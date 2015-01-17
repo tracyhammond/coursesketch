@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Class Search</title>
+	<!-- PUT THIS AT TOP OF PAGE -->
+	<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html" />
+	<script type="text/javascript" src="/src/utilities/functions/childScript.js"
+			data-namespace="classSearch"></script>
+	<!-- PUT THIS AT TOP OF PAGE -->
+	<link rel="stylesheet" href="/css/utility/columns.css">
+	<link rel="stylesheet" href="/css/courseSketch2.css">
+
+	<!-- protobuf -->
+	<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+	<!-- school item -->
+	<link rel="import" href="/src/utilities/templates/schoolItem/schoolItemInclude.html" />
+	<link rel="import"
+		  href="/src/utilities/templates/loading/loadingInclude.html">
+
+	<link rel="stylesheet" href="/src/student/search/classSearch.css">
+	<script src="/src/student/search/classSearch.js"></script>
+</head>
+
+<body>
+<div>
+   	<div class="columnContainer"style="width:100%;">
+		<div>
+			<div class = "wide_centre" id="class_list_column1">
+			</div>
+		</div>
+		<div>
+			<div class = "wide_centre" id="class_list_column2">
+			</div>
+		</div>
+   	</div>
+   	<div id = "loadingIcon" class = "centerOfScreen">
+   		<img src="/images/loading/7EB5D6_large_loader.gif">
+   	</div>
+ </div>
+ <div id="registerButton">
+ </div>
+</body>
+</html>

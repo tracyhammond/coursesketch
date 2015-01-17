@@ -230,7 +230,9 @@ public abstract class AbstractClientWebSocket {
             // adds this version because it has not been added before
             queuedMessages.add(buffer);
             System.err.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
-            socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, this.getClass().getName()));
+            if (socketFailedListener != null) {
+                socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, this.getClass().getName()));
+            }
             // all messages are empty after the actions with the message are finished.
             queuedMessages.clear();
             throw new ConnectionException("" + this.getClass().getSimpleName() + " failed to connect after multiple tries");

@@ -1,0 +1,296 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Command Methods test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+    <script src="/test/testUtilities/databaseHelper.js"></script>
+
+    <!-- files needed for testing -->
+    <link id="submissionTemplateImport" rel="import" href="/src/common/submission/submissionInclude.html">
+    <link rel="import" href="/src/common/submission/toolbar/toolBarInclude.html">
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/common/submission/submission.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id="htmlCode"></div>
+
+<script>
+
+        var template = (function() {
+            var link1 = document.querySelector('#submissionTemplateImport');
+            var link = link1.import.querySelector('#submissionTemplateImport');
+            var template = link.import.querySelector('#submission');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        QUnit.module("submission", {
+            setupOnce : function() {
+                try {
+                    var newElement = new SubmissionPanel();
+
+                    newElement.attachedCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    // test is not a typo
+                    document.registerElement('test-element', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            setup: function() {
+            },
+            teardown : function() {
+                CourseSketch.connection.sendRequest = function(){};
+                document.getElementById('htmlCode').innerHTML = "";
+            }
+        });
+
+        /**
+         * @return a list that contains two elements [Submission Object, ToolPanel]
+         */
+        function createSubmissionElement() {
+            var toolbar = document.createElement("problem-tool-bar");
+            var testElement = document.createElement("test-element");
+            testElement.appendChild(toolbar);
+            return [testElement, toolbar];
+        }
+
+        /* adds an element to the dom in a safe way. */
+        function addElementToDom(element) {
+            document.getElementById("htmlCode").appendChild(element);
+        }
+
+        QUnit.test("testing creation", function(assert) {
+            expect(0);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+        });
+
+        QUnit.test("testing exception", function(assert) {
+            QUnit.throws(function() {
+                throw new SubmissionException("Exception thrown");
+            });
+        });
+
+        QUnit.asyncTest("testing toolbar submission callback is set", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var toolbar = element[1];
+            // declare variable before using it
+            var interval = undefined;
+            submission.sendDataToServer = function(isSubmission) {
+                clearInterval(interval);
+                assert.ok(isSubmission, "Submission callback is set");
+                QUnit.start();
+            };
+            // set variable.
+            interval = setInterval(function() {
+                simulate(toolbar.shadowRoot.querySelector("#submission"), "click");
+            }, 100);
+        });
+
+        QUnit.asyncTest("testing toolbar save callback is set", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var toolbar = element[1];
+            // declare variable before using it
+            var interval = undefined;
+            submission.sendDataToServer = function(isSubmission) {
+                clearInterval(interval);
+                assert.ok(!isSubmission, "Save callback is set");
+                QUnit.start();
+            };
+            // set variable.
+            interval = setInterval(function() {
+                simulate(toolbar.shadowRoot.querySelector("#save"), "click");
+            }, 100);
+        });
+
+        QUnit.test("testing wrapped exception does not throw error", function(assert) {
+            expect(0);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var toolbar = element[1];
+            // declare variable before using it
+            var interval = undefined;
+            submission.sendDataToServer = function() {
+                throw new SubmissionException("exception problems?");
+            };
+            submission.sendDataToServerExceptionWrapped(undefined, true);
+        });
+
+        QUnit.test("testing sending data throws exception when subpanel does not exist", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var toolbar = element[1];
+            // declare variable before using it
+            var interval = undefined;
+            QUnit.throws(function() {
+                submission.sendDataToServer(undefined, true);
+            });
+        });
+
+        QUnit.test("testing sending data throws exception when problem type does not exist", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            submission.appendChild(textArea);
+            // declare variable before using it
+            var interval = undefined;
+            QUnit.throws(function() {
+                submission.sendDataToServer(undefined, true);
+            });
+        });
+
+        QUnit.test("testing sending data throws exception when problem type is not supported", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            submission.appendChild(textArea);
+            submission.problemType = -1; // not a supported type
+
+
+            // actual test
+
+            QUnit.throws(function() {
+                submission.sendDataToServer(undefined, true);
+            });
+        });
+
+        QUnit.test("testing sending data throws exception when wrapper function is not supported", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            textArea.value = "I AM TEXT VALUE";
+            submission.appendChild(textArea);
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+
+            // actual test
+
+            QUnit.throws(function() {
+                submission.sendDataToServer(undefined, true);
+            });
+        });
+
+        QUnit.test("testing sending data text submission works correctly", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            textArea.value = "I AM TEXT VALUE";
+            submission.appendChild(textArea);
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+
+            submission.wrapperFunction = function(submission) {
+                assert.equal(submission.textAnswer, textArea.value, "Text area value is set in submission");
+                return submission;
+            };
+            // actual test
+            submission.sendDataToServer(undefined, true);
+        });
+
+        QUnit.test("testing student sending submission data", function(assert) {
+            expect(1);
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            textArea.value = "I AM TEXT VALUE";
+            submission.appendChild(textArea);
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+
+            submission.wrapperFunction = function(submission) {
+                return submission;
+            }
+
+            submission.isStudent = true;
+
+
+            CourseSketch.connection.sendRequest = function(request) {
+                assert.equal(request.responseText, "student");
+            };
+            // actual test
+            submission.sendDataToServer(undefined, true);
+        });
+
+        QUnit.test("testing grader sending submission data", function(assert) {
+            expect(1)
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            textArea.value = "I AM TEXT VALUE";
+            submission.appendChild(textArea);
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+
+            submission.wrapperFunction = function(submission) {
+                return submission;
+            }
+
+            submission.isStudent = false;
+            submission.isGrader = true;
+
+            CourseSketch.connection.sendRequest = function(request) {
+                assert.equal(request.responseText, "moderator");
+            }
+            // actual test
+            submission.sendDataToServer(undefined, true);
+        });
+
+        QUnit.test("testing instructor sending submission data", function(assert) {
+            expect(1)
+            var element = createSubmissionElement();
+            addElementToDom(element[0]);
+            var submission = element[0];
+            var textArea = document.createElement("textarea");
+            textArea.className = "sub-panel";
+            textArea.value = "I AM TEXT VALUE";
+            submission.appendChild(textArea);
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+
+            submission.wrapperFunction = function(submission) {
+                return submission;
+            }
+
+            submission.isStudent = false;
+            submission.isGrader = false;
+
+            CourseSketch.connection.sendRequest = function(request) {
+                assert.equal(request.responseText, "instructor");
+            }
+            // actual test
+            submission.sendDataToServer(undefined, true);
+        });
+</script>
+</body>

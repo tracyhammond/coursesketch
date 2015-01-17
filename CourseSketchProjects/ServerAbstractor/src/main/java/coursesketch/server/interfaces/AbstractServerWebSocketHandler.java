@@ -317,41 +317,6 @@ public abstract class AbstractServerWebSocketHandler {
      * @author gigemjt
      */
     public static final class Encoder {
-
-        /**
-         * This number represents the 4th version of UUID which is the one we use.
-         */
-        public static final long VERSION_4_UUID = 0x4000L;
-
-        /**
-         * How much we multiply the random number by.
-         */
-        private static final double RANDOM_MULT = 0x1000;
-
-        /**
-         * We use this number to increment the counter.
-         */
-        private static final long COUNTER_ADDITION = 0x10000L;
-
-        /**
-         * | with the nano time.  (not sure what it does)
-         */
-        private static final long MIN_NANO_TIME = 0x8000000000000000L;
-
-        /**
-         * counter will be incremented by 0x10000 for each new SComponent that
-         * is created counter is used as the most significant bits of the UUID.
-         *
-         * initialized to 0x4000 (the version -- 4: randomly generated UUID)
-         * along with 3 bytes of randomness: Math.random()*0x1000 (0x0 - 0xFFF)
-         *
-         * the randomness further reduces the chances of collision between
-         * multiple sketches created on multiple computers simultaneously
-         *
-         * (taken from SCComponent)
-         */
-        private static long counter = VERSION_4_UUID | (long) (Math.random() * RANDOM_MULT);
-
         /**
          * Empty constructor.
          */
@@ -385,15 +350,7 @@ public abstract class AbstractServerWebSocketHandler {
          * @return The next UUID that is generated.
          */
         public static UUID nextID() {
-            counter += COUNTER_ADDITION; // Overflow is perfectly fine.
-            return new UUID(counter, System.nanoTime() | MIN_NANO_TIME);
-        }
-
-        /**
-         * @return the counter used in the generation of UUIDs.
-         */
-        public static long getCounter() {
-            return counter;
+            return UUID.randomUUID();
         }
     }
 }
