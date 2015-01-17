@@ -217,7 +217,8 @@ function UpdateManager(sketchManager, onError) {
         try {
             var redraw = executeUpdate(nextUpdate);
             var updateIndex = currentUpdateIndex;
-            var pluginUpdate = updateList[updateIndex - 1];
+            var offset = lastUpdateType == -1 ? 0 : 1;
+            var pluginUpdate = updateList[updateIndex - offset];
             var updateType = lastUpdateType;
             setTimeout(function() {
                 for (var i = 0; i < plugins.length; i++) {
