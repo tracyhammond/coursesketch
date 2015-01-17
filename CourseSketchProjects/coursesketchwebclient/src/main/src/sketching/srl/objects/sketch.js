@@ -16,16 +16,23 @@ function SRL_Sketch() {
     this.superConstructor();// (Overloads); // super call
 
     var objectList = new Array();
-    var objectIdMap = new Array();
+    var objectIdMap = new Map();
     var boundingBox = new SRL_BoundingBox();
-    var objectMap = {};
 
     this.addObject = function(srlObject) {
         objectList.push(srlObject);
-        objectIdMap[srlObject.getId()] = srlObject;
+        objectIdMap.set(srlObject.getId(), srlObject);
     };
+    this.addSubObject = this.addObject; // backwards compatablity
 
-    this.addSubObject = this.addObject; // backwards comaptiablity
+    /**
+     * Adds all objects in the array to the sketch.
+     */
+    this.addAllSubObjects = function(array) {
+        for (var i = 0; i < array.length; i++) {
+            this.addObject(array[i]);
+        }
+    }
 
     /**
      * Given an object, remove this instance of the object.
@@ -34,7 +41,7 @@ function SRL_Sketch() {
         var result = removeObjectFromArray(objectList, srlObject);
         //var result = objectList.removeObject(srlObject);
         if (result) {
-            delete objectMap[result.getId()];
+            objectIdMap.delete(result.getId());
         }
         return result;
     };
@@ -57,7 +64,7 @@ function SRL_Sketch() {
      * Returns the object based off of its id.
      */
     this.getSubObjectById = function(objectId) {
-        return objectIdMap[objectId];
+        return objectIdMap.get(objectId);
     };
 
     this.getSubObjectAtIndex = function(index) {
@@ -115,13 +122,18 @@ function SRL_Sketch() {
 
     /**
      * Resets the sketch to its starting state.
+     * Assigns new objects so any external references are now useless.
+     * @return {Array} A list that contains references to all of the existing objects.
      */
     this.resetSketch = function() {
-        objectList = [];
-        objectIdMap = [];
+        var oldList = objectList;
+        objectList = new Array();
+        objectIdMap = new Map();
         boundingBox = new SRL_BoundingBox();
-        objectMap = {};
+        return oldList;
     };
+
+    this.clearSketch = this.resetSketch;
 }
 
 SRL_Sketch.Inherits(Overloads);
