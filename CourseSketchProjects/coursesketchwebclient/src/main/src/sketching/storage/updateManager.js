@@ -57,6 +57,7 @@ function UpdateManager(sketchManager, onError) {
      * 0 = normal update
      * -1 = undo
      * 1 = redo
+     * 2 =
      */
     var lastUpdateType = 0;
     /**
@@ -216,20 +217,22 @@ function UpdateManager(sketchManager, onError) {
         var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
         try {
             var redraw = executeUpdate(nextUpdate);
-            var updateIndex = currentUpdateIndex;
-            var offset = lastUpdateType == -1 ? 0 : 1;
-            var pluginUpdate = updateList[updateIndex - offset];
-            var updateType = lastUpdateType;
-            setTimeout(function() {
-                for (var i = 0; i < plugins.length; i++) {
-                    if (!isUndefined(plugins[i].addUpdate)) {
-                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
+            if (!skippingMarkerMode) {
+                var updateIndex = currentUpdateIndex;
+                var offset = lastUpdateType == -1 ? 0 : 1;
+                var pluginUpdate = updateList[updateIndex - offset];
+                var updateType = lastUpdateType;
+                setTimeout(function() {
+                    for (var i = 0; i < plugins.length; i++) {
+                        if (!isUndefined(plugins[i].addUpdate)) {
+                            plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
+                        }
                     }
-                }
-                updateType = undefined;
-                pluginUpdate = undefined;
-                updateIndex = undefined;
-            }, 10);
+                    updateType = undefined;
+                    pluginUpdate = undefined;
+                    updateIndex = undefined;
+                }, 10);
+            }
         } catch (exception) {
             executionLock = false;
             if (!isUndefined(onError)) {
