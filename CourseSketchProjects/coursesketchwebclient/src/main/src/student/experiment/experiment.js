@@ -106,6 +106,10 @@
         sketchSurface.className = "wide_rule sub-panel";
         sketchSurface.style.width="100%";
         sketchSurface.style.height="calc(100% - 110px)";
+        sketchSurface.setErrorListener(function(exception) {
+            console.log(exception);
+            alert(exception);
+        });
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
