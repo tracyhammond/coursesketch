@@ -43,8 +43,9 @@ function Graphics(canvasElement, sketchManager) {
      * uses the canvas size.
      */
     this.fillCanvas = function() {
-        ps.project.activeLayer.fitBounds(new ps.Rectangle(0, 0, canvasElement.width, canvasElement.height));
         ps.activate();
+        var boundary = new ps.Rectangle(ps.view.bounds);
+        ps.project.activeLayer.fitBounds(boundary);
         ps.view.update();
     }
 
