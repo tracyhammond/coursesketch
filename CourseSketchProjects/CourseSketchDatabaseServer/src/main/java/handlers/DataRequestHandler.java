@@ -3,6 +3,7 @@ package handlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
+import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
@@ -38,6 +39,11 @@ public final class DataRequestHandler {
      * A message returned when getting the data was successful.
      */
     private static final String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
+
+    /**
+     * A message returned when getting the data was successful.
+     */
+    private static final String NO_OP_MESSAGE = "NO DATA TO RETURN";
 
     /**
      * A message returned if the user does not have any classes.
@@ -140,7 +146,9 @@ public final class DataRequestHandler {
                                     System.out.println("Trying to retrieve an experiemnt from a user!");
                                     try {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
-                                    } catch (Exception e) {
+
+                                        results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
+                                    } catch (DatabaseAccessException e) {
                                         results.add(ResultBuilder.buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
                                         break;
                                     }
