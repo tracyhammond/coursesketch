@@ -108,6 +108,7 @@ function Graphics(canvasElement, sketchManager) {
         }
         ps.view.update();
     };
+    var loadSketch = this.loadSketch;
 
     /**
      * Removes an item from the view.
@@ -166,6 +167,12 @@ function Graphics(canvasElement, sketchManager) {
                     loadStroke(stroke);
                 } else if (lastUpdateType == -1) {
                     removeItem(stroke.getId());
+                }
+            } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
+                if (lastUpdateType == 0 || lastUpdateType == 1) {
+                    ps.project.activeLayer.removeChildren();
+                } else {
+                    loadSketch();
                 }
             }
         }

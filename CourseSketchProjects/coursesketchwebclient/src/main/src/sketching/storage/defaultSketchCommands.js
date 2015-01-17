@@ -6,17 +6,27 @@
 (function() {
 
     /**
-     * TODO: THIS DOES NOT HAVE AN UNDO METHOD RIGHT NOW! UNDOING A CLEAR
-     * COMMAND CAN CAUSE SOME VERY AWKWARD RESULTS. But what this does is clear
-     * the sketch of any objects it contains.
-     *
+     * Removes all elements of the sketch.
      * @returns {boolean} true. This will always ask for the sketch to be
-     *          redrawn. TODO: change it so that it knows what sketch it is
-     *          associated with.
+     *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, function() {
         var sketch = this.getLocalSketchSurface();
-        sketch.resetSketch();
+        var objects = sketch.resetSketch();
+        this.decodedData = objects;
+        return true;
+    });
+
+    /**
+     * Adds all of the sketch data back.
+     *
+     * @returns {boolean} true. This will always ask for the sketch to be
+     *          redrawn.
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, function() {
+        var sketch = this.getLocalSketchSurface();
+        sketch.addAllSubObjects(this.decodedData);
+        this.decodedData = undefined;
         return true;
     });
 
