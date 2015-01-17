@@ -110,7 +110,7 @@ function SubmissionPanel() {
             problemType = undefined;
             problemIndex = undefined;
         }.bind(this));
-        request.setResponseText(this.isStudent ? "student" : this.isGrader ? "moderator" : "instructor");
+        request.setResponseText(this.isStudent ? "student" : this.isGrader ? "grader" : "instructor");
         CourseSketch.connection.sendRequest(request);
         QuestionType = undefined;
         submission = undefined;
