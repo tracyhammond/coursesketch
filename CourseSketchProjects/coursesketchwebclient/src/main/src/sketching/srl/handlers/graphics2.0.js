@@ -14,11 +14,6 @@ function Graphics(canvasElement, sketchManager) {
     var canvasElement = $(canvasElement)[0];
     var drawUpdate = true;
 
-    /**
-     * the last stroke the user drew.  Used to prevent the creation of two paths.
-     */
-    var lastStroke = undefined;
-
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
 
@@ -80,7 +75,6 @@ function Graphics(canvasElement, sketchManager) {
     this.endPath = function(point, stroke) {
         livePath.add(point);
         livePath.simplify();
-        lastStroke = stroke;
         livePath.data.id = stroke.getId();
     };
 
@@ -95,7 +89,6 @@ function Graphics(canvasElement, sketchManager) {
      * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously.
      */
     this.loadSketch = function() {
-        lastStroke = undefined;
         ps.project.activeLayer.removeChildren();
         ps.view.update();
         var sketch = sketchManager.getCurrentSketch();
@@ -115,13 +108,7 @@ function Graphics(canvasElement, sketchManager) {
      */
     this.removeItem = function(itemId) {
         var object = ps.project.getItem({data: {id : itemId} });
-        console.log("Removing item!");
-        console.log(object);
         object.remove();
-        //var result = ps.project.activeLayer.removeChild(object);
-        if (!isUndefined(lastStroke) && lastStroke.getId() == itemId) {
-            lastStroke = undefined;
-        }
         ps.view.update();
     };
     var removeItem = this.removeItem;
@@ -132,10 +119,6 @@ function Graphics(canvasElement, sketchManager) {
      */
     function loadStroke(stroke) {
         ps.activate();
-        /*
-        if (!isUndefined(lastStroke) && (lastStroke == stroke || lastStroke.getId() == stroke.getId())) {
-            return; // we do not need to double path.
-            */
         var object = ps.project.getItem({data: {id : stroke.getId()} });
         if (!isUndefined(object) && object != null) {
             return; // already added to the sketch.
@@ -157,7 +140,6 @@ function Graphics(canvasElement, sketchManager) {
         if (!drawUpdate) {
             return;
         }
-        console.log(update);
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
@@ -189,7 +171,7 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * some manual unlinking to help out the garbage collector.
+     * Some manual unlinking to help out the garbage collector.
      */
     this.finalize = function() {
         sketchManager = undefined;
