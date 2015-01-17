@@ -44,7 +44,6 @@
                 redraw = true;
             }
         }
-        getLocalSketchSurface = undefined;
         return redraw;
     };
 
@@ -87,19 +86,19 @@
     ProtoSrlCommand.decodedData = false;
 
     ProtoSrlCommand.redo = function() {
-        var redoFunc = this["redo" + this.getCommandType()].bind(this);
+        var redoFunc = this["redo" + this.getCommandType()];
         if (isUndefined(redoFunc)) {
-            throw (this.getCommandTypeName() + " is not defined as a function");
+            throw (this.getCommandTypeName() + " is not defined as a redo function");
         }
-        return redoFunc();
+        return redoFunc.bind(this)();
     };
 
     ProtoSrlCommand.undo = function() {
-        var undoFunc = this["undo" + this.getCommandType()].bind(this);
+        var undoFunc = this["undo" + this.getCommandType()];
         if (isUndefined(undoFunc)) {
-            throw (this.getCommandTypeName() + " is not defined as a function");
+            throw (this.getCommandTypeName() + " is not defined as an undo function");
         }
-        return undoFunc();
+        return undoFunc.bind(this)();
     };
 
     /**
