@@ -36,6 +36,9 @@ function MvSketch() {
         this.setupAttributes();
     };
 
+    /**
+     * Looks at the data attributes of this element and configures the element appropriately.
+     */
     this.setupAttributes = function() {
         if (!isUndefined(this.dataset) && this.dataset.binary == "true" || this.dataset.binary == "") {
             this.shadowRoot.querySelector("#gradeInput").disabled = true;
@@ -71,6 +74,9 @@ function MvSketch() {
         this.shadowRoot.querySelector("#gradeInput").value = parseFloat(this.gradeValue);
     }
 
+    /**
+     * Sets the callback that is called when the sketch is clicked.
+     */
     this.setSketchClickedFunction = function(sketchClickedFunction) {
         this.shadowRoot.querySelector("sketch-surface").onclick = sketchClickedFunction;
     };
