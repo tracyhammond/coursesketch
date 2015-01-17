@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by gigemjt on 10/23/14.
  */
-class ClientWebSocketWrapper  extends SimpleChannelInboundHandler<Object> {
+class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
     private final WebSocketClientHandshaker handshaker;
     private final ClientWebSocket socketHandler;
     private ChannelPromise handshakeFuture;
@@ -87,7 +87,7 @@ class ClientWebSocketWrapper  extends SimpleChannelInboundHandler<Object> {
         } else if (frame instanceof CloseWebSocketFrame) {
             System.out.println("WebSocket Client received closing");
             ch.close();
-            socketHandler.onClose(((CloseWebSocketFrame) frame).statusCode(),((CloseWebSocketFrame) frame).reasonText());
+            socketHandler.onClose(((CloseWebSocketFrame) frame).statusCode(), ((CloseWebSocketFrame) frame).reasonText());
         } else {
             final RuntimeException exp = new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
                     .getName()));

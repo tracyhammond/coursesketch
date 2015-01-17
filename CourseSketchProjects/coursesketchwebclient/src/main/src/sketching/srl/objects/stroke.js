@@ -2,14 +2,14 @@
 
 /**
  * ******************************
- * 
- * 
+ *
+ *
  * Stroke data class
- * 
+ *
  * @author hammond; Daniel Tan
  * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&M University
- * 
- * 
+ *
+ *
  * ******************************
  */
 
@@ -24,7 +24,7 @@ function SRL_Stroke(startPoint) {
     var intersector = new SRL_IntersectionHandler(this);
     /**
      * Adding another point to the stroke
-     * 
+     *
      * @param point
      */
     this.addPoint = function(point) {
@@ -37,7 +37,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Constructor setting the initial point in the stroke
-     * 
+     *
      * @param startPoint
      */
     if (startPoint instanceof SRL_Point) {
@@ -46,7 +46,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Gets the complete list of points in the stroke
-     * 
+     *
      * @return list of points in the stroke
      */
     this.getPoints = function() {
@@ -59,7 +59,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Get the i'th point in the stroke The first point has index i = 0
-     * 
+     *
      * @param i
      *            the index of the stroke
      * @return the point at index i
@@ -75,7 +75,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Goes through every object in this list of objects. (Brute force).
-     * 
+     *
      * @return the object if it exist, returns false otherwise.
      */
     this.getSubObjectById = function(objectId) {
@@ -89,30 +89,28 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Goes through every object in this list of objects. (Brute force).
-     * 
+     *
      * @return the object if it exist, returns false otherwise.
      */
     this.removeSubObjectById = function(objectId) {
         for (var i = 0; i < points.length; i++) {
             var object = points[i];
             if (object.getId() == objectId) {
-                return points.removeObjectAtIndex(i);
+                return removeObjectByIndex(points, i);
             }
-            ;
         }
-        ;
     };
 
     /**
      * Given an object, remove this instance of the object.
      */
     this.removeSubObject = function(srlObject) {
-        return points.removeObject(srlObject);
+        return removeObjectFromArray(points, srlObject);
     };
 
     /**
      * Gets the list of subobjects
-     * 
+     *
      * @return list of objects that make up this object
      */
     this.getSubObjects = function() {
@@ -121,7 +119,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Gets the number of points in the stroke
-     * 
+     *
      * @return number of points in the stroke
      */
     this.getNumPoints = function() {
@@ -131,7 +129,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Returns the first point in the stroke. if the stroke has no points, it
      * returns null.
-     * 
+     *
      * @return first point in the stroke
      */
     this.getFirstPoint = function() {
@@ -144,7 +142,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Returns the last point in the stroke If the stroke has no points, it
      * returns null.
-     * 
+     *
      * @return last point in the stroke.
      */
     this.getLastPoint = function() {
@@ -188,7 +186,7 @@ function SRL_Stroke(startPoint) {
      */
     this.getMaxX.SRL_Stroke = function() {
         /*
-         * 
+         *
          * var maxx = this.getFirstPoint().getX(); for(var i=0; i<points.length;
          * i++){ if(points[i].getX() > maxx){ maxx = points[i].getX(); } }
          */
@@ -213,7 +211,7 @@ function SRL_Stroke(startPoint) {
      * secondPoint If there are fewer than that many points, it uses the last
      * point. If there are only 0 or 1 points, this returns NaN. Note that this
      * is also feature 1 of Rubine.
-     * 
+     *
      * @param secondPoint
      *            which number point should be used for the second point
      * @return cosine of the starting angle of the stroke
@@ -250,7 +248,7 @@ function SRL_Stroke(startPoint) {
      * there are fewer than that many points, it uses the last point. If there
      * are only 0 or 1 points, this returns NaN. Note that this is also feature
      * 1 of Rubine.
-     * 
+     *
      * @param secondPoint
      *            which number point should be used for the second point
      * @return cosine of the starting angle of the stroke
@@ -283,7 +281,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Return the Euclidean distance from the starting point to the ending point
      * of the stroke
-     * 
+     *
      * @return the distance between the starting and ending points of the stroke
      */
     this.getEuclideanDistance = function() {
@@ -298,7 +296,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the cosine of the angle between the start and end point
-     * 
+     *
      * @return cosine of the ending angle
      */
     this.getEndAngleCosine = function() {
@@ -310,7 +308,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the cosine of the angle between the start and end point
-     * 
+     *
      * @return cosine of the ending angle
      */
     this.getEndAngleSine = function() {
@@ -322,7 +320,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Returns the length of the stroke, complete with all of its turns
-     * 
+     *
      * @return length of the stroke
      */
     this.getStrokeLength = function() {
@@ -338,7 +336,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the total stroke time
-     * 
+     *
      * @return total time of the stroke
      */
     this.getTotalTime = function() {
@@ -351,7 +349,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Auxiliary method used to return a list containing all points but with
      * duplicated (based on time) removed
-     * 
+     *
      * @return list of points with duplicates (based on time) removed
      */
     this.removeTimeDuplicates = function() {
@@ -373,7 +371,7 @@ function SRL_Stroke(startPoint) {
     /**
      * Auxiliary method used to return a list containing all points but with
      * duplicated (based on X,Y coordinates) removed
-     * 
+     *
      * @return list of points with duplicates (based on coordinates) removed
      */
     this.removeCoordinateDuplicates = function() {
@@ -392,7 +390,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the maximum stroke speed reached
-     * 
+     *
      * @return maximum stroke speed reached
      */
     this.getMaximumSpeed = function() {
@@ -417,7 +415,7 @@ function SRL_Stroke(startPoint) {
      * Calculates the rotation from point startP to two points further.
      * Calculates the line between startP and the next point, and then the next
      * two points, and then returns the angle between the two.
-     * 
+     *
      * @param points
      * @param startP
      * @return
@@ -436,7 +434,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the total rotation of the stroke from start to end points
-     * 
+     *
      * @return total rotation of the stroke
      */
     this.getRotationSum = function() {
@@ -459,7 +457,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the absolute rotation of the stroke from start to end points
-     * 
+     *
      * @return total absolute rotation of the stroke
      */
     this.getRotationAbsolute = function() {
@@ -482,7 +480,7 @@ function SRL_Stroke(startPoint) {
 
     /**
      * Return the squared rotation of the stroke from start to end points
-     * 
+     *
      * @return total squared rotation of the stroke
      */
     this.getRotationSquared = function() {

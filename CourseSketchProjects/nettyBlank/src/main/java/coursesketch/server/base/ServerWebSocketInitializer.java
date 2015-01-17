@@ -14,36 +14,35 @@ import io.netty.handler.ssl.SslContext;
  * Created by gigemjt on 10/19/14.
  */
 public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel> implements ISocketInitializer {
-    private SslContext sslContext;
-
-    private ServerSocketWrapper singleWrapper;
-
     /**
      * The server that the servlet is connected to.
      */
     private final AbstractServerWebSocketHandler connectionServer;
-
     /**
      * The {@link MultiConnectionManager} that is used by the servlet to recieve
      * connections.
      */
     private final MultiConnectionManager manager;
-
     /**
      * The amount of time it takes before a connection times out.
      */
     private final long timeoutTime;
-
     /**
      * True if the server is allowing secure connections.
      */
     private final boolean secure;
+    private SslContext sslContext;
+    private ServerSocketWrapper singleWrapper;
 
     /**
      * Creates a GeneralConnectionServlet.
-     * @param iTimeoutTime The time it takes before a connection times out.
-     * @param iSecure True if the connection is allowing SSL connections.
-     * @param connectLocally True if the server is connecting locally.
+     *
+     * @param iTimeoutTime
+     *         The time it takes before a connection times out.
+     * @param iSecure
+     *         True if the connection is allowing SSL connections.
+     * @param connectLocally
+     *         True if the server is connecting locally.
      */
     public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
         this.timeoutTime = iTimeoutTime;
@@ -88,8 +87,10 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
-     * @param iSecure        True if the connection is using SSL.
+     * @param connectLocally
+     *         True if the connection is acting as if it is on a local computer (used for testing)
+     * @param iSecure
+     *         True if the connection is using SSL.
      * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
      */
     @Override
@@ -115,8 +116,10 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * This method will be called once the {@link io.netty.channel.Channel} was registered. After the method returns this instance
      * will be removed from the {@link ChannelPipeline} of the {@link io.netty.channel.Channel}.
      *
-     * @param ch the {@link io.netty.channel.Channel} which was registered.
-     * @throws Exception is thrown if an error occurs. In that case the {@link io.netty.channel.Channel} will be closed.
+     * @param ch
+     *         the {@link io.netty.channel.Channel} which was registered.
+     * @throws Exception
+     *         is thrown if an error occurs. In that case the {@link io.netty.channel.Channel} will be closed.
      */
     @Override
     protected void initChannel(final SocketChannel ch) throws Exception {
@@ -136,12 +139,14 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Called after reconnecting the connections.
      */
-    protected void onReconnect() { }
+    protected void onReconnect() {
+    }
 
     /**
      * @return the multiConnectionManager.  This is only used within this package.
      */
-    /* package-private */ final MultiConnectionManager getManager() {
+    /* package-private */
+    final MultiConnectionManager getManager() {
         return manager;
     }
 
