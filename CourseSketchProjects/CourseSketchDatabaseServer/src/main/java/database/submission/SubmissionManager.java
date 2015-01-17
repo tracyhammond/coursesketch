@@ -166,8 +166,8 @@ public final class SubmissionManager {
             if (SELF_ID.equals(key)) {
                 continue;
             }
-            final Object id = corsor.get(key);
-            if (id == null || id instanceof ObjectId) {
+            final Object experimentId = corsor.get(key);
+            if (experimentId == null || experimentId instanceof ObjectId) {
                 continue;
             }
             final String sketchId = corsor.get(key).toString();

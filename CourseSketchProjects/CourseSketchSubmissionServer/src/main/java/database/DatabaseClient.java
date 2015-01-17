@@ -38,6 +38,7 @@ import static database.DatabaseStringConstants.USER_ID;
 /**
  * Manages the submissions in the database.
  */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class DatabaseClient {
     /**
      * A single instance of the mongo institution.
@@ -246,6 +247,7 @@ public class DatabaseClient {
      * @throws DatabaseAccessException
      *         Thrown if a part of the experiment is invalid.
      */
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     private static void verifyInput(final SrlExperiment experiment) throws DatabaseAccessException {
         if (!experiment.hasProblemId() || "".equals(experiment.getProblemId())) {
             throw new DatabaseAccessException("Problem id must be defined to make a submission");
