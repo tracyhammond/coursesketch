@@ -1,28 +1,31 @@
 /* depends on base.js */
 
 /**
- * ************************************************************* Array Functions
- * 
- * @author gigemjt *************************************************************
+ * *************************************************************
+ *
+ * Array Functions
+ *
+ * @author gigemjt
+ *
+ ***************************************************************
  */
 
 /**
+ * Creates an ArrayException object that returns exception values.
+ */
+function ArrayException(message) {
+    this.name = "ArrayException";
+    this.specificMessage = message;
+    this.message = "";
+    this.htmlMessage = "";
+}
+ArrayException.prototype = BaseException;
+
+/**
  * removes the object from an array.
- * 
+ *
  * @return the object that was removed if it exist.
  */
-if (isUndefined(Array.prototype.removeObject)) {
-    Array.prototype.removeObject = function(object) {
-        var index = this.indexOf(object);
-        if (index != -1) {
-            var result = this[index];
-            this.splice(index, 1);
-            return result;
-        }
-        throw new Error("attempt to remove invalid object");
-    };
-}
-
 if (isUndefined(removeObjectFromArray)) {
     function removeObjectFromArray(array, object) {
         var index = array.indexOf(object);
@@ -31,30 +34,29 @@ if (isUndefined(removeObjectFromArray)) {
             array.splice(index, 1);
             return result;
         }
-        throw new Error("attempt to remove invalid object");
+        throw new ArrayException("attempt to remove invalid object");
     }
-    ;
 }
 
 /**
  * removes the object from an array.
- * 
+ *
  * @return the object that was removed if it exist.
  */
-if (isUndefined(Array.prototype.removeObjectByIndex)) {
-    Array.prototype.removeObjectByIndex = function(index) {
+if (isUndefined(removeObjectByIndex)) {
+    function removeObjectByIndex(array, index) {
         if (index != -1) {
-            var result = this[index];
-            this.splice(index, 1);
+            var result = array[index];
+            array.splice(index, 1);
             return result;
         }
-        throw new Error("attempt to remove at invalid index");
-    };
+        throw new ArrayException("attempt to remove at invalid index");
+    }
 }
 
 /**
  * Checks to see if an item is an instance of an array.
- * 
+ *
  * returns true if it is an array, (hopefully).
  */
 if (isUndefined(isArray)) {
@@ -64,8 +66,8 @@ if (isUndefined(isArray)) {
 }
 
 /**
- * Makes a map out of the list.
- * 
+ * Makes a list out of an object map.
+ *
  * @param map
  * @returns {Array}
  */
