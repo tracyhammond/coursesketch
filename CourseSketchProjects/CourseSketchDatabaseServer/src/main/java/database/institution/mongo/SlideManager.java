@@ -92,32 +92,32 @@ public final class SlideManager {
     /**
      * NOTE: This function is only used internally and should not be made public.
      *
-     * @param e
+     * @param lectureElement
      *         an element that belongs on a lecture
      * @return a BasicDBObject of the element
      */
-    private static BasicDBObject createQueryFromElement(final Lecturedata.LectureElement e) {
-        final BasicDBObject query = new BasicDBObject(SELF_ID, e.getId())
-                .append(X_POSITION, e.getXPosition())
-                .append(Y_POSITION, e.getYPosition())
-                .append(X_DIMENSION, e.getXDimension())
-                .append(Y_DIMENSION, e.getYDimension())
-                .append(SLIDE_BLOB_TYPE, e.getElementTypeCase().getNumber());
-        switch (e.getElementTypeCase()) {
+    private static BasicDBObject createQueryFromElement(final Lecturedata.LectureElement lectureElement) {
+        final BasicDBObject query = new BasicDBObject(SELF_ID, lectureElement.getId())
+                .append(X_POSITION, lectureElement.getXPosition())
+                .append(Y_POSITION, lectureElement.getYPosition())
+                .append(X_DIMENSION, lectureElement.getXDimension())
+                .append(Y_DIMENSION, lectureElement.getYDimension())
+                .append(SLIDE_BLOB_TYPE, lectureElement.getElementTypeCase().getNumber());
+        switch (lectureElement.getElementTypeCase()) {
             case IMAGE:
-                query.append(SLIDE_BLOB, e.getImage().toByteArray());
+                query.append(SLIDE_BLOB, lectureElement.getImage().toByteArray());
                 break;
             case TEXTBOX:
-                query.append(SLIDE_BLOB, e.getTextBox().toByteArray());
+                query.append(SLIDE_BLOB, lectureElement.getTextBox().toByteArray());
                 break;
             case SKETCHAREA:
-                query.append(SLIDE_BLOB, e.getSketchArea().toByteArray());
+                query.append(SLIDE_BLOB, lectureElement.getSketchArea().toByteArray());
                 break;
             case QUESTION:
-                query.append(SLIDE_BLOB, e.getQuestion().toByteArray());
+                query.append(SLIDE_BLOB, lectureElement.getQuestion().toByteArray());
                 break;
             case EMBEDDEDHTML:
-                query.append(SLIDE_BLOB, e.getEmbeddedHtml().toByteArray());
+                query.append(SLIDE_BLOB, lectureElement.getEmbeddedHtml().toByteArray());
                 break;
             case ELEMENTTYPE_NOT_SET:
             default:
@@ -160,7 +160,7 @@ public final class SlideManager {
         isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
         isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
 
-        // TODO: Fix this
+        // FUTURE Fix this! maybe make the lecture a user? not really sure for now everyone is a user.
         isUsers = true; // authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
@@ -230,30 +230,25 @@ public final class SlideManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
 
-        //final ArrayList adminList = (ArrayList<Object>) corsor.get("Admin");
-        //final ArrayList modList = (ArrayList<Object>) corsor.get("Mod");
-        boolean isAdmin, isMod;
-        isAdmin = true; //authenticator.checkAuthentication(userId, adminList);
-        isMod = true; //authenticator.checkAuthentication(userId, modList);
+        final DBRef parentLecture = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureSlide.getLectureId()));
+        final DBObject lectureCursor = parentLecture.fetch();
+
+        final boolean isAdmin = authenticator.checkAuthentication(userId, (List<String>) lectureCursor.get("Admin"));
+        final boolean isMod = authenticator.checkAuthentication(userId, (List<String>) lectureCursor.get("Mod"));
 
         if (!isAdmin && !isMod) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
-        final BasicDBObject updated = new BasicDBObject();
-        if (isAdmin || isMod) {
-            if (lectureSlide.getElementsCount() > 0) {
-                final ArrayList list = new ArrayList();
-                for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
-                    list.add(createQueryFromElement(element));
-                }
-                lectureSlides.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
-                update = true;
+        // TODO make a way to clear out a lecture slide so it is empty?
+        if (isAdmin || isMod && lectureSlide.getElementsCount() > 0) {
+            final List<BasicDBObject> list = new ArrayList<>();
+            for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
+                list.add(createQueryFromElement(element));
             }
+            lectureSlides.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
+            update = true;
         }
-        /*if (update) {
-            UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), lectureSlideId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
-        }*/
-        return true;
+        return update;
     }
 
     /**
@@ -289,7 +284,7 @@ public final class SlideManager {
      */
     private static Lecturedata.LectureElement createElementFromQuery(final BasicDBObject query) throws DatabaseAccessException {
         final Lecturedata.LectureElement.Builder element = Lecturedata.LectureElement.newBuilder();
-        final String id = (String) query.get(SELF_ID);
+        final String lectureElementId = (String) query.get(SELF_ID);
         final int xPos = (int) query.get(X_POSITION);
         final int yPos = (int) query.get(Y_POSITION);
         final int xDim = (int) query.get(X_DIMENSION);
@@ -297,7 +292,7 @@ public final class SlideManager {
         final Lecturedata.LectureElement.ElementTypeCase blobType =
                 Lecturedata.LectureElement.ElementTypeCase.valueOf((int) query.get(SLIDE_BLOB_TYPE));
         final byte[] blob = (byte[]) query.get(SLIDE_BLOB);
-        element.setId(id);
+        element.setId(lectureElementId);
         element.setXPosition(xPos);
         element.setYPosition(yPos);
         element.setXDimension(xDim);

@@ -251,27 +251,46 @@ public final class AssignmentManager {
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-            try {
-                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
-            } catch (NullPointerException exception) {
+            if (corsor.get(LATE_POLICY_FUNCTION_TYPE) == null) {
                 latePolicy.setFunctionType(LatePolicy.FunctionType.STEPPING_FUNCTION);
+            } else {
+                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
             }
 
-            latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
+            if (corsor.get(LATE_POLICY_RATE) == null) {
+                latePolicy.setRate(1.0F);
+            } else {
+                latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
+            }
 
-            try {
-                final boolean subtractionType = (Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE); // true is cap score.
-                if (subtractionType) {
-                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
-                } else {
-                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
+            if (corsor.get(LATE_POLICY_SUBTRACTION_TYPE) == null) {
+                latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+            } else {
+                try {
+                    final Object subType = corsor.get(LATE_POLICY_SUBTRACTION_TYPE);
+                    if (subType != null) {
+                        final boolean subtractionType = (Boolean) subType; // true is cap score.
+                        if (subtractionType) {
+                            latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+                        } else {
+                            latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
+                        }
+                    } else {
+                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
+                    }
+                } catch (ClassCastException e) {
+                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
                 }
-            } catch (ClassCastException e) {
-                latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
             }
 
-            if (latePolicy.getFunctionType() == LatePolicy.FunctionType.STEPPING_FUNCTION) {
-                latePolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+            if (latePolicy.getFunctionType() != LatePolicy.FunctionType.EXPONENTIAL) {
+                if (corsor.get(LATE_POLICY_TIME_FRAME_TYPE) == null) {
+                    latePolicy.setTimeFrameType(LatePolicy.TimeFrame.DAY);
+                } else {
+                    latePolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+                }
+            } else {
+                latePolicy.setTimeFrameType(LatePolicy.TimeFrame.CONSTANT);
             }
         }
 

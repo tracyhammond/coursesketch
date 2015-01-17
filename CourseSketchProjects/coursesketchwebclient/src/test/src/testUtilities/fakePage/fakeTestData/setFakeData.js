@@ -1,7 +1,7 @@
 /**
  * loads all of the test data.
  */
-$(document).ready(function() {
+(function() {
     var barrier = new CallbackBarrier();
     console.log(barrier);
     var lectureBarrier = barrier.getCallback();
@@ -48,12 +48,12 @@ $(document).ready(function() {
     };
 
     var loadProblems = function() {
-        /*
-        for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLectureLocal(CourseSketch.fakeLectures[i]);
+        var localBarrier = new CallbackBarrier();
+        var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeProblems.length);
+        localBarrier.finalize(problemBarrier);
+        for (var i = 0; i < CourseSketch.fakeProblems.length; ++i) {
+            CourseSketch.dataManager.setCourseProblem(CourseSketch.fakeProblems[i], loadedCallback);
         }
-        */
-        problemBarrier();
     };
 
     /**
@@ -81,10 +81,10 @@ $(document).ready(function() {
 
         CourseSketch.dataManager.getAllExperiments = function(problemId, callback) {
             var results = [];
-            for(var i = 0; i<CourseSketch.fakeSketches.length; ++i){
-                if(CourseSketch.fakExperiments[i].problemId == problemId){
+            for (var i = 0; i<CourseSketch.fakeSketches.length; ++i){
+                if (CourseSketch.fakeExperiments[i].problemId == problemId){
                     results.push(CourseSketch.fakeExperiments[i]);
-                }   
+                }
             }
             callback(results);
         }
@@ -106,9 +106,9 @@ $(document).ready(function() {
     } else {
         var intervalVar = setInterval(function() {
             if (CourseSketch.dataManager.realDatabaseReady()) {
-            clearInterval(intervalVar);
-            databaseIsReadForLoading();
-        }
-    }, 100);
+                clearInterval(intervalVar);
+                databaseIsReadForLoading();
+            }
+        }, 50);
     }
-});
+})();

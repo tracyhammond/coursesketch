@@ -117,9 +117,9 @@ message SrlBankProblem {
 	optional SrlPermission accessPermission= 10;
 
 	enum QuestionType {
-		SKETCH = 1;
+		SKETCH = 1; // sketching
 		MULT_CHOICE = 2;
-		FREE_RESP = 3;
+		FREE_RESP = 3; // typing
 		CHECK_BOX = 4;
 	}
 }
