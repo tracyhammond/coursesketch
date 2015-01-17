@@ -128,8 +128,10 @@ function Graphics(canvasElement, sketchManager) {
      * @param stroke {Srl_Stroke} the stroke to be drawn.
      */
     function loadStroke(stroke) {
+        /*
         if (!isUndefined(lastStroke) && (lastStroke == stroke || lastStroke.getId() == stroke.getId())) {
             return; // we do not need to double path.
+            */
         var object = ps.project.getItem({data: {id : stroke.getId()} });
         if (!isUndefined(object) && object != null) {
             return; // already added to the sketch.
@@ -150,6 +152,7 @@ function Graphics(canvasElement, sketchManager) {
         if (!drawUpdate) {
             return;
         }
+        console.log(update);
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
