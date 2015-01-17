@@ -19,7 +19,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
-import netty.WebSocketServerIndexPage;
 
 import java.nio.ByteBuffer;
 
@@ -42,23 +41,41 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 @ChannelHandler.Sharable
 /* package private! */ class ServerSocketWrapper extends SimpleChannelInboundHandler<Object> {
 
-    private static final String WEBSOCKET_PATH = "/websocket";
-    private final boolean isSecure;
     /**
-     * An actual socket handler that is just wrapped by the
+     * The path at which you connect to the websocket.
+     */
+    private static final String WEBSOCKET_PATH = "/websocket";
+
+    /**
+     * True if the socket should be secured using SSL.
+     */
+    private final boolean isSecure;
+
+    /**
+     * An actual socket handler that is just wrapped by the.
      */
     private final ServerWebSocketHandler socketHandler;
+
+    /**
+     * Handles the handshake upgrade request.
+     */
     private WebSocketServerHandshaker handshaker;
 
     /**
-     * @param handler
-     * @param secure
+     * @param handler The handler for the server side of the socket.
+     * @param secure True if the socket should use SSL.
      */
     ServerSocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
         socketHandler = (ServerWebSocketHandler) handler;
         isSecure = secure;
     }
 
+    /**
+     * Sends a response via Http if needed.
+     * @param ctx The socket object.
+     * @param req The request that came in as Http.
+     * @param res The response in Http Format.
+     */
     private static void sendHttpResponse(
             final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
         // Generate an error page if response getStatus code is not OK (200).
@@ -70,7 +87,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
 
         // Send the response and close the connection if necessary.
-        ChannelFuture f = ctx.channel().writeAndFlush(res);
+        final ChannelFuture f = ctx.channel().writeAndFlush(res);
         if (!isKeepAlive(req) || res.status() != OK) {
             f.addListener(ChannelFutureListener.CLOSE);
         }
@@ -104,6 +121,11 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
     }
 
+    /**
+     * Handles http request.
+     * @param ctx The client socket context.
+     * @param req The request itself.
+     */
     private void handleHttpRequest(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         // Handle a bad request.
 
@@ -120,8 +142,8 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
         // Send the demo page and favicon.ico
         if ("/demo".equals(req.uri())) {
-            ByteBuf content = WebSocketServerIndexPage.getContent(getWebSocketLocation(req));
-            FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, OK, content);
+            final ByteBuf content = WebSocketServerIndexPage.getContent(getWebSocketLocation(req));
+            final FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, OK, content);
 
             res.headers().set(CONTENT_TYPE, "text/html; charset=UTF-8");
             setContentLength(res, content.readableBytes());
@@ -141,6 +163,8 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
     /**
      * Called to initiate a handshake to upgrade into a webSocket.
+     * @param ctx The context of the socket.
+     * @param req The Http Request that contains the information about the upgrade.
      */
     private void handShake(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         // Handshake
@@ -155,6 +179,11 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
     }
 
+    /**
+     * Handles the communication of a single frame.
+     * @param ctx The socket context.
+     * @param frame The message.
+     */
     private void handleWebSocketFrame(final ChannelHandlerContext ctx, final WebSocketFrame frame) {
 
         // Check for closing frame
@@ -182,11 +211,21 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
     }
 
+    /**
+     * Closes the socket.
+     * @param ctx The socket.
+     * @param frame The message that represents the closing of the socket.
+     */
     private void close(final ChannelHandlerContext ctx, final CloseWebSocketFrame frame) {
         handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
         socketHandler.nettyOnClose(ctx, frame.statusCode(), frame.reasonText());
     }
 
+    /**
+     * Called on message for binary data.
+     * @param ctx The socket.
+     * @param frame The binary message.
+     */
     private void onMessage(final ChannelHandlerContext ctx, final BinaryWebSocketFrame frame) {
         // This was the only way we were able to make the bytes able to be read.
         // There may be another way in the future to grab the bytes.

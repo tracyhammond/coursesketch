@@ -29,6 +29,11 @@ import java.nio.ByteBuffer;
 public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
+     * The code that is used by the Html aggregator.
+     */
+    private static final int OBJECT_AGGREGATOR_CODE = 8192;
+
+    /**
      * An eventloop?
      * Something needs to be done to ensure that it closes gracefully.
      */
@@ -81,19 +86,19 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                             WebSocketClientHandshakerFactory.newHandshaker(
                                     getURI(), WebSocketVersion.V13, null, false, new DefaultHttpHeaders()), this);
 
-            Bootstrap b = new Bootstrap();
+            final Bootstrap b = new Bootstrap();
             b.group(group)
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(final SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
+                            final ChannelPipeline p = ch.pipeline();
                             if (sslCtx != null) {
                                 p.addFirst(sslCtx.newHandler(ch.alloc(), getURI().getHost(), getURI().getPort()));
                             }
                             p.addLast(
                                     new HttpClientCodec(),
-                                    new HttpObjectAggregator(8192),
+                                    new HttpObjectAggregator(OBJECT_AGGREGATOR_CODE),
                                     //new WebSocketClientCompressionHandler(),
                                     handler);
                         }
@@ -129,7 +134,9 @@ public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
      * @param ctx
+     *         The context of the socket
      * @param cause
+     *         The error that was thrown
      */
     final void nettyOnError(final ChannelHandlerContext ctx, final Throwable cause) {
         onError(new NettySession(ctx), cause);
@@ -137,7 +144,9 @@ public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
      * @param ctx
+     *         The context of the socket.
      * @param wrap
+     *         The binary data of the message.
      */
     final void nettyOnMessage(final ChannelHandlerContext ctx, final ByteBuffer wrap) {
         onMessage(wrap);
