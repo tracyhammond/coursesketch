@@ -19,7 +19,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * @param args
      *            arguments from the command line.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final ProxyRunner run = new ProxyRunner(args);
         run.start();
     }
@@ -40,7 +40,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * @param args
      *            arguments from the command line.
      */
-    public ProxyRunner(final String[] args) {
+    public ProxyRunner(final String... args) {
         super(args);
         super.setPort(PROXY_PORT);
         super.setTimeoutTime(TIMEOUT_TIME);

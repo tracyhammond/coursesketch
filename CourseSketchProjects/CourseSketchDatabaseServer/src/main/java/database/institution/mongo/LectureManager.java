@@ -124,7 +124,7 @@ public final class LectureManager {
      * @param ids
      *         the list of list of permissions that is getting added.
      */
-    /*package-private*/static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>[] ids) {
+    /*package-private*/static void mongoInsertDefaultGroupId(final DB dbs, final String lectureId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);

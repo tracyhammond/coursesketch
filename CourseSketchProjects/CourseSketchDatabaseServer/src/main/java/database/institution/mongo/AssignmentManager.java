@@ -464,7 +464,7 @@ public final class AssignmentManager {
      * @param assignmentId the id of the assignment that is getting permissions.
      * @param ids the list of list of permissions that is getting added.
      */
-    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>[] ids) {
+    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);

@@ -25,6 +25,11 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
         super(parent);
     }
 
+    /**
+     * Called when this server connects to a client.
+     * @param ctx The context of the socket itself.
+     * @param req The request that contains data about the upgrade request.
+     */
     final void nettyOnConnect(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         onOpen(new NettySession(ctx));
     }
@@ -40,6 +45,11 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     }
 
+    /**
+     * Called if an error occurs.
+     * @param session The socket context of the error.
+     * @param cause The cause of the error.
+     */
     final void nettyOnError(final ChannelHandlerContext session, final Throwable cause) {
         onError(new NettySession(session), cause);
     }
@@ -57,6 +67,11 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     }
 
+    /**
+     * Called when the server receives a message.
+     * @param session The socket context.
+     * @param buf The binary message data.
+     */
     final void nettyOnMessage(final ChannelHandlerContext session, final ByteBuffer buf) {
         onMessage(new NettySession(session), buf);
     }
@@ -67,13 +82,20 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      *
      * @param session
      *         the session object that created the message
-     * @param req
+     * @param req The protobuf request object that represents what was sent to the server
      */
     @Override
+    @SuppressWarnings("checkstyle:designforextension")
     protected void onMessage(final SocketSession session, final Message.Request req) {
         System.out.println(req);
     }
 
+    /**
+     * Called when the server or the client closes the connection.
+     * @param session The socket session.
+     * @param statusCode The code number that represents the reason for closing.
+     * @param reason The human readable message that defines why the socket closed.
+     */
     final void nettyOnClose(final ChannelHandlerContext session, final int statusCode, final String reason) {
         super.onClose(new NettySession(session), statusCode, reason);
     }

@@ -22,7 +22,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      * @param args
      *            Arguments passed from the command line.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final LoginRunner run = new LoginRunner(args);
         run.start();
     }
@@ -31,7 +31,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      * @param args
      *            Arguments passed from the command line.
      */
-    public LoginRunner(final String[] args) {
+    public LoginRunner(final String... args) {
         super(args);
         super.setPort(LOGIN_PORT);
     }
