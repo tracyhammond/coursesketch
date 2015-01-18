@@ -22,7 +22,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      *
      * @param args Arguments passed from the command line.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final DatabaseRunner run = new DatabaseRunner(args);
         run.start();
     }
@@ -30,7 +30,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     /**
      * @param args Arguments passed from the command line.
      */
-    public DatabaseRunner(final String[] args) {
+    public DatabaseRunner(final String... args) {
         super(args);
         super.setPort(DATABASE_PORT);
     }

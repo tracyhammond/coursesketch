@@ -16,8 +16,15 @@ import java.util.concurrent.Future;
  * Created by gigemjt on 10/19/14.
  */
 public final class NettySession implements SocketSession {
+    /**
+     * The context of the socket.
+     */
     private final ChannelHandlerContext session;
 
+    /**
+     * Creates a wrapper around the channel context.
+     * @param context The context of the session (the socket itself).
+     */
     public NettySession(final ChannelHandlerContext context) {
         this.session = context;
     }
@@ -69,11 +76,14 @@ public final class NettySession implements SocketSession {
         System.out.println(frame);
         final ChannelFuture future = session.channel().write(frame);
         future.addListener(new GenericProgressiveFutureListener<ProgressiveFuture<Void>>() {
-            @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) throws Exception {
+
+            @SuppressWarnings("PMD.CommentRequired")
+            @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) {
                 System.out.println("huh? " + progress + ":" + total);
             }
 
-            @Override public void operationComplete(final ProgressiveFuture future) throws Exception {
+            /** {@inheritDoc} */
+            @Override public void operationComplete(final ProgressiveFuture future) {
                 System.out.println("COMPELTE");
             }
         });

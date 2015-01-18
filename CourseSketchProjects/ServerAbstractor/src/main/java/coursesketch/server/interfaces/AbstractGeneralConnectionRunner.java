@@ -115,7 +115,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * @param arguments
      *            the arguments from the server are then parsed.
      */
-    protected AbstractGeneralConnectionRunner(final String[] arguments) {
+    protected AbstractGeneralConnectionRunner(final String... arguments) {
         this.args = Arrays.copyOf(arguments, arguments.length);
         if (arguments.length >= 1 && arguments[0].equals("local")) {
             local = true;
