@@ -20,7 +20,7 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      * @param arguments
      *            the arguments from the server are then parsed.
      */
-    public SubmissionRunner(final String[] arguments) {
+    public SubmissionRunner(final String... arguments) {
         super(arguments);
         super.setPort(PORT);
     }
@@ -29,7 +29,7 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      * The main method that can be used to run a server.
      * @param args Input arguments that are running the server.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final SubmissionRunner run = new SubmissionRunner(args);
         run.start();
     }

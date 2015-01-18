@@ -27,10 +27,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * connections.
      */
     private final MultiConnectionManager manager;
-    /**
-     * The amount of time it takes before a connection times out.
-     */
-    private final long timeoutTime;
+
     /**
      * True if the server is allowing secure connections.
      */
@@ -56,8 +53,9 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * @param connectLocally
      *         True if the server is connecting locally.
      */
+    @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
-        this.timeoutTime = iTimeoutTime;
+        System.out.println("Currently time out time is not used " + iTimeoutTime);
         this.secure = iSecure;
         connectionServer = createServerSocket();
         manager = createConnectionManager(connectLocally, secure);
@@ -124,7 +122,9 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
 
     /**
      * Sets the context for ssl.
-     * @param iSslContext The Ssl context
+     *
+     * @param iSslContext
+     *         The Ssl context
      */
     final void setSslContext(final SslContext iSslContext) {
         this.sslContext = iSslContext;
@@ -134,16 +134,14 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * This method will be called once the {@link io.netty.channel.Channel} was registered. After the method returns this instance
      * will be removed from the {@link ChannelPipeline} of the {@link io.netty.channel.Channel}.
      *
-     * @param ch
+     * @param channel
      *         the {@link io.netty.channel.Channel} which was registered.
-     * @throws Exception
-     *         is thrown if an error occurs. In that case the {@link io.netty.channel.Channel} will be closed.
      */
     @Override
-    protected final void initChannel(final SocketChannel ch) throws Exception {
-        final ChannelPipeline pipeline = ch.pipeline();
+    protected final void initChannel(final SocketChannel channel) {
+        final ChannelPipeline pipeline = channel.pipeline();
         if (sslContext != null) {
-            pipeline.addFirst("ssl", sslContext.newHandler(ch.alloc()));
+            pipeline.addFirst("ssl", sslContext.newHandler(channel.alloc()));
         }
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(MAX_SIZE));

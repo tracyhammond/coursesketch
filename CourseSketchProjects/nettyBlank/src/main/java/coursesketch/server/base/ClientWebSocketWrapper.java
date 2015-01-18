@@ -32,7 +32,7 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
     /**
      * Returned during the handshake to know if the handshake was successful.
      */
-    private ChannelPromise handshakeFuture;
+    private ChannelPromise handshakePromise;
 
     /**
      * Wraps around the {@link ClientWebSocket}.
@@ -51,41 +51,56 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
      * @return {@link io.netty.channel.ChannelPromise}
      */
     public ChannelFuture handshakeFuture() {
-        return handshakeFuture;
+        return handshakePromise;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handlerAdded(final ChannelHandlerContext ctx) {
-        handshakeFuture = ctx.newPromise();
+        handshakePromise = ctx.newPromise();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         handshaker.handshake(ctx.channel());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void channelInactive(final ChannelHandlerContext ctx) {
         ctx.fireChannelInactive();
         socketHandler.onClose(0, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
         socketHandler.nettyOnError(ctx, cause);
-        if (!handshakeFuture.isDone()) {
-            handshakeFuture.setFailure(cause);
+        if (!handshakePromise.isDone()) {
+            handshakePromise.setFailure(cause);
         }
         ctx.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected void channelRead0(final ChannelHandlerContext ctx, final Object msg) throws Exception {
-        final Channel ch = ctx.channel();
+    protected void channelRead0(final ChannelHandlerContext ctx, final Object msg) {
+        final Channel channel = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
-            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            handshaker.finishHandshake(channel, (FullHttpResponse) msg);
             socketHandler.nettyOnOpen(ctx);
-            handshakeFuture.setSuccess();
+            handshakePromise.setSuccess();
             return;
         }
 
@@ -105,10 +120,10 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
             System.out.println("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
             System.out.println("WebSocket Client received closing");
-            ch.close();
+            channel.close();
             socketHandler.onClose(((CloseWebSocketFrame) frame).statusCode(), ((CloseWebSocketFrame) frame).reasonText());
         } else {
-            final RuntimeException exp = new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
+            final UnsupportedOperationException exp = new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
                     .getName()));
             socketHandler.nettyOnError(ctx, exp);
             throw exp;
@@ -123,6 +138,7 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
      * @param frame
      *         The specific binary data.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void onMessage(final ChannelHandlerContext ctx, final BinaryWebSocketFrame frame) {
         // This was the only way we were able to make the bytes able to be read.
         // There may be another way in the future to grab the bytes.

@@ -34,12 +34,6 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     private static final int OBJECT_AGGREGATOR_CODE = 8192;
 
     /**
-     * An eventloop?
-     * Something needs to be done to ensure that it closes gracefully.
-     */
-    private EventLoopGroup group;
-
-    /**
      * Creates a ConnectionWrapper to a destination using a given server.
      * <p/>
      * Note that this does not actually try and connect the wrapper you have to
@@ -76,7 +70,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         if (remoteAddress.isUnresolved()) {
             throw new ConnectionException("Remote address does not exist " + remoteAddress.getHostString());
         }
-        group = new NioEventLoopGroup();
+        final EventLoopGroup group = new NioEventLoopGroup();
         try {
             // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
             // If you change it to V00, ping is not supported and remember to change
@@ -86,17 +80,18 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                             WebSocketClientHandshakerFactory.newHandshaker(
                                     getURI(), WebSocketVersion.V13, null, false, new DefaultHttpHeaders()), this);
 
-            final Bootstrap b = new Bootstrap();
-            b.group(group)
+            final Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(group)
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
+                        @SuppressWarnings("PMD.CommentRequired")
                         @Override
-                        protected void initChannel(final SocketChannel ch) {
-                            final ChannelPipeline p = ch.pipeline();
+                        protected void initChannel(final SocketChannel channel) {
+                            final ChannelPipeline pipeline = channel.pipeline();
                             if (sslCtx != null) {
-                                p.addFirst(sslCtx.newHandler(ch.alloc(), getURI().getHost(), getURI().getPort()));
+                                pipeline.addFirst(sslCtx.newHandler(channel.alloc(), getURI().getHost(), getURI().getPort()));
                             }
-                            p.addLast(
+                            pipeline.addLast(
                                     new HttpClientCodec(),
                                     new HttpObjectAggregator(OBJECT_AGGREGATOR_CODE),
                                     //new WebSocketClientCompressionHandler(),
@@ -104,9 +99,9 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                         }
                     });
             System.out.println(this.getClass().getSimpleName() + " connecting to[" + getURI() + "]");
-            final Channel ch = b.connect(getURI().getHost(), getURI().getPort()).sync().channel();
+            final Channel channel = bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
             handler.handshakeFuture().sync();
-            System.err.println("Something happened?" + ch.metadata());
+            System.err.println("Something happened?" + channel.metadata());
         } catch (InterruptedException e) {
             e.printStackTrace();
             group.shutdownGracefully();
