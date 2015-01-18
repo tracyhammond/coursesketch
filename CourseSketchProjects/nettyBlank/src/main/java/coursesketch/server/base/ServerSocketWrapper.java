@@ -22,7 +22,6 @@ import io.netty.util.CharsetUtil;
 
 import java.nio.ByteBuffer;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpHeaders.Names.HOST;
 import static io.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static io.netty.handler.codec.http.HttpHeaders.setContentLength;
@@ -39,6 +38,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * This channel should be shareable!
  */
 @ChannelHandler.Sharable
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 /* package private! */ class ServerSocketWrapper extends SimpleChannelInboundHandler<Object> {
 
     /**
@@ -87,12 +87,15 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         }
 
         // Send the response and close the connection if necessary.
-        final ChannelFuture f = ctx.channel().writeAndFlush(res);
+        final ChannelFuture future = ctx.channel().writeAndFlush(res);
         if (!isKeepAlive(req) || res.status() != OK) {
-            f.addListener(ChannelFutureListener.CLOSE);
+            future.addListener(ChannelFutureListener.CLOSE);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {
         ctx.flush();
@@ -109,11 +112,9 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      *         belongs to
      * @param msg
      *         the message to handle
-     * @throws Exception
-     *         is thrown if an error occurred
      */
     @Override
-    protected final void channelRead0(final ChannelHandlerContext ctx, final Object msg) throws Exception {
+    protected final void channelRead0(final ChannelHandlerContext ctx, final Object msg) {
         if (msg instanceof FullHttpRequest) {
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -126,6 +127,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @param ctx The client socket context.
      * @param req The request itself.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void handleHttpRequest(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         // Handle a bad request.
 
@@ -137,18 +139,6 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
         // Allow only GET methods.
         if (req.method() != GET) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN));
-            return;
-        }
-
-        // Send the demo page and favicon.ico
-        if ("/demo".equals(req.uri())) {
-            final ByteBuf content = WebSocketServerIndexPage.getContent(getWebSocketLocation(req));
-            final FullHttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, OK, content);
-
-            res.headers().set(CONTENT_TYPE, "text/html; charset=UTF-8");
-            setContentLength(res, content.readableBytes());
-
-            sendHttpResponse(ctx, req, res);
             return;
         }
 
@@ -184,6 +174,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @param ctx The socket context.
      * @param frame The message.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void handleWebSocketFrame(final ChannelHandlerContext ctx, final WebSocketFrame frame) {
 
         // Check for closing frame
@@ -216,6 +207,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @param ctx The socket.
      * @param frame The message that represents the closing of the socket.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void close(final ChannelHandlerContext ctx, final CloseWebSocketFrame frame) {
         handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
         socketHandler.nettyOnClose(ctx, frame.statusCode(), frame.reasonText());
@@ -226,6 +218,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @param ctx The socket.
      * @param frame The binary message.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void onMessage(final ChannelHandlerContext ctx, final BinaryWebSocketFrame frame) {
         // This was the only way we were able to make the bytes able to be read.
         // There may be another way in the future to grab the bytes.

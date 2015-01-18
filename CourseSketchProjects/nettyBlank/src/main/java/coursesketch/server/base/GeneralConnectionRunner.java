@@ -20,6 +20,7 @@ import java.io.IOException;
 /**
  * Created by gigemjt on 10/19/14.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
 
     /**
@@ -54,7 +55,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @param arguments
      *         the arguments from the server are then parsed.
      */
-    protected GeneralConnectionRunner(final String[] arguments) {
+    protected GeneralConnectionRunner(final String... arguments) {
         super(arguments);
         super.setCertificatePath("/Users/gigemjt/workspace/coursesketch/config/localssl/server.crt");
         super.setKeystorePath("/Users/gigemjt/workspace/coursesketch/config/localssl/serverpk8.key");
@@ -66,7 +67,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @param args
      *         Input arguments that are running the server.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final GeneralConnectionRunner run = new GeneralConnectionRunner(args);
         run.start();
     }
@@ -155,8 +156,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             public void run() {
                 try {
                     final ChannelFuture strap = server.bind(getPort());
-                    final Channel ch = strap.sync().channel();
-                    ch.closeFuture().sync();
+                    final Channel channel = strap.sync().channel();
+                    channel.closeFuture().sync();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {

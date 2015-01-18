@@ -130,7 +130,7 @@ public final class DataRequestHandler {
                             final List<SrlCourse> courseLoop = instance.getUserCourses(userId);
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
-                            if (courseLoop.size() <= 0) {
+                            if (courseLoop.isEmpty()) {
                                 results.add(ResultBuilder.buildResult(courseSearch.build().toByteString(), NO_COURSE_MESSAGE, ItemQuery.SCHOOL));
                             } else {
                                 results.add(ResultBuilder.buildResult(courseSearch.build().toByteString(), ItemQuery.SCHOOL));

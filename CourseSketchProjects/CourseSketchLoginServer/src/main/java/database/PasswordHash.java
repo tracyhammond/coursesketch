@@ -3,17 +3,17 @@ package database;
 /*
  * Password Hashing With PBKDF2 (http://crackstation.net/hashing-security.htm).
  * Copyright (c) 2013, Taylor Hornby All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,11 +27,11 @@ package database;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.security.SecureRandom;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 /**
@@ -39,7 +39,7 @@ import java.security.spec.InvalidKeySpecException;
  * http://crackstation.net/hashing-security.htm
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.ShortVariable", "PMD.UselessParentheses", "PMD.AvoidCatchingGenericException",
-        "PMD.FieldDeclarationsShouldBeAtStartOfClass" })
+        "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.UseVarargs" })
 public final class PasswordHash {
 
     private PasswordHash() {

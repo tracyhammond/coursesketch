@@ -1,5 +1,15 @@
 package database.auth;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.RequestConverter;
+import database.auth.Authenticator.AuthenticationData;
+import org.bson.types.ObjectId;
+
+import java.util.List;
+
 import static database.DatabaseStringConstants.ACCESS_DATE;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.CLOSE_DATE;
@@ -7,18 +17,6 @@ import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
-
-import java.util.List;
-
-import org.bson.types.ObjectId;
-
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.BasicDBObject;
-
-import database.RequestConverter;
-import database.auth.Authenticator.AuthenticationData;
 
 /**
  * A mongo implementation of the {@link AuthenticationDataCreator}.
@@ -76,7 +74,7 @@ public final class MongoAuthenticator implements AuthenticationDataCreator {
      * @return a query created from the list of ids.
      */
     @SuppressWarnings({ "PMD.UselessParentheses" })
-    public static BasicDBObject createMongoCopyPermissionQeuery(final List<String>[] ids) {
+    public static BasicDBObject createMongoCopyPermissionQeuery(final List<String>... ids) {
         BasicDBObject updateQuery = null;
         BasicDBObject fieldQuery = null;
         for (int k = 0; k < ids.length; k++) {
