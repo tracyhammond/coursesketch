@@ -71,6 +71,7 @@ function HighlightText() {
                     var start = range.startContainer.parentNode;
                     console.log(range);
                     console.log(range.startContainer);
+                    console.log(getXPath(range.startContainer));
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
                     
@@ -111,6 +112,23 @@ function HighlightText() {
             }
         }
     }
+    
+    function getXPath (node, currentPath) {
+    /* this should suffice in HTML documents for selectable nodes, XML with namespaces needs more code */
+        currentPath = currentPath || '';
+        switch (node.nodeType) {
+            case 3:
+            case 4:
+                return getXPath(node.parentNode, 'text()[' + (document.evaluate('preceding-sibling::text()', node, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']');
+            case 1:
+                return getXPath(node.parentNode, node.nodeName + '[' + (document.evaluate('preceding-sibling::' + node.nodeName, node, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']' + (currentPath ? '/' + currentPath : ''));
+            case 9:
+                return '/' + currentPath;
+            default:
+                return '';
+        }
+    }
+    
     /**
      * @param {node} is a clone of the custom HTML template for highlighting text
      * This creates the element in the shadowRoot and turns highlight mode on by default
