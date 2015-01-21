@@ -1,7 +1,6 @@
 package database.institution.mongo;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -20,14 +19,12 @@ import database.user.UserClient;
 import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
-import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.submission.Submission.SrlExperiment;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -48,7 +45,7 @@ import static database.DatabaseStringConstants.USER_LIST;
  * @author gigemjt
  *
  */
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({ "PMD.CommentRequired", "PMD.TooManyMethods" })
 public final class MongoInstitution implements Institution {
     /**
      * A single instance of the mongo institution.
@@ -407,8 +404,7 @@ public final class MongoInstitution implements Institution {
 
     @Override
     public String insertLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        final String resultId = SlideManager.mongoInsertSlide(getInstance().auth, getInstance().database, userId, lectureSlide);
-        return resultId;
+        return SlideManager.mongoInsertSlide(getInstance().auth, getInstance().database, userId, lectureSlide);
     }
 
     /*
@@ -495,37 +491,14 @@ public final class MongoInstitution implements Institution {
      * (non-Javadoc)
      *
      * @see
-     * database.institution.mongo.Institution#mongoInsertSubmission(protobuf
-     * .srl.request.Message.Request)
-     */
-    @Override
-    public void insertSubmission(final Request req) throws DatabaseAccessException {
-        try {
-            final SrlExperiment exp = SrlExperiment.parseFrom(req.getOtherData());
-            insertSubmission(exp.getProblemId(), req.getServersideId(), exp.getSubmission().getId(), true);
-            return;
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        }
-        // FUTURE: change how this process works for instructors!
-            //final SrlSolution exp = SrlSolution.parseFrom(req.getOtherData());
-            throw new DatabaseAccessException("Instructors need to be authenticated first!");
-            // SubmissionManager.mongoInsertSubmission(exp.getProblemBankId(),
-            // exp.getProblemBankId(), exp.getSubmission().getId(), false);
-            // return;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
      * database.institution.mongo.Institution#mongoInsertSubmission(java.lang
      * .String, java.lang.String, java.lang.String, boolean)
      */
     @Override
-    public void insertSubmission(final String problemId, final String userId, final String submissionId, final boolean experiment)
+    public void insertSubmission(final String userId, final String problemId, final String submissionId,
+            final boolean experiment)
             throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(getInstance().database, problemId, userId, submissionId, experiment);
+        SubmissionManager.mongoInsertSubmission(getInstance().database, userId, problemId, submissionId, experiment);
     }
 
     /*

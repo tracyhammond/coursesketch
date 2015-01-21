@@ -23,6 +23,16 @@ public class DatabaseAccessException extends Exception {
     }
 
     /**
+     * Accepts a message and if it is recoverable error.
+     * @param exception the specific exception being throw.
+     * @param iRecoverable True if the error is recoverable.
+     */
+    public DatabaseAccessException(final Exception exception, final boolean iRecoverable) {
+        super(exception);
+        this.recoverable = iRecoverable;
+    }
+
+    /**
      * Only takes in a message assumes the exception is not recoverable.
      * @param string A message of the error.
      * @param exception The exception that was thrown before this.

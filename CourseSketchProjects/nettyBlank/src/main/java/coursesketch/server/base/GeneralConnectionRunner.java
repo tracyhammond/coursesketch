@@ -2,7 +2,6 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
-import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -12,8 +11,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 
 import javax.net.ssl.SSLException;
 import java.io.BufferedReader;
@@ -23,39 +20,56 @@ import java.io.IOException;
 /**
  * Created by gigemjt on 10/19/14.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
+
+    /**
+     * 1000ms = 1s.
+     */
+    private static final int ONE_SECOND = 1000;
 
     /**
      * Context for SSL to take place.
      */
     private SslContext sslCtx;
 
+    /**
+     * The Netty server that handles communication.
+     */
     private ServerBootstrap server;
 
+    /**
+     * The group in charge of managing other groups.
+     */
     private EventLoopGroup bossGroup;
 
-    private EventLoopGroup workerGroup;
-
     /**
-     * The main method that can be used to run a server.
-     * @param args Input arguments that are running the server.
+     * Performs actual work on the server.
      */
-    public static void main(final String[] args) {
-        final GeneralConnectionRunner run = new GeneralConnectionRunner(args);
-        run.start();
-    }
+    private EventLoopGroup workerGroup;
 
     /**
      * Parses the arguments from the server. This only expects a single argument
      * which is if it is local.
      *
      * @param arguments
-     *            the arguments from the server are then parsed.
+     *         the arguments from the server are then parsed.
      */
-    protected GeneralConnectionRunner(final String[] arguments) {
+    protected GeneralConnectionRunner(final String... arguments) {
         super(arguments);
         super.setCertificatePath("/Users/gigemjt/workspace/coursesketch/config/localssl/server.crt");
         super.setKeystorePath("/Users/gigemjt/workspace/coursesketch/config/localssl/serverpk8.key");
+    }
+
+    /**
+     * The main method that can be used to run a server.
+     *
+     * @param args
+     *         Input arguments that are running the server.
+     */
+    public static void main(final String... args) {
+        final GeneralConnectionRunner run = new GeneralConnectionRunner(args);
+        run.start();
     }
 
     /**
@@ -95,8 +109,10 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     /**
      * Configures the SSL for the server.
      *
-     * @param iKeystorePath     the location of the keystore.
-     * @param iCertificatePath the password for the keystore.
+     * @param iKeystorePath
+     *         the location of the keystore.
+     * @param iCertificatePath
+     *         the password for the keystore.
      */
     @Override
     protected final void configureSSL(final String iKeystorePath, final String iCertificatePath) {
@@ -136,12 +152,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     protected final void startServer() {
         final Thread serverThread = new Thread() {
             @Override
-            @SuppressWarnings({"PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
+            @SuppressWarnings({ "PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
             public void run() {
                 try {
                     final ChannelFuture strap = server.bind(getPort());
-                    final Channel ch = strap.sync().channel();
-                    ch.closeFuture().sync();
+                    final Channel channel = strap.sync().channel();
+                    channel.closeFuture().sync();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
@@ -152,7 +168,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         };
         serverThread.start();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(ONE_SECOND);
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
             System.out.println("Server is running hopefully = " + assumedRunning);
             getSocketInitailizerInstance().reconnect();
@@ -164,11 +180,15 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     /**
      * Parses extra commands that are taken in through the input line.
      *
-     * @param command The command that is being processed.
-     * @param sysin   Used for additional input.
+     * @param command
+     *         The command that is being processed.
+     * @param sysin
+     *         Used for additional input.
      * @return True if the message command is processed.
-     * @throws java.io.IOException Thrown if there is a problem reading input.
+     * @throws java.io.IOException
+     *         Thrown if there is a problem reading input.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     @Override
     protected boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
         return false;
@@ -198,17 +218,22 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
      *
-     * @param timeOut  length of specified timeout, in miliseconds
-     * @param isSecure <code>true</code> if the servlet should be secure,
-     *                 <code>false</code> otherwise
-     * @param isLocal  <code>true</code> if the server is running locally,
-     *                 <code>false</code> otherwise
+     * @param timeOut
+     *         length of specified timeout, in miliseconds
+     * @param isSecure
+     *         <code>true</code> if the servlet should be secure,
+     *         <code>false</code> otherwise
+     * @param isLocal
+     *         <code>true</code> if the server is running locally,
+     *         <code>false</code> otherwise
      * @return a new connection servlet for this server
      */
+    @SuppressWarnings("checkstyle:designforextension")
     @Override
     protected ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
     }
+
     /**
      * @return true if the server has not been started (basically run most has not been called yet)
      */
