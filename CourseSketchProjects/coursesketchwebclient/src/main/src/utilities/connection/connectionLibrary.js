@@ -63,7 +63,6 @@ function Connection(uri, encrypted, attemptReconnect) {
                 }
             };
             websocket.onmessage = function(evt) {
-                console.log(evt.data.length);
                 try {
                     var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
                     // Decode the Request
@@ -88,6 +87,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                     } else if ((msg.requestType == MessageType.DATA_REQUEST || msg.requestType == MessageType.DATA_INSERT
                         || msg.requestType == MessageType.DATA_UPDATE || msg.requestType == MessageType.DATA_REMOVE) && onSchoolData) {
                         console.log("getting from school data");
+                        console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType == MessageType.ERROR) {
                         console.log(msg.getResponseText());

@@ -94,9 +94,14 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * @param length The length of the message itself.
      * @see {@link ClientWebSocket#onMessage(ByteBuffer)}
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     @OnWebSocketMessage
     public final void jettyOnMessage(final byte[] data, final int offset, final int length) {
-        onMessage(ByteBuffer.wrap(data, offset, length));
+        try {
+            onMessage(ByteBuffer.wrap(data, offset, length));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

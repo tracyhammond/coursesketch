@@ -11,12 +11,13 @@
 		<module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
+		<module>CourseSketchProjects/nettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
-        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+
 	</modules>
 
 	<issueManagement>
@@ -29,7 +30,7 @@
 			<id>maven-3</id>
 			<activation>
 				<file>
-					<!-- This employs that the basedir expression is only recognized by 
+					<!-- This employs that the basedir expression is only recognized by
 						Maven 3.x (see MNG-2363) -->
 					<exists>${basedir}</exists>
 				</file>
@@ -421,12 +422,16 @@
 		<mockitoVersion>1.9.5</mockitoVersion>
 		<puppyVersion>[5.6,)</puppyVersion>
 		<junitVersion>4.11</junitVersion>
+		<fongoVersion>1.5.9</fongoVersion>
+		<slf4jVersion>1.7.9</slf4jVersion>
+		<log4jVersion>2.1</log4jVersion>
 		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
         <powermock.version>1.5.6</powermock.version>
+        <easymock.version>3.3</easymock.version>
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
-        <pmdVersion>3.2</pmdVersion>
+        <pmdVersion>3.3</pmdVersion>
 
         <!-- testing -->
 		<testLevel>85</testLevel>
@@ -486,6 +491,24 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4jVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4jVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 			<version>${puppyVersion}</version>
@@ -510,7 +533,7 @@
 		<dependency>
 			<groupId>com.github.fakemongo</groupId>
 			<artifactId>fongo</artifactId>
-			<version>1.5.5</version>
+			<version>${fongoVersion}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -534,5 +557,18 @@
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.1</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 </project>

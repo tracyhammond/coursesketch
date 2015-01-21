@@ -20,7 +20,6 @@ import io.netty.handler.ssl.SslContext;
 import utilities.ConnectionException;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
@@ -30,10 +29,9 @@ import java.nio.ByteBuffer;
 public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
-     * An eventloop?
-     * Something needs to be done to ensure that it closes gracefully.
+     * The code that is used by the Html aggregator.
      */
-    private EventLoopGroup group;
+    private static final int OBJECT_AGGREGATOR_CODE = 8192;
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -42,20 +40,21 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * either explicitly call {@link coursesketch.server.interfaces.AbstractClientWebSocket#connect()} or call
      * {@link coursesketch.server.interfaces.AbstractClientWebSocket#send(java.nio.ByteBuffer)}.
      *
-     * @param iDestination  The location the server is going as a URI. ex:
-     *                      http://example.com:1234
+     * @param iDestination
+     *         The location the server is going as a URI. ex:
+     *         http://example.com:1234
      * @param iParentServer
-     *                      The server that is using this connection wrapper.
+     *         The server that is using this connection wrapper.
      */
     protected ClientWebSocket(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
 
-
     /**
      * Attempts to connect to the server at URI with a webSocket Client.
      *
-     * @throws ConnectionException Throws an exception if an error occurs during the connection attempt.
+     * @throws ConnectionException
+     *         Throws an exception if an error occurs during the connection attempt.
      */
     @Override
     protected final void connect() throws ConnectionException {
@@ -71,7 +70,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         if (remoteAddress.isUnresolved()) {
             throw new ConnectionException("Remote address does not exist " + remoteAddress.getHostString());
         }
-        group = new NioEventLoopGroup();
+        final EventLoopGroup group = new NioEventLoopGroup();
         try {
             // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
             // If you change it to V00, ping is not supported and remember to change
@@ -81,27 +80,28 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                             WebSocketClientHandshakerFactory.newHandshaker(
                                     getURI(), WebSocketVersion.V13, null, false, new DefaultHttpHeaders()), this);
 
-            Bootstrap b = new Bootstrap();
-            b.group(group)
+            final Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(group)
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
+                        @SuppressWarnings("PMD.CommentRequired")
                         @Override
-                        protected void initChannel(final SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
+                        protected void initChannel(final SocketChannel channel) {
+                            final ChannelPipeline pipeline = channel.pipeline();
                             if (sslCtx != null) {
-                                p.addFirst(sslCtx.newHandler(ch.alloc(), getURI().getHost(), getURI().getPort()));
+                                pipeline.addFirst(sslCtx.newHandler(channel.alloc(), getURI().getHost(), getURI().getPort()));
                             }
-                            p.addLast(
+                            pipeline.addLast(
                                     new HttpClientCodec(),
-                                    new HttpObjectAggregator(8192),
+                                    new HttpObjectAggregator(OBJECT_AGGREGATOR_CODE),
                                     //new WebSocketClientCompressionHandler(),
                                     handler);
                         }
                     });
             System.out.println(this.getClass().getSimpleName() + " connecting to[" + getURI() + "]");
-            final Channel ch = b.connect(getURI().getHost(), getURI().getPort()).sync().channel();
+            final Channel channel = bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
             handler.handshakeFuture().sync();
-            System.err.println("Something happened?" + ch.metadata());
+            System.err.println("Something happened?" + channel.metadata());
         } catch (InterruptedException e) {
             e.printStackTrace();
             group.shutdownGracefully();
@@ -112,14 +112,16 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * Accepts messages and sends the request to the correct server and holds
      * minimum client state.
      *
-     * @param buffer The message that is received by this object.
+     * @param buffer
+     *         The message that is received by this object.
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
 
     }
 
     /**
-     * @param ctx the context for the channel.
+     * @param ctx
+     *         the context for the channel.
      */
     final void nettyOnOpen(final ChannelHandlerContext ctx) {
         onOpen(new NettySession(ctx));
@@ -127,16 +129,19 @@ public class ClientWebSocket extends AbstractClientWebSocket {
 
     /**
      * @param ctx
+     *         The context of the socket
      * @param cause
+     *         The error that was thrown
      */
     final void nettyOnError(final ChannelHandlerContext ctx, final Throwable cause) {
         onError(new NettySession(ctx), cause);
     }
 
     /**
-     *
      * @param ctx
+     *         The context of the socket.
      * @param wrap
+     *         The binary data of the message.
      */
     final void nettyOnMessage(final ChannelHandlerContext ctx, final ByteBuffer wrap) {
         onMessage(wrap);

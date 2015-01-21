@@ -16,7 +16,15 @@ import java.util.concurrent.Future;
  * Created by gigemjt on 10/19/14.
  */
 public final class NettySession implements SocketSession {
+    /**
+     * The context of the socket.
+     */
     private final ChannelHandlerContext session;
+
+    /**
+     * Creates a wrapper around the channel context.
+     * @param context The context of the session (the socket itself).
+     */
     public NettySession(final ChannelHandlerContext context) {
         this.session = context;
     }
@@ -55,7 +63,8 @@ public final class NettySession implements SocketSession {
      * Initiates the asynchronous transmission of a binary message. This method returns before the message is transmitted.
      * Developers may use the returned Future object to track progress of the transmission.
      *
-     * @param buffer the data being sent
+     * @param buffer
+     *         the data being sent
      * @return the Future object representing the send operation.
      */
     @Override
@@ -67,11 +76,14 @@ public final class NettySession implements SocketSession {
         System.out.println(frame);
         final ChannelFuture future = session.channel().write(frame);
         future.addListener(new GenericProgressiveFutureListener<ProgressiveFuture<Void>>() {
-            @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) throws Exception {
+
+            @SuppressWarnings("PMD.CommentRequired")
+            @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) {
                 System.out.println("huh? " + progress + ":" + total);
             }
 
-            @Override public void operationComplete(final ProgressiveFuture future) throws Exception {
+            /** {@inheritDoc} */
+            @Override public void operationComplete(final ProgressiveFuture future) {
                 System.out.println("COMPELTE");
             }
         });
@@ -83,8 +95,10 @@ public final class NettySession implements SocketSession {
      * <p/>
      * This will enqueue a graceful close to the remote endpoint.
      *
-     * @param statusCode the status code
-     * @param reason     the (optional) reason. (can be null for no reason)
+     * @param statusCode
+     *         the status code
+     * @param reason
+     *         the (optional) reason. (can be null for no reason)
      * @see #close()
      */
     @Override
@@ -93,7 +107,8 @@ public final class NettySession implements SocketSession {
     }
 
     /**
-     * @param other a different JettySession.
+     * @param other
+     *         a different JettySession.
      * @return true if the {@link org.eclipse.jetty.websocket.api.Session} are equal.
      */
     @Override
