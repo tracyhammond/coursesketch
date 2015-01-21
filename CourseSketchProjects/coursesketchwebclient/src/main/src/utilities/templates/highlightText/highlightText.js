@@ -72,15 +72,23 @@ function HighlightText() {
                     console.log(range);
                     console.log(range.startContainer);
                     console.log(getXPath(range.startContainer));
+                    console.log(range.startOffset);
+                    console.log(getXPath(range.endContainer));
+                    console.log(range.endOffset);
+                    testData = [getXPath(range.startContainer), range.startOffset, getXPath(range.endContainer), range.endOffset];
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
+                    //$(".highlightedText").replaceWith(function() { return $(this).contents(); } );
+                    $(".highlightedText").contents().unwrap();
+                    document.normalize();
+                    restoreSelection();
                     
                     var count = 0; // Used to count how deep in the sibling list the start container is
                     var sibList = [];
                     var theId = undefined;
                     console.log(start);
                     console.log(start.id);
-                    while (start.id == undefined || start.id == "") {
+                    /*while (start.id == undefined || start.id == "") {
                         console.log('entering loop');
                         // If previous sibling is defined, move to previous sibling and increase count
                         if (start.previousSibling == null) {
@@ -98,7 +106,7 @@ function HighlightText() {
                         if (start == null) {
                             break;
                         }
-                    }
+                    }*/
                     if (start != null) {
                         theId = start.id;
                     }
@@ -128,6 +136,27 @@ function HighlightText() {
                 return '';
         }
     }
+    
+    
+    function restoreSelection () {
+        var selectionDetails = testData;
+            if (typeof window.getSelection != 'undefined') {
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                var range = document.createRange();
+                range.setStart(document.evaluate(selectionDetails[0], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(selectionDetails[1]));
+                range.setEnd(document.evaluate(selectionDetails[2], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(selectionDetails[3]));
+                selection.addRange(range);
+                var newNode = document.createElement('span');
+                newNode.setAttribute('class', 'highlightedText');
+                newNode.setAttribute('style', 'background:' + highlightColor + '; color:' + textColor);
+                newNode.appendChild(range.extractContents());
+                range.insertNode(newNode);
+                console.log("I DID IT MOM");
+            }
+    }
+    
+    
     
     /**
      * @param {node} is a clone of the custom HTML template for highlighting text
