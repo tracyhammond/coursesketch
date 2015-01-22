@@ -74,7 +74,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     function getCourse(courseId, courseCallback) {
         // quick and dirty this is in ram (not in local memory)
         if (!isUndefined(userCourses[courseId])) {
-            if (userCourses[courseId] == nonExistantValue) {
+            if (userCourses[courseId] == nonExistantValue || isUndefined(userCourses[courseId]) || userCourses[courseId] == null) {
                 courseCallback(new DatabaseException("Course does not exist", "Getting courses with id " + courseId));
                 return;
             }
@@ -263,7 +263,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *            courseId
      */
     function insertCourse(course, courseCallback, serverCallback) {
-        if (isUndefined(course.id)) {
+        if (isUndefined(course.id) || course.id == null) {
             var courseId = generateUUID();
             course.id = courseId;
         }
