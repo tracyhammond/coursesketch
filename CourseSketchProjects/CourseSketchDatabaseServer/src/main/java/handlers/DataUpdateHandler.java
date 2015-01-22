@@ -12,6 +12,7 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.School;
 
 import java.util.ArrayList;
 
@@ -76,6 +77,12 @@ public final class DataUpdateHandler {
                         case LECTURESLIDE: {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
                             instance.updateLectureSlide(userId, lectureSlide);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case COURSE: {
+                            final School.SrlCourse course = School.SrlCourse.parseFrom(itemSet.getData());
+                            instance.updateCourse(userId, course);
                             results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
                         }
                         break;

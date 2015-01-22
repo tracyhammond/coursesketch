@@ -441,17 +441,15 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
+    public void updateCourse(final String userId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
+        CourseManager.mongoUpdateCourse(getInstance().auth, getInstance().database, course.getId(), userId, course);
+    }
+
+    @Override
     public void updateLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         SlideManager.mongoUpdateLectureSlide(getInstance().auth, getInstance().database, lectureSlide.getId(), userId, lectureSlide);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * database.institution.mongo.Institution#putUserInCourse(java.lang.String,
-     * java.lang.String)
-     */
     @Override
     public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
         // this actually requires getting the data from the course itself
@@ -476,24 +474,11 @@ public final class MongoInstitution implements Institution {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * database.institution.mongo.Institution#getUserCourses(java.lang.String)
-     */
     @Override
     public ArrayList<SrlCourse> getUserCourses(final String userId) throws AuthenticationException, DatabaseAccessException {
         return this.getCourses(UserClient.getUserCourses(userId), userId);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * database.institution.mongo.Institution#mongoInsertSubmission(java.lang
-     * .String, java.lang.String, java.lang.String, boolean)
-     */
     @Override
     public void insertSubmission(final String userId, final String problemId, final String submissionId,
             final boolean experiment)
@@ -501,14 +486,6 @@ public final class MongoInstitution implements Institution {
         SubmissionManager.mongoInsertSubmission(getInstance().database, userId, problemId, submissionId, experiment);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * database.institution.mongo.Institution#mongoGetExperimentAsUser(java.
-     * lang.String, java.lang.String, java.lang.String,
-     * coursesketch.server.interfaces.MultiConnectionManager)
-     */
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
@@ -516,14 +493,6 @@ public final class MongoInstitution implements Institution {
         SubmissionManager.mongoGetExperiment(getInstance().database, userId, problemId, sessionInfo, internalConnections);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * database.institution.mongo.Institution#mongoGetExperimentAsInstructor
-     * (java.lang.String, java.lang.String, java.lang.String,
-     * coursesketch.server.interfaces.MultiConnectionManager, com.google.protobuf.ByteString)
-     */
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {

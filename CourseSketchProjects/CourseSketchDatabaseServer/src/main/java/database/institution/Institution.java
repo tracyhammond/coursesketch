@@ -218,9 +218,9 @@ public interface Institution {
     String insertBankProblem(String userId, SrlBankProblem problem) throws AuthenticationException;
 
     /**
-     * Inserts the lecture into the the database.
+     * Updates an existing lecture in the database.
      *
-     * Upon insertion 1 step happen:
+     * Upon updating 1 step happen:
      * <ol>
      * <li>the lecture is updated in a lecture collection</li>
      * </ol>
@@ -237,6 +237,27 @@ public interface Institution {
      *
      */
     void updateLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Updates an existing course in the database.
+     *
+     * Upon updating 1 step happen:
+     * <ol>
+     * <li>the course is updated in a lecture collection</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param course
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
+     *
+     */
+    void updateCourse(final String userId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the lecture into the the database.
