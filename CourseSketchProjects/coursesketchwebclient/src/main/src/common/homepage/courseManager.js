@@ -4,10 +4,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 
-(function(document) {
+(function() {
 
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
-    var localScope = CourseSketch.courseManagement;
+    var courseManagement = CourseSketch.courseManagement;
 
     /**
      * Polls for all updates to the user and then shows the courses.
@@ -15,22 +15,18 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
      */
-    CourseSketch.courseManagement.initializeCourseManagment = function(localDocument) {
-        var doc = document;
-        if (!isUndefined(localDocument)) {
-            doc = localDocument;
-        }
-        if (!doc.querySelector('#class_list_column')) {
+    CourseSketch.courseManagement.initializeCourseManagment = function() {
+        if (!document.querySelector('#class_list_column')) {
             return false;
         }
-        doc.querySelector('#class_list_column').appendChild(waitingIcon);
+        document.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         var loadCourses = function(courseList) {
             if (waitingIcon.isRunning()) {
                 waitingIcon.finishWaiting();
             }
-            localScope.showCourses(courseList);
+            courseManagement.showCourses(courseList);
         };
         if (CourseSketch.dataManager.isDatabaseReady()) {
             CourseSketch.dataManager.pollUpdates(function() {
@@ -52,12 +48,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * Given a list of {@link SrlCourse} a bunch of school items are built then
      * added to the clss_list_column div.
      */
-    localScope.showCourses = function showCourses(courseList, localDocument) {
-        var doc = document;
-        if (!isUndefined(localDocument)) {
-            doc = localDocument;
-        }
-
+    courseManagement.showCourses = function showCourses(courseList) {
         var builder = new SchoolItemBuilder();
         builder.setList(courseList);
         if (CourseSketch.connection.isInstructor) {
@@ -65,19 +56,19 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
         builder.showImage = false;
         builder.setBoxClickFunction(function(course) {
-            courseClickerFunction(course, doc)
+            courseManagement.courseClicked(course);
         });
-        builder.build(doc.querySelector('#class_list_column'));
-        clearLists(2, localDocument);
+        builder.build(document.querySelector('#class_list_column'));
+        setNotSelectedMessage(2);
     };
 
     /**
-     * Called when a user clicks on a course school item. This then creates the
-     * list of assignments for that course and then displays them.
+     * Called when a user clicks on a course school item.
+     * This loads the assignments from the database then calls "showAssignments" to display them.
      */
-    function courseClickerFunction(course, doc) {
+    courseManagement.courseClicked = function(course) {
         var classColumn = document.querySelector('#class_list_column');
-        clearLists(2, doc);
+        setNotSelectedMessage(2);
 
         // note that query selector does not work on ids that start with a number.
         changeSelection(classColumn.querySelector(cssEscapeId(course.id)), courseSelectionManager);
@@ -85,41 +76,14 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         problemSelectionManager.clearAllSelectedItems();
 
         // waiting icon
-        doc.querySelector('#assignment_list_column').appendChild(waitingIcon);
+        document.querySelector('#assignment_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
 
-        function buildSchoolList(assignmentList) {
-            console.log(assignmentList);
-            var builder = new SchoolItemBuilder();
-            builder.setEmptyListMessage('There are no assignments for this course!');
-            if (assignmentList == "NONEXISTANT_VALUE") {
-                if (!(course.getState().accessible)) {
-                    builder
-                            .setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
-                }
-                assignmentList = [];
-            }
-
-            builder.setList(assignmentList);
-            builder.showImage = false;
-
-            builder.setBoxClickFunction(function(assignment) {
-                assignmentClickerFunction(assignment, doc);
-            });
-            builder.build(doc.querySelector('#assignment_list_column'));
-            doc.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
-            if (CourseSketch.dataManager.getState("isInstructor")) {
-                try {
-                    replaceEditContent('html/instructor/course_management_frames/edit_course.html');
-                } catch (exception) {
-
-                }
-                showButton('assignment_button');
-            }
-        }
         // we can make this faster because we have the list of assignments
-        CourseSketch.dataManager.getAssignments(course.assignmentList, buildSchoolList, function(assignmentList) {
-            buildSchoolList(assignmentList);
+        CourseSketch.dataManager.getAssignments(course.assignmentList, function(assignmentList) {
+            courseManagement.showAssignments(assignmentList, course);
+        }, function(assignmentList) {
+            courseManagement.showAssignments(assignmentList, course);
             if (waitingIcon.isRunning()) {
                 waitingIcon.finishWaiting(); // stops the
                 // waiting icon
@@ -127,7 +91,35 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         });
     }
 
-    function assignmentClickerFunction(assignment) {
+    /**
+     * Called to show a specific set of assignments with the given list.
+     */
+    courseManagement.showAssignments = function(assignmentList, course) {
+        console.log(assignmentList);
+        var builder = new SchoolItemBuilder();
+        builder.setEmptyListMessage('There are no assignments for this course!');
+        if (assignmentList instanceof CourseSketch.DatabaseException) {
+            if (!isUndefined(course) && !(course.getState().accessible)) {
+                builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
+            }
+            assignmentList = [];
+        }
+
+        builder.setList(assignmentList);
+        builder.showImage = false;
+
+        builder.setBoxClickFunction(function(assignment) {
+            courseManagement.assignmentClicked(assignment);
+        });
+        builder.build(document.querySelector('#assignment_list_column'));
+        document.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
+    }
+
+
+    /**
+     * Called when an assignment is clicked.
+     */
+    courseManagement.assignmentClicked = function(assignment) {
         var assignmentColumn = document.querySelector('#assignment_list_column');
         changeSelection(assignmentColumn.querySelector(cssEscapeId(assignment.id)), assignmentSelectionManager);
         problemSelectionManager.clearAllSelectedItems();
@@ -135,51 +127,54 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
-        CourseSketch.dataManager
-                .getCourseProblems(
-                        assignment.problemList,
-                        function(problemList) {
-                            var builder = new SchoolItemBuilder();
-                            builder.setEmptyListMessage('There are no problems for this assignment!');
-                            if (problemList == "NONEXISTANT_VALUE") {
-                                problemList = [];
-                                if (!assignment.getState().accessible) {
-                                    builder
-                                            .setEmptyListMessage('This assignment is currently not avialable. Please contact the instructor to let you view the problems');
-                                }
-                            }
-                            for (var i = 0; i < problemList.length; i++) {
-                                var q = problemList[i].description;
-                                if (isUndefined(q) || q == "") {
-                                    var prob = problemList[i];
-                                    if (!isUndefined(prob.problemInfo)) {
-                                        var text = prob.getProblemInfo().getQuestionText();
-                                        problemList[i].setDescription(text);
-                                    } else {
-                                        problemList[i].setDescription("No Description or question text");
-                                    }
-                                }
-                            }
-                            builder.setList(problemList);
-                            builder.showImage = false;
-                            builder.setBoxClickFunction(problemClickerFunction);
-                            if (waitingIcon.isRunning()) {
-                                waitingIcon.finishWaiting(); // stops the
-                                // waiting icon
-                            }
-                            builder.build('problem_list_column');
-                            if (CourseSketch.dataManager.getState("isInstructor")) {
-                                try {
-                                    replaceEditContent('html/instructor/course_managment_frames/edit_assignment.html');
-                                } catch (exception) {
-
-                                }
-                                showButton('problem_button');
-                            }
-                        });
+        CourseSketch.dataManager.getCourseProblems(assignment.problemList,function(problemList) {
+            courseManagement.showProblems(problemList, assignment);
+        }, function(problemList) {
+            courseManagement.showProblems(problemList, assignment);
+            if (waitingIcon.isRunning()) {
+                waitingIcon.finishWaiting(); // stops the
+                // waiting icon
+            }
+        });
     }
 
-    function problemClickerFunction(problem) {
+    /**
+     * Displays the list of problems for the user to pick from.
+     * @param problemList The list of problems that are wanting to be showed
+     * @param assignment (optional) The assignment that created this problem list
+     */
+    courseManagement.showProblems = function(problemList, assignment) {
+        var builder = new SchoolItemBuilder();
+        builder.setEmptyListMessage('There are no problems for this assignment!');
+        if (problemList instanceof CourseSketch.DatabaseException) {
+            problemList = [];
+            if (!isUndefined(assignment) && !assignment.getState().accessible) {
+                builder.setEmptyListMessage('This assignment is currently not available. '
+                    + 'Please contact the instructor to let you view the problems');
+            }
+        }
+        for (var i = 0; i < problemList.length; i++) {
+            var q = problemList[i].description;
+            if (isUndefined(q) || q == "") {
+                var prob = problemList[i];
+                if (!isUndefined(prob.problemInfo)) {
+                    var text = prob.getProblemInfo().getQuestionText();
+                    problemList[i].setDescription(text);
+                } else {
+                    problemList[i].setDescription("No Description or question text");
+                }
+            }
+        }
+        builder.setList(problemList);
+        builder.showImage = false;
+        builder.setBoxClickFunction(courseManagement.problemClicked);
+        builder.build('problem_list_column');
+    };
+
+    /**
+     * Called when a problem is displayed.
+     */
+    courseManagement.problemClicked = function(problem) {
         var problemColumn = document.querySelector('#problem_list_column');
         var clickedElement = problemColumn.querySelector(cssEscapeId(problem.id));
 
@@ -225,47 +220,19 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             // note that queryselector is not allowed on these types of ids
             changeSelection(clickedElement, problemSelectionManager);
         }
-
-        if (CourseSketch.dataManager.getState("isInstructor")) {
-            try {
-                replaceEditContent('html/instructor/course_managment_frames/edit_problem.html');
-            } catch (exception) {
-
-            }
-            showButton('problem_button');
-        }
     }
 
-    function showButton(id) {
-        var element = document.getElementById(id);
-        if (element) {
-            element.style.display = "block";
-        }
-    }
-
-    function hideButton(element) {
-        if (element) {
-            element.style.display = "none";
-        }
-    }
-
-    function clearLists(number, localDocument) {
-        var doc = document;
-        if (!isUndefined(localDocument)) {
-            doc = localDocument;
-        }
+    function setNotSelectedMessage(number) {
         var builder = new SchoolItemBuilder();
 
         if (number > 0) {
-            hideButton(doc.querySelector('#problem_button'));
             builder.setEmptyListMessage('Please select an assignment to see the list of problems.');
-            builder.build(doc.querySelector('#problem_list_column'));
+            builder.build(document.querySelector('#problem_list_column'));
         }
 
         if (number > 1) {
-            hideButton(doc.querySelector('#assignment_button'));
             builder.setEmptyListMessage('Please select a course to see the list of assignments.');
-            builder.build(doc.querySelector('#assignment_list_column'));
+            builder.build(document.querySelector('#assignment_list_column'));
         }
     }
 
@@ -324,4 +291,4 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     var courseSelectionManager = new clickSelectionManager();
     var assignmentSelectionManager = new clickSelectionManager();
     var problemSelectionManager = new clickSelectionManager();
-})(document.currentScript.ownerDocument);
+})();
