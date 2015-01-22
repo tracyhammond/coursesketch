@@ -19,7 +19,7 @@
         // course.closeDate = "mm/dd/yyyy";
         CourseSketch.dataManager.getAllCourses(function(courseList) {
             var localCourseList = courseList;
-            if (courseList instanceof DatabaseException) {
+            if (courseList instanceof CourseSketch.DatabaseException) {
                 // we are cool because we are adding a new one.
                 localCourseList = [];
             }
