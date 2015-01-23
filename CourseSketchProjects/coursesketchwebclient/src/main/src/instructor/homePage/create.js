@@ -12,8 +12,15 @@
      *            protobuf element that has been edited
      */
     courseManagement.courseEndEdit = function(attributeChanged, oldValue, newValue, element) {
-            element[attributeChanged] = newValue;
-            CourseSketch.dataManager.updateCourse(element.schoolItemData);
+        var keyList = newValue.keys();
+        var srlCourse = element.schoolItemData;
+        console.log(srlCourse);
+        for (var key of keyList) {
+            console.log(key);
+            srlCourse[key] = newValue.get(key);
+        }
+        console.log(srlCourse);
+        CourseSketch.dataManager.updateCourse(srlCourse);
     };
 
     courseManagement.commonShowCourses = courseManagement.showCourses;
