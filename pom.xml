@@ -472,24 +472,9 @@
 	<dependencies>
         <!-- jetty -->
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jettyServerVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-server</artifactId>
-            <version>${jettySocketVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jettyServletVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mortbay.jetty.npn</groupId>
-            <artifactId>npn-boot</artifactId>
-            <version>${jettyNpnVersion}</version>
+			<groupId>org.eclipse.jetty.aggregate</groupId>
+			<artifactId>jetty-all</artifactId>
+			<version>${jettyVersion}</version>
         </dependency>
 
 		<dependency>
