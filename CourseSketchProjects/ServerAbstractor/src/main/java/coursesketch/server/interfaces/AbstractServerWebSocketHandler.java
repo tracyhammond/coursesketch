@@ -88,7 +88,7 @@ public abstract class AbstractServerWebSocketHandler {
     protected final void onClose(final SocketSession conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
         System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
-        final MultiConnectionState stateId = connectionToId.remove(conn);
+        final MultiConnectionState stateId = getConnectionToId().remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
             idToState.remove(stateId.getKey());
@@ -102,13 +102,8 @@ public abstract class AbstractServerWebSocketHandler {
      *
      * @param conn The connection that is being opened.
      */
-    @OnWebSocketConnect
-    public final void onOpen(final Session conn) {
-        if (getCurrentConnectionNumber() >= MAX_CONNECTIONS) {
-=======
     protected final void onOpen(final SocketSession conn) {
         if (getConnectionToId().size() >= MAX_CONNECTIONS) {
->>>>>>> serverIpAddresses:CourseSketchProjects/ServerAbstractor/src/main/java/coursesketch/server/interfaces/AbstractServerWebSocketHandler.java
             // Return negatative state.
             System.out.println("FULL SERVER"); // send message to someone?
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
