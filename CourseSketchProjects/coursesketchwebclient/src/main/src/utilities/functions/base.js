@@ -10,17 +10,17 @@ if (typeof isUndefined === 'undefined') {
 
 /**
  * *************************************************************
- * 
+ *
  * Sketch Function
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * Generates an rfc4122 version 4 compliant solution.
- * 
+ *
  * found at http://stackoverflow.com/a/2117523/2187510 and further improved at
  * http://stackoverflow.com/a/8809472/2187510
  */
@@ -50,17 +50,17 @@ if (isUndefined(createTimeStamp)) {
 
 /**
  * *************************************************************
- * 
+ *
  * onLoad utility Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * Creates a recursive set of functions that are all called onload
- * 
+ *
  * The scope is the target for the onload
  */
 if (isUndefined(addScopedLoadEvent)) {
@@ -80,17 +80,17 @@ if (isUndefined(addScopedLoadEvent)) {
 }
 /**
  * *************************************************************
- * 
+ *
  * Utility utility Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * Checks to see if the given object is a function.
- * 
+ *
  * returns true if the object is a function.
  */
 if (isUndefined(isFunction)) {
@@ -101,11 +101,11 @@ if (isUndefined(isFunction)) {
 
 /**
  * *************************************************************
- * 
+ *
  * Date Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
@@ -128,7 +128,7 @@ if (isUndefined(getMillitaryFormattedDateTime)) {
 }
 
 /**
- * @param dateTime {Date} uses the default Date object in the browser to return 
+ * @param dateTime {Date} uses the default Date object in the browser to return
  */
 if (isUndefined(getFormattedDateTime)) {
     function getFormattedDateTime(dateTime) {
@@ -146,6 +146,27 @@ if (isUndefined(getFormattedDateTime)) {
         }
         var time = make2Digits(hours) + ":" + make2Digits(dateTime.getMinutes()) + timeType;
         return date + ' ' + time;
+    }
+}
+
+/**
+ * Does a very simple escaping of the id for css purposes.
+ * A more complicated version is found here: https://mothereff.in/css-escapes
+ * @param inputId The id we want escaped.
+ * @return escaped value
+ *
+ * Example:
+ * Input: 12a2b3c
+ * Output: #\31 2a2b3c
+ */
+if (isUndefined(cssEscapeId)) {
+    function cssEscapeId(inputId) {
+        var output = inputId;
+        var firstChar = inputId.charAt(0);
+        if (/\d/.test(firstChar)) {
+            output = '\\3' + firstChar + ' ' + output.slice(1);
+        }
+        return '#' + output;
     }
 }
 
@@ -200,5 +221,15 @@ if (isUndefined(getTypeName)) {
             default:
                 return t;
         }
+    }
+}
+
+if (isUndefined(loadJs)) {
+    function loadJs(src) {
+        var head= document.getElementsByTagName('head')[0];
+        var script= document.createElement('script');
+        script.type= 'text/javascript';
+        script.src= src;
+        head.appendChild(script);
     }
 }

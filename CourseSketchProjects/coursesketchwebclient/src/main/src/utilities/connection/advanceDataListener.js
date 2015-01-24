@@ -16,13 +16,13 @@ function AdvanceDataListener(connection, Request, defListener) {
 	var myScope = this;
 	var defaultListener = defListener || false;
 	var errorListener = false;
-	
+
 	this.setErrorListener = function(func) {
 		errorListener = func;
 	};
-	
+
 	/**
-	 * Sets
+	 * Sets the listener to listen for database code.
 	 */
 	this.setListener = function(messageType, queryType, func) {
 		var localMap = requestMap[messageType];
@@ -55,20 +55,20 @@ function AdvanceDataListener(connection, Request, defListener) {
 				msg.otherData.mark();
 			} catch(exception) {
 				console.log(exception);
+				console.log(msg);
 			}
 			var dataList = CourseSketch.PROTOBUF_UTIL.getDataResultClass().decode(msg.otherData).results;
 			for (var i = 0; i < dataList.length; i++) {
 				//console.log("Decoding listener");
 				var item = dataList[i];
 				var func = localMap[item.query];
-				//console.log(messageType);
-				//console.log(item.query);
 				if (!isUndefined(func)) {
 					try {
 						func(evt, item);
 					} catch(exception) {
 						console.error(exception);
 						console.error(exception.stack);
+						console.log(msg);
 					}
 				} else {
 					defListener(evt, item);
@@ -77,7 +77,7 @@ function AdvanceDataListener(connection, Request, defListener) {
 		}catch(exception) {
 			console.error(exception);
 			console.error(exception.stack);
-			console.log("decoding data failed: " + msg.responseText);
+			console.log("decoding data failed: ", msg);
 			if (errorListener) {
 				errorListener(msg);
 			}

@@ -18,7 +18,7 @@
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
 		<projectBranchLevel>6</projectBranchLevel>
-		<projectLineLevel>9</projectLineLevel>
+		<projectLineLevel>6</projectLineLevel>
 	</properties>
 	<build>
 		<plugins>
@@ -47,24 +47,9 @@
 
 	<dependencies>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jettyServerVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-server</artifactId>
-            <version>${jettySocketVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jettyServletVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mortbay.jetty.npn</groupId>
-            <artifactId>npn-boot</artifactId>
-            <version>${jettyNpnVersion}</version>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all</artifactId>
+            <version>${jettyVersion}</version>
         </dependency>
 
         <dependency>
@@ -79,5 +64,17 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ServerAbstractor</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+        </dependency>
 	</dependencies>
 </project>

@@ -1,0 +1,50 @@
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+.info {
+	position: relative;
+	width: 20%;
+	outline: 1px solid black;
+	background-color: white;
+	text-align: center;
+	font-size: 120%;
+	font-family: 'Open Sans', sans-serif;
+
+}
+.problem-panel {
+	position:relative;
+	display:flex;
+	flex-direction: row;
+	overflow-y:hidden;
+	height:calc(100% - 20px);
+}
+
+.sketches {
+	position: relative;
+	outline: 1px solid black;
+	background-color: white;
+	text-align: center;
+	font-size: 175%;
+	overflow-y:scroll;
+}
+
+mv-sketch {
+	display: inline-block;
+	width: 50%;
+}
+
+#dialogPanel {
+	width:calc(100% - 5px);
+	height:calc(100% - 5px);
+	padding:0px;
+}
+
+#dialogPanel button {
+	position:absolute;
+	top:0;
+	right:0;
+	font-size:3em;
+	z-index: 5;
+}

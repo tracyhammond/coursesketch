@@ -1,7 +1,7 @@
 /**
  * Attempts to use data as a database, pulls data from the server if it does not
  * exist
- * 
+ *
  * @param userId
  *            The user that this database is associated with.
  * @param connection
@@ -21,10 +21,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
     var localScope = this;
     var localUserId = userId;
-    var stateMachine = {};
+    var stateMachine = new Map();
     var databaseFinishedLoading = false;
 
-    var version = 4;
+    var version = 6;
     var dataListener = advanceDataListener;
 
     var serverConnection = connection;
@@ -43,13 +43,13 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns true if the database is ready false otherwise.
-     * 
+     *
      * it is placed this far up so that it can be called even before most of the
      * database is set up.
      */
     this.isDatabaseReady = function() {
         return databaseFinishedLoading;
-    }
+    };
 
     /**
      * After the lower level database has been completely setup the higher level
@@ -87,6 +87,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         tables.push(database.createTable("BankProblems", "id", addFunction));
         tables.push(database.createTable("Submissions", "id", addFunction));
         tables.push(database.createTable("Grades", "id", addFunction));
+        tables.push(database.createTable("Lectures", "id", addFunction));
+        tables.push(database.createTable("Slides", "id", addFunction));
         tables.push(database.createTable("Other", "id", addFunction));
 
         database.setTables(tables);
@@ -118,11 +120,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
-
         var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemSend.setQuery(queryType);
         itemSend.setData(data);
-
         dataSend.items.push(itemSend);
 
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
@@ -134,11 +134,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
         dataSend.items = new Array();
-
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
+
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
@@ -152,6 +152,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         /* assignmentManager = */new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* courseProblemManager = */new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* submissionManager = */new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* lectureDataManager = */new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        /* slideDataManager = */new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         /* submissionManager = */// new GradeDataManager(this, dataListener,
                                 // database, dataSender, Request, ByteBuffer);
         console.log("Database is ready for use! with user: " + userId);
@@ -160,7 +162,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * retrieves all the assignments for a given course.
-     * 
+     *
      * The callback is called with a list of assignment objects
      */
     this.getAllAssignmentsFromCourse = function(courseId, assignmentCallback) {
@@ -178,7 +180,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * retrieves all the assignments for a given course.
-     * 
+     *
      * The callback is called with a list of assignment objects
      */
     this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
@@ -244,19 +246,19 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * transitioning from one page to the next!)
      */
     this.addState = function(key, value) {
-        stateMachine[key] = value;
+        stateMachine.set(key, value);
     }
 
     this.getState = function(key) {
-        return stateMachine[key];
+        return stateMachine.get(key);
     }
 
     this.hasState = function(key) {
-        return !isUndefined(stateMachine[key]);
+        return stateMachine.has(key);
     }
 
     this.clearStates = function() {
-        stateMachine = {};
+        stateMachine = new Map();
     }
 
     /**
@@ -267,6 +269,23 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     this.getCurrentTime = connection.getCurrentTime;
+
+    CourseSketch.DatabaseException = DatabaseException;
+
+    /**
+     * A helper function for testing that waits for the database to be loaded before calling a callback.
+     * @param dataManager The database we are waiting to stop.
+     * @param callback called when the database is ready.
+     */
+    this.waitForDatabase = function waitForDatabase(callback) {
+        var dataManager = this;
+        var interval = setInterval(function() {
+            if (dataManager.isDatabaseReady()) {
+                clearInterval(interval);
+                callback();
+            } // endif
+        }, 50);
+    };
 }
 var nonExistantValue = "NONEXISTANT_VALUE";
 var CURRENT_QUESTION = "CURRENT_QUESTION";

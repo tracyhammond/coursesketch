@@ -1,0 +1,74 @@
+<html>
+<head>
+<!-- utilities -->
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+<!-- Jquery library -->
+<link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+
+<!-- security -->
+<script
+        src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"
+        onerror="loadJs('/src/utilities/libraries/security/crypto.js');"></script>
+<!-- utils -->
+<script src="/src/utilities/functions/objectAndInheritance.js"></script>
+
+<!-- connection -->
+<script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
+
+<!-- html template -->
+<link id="registerTemplateImport" rel="import"
+	href="/src/utilities/connection/register/register.html">
+
+<!-- login.js -->
+<script type="text/javascript" src="/src/utilities/connection/login/login.js"></script>
+
+<script type="text/javascript" src="register.js"></script>
+<script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var link = importDoc.querySelector('#registerTemplateImport');
+            var template = link.import.querySelector('template');
+            var clone = document.importNode(template.content, true);
+
+            var newElement = new RegisterSystem();
+          	var official = "srl01.tamu.edu:8888"; // our server
+    		var test = "localhost:8888/websocket"; // local server
+
+    		var wsUri = official;
+    		if (document.URL.indexOf("http://localhost") === 0 || document.URL.indexOf("httpw://localhost") === 0) {
+    		    if (isUndefined(Window.TESTING_ENVIRONMENT) && confirm('Using localhost do you want to connect locally?')) {
+	    		    wsUri = test;
+	    		} else {
+	    		    wsUri = official;
+	    		}
+    		}
+
+    		/**
+    		 * @Method
+    		 * Creates the connection to the server. (but does nothing else)
+    		 */
+            RegisterSystem.prototype.createdCallback = function() {
+    		    console.log("connection " + wsUri);
+                this.createConnection(wsUri, false, true);
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            RegisterSystem.prototype.attachedCallback = function() {
+                this.initializeElement(document, clone.cloneNode(true));
+            };
+
+            RegisterSystem.prototype.detachedCallback = function() {
+                this.finalize();
+            };
+
+            document.registerElement('register-system', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

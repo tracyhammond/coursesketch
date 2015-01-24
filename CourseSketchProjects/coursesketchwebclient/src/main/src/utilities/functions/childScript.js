@@ -6,6 +6,10 @@
 var CourseSketch = parent.CourseSketch;
 
 (function() {
+    if (typeof CourseSketch === "undefined") {
+        CourseSketch = {};
+    }
+
     var namespaceList = [];
     CourseSketch.addNamespace = function(namespaceName) {
         CourseSketch[namespaceName] = {};
@@ -27,7 +31,10 @@ var CourseSketch = parent.CourseSketch;
      * <script data-namespace="name1, name2,name3 , name4" src="childScript.js"></script>
      */
     var scriptElement = document.currentScript;
-    if (!isUndefined(scriptElement.dataset.namespace)) {
+    if (scriptElement.ownerDocument.URL.indexOf("FakePage.html") > -1 ) {
+        return;
+    }
+    if (typeof scriptElement.dataset.namespace !== "undefined") {
         var dataNamespaceList = scriptElement.dataset.namespace.split(",");
         for (var i = 0; i < dataNamespaceList.length; i++) {
             CourseSketch.addNamespace(dataNamespaceList[i].trim());

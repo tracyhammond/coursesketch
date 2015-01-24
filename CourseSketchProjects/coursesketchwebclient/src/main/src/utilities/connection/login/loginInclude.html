@@ -9,7 +9,8 @@
 <!-- security -->
 <script
 	src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"
-	onerror="loader.replaceFile('sha3.js', 'js/connection/libraries/crypto.js', 'js');"></script>
+	onerror="loadJs('/src/utilities/libraries/security/crypto.js');"></script>
+
 <!-- utils -->
 <script src="/src/utilities/functions/objectAndInheritance.js"></script>
 
@@ -30,8 +31,9 @@
             var clone = document.importNode(template.content, true);
 
             var newElement = new LoginSystem();
-          	var official = "srl01.tamu.edu:8888"; // our server
-    		var test = "localhost:8443/socket/"; // local server
+          	var official = "128.194.133.77:8888"; // our server
+          	//var official = "srl01.tamu.edu:8888"; // our server
+    		var test = "localhost:8888/websocket"; // local server
 
     		var wsUri = official;
     		if (document.URL.indexOf("http://localhost") === 0 || document.URL.indexOf("httpw://localhost") === 0) {

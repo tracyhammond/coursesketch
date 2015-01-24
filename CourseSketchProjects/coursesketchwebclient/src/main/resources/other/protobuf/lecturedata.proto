@@ -1,0 +1,106 @@
+import "school.proto";
+import "tutorial.proto";
+package protobuf.srl.lecturedata;
+
+message SrlLectureDataHolder {
+    repeated Lecture lectures = 1;
+    repeated LectureSlide slides = 2;
+    repeated LectureElement elements = 3;
+}
+
+message Lecture {
+    required string courseId = 1;
+    //id of this lecture
+    required string id = 2;
+    optional string name = 3;
+    optional string description = 4;
+    repeated IdsInLecture idList = 5;
+    optional protobuf.srl.school.SrlPermission accessPermission = 6;
+    optional protobuf.srl.school.DateTime accessDate = 7;
+    optional protobuf.srl.school.DateTime closeDate = 8;
+    optional protobuf.srl.school.State state = 9;
+}
+
+message IdsInLecture {
+    required string id = 1;
+    required bool isSlide = 2;
+    optional bool unlocked = 3;
+    optional LectureNavigator nav = 4;
+}
+
+message LectureSlide {
+    required string lectureId = 1;
+    //id of this slide
+    required string id = 2;
+    //thumbnail
+    repeated LectureElement elements = 3;
+}
+
+message LectureElement {
+    //id of this element
+    required string id = 2;
+    optional int32 x_position = 3;
+    optional int32 y_position = 4;
+    optional int32 x_dimension = 5;
+    optional int32 y_dimension = 6;
+
+    oneof ElementType {
+        protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
+        Image image = 8;
+        SketchArea sketchArea = 9;
+        SrlQuestion question = 10;
+        EmbeddedHtml embeddedHtml = 11;
+    }
+}
+
+message EmbeddedHtml {
+    optional string embeddedHtml = 1;
+}
+
+message Image {
+    optional string src = 8;
+    optional float orientation = 9;
+}
+
+message SketchArea {
+    //srlSketch object if proto include works
+    optional bytes SrlUpdateList = 10;
+}
+
+message LectureNavigator {
+    optional string nextLectureId = 1;
+    optional int32 nextSlide = 2;
+}
+
+message SrlQuestion {
+    required string id = 1;
+    optional string questionText = 2;
+    optional QuestionType questionType = 3 [default=SKETCH];
+    repeated LectureNavigator navs = 4;
+
+    oneof QuestionOption {
+    MultipleChoice multipleChoice = 5;
+    SketchQuestion sketchQuestion = 6;
+}
+}
+
+message MultipleChoice {
+    repeated AnswerChoice answerChoices = 1;
+    optional string correctId = 2;
+}
+
+message SketchQuestion {
+    optional bytes sketch = 1;
+}
+
+message AnswerChoice {
+    required string id = 1;
+    optional string text = 2;
+}
+
+enum QuestionType {
+    SKETCH = 1;
+    MULT_CHOICE = 2;
+    FREE_RESP = 3;
+    CHECK_BOX = 4;
+}

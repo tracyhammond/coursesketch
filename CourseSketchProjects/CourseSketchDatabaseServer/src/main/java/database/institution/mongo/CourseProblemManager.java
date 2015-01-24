@@ -1,5 +1,25 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.DatabaseAccessException;
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
+import database.auth.MongoAuthenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.School.State;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
@@ -16,35 +36,12 @@ import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
-import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.school.School.State;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.Authenticator.AuthType;
-import database.auth.MongoAuthenticator;
-
 /**
  * Manages course problems for the mongo database.
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
-        "PMD.NPathComplexity" })
+        "PMD.NPathComplexity" , "PMD.AvoidDeeplyNestedIfStmts" })
 public final class CourseProblemManager {
 
     /**
@@ -128,7 +125,6 @@ public final class CourseProblemManager {
         if (isUsers && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
-
         // states
         final State.Builder stateBuilder = State.newBuilder();
 
@@ -244,7 +240,7 @@ public final class CourseProblemManager {
      * @param courseProblemId the problem that the group is being inserted into.
      * @param ids the list of id groupings that contain the ids being copied over.
      */
-    static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>[] ids) {
+    static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection problems = dbs.getCollection(COURSE_PROBLEM_COLLECTION);

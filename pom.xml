@@ -9,12 +9,15 @@
 
 	<modules>
 		<module>CourseSketchProjects/ProtoFiles</module>
+        <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
+		<module>CourseSketchProjects/nettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+
 	</modules>
 
 	<issueManagement>
@@ -27,7 +30,7 @@
 			<id>maven-3</id>
 			<activation>
 				<file>
-					<!-- This employs that the basedir expression is only recognized by 
+					<!-- This employs that the basedir expression is only recognized by
 						Maven 3.x (see MNG-2363) -->
 					<exists>${basedir}</exists>
 				</file>
@@ -415,19 +418,26 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jettyVersion>[9.2.3.v,)</jettyVersion> <!-- 9.2.2.v20140723 -->
-        <jettyServerVersion>9.2.3.v20140905</jettyServerVersion> <!-- 9.2.2.v20140723 -->
-        <jettySocketVersion>9.2.3.v20140905</jettySocketVersion> <!-- 9.2.2.v20140723 -->
-        <jettyServletVersion>9.2.3.v20140905</jettyServletVersion>
-        <jettyNpnVersion>1.1.7.v20140316</jettyNpnVersion>
-        <protobufVersion>[2.5.0,)</protobufVersion>
+        <!-- version -->
+		<jettyVersion>[9.2.2,)</jettyVersion> <!-- 9.2.2.v20140723 -->
+		<protobufVersion>[2.6.0,)</protobufVersion>
 		<jodaVersion>[2.1,)</jodaVersion>
 		<mongodbVersion>[2.12.3,)</mongodbVersion>
-		<mockitoVersion>[1.9.5,)</mockitoVersion>
+		<mockitoVersion>1.9.5</mockitoVersion>
 		<puppyVersion>[5.6,)</puppyVersion>
-		<junitVersion>[4.11,)</junitVersion>
+		<junitVersion>4.11</junitVersion>
+		<fongoVersion>1.5.9</fongoVersion>
+		<slf4jVersion>1.7.9</slf4jVersion>
+		<log4jVersion>2.1</log4jVersion>
 		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
+        <powermock.version>1.5.6</powermock.version>
+        <easymock.version>3.3</easymock.version>
+        <sitepluginVersion>2.3.3</sitepluginVersion>
+        <coberturaVersion>2.6</coberturaVersion>
+        <pmdVersion>3.3</pmdVersion>
+
+        <!-- testing -->
 		<testLevel>85</testLevel>
 		<minTestLevel>70</minTestLevel>
 		<averageTestLevel>90</averageTestLevel>
@@ -435,16 +445,13 @@
 		<projectLineLevel>${averageTestLevel}</projectLineLevel>
 		<packageBranchLevel>${averageTestLevel}</packageBranchLevel>
 		<packageLineLevel>${averageTestLevel}</packageLineLevel>
+
+        <!-- config locations -->
 		<checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
 		<absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
 		<checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
 		<findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
-		<protocLocation>/usr/local/bin/protoc</protocLocation>
-		<sitepluginVersion>2.3.3</sitepluginVersion>
-		<coberturaVersion>2.6</coberturaVersion>
-		<pmdVersion>3.2</pmdVersion>
 		<moduleConfigLocation>${basedir}/config</moduleConfigLocation>
-		<githubLocation>tracyhammond/coursesketch</githubLocation>
 		<pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
 		<pmdRuleset>${absoluteConfigLocation}/ruleset.xml</pmdRuleset>
 		<cpdExclude>${moduleConfigLocation}/${cpdFile}</cpdExclude>
@@ -452,6 +459,10 @@
 		<pmdFile>exclude-pmd.properties</pmdFile>
 		<cpdFile>exclude-cpd.properties</cpdFile>
 		<absoluteConfigLocation>${parentConfigLocationDir}/config</absoluteConfigLocation>
+
+        <!-- binary locations -->
+        <protocLocation>/usr/local/bin/protoc</protocLocation>
+        <githubLocation>tracyhammond/coursesketch</githubLocation>
 
 		<!-- This needs to be overwritten in child poms -->
 		<mainClass>fully.qualified.MainClass</mainClass>
@@ -500,6 +511,24 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4jVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4jVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 			<version>${puppyVersion}</version>
@@ -524,9 +553,42 @@
 		<dependency>
 			<groupId>com.github.fakemongo</groupId>
 			<artifactId>fongo</artifactId>
-			<version>1.5.5</version>
+			<version>${fongoVersion}</version>
 			<scope>test</scope>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.1</version>
+			<scope>test</scope>
+		</dependency>
+    </dependencies>
 </project>

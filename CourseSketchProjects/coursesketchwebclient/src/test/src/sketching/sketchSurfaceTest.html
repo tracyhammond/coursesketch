@@ -5,12 +5,12 @@
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
+<!-- files needed for testing -->
+<link id="sketchSurfaceTemplateImport" rel="import"
+      href="/src/sketching/sketchInclude.html">
+
 <!-- file being tested. -->
 <script src="/src/sketching/sketchSurface.js" data-cover></script>
-
-<!-- files needed for testing -->
-<link id="sketchInclude" rel="import"
-	href="/src/sketching/sketchInclude.html">
 
 </head>
 <body>
@@ -19,18 +19,42 @@
 	<div id="sketchLocationCreator"></div>
 
 	<script>
-        var link = document.querySelector('#sketchInclude');
-        var importStuff = link.import;
-        var link2 = importStuff.querySelector('#sketchSurfaceImport');
-        var template = link2.import.querySelector('template');
+        var template = (function() {
+            var link1 = document.querySelector('#sketchSurfaceTemplateImport');
+            var link = link1.import.querySelector('#sketchSurfaceImport');
+            var template = link.import.querySelector('template');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
 
-        QUnit.module("sketchSurface");
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    var newElement = new SketchSurface();
+                    // test is not a typo
+                    SketchSurface.prototype.createdCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    SketchSurface.prototype.attachedCallback = function() {
+                        this.initializeSurface(InputListener, UpdateManager);
+                    };
+
+                    document.registerElement('sketch-surface-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+            }
+        });
+
         QUnit.test("test creation", function(assert) {
             expect(0);
             var sketch = new SketchSurface();
         });
+
         QUnit.test("test getting an SrlSketch", function(assert) {
-            var sketch = new SketchSurface();
+            var sketch = document.createElement('sketch-surface-test');
 
             sketch.initializeSketch();
 
@@ -88,75 +112,51 @@
             var oddity = document.createElement("sketch-surface");
             container.appendChild(oddity);
         });
-
-        QUnit.test("tag creation #2 (basically starting from scratch)", function(assert) {
-            var sketchSurface = new SketchSurface();
-
-            // lol hax
-            var element = document.createElement("sketch-surface");
-            var fakeRoot = element.createShadowRoot();
-
-            // basically stealing from another element.
-            // bad in real life but good for the test.
-            var clone = document.importNode(template.content, true);
-            fakeRoot.appendChild(clone);
-            sketchSurface.setRoot(fakeRoot);
-
-            sketchSurface.dataset = {};
-            console.log(sketchSurface);
-            var spy = this.spy(SKETCHING_SURFACE_HANDLER, "addElement");
-
-            sketchSurface.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
-
-            assert.ok(spy.calledOnce);
-            spy.restore();
-
-            sketchSurface.finalize();
-        });
     </script>
 	<script>
         QUnit.module("events", {
             setup : function() {
-                this.elementSpy = sinon.spy(SKETCHING_SURFACE_HANDLER, "addElement");
+                try {
+                    this.elementSpy = sinon.spy(CourseSketch.SKETCHING_SURFACE_HANDLER, "addElement");
+                } catch(exception) {
+                }
             },
             teardown : function() {
                 document.getElementById("sketchLocationCreator").innerHTML = "";
-                this.elementSpy.restore();
+                if (!isUndefined(this.elementSpy)) {
+                    this.elementSpy.restore();
+                }
+            },
+            setupOnce : function() {
+                try {
+                    var newElement = new SketchSurface();
+                    // test is not a typo
+                    SketchSurface.prototype.createdCallback = function() {
+                        this.initializeElement(template.cloneNode(true));
+                    };
+
+                    SketchSurface.prototype.attachedCallback = function() {
+                        this.initializeSurface(InputListener, UpdateManager);
+                    };
+
+                    document.registerElement('sketch-surface-test', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
             }
         });
 
         QUnit.test("a stroke will be added to the sketch when drawing", function(assert) {
-            /** CREATING A SKETCH SURFACE ITEM (added to all test to make sure it happens in any order)***/
-            try {
-                var sketch = new SketchSurface();
-                var clone = document.importNode(template.content, true);
-
-                SketchSurface.prototype.createdCallback = function() {
-                    this.initializeElement(document, clone.cloneNode(true));
-                };
-
-                SketchSurface.prototype.attachedCallback = function() {
-                    this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
-                };
-
-                document.registerElement('sketch-surface2', {
-                    prototype : sketch
-                });
-            } catch (exception) {
-
-            }
-            /** DONE CREATING A SKETCH SURFACE ITEM ***/
-
-            var sketchSurface = document.createElement("sketch-surface2");
-            sketchSurface.dataset.existingList = "";
+            var sketchSurface = document.createElement("sketch-surface-test");
+            sketchSurface.dataset.existinglist = "";
             var container = document.getElementById("sketchLocationCreator");
 
             container.appendChild(sketchSurface);
-            SKETCHING_SURFACE_HANDLER.addElementForced(sketchSurface);
-
+            CourseSketch.SKETCHING_SURFACE_HANDLER.addElementForced(sketchSurface);
             var updateList = new UpdateManager(sketchSurface.getSrlSketch(), function(error) {
                 assert.ok(false, error);
-            }, SKETCHING_SURFACE_HANDLER);
+            }, CourseSketch.SKETCHING_SURFACE_HANDLER);
 
             sketchSurface.bindToUpdateList(updateList);
 
@@ -197,28 +197,8 @@
 
         QUnit.test("canvas resizes correctly TODO: make better", function(assert) {
             expect(0);
-            /** CREATING A SKETCH SURFACE ITEM (added to all test to make sure it happens in any order)***/
-            try {
-                var sketch = new SketchSurface();
-                var clone = document.importNode(template.content, true);
 
-                SketchSurface.prototype.createdCallback = function() {
-                    this.initializeElement(document, clone.cloneNode(true));
-                };
-
-                SketchSurface.prototype.attachedCallback = function() {
-                    this.initializeSurface(InputListener, SketchEventConverter, UpdateManager);
-                };
-
-                document.registerElement('sketch-surface2', {
-                    prototype : sketch
-                });
-            } catch (exception) {
-
-            }
-            /** DONE CREATING A SKETCH SURFACE ITEM ***/
-
-            var sketchSurface = document.createElement("sketch-surface2");
+            var sketchSurface = document.createElement("sketch-surface-test");
             var container = document.getElementById("sketchLocationCreator");
             container.appendChild(sketchSurface);
 
@@ -227,7 +207,7 @@
 
             var canvas = sketchSurface.getElementForDrawing();
             var size = canvas.height;
-            
+
             sketchSurface.makeResizeable();
 
             $(sketchSurface).css("height", sketchSurfaceHeight / 2);

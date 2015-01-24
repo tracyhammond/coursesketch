@@ -35,8 +35,8 @@ enum CommandType {
 	REMOVE_ATTRIBUTE = 5;
 	MARKER = 6; //marker has a number and a MARKERTYPE
 	CLEAR = 7; // removes all data from the current sketch object
-	CREATE_SKETCH = 8; // This will contain ActionCreateSketch.  This will also switch to the sketch immediately.
-	SWITCH_SKETCH = 9; // This should have an IdChain which contains a single id.
+	CREATE_SKETCH = 8; // This will contain ActionCreateSketch.  This will also switch to the sketch immediately. (Must be first command in update)
+	SWITCH_SKETCH = 9; // This should have an IdChain which contains a single id. (Must be first command in update)
 	FORCE_INTERPRETATION = 10;
 
 	// Stack Commands, They do not have any other data associated with it.
@@ -48,6 +48,13 @@ enum CommandType {
 	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
 
 	// all other commands will appear after 16
+	CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
+	CREATE_QUESTION = 18; // Creates a question for use in lecture slides
+	CREATE_MULTIPLE_CHOICE = 19; // Creates a multiple choice item to be included in a question
+	CREATE_IMAGE = 20; // Creates an image
+	CREATE_EMBEDDED_HTML = 21; // Creates an image
+    CREATE_TTSBOX = 22; // Creates a ttsbox for use in tutorial or lecture slides
+    CREATE_OUTLINE = 23; // Creates an outline box for use in tutorial or lecture slides
 }
 
 /**

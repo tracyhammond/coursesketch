@@ -1,0 +1,106 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Lecture Selection Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+    
+<link rel="import"
+    href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+<link rel="import"
+    href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/common/lecture/lectureSelection.html"
+    data-fake>
+
+<!-- file being tested. -->
+<script src="/src/common/lecture/lectureSelection.js" data-cover></script>
+</head>
+<body>
+    <div id="fakePage"></div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <div id=""></div>
+    
+    <!-- Fake doms for the UI stuff -->
+    <div id="col2" class="column" style="display: none;">
+        <div class="content">
+        </div>
+    </div>
+    <div id="col1" class="column" style="display: none;">
+        <div class="content">
+            <button id="add"></button>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        QUnit.stop();
+        var loadCourses = function() {
+            var courseList = CourseSketch.fakeCourses;
+            CourseSketch.dataManager.getAllCourses = function(coursesCallback) {
+                for(var i = 0; i < courseList.length; ++i) {
+                    CourseSketch.dataManager.setCourse(courseList[i]);
+                }
+                for(var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
+                    CourseSketch.dataManager.insertLecture(CourseSketch.fakeLectures[i]);
+                }
+                coursesCallback(courseList);
+            }
+            CourseSketch.dataManager.testDataLoaded = true;
+
+            // Tests
+            QUnit.config.testTimeout = 10000;
+            QUnit.module("lecture UI");
+            CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+            asyncTest("show courses", function(assert) {
+                expect(1);
+                CourseSketch.lectureSelection.showCourses(courseList);
+                assert.ok(true, "Show courses successfully called.");
+                QUnit.start();
+            });
+
+            asyncTest("course selection", function(assert) {
+                var courseDomList = document.querySelector("#col1>.content").children;
+                var courseProtoList = CourseSketch.lectureSelection.schoolItemBuilder.list;
+                expect(courseDomList.length);
+                for(var i = 0; i < courseDomList.length; ++i) {
+                    simulate(courseDomList[i], "click");
+                    assert.equal(courseDomList[i].className, " selectedBox", "Box shows as selected when clicked.");
+                }
+                QUnit.start();
+            });
+
+            asyncTest("add lecture", function(assert) {
+                var courseDomList = document.querySelector("#col1>.content").children;
+                expect(courseDomList.length);
+                var i;
+                for(i = 0; i < courseDomList.length; ++i) {
+                    simulate(courseDomList[i], "click");
+                    var lecturesOld, lecturesNew;
+                    CourseSketch.dataManager.getCourse(courseDomList[i].id, function(course) {
+                        CourseSketch.lectureSelection.addLecture(undefined, function(course) {
+                            assert.ok(true, "Succesfully added a lecture.");
+                        });
+                    });
+                }
+                var interval = setInterval(function() {
+                        QUnit.start();
+                        clearInterval(interval);
+                }, 1000);
+            });
+        };
+        if (CourseSketch.dataManager.realDatabaseReady()) {
+            loadCourses();
+        } else {
+            var intervalVar = setInterval(function() {
+            if (CourseSketch.dataManager.realDatabaseReady()) {
+                clearInterval(intervalVar);
+                loadCourses();
+            }
+            }, 100);
+        }
+    });
+    </script>
+</body>

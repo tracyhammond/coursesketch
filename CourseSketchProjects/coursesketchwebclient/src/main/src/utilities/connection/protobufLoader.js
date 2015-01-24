@@ -10,11 +10,11 @@ ProtobufException.prototype = BaseException;
 
 /**
  * *************************************************************
- * 
+ *
  * Protobuf Utility functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
@@ -24,6 +24,10 @@ ProtobufException.prototype = BaseException;
  *        protobuf object creator before it is created)
  */
 function ProtobufSetup() {
+    // sets it locally and only uses the local version from now on.
+    this.dcodeIO = dcodeIO;
+
+    var localDcodeIo = this.dcodeIO;
 
     var localScope = this;
     var PROTOBUF_PACKAGE = 'protobuf';
@@ -36,49 +40,62 @@ function ProtobufSetup() {
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
-
         buildMessage();
         buildSchool();
         buildSketch();
         buildUpdateList();
         buildDataQuery();
+        buildTutorial();
         buildSubmissions();
+        buildLectures();
         return localScope;
     };
 
     function buildMessage() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
         var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
         assignValues(requestPackage);
     }
 
     function buildDataQuery() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
         var QueryBuilder = builder.build(PROTOBUF_PACKAGE).srl.query;
         assignValues(QueryBuilder);
     }
 
     function buildSchool() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
         var SchoolBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
         assignValues(SchoolBuilder);
     }
 
     function buildSketch() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
         var sketchBuilder = builder.build(PROTOBUF_PACKAGE).srl.sketch;
         assignValues(sketchBuilder, 'Proto');
     }
 
     function buildUpdateList() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
         var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
         assignValues(ProtoUpdateCommandBuilder);
     }
 
+    function buildTutorial() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "tutorial.proto");
+        var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
+        assignValues(ProtoTutorialBuilder);
+    }
+
     function buildSubmissions() {
-        var builder = dcodeIO.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
+        assignValues(ProtoSubmissionBuilder);
+    }
+
+    function buildLectures() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
+        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
         assignValues(ProtoSubmissionBuilder);
     }
 
@@ -93,7 +110,7 @@ function ProtobufSetup() {
      */
     function assignValues(protoPackage, namePrefix) {
         var preString = namePrefix;
-        // safe checking
+        // safe checking.
         if (isUndefined(preString)) {
             preString = '';
         }
@@ -135,10 +152,10 @@ function ProtobufSetup() {
     /**
      * Given a protobuf Command array a Request is created with a single
      * SrlUpdate.
-     * 
+     *
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
-     * 
+     *
      * @param commands
      *            {Array<SrlCommand>} a list of commands stored as an array.
      * @param requestType
@@ -151,7 +168,7 @@ function ProtobufSetup() {
 
     /**
      * Given a protobuf object compile it to other data and return a request.
-     * 
+     *
      * @param data
      *            {Protobuf} An uncompiled protobuf object.
      * @param requestType
@@ -168,22 +185,41 @@ function ProtobufSetup() {
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
-     * 
+     *
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
-     * 
+     *
      * @param commands
      *            {Array<SrlCommand>} a list of commands stored as an array.
      * @return {SrlUpdate}
      */
     this.createUpdateFromCommands = function createUpdateFromCommands(commands) {
+        /*
         if (!isArray(commands)) {
             throw new TypeError('Invalid Type Error: Input is not an Array');
         }
+        */
 
         var update = this.SrlUpdate();
         update.setCommands(commands);
         var n = createTimeStamp();
+        update.setTime("" + n);
+        update.setUpdateId(generateUUID());
+        return update;
+    };
+
+    /**
+     * Given a protobuf Command array an SrlUpdate is created.
+     *
+     * It is important to node that an SrlUpdate implies that the commands
+     * happened at the same time.
+     *
+     * @return {SrlUpdate}
+     */
+    this.createBaseUpdate = function createBaseUpdate() {
+        var update = this.SrlUpdate();
+        var n = createTimeStamp();
+        update.commands = [];
         update.setTime("" + n);
         update.setUpdateId(generateUUID());
         return update;
@@ -211,7 +247,7 @@ function ProtobufSetup() {
 
     /**
      * Creates a command given the commandType and if the user created.
-     * 
+     *
      * @param commandType
      *            {CommandType} the enum object of the commandType (found at
      *            CourseSketch.PROTOBUF_UTIL.CommandType).
@@ -229,14 +265,62 @@ function ProtobufSetup() {
     };
 
     /**
+     * Creates a protobuf date time object.
+     * @param inputDateTime {Number | Date | Long} representing the time that this object should be created with.
+     * @return {DateTime} a protobuf date time objct that can be used for date stuff.
+     */
+    this.createProtoDateTime = function(inputDateTime) {
+        var preConvertedDate = inputDateTime;
+        if (inputDateTime instanceof Date) {
+            preConvertedDate = inputDateTime.getTime();
+        }
+        var longVersion = localDcodeIo.Long.fromString("" + preConvertedDate);
+        var dateTime = this.DateTime();
+        // Long object does not play nice with iframes so parsing as string instead.
+        dateTime.setMillisecond("" + longVersion);
+        var date = new Date(preConvertedDate);
+        dateTime.setYear(date.getFullYear());
+        dateTime.setMonth(date.getMonth());
+        dateTime.setDay(date.getDate());
+        dateTime.setHour(date.getHours());
+        dateTime.setMinute(date.getMinutes());
+        return dateTime;
+    };
+
+    /**
+     * Creates a new sketch command.
+     * @param x the x location of the sketch as an offset of its parent sketch.
+     * @param y the y location of the sketch as an offset of its parent sketch.
+     * @param width the width of the sketch.
+     * @param height the height of the sketch.
+     * @param id the id of the sketch, undefined if you want a random id given.
+     * @return {SrlCommand} a create sketch command
+     */
+    this.createNewSketch = function createNewSketch(id, x, y, width, height) {
+        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
+        var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+        if (!isUndefined(id)) {
+            idChain.idChain = [ id ];
+        } else {
+            idChain.idChain = [ generateUUID() ];
+        }
+        var createSketchAction = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+        createSketchAction.sketchId = idChain;
+        createSketchAction.x = x || (x === 0 ? 0 : -1);
+        createSketchAction.y = y || (y === 0 ? 0 : -1);
+        createSketchAction.width = width || (width === 0 ? 0 : -1);
+        createSketchAction.height = height || (height === 0 ? 0 : -1);
+        command.setCommandData(createSketchAction.toArrayBuffer());
+        return command;
+    };
+    /**
      * @Method
      * @returns {Array} A cloned version of the array that contains all of the
      *          current protobuf objects.
      */
     this.getSupportedObjects = function getSupportedObjects() {
-        return JSON.parse(JSON.stringify(objectList)); // why is
-        // this
-        // always so fast?
+        // The quickest way to clone.
+        return JSON.parse(JSON.stringify(objectList));
     };
 
     /**
@@ -245,13 +329,13 @@ function ProtobufSetup() {
      *          current protobuf enums.
      */
     this.getSupportedEnums = function getSupportedObjects() {
-        return JSON.parse(JSON.stringify(enumList)); // why is this
-        // always so fast?
+        // The quickest way to clone.
+        return JSON.parse(JSON.stringify(enumList));
     };
 
     /**
-     * Decodes the data and perserves the bytebuffer for later use
-     * 
+     * Decodes the data and preserves the bytebuffer for later use
+     *
      * @param data
      *            {ArrayBuffer} a compiled set of data in the protobuf object.
      * @param proto
@@ -270,6 +354,9 @@ function ProtobufSetup() {
             if (onError) {
                 onError(exception);
             }
+        }
+        if (isUndefined(data) || data == null || typeof data != 'object') {
+            throw new ProtobufException("Data type is not supported:" + typeof data);
         }
         var decoded = proto.decode(data);
         try {
@@ -297,5 +384,6 @@ function ProtobufSetup() {
     if (!isUndefined(scope.CourseSketch.PROTOBUF_UTIL)) {
         return;
     }
+    makeValueReadOnly(scope, "dcodeIO", dcodeIO);
     makeValueReadOnly(scope.CourseSketch, "PROTOBUF_UTIL", new ProtobufSetup().initializeBuf());
-})(this);
+})(window);

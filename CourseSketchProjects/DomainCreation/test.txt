@@ -1,7 +1,0 @@
-Domain{
-draw number
-draw circle
-onclick number
-draw pizza number
-
-}

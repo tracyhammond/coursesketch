@@ -1,5 +1,26 @@
 package database.submission;
 
+import com.google.protobuf.ByteString;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import connection.SubmissionClientWebSocket;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.query.Data.DataRequest;
+import protobuf.srl.query.Data.ItemQuery;
+import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.request.Message.Request;
+import protobuf.srl.request.Message.Request.MessageType;
+import utilities.ConnectionException;
+
+import java.util.ArrayList;
+
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
@@ -7,31 +28,6 @@ import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SOLUTION_ID;
-
-import java.util.ArrayList;
-
-import multiconnection.MultiConnectionManager;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.query.Data.DataRequest;
-import protobuf.srl.query.Data.ItemQuery;
-import protobuf.srl.query.Data.ItemRequest;
-import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
-
-import com.google.protobuf.ByteString;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import connection.ConnectionException;
-import connection.SubmissionConnection;
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
 
 /**
  * Manages data that has to deal with submissions in the database server.
@@ -56,18 +52,19 @@ public final class SubmissionManager {
      * if {@code experiment} is true then {@code uniqueId} is a userId otherwise
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem
-     *
-     * @param dbs The database that contains the information about the submission.
+     *  @param dbs The database that contains the information about the submission.
      * @param uniqueId Generally the userId.
      * @param problemId The problem id.
      * @param submissionId The id associated with the submission on the submission server.
      * @param experiment True if the object being submitted is an experiment
      */
     @SuppressWarnings({ "PMD.NPathComplexity" })
-    public static void mongoInsertSubmission(final DB dbs, final String problemId, final String uniqueId, final String submissionId,
+    public static void mongoInsertSubmission(final DB dbs, final String uniqueId, final String problemId,
+            final String submissionId,
             final boolean experiment) {
         System.out.println("Inserting an experiment " + experiment);
         System.out.println("database is " + dbs);
+        System.out.println("Problem id: " + problemId);
         final DBRef myDbRef = new DBRef(dbs, experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION, new ObjectId(problemId));
         final DBCollection collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
         final DBObject corsor = myDbRef.fetch();
@@ -105,6 +102,9 @@ public final class SubmissionManager {
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
+        if (corsor == null) {
+            throw new DatabaseAccessException("The student has not submitted anything for this problem");
+        }
         final String sketchId = "" + corsor.get(userId);
         System.out.println("SketchId " + sketchId);
         if ("null".equals(sketchId)) {
@@ -114,11 +114,11 @@ public final class SubmissionManager {
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
         requestBuilder.setOtherData(data.build().toByteString());
-        System.out.println("Sending command " + requestBuilder.build());
         try {
-            internalConnections.send(requestBuilder.build(), null, SubmissionConnection.class);
+            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
+            throw new DatabaseAccessException("Failed to send request to submission server for experiment", e);
         }
     }
 
@@ -163,7 +163,14 @@ public final class SubmissionManager {
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
         for (String key : corsor.keySet()) {
-            final String sketchId = "" + corsor.get(key);
+            if (SELF_ID.equals(key)) {
+                continue;
+            }
+            final Object experimentId = corsor.get(key);
+            if (experimentId == null || experimentId instanceof ObjectId) {
+                continue;
+            }
+            final String sketchId = corsor.get(key).toString();
             System.out.println("SketchId " + sketchId);
             build.addItemId(sketchId);
         }
@@ -173,7 +180,7 @@ public final class SubmissionManager {
         requestBuilder.setOtherData(data.build().toByteString());
         System.out.println("Sending command " + requestBuilder.build());
         try {
-            internalConnections.send(requestBuilder.build(), null, SubmissionConnection.class);
+            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

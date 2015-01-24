@@ -2,10 +2,31 @@
 <head>
 <meta charset="UTF-8">
 <link rel="import" href="/src/sketching/sketchInclude.html">
+    <script src="/src/utilities/functions/barrier.js"></script>
+    <script src="/src/sketching/plugins/playback.js"></script>
 </head>
-<body>
-<sketch-surface id="hello"></sketch-surface>
+<body style="background:#FFFFFF;">
+
+<sketch-surface id="hello" style="height:1005; width:100%; border: 5px solid red;"></sketch-surface>
+
 <script>
+    var surface = document.body.querySelector("sketch-surface");
+    var graphics = surface.graphics;
+    //var updateManager = surface.getUpdateManager();
+    function playMe() {
+        var graphics = surface.graphics;
+        var updateList = surface.getUpdateList();
+        var copyList = [];
+        for (var i = 0; i < updateList.length; i++) {
+            copyList.push(updateList[i]);
+        }
+        var updateManager = surface.getUpdateManager();
+        updateManager.clearUpdates(false);
+
+        var playBack = new Playback(copyList, updateManager, graphics);
+        updateManager.addPlugin(playBack);
+        playBack.playNext();
+    }
 </script>
 </body>
 </html>

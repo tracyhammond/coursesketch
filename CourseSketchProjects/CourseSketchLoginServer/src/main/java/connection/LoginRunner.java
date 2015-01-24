@@ -1,7 +1,7 @@
 package connection;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 import database.DatabaseClient;
 
 /**
@@ -22,16 +22,16 @@ public class LoginRunner extends GeneralConnectionRunner {
      * @param args
      *            Arguments passed from the command line.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final LoginRunner run = new LoginRunner(args);
-        run.runAll();
+        run.start();
     }
 
     /**
      * @param args
      *            Arguments passed from the command line.
      */
-    public LoginRunner(final String[] args) {
+    public LoginRunner(final String... args) {
         super(args);
         super.setPort(LOGIN_PORT);
     }
@@ -40,7 +40,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      * Makes the login database run locally.
      */
     @Override
-    public final void executeLocalEnviroment() {
+    public final void executeLocalEnvironment() {
         System.out.println("Setting the login database to connect locally");
         new DatabaseClient(false, null); // makes the database point locally
     }
@@ -49,7 +49,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new LoginServlet(time, secure, local);
     }
 }

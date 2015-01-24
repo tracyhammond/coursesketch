@@ -6,7 +6,7 @@ function SchoolItemBuilder() {
     /**
      * resets the values in the school builder so that the same build object can
      * be used again.
-     * 
+     *
      * NOTE: ONLY DATA SHOULD GO HERE.
      */
     this.resetValues = function resetValues() {
@@ -39,7 +39,7 @@ function SchoolItemBuilder() {
 
     /***************************************************************************
      * NOTHING ELSE GOES ABOVE THIS!!!!! SETTER METHODS
-     * 
+     *
      * Creates a set method for every variable in the current object. EX:
      * setWidth, setImageClicked ...
      **************************************************************************/
@@ -147,6 +147,10 @@ function SchoolItemBuilder() {
         // Required Items
         var box = document.createElement('school-item');
         box.setAttribute('id', srlSchoolItem.id);
+        box.schoolItemData = srlSchoolItem;
+
+        // every box starts off not being edtited
+        box.dataset.isediting = false;
 
         if (!this.instructorCard && this.boxClickFunction) {
             box.dataset.clickable = "";
@@ -201,14 +205,16 @@ function SchoolItemBuilder() {
     this.addClickFunction = function addClickFunction(element, boxFunction, editFunction, srlSchoolItem) {
         if (boxFunction) {
             element.addEventListener('click', function() {
-                boxFunction(srlSchoolItem);
+                if (element.dataset.isediting === "false") {
+                    boxFunction(srlSchoolItem);
+                }
             }, false);
             // GET THE ONCLICK LISTENTER TO DO THE CLICKING THING CORRECTLY!
         }
 
         if (editFunction) {
-            element.setEditCallback(function(type, oldValue, newValue) {
-                editFunction(type, oldValue, newValue, srlSchoolItem);
+            element.setEditCallback(function(type, oldValue, newValue, realElement) {
+                editFunction(type, oldValue, newValue, realElement.schoolItemData);
             });
         }
     };

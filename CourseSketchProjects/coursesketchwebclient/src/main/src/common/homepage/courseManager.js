@@ -11,7 +11,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Polls for all updates to the user and then shows the courses.
-     * 
+     *
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
      */
@@ -59,7 +59,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
 
         var builder = new SchoolItemBuilder();
-        builder.setList(courseList)
+        builder.setList(courseList);
         if (CourseSketch.connection.isInstructor) {
             builder.setInstructorCard(true);
         }
@@ -76,10 +76,11 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * list of assignments for that course and then displays them.
      */
     function courseClickerFunction(course, doc) {
+        var classColumn = document.querySelector('#class_list_column');
         clearLists(2, doc);
 
         // note that query selector does not work on ids that start with a number.
-        changeSelection(doc.getElementById(course.id), courseSelectionManager);
+        changeSelection(classColumn.querySelector(cssEscapeId(course.id)), courseSelectionManager);
         assignmentSelectionManager.clearAllSelectedItems();
         problemSelectionManager.clearAllSelectedItems();
 
@@ -92,9 +93,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             var builder = new SchoolItemBuilder();
             builder.setEmptyListMessage('There are no assignments for this course!');
             if (assignmentList == "NONEXISTANT_VALUE") {
-                if (!course.getState().accessible) {
+                if (!(course.getState().accessible)) {
                     builder
-                            .setEmptyListMessage('This course is currently not avialable. Please contact the instructor to let you view the assignments');
+                            .setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
                 }
                 assignmentList = [];
             }
@@ -109,7 +110,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             doc.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
             if (CourseSketch.dataManager.getState("isInstructor")) {
                 try {
-                    replaceEditContent('html/instructor/course_managment_frames/edit_course.html');
+                    replaceEditContent('html/instructor/course_management_frames/edit_course.html');
                 } catch (exception) {
 
                 }
@@ -127,10 +128,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     }
 
     function assignmentClickerFunction(assignment) {
-        // clears the problems
-        changeSelection(assignment.id, assignmentSelectionManager);
+        var assignmentColumn = document.querySelector('#assignment_list_column');
+        changeSelection(assignmentColumn.querySelector(cssEscapeId(assignment.id)), assignmentSelectionManager);
         problemSelectionManager.clearAllSelectedItems();
-        clearLists(1);
 
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);
@@ -180,21 +180,24 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     }
 
     function problemClickerFunction(problem) {
-        var id = problem.id;
-        if (problemSelectionManager.isItemSelected(id)) {
-            var element = document.getElementById(id);
-            var itemNumber = element.dataset.item_number;
-            CourseSketch.dataManager.addState("CURRENT_QUESTION_INDEX", itemNumber);
-            CourseSketch.dataManager.addState("CURRENT_ASSIGNMENT", problem.assignmentId);
-            CourseSketch.dataManager.addState("CURRENT_QUESTION", id);
+        var problemColumn = document.querySelector('#problem_list_column');
+        var clickedElement = problemColumn.querySelector(cssEscapeId(problem.id));
+
+        if (problemSelectionManager.isItemSelected(clickedElement)) {
+            var itemNumber = clickedElement.dataset.item_number;
+            CourseSketch.dataManager.addState("currentProblemIndex", itemNumber);
+            CourseSketch.dataManager.addState("currentAssignment", problem.assignmentId);
+            CourseSketch.dataManager.addState("CURRENT_QUESTION", problem.id);
             // change source to the problem page! and load problem
-            if (CourseSketch.dataManager.getState("isInstructor")) {
+            if (CourseSketch.connection.isInstructor) {
                 // solution editor page!
-                CourseSketch.redirectContent("html/instructor/instructorproblemlayout.html", "");
+                CourseSketch.redirectContent("/src/instructor/review/multiviewGrading.html", "Grading problems!");
             } else {
-                CourseSketch.redirectContent("html/student/problemlayout.html", "Starting Problem");
+                CourseSketch.redirectContent("/src/student/experiment/experiment.html", "Starting Problem");
             }
         } else {
+            // TODO: find a more lightweight popup library
+            /*
             var element = document.getElementById(id);
             var myOpenTip = new Opentip(element, {
                 target : element,
@@ -218,7 +221,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 pastToolTip.deactivate();
             }
             problemSelectionManager['currentToolTip'] = myOpenTip;
-            changeSelection(id, problemSelectionManager);
+            */
+            // note that queryselector is not allowed on these types of ids
+            changeSelection(clickedElement, problemSelectionManager);
         }
 
         if (CourseSketch.dataManager.getState("isInstructor")) {

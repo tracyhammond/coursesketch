@@ -1,7 +1,8 @@
 package connection;
 
-import multiconnection.GeneralConnectionServer;
-import multiconnection.MultiConnectionManager;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import utilities.ConnectionException;
 
 /**
  * Creates a connection to the submission server.
@@ -19,7 +20,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param connectType If the connection is local or if it is remote
      * @param secure If ssl should be used.
      */
-    public DatabaseConnectionManager(final GeneralConnectionServer parent, final boolean connectType, final boolean secure) {
+    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
         super(parent, connectType, secure);
     }
 
@@ -28,9 +29,11 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param serv The current server that the connections will be made from.
      */
     @Override
-    public final void connectServers(final GeneralConnectionServer serv) {
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+    public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(), SubmissionConnection.class);
+            createAndAddConnection(serv, this.isConnectionLocal(), "10.9.74.202", SUBMISSION_PORT, this.isSecure(),
+                    SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }

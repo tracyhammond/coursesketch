@@ -1,6 +1,6 @@
 package internalconnections;
 
-import multiconnection.MultiConnectionState;
+import coursesketch.server.interfaces.MultiConnectionState;
 
 /**
  * Holds special information about a user being logged in.

@@ -1,8 +1,7 @@
 package serverfront;
 
-import multiconnection.GeneralConnectionRunner;
-import multiconnection.GeneralConnectionServlet;
-import multiconnection.GeneralSocketHandler;
+import coursesketch.server.base.GeneralConnectionRunner;
+import coursesketch.server.base.ServerWebSocketInitializer;
 
 /**
  * A subclass of the runner and sets up some special information for running the
@@ -20,11 +19,9 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * @param args
      *            arguments from the command line.
      */
-    public static void main(final String[] args) {
-        System.out.println("StARTING THE PROXY ESERVER");
-        final String[] args2 = {"local"};
-        final ProxyRunner run = new ProxyRunner(args2);
-        run.runAll();
+    public static void main(final String... args) {
+        final ProxyRunner run = new ProxyRunner(args);
+        run.start();
     }
 
     /**
@@ -35,6 +32,8 @@ public class ProxyRunner extends GeneralConnectionRunner {
     public final void executeRemoveEnviroment() {
         /*
         setKeystorePassword("Challeng3");
+    public final void executeRemoveEnvironment() {
+        setCertificatePath("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
         */
     }
@@ -45,7 +44,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * @param args
      *            arguments from the command line.
      */
-    public ProxyRunner(final String[] args) {
+    public ProxyRunner(final String... args) {
         super(args);
         super.setPort(PROXY_PORT);
         super.setTimeoutTime(TIMEOUT_TIME);
@@ -55,7 +54,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final GeneralConnectionServlet getServlet(final long time, final boolean secure, final boolean local) {
+    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new ProxyServlet(time, secure, local);
     }
 

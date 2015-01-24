@@ -1,159 +1,79 @@
 /* depends on objectandinheritance.js */
 
 /**
- * This file contains all of the resources for
+ * This file contains all of the resources for managing sketches.
  */
-function SketchSurfaceHandler() {
-
-    var SKETCH_TAG = "sketch-surface";
-    var SKETCH_CONTAINER_CLASS = "sketch-surface-container";
-    var SKETCH_TEMPLATE = "sketch-surface-template";
-    var sketchObjectList = {};
+function SketchSurfaceManager(sketchSurface) {
+    var sketchMap = new Map();
+    var parentSketch = undefined;
+    var currentSketch = undefined;
 
     /**
-     * @param id
-     *            {String}
-     * @returns {SketchSurface}
+     * sets the parent sketch.
      */
-    this.getSketchSurface = function(id) {
-        return sketchObjectList[id];
+    this.setParentSketch = function(sketch) {
+        parentSketch = sketch;
+        if (isUndefined(currentSketch)) {
+            currentSketch = sketch;
+        }
     };
 
     /**
-     * Returns a sketch with the specific ID
-     *
-     * @param id
-     *            {String}
-     * @returns {SRL_Sketch}
+     * Sets the id of the parent sketch.
+     * A sketch surface can contain multiple sketches but the first sketch object created is the parent sketch.
+     */
+    this.setParentSketchId = function(id) {
+        parentSketch.id = id;
+        this.setSketch(parentSketch);
+    };
+
+    /**
+     * Adds the sketch with its Id to the list of sketches related to this sketch surface.
+     * (replaces an old sketch with the same id if it already exist in the list).
+     */
+    this.setSketch = function(sketch) {
+        if (isUndefined(sketch.id)) {
+            // TODO: change to exception object
+            throw "id must be defined to add it.";
+        }
+        sketchMap.set(sketch.id, sketch);
+    };
+
+    /**
+     * Returns a sketch based off of its id.
      */
     this.getSketch = function(id) {
-        return sketchObjectList[id].getSrlSketch();
+        return sketchMap.get(id);
     };
 
     /**
-     * Creates a new sketch. The sketch is invisible by default and has its
-     * style set to none.
-     *
-     * @param id
-     *            {String}
-     * @param updateList
-     *            {UpdateManager} An optional argument that creates a sketch
-     *            with an existing update list.
-     * @returns {SRL_Sketch}
+     * creates a new sketch with the given id.
+     * NOTE: this does not change what the current sketch is pointed to.
      */
-    this.createSketch = function(id, updateList) {
-        try {
-            var sketch = this.getSketch(id);
-            if (!isUndefined(sketch)) {
-                return sketch; // sketch is already created with this ID.
-                // prevents infinite loops
-            }
-        } catch (exception) {
-            console.log("ISSUE!");
-        }
-        var element = document.createElement("sketch-surface");
-        if (!isUndefined(updateList)) {
-            element.dataset.existingList = "";
-            element.bindToUpdateList(updateList);
-        }
-        if (!isUndefined(id)) {
-            element.dataset.customId = "";
-            element.id = id;
-        }
-        sketchObjectList[id] = element;
-        element.initializeSketch();
-        return element.getSrlSketch();
+    this.createSketch = function(id, sketchData) {
+        var sketch = new SRL_Sketch();
+        sketch.id = id;
+        this.setSketch(sketch);
     };
 
     /**
-     * Removes the sketch and possibly removes it from the DOM
+     * sets the current sketch for input and drawing to the one specified by the given id.
+     */
+    this.setCurrentSketch = function(id) {
+        currentSketch = this.getSketch(id);
+    };
+
+    /**
+     * returns the current sketch that is being used by this sketch surface.
+     */
+    this.getCurrentSketch = function() {
+        return currentSketch;
+    };
+
+    /**
+     * deletes the sketch from the list of possible sketches.
      */
     this.deleteSketch = function(id) {
-        sketchObjectList[id] = undefined;
-        var element = document.getElementById(id);
-        if (!isUndefined(element) && element != null) {
-            // implicitly calls finalize on the specific element
-            element.parentNode.removeChild(element);
-        }
-    };
-
-    /**
-     * Initializes the list of sketches with the current element.
-     * 
-     * This method should not need to be called because it should automatically
-     * register itself.
-     * 
-     * @param element
-     *            {Element}
-     */
-    this.addFromElement = function(element) {
-        var elements = element.querySelectorAll(SKETCH_TAG);
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i];
-            sketchObjectList[element.id] = element;
-        }
-    };
-
-    /**
-     * @param element
-     *            {SketchSurface} adds an instance of SketchSurface to the
-     *            sketch.
-     */
-    this.addElement = function(element) {
-        if (!(getTypeName(element) === "sketch-surface" || element instanceof SketchSurface || Object.getPrototypeOf(element) == SketchSurface)) {
-            throw new Error("Added element is not an instance of SketchSurface: " + getTypeName(element));
-        }
-        if (isUndefined(element.id)) {
-            throw new Error("Element Id must be defined");
-        }
-        sketchObjectList[element.id] = element;
-    };
-
-    /**
-     * This is used to force the addition of adding an element (typically not a good idea)
-     * @param element
-     *            {SketchSurface} adds an instance of SketchSurface to the
-     *            sketch.
-     */
-    this.addElementForced = function(element) {
-        sketchObjectList[element.id] = element;
-    };
-
-    /**
-     * Resets this object so that it contains zero sketch objects.
-     * 
-     * NOTE: this does not delete any sketches from the dom.
-     */
-    this.reset = function() {
-        sketchObjectList = {};
-    };
-
-    this.getSketchContainerClass = function() {
-        return SKETCH_CONTAINER_CLASS;
-    };
-
-    this.getSketchTemplateId = function() {
-        return SKETCH_TEMPLATE;
-    };
-
-    /**
-     * @returns {Array}
-     */
-    this.getSketchIds = function() {
-        var array = [];
-        for ( var id in sketchObjectList) {
-            array.push(id);
-        }
-        return array;
+        sketchMap.delete(id);
     };
 }
-
-(function(scope) {
-    if (!isUndefined(scope.SKETCHING_SURFACE_HANDLER)) {
-        return;
-    }
-    /**
-     * @Class Contains data that get
-     */
-    makeValueReadOnly(scope, "SKETCHING_SURFACE_HANDLER", new SketchSurfaceHandler());
-})(this);

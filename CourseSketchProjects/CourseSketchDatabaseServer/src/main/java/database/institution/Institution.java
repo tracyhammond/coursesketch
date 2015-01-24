@@ -1,24 +1,24 @@
 package database.institution;
 
-import java.util.List;
-
-import multiconnection.MultiConnectionManager;
-import protobuf.srl.request.Message.Request;
+import com.google.protobuf.ByteString;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
+import protobuf.srl.lecturedata.Lecturedata.Lecture;
+import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 
-import com.google.protobuf.ByteString;
-
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import java.util.List;
 
 /**
  * A wrapper around the database that contains institution data.
  * @author gigemjt
  *
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Institution {
 
     /**
@@ -52,6 +52,26 @@ public interface Institution {
      * @throws DatabaseAccessException Thrown if the data does not exist.
      */
     List<SrlAssignment> getAssignment(List<String> assignementID, String userId) throws AuthenticationException,
+            DatabaseAccessException;
+
+    /**
+     * @param lectureId A list of ids for a specific lecture.
+     * @param userId The user requesting these courses.
+     * @return A list of lectures given a list of Ids for the lectures.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the data does not exist.
+     */
+    List<Lecture> getLecture(List<String> lectureId, String userId) throws AuthenticationException,
+            DatabaseAccessException;
+
+    /**
+     * @param lectureSlideId A list of ids for a specific lecture slide.
+     * @param userId The user requesting these courses.
+     * @return A list of lecture slides given a list of Ids for the lecture slides.
+     * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the data does not exist.
+     */
+    List<LectureSlide> getLectureSlide(List<String> lectureSlideId, String userId) throws AuthenticationException,
             DatabaseAccessException;
 
     /**
@@ -114,6 +134,51 @@ public interface Institution {
     String insertAssignment(String userId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
+     * Inserts the lecture into the the database.
+     *
+     * Upon insertion 3 steps happen:
+     * <ol>
+     * <li>the lecture is created in a lecture collection</li>
+     * <li>the course lecture list now contains the lecture Id</li>
+     * <li>the lecture has the same default permissions as the parent course</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the insertion
+     * @param lecture
+     *            The object being inserted
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
+     * @return The Id of the object that was inserted
+     */
+    String insertLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Inserts the lecture slide into the the database.
+     *
+     * Upon insertion 3 steps happen:
+     * <ol>
+     * <li>the lecture slide is created in a lecture slide collection</li>
+     * <li>the lecture slide list now contains the lecture Id</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the insertion
+     * @param lectureSlide
+     *            The object being inserted
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
+     * @return The Id of the object that was inserted
+     */
+    String insertLectureSlide(String userId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException;
+
+    /**
      * Inserts the assignment into the the database.
      *
      * Upon insertion 3 steps happen:
@@ -153,6 +218,48 @@ public interface Institution {
     String insertBankProblem(String userId, SrlBankProblem problem) throws AuthenticationException;
 
     /**
+     * Inserts the lecture into the the database.
+     *
+     * Upon insertion 1 step happen:
+     * <ol>
+     * <li>the lecture is updated in a lecture collection</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param lecture
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
+     *
+     */
+    void updateLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Inserts the lecture into the the database.
+     *
+     * Upon insertion 1 step happen:
+     * <ol>
+     * <li>the lecture slide is updated in a slide collection</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param lectureSlide
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to insert an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the assignment.
+     *
+     */
+    void updateLectureSlide(String userId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException;
+
+    /**
      * Registers a user for a course
      *
      * Upon registration 3 steps happen:
@@ -187,23 +294,14 @@ public interface Institution {
 
     /**
      * A message sent from the submission server that allows the insertion of
-     * the message.
-     *
-     * @param req Submission being inserted.
-     * @throws DatabaseAccessException Thrown if there is data missing.
-     */
-    void insertSubmission(Request req) throws DatabaseAccessException;
-
-    /**
-     * A message sent from the submission server that allows the insertion of
      * the submission.
-     * @param problemId The bank problem that is related
      * @param userId The user that the submission is associated.
+     * @param problemId The bank problem that is related
      * @param submissionId The submission that is being inserted.
-     * @param experiment True if the submission is an experiment.
+     * @param isExperiment True if the submission is an experiment.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void insertSubmission(String problemId, String userId, String submissionId, boolean experiment)
+    void insertSubmission(String userId, String problemId, String submissionId, boolean isExperiment)
             throws DatabaseAccessException;
 
     /**

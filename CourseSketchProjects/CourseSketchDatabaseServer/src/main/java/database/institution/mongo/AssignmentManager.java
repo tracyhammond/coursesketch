@@ -1,5 +1,26 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.DatabaseAccessException;
+import database.RequestConverter;
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import database.auth.Authenticator.AuthType;
+import database.auth.MongoAuthenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.LatePolicy;
+import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.school.School.State;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.ACCESS_DATE;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
@@ -25,30 +46,6 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
-import protobuf.srl.school.School.SrlPermission;
-import protobuf.srl.school.School.State;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
-import database.auth.Authenticator.AuthType;
 
 /**
  * Manages assignments for mongo.
@@ -91,12 +88,11 @@ public final class AssignmentManager {
                 .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, assignment.getAccessPermission().getUserPermissionList());
         if (assignment.hasLatePolicy()) {
-            query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType())
+            query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
                     .append(LATE_POLICY_RATE, assignment.getLatePolicy().getRate())
-                    .append(LATE_POLICY_SUBTRACTION_TYPE, assignment.getLatePolicy().getSubtractionType());
-            if (assignment.getLatePolicy().getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
-                query.append(LATE_POLICY_TIME_FRAME_TYPE, assignment.getLatePolicy().getTimeFrameType());
-            }
+                    .append(LATE_POLICY_SUBTRACTION_TYPE, assignment.getLatePolicy().getSubtractionType().getNumber());
+
+            query.append(LATE_POLICY_TIME_FRAME_TYPE, assignment.getLatePolicy().getTimeFrameType().getNumber());
         }
         if (assignment.getProblemListList() != null) {
             query.append(PROBLEM_LIST, assignment.getProblemListList());
@@ -105,7 +101,7 @@ public final class AssignmentManager {
         final DBObject corsor = newUser.findOne(query);
 
         // inserts the id into the previous the course
-        CourseManager.mongoInsertIntoCourse(dbs, assignment.getCourseId(), corsor.get(SELF_ID).toString());
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), corsor.get(SELF_ID).toString());
 
         return corsor.get(SELF_ID).toString();
     }
@@ -255,12 +251,46 @@ public final class AssignmentManager {
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-            latePolicy.setFunctionType(SrlAssignment.LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
-            // safety case to string then parse to float
-            latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
-            latePolicy.setSubtractionType((Boolean) corsor.get(LATE_POLICY_SUBTRACTION_TYPE));
-            if (latePolicy.getFunctionType() == LatePolicy.FunctionType.WINDOW_FUNCTION) {
-                latePolicy.setTimeFrameType(SrlAssignment.LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+            if (corsor.get(LATE_POLICY_FUNCTION_TYPE) == null) {
+                latePolicy.setFunctionType(LatePolicy.FunctionType.STEPPING_FUNCTION);
+            } else {
+                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+            }
+
+            if (corsor.get(LATE_POLICY_RATE) == null) {
+                latePolicy.setRate(1.0F);
+            } else {
+                latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
+            }
+
+            if (corsor.get(LATE_POLICY_SUBTRACTION_TYPE) == null) {
+                latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+            } else {
+                try {
+                    final Object subType = corsor.get(LATE_POLICY_SUBTRACTION_TYPE);
+                    if (subType != null) {
+                        final boolean subtractionType = (Boolean) subType; // true is cap score.
+                        if (subtractionType) {
+                            latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
+                        } else {
+                            latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
+                        }
+                    } else {
+                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
+                    }
+                } catch (ClassCastException e) {
+                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
+                }
+            }
+
+            if (latePolicy.getFunctionType() != LatePolicy.FunctionType.EXPONENTIAL) {
+                if (corsor.get(LATE_POLICY_TIME_FRAME_TYPE) == null) {
+                    latePolicy.setTimeFrameType(LatePolicy.TimeFrame.DAY);
+                } else {
+                    latePolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+                }
+            } else {
+                latePolicy.setTimeFrameType(LatePolicy.TimeFrame.CONSTANT);
             }
         }
 
@@ -434,7 +464,7 @@ public final class AssignmentManager {
      * @param assignmentId the id of the assignment that is getting permissions.
      * @param ids the list of list of permissions that is getting added.
      */
-    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>[] ids) {
+    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);

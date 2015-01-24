@@ -39,6 +39,7 @@ message ItemResult {
 }
 
 enum ItemQuery {
+	NO_OP = -2; // no operation happens.
 	ERROR = -1;
 	COURSE = 0;
 	ASSIGNMENT = 1;
@@ -55,6 +56,8 @@ enum ItemQuery {
 	REGISTER = 12; // userId = 0 courseId = 1
 	COURSE_LIST = 13; // returns a list of Ids
 	UPDATE = 14; // polls the database for any updates/changes that have happened.
+	LECTURE = 15; // used to get the lectures for a course
+	LECTURESLIDE = 16; // used to get the lecture slides for a course
 }
 
 /**

@@ -62,10 +62,9 @@ function Connection(uri, encrypted, attemptReconnect) {
                     }, 3000);
                 }
             };
-
             websocket.onmessage = function(evt) {
                 try {
-                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType; 
+                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
                     // Decode the Request
                     var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
                     // console.log("request decoded succesfully ");
@@ -85,8 +84,10 @@ function Connection(uri, encrypted, attemptReconnect) {
                     } else if (msg.requestType == MessageType.FEEDBACK && onAnswerChecker) {
                         console.log("getting from answer checker");
                         onAnswerChecker(evt, msg);
-                    } else if (msg.requestType == MessageType.DATA_REQUEST && onSchoolData) {
+                    } else if ((msg.requestType == MessageType.DATA_REQUEST || msg.requestType == MessageType.DATA_INSERT
+                        || msg.requestType == MessageType.DATA_UPDATE || msg.requestType == MessageType.DATA_REMOVE) && onSchoolData) {
                         console.log("getting from school data");
+                        console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType == MessageType.ERROR) {
                         console.log(msg.getResponseText());
@@ -208,14 +209,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 	 * TODO: complete the entirety of the event that can be spoofed.
 	 */
 	this.sendSelf = function(message) {
-        var event = {
-            data : message.toArrayBuffer()
-        };
-        setTimeout(function() {
+	    setTimeout(function() {
+            var event = {
+                data : message.toArrayBuffer()
+            };
             websocket.onmessage(event);
-        }, 500);
+        }, 100);
     };
-	
 	/**
 	 * Closes the websocket.
 	 *

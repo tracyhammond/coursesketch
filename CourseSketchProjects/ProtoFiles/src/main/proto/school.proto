@@ -17,13 +17,14 @@ message SrlCourse {
 	optional SrlPermission accessPermission= 3;
 	optional Accessibility access = 4 [default=PROTECTED];
 	optional string description = 5;
-	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer) 
+	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
 	optional string imageUrl = 7;
 	optional float grade = 8; //Calculated grade for all Assignments in this course
 	optional DateTime accessDate = 9; //Date course can be accessed
 	optional DateTime closeDate = 10; //Date course can no longer be accessed
 	optional State state = 11;
 	repeated string assignmentList = 12;
+	repeated string lectureList = 13;
 
 	enum Accessibility {
 		SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
@@ -38,7 +39,7 @@ message SrlAssignment {
 	required string courseId = 1; // To know who the parent is.
 	required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
 	optional string name = 3;
-	optional AssignmentType type = 4 [default=HOMEWORK];
+	optional AssignmentType type = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
 	optional string other = 5; // Name of an Instructor-defined assignment type
 	optional string description = 6;
 	repeated string links = 7; // external links/resources. Field needs improvement.
@@ -58,27 +59,33 @@ message SrlAssignment {
 		QUIZ = 2;
 		LAB = 3;
 		EXAM = 4;
-		SURVEY = 5;
+		SURVEY = 5; // not for a grade!
 		OTHER = 6; // Allows instructors to create unique assignment types
 	}
+}
 
-	message LatePolicy {
-		required FunctionType functionType = 1 [default = WINDOW_FUNCTION];
-		optional TimeFrame timeFrameType = 2 [default = DAY];
-		optional float rate = 3;
-		optional bool subtractionType = 4; // true is cap score, false is off user grade.
+message LatePolicy {
+	required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
+	optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
+	optional float rate = 3;
+	optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
 
-		enum FunctionType {
-			WINDOW_FUNCTION = 1;
-			LINE = 2;
-			EXPONENTIAL = 3;
-		}
+	enum FunctionType {
+		STEPPING_FUNCTION = 0;
+		LINE = 1;
+		EXPONENTIAL = 2;
+	}
 
-		enum TimeFrame {
-			DAY = 1;
-			HOUR = 2;
-			MINUTE = 3;
-		}
+	enum TimeFrame {
+		DAY = 3;
+		HOUR = 2;
+		MINUTE = 1;
+		CONSTANT = 0;
+	}
+
+	enum SubtractionType {
+		CAP = 0;
+		PERCENT = 1;
 	}
 }
 
@@ -110,10 +117,10 @@ message SrlBankProblem {
 	optional SrlPermission accessPermission= 10;
 
 	enum QuestionType {
-		SKETCH = 1;	
+		SKETCH = 1; // sketching
 		MULT_CHOICE = 2;
-		FREE_RESP = 3;
-		CHECK_BOX = 4;	
+		FREE_RESP = 3; // typing
+		CHECK_BOX = 4;
 	}
 }
 
@@ -130,7 +137,7 @@ message SrlGrade {
 }
 
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
-	optional int32 year = 1;	
+	optional int32 year = 1;
 	optional int32 month = 2;
 	optional int32 day = 3;
 	optional int32 hour = 4;

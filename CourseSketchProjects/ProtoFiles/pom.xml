@@ -27,8 +27,8 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>dtrott</id>
-			<url>http://maven.davidtrott.com/repository</url>
+			<id>protoc-plugin</id>
+			<url>http://sergei-ivanov.github.com/maven-protoc-plugin/repo/releases/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -37,10 +37,18 @@
 	</properties>
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>com.google.protobuf.tools</groupId>
 				<artifactId>maven-protoc-plugin</artifactId>
-				<version>0.1.10</version>
+				<version>0.3.2</version>
 				<configuration>
 					<checkStaleness>true</checkStaleness>
 					<staleMillis>10000</staleMillis>
@@ -55,7 +63,8 @@
 							<protocExecutable>${protocLocation}</protocExecutable>
 						</configuration>
 						<goals>
-							<goal>compile</goal>
+                                <goal>compile</goal>
+                                <goal>testCompile</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -64,6 +73,11 @@
 	</build>
 
 	<dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.3.0</version>
+        </dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>

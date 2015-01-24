@@ -128,7 +128,8 @@ public final class BankProblemManager {
      * @throws AuthenticationException Thrown if the user does not have permission to update the bank problem.
      * @throws DatabaseAccessException Thrown if there is an issue updating the problem.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+        "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
