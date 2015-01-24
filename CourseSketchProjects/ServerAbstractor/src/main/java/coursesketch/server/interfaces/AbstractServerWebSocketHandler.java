@@ -257,14 +257,14 @@ public abstract class AbstractServerWebSocketHandler {
     protected abstract MultiConnectionManager getConnectionManager();
 
     /**
-     * @return A map representing the Id to state. The returned map is read only.
+     * @return A map representing the session id as a string to the session state. The returned map is read only.
      */
     protected final Map<String, MultiConnectionState> getIdToState() {
         return Collections.unmodifiableMap(idToState);
     }
 
     /**
-     * @return A map representing the Id to Connection. The returned map is read only.
+     * @return A map representing the connection state to Connection. The returned map is read only.
      */
     protected final Map<MultiConnectionState, SocketSession> getIdToConnection() {
         return Collections.unmodifiableMap(idToConnection);

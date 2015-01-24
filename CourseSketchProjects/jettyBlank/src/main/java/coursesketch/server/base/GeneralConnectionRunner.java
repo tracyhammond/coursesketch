@@ -17,6 +17,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -65,6 +66,49 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void configureSSL(final String keystorePath, final String iCertificatePath) {
+        /*
+        servletInstance = getServlet(timeoutTime, false, local);
+
+        final ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SECURITY);
+        context.setContextPath("/socket");
+        context.addServlet(new ServletHolder(servletInstance), "/socket");
+
+        final HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] {context});
+        server.setHandler(handlers);
+        */
+
+        /*
+        final WebSocketHandler wsHandler = getSocketHandler(timeoutTime, true, local);
+        final ContextHandler wsContextHandler = new ContextHandler();
+        wsContextHandler.setHandler(wsHandler);
+        wsContextHandler.setContextPath("/");  // this context path doesn't work ftm
+        final List<Handler> webSocketHandlerList = new ArrayList<>();
+        webSocketHandlerList.add(wsHandler);
+
+        final HandlerCollection handlerCollection = new HandlerCollection();
+        handlerCollection.setHandlers(webSocketHandlerList.toArray(new Handler[0]));
+        server.setHandler(handlerCollection);
+
+        */
+        /*
+        final StatisticsHandler stats = new StatisticsHandler();
+        final ServletHandler servletHandler = new ServletHandler();
+
+        System.out.println("Creating a new servlet");
+
+        // FUTURE: change this to true!
+        servletInstance = getServlet(timeoutTime, false, local);
+
+        servletHandler.addServletWithMapping(new ServletHolder(servletInstance), "/*");
+
+        stats.setHandler(servletHandler);
+
+        final HandlerList handlers = new HandlerList();
+        handlers.setHandlers(new Handler[] {stats});
+
+        server.setHandler(handlers);
+        */
 
         final SslContextFactory contextfactor = new SslContextFactory();
 

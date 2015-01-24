@@ -58,6 +58,11 @@ public abstract class AbstractGeneralConnectionRunner {
     private int port = DEFAULT_PORT;
 
     /**
+     * The url that the server runs on.
+     */
+    private String host;
+
+    /**
      * The timeoutTime of a connection.
      */
     private long timeoutTime;
@@ -92,7 +97,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * The password for the keystore.
      */
-    private String certificatePath = null;
+    private String keyManagerPassword;
 
     /**
      * The location the keystore is stored in.
@@ -100,6 +105,13 @@ public abstract class AbstractGeneralConnectionRunner {
     private String keystorePath = null;
 
     /**
+     * The location the truststore is stored in.
+     */
+    private String certificatePath = "";
+
+    /**
+     * The main method that can be used to run a server.
+     * @param args Input arguments that are running the server.
      * The servlet that is connected to the server.  (it is typically binded to a certain URL)
      */
     private ISocketInitializer socketInitializerInstance;
@@ -119,16 +131,24 @@ public abstract class AbstractGeneralConnectionRunner {
         this.args = Arrays.copyOf(arguments, arguments.length);
         if (arguments.length >= 1 && arguments[0].equals("local")) {
             local = true;
+            if (arguments.length >= 2 && arguments[1].equals("secure")) {
+                System.out.println("Running local code!");
+                host = "localhost";
+                //keystorePassword = "sketchrec";
+                keyManagerPassword = "sketchrec";
+                keystorePath = "keystore.jks";
+                //truststorePath = "truststore.jks";
+                secure = true;
+            }
         } else {
             local = false;
+            secure = false;
         }
         production = false;
-        secure = false;
     }
 
     /**
      * Runs the entire startup process including input.
-     * The order that the subclass methods are called is:
      * <ol>
      *     <li>{@link #loadConfigurations()}</li>
      *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoveEnvironment()}</li>
