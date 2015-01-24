@@ -67,6 +67,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         }
     }
 
+    /**
+     * Sets the assignment locally into the local database.
+     */
     function setAssignment(assignment, assignmentCallback) {
         database.putInAssignments(assignment.id, assignment.toBase64(), function(e, request) {
             if (assignmentCallback) {
@@ -85,6 +88,43 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         });
     }
     parent.deleteAssignment = deleteAssignment;
+
+    /**
+     * Adds a new assignment to both local and server databases. Also updates the
+     * corresponding course given by the assignment's courseId.
+     *
+     * @param assignment
+     *                assignment object to insert
+     * @param localCallback
+     *                function to be called after local insert is done
+     * @param serverCallback
+     *                function to be called after server insert is done
+     */
+    function insertAssignment(assignment, localCallback, serverCallback) {
+        setAssignment(assignment, function(e, request) {
+            console.log("inserted locally :" + assignment.id)
+            if (!isUndefined(localCallback)) {
+                localCallback(e, request);
+            }
+            insertAssignmentServer(assignment, function(assignmentUpdated) {
+                parent.getCourse(assignment.courseId, function(course) {
+                    var assignmentList = course.assignmentList;
+                    assignmentList.push(assignmentUpdated.id);
+                    course.assignmentList = assignmentList;
+                    parent.setCourse(course, function() {
+                        if (!isUndefined(serverCallback)) {
+                            serverCallback(course);
+                        }
+                    });
+                    // Course is set with its new assignment
+                });
+                // Finished with the course
+            });
+            // Finished with setting assignment
+        });
+        // Finished with local assignment
+    }
+    parent.insertAssignment = insertAssignment;
 
     /**
      * Gets an Assignment from the local database.
