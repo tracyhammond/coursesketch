@@ -15,6 +15,15 @@ message ActionCreateTextBox {
     optional string text = 5;
 }
 
+message ActionCreateHighlightText {
+    optional string startXPath = 1;
+    optional int32 startOffset = 2;
+    optional string endXPath = 3;
+    optional int32 endOffset = 4;
+    optional string backgroundColor = 5;
+    optional string textColor = 6;
+}
+
 message ActionCreateOutline {
     optional int32 x = 1;
     optional int32 y = 2;
