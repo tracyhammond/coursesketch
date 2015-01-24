@@ -29,6 +29,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param serv The current server that the connections will be made from.
      */
     @Override
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
             createAndAddConnection(serv, this.isConnectionLocal(), "10.9.74.202", SUBMISSION_PORT, this.isSecure(),

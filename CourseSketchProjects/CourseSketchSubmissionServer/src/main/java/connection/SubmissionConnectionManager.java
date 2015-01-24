@@ -32,6 +32,7 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
      * {@inheritDoc}.
      */
     @Override
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
             createAndAddConnection(serv, isConnectionLocal(), "10.9.74.201", PORT, isSecure(), DataClientWebSocket.class);

@@ -49,6 +49,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *            {@link serverfront.ProxyServerWebSocketHandler}) in this case.
      */
     @Override
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         // System.out.println("Open Recognition...");
         System.out.println("Open Login...");

@@ -32,6 +32,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public final void connectServers(final AbstractServerWebSocketHandler parent) {
         try {
             createAndAddConnection(parent, isConnectionLocal(), "10.9.74.200.202",
