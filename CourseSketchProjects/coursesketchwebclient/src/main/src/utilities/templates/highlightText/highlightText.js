@@ -56,80 +56,45 @@ function HighlightText() {
      * The selection must also contain characters (no alert for this)
      */
     function highlightText() {
+        
+    
         if (window.getSelection().type !== "None") {
             var myText = window.getSelection();
             var range = myText.getRangeAt();
             children = range.cloneContents().childNodes;
             
-            // Makes sure the selection contains characters so blank span tags are not added
-            if (myText.toString().length > 0) {
-                // Makes sure adding span tags will not ruin the selected text formatting
-                if (checkChildrenNodes(children)) {
+            
+            if (myText.toString().length > 0) { // Makes sure the selection contains characters so blank span tags are not added
+                if (checkChildrenNodes(children)) { // Makes sure adding span tags will not ruin the selected text formatting
                     var newNode = document.createElement('span');
                     newNode.setAttribute('class', 'highlightedText');
-                    newNode.setAttribute('style', 'background:' + highlightColor + '; color:' + textColor);
-                    var start = range.startContainer.parentNode;
-                    console.log(range);
-                    console.log(range.startContainer);
-                    console.log(getXPath(range.startContainer));
-                    console.log(range.startOffset);
-                    console.log(getXPath(range.endContainer));
-                    console.log(range.endOffset);
-                    testData = [getXPath(range.startContainer), range.startOffset, getXPath(range.endContainer), range.endOffset];
+                    newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
+                    
+                    startXPath = getXPath(range.startContainer);
+                    startOffset = range.startOffset;
+                    endXPath = getXPath(range.endContainer);
+                    endOffset = range.endOffset;
+
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
-                    //$(".highlightedText").replaceWith(function() { return $(this).contents(); } );
-                    $(".highlightedText").contents().unwrap();
-                    document.normalize();
-                    restoreSelection();
-                    
-                    var count = 0; // Used to count how deep in the sibling list the start container is
-                    var sibList = [];
-                    var theId = undefined;
-                    console.log(start);
-                    console.log(start.id);
-                    /*while (start.id == undefined || start.id == "") {
-                        console.log('entering loop');
-                        // If previous sibling is defined, move to previous sibling and increase count
-                        if (start.previousSibling == null) {
-                            start = start.previousSibling;
-                            count += 1;
-                            console.log(count);
-                        } else {
-                        // If previous sibling is undefined, move up to parentNode, push count, and reset count
-                            start = start.parentNode;
-                            console.log("PUSH");
-                            console.log(count);
-                            sibList.push(count);
-                            count = 0;
-                        }
-                        if (start == null) {
-                            break;
-                        }
-                    }*/
-                    if (start != null) {
-                        theId = start.id;
-                    }
-                    console.log(sibList);
-                    console.log(theId);
                     
                 } else {
-                    // Message for a selection that is not valid
-                    alert("Please make a valid selection.")
+                    alert("Please make a valid selection.") // Message for invalid selections
                 }
             }
         }
     }
     
     function getXPath (node, currentPath) {
-    /* this should suffice in HTML documents for selectable nodes, XML with namespaces needs more code */
         currentPath = currentPath || '';
         switch (node.nodeType) {
             case 3:
             case 4:
-                return getXPath(node.parentNode, 'text()[' + (document.evaluate('preceding-sibling::text()', node, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']');
+                return getXPath(node.parentNode, 'text()[' + (document.evaluate('preceding-sibling::text()', node, null,
+                        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']');
             case 1:
-                return getXPath(node.parentNode, node.nodeName + '[' + (document.evaluate('preceding-sibling::' + node.nodeName, node, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']' + (currentPath ? '/' + currentPath : ''));
+                return getXPath(node.parentNode, node.nodeName + '[' + (document.evaluate('preceding-sibling::' + node.nodeName, node, null,
+                        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']' + (currentPath ? '/' + currentPath : ''));
             case 9:
                 return '/' + currentPath;
             default:
@@ -138,25 +103,27 @@ function HighlightText() {
     }
     
     
-    function restoreSelection () {
-        var selectionDetails = testData;
+    function restoreSelection() {
             if (typeof window.getSelection != 'undefined') {
                 var selection = window.getSelection();
                 selection.removeAllRanges();
                 var range = document.createRange();
-                range.setStart(document.evaluate(selectionDetails[0], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(selectionDetails[1]));
-                range.setEnd(document.evaluate(selectionDetails[2], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(selectionDetails[3]));
+                range.setStart(document.evaluate(startXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(startOffset));
+                range.setEnd(document.evaluate(endXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(endOffset));
                 selection.addRange(range);
+                
                 var newNode = document.createElement('span');
                 newNode.setAttribute('class', 'highlightedText');
-                newNode.setAttribute('style', 'background:' + highlightColor + '; color:' + textColor);
+                newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
                 newNode.appendChild(range.extractContents());
                 range.insertNode(newNode);
-                console.log("I DID IT MOM");
             }
     }
     
-    
+    this.unhighlightAll = function() {
+        $(".highlightedText").contents().unwrap();
+        document.normalize(); //Try to find a way to do this with node.normalize() (in case somebody highlights a bajillion things)
+    }
     
     /**
      * @param {node} is a clone of the custom HTML template for highlighting text
@@ -170,8 +137,10 @@ function HighlightText() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        highlightColor = shadowRoot.querySelector("#highlightColor").value;
+        backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
         textColor = shadowRoot.querySelector("#textColor").value;
+        startXPath, startOffset, endXPath, endOffset = undefined;
+        
         $(document).on("mouseup", highlightText);
         
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
@@ -189,9 +158,9 @@ function HighlightText() {
             localScope.parentNode.removeChild(localScope);
         };
         
-        // Updates value of highlightColor when the color selector value is changed by the user
-        shadowRoot.querySelector("#highlightColor").onchange = function() {
-            highlightColor = shadowRoot.querySelector("#highlightColor").value;
+        // Updates value of backgroundColor when the color selector value is changed by the user
+        shadowRoot.querySelector("#backgroundColor").onchange = function() {
+            backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
         };
         
         // Updates value of textColor when the color selecor value is changed by the user
@@ -201,6 +170,70 @@ function HighlightText() {
         
         enableDragging();
     };
+    
+    this.setFinishedListener = function(listener) {
+        this.finishedCallback = listener;
+    };
+
+    // Saves Data for the proto message based on the position, height, width, and value of the text box
+    this.saveData = function(event) {
+        var highlightTextProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+        highlightTextProto.setStartXPath(startXPath);
+        highlightTextProto.setStartOffset(startOffset);
+        highlightTextProto.setEndXPath(endXPath);
+        highlightTextProto.setEndOffset(endOffset);
+        highlightTextProto.setBackgroundColor(backgroundColor);
+        highlightTextProto.setTextColor(textColor);
+
+        // If the highlightText does not have an id, then a command has not been created for the highlightText
+        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
+        }
+        
+        this.command.setCommandData(highlightTextProto.toArrayBuffer()); // Sets commandData for commandlist
+        this.createdCommand = this.command;
+        this.id = this.command.commandId;
+        this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
+    };
+    
+    this.loadData = function(highlightTextProto) {
+        if (isUndefined(shadowRoot)) {
+            loadedData = highlightTextProto;
+            return;
+        }
+        if (isUndefined(highlightTextProto)) {
+            return;
+        }
+        
+        var rangeStartNode = highlightTextProto.getStartXPath();
+        var rangeStartOffset = highlightTextProto.getStartOffset();
+        var rangeEndNode = highlightTextProto.getEndXPath();
+        var rangeEndOffset = highlightTextProto.getEndOffset();
+        var bgColor = highlightTextProto.getBackgroundColor();
+        var fontColor = highlightTextProto.getTextColor();
+        
+        if (typeof window.getSelection != 'undefined') {
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            var range = document.createRange();
+            range.setStart(document.evaluate(rangeStartNode, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeStartOffset));
+            range.setEnd(document.evaluate(rangeEndNode, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeEndOffset));
+            selection.addRange(range);
+            
+            var newNode = document.createElement('span');
+            newNode.setAttribute('class', 'highlightedText');
+            newNode.setAttribute('style', 'background:' + bgColor + '; color:' + fontColor);
+            newNode.appendChild(range.extractContents());
+            range.insertNode(newNode);
+        }
+        
+    };
+    
+    this.getFinishedCallback = function() {
+        return this.finishedCallback;
+    };
 }
 
+HighlightText.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
+HighlightText.prototype.createdCommand = undefined;
 HighlightText.prototype = Object.create(HTMLDialogElement.prototype);
