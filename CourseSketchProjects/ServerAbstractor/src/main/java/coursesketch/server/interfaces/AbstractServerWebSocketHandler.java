@@ -120,7 +120,7 @@ public abstract class AbstractServerWebSocketHandler {
         idToState.put(uniqueState.getKey(), uniqueState);
         System.out.println("ID ASSIGNED");
 
-        System.out.println("Recieving connection " + getCurrentConnectionNumber());
+        System.out.println("Recieving connection " + getConnectionToId().size());
         openSession(conn);
     }
 
@@ -240,7 +240,7 @@ public abstract class AbstractServerWebSocketHandler {
         for (SocketSession sesh : getConnectionToId().keySet()) {
             sesh.close();
         }
-        connectionToId.clear();
+        getConnectionToId().clear();
         idToConnection.clear();
         idToState.clear();
         onStop();
