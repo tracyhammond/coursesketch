@@ -110,10 +110,7 @@ public abstract class AbstractServerWebSocketHandler {
         }
 
         final MultiConnectionState uniqueState = getUniqueState();
-<<<<<<< HEAD:CourseSketchProjects/jettyBlank/src/main/java/multiconnection/GeneralConnectionServer.java
-=======
         // uses actual variables as get methods produce unmodifiable maps
->>>>>>> serverIpAddresses:CourseSketchProjects/ServerAbstractor/src/main/java/coursesketch/server/interfaces/AbstractServerWebSocketHandler.java
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
         System.out.println("Session Key " + uniqueState.getKey());
@@ -281,24 +278,10 @@ public abstract class AbstractServerWebSocketHandler {
     }
 
     /**
-<<<<<<< HEAD:CourseSketchProjects/jettyBlank/src/main/java/multiconnection/GeneralConnectionServer.java
-     * @return The servlet that represents this server.
-     */
-    protected final GeneralConnectionServlet getParentServer() {
-        return parentServer;
-    }
-
-    /**
-     * @return a read only map that contains session mapped to states.
-     */
-    protected final Map<Session, MultiConnectionState> getConnectionToId() {
-        return Collections.unmodifiableMap(connectionToId);
-=======
      * @return the connectionToId
      */
     protected final Map<SocketSession, MultiConnectionState> getConnectionToId() {
         return connectionToId;
->>>>>>> serverIpAddresses:CourseSketchProjects/ServerAbstractor/src/main/java/coursesketch/server/interfaces/AbstractServerWebSocketHandler.java
     }
 
     /**
