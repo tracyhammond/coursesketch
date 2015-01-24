@@ -34,7 +34,7 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), "10.9.74.201", PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             e.printStackTrace();
         }
