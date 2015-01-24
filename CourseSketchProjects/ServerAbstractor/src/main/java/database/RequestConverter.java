@@ -28,7 +28,7 @@ public final class RequestConverter {
      * Creates a proto version of a date from the given milliseconds.
      *
      * @param date The date in milliseconds.
-     * @return {@link DateTime} contains all values needed.
+     * @return {@link protobuf.srl.school.School.DateTime} contains all values needed.
      */
     public static DateTime getProtoFromMilliseconds(final long date) {
         final org.joda.time.DateTime jodaDate = new org.joda.time.DateTime(date);
@@ -36,9 +36,9 @@ public final class RequestConverter {
     }
 
     /**
-     * Creates a protobuf {@link DateTime} from the {@link org.joda.time.DateTime}.
+     * Creates a protobuf {@link protobuf.srl.school.School.DateTime} from the {@link org.joda.time.DateTime}.
      * @param jodaDate the input date and time.
-     * @return {@link DateTime}
+     * @return {@link protobuf.srl.school.School.DateTime}
      */
     public static DateTime getProtoFromDate(final org.joda.time.DateTime jodaDate) {
         final DateTime.Builder result = DateTime.newBuilder();
@@ -60,7 +60,7 @@ public final class RequestConverter {
     }
 
     /**
-     * Converts the protobuf {@link DateTime}  to a joda {@link org.joda.time.DateTime}.
+     * Converts the protobuf {@link protobuf.srl.school.School.DateTime}  to a joda {@link org.joda.time.DateTime}.
      * @param date The protobuf date time object
      * @return {@link org.joda.time.DateTime}.
      */

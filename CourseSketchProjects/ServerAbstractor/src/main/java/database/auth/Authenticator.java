@@ -1,11 +1,11 @@
 package database.auth;
 
-import static database.DatabaseStringConstants.GROUP_PREFIX;
-import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
+import protobuf.srl.school.School.DateTime;
 
 import java.util.List;
 
-import protobuf.srl.school.School.DateTime;
+import static database.DatabaseStringConstants.GROUP_PREFIX;
+import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
 
 /**
  * A class that performs authentication.
@@ -18,7 +18,7 @@ import protobuf.srl.school.School.DateTime;
 public final class Authenticator {
 
     /**
-     * An implementation of the {@link AuthenticationDataCreator}.
+     * An implementation of the {@link database.auth.AuthenticationDataCreator}.
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
     private final AuthenticationDataCreator dataGrabber;
@@ -308,7 +308,7 @@ public final class Authenticator {
      * @throws DatabaseAccessException
      */
     public boolean isAuthenticated(final String collection, final String itemId,
-            final String userId, final long checkTime, final Authenticator.AuthType checkType) {
+            final String userId, final long checkTime, final AuthType checkType) {
 
         if (!checkType.validRequest()) {
             return false;
@@ -341,7 +341,7 @@ public final class Authenticator {
      * @param checkType contains data about what is being checked.
      * @return true if the user is authenticated.  false if it is not being checked or if the user is not authenticated.
      */
-    private boolean authenticateUser(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
+    private boolean authenticateUser(final String userId, final AuthenticationData result, final AuthType checkType) {
         boolean validUser = false;
         if (checkType.isUser()) {
             final List usersList = result.getUserList();
@@ -357,7 +357,7 @@ public final class Authenticator {
      * @param checkType contains data about what is being checked.
      * @return true if the user is authenticated.  false if it is not being checked or if the moderator is not authenticated.
      */
-    private boolean authenticateModerator(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
+    private boolean authenticateModerator(final String userId, final AuthenticationData result, final AuthType checkType) {
         boolean validMod = false;
         if (checkType.isMod() || checkType.isCheckAdminOrMod()) {
             final List modList = result.getModeratorList();
@@ -373,7 +373,7 @@ public final class Authenticator {
      * @param checkType contains data about what is being checked.
      * @return true if the user is authenticated.  false if it is not being checked or if the admin is not authenticated.
      */
-    private boolean authenticateAdmin(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
+    private boolean authenticateAdmin(final String userId, final AuthenticationData result, final AuthType checkType) {
         boolean validAdmin = false;
         if (checkType.isAdmin() || checkType.isCheckAdminOrMod()) {
             final List adminList = result.getAdminList();

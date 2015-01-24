@@ -1,8 +1,8 @@
 package database.auth;
 
-import java.util.List;
-
 import database.auth.Authenticator.AuthenticationData;
+
+import java.util.List;
 
 /**
  * An interface that implements where data for authentication actually comes from.

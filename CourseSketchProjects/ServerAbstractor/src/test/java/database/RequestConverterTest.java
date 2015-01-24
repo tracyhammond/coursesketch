@@ -1,10 +1,9 @@
 package database;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import protobuf.srl.school.School.DateTime;
+
+import static org.junit.Assert.assertEquals;
 
 public class RequestConverterTest {
 
