@@ -131,7 +131,7 @@
      * and adds it to the database.
      */
     courseManagement.addNewAssignment = function addNewAssignment() {
-        var course = document.querySelector("#class_list_column .selectedBox");
+        var courseId = document.querySelector("#class_list_column .selectedBox").id;
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
         document.getElementById('assignment_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
@@ -144,22 +144,22 @@
         // Spring, Su = Summer) ";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
-        CourseSketch.dataManager.getAllCourses(function(courseList) {
-            var localCourseList = courseList;
-            if (courseList instanceof CourseSketch.DatabaseException) {
+        CourseSketch.dataManager.getAllAssignmentsFromCourse(courseId, function(assignmentList) {
+            var localAssignmentList = assignmentList;
+            if (assignmentList instanceof CourseSketch.DatabaseException) {
                 // we are cool because we are adding a new one.
-                localCourseList = [];
+                localAssignmentList = [];
             }
-            var firstCourse = undefined;
-            CourseSketch.dataManager.insertCourse(course, function(course) {
-                firstCourse = course;
-                localCourseList.push(course);
-                courseManagement.showCourses(localCourseList);
-            }, function(course) {
+            var firstAssignment = undefined;
+            CourseSketch.dataManager.insertAssignment(assignment, function(assignment) {
+                firstAssignment = assignment;
+                localAssignmentList.push(assignment);
+                courseManagement.showAssignments(localAssignmentList);
+            }, function(assignment) {
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
-                courseManagement.showCourses(localCourseList);
+                courseManagement.showAssignments(localAssignmentList);
             });
         });
     };
