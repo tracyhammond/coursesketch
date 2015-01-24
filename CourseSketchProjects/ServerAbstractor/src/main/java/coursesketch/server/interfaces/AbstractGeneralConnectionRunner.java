@@ -3,38 +3,10 @@ package coursesketch.server.interfaces;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.http.HttpVersion;
-import org.eclipse.jetty.npn.NextProtoNego;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.SecureRequestCustomizer;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SslConnectionFactory;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerList;
-//import org.eclipse.jetty.server.handler.StatisticsHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-//import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.resource.PathResource;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.websocket.server.WebSocketHandler;
-import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
-
-import javax.net.ssl.SSLEngine;
 
 /**
  * Sets up the server and manages calling the methods needed to start the server.
@@ -175,88 +147,6 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Runs the entire startup process including input.
-     *
-     */
-    protected final void runAll() {
-        this.runMost();
-        this.startInput();
-    }
-
-    /**
-     * Configures the SSL for the server.
-     * Ignoring this method for now.
-     */
-    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-    private void configureSSL() {
-        final SslContextFactory sslContextFactory = new SslContextFactory();
-        System.out.println("Loading a file resource at: " + keystorePath);
-        final File res = new File(keystorePath);
-        System.out.println("Loading a file resource at: " + res);
-
-        sslContextFactory.setKeyStoreResource(new PathResource(res));
-
-        sslContextFactory.setKeyStorePassword(keystorePassword);
-        sslContextFactory.setKeyManagerPassword(keyManagerPassword);
-        sslContextFactory.setTrustStorePath(truststorePath);
-        sslContextFactory.setTrustStorePassword(keyManagerPassword);
-        sslContextFactory.setProtocol("TLS");
-
-        final HttpConfiguration config = new HttpConfiguration();
-        config.setSecureScheme("https");
-        config.setSecurePort(port);
-        config.setOutputBufferSize(DEFAULT_OUTPUT_BUFFER_SIZE);
-        config.setRequestHeaderSize(DEFAULT_REQUEST_HEADER_SIZE);
-        config.setResponseHeaderSize(DEFAULT_RESPONSE_HEADER_SIZE);
-        final HttpConfiguration sslConfiguration = new HttpConfiguration(config);
-        sslConfiguration.addCustomizer(new SecureRequestCustomizer());
-        final HttpConnectionFactory httpConnectionFactoryOld = new HttpConnectionFactory(sslConfiguration);
-
-        //final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString());
-        System.out.println("get ssl protocal");
-        //System.out.println(sslConnectionFactory.getProtocol());
-
-        //sslConnectionFactory.getSslContextFactory().getSslContext().createSSLEngine()
-        final ServerConnector sslConnector = new ServerConnector(server, sslContextFactory);
-        sslConnector.setHost(host);
-        sslConnector.setPort(port);
-
-        server.addConnector(sslConnector);
-
-        System.out.println("annoyed");
-        /*
-        final SSLEngine socket = sslConnectionFactory.getSslContextFactory().newSSLEngine();
-        NextProtoNego.put(socket, new NextProtoNego.ServerProvider() {
-            @SuppressWarnings("PMD.CommentRequired")
-            @Override
-            public void unsupported() {
-                NextProtoNego.remove(socket);
-            }
-
-            @SuppressWarnings("PMD.CommentRequired")
-            @Override
-            public List<String> protocols() {
-                return Arrays.asList("http/1.1");
-            }
-
-            @SuppressWarnings("PMD.CommentRequired")
-            @Override
-            public void protocolSelected(final String protocol) {
-                NextProtoNego.remove(socket);
-                System.out.println("Protocol Selected is: " + protocol);
-            }
-        });
-        */
-    }
-
-    /**
-     * Runs the majority of the startup process.
-     *
-     * Does not handle accepting Input.
-     */
-    protected final void runMost() {
-        this.loadConfigurations();
-=======
-     * The order that the subclass methods are called is:
      * <ol>
      *     <li>{@link #loadConfigurations()}</li>
      *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoveEnvironment()}</li>
@@ -270,7 +160,6 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     protected final void start() {
         loadConfigurations();
->>>>>>> serverIpAddresses:CourseSketchProjects/ServerAbstractor/src/main/java/coursesketch/server/interfaces/AbstractGeneralConnectionRunner.java
         if (local) {
             executeLocalEnvironment();
         } else {
@@ -330,31 +219,6 @@ public abstract class AbstractGeneralConnectionRunner {
      * @see #start()
      */
     protected abstract void startServer();
-
-    /**
-     * Returns a new instance of a {@link GeneralConnectionServlet}.
-     *
-     * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet
-     *
-     * @param timeOut
-     *            length of specified timeout, in miliseconds
-     * @param isSecure
-     *            <code>true</code> if the servlet should be secure,
-     *            <code>false</code> otherwise
-     * @param isLocal
-     *            <code>true</code> if the server is running locally,
-     *            <code>false</code> otherwise
-     *
-     * @return a new connection servlet for this server
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    public GeneralSocketHandler getSocketHandler(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        if (!isSecure && production) {
-            System.err.println("Running an insecure server");
-        }
-        return new GeneralSocketHandler(timeOut, isSecure, isLocal);
-    }
 
     /**
      * Handles commands that can be used to perform certain functionality.

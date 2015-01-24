@@ -13,7 +13,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
     private static final long TIMEOUT_TIME = 30 * 60 * 1000;
 
     /** port of the proxy server. */
-    private static final int PROXY_PORT = 8443;
+    private static final int PROXY_PORT = 8888;
 
     /**
      * @param args
@@ -30,12 +30,8 @@ public class ProxyRunner extends GeneralConnectionRunner {
      */
     @Override
     public final void executeRemoveEnviroment() {
-        /*
-        setKeystorePassword("Challeng3");
-    public final void executeRemoveEnvironment() {
         setCertificatePath("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
-        */
     }
 
     /**
@@ -56,13 +52,5 @@ public class ProxyRunner extends GeneralConnectionRunner {
     @Override
     public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
         return new ProxyServlet(time, secure, local);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final GeneralSocketHandler getSocketHandler(final long time, final boolean secure, final boolean local) {
-        return new ProxySocketHandler(time, secure, local);
     }
 }
