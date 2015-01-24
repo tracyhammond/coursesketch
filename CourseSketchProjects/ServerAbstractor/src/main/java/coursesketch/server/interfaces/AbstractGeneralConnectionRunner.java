@@ -107,7 +107,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * The location the truststore is stored in.
      */
-    private String truststorePath = "";
+    private String certificatePath = "";
 
     /**
      * The main method that can be used to run a server.
@@ -130,14 +130,16 @@ public abstract class AbstractGeneralConnectionRunner {
     protected AbstractGeneralConnectionRunner(final String... arguments) {
         this.args = Arrays.copyOf(arguments, arguments.length);
         if (arguments.length >= 1 && arguments[0].equals("local")) {
-            System.out.println("Running local code!");
-            host = "localhost";
-            keystorePassword = "sketchrec";
-            keyManagerPassword = "sketchrec";
-            keystorePath = "keystore.jks";
-            truststorePath = "truststore.jks";
-            secure = true;
             local = true;
+            if (arguments.length >= 2 && arguments[1].equals("secure")) {
+                System.out.println("Running local code!");
+                host = "localhost";
+                //keystorePassword = "sketchrec";
+                keyManagerPassword = "sketchrec";
+                keystorePath = "keystore.jks";
+                //truststorePath = "truststore.jks";
+                secure = true;
+            }
         } else {
             local = false;
             secure = false;

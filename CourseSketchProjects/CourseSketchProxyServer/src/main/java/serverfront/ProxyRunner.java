@@ -29,7 +29,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * instead of listed in code.
      */
     @Override
-    public final void executeRemoveEnviroment() {
+    public final void executeRemoveEnvironment() {
         setCertificatePath("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
     }
