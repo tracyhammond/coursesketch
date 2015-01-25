@@ -249,7 +249,7 @@ if (isUndefined(validateFirstRun)) {
         if (!isUndefined(scriptBay[scriptObject.src])) {
             var errorEvent = {src: scriptObject.src};
             var listener = function(event) {
-                if (typeof event.error === "object" 
+                if (typeof event.error === "object"
                     && !isUndefined(event.error.src)
                     && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
@@ -260,5 +260,36 @@ if (isUndefined(validateFirstRun)) {
             throw errorEvent;
         }
         scriptBay[scriptObject.src] = {};
+    }
+}
+
+
+/**
+ * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+ * And prevents further execution of the script.
+ */
+if (isUndefined(validateFirstGlobalRun)) {
+    function validateFirstGlobalRun(scriptObject) {
+        // no var on purpose.
+        try {
+            CourseSketch.scriptBay = CourseSketch.scriptBay || {};
+        } catch(exception) {
+            CourseSketch.scriptBay = {};
+        }
+        if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
+            var errorEvent = {src: scriptObject.src};
+            var listener = function(event) {
+                if (typeof event.error === "object"
+                    && !isUndefined(event.error.src)
+                    && event.error.src === scriptObject.src) {
+                    event.preventDefault();event.stopPropagation();
+                    window.removeEventListener("error", listener, true);
+                }
+            }
+            window.addEventListener("error", listener, true);
+            throw errorEvent;
+        }
+        CourseSketch.scriptBay[scriptObject.src] = {};
+        validateFirstRun(scriptObject); // look locally too!
     }
 }
