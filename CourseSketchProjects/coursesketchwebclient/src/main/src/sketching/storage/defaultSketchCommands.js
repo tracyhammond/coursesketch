@@ -1,3 +1,5 @@
+validateFirstGlobalRun(document.currentScript);
+
 /*******************************************************************************
  * METHODS FOR THE REDO AND UNDO ARE BELOW.
  *
