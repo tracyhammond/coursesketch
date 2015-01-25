@@ -90,6 +90,40 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     parent.deleteAssignment = deleteAssignment;
 
     /**
+     * Sets a assignment in server database.
+     *
+     * @param assignment
+     *                assignment object to set
+     * @param assignmentCallback
+     *                function to be called after assignment setting is done
+     */
+    function insertAssignmentServer(assignment, assignmentCallback) {
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+            var resultArray = item.getReturnText().split(":");
+            var oldId = resultArray[1].trim();
+            var newId = resultArray[0].trim();
+            // we want to get the current course in the local database in case
+            // it has changed while the server was processing.
+            getAssignmentLocal(oldId, function(assignment2) {
+                deleteAssignment(oldId);
+                if (!isUndefined(assignment2) && !(assignment2 instanceof DatabaseException)) {
+                    assignment2.id = newId;
+                    setAssignment(assignment2, function() {
+                        assignmentCallback(assignment2);
+                    });
+                } else {
+                    assignment.id = newId;
+                    setAssignment(assignment, function(e, request) {
+                        assignmentCallback(assignment);
+                    });
+                }
+            });
+        });
+        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
+    }
+
+    /**
      * Adds a new assignment to both local and server databases. Also updates the
      * corresponding course given by the assignment's courseId.
      *
@@ -101,10 +135,14 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *                function to be called after server insert is done
      */
     function insertAssignment(assignment, localCallback, serverCallback) {
+         if (isUndefined(assignment.id) || assignment.id == null) {
+            var assignmentId = generateUUID();
+            assignment.id = assignmentId;
+        }
         setAssignment(assignment, function(e, request) {
             console.log("inserted locally :" + assignment.id)
             if (!isUndefined(localCallback)) {
-                localCallback(e, request);
+                localCallback(assignment);
             }
             insertAssignmentServer(assignment, function(assignmentUpdated) {
                 parent.getCourse(assignment.courseId, function(course) {
@@ -113,7 +151,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                     course.assignmentList = assignmentList;
                     parent.setCourse(course, function() {
                         if (!isUndefined(serverCallback)) {
-                            serverCallback(course);
+                            serverCallback(assignmentUpdated);
                         }
                     });
                     // Course is set with its new assignment

@@ -117,7 +117,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                     course.lectureList = lectureList;
                     parent.setCourse(course, function() {
                         if (!isUndefined(serverCallback)) {
-                            serverCallback(course);
+                            serverCallback(lectureUpdated);
                         }
                     });
                     // Course is set with its new lecture

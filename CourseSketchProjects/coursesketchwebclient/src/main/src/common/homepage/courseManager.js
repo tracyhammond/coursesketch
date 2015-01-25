@@ -5,7 +5,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     manage.waitIconText = "loading data";
     return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
-
 (function() {
 
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
@@ -53,7 +52,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     courseManagement.showCourses = function showCourses(courseList) {
         var builder = new SchoolItemBuilder();
         builder.setList(courseList);
-        if (CourseSketch.connection.isInstructor) {
+        if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.showImage = false;
@@ -99,9 +98,12 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     courseManagement.showAssignments = function(assignmentList, course) {
         console.log(assignmentList);
         var builder = new SchoolItemBuilder();
+        if (CourseSketch.connection.isInstructor === true) {
+            builder.setInstructorCard(true);
+        }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            if (!isUndefined(course) && !(course.getState().accessible)) {
+            if (!isUndefined(course) && course.getState() != null &&!(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
             assignmentList = [];
@@ -147,10 +149,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      */
     courseManagement.showProblems = function(problemList, assignment) {
         var builder = new SchoolItemBuilder();
+        if (CourseSketch.connection.isInstructor === true) {
+            builder.setInstructorCard(true);
+        }
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
             problemList = [];
-            if (!isUndefined(assignment) && !assignment.getState().accessible) {
+            if (!isUndefined(assignment) && assignment.getState() != null && !assignment.getState().accessible) {
                 builder.setEmptyListMessage('This assignment is currently not available. '
                     + 'Please contact the instructor to let you view the problems');
             }
