@@ -21,8 +21,8 @@ public class LocalAddAssignments {
 			testBuilder.setDescription(descsription[k]);
 			testBuilder.setGradeWeight("50%");
 			//testBuilder.setLatePolicy(LatePolicy.POLICY1);
-			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1396673999000L/*1395291599000L*//*1394085599000L*//*1393480799000L*//*1392875999000L*//*1392703199000L*/).getTime())));
+			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds(0));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds(315576000000000L));
 			Date d = new Date();
 			d.setYear(2014-1900);
 			d.setMonth(1);
