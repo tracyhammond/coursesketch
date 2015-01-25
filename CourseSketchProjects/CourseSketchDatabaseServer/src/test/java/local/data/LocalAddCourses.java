@@ -1,6 +1,7 @@
 package local.data;
 
 import database.DatabaseAccessException;
+import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
@@ -10,15 +11,17 @@ import javax.swing.JOptionPane;
 
 public class LocalAddCourses {
 	public static void testCourses(String instructionID) throws DatabaseAccessException {
-		String[] name = new String[]{"CourseSketch 101"};
-		String[] descsription = new String[]{"Hi Welcome to CourseSketch, you have automatically been enrolled in this tutorial."
-				+ " To expand the description of a class click the down arrow."};
+		String[] name = new String[]{"Chem 107", "Simple Circuits"};
+		String[] descsription = new String[]{"Howdy! Welcome to Chem 107 where you learn about luis dot diagrams",
+				""};
 		for (int k = 0; k < name.length; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 			testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
 			testBuilder.setSemester("FALL");
 			testBuilder.setName(name[k]);
 			testBuilder.setDescription(descsription[k]);
+			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds(0));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds(315576000000000L));
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
 
 			testBuilder.setAccessPermission(permissions.build());
