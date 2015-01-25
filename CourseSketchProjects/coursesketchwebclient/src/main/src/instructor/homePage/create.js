@@ -57,17 +57,12 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.showCourses = function(courseList) {
         courseManagement.commonShowCourses(courseList);
-        var children = document.getElementById('class_list_column').children;
-        if (children.length <= 0) {
-            hideButton("assignment_button")
-        } else {
-            showButton("assignment_button");
-        }
+        hideButton("assignment_button");
+        hideButton("problem_button");
+        var children = document.getElementById('class_list_column').querySelectorAll("school-item");
         for (var i = 0; i < children.length; i++) {
             var schoolItem = children[i];
-            if (schoolItem.nodeName == "SCHOOL-ITEM") {
-                schoolItem.setEditCallback(courseManagement.courseEndEdit);
-            }
+            schoolItem.setEditCallback(courseManagement.courseEndEdit);
         }
     };
 
@@ -76,19 +71,14 @@ validateFirstRun(document.currentScript);
     /**
      * Overwrote the old show courses to add some edit capabilities.
      */
-    courseManagement.showAssignments = function(courseList) {
-        courseManagement.commonShowAssignments(courseList);
-        var children = document.getElementById('assignment_list_column').children;
-        if (children.length <= 0) {
-            hideButton("problem_button")
-        } else {
-            showButton("problem_button");
-        }
+    courseManagement.showAssignments = function(assignmentList) {
+        showButton("assignment_button");
+        hideButton("problem_button");
+        courseManagement.commonShowAssignments(assignmentList);
+        var children = document.getElementById('assignment_list_column').querySelectorAll("school-item");
         for (var i = 0; i < children.length; i++) {
             var schoolItem = children[i];
-            if (schoolItem.nodeName == "SCHOOL-ITEM") {
-                schoolItem.setEditCallback(courseManagement.assignmentEndEdit);
-            }
+            schoolItem.setEditCallback(courseManagement.assignmentEndEdit);
         }
     };
 
@@ -140,17 +130,15 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
         // by instructors
         var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-        // course.id = "Course_01";
         assignment.name = "Insert name";
+        assignment.courseId = courseId;
         assignment.description = "Insert description";
-        // course.semester = "Should be in format: '_F13' (_F = Fall, Sp =
-        // Spring, Su = Summer) ";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
         CourseSketch.dataManager.getAllAssignmentsFromCourse(courseId, function(assignmentList) {
             var localAssignmentList = assignmentList;
             if (assignmentList instanceof CourseSketch.DatabaseException) {
-                // we are cool because we are adding a new one.
+                // no assignments exist or something went wrong
                 localAssignmentList = [];
             }
             var firstAssignment = undefined;
@@ -186,4 +174,4 @@ validateFirstRun(document.currentScript);
             element.style.display = "none";
         }
     }
-})(CourseSketch.courseManagement);
+})();
