@@ -1,4 +1,7 @@
-(function(courseManagement) {
+validateFirstRun(document.currentScript);
+
+(function() {
+    var courseManagement = CourseSketch.courseManagement;
     /**
      * Function to be called when a lecture has finished editing.
      *

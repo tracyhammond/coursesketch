@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 (function() {
     CourseSketch.studentExperiment.waitScreenManager = new WaitScreenManager();
     $(document).ready(function() {

@@ -233,3 +233,32 @@ if (isUndefined(loadJs)) {
         head.appendChild(script);
     }
 }
+
+/**
+ * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+ * And prevents further execution of the script.
+ */
+if (isUndefined(validateFirstRun)) {
+    function validateFirstRun(scriptObject) {
+        // no var on purpose.
+        try {
+            scriptBay = scriptBay || {};
+        } catch(exception) {
+            scriptBay = {};
+        }
+        if (!isUndefined(scriptBay[scriptObject.src])) {
+            var errorEvent = {src: scriptObject.src};
+            var listener = function(event) {
+                if (typeof event.error === "object" 
+                    && !isUndefined(event.error.src)
+                    && event.error.src === scriptObject.src) {
+                    event.preventDefault();event.stopPropagation();
+                    window.removeEventListener("error", listener, true);
+                }
+            }
+            window.addEventListener("error", listener, true);
+            throw errorEvent;
+        }
+        scriptBay[scriptObject.src] = {};
+    }
+}

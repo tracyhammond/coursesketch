@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 (function() {
     $(document).ready(function() {
         CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();

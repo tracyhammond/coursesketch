@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 CourseSketch.courseManagement.waitingIcon = (function() {
     var manage = new WaitScreenManager();
     manage.waitIconText = "loading data";
