@@ -11,15 +11,14 @@ import javax.swing.JOptionPane;
 
 public class LocalAddCourses {
 	public static void testCourses(String instructionID) throws DatabaseAccessException {
-		String[] name = new String[]{"Chem 107", "Simple Circuits"};
-		String[] descsription = new String[]{"Howdy! Welcome to Chem 107 where you learn about luis dot diagrams",
-				""};
+		String[] name = new String[]{"Chem 107"};
+		String[] description = new String[]{"Howdy! Welcome to Chem 107 where you learn about lewis dot diagrams"};
 		for (int k = 0; k < name.length; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 			testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
 			testBuilder.setSemester("FALL");
 			testBuilder.setName(name[k]);
-			testBuilder.setDescription(descsription[k]);
+			testBuilder.setDescription(description[k]);
 			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds(0));
 			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds(315576000000000L));
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
