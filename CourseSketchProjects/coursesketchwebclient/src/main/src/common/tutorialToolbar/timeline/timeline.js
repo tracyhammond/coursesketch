@@ -204,20 +204,52 @@ function Timeline () {
         plusButton.appendChild(highlightButton);
         highlightButton.onclick = function(event) {
             event.stopPropagation();
-            /*creating the textbox*/
-            var highlightBox = document.createElement('highlight-text-creation');
-            document.body.appendChild(highlightBox);
-            /* Add this function back when highlightTool can save
-            highlightBox.setFinishedListener(function(command) {
-                globalcommand = command;
+            if (document.querySelector('highlight-text-creation') == null) {
+                /*creating the textbox*/
+                var highlightText = document.createElement('highlight-text-creation');
+                document.body.appendChild(highlightText);
+                /*end of creating the textbox*/
+                var highlightMarker = document.createElement("timeline-marker");
+                highlightMarker.className = "highlightmarker";
+                toolArea.appendChild(highlightMarker);
+                $(plusButton).empty();
+                $(plusButton).removeClass("tall");
+            } else {
+                alert("You already have a highlight tool for this step!")
+            }
+            
+            function closeHighlightText(command) {
+                var highlightText = document.getElementById(command.commandId);
+                var highlightMarker = localScope.shadowRoot.getElementById(command.commandId);
+                if (!isUndefined(highlightText.command)) {
+                    removeObjectFromArray(highlightText.currentUpdate.commands, highlightText.command);
+                }
+                highlightText.parentNode.removeChild(highlightText);
+                if (highlightMarker != null) {
+                    highlightMarker.parentNode.removeChild(highlightMarker);
+                }
+            }
+            
+            highlightTextFinishedListener = function(command, event, currentUpdate) {
+                var highlightText = document.getElementById(command.commandId);
+                if (isUndefined(currentUpdate.commands)) {
+                    return;
+                }
+                if (currentUpdate.commands.indexOf(command) < 0) {
+                    currentUpdate.commands.push(command);
+                }
+                if (!isUndefined(event)) {
+                    closeHighlightText(command);
+                    return;
+                }
+            };
+            
+            highlightMarker.setRemoveFunction(function() {
+                closeHighlightText(highlightText.createdCommand);
             });
-            */
-            /*end of creating the textbox*/
-            var highlightMarker = document.createElement("div");
-            highlightMarker.className = "highlightmarker";
-            toolArea.appendChild(highlightMarker);
-            $(plusButton).empty();
-            $(plusButton).removeClass("tall");
+            
+            highlightText.setFinishedListener(highlightTextFinishedListener);
+            highlightMarker.id = highlightText.id;
         };
     }
     /**
@@ -262,14 +294,24 @@ function Timeline () {
                 }
             }
         });
+        // creates saving for highlight box
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() 
+            if (!isUndefined(this.commandId)) {
+                var elementToDelete = document.getElementById(this.commandId);
+                if (elementToDelete != null) {
+                    document.body.removeChild(elementToDelete);
+                }
+            }
+            $(".highlightedText").contents().unwrap();
+            document.normalize();
+            // Normalize joins adjacent text nodes. The wrap/unwrap ends up with 3 adjacent text nodes. Visually no different, but needed for future highlighting
+        });
     }
     /**
      * creates redos
      */
     function redoCreator () {
-        /**
-         * creates textbox redo
-         */
+        //creates textbox redo
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
@@ -284,9 +326,7 @@ function Timeline () {
                 textBox.saveData();
             }
         });
-        /**
-         * creates tts box
-         */
+        // creates tts box redo
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
@@ -299,6 +339,20 @@ function Timeline () {
                 ttsBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
                 ttsBox.setFinishedListener(ttsBoxFinishedListener);
                 ttsBox.saveData();
+            }
+        });
+        // creates highlightText redo
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+            if (!isUndefined(this.commandId)) {
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
+                var highlightText = document.createElement('highlight-text-creation');
+                document.body.appendChild(highlightText);
+                highlightText.loadData(decoded);
+                highlightText.id = this.commandId;
+                highlightText.command = this;
+                highlightText.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
+                highlightText.setFinishedListener(highlightTextFinishedListener);
             }
         });
     }
