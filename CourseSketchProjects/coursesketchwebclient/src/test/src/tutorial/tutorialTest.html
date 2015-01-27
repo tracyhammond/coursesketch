@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/courseSketch2.css">
 <link rel="stylesheet" href="/css/common/homePage.css">
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
-<link rel="import" href="/src/common/tutorialToolbar/tutorialToolbarInclude.html">
+<link rel="import" href="/src/utilities/templates/highlightText/highlightTextInclude.html">
 <link rel="import" href="/src/utilities/templates/outlineTool/outlineToolInclude.html">
 <!-- basic utilities -->
 
@@ -12,41 +12,18 @@
 </head>
 <body>
 
-<button id="textBox">Text Box</button>
-<button id="viewTextBox">View Text Box</button>
-<button id="ttsBox">TTS Box</button>
-<button id="speakTtsBox">Speak TTS</button>
+<button id="highlightText">Highlight Text</button>
+<button id="showHighlight">Show Highlight</button>
 <button id="outlineTool">Outline</button>
 <button id="viewOutlineTool">View Outline</button>
 
 <script>
-    document.querySelector('#textBox').onclick = function() {
-        var textbox = document.createElement('text-box-creation');
-        document.body.appendChild(textbox);
-        textbox.setFinishedListener(function(command) {
-            globalcommand = command;
-        });   
-    };
-    document.querySelector('#viewTextBox').onclick = function() {
-        var textview = document.createElement('text-box-viewing');
-        document.body.appendChild(textview);
-        var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(globalcommand.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-        textview.loadData(decoded);
-    };
-    document.querySelector('#ttsBox').onclick = function() {
-        var ttsBox = document.createElement('tts-box-creation');
-        document.body.appendChild(ttsBox);
-        ttsBox.setFinishedListener(function(command) {
+    document.querySelector('#highlightText').onclick = function() {
+        var highlightText = document.createElement('highlight-text-creation');
+        document.body.appendChild(highlightText);
+        highlightText.setFinishedListener(function(command) {
             globalcommand = command;
         });
-    };
-    document.querySelector('#speakTtsBox').onclick = function() {
-        var ttsSpeak = document.createElement('tts-box-viewing');
-        document.body.appendChild(ttsSpeak);
-        var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(globalcommand.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-        ttsSpeak.loadData(decoded);
     };
     document.querySelector('#outlineTool').onclick = function() {
         var outlineTool = document.createElement('outline-tool-creation');

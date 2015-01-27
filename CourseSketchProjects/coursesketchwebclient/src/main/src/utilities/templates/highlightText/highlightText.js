@@ -56,23 +56,20 @@ function HighlightText() {
      * The selection must also contain characters (no alert for this)
      */
     function highlightText() {
-        
-    
         if (window.getSelection().type !== "None") {
             var myText = window.getSelection();
             var range = myText.getRangeAt();
             children = range.cloneContents().childNodes;
-            
-            
+
             if (myText.toString().length > 0) { // Makes sure the selection contains characters so blank span tags are not added
                 if (checkChildrenNodes(children)) { // Makes sure adding span tags will not ruin the selected text formatting
                     var newNode = document.createElement('span');
                     newNode.setAttribute('class', 'highlightedText');
                     newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
                     
-                    startXPath = getXPath(range.startContainer);
+                    startPath = getXPath(range.startContainer);
                     startOffset = range.startOffset;
-                    endXPath = getXPath(range.endContainer);
+                    endPath = getXPath(range.endContainer);
                     endOffset = range.endOffset;
 
                     newNode.appendChild(range.extractContents());
@@ -101,30 +98,7 @@ function HighlightText() {
                 return '';
         }
     }
-    
-    
-    function restoreSelection() {
-            if (typeof window.getSelection != 'undefined') {
-                var selection = window.getSelection();
-                selection.removeAllRanges();
-                var range = document.createRange();
-                range.setStart(document.evaluate(startXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(startOffset));
-                range.setEnd(document.evaluate(endXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(endOffset));
-                selection.addRange(range);
-                
-                var newNode = document.createElement('span');
-                newNode.setAttribute('class', 'highlightedText');
-                newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
-                newNode.appendChild(range.extractContents());
-                range.insertNode(newNode);
-            }
-    }
-    
-    this.unhighlightAll = function() {
-        $(".highlightedText").contents().unwrap();
-        document.normalize(); //Try to find a way to do this with node.normalize() (in case somebody highlights a bajillion things)
-    }
-    
+
     /**
      * @param {node} is a clone of the custom HTML template for highlighting text
      * This creates the element in the shadowRoot and turns highlight mode on by default
@@ -139,10 +113,11 @@ function HighlightText() {
         shadowRoot.appendChild(templateClone);
         backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
         textColor = shadowRoot.querySelector("#textColor").value;
-        startXPath, startOffset, endXPath, endOffset = undefined;
-        
-        $(document).on("mouseup", highlightText);
-        
+        startPath = undefined;
+        startOffset = undefined;
+        endPath = undefined;
+        endOffset = undefined;
+
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
         shadowRoot.querySelector("#highlightMode").onchange = function() {
             if (shadowRoot.querySelector("#highlightMode").checked) {
@@ -175,58 +150,66 @@ function HighlightText() {
         this.finishedCallback = listener;
     };
 
-    // Saves Data for the proto message based on the position, height, width, and value of the text box
     this.saveData = function(event) {
-        var highlightTextProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
-        highlightTextProto.setStartXPath(startXPath);
-        highlightTextProto.setStartOffset(startOffset);
-        highlightTextProto.setEndXPath(endXPath);
-        highlightTextProto.setEndOffset(endOffset);
-        highlightTextProto.setBackgroundColor(backgroundColor);
-        highlightTextProto.setTextColor(textColor);
+        var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
+        var highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+        nodePathProto.setStartPath(startPath);
+        nodePathProto.setStartOffset(startOffset);
+        nodePathProto.setEndPath(endPath);
+        nodePathProto.setEndOffset(endOffset);
+        nodePathProto.setBackgroundColor(backgroundColor);
+        nodePathProto.setTextColor(textColor);
+        highlightProto.addSelectedNodePath(nodePathProto);
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
-        
-        this.command.setCommandData(highlightTextProto.toArrayBuffer()); // Sets commandData for commandlist
+        this.command.setCommandData(highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
         this.id = this.command.commandId;
         this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
     
-    this.loadData = function(highlightTextProto) {
+    this.loadData = function(highlightProto) {
         if (isUndefined(shadowRoot)) {
-            loadedData = highlightTextProto;
+            loadedData = highlightProto;
             return;
         }
-        if (isUndefined(highlightTextProto)) {
+        if (isUndefined(highlightProto)) {
             return;
         }
         
-        var rangeStartNode = highlightTextProto.getStartXPath();
-        var rangeStartOffset = highlightTextProto.getStartOffset();
-        var rangeEndNode = highlightTextProto.getEndXPath();
-        var rangeEndOffset = highlightTextProto.getEndOffset();
-        var bgColor = highlightTextProto.getBackgroundColor();
-        var fontColor = highlightTextProto.getTextColor();
-        
-        if (typeof window.getSelection != 'undefined') {
-            var selection = window.getSelection();
-            selection.removeAllRanges();
-            var range = document.createRange();
-            range.setStart(document.evaluate(rangeStartNode, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeStartOffset));
-            range.setEnd(document.evaluate(rangeEndNode, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeEndOffset));
-            selection.addRange(range);
+        var nodes = highlightProto.getSelectedNodePathList();
+        for (x in nodes) {
+            var rangeStartNode = x.getStartXPath();
+            var rangeStartOffset = x.getStartOffset();
+            var rangeEndNode = x.getEndXPath();
+            var rangeEndOffset = x.getEndOffset();
+            var backgroundColor = x.getBackgroundColor();
+            var textColor = x.getTextColor();
+
+            if (typeof window.getSelection != 'undefined') {
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                var range = document.createRange();
+                range.setStart(document.evaluate(rangeStartNode, document, null,
+                        XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeStartOffset));
+                range.setEnd(document.evaluate(rangeEndNode, document, null,
+                        XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeEndOffset));
+                selection.addRange(range);
             
-            var newNode = document.createElement('span');
-            newNode.setAttribute('class', 'highlightedText');
-            newNode.setAttribute('style', 'background:' + bgColor + '; color:' + fontColor);
-            newNode.appendChild(range.extractContents());
-            range.insertNode(newNode);
+                var newNode = document.createElement('span');
+                newNode.setAttribute('class', 'highlightedText');
+                newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
+                newNode.appendChild(range.extractContents());
+                range.insertNode(newNode);
+            }
         }
         
+        // This will set the text/background color to the last used combination
+        shadowRoot.querySelector('#textColor').value = textColor;
+        shadowRoot.querySelector('#backgroundColor').value = backgroundColor;
     };
     
     this.getFinishedCallback = function() {

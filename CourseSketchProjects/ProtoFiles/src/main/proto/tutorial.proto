@@ -15,13 +15,17 @@ message ActionCreateTextBox {
     optional string text = 5;
 }
 
-message ActionCreateHighlightText {
-    optional string startXPath = 1;
+message SelectedNodePath {
+    optional string startPath = 1;
     optional int32 startOffset = 2;
-    optional string endXPath = 3;
+    optional string endPath = 3;
     optional int32 endOffset = 4;
-    optional string backgroundColor = 5;
-    optional string textColor = 6;
+    optional string backgroundColor = 2;
+    optional string textColor = 3;
+}
+
+message ActionCreateHighlightText {
+    repeated SelectedNodePath selectedNodePath = 1;
 }
 
 message ActionCreateOutline {
