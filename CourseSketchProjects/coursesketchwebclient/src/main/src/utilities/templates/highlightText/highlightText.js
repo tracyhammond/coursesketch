@@ -74,6 +74,7 @@ function HighlightText() {
 
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
+                    this.saveData();
                     
                 } else {
                     alert("Please make a valid selection.") // Message for invalid selections
@@ -121,11 +122,11 @@ function HighlightText() {
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
         shadowRoot.querySelector("#highlightMode").onchange = function() {
             if (shadowRoot.querySelector("#highlightMode").checked) {
-                $(document).on("mouseup", highlightText)
+                $(document).on("mouseup", highlightText.bind(this))
             } else {
-                $(document).off("mouseup", highlightText);
+                $(document).off("mouseup", highlightText.bind(this));
             }
-        };
+        }.bind(this);
             
         // Click action for the "X" that closes the dialog
         shadowRoot.querySelector("#closeButton").onclick = function() {
@@ -159,7 +160,8 @@ function HighlightText() {
         nodePathProto.setEndOffset(endOffset);
         nodePathProto.setBackgroundColor(backgroundColor);
         nodePathProto.setTextColor(textColor);
-        highlightProto.addSelectedNodePath(nodePathProto);
+        highlightProto.add("selectedNodePath", nodePathProto);
+        console.log(nodePathProto);
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
@@ -168,6 +170,7 @@ function HighlightText() {
         this.command.setCommandData(highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
         this.id = this.command.commandId;
+        console.log("I SAVED");
         this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
     
@@ -180,14 +183,16 @@ function HighlightText() {
             return;
         }
         
-        var nodes = highlightProto.getSelectedNodePathList();
-        for (x in nodes) {
-            var rangeStartNode = x.getStartXPath();
-            var rangeStartOffset = x.getStartOffset();
-            var rangeEndNode = x.getEndXPath();
-            var rangeEndOffset = x.getEndOffset();
-            var backgroundColor = x.getBackgroundColor();
-            var textColor = x.getTextColor();
+        var nodes = highlightProto.getSelectedNodePath();
+        console.log(nodes);
+        for (i=0; i < nodes.length; i++) {
+            var loadNode = nodes[i];
+            var rangeStartNode = loadNode.getStartPath();
+            var rangeStartOffset = loadNode.getStartOffset();
+            var rangeEndNode = loadNode.getEndPath();
+            var rangeEndOffset = loadNode.getEndOffset();
+            var backgroundColor = loadNode.getBackgroundColor();
+            var textColor = loadNode.getTextColor();
 
             if (typeof window.getSelection != 'undefined') {
                 var selection = window.getSelection();
