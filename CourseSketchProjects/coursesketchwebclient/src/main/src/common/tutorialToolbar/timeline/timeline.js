@@ -208,6 +208,8 @@ function Timeline () {
                 /*creating the textbox*/
                 var highlightText = document.createElement('highlight-text-creation');
                 document.body.appendChild(highlightText);
+                var currentUpdate = localScope.index.getCurrentUpdate();
+                highlightText.currentUpdate = currentUpdate;
                 /*end of creating the textbox*/
                 var highlightMarker = document.createElement("timeline-marker");
                 highlightMarker.className = "highlightmarker";
@@ -295,7 +297,7 @@ function Timeline () {
             }
         });
         // creates saving for highlight box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() 
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete != null) {
