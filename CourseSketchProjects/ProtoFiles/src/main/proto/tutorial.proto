@@ -20,8 +20,8 @@ message SelectedNodePath {
     optional int32 startOffset = 2;
     optional string endPath = 3;
     optional int32 endOffset = 4;
-    optional string backgroundColor = 2;
-    optional string textColor = 3;
+    optional string backgroundColor = 5;
+    optional string textColor = 6;
 }
 
 message ActionCreateHighlightText {
