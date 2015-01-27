@@ -54,7 +54,7 @@ enum CommandType {
 	CREATE_IMAGE = 20; // Creates an image
 	CREATE_EMBEDDED_HTML = 21; // Creates an image
     CREATE_TTSBOX = 22; // Creates a ttsbox for use in tutorial or lecture slides
-    CREATE_OUTLINE = 23; // Creates an outline box for use in tutorial or lecture slides
+    CREATE_HIGHLIGHT_TEXT = 23; // Creates an outline box for use in tutorial or lecture slides
 }
 
 /**
