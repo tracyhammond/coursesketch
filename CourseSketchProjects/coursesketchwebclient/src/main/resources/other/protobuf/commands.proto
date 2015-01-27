@@ -2,22 +2,22 @@ package protobuf.srl.commands;
 /* https://developers.google.com/protocol-buffers/docs/proto#oneof */
 
 message SrlUpdateList {
-	repeated SrlUpdate list = 1;
+    repeated SrlUpdate list = 1;
 }
 
 message SrlUpdate {
-	required string updateId = 1;
-	optional int64 time = 2;
-	repeated SrlCommand commands = 3;
-	optional int32 commandNumber = 4; // this is only mainly used in a SYNC Command
+    required string updateId = 1;
+    optional int64 time = 2;
+    repeated SrlCommand commands = 3;
+    optional int32 commandNumber = 4; // this is only mainly used in a SYNC Command
 }
 
 // inheritance does not exist so this will replace shape
 message SrlCommand {
-	required CommandType commandType = 1;
-	required bool isUserCreated = 2;
-	optional bytes commandData = 3;
-	optional string commandId = 4;
+    required CommandType commandType = 1;
+    required bool isUserCreated = 2;
+    optional bytes commandData = 3;
+    optional string commandId = 4;
 }
 
 /**
@@ -27,32 +27,32 @@ message SrlCommand {
  * Changing the value of a command will invalidate all current checksums and cause a version issue with stored updateList
  */
 enum CommandType {
-	ADD_STROKE = 0;		// Adds a Stroke:		This will only contain an SRL_Stroke in commandData
-	ADD_SHAPE = 1;		// Adds a shape:		This will only contain an SRL_Shape in commandData
-	PACKAGE_SHAPE = 2;	// Repackages shapes from the surface to inside another shape
-	REMOVE_OBJECT = 3;	// Removes an object:	This will only contain an IdChain in commandData.
-	ASSIGN_ATTRIBUTE = 4;
-	REMOVE_ATTRIBUTE = 5;
-	MARKER = 6; //marker has a number and a MARKERTYPE
-	CLEAR = 7; // removes all data from the current sketch object
-	CREATE_SKETCH = 8; // This will contain ActionCreateSketch.  This will also switch to the sketch immediately. (Must be first command in update)
-	SWITCH_SKETCH = 9; // This should have an IdChain which contains a single id. (Must be first command in update)
-	FORCE_INTERPRETATION = 10;
+    ADD_STROKE = 0;        // Adds a Stroke:        This will only contain an SRL_Stroke in commandData
+    ADD_SHAPE = 1;        // Adds a shape:        This will only contain an SRL_Shape in commandData
+    PACKAGE_SHAPE = 2;    // Repackages shapes from the surface to inside another shape
+    REMOVE_OBJECT = 3;    // Removes an object:    This will only contain an IdChain in commandData.
+    ASSIGN_ATTRIBUTE = 4;
+    REMOVE_ATTRIBUTE = 5;
+    MARKER = 6; //marker has a number and a MARKERTYPE
+    CLEAR = 7; // removes all data from the current sketch object
+    CREATE_SKETCH = 8; // This will contain ActionCreateSketch.  This will also switch to the sketch immediately. (Must be first command in update)
+    SWITCH_SKETCH = 9; // This should have an IdChain which contains a single id. (Must be first command in update)
+    FORCE_INTERPRETATION = 10;
 
-	// Stack Commands, They do not have any other data associated with it.
-	UNDO = 11; // "pop" one command and Undo its effect.
-	REDO = 12; // Redo one command and Redo its effect.
-	REWRITE = 13; // Forces all commands in the list that are past the current state to be removed.
-	CLEAR_STACK = 14; // Clears the stack.
-	OPEN_SYNC = 15; // Tells this machine that it will recieve a list of Updates and to execute them and compare order
-	CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
+    // Stack Commands, They do not have any other data associated with it.
+    UNDO = 11; // "pop" one command and Undo its effect.
+    REDO = 12; // Redo one command and Redo its effect.
+    REWRITE = 13; // Forces all commands in the list that are past the current state to be removed.
+    CLEAR_STACK = 14; // Clears the stack.
+    OPEN_SYNC = 15; // Tells this machine that it will recieve a list of Updates and to execute them and compare order
+    CLOSE_SYNC = 16; // Tells the machine that it is going back to normal mode.
 
-	// all other commands will appear after 16
-	CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
-	CREATE_QUESTION = 18; // Creates a question for use in lecture slides
-	CREATE_MULTIPLE_CHOICE = 19; // Creates a multiple choice item to be included in a question
-	CREATE_IMAGE = 20; // Creates an image
-	CREATE_EMBEDDED_HTML = 21; // Creates an image
+    // all other commands will appear after 16
+    CREATE_TEXTBOX = 17; // Creates a textbox for use in tutorial or lecture slides
+    CREATE_QUESTION = 18; // Creates a question for use in lecture slides
+    CREATE_MULTIPLE_CHOICE = 19; // Creates a multiple choice item to be included in a question
+    CREATE_IMAGE = 20; // Creates an image
+    CREATE_EMBEDDED_HTML = 21; // Creates an image
     CREATE_TTSBOX = 22; // Creates a ttsbox for use in tutorial or lecture slides
     CREATE_HIGHLIGHT_TEXT = 23; // Creates an outline box for use in tutorial or lecture slides
 }
@@ -62,7 +62,7 @@ enum CommandType {
  * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
  */
 message IdChain {
-	repeated string idChain = 1;
+    repeated string idChain = 1;
 }
 
 /**
@@ -71,16 +71,16 @@ message IdChain {
  * Marks can have special purposes.  For example quick look through for the progress of the sketch (like when reviewing)
  */
 message Marker {
-	required MarkerType type = 1;
-	enum MarkerType {
-		SUBMISSION = 0; // notes that the sketch was submitted at this point.
-		FEEDBACK = 1; // notes that the user recieved answer checking feedback at this point.
-		SAVE = 2; // notes that the sketch was saved at this point.
-		// when an undo / redo branch occurs this is the marker that signifies the split.
-		// additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
-		SPLIT = 3;
-	}
-	optional string otherData = 2;
+    required MarkerType type = 1;
+    enum MarkerType {
+        SUBMISSION = 0; // notes that the sketch was submitted at this point.
+        FEEDBACK = 1; // notes that the user recieved answer checking feedback at this point.
+        SAVE = 2; // notes that the sketch was saved at this point.
+        // when an undo / redo branch occurs this is the marker that signifies the split.
+        // additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
+        SPLIT = 3;
+    }
+    optional string otherData = 2;
 }
 
 /**
@@ -91,26 +91,26 @@ message Marker {
  * If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
  */
 message ActionPackageShape {
-	optional IdChain oldContainerId = 1;
-	optional IdChain newContainerId = 2;
-	repeated string shapesToBeContained = 3; // This is a list of shapes ids
+    optional IdChain oldContainerId = 1;
+    optional IdChain newContainerId = 2;
+    repeated string shapesToBeContained = 3; // This is a list of shapes ids
 }
 
 /**
  * Gives the shape with the current Id a new interpretation
  */
 message ActionForceInterpretation {
-	required bytes interpretation = 1;
-	required IdChain shapeId = 2;
+    required bytes interpretation = 1;
+    required IdChain shapeId = 2;
 }
 
 /**
  * Assigns an attribute to a shape.
  */
 message ActionAddAttribtue {
-	required IdChain shapeId = 1;
-	required string attributeKey = 2;
-	required bytes attributeValue = 3;
+    required IdChain shapeId = 1;
+    required string attributeKey = 2;
+    required bytes attributeValue = 3;
 }
 
 /**
@@ -120,31 +120,31 @@ message ActionAddAttribtue {
  * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
  */
 message ActionRemoveAttribtue {
-	required IdChain shapeId = 1;
-	required string attributeKey = 2;
-	required bytes attributeValue = 3;
+    required IdChain shapeId = 1;
+    required string attributeKey = 2;
+    required bytes attributeValue = 3;
 }
 
 /**
  * Advance data for creating a sketch.
  */
 message ActionCreateSketch {
-	required IdChain sketchId = 1; // The id of the sketch.  It will only contain a single value.
-	optional SketchType sketchType = 2 [default = DEFAULT];
+    required IdChain sketchId = 1; // The id of the sketch.  It will only contain a single value.
+    optional SketchType sketchType = 2 [default = DEFAULT];
 
-	// if these values are -1 they take the values of the parent sketch.
-	optional int32 x = 3;
-	optional int32 y = 4;
-	optional int32 width = 5;
-	optional int32 height = 6;
+    // if these values are -1 they take the values of the parent sketch.
+    optional int32 x = 3;
+    optional int32 y = 4;
+    optional int32 width = 5;
+    optional int32 height = 6;
 
-	// used to define a special domain that is different from the main sketch.
-	optional string domainId = 7;
+    // used to define a special domain that is different from the main sketch.
+    optional string domainId = 7;
 }
 
 enum SketchType {
-	DEFAULT = 0; // the default
-	RESPONSE = 1;
-	TEXT = 2;
-	DOMAIN_SPECIFIC = 3;
+    DEFAULT = 0; // the default
+    RESPONSE = 1;
+    TEXT = 2;
+    DOMAIN_SPECIFIC = 3;
 }
