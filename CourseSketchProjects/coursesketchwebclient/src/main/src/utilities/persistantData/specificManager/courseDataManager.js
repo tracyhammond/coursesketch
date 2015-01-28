@@ -221,11 +221,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Returns a list of all of the courses in database.
      *
      * This does attempt to pull courses from the server!
+     * @param courseCallback called when the courses are loaded (this may be called more than once)
+     * @param onlyLocal {Boolean} true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
      */
-    function getAllCourses(courseCallback) {
+    function getAllCourses(courseCallback, onlyLocal) {
         var localFunction = setCourseIdList;
         // there are no courses loaded onto this client!
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
             // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText != "null" && item.returnText != null) {
                 userHasCourses = false;
@@ -239,10 +242,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             var idList = [];
             for (var i = 0; i < courseList.length; i++) {
                 var course = courseList[i];
-                localScope.setCourse(course); // no callback is needed
+                setCourse(course); // no callback is needed
                 idList.push(course.id);
             }
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
             courseCallback(courseList);
             setCourseIdList(idList);
         });
@@ -259,7 +261,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             var courseList = [];
 
             // ask server for course list
-            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
+            if (!onlyLocal) {
+                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
+            }
 
             // create local course list so everything appears really fast!
             for (var i = 0; i < userCourseId.length; i++) {
@@ -268,8 +272,13 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     barrier -= 1;
                     if (barrier == 0) {
                         courseCallback(courseList);
+                        return;
                     }
                 });
+            }
+
+            if (onlyLocal) {
+                courseCallback(new DatabaseException("No Courses exist locally for this user"));
             }
             // we ask the program for the list of courses by id then we compare
             // and update!
