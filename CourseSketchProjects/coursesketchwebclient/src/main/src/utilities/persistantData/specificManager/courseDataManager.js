@@ -319,7 +319,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 var newId = resultArray[0];
                 // we want to get the current course in the local database in case
                 // it has changed while the server was processing.
-                getCourse(oldId, function(course2) {
+                getCourseLocal(oldId, function(course2) {
                     deleteCourse(oldId);
                     course2.id = newId;
                     setCourse(course2, function() {
