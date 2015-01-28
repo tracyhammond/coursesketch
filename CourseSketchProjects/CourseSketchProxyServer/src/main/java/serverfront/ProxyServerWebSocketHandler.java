@@ -83,12 +83,6 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 } catch (ConnectionException e1) {
                     e1.printStackTrace();
                 }
-                /*
-                 * try {
-                 * getConnectionManager().send(TimeManager.serverSendTimeToClient
-                 * (), null, RecognitionConnection.class); } catch
-                 * (ConnectionException e1) { e1.printStackTrace(); } //
-                 */
 
                 final Set<SocketSession> conns = getConnectionToId().keySet();
                 for (SocketSession conn : conns) {
