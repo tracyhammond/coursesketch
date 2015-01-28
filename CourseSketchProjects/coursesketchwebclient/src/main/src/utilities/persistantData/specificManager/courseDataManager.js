@@ -199,16 +199,16 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     function deleteCourse(courseId, courseCallback) {
         database.deleteFromCourses(courseId, function(e, request) {
+            delete userCourses[courseId]; // removing it from the local map
+            var index = userCourseId.indexOf(courseId);
+            if (index > -1) {
+                userCourseId.splice(index, 1);
+                setCourseIdList(userCourseId);
+            }
             if (!isUndefined(courseCallback)) {
                 courseCallback(e, request);
             }
         });
-        delete userCourses[courseId]; // removing it from the local map
-        var index = userCourseId.indexOf(courseId);
-        if (index > -1) {
-            userCourseId.splice(index, 1);
-            setCourseIdList(userCourseId);
-        }
     }
     parent.deleteCourse = deleteCourse;
 
