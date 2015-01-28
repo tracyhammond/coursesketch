@@ -172,7 +172,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 courseCallback(e, request);
             }
         });
-        userCourses[courseId] = undefined; // removing it from the local map
+        delete userCourses[courseId]; // removing it from the local map
         var index = userCourseId.indexOf(courseId);
         if (index > -1) {
             userCourseId.splice(index, 1);
@@ -199,7 +199,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText != "null" && item.returnText != null) {
                 userHasCourses = false;
                 console.log(item.returnText);
-                alert(item.returnText);
                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
                 courseCallback(new DatabaseException(item.returnText, "Getting all courses for user " + parent.getCurrentId()));
                 return;
