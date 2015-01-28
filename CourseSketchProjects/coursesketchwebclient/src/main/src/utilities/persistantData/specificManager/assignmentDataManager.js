@@ -80,6 +80,15 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     parent.setAssignment = setAssignment;
     parent.setAssignmentLocal = setAssignment;
 
+    /**
+     * Deletes a assignment from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param assignmentId
+     *                ID of the assignment to delete
+     * @param assignmentCallback
+     *                function to be called after the deletion is done
+     */
     function deleteAssignment(assignmentId, assignmentCallback) {
         database.deleteFromAssignments(assignmentId, function(e, request) {
             if (assignmentCallback) {
@@ -136,9 +145,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *                function to be called after server insert is done
      */
     function insertAssignment(assignment, localCallback, serverCallback) {
-         if (isUndefined(assignment.id) || assignment.id == null) {
-            var assignmentId = generateUUID();
-            assignment.id = assignmentId;
+        if (isUndefined(assignment.id) || assignment.id == null) {
+            assignment.id = generateUUID();
         }
         setAssignment(assignment, function(e, request) {
             console.log("inserted locally :" + assignment.id)
@@ -148,8 +156,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             insertAssignmentServer(assignment, function(assignmentUpdated) {
                 parent.getCourse(assignment.courseId, function(course) {
                     var assignmentList = course.assignmentList;
+
+                    // remove old Id (if it exists)
+                    if (assignmentList.indexOf(assignment.id) >= 0) {
+                        removeObjectFromArray(assignmentList, assignment.id);
+                    }
                     assignmentList.push(assignmentUpdated.id);
-                    course.assignmentList = assignmentList;
                     parent.setCourse(course, function() {
                         if (!isUndefined(serverCallback)) {
                             serverCallback(assignmentUpdated);
