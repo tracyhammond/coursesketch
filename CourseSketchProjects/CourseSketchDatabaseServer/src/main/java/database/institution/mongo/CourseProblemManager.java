@@ -122,7 +122,7 @@ public final class CourseProblemManager {
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
-        if (isUsers && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
+        if (isUsers && !isAdmin && !isMod && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
         // states
