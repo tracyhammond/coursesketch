@@ -51,7 +51,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      */
     courseManagement.showCourses = function showCourses(courseList) {
         var builder = new SchoolItemBuilder();
-        builder.setList(courseList);
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
@@ -59,6 +58,17 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         builder.setBoxClickFunction(function(course) {
             courseManagement.courseClicked(course);
         });
+
+        if (courseList instanceof CourseSketch.DatabaseException || courseList.length == 0) {
+            if (CourseSketch.connection.isInstructor) {
+                builder.setEmptyListMessage('Please Create a new course to get started!');
+            } else {
+                builder.setEmptyListMessage('Please add a new course to get started');
+            }
+            courseList = [];
+        }
+
+        builder.setList(courseList);
         builder.build(document.querySelector('#class_list_column'));
         setNotSelectedMessage(2);
     };
