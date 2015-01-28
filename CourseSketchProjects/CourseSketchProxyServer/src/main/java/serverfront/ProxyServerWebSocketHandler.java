@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * A simple WebSocketServer implementation.
@@ -89,12 +90,11 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                  * (ConnectionException e1) { e1.printStackTrace(); } //
                  */
 
-                /*
                 final Set<SocketSession> conns = getConnectionToId().keySet();
                 for (SocketSession conn : conns) {
                     send(conn, TimeManager.serverSendTimeToClient());
                 }
-                */
+
             }
         };
         TimeManager.setTimeEstablishedListener(listener);
@@ -123,7 +123,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             // conn.send(pending);
             return;
         }
-        if (!state.isLoggedIn()) {
+        if (!state.isLoggedIn() && req.getRequestType()!= MessageType.TIME) {
             if (state.getTries() > MAX_LOGIN_TRIES) {
                 conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
                 return;
