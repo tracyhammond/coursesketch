@@ -78,7 +78,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         });
     }
     parent.setAssignment = setAssignment;
-    parent.setAssignmentLocal = setAssignment;
 
     /**
      * Deletes a assignment from local database.
@@ -324,7 +323,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                     var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
                                     var assignment = school.assignments[0];
                                     if (isUndefined(assignment) || assignment instanceof DatabaseException) {
-
                                         var result = assignment;
                                         if (isUndefined(result)) {
                                             result = new DatabaseException("Nothing is in the server database!",
