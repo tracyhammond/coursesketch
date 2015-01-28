@@ -324,8 +324,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     course2.id = newId;
                     setCourse(course2, function() {
                         userCourseId.push(newId);
-                        serverCallback(course2);
                         setCourseIdList(userCourseId);
+
+                        // now that everything is set we can return
+                        if (!isUndefined(serverCallback)) {
+                            serverCallback(course2);
+                        }
                     });
                 });
             });
