@@ -114,6 +114,11 @@ validateFirstRun(document.currentScript);
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
+
+                // replaces object with an updated id
+                removeObjectFromList(localCourseList, firstCourse);
+                localCourseList.push(course);
+
                 courseManagement.showCourses(localCourseList);
             });
         });
@@ -132,6 +137,7 @@ validateFirstRun(document.currentScript);
         var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
         assignment.name = "Insert name";
         assignment.courseId = courseId;
+        alert(courseId);
         assignment.description = "Insert description";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
@@ -150,7 +156,16 @@ validateFirstRun(document.currentScript);
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
-                courseManagement.showAssignments(localAssignmentList);
+
+                // replaces object with an updated id
+                removeObjectFromList(localAssignmentList, firstAssignment);
+                localAssignmentList.push(assignment);
+
+                // updates the course too!
+                CourseSketch.dataManager.getAllCourses(function(courseList) {
+                    courseManagement.showCourses(courseList);
+                    courseManagement.showAssignments(localAssignmentList);
+                });
             });
         });
     };
