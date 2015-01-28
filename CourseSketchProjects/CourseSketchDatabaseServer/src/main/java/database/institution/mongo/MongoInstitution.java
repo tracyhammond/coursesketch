@@ -215,13 +215,13 @@ public final class MongoInstitution implements Institution {
      * java.lang.String)
      */
     @Override
-    public ArrayList<SrlAssignment> getAssignment(final List<String> assignementID, final String userId) throws AuthenticationException,
+    public ArrayList<SrlAssignment> getAssignment(final List<String> assignmentID, final String userId) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
-        for (int assignments = assignementID.size() - 1; assignments >= 0; assignments--) {
+        for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
-                allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().auth, getInstance().database, assignementID.get(assignments),
+                allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().auth, getInstance().database, assignmentID.get(assignments),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
                 e.printStackTrace();
