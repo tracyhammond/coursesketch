@@ -7,7 +7,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     var dataListener = advanceDataListener;
     var database = parentDatabase;
     var sendDataRequest = sendData.sendDataRequest;
-    var localScope = parent;
 
     /**
      * Looks at the course and gives it some state if the state values do not
@@ -58,6 +57,53 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     }
 
     /**
+     * Gets an Course from the local database.
+     *
+     * @param courseId
+     *                ID of the course to get
+     * @param courseCallback
+     *                function to be called after getting is complete, parameter
+     *                is the course object, can be called with {@link DatabaseException} if an exception occurred getting the data.
+     */
+    function getCourseLocal(courseId, courseCallback) {
+        if (isUndefined(courseId) || courseId == null) {
+            courseCallback(new DatabaseException("The given id is not assigned", "getting Course: " + courseId));
+        }
+
+        // quick and dirty this is in ram && synchronous (not in local memory)
+        if (!isUndefined(userCourses[courseId])) {
+            if (userCourses[courseId] == nonExistantValue || isUndefined(userCourses[courseId]) || userCourses[courseId] == null) {
+                courseCallback(new DatabaseException("Course does not exist", "Getting courses with id " + courseId));
+                return;
+            }
+            var bytes = ByteBuffer.fromBase64(userCourses[courseId]);
+            stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
+            return;
+        }
+
+        // quick and dirty failed fallback to local db
+        database.getFromCourses(courseId, function(e, request, result) {
+            if (isUndefined(result) || isUndefined(result.data)) {
+                courseCallback(new DatabaseException("The result is undefined", "getting Course: " + courseId));
+            } else if (result.data == nonExistantValue) {
+                // the server holds this special value then it means the server
+                // does not have the value
+                courseCallback(new DatabaseException("The database does not hold this value", "getting Course: " + courseId));
+            } else {
+                // gets the data from the database and calls the callback
+                try {
+                    var bytes = ByteBuffer.fromBase64(result.data);
+                    stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
+                } catch (exception) {
+                    console.error(exception);
+                    courseCallback(new DatabaseException("The result is undefined", "getting Course: " + courseId));
+                }
+            }
+        });
+    }
+    parent.getCourseLocal = getCourseLocal;
+
+    /**
      * Returns a course with the given couresId will ask the server if it does
      * not exist locally.
      *
@@ -72,22 +118,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *            asynchronous)
      */
     function getCourse(courseId, courseCallback) {
-        // quick and dirty this is in ram (not in local memory)
-        if (!isUndefined(userCourses[courseId])) {
-            if (userCourses[courseId] == nonExistantValue || isUndefined(userCourses[courseId]) || userCourses[courseId] == null) {
-                courseCallback(new DatabaseException("Course does not exist", "Getting courses with id " + courseId));
-                return;
-            }
-            var bytes = ByteBuffer.fromBase64(userCourses[courseId]);
-            stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
-            return;
+        if (isUndefined(courseId) || courseId == null) {
+            courseCallback(new DatabaseException("The given id is not assigned", "getting Course: " + courseId));
         }
-        database.getFromCourses(courseId, function(e, request, result) {
-            if (isUndefined(result) || isUndefined(result.data)) {
-                // the listener from the server of the request
-                // it stores the course locally then cals the callback with the
-                // course
+
+        getCourseLocal(courseId, function(course) {
+            if (isUndefined(course) || course instanceof DatabaseException) {
                 advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
+                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
                     var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
                     var course = school.courses[0];
                     if (isUndefined(course)) {
@@ -96,22 +134,15 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                         advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
                         return;
                     }
-                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
-                    localScope.setCourse(course);
-                    stateCallback(course, courseCallback);
+                    setCourse(course, function() {
+                        stateCallback(course, courseCallback);
+                    });
                 });
                 // creates a request that is then sent to the server
                 sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, [ courseId ]);
-            } else if (result.data == nonExistantValue) {
-                // the server holds this special value then it means the server
-                // does not have the value
-                courseCallback(nonExistantValue);
-                userCourses[courseId] = nonExistantValue;
             } else {
-                // gets the data from the database and calls the callback
-                userCourses[courseId] = result.data;
-                var bytes = ByteBuffer.fromBase64(result.data);
-                stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
+                // get course local calls state callback so it is not needed here if it exists.
+                courseCallback(course);
             }
         });
     }
