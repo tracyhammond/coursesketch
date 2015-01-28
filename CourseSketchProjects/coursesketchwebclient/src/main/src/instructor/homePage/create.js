@@ -121,7 +121,7 @@ validateFirstRun(document.currentScript);
 
                 courseManagement.showCourses(localCourseList);
             });
-        });
+        }, true); // end getAllCourses
     };
 
     /**
