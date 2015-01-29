@@ -251,13 +251,34 @@ public interface Institution {
      * @param course
      *            The object being updated
      * @throws AuthenticationException
-     *             Thrown if the user does not have permission to insert an
-     *             Assignment.
+     *             Thrown if the user does not have permission to update a
+     *             Course.
      * @throws DatabaseAccessException
-     *             Thrown if there is a problem inserting the assignment.
+     *             Thrown if there is a problem updating the course.
      *
      */
     void updateCourse(final String userId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Updates an existing assignment in the database.
+     *
+     * Upon updating 1 step happen:
+     * <ol>
+     * <li>the assignment is updated in a assignment collection</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param assignment
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to update an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem updating the assignment.
+     *
+     */
+    void updateAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the lecture into the the database.
@@ -348,5 +369,6 @@ public interface Institution {
      */
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
+
 
 }
