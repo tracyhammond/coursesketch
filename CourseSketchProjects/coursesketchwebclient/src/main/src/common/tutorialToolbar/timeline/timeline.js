@@ -212,12 +212,15 @@ function Timeline () {
                 highlightText.currentUpdate = currentUpdate;
                 /*end of creating the textbox*/
                 var highlightMarker = document.createElement("timeline-marker");
-                highlightMarker.className = "highlightmarker";
+                highlightMarker.className = "highlight";
                 toolArea.appendChild(highlightMarker);
                 $(plusButton).empty();
                 $(plusButton).removeClass("tall");
             } else {
                 alert("You already have a highlight tool for this step!")
+                $(plusButton).empty();
+                $(plusButton).removeClass("tall");
+                return;
             }
             
             function closeHighlightText(command) {
@@ -230,6 +233,8 @@ function Timeline () {
                 if (highlightMarker != null) {
                     highlightMarker.parentNode.removeChild(highlightMarker);
                 }
+                $(".highlightedText").contents().unwrap();
+                document.normalize();
             }
             
             highlightTextFinishedListener = function(command, event, currentUpdate) {
@@ -251,6 +256,7 @@ function Timeline () {
             });
             
             highlightText.setFinishedListener(highlightTextFinishedListener);
+            highlightText.saveData();
             highlightMarker.id = highlightText.id;
         };
     }
