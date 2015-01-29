@@ -190,6 +190,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             // remove course
             if (userCourseId.indexOf(courseId) >= 0) {
                 removeObjectFromArray(userCourseId, courseId);
+                setCourseIdList(userCourseId);
             }
             if (!isUndefined(courseCallback)) {
                 courseCallback(e, request);
