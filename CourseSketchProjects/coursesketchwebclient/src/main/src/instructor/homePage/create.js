@@ -147,7 +147,14 @@ validateFirstRun(document.currentScript);
         assignment.description = "Insert description";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
+        var alreadyInserted = false;
         CourseSketch.dataManager.getAllAssignmentsFromCourse(courseId, function(assignmentList) {
+            // ensure that we only insert once.
+            if (!alreadyInserted) {
+                alreadyInserted = true;
+            } else {
+                return;
+            }
             var localAssignmentList = assignmentList;
             if (assignmentList instanceof CourseSketch.DatabaseException) {
                 // no assignments exist or something went wrong
