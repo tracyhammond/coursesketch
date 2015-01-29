@@ -30,8 +30,7 @@
             };
 
             HighlightText.prototype.detachedCallback = function() {
-                //this.finalize();
-                //TODO: Add saving actions here
+                $(document).off("mouseup");
             };
 
             document.registerElement('highlight-text-creation', {

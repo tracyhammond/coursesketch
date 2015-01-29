@@ -4,6 +4,8 @@
  * The highlighting is done by adding span tags and will not break any formatting across other tags
  */
 function HighlightText() {
+    var loadedData = undefined; // Utilized if the element does not exist when loadData() is called
+    var shadowRoot = undefined; // Used only to tell if the data is ready to be loaded.
     /**
      * This is for making the dialog moveable with the interact.js library
      * It selects the created dialog and makes it draggable with no inertia
@@ -60,17 +62,16 @@ function HighlightText() {
             var myText = window.getSelection();
             var range = myText.getRangeAt();
             children = range.cloneContents().childNodes;
-
             if (myText.toString().length > 0) { // Makes sure the selection contains characters so blank span tags are not added
                 if (checkChildrenNodes(children)) { // Makes sure adding span tags will not ruin the selected text formatting
                     var newNode = document.createElement('span');
                     newNode.setAttribute('class', 'highlightedText');
-                    newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
+                    newNode.setAttribute('style', 'background:' + this.backgroundColor + '; color:' + this.textColor);
                     
-                    startPath = getXPath(range.startContainer);
-                    startOffset = range.startOffset;
-                    endPath = getXPath(range.endContainer);
-                    endOffset = range.endOffset;
+                    this.startPath = getXPath(range.startContainer);
+                    this.startOffset = range.startOffset;
+                    this.endPath = getXPath(range.endContainer);
+                    this.endOffset = range.endOffset;
 
                     newNode.appendChild(range.extractContents());
                     range.insertNode(newNode);
@@ -112,12 +113,13 @@ function HighlightText() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
-        textColor = shadowRoot.querySelector("#textColor").value;
-        startPath = undefined;
-        startOffset = undefined;
-        endPath = undefined;
-        endOffset = undefined;
+        this.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+        this.textColor = shadowRoot.querySelector("#textColor").value;
+        this.startPath = undefined;
+        this.startOffset = undefined;
+        this.endPath = undefined;
+        this.endOffset = undefined;
+        this.highlightProto = undefined;
 
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
         shadowRoot.querySelector("#highlightMode").onchange = function() {
@@ -130,18 +132,20 @@ function HighlightText() {
             
         // Click action for the "X" that closes the dialog
         shadowRoot.querySelector("#closeButton").onclick = function() {
-            $(document).off("mouseup", highlightText);
-            localScope.parentNode.removeChild(localScope);
+            if (confirm("You are about to permanently remove the highlighting from this step.")) {
+                $(document).off("mouseup", highlightText);
+                localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate);
+            }
         };
         
         // Updates value of backgroundColor when the color selector value is changed by the user
         shadowRoot.querySelector("#backgroundColor").onchange = function() {
-            backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+            localScope.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
         };
         
         // Updates value of textColor when the color selecor value is changed by the user
         shadowRoot.querySelector("#textColor").onchange = function() {
-            textColor = shadowRoot.querySelector("#textColor").value;
+            localScope.textColor = shadowRoot.querySelector("#textColor").value;
         };
         
         enableDragging();
@@ -153,38 +157,39 @@ function HighlightText() {
 
     this.saveData = function(event) {
         var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
-        var highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
-        nodePathProto.setStartPath(startPath);
-        nodePathProto.setStartOffset(startOffset);
-        nodePathProto.setEndPath(endPath);
-        nodePathProto.setEndOffset(endOffset);
-        nodePathProto.setBackgroundColor(backgroundColor);
-        nodePathProto.setTextColor(textColor);
-        highlightProto.add("selectedNodePath", nodePathProto);
-        console.log(nodePathProto);
+        if (isUndefined(this.highlightProto)) {
+            this.highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+        }
+        if (!isUndefined(this.startPath)) {
+            nodePathProto.setStartPath(this.startPath);
+            nodePathProto.setStartOffset(this.startOffset);
+            nodePathProto.setEndPath(this.endPath);
+            nodePathProto.setEndOffset(this.endOffset);
+            nodePathProto.setBackgroundColor(this.backgroundColor);
+            nodePathProto.setTextColor(this.textColor);
+            this.highlightProto.add('selectedNodePath', nodePathProto);
+        }
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
-        this.command.setCommandData(highlightProto.toArrayBuffer()); // Sets commandData for commandlist
+        this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
         this.id = this.command.commandId;
-        console.log("I SAVED");
         this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
     
-    this.loadData = function(highlightProto) {
+    this.loadData = function(protoData) {
         if (isUndefined(shadowRoot)) {
-            loadedData = highlightProto;
+            loadedData = protoData;
             return;
         }
-        if (isUndefined(highlightProto)) {
+        if (isUndefined(protoData)) {
             return;
         }
-        
-        var nodes = highlightProto.getSelectedNodePath();
-        console.log(nodes);
+        var nodes = protoData.getSelectedNodePath();
+        this.highlightProto = protoData;
         for (i=0; i < nodes.length; i++) {
             var loadNode = nodes[i];
             var rangeStartNode = loadNode.getStartPath();
@@ -215,6 +220,8 @@ function HighlightText() {
         // This will set the text/background color to the last used combination
         shadowRoot.querySelector('#textColor').value = textColor;
         shadowRoot.querySelector('#backgroundColor').value = backgroundColor;
+        this.textColor = textColor;
+        this.backgroundColor = backgroundColor;
     };
     
     this.getFinishedCallback = function() {
