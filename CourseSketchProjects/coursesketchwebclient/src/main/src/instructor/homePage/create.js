@@ -40,14 +40,14 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.assignmentEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var keyList = newValue.keys();
-        var srlCourse = element.schoolItemData;
-        console.log(srlCourse);
+        var assignment = element.schoolItemData;
+        console.log(assignment);
         for (var key of keyList) {
             console.log(key);
-            srlCourse[key] = newValue.get(key);
+            assignment[key] = newValue.get(key);
         }
-        console.log(srlCourse);
-        CourseSketch.dataManager.updateAssignment(srlCourse);
+        console.log(assignment);
+        CourseSketch.dataManager.updateAssignment(assignment);
     };
 
     courseManagement.commonShowCourses = courseManagement.showCourses;
@@ -181,7 +181,7 @@ validateFirstRun(document.currentScript);
                     if (isUndefined(course) || course instanceof CourseSketch.DatabaseException) {
                         throw new Error("Course is not defined while trying to add assignment.");
                     }
-                    document.getElementById('class_list_column').schoolData = course;
+                    document.getElementById('class_list_column').querySelector(cssEscapeId(courseId)).schoolItemData = course;
                 });
             });
         });
