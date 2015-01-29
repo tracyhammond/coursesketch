@@ -136,9 +136,12 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.addNewAssignment = function addNewAssignment() {
         var courseId = document.querySelector("#class_list_column .selectedBox").id;
+        var assignmentColumn = document.getElementById('assignment_list_column');
+
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
-        document.getElementById('assignment_list_column').appendChild(waitingIcon);
+        assignmentColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
+
         // by instructors
         var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
         assignment.name = "Insert name";
@@ -160,24 +163,25 @@ validateFirstRun(document.currentScript);
                 // no assignments exist or something went wrong
                 localAssignmentList = [];
             }
-            var firstAssignment = undefined;
-            CourseSketch.dataManager.insertAssignment(assignment, function(assignment) {
-                firstAssignment = assignment;
-                localAssignmentList.push(assignment);
+            var oldId = undefined;
+            CourseSketch.dataManager.insertAssignment(assignment, function(insertedAssignment) {
+                oldId = insertedAssignment.id;
+                localAssignmentList.unshift(insertedAssignment);
                 courseManagement.showAssignments(localAssignmentList);
-            }, function(assignment) {
+            }, function(updateAssignment) {
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
+                var oldElement = assignmentColumn.querySelector(cssEscapeId(oldId));
+                oldElement.id = updateAssignment.id.trim();
+                oldElement.schoolItemData = updateAssignment;
 
-                // replaces object with an updated id
-                removeObjectFromList(localAssignmentList, firstAssignment);
-                localAssignmentList.push(assignment);
-
-                // updates the course too!
-                CourseSketch.dataManager.getAllCourses(function(courseList) {
-                    courseManagement.showCourses(courseList);
-                    courseManagement.showAssignments(localAssignmentList);
+                // updates the course too! (basically the assignment list)
+                CourseSketch.dataManager.getCourse(courseId, function(course) {
+                    if (isUndefined(course) || course instanceof CourseSketch.DatabaseException) {
+                        throw new Error("Course is not defined while trying to add assignment.");
+                    }
+                    document.getElementById('class_list_column').schoolData = course;
                 });
             });
         });
