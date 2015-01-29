@@ -355,7 +355,7 @@
                 }); // end wait for database
              });
 
-             asyncTest("getAllCourses local only", function(assert) {
+            asyncTest("getAllCourses local only", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                     CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
 
