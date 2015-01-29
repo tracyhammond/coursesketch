@@ -88,7 +88,8 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.addNewCourse = function addNewCourse() {
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
-        document.getElementById('class_list_column').appendChild(waitingIcon);
+        var courseColumn = document.getElementById('class_list_column');
+        courseColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
         // by instructors
         var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
@@ -99,32 +100,32 @@ validateFirstRun(document.currentScript);
         // Spring, Su = Summer) ";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
+        var alreadyInserted = false;
         CourseSketch.dataManager.getAllCourses(function(courseList) {
+            // ensure that we only insert once.
+            if (!alreadyInserted) {
+                alreadyInserted = true;
+            } else {
+                return;
+            }
             var localCourseList = courseList;
             if (courseList instanceof CourseSketch.DatabaseException) {
                 // we are cool because we are adding a new one.
                 localCourseList = [];
             }
-            var firstCourse = undefined;
-            CourseSketch.dataManager.insertCourse(course, function(course) {
-                firstCourse = course;
-                localCourseList.push(course);
+            var oldId = undefined;
+            CourseSketch.dataManager.insertCourse(course, function(insertedCourse) {
+                console.log("inserting course", insertedCourse);
+                oldId = insertedCourse.id;
+                localCourseList.unshift(insertedCourse);
                 courseManagement.showCourses(localCourseList);
-            }, function(course) {
+            }, function(updatedCourse) {
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
-
-                // replaces object with an updated id
-                for (var i = 0; i < localCourseList.length; i++) {
-                    if (localCourseList[i].id == firstCourse[i].id) {
-                        removeObjectByIndex(localCourseList, i);
-                        i--;
-                    }
-                }
-                localCourseList.push(course);
-
-                courseManagement.showCourses(localCourseList);
+                var oldElement = document.getElementById(oldId);
+                oldElement.id = updatedCourse.id.trim();
+                oldElement.schoolItemData = updatedCourse;
             });
         }); // end getAllCourses
     };
