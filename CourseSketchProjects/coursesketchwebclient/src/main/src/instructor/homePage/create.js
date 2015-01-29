@@ -123,7 +123,7 @@ validateFirstRun(document.currentScript);
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
-                var oldElement = document.getElementById(oldId);
+                var oldElement = courseColumn.querySelector('#' + cssEscapeId(oldId));
                 oldElement.id = updatedCourse.id.trim();
                 oldElement.schoolItemData = updatedCourse;
             });
