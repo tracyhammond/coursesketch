@@ -86,7 +86,17 @@ public final class DataUpdateHandler {
                             results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
                         }
                         break;
+                        case ASSIGNMENT: {
+                            final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
+                            instance.updateAssignment(userId, assignment);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
                         default:
+                            final ItemResult.Builder build = ItemResult.newBuilder();
+                            build.setQuery(itemSet.getQuery());
+                            results.add(ResultBuilder.buildResult(build.build().toByteString(), "Update is not supported for this type",
+                                    ItemQuery.ERROR));
                             break;
                     }
                 } catch (AuthenticationException e) {
