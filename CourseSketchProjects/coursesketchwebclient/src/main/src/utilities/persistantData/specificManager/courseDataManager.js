@@ -232,7 +232,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             courseCallback(courseList);
 
         });
-        if (userCourseId.length == 0 && userHasCourses) {
+        if (userCourseId.length == 0 && userHasCourses && !onlyLocal) {
             sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
             // console.log("course list from server polled!");
         } else {
@@ -253,15 +253,21 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             // create local course list so everything appears really fast!
             for (var i = 0; i < userCourseId.length; i++) {
                 this.getCourseLocal(userCourseId[i], function(course) {
-                    courseList.push(course);
+                    if (!isUndefined(course) && !(course instanceof DatabaseException)) {
+                        courseList.push(course);
+                    }
                     barrier -= 1;
                     if (barrier == 0 && courseList.length > 0) {
                         courseCallback(courseList);
                         return;
                     } else if(barrier == 0) {
-                        courseCallback(new DatabaseException("No Courses exist locally for this user"));
+                        courseCallback(new DatabaseException("No Valid Courses exist locally for this user"));
                     }
                 });
+            }
+
+            if (userCourseId.length == 0 && onlyLocal) {
+                courseCallback(new DatabaseException("No Courses exist locally for this user"));
             }
         }
     }
