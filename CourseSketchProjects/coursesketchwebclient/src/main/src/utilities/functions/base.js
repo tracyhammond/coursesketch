@@ -149,27 +149,6 @@ if (isUndefined(getFormattedDateTime)) {
     }
 }
 
-/**
- * Does a very simple escaping of the id for css purposes.
- * A more complicated version is found here: https://mothereff.in/css-escapes
- * @param inputId The id we want escaped.
- * @return escaped value
- *
- * Example:
- * Input: 12a2b3c
- * Output: #\31 2a2b3c
- */
-if (isUndefined(cssEscapeId)) {
-    function cssEscapeId(inputId) {
-        var output = inputId;
-        var firstChar = inputId.charAt(0);
-        if (/\d/.test(firstChar)) {
-            output = '\\3' + firstChar + ' ' + output.slice(1);
-        }
-        return '#' + output;
-    }
-}
-
 if (isUndefined(BaseException)) {
     /**
      * @Class Defines the base exception class that can be extended by all other
