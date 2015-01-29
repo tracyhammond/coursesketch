@@ -38,27 +38,33 @@ import static database.DatabaseStringConstants.USERS;
 
 /**
  * Manages course problems for the mongo database.
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
-        "PMD.NPathComplexity" , "PMD.AvoidDeeplyNestedIfStmts" })
+        "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
 public final class CourseProblemManager {
 
     /**
      * Private constructor.
-     *
      */
     private CourseProblemManager() {
     }
 
     /**
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the course problem is being stored.
-     * @param userId The user that is asking to insert a course problem.
-     * @param problem the data of the course problem being inserted.
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the course problem is being stored.
+     * @param userId
+     *         The user that is asking to insert a course problem.
+     * @param problem
+     *         the data of the course problem being inserted.
      * @return the mongo database Id of the course problem.
-     * @throws AuthenticationException Thrown if the user does not have permission to insert the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to insert the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String userId, final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
@@ -91,14 +97,21 @@ public final class CourseProblemManager {
      *
      * If a problem is not within a valid date an exception is thrown.
      *
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the assignment is being stored.
-     * @param problemId the problem being requested.
-     * @param userId the user requesting the problem.
-     * @param checkTime the time at which the problem was requested.
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param problemId
+     *         the problem being requested.
+     * @param userId
+     *         the user requesting the problem.
+     * @param checkTime
+     *         the time at which the problem was requested.
      * @return an SrlProblem if it exists and all checks pass.
-     * @throws AuthenticationException Thrown if the user does not have permission to get the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to get the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
@@ -122,7 +135,8 @@ public final class CourseProblemManager {
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
-        if (isUsers && !isAdmin && !isMod && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
+        if (isUsers && !isAdmin && !isMod && !authenticator
+                .isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
         // states
@@ -172,15 +186,21 @@ public final class CourseProblemManager {
     }
 
     /**
-     *
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the assignment is being stored.
-     * @param problemId the problem being updated.
-     * @param userId the user requesting the problem.
-     * @param problem the data of the problem itself.
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param problemId
+     *         the problem being updated.
+     * @param userId
+     *         the user requesting the problem.
+     * @param problem
+     *         the data of the problem itself.
      * @return true if the data was updated successfully.
-     * @throws AuthenticationException Thrown if the user does not have permission to update the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
@@ -236,9 +256,12 @@ public final class CourseProblemManager {
      * This is used to copy permissions from the parent assignment into the
      * current problem.
      *
-     * @param dbs The database where the assignment is being stored.
-     * @param courseProblemId the problem that the group is being inserted into.
-     * @param ids the list of id groupings that contain the ids being copied over.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param courseProblemId
+     *         the problem that the group is being inserted into.
+     * @param ids
+     *         the list of id groupings that contain the ids being copied over.
      */
     static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
