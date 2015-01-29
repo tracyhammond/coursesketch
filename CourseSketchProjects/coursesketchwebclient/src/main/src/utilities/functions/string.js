@@ -40,7 +40,16 @@ if (isUndefined(getTextWidth)) {
     }
 }
 
-
+/**
+ * Does a very simple escaping of the id for css purposes.
+ * A more complicated version is found here: https://mothereff.in/css-escapes
+ * @param inputId The id we want escaped.
+ * @return escaped value
+ *
+ * Example:
+ * Input: 12a2b3c
+ * Output: #\31 2a2b3c
+ */
 if (isUndefined(cssEscapeId)) {
     function cssEscapeId(id) {
         // simple number at front
