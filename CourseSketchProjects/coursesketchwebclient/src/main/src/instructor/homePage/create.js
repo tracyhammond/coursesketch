@@ -123,8 +123,8 @@ validateFirstRun(document.currentScript);
                 if (waitingIcon.isRunning()) {
                     waitingIcon.finishWaiting();
                 }
-                var oldElement = courseColumn.querySelector('#' + cssEscapeId(oldId));
-                oldElement.id = updatedCourse.id.trim();
+                var oldElement = courseColumn.querySelector(cssEscapeId(oldId));
+                oldElement.id = updatedCourse.id
                 oldElement.schoolItemData = updatedCourse;
             });
         }); // end getAllCourses
