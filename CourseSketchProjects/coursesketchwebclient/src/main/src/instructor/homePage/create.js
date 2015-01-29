@@ -116,12 +116,17 @@ validateFirstRun(document.currentScript);
                 }
 
                 // replaces object with an updated id
-                removeObjectFromList(localCourseList, firstCourse);
+                for (var i = 0; i < localCourseList.length; i++) {
+                    if (localCourseList[i].id == firstCourse[i].id) {
+                        removeObjectByIndex(localCourseList, i);
+                        i--;
+                    }
+                }
                 localCourseList.push(course);
 
                 courseManagement.showCourses(localCourseList);
             });
-        }, true); // end getAllCourses
+        }); // end getAllCourses
     };
 
     /**
