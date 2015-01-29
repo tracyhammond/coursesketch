@@ -51,17 +51,12 @@ if (isUndefined(getTextWidth)) {
  * Output: #\31 2a2b3c
  */
 if (isUndefined(cssEscapeId)) {
-    function cssEscapeId(id) {
-        // simple number at front
-        if (id.match(/^\d\D/)) {
-            return '\\3' + id;
+    function cssEscapeId(inputId) {
+        var output = inputId;
+        var firstChar = inputId.charAt(0);
+        if (/\d/.test(firstChar)) {
+            output = '\\3' + firstChar + ' ' + output.slice(1);
         }
-
-        // simple number at front
-        if (id.match(/^\d\d.*/)) {
-            return '\\3' + id.charAt(0) + ' ' + id.substring(1);
-        }
-
-        return id;
+        return '#' + output;
     }
 }
