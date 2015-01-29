@@ -300,8 +300,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
                 var resultArray = item.getReturnText().split(":");
-                var oldId = resultArray[1];
-                var newId = resultArray[0];
+                var oldId = resultArray[1].trim();
+                var newId = resultArray[0].trim();
                 // we want to get the current course in the local database in case
                 // it has changed while the server was processing.
                 getCourseLocal(oldId, function(course2) {
