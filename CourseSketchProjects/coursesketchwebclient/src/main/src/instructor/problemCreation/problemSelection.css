@@ -5,3 +5,8 @@ dialog: {
     left: 10%;
     right: 10%;
 }
+
+school-item {
+    width:48%;
+    margin-left:1%;
+}
