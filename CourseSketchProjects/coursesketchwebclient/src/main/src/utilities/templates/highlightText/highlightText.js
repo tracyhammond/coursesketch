@@ -64,19 +64,19 @@ function HighlightText() {
             children = range.cloneContents().childNodes;
             if (myText.toString().length > 0) { // Makes sure the selection contains characters so blank span tags are not added
                 if (checkChildrenNodes(children)) { // Makes sure adding span tags will not ruin the selected text formatting
-                    var newNode = document.createElement('span');
+                    var newNode = document.createElement('span'); // This node is created to encase the text in the highlighted color
                     newNode.setAttribute('class', 'highlightedText');
                     newNode.setAttribute('style', 'background:' + this.backgroundColor + '; color:' + this.textColor);
                     
+                    // These values are used for saving data
                     this.startPath = getXPath(range.startContainer);
                     this.startOffset = range.startOffset;
                     this.endPath = getXPath(range.endContainer);
                     this.endOffset = range.endOffset;
 
-                    newNode.appendChild(range.extractContents());
-                    range.insertNode(newNode);
+                    newNode.appendChild(range.extractContents()); // Makes the new span tags have the contents of the selection
+                    range.insertNode(newNode); // Inserts the new node to where the old range was
                     this.saveData();
-                    
                 } else {
                     alert("Please make a valid selection.") // Message for invalid selections
                 }
@@ -84,6 +84,11 @@ function HighlightText() {
         }
     }
     
+    /**
+     * @param node {node} is the node whose path we are getting
+     * @param currentPath {string} is used within the function to append the previous sibling to the path
+     * @return currentPath {string} is the XML Path of the input node
+     */
     function getXPath (node, currentPath) {
         currentPath = currentPath || '';
         switch (node.nodeType) {
@@ -128,13 +133,13 @@ function HighlightText() {
             } else {
                 $(document).off("mouseup", highlightText.bind(this));
             }
-        }.bind(this);
+        }.bind(this); // Binds this so the highlightText function can write to variables (this is to define the correct scope)
             
         // Click action for the "X" that closes the dialog
         shadowRoot.querySelector("#closeButton").onclick = function() {
             if (confirm("You are about to permanently remove the highlighting from this step.")) {
-                $(document).off("mouseup", highlightText);
-                localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate);
+                $(document).off("mouseup", highlightText); // Removes the bound mouseup event
+                localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate); // Gets and calls finishedCallback
             }
         };
         
@@ -154,20 +159,26 @@ function HighlightText() {
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };
-
+    
+    /**
+     * @param event {event} This is utilized for exiting, but I don't think it's actually needed anymore (Matt)
+     * highlightProto is the list of all highlighted selections for the current step
+     * The highlightText tool only appears once per step, this is why highlightProto only exists once
+     * nodePathProto is an individual highlighted selection that gets added to the highlightProto list
+     */
     this.saveData = function(event) {
         var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
-        if (isUndefined(this.highlightProto)) {
+        if (isUndefined(this.highlightProto)) { // Defines highlightProto if it does not already exist
             this.highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
         }
-        if (!isUndefined(this.startPath)) {
+        if (!isUndefined(this.startPath)) { // If startPath is defined, then saving will occur
             nodePathProto.setStartPath(this.startPath);
             nodePathProto.setStartOffset(this.startOffset);
             nodePathProto.setEndPath(this.endPath);
             nodePathProto.setEndOffset(this.endOffset);
             nodePathProto.setBackgroundColor(this.backgroundColor);
             nodePathProto.setTextColor(this.textColor);
-            this.highlightProto.add('selectedNodePath', nodePathProto);
+            this.highlightProto.add('selectedNodePath', nodePathProto); // Adds nodePath to the end of the current highlightProto list
         }
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
@@ -176,10 +187,14 @@ function HighlightText() {
         }
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
-        this.id = this.command.commandId;
+        this.id = this.command.commandId; // Sets highlightText id to the same as the commandId
         this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
     
+    /**
+     * @param protoData {protoCommand} is the CommandData to be loaded
+     * This function loads data by recreating the node and then insert it into the webpage
+     */
     this.loadData = function(protoData) {
         if (isUndefined(shadowRoot)) {
             loadedData = protoData;
@@ -188,10 +203,10 @@ function HighlightText() {
         if (isUndefined(protoData)) {
             return;
         }
-        var nodes = protoData.getSelectedNodePath();
-        this.highlightProto = protoData;
-        for (i=0; i < nodes.length; i++) {
-            var loadNode = nodes[i];
+        var nodes = protoData.getSelectedNodePath(); // This is a list of all the nodes to recreate
+        this.highlightProto = protoData; // This sets highlightProto to the previous list so that you can add new selections in edit mode
+        for (i=0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
+            var loadNode = nodes[i]; // The current node to be loaded
             var rangeStartNode = loadNode.getStartPath();
             var rangeStartOffset = loadNode.getStartOffset();
             var rangeEndNode = loadNode.getEndPath();
@@ -199,6 +214,7 @@ function HighlightText() {
             var backgroundColor = loadNode.getBackgroundColor();
             var textColor = loadNode.getTextColor();
 
+            // This recreates the node based on selection start/end node/offset and text/background colors
             if (typeof window.getSelection != 'undefined') {
                 var selection = window.getSelection();
                 selection.removeAllRanges();

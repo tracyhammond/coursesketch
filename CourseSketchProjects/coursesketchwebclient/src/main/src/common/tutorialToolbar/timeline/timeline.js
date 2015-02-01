@@ -204,6 +204,8 @@ function Timeline () {
         plusButton.appendChild(highlightButton);
         highlightButton.onclick = function(event) {
             event.stopPropagation();
+            
+            // This prevents the user from making two highlightText tools in the same tutorial step
             if (document.querySelector('highlight-text-creation') == null) {
                 /*creating the textbox*/
                 var highlightText = document.createElement('highlight-text-creation');
