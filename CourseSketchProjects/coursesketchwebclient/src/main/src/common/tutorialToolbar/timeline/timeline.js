@@ -26,6 +26,7 @@ function Timeline () {
             continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
         };
     };
+    
     /**
      * a tool area holds all of the different tools that can be used for tutorial creation, such 
      * as textbox, tts, highlight, sketch surface, etc
@@ -37,6 +38,7 @@ function Timeline () {
         addPlusButton(toolArea, this);
         this.index.addNewToolArea(toolArea);
     };
+    
     /**
      * the plus button calls show tools to list out the available tools
      */
@@ -51,6 +53,7 @@ function Timeline () {
             showTools(plusButton, parent, localScope);
         };
     }
+    
     /**
      * sketch surface is currently not fully implemented.  To see what it does, uncomment the line
      */
@@ -60,6 +63,7 @@ function Timeline () {
         addHighlightButton(plusButton, toolArea, localScope);
         //addSketchSurfaceButton(plusButton, toolArea, localScope);
     }
+    
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
@@ -73,12 +77,13 @@ function Timeline () {
         
         textBoxButton.onclick = function(event) {
             event.stopPropagation();
-            /*creating the textbox*/
+            
+            /* creating the textbox */
             var textBox = document.createElement('text-box-creation');
             document.body.appendChild(textBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
-            /*end of creating the textbox*/
+            /* end of creating the textbox */
             
             function closeTextBox(command) {
                 var textBox = document.getElementById(command.commandId);
@@ -92,7 +97,6 @@ function Timeline () {
                 }
             }
 
-            /*end of creating the textbox*/
             var textBoxMarker = document.createElement("timeline-marker");
             textBoxMarker.className = "textbox";
             toolArea.appendChild(textBoxMarker);
@@ -128,6 +132,7 @@ function Timeline () {
             textBoxMarker.id = textBox.id;
         };
     }
+    
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
@@ -141,12 +146,13 @@ function Timeline () {
         
         ttsBoxButton.onclick = function(event) {
             event.stopPropagation();
-            /*creating the textbox*/
+            
+            /* creating the textbox */
             var ttsBox = document.createElement('tts-box-creation');
             document.body.appendChild(ttsBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             ttsBox.currentUpdate = currentUpdate;
-            /*end of creating the textbox*/
+            /* end of creating the textbox */
             
             function closeTtsBox(command) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -192,6 +198,7 @@ function Timeline () {
             ttsBoxMarker.id = ttsBox.id;
         };
     }
+    
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
@@ -207,19 +214,21 @@ function Timeline () {
             
             // This prevents the user from making two highlightText tools in the same tutorial step
             if (document.querySelector('highlight-text-creation') == null) {
-                /*creating the textbox*/
+            
+                /* creating the highlightTool */
                 var highlightText = document.createElement('highlight-text-creation');
                 document.body.appendChild(highlightText);
                 var currentUpdate = localScope.index.getCurrentUpdate();
                 highlightText.currentUpdate = currentUpdate;
-                /*end of creating the textbox*/
+                /* end of creating the highlightTool */
+                
                 var highlightMarker = document.createElement("timeline-marker");
                 highlightMarker.className = "highlight";
                 toolArea.appendChild(highlightMarker);
                 $(plusButton).empty();
                 $(plusButton).removeClass("tall");
             } else {
-                alert("You already have a highlight tool for this step!")
+                alert("You already have a highlight tool for this step!");
                 $(plusButton).empty();
                 $(plusButton).removeClass("tall");
                 return;
@@ -284,7 +293,7 @@ function Timeline () {
      * creates undos
      */
     function undoCreator () {
-        // creates saving for textbox
+        // creates undo for textbox
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
@@ -294,7 +303,7 @@ function Timeline () {
                 }
             }
         });
-        // creates saving for tts box
+        // creates undo for tts box
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
@@ -304,7 +313,7 @@ function Timeline () {
                 }
             }
         });
-        // creates saving for highlight box
+        // creates undo for highlight box
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);

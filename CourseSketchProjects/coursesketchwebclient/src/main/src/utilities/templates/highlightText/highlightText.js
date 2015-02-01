@@ -78,7 +78,7 @@ function HighlightText() {
                     range.insertNode(newNode); // Inserts the new node to where the old range was
                     this.saveData();
                 } else {
-                    alert("Please make a valid selection.") // Message for invalid selections
+                    alert("Please make a valid selection."); // Message for invalid selections
                 }
             }
         }
@@ -129,7 +129,7 @@ function HighlightText() {
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
         shadowRoot.querySelector("#highlightMode").onchange = function() {
             if (shadowRoot.querySelector("#highlightMode").checked) {
-                $(document).on("mouseup", highlightText.bind(this))
+                $(document).on("mouseup", highlightText.bind(this));
             } else {
                 $(document).off("mouseup", highlightText.bind(this));
             }
@@ -161,12 +161,12 @@ function HighlightText() {
     };
     
     /**
-     * @param event {event} This is utilized for exiting, but I don't think it's actually needed anymore (Matt)
-     * highlightProto is the list of all highlighted selections for the current step
-     * The highlightText tool only appears once per step, this is why highlightProto only exists once
-     * nodePathProto is an individual highlighted selection that gets added to the highlightProto list
+     * This saves data for the highlight tool
+     * The highlight tool only appears once per tutorial step, but multiple selections is allowed
+     * highlightProto corresponds with the tool, and thus only exists once per tutorial step
+     * nodePathProto is the data needed to define a selection with its highlighted color. There can be multiple per tutorial step
      */
-    this.saveData = function(event) {
+    this.saveData = function() {
         var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
         if (isUndefined(this.highlightProto)) { // Defines highlightProto if it does not already exist
             this.highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
@@ -188,12 +188,12 @@ function HighlightText() {
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
         this.id = this.command.commandId; // Sets highlightText id to the same as the commandId
-        this.getFinishedCallback()(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
+        this.getFinishedCallback()(this.command, undefined, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
     
     /**
-     * @param protoData {protoCommand} is the CommandData to be loaded
      * This function loads data by recreating the node and then insert it into the webpage
+     * @param protoData {protoCommand} is the CommandData to be loaded
      */
     this.loadData = function(protoData) {
         if (isUndefined(shadowRoot)) {
@@ -205,7 +205,7 @@ function HighlightText() {
         }
         var nodes = protoData.getSelectedNodePath(); // This is a list of all the nodes to recreate
         this.highlightProto = protoData; // This sets highlightProto to the previous list so that you can add new selections in edit mode
-        for (i=0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
+        for (var i=0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
             var loadNode = nodes[i]; // The current node to be loaded
             var rangeStartNode = loadNode.getStartPath();
             var rangeStartOffset = loadNode.getStartOffset();
@@ -215,7 +215,7 @@ function HighlightText() {
             var textColor = loadNode.getTextColor();
 
             // This recreates the node based on selection start/end node/offset and text/background colors
-            if (typeof window.getSelection != 'undefined') {
+            if (!isUndefined(window.getSelection)) {
                 var selection = window.getSelection();
                 selection.removeAllRanges();
                 var range = document.createRange();
