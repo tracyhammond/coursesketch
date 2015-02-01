@@ -16,6 +16,9 @@
             CourseSketch.connection.sendSelf(CourseSketch.serverResponseForBankProblems(req));
         };
         document.querySelector('problem-selection').loadProblems('courseId', 'assignmentId', 0);
+        document.querySelector('problem-selection').setAcceptCallback(function(list) {
+            console.log(list);
+        });
     });
 </script>
 </head>
