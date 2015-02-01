@@ -15,6 +15,14 @@ message ActionCreateTextBox {
     optional string text = 5;
 }
 
+/**
+ * Used in conjunection with ActionCreateHighlightText to save a selection and the colors for highlighting*
+ * startPath/endPath is the XML Path for the startNode and endNode of the selection
+ * startOffset/endOffset is the offset from the front of the startNode/endNode for the selection
+ *
+ * The first 4 items could be used to save and recreate any selection in a webpage
+ * This could be useful for wrapping a button in a div with an onclick event to track if a user has clicked the button or not
+ */
 message SelectedNodePath {
     optional string startPath = 1;
     optional int32 startOffset = 2;
@@ -24,6 +32,9 @@ message SelectedNodePath {
     optional string textColor = 6;
 }
 
+/**
+ * This is a repeated list of highlighted selections
+ */
 message ActionCreateHighlightText {
     repeated SelectedNodePath selectedNodePath = 1;
 }
