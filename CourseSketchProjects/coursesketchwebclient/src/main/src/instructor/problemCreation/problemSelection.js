@@ -1,3 +1,6 @@
+/**
+ * Only one of these can be on a page at a time.
+ */
 function ProblemSelectionPanel() {
     /**
      * Holds the list of ids of the selected bank problems.
@@ -5,7 +8,9 @@ function ProblemSelectionPanel() {
     var selectedBankProblems = new Array();
     var clickSelector = new clickSelectionManager();
 
-    // if you are an admin of the assignment we will allow you to view problems.
+    /**
+     * Loads the problems from the server.
+     */
     this.loadProblems = function(courseId, assignmentId, page) {
         var request = this.createRequest(courseId, assignmentId, page);
         CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
@@ -19,12 +24,17 @@ function ProblemSelectionPanel() {
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
             var bankProblems = school.bankProblems;
             var builder = new SchoolItemBuilder().setList(bankProblems)
-                    .setBoxClickFunction(function(schoolItem) {
-                        console.log(this);
-                        clickSelector.toggleSelection(this);
-                    })
-                    .build(this.shadowRoot.querySelector("#selectionContent"));
-        });
+                .setBoxClickFunction(function(schoolItem) {
+                    console.log(this.id);
+                    clickSelector.toggleSelection(this);
+                    if ($(this).hasClass(clickSelector.selectionClassName)) {
+                        removeObjectFromArray(selectedBankProblems, this.id);
+                    } else {
+                        selectedBankProblems.push(this.id);
+                    }
+                })
+                .build(this.shadowRoot.querySelector("#selectionContent"));
+        }.bind(this));
         CourseSketch.connection.sendRequest(request);
     };
 
@@ -33,9 +43,17 @@ function ProblemSelectionPanel() {
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
-        localScope = this; // This sets the variable to the level of the custom element tag
-        shadowRoot = this.createShadowRoot();
+        var localScope = this; // This sets the variable to the level of the custom element tag
+        var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
+
+        shadowRoot.querySelector('#accept').onclick = function() {
+            localScope.acceptCallback(selectedBankProblems);
+        };
+
+        shadowRoot.querySelector('#cancel').onclick = function() {
+            localScope.canceledCallback(selectedBankProblems);
+        };
     };
 }
 
