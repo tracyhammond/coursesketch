@@ -96,6 +96,7 @@ function LoginSystem() {
                 // successful login here
                 makeValueReadOnly(connection, 'isInstructor', isInstructor);
                 makeValueReadOnly(connection, 'userId', userId);
+                makeValueReadOnly(connection, 'userName', shadowRoot.querySelector("#username").value);
 
                 // remove oneself from being able to respond to login attempts
                 connection.setLoginListener(undefined);
