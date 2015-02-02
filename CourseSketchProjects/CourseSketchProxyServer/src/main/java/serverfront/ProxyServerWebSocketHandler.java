@@ -117,7 +117,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             // conn.send(pending);
             return;
         }
-        if (!state.isLoggedIn() && req.getRequestType()!= MessageType.TIME) {
+        if (!state.isLoggedIn() && req.getRequestType() != MessageType.TIME) {
             if (state.getTries() > MAX_LOGIN_TRIES) {
                 conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
                 return;
