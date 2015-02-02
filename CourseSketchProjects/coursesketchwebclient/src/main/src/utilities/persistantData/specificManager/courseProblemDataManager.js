@@ -50,6 +50,100 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 		});
 	}
 
+    /**
+     * Sets a courseproblem in server database.
+     *
+     * @param courseproblem
+     *                courseproblem object to set
+     * @param courseproblemCallback
+     *                function to be called after courseproblem setting is done
+     */
+    function insertCourseProblemServer(courseProblem, courseProblemCallback) {
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+            var resultArray = item.getReturnText().split(":");
+            var oldId = resultArray[1].trim();
+            var newId = resultArray[0].trim();
+            // we want to get the current course in the local database in case
+            // it has changed while the server was processing.
+            getCourseProblemLocal(oldId, function(courseProblem2) {
+                deleteCourseProblem(oldId);
+                if (!isUndefined(courseProblem2) && !(courseProblem2 instanceof DatabaseException)) {
+                    courseProblem2.id = newId;
+                    setCourseProblem(courseproblem2, function() {
+                        courseproblemCallback(courseproblem2);
+                    });
+                } else {
+                    courseproblem.id = newId;
+                    setCourseproblem(courseproblem, function(e, request) {
+                        courseproblemCallback(courseproblem);
+                    });
+                }
+            });
+        });
+        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
+    }
+
+    /**
+     * Adds a new courseProblem to both local and server databases. Also updates the
+     * corresponding course given by the courseProblem's courseId.
+     *
+     * @param courseProblem
+     *                courseProblem object to insert
+     * @param localCallback
+     *                function to be called after local insert is done
+     * @param serverCallback
+     *                function to be called after server insert is done
+     */
+    function insertCourseProblem(courseProblem, localCallback, serverCallback) {
+        if (isUndefined(courseProblem.id) || courseProblem.id == null) {
+            courseProblem.id = generateUUID();
+        }
+
+        // used locally in two places
+        function insertingCourseProblem() {
+        	setCourseproblem(courseProblem, function(e, request) {
+				console.log("inserted locally :" + courseProblem.id)
+				if (!isUndefined(localCallback)) {
+					localCallback(courseProblem);
+				}
+				insertCourseProblemServer(courseProblem, function(courseProblemUpdated) {
+					parent.getCourse(courseProblem.courseId, function(course) {
+						var courseProblemList = course.courseProblemList;
+
+						// remove old Id (if it exists)
+						if (courseProblemList.indexOf(courseProblem.id) >= 0) {
+							removeObjectFromArray(courseProblemList, courseProblem.id);
+						}
+						courseProblemList.push(courseProblemUpdated.id);
+						parent.setCourse(course, function() {
+							if (!isUndefined(serverCallback)) {
+								serverCallback(courseProblemUpdated);
+							}
+						});
+						// Course is set with its new courseProblem
+					});
+					// Finished with the course
+				});
+				// Finished with setting courseProblem
+			});
+        } // insertingCourseProblem
+
+		// Inserts the bank problem first!
+        if ((isUndefined(courseProblem.problemBankId) || courseProblem.problemBankId == null)
+        	&& (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo != null)) {
+        	insertBankProblemServer(courseProblem.problemInfo, function(updateId) {
+				courseProblem.problemBankId = updateId;
+				insertingCourseProblem();
+        	});
+        } else {
+        	insertingCourseProblem();
+        }
+
+        // Finished with local courseProblem
+    }
+    parent.insertCourseproblem = insertCourseproblem;
+
 	/**
 	 * Returns a list of all of the course problems from the local and server database for the given list
 	 * of Ids.
@@ -57,7 +151,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 	 * This does attempt to pull course problems from the server!
 	 *
 	 * @param CourseProblemIdList
-	 *            list of IDs of the assignments to get
+	 *            list of IDs of the courseproblems to get
 	 * @param courseProblemCallbackPartial
 	 *            {Function} called when course problems are grabbed from the local
 	 *            database only. This list may not be complete. This may also

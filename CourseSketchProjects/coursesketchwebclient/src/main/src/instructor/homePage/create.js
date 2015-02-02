@@ -240,8 +240,10 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         // by instructors
+        var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+        bankProblem.questionText = prompt("Please enter the question text", "Default Question Text");
+
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-        courseProblem.name = "Insert name";
         courseProblem.courseId = courseId;
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = "";
