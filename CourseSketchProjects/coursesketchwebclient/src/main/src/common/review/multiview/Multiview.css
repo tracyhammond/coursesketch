@@ -1,0 +1,109 @@
+:host {
+    position:relative;
+}
+
+#outer {
+    display:flex;
+    flex-direction: row;
+    position:relative;
+    padding: 10px 10px 10px 10px;
+    background-color: #CEE;
+}
+
+.buttons {
+    background-color: #B8B8B8;
+    width: 15%;
+    display:flex;
+    flex-direction: column;
+}
+.buttons > * {
+    flex-grow: 1;
+}
+button, input[type='number'] {
+    /*height:calc(100% / 3);*/
+    width:100%;
+}
+
+.correctButton {
+     background: url("/images/MultiView/correctbtn.svg");
+     background-repeat: no-repeat;
+     background-position: center;
+
+}
+
+.wrongButton {
+     background: url("/images/MultiView/wrongbtn.svg");
+     background-repeat: no-repeat;
+     background-position: center;
+}
+
+.one-to-one {
+	position: relative;
+}
+
+.one-to-one > * {
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.one-to-one:before {
+	content: "";
+	display: block;
+	padding-top: 100%; 	/* initial ratio of 1:1*/
+}
+
+.sketch {
+    width:85%;
+}
+
+sketch-surface {
+    background:#FFFFFF;
+}
+
+/*these classes are for cahnging the background color of the div tag outer*/
+
+#outer.outerCorrect {
+    background-color: #00FF00;
+}
+
+#outer.outerWrong {
+    background-color: #FF0000;
+}
+
+/* sets the font size to make it pretty large */
+input[type='number'] {
+    font-size: 1.3em;
+    overflow:visible;
+}
+
+/* sets the font size to make it pretty large */
+input[type='number']:not(:valid) {
+    background:red;
+}
+
+/* this makes the spinner in chrome not overlap with the number */
+input[type='number']:not(:hover) /deep/ #spin {
+    -webkit-appearance: none;
+    background: #000;
+}
+
+/*
+currently does not work
+input[type='number'].percent /deep/ #inner-editor {
+    width: 10px;
+}
+*/
+
+/* makes percent stuff */
+/*
+currently does not work.
+input[type='number'].percent /deep/ #inner-editor:after {
+    display:inline-block;
+    content: "PLEASE SHOW ME!";
+    color:black;
+    font-size: 2em;
+    z-index:3;
+}
+*/
