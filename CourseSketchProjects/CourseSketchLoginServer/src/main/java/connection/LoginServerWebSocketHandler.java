@@ -1,22 +1,20 @@
 package connection;
 
-import java.security.GeneralSecurityException;
-
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
+import database.DatabaseClient;
 import database.LoginException;
 import database.RegistrationException;
-
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-import database.DatabaseClient;
 import utilities.TimeManager;
+
+import java.security.GeneralSecurityException;
 
 /**
  * A simple WebSocketServer implementation.
@@ -200,7 +198,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * @return the request body
      */
     private static Request createLoginResponse(final Request req, final LoginInformation login, final boolean success, final String message,
-            final boolean instructorIntent, final String[] ids) {
+            final boolean instructorIntent, final String... ids) {
         final Request.Builder requestBuilder = Request.newBuilder();
         requestBuilder.setRequestType(MessageType.LOGIN);
         requestBuilder.setResponseText(message);

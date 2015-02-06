@@ -20,17 +20,32 @@ import java.io.IOException;
 /**
  * Created by gigemjt on 10/19/14.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
+
+    /**
+     * 1000ms = 1s.
+     */
+    private static final int ONE_SECOND = 1000;
 
     /**
      * Context for SSL to take place.
      */
     private SslContext sslCtx;
 
+    /**
+     * The Netty server that handles communication.
+     */
     private ServerBootstrap server;
 
+    /**
+     * The group in charge of managing other groups.
+     */
     private EventLoopGroup bossGroup;
 
+    /**
+     * Performs actual work on the server.
+     */
     private EventLoopGroup workerGroup;
 
     /**
@@ -40,7 +55,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @param arguments
      *         the arguments from the server are then parsed.
      */
-    protected GeneralConnectionRunner(final String[] arguments) {
+    protected GeneralConnectionRunner(final String... arguments) {
         super(arguments);
         super.setCertificatePath("/Users/gigemjt/workspace/coursesketch/config/localssl/server.crt");
         super.setKeystorePath("/Users/gigemjt/workspace/coursesketch/config/localssl/serverpk8.key");
@@ -52,7 +67,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @param args
      *         Input arguments that are running the server.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final GeneralConnectionRunner run = new GeneralConnectionRunner(args);
         run.start();
     }
@@ -141,8 +156,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             public void run() {
                 try {
                     final ChannelFuture strap = server.bind(getPort());
-                    final Channel ch = strap.sync().channel();
-                    ch.closeFuture().sync();
+                    final Channel channel = strap.sync().channel();
+                    channel.closeFuture().sync();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
@@ -153,7 +168,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         };
         serverThread.start();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(ONE_SECOND);
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
             System.out.println("Server is running hopefully = " + assumedRunning);
             getSocketInitailizerInstance().reconnect();
@@ -173,6 +188,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @throws java.io.IOException
      *         Thrown if there is a problem reading input.
      */
+    @SuppressWarnings("checkstyle:designforextension")
     @Override
     protected boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
         return false;
@@ -212,6 +228,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      *         <code>false</code> otherwise
      * @return a new connection servlet for this server
      */
+    @SuppressWarnings("checkstyle:designforextension")
     @Override
     protected ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);

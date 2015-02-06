@@ -21,7 +21,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * @param arguments
      *         the arguments from the server are then parsed.
      */
-    public AnswerCheckerRunner(final String[] arguments) {
+    public AnswerCheckerRunner(final String... arguments) {
         super(arguments);
         super.setPort(PORT);
     }
@@ -32,7 +32,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * @param args
      *         Input arguments that are running the server.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final AnswerCheckerRunner run = new AnswerCheckerRunner(args);
         run.start();
     }

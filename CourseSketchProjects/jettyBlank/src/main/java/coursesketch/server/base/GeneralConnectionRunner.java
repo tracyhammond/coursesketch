@@ -6,10 +6,6 @@ package coursesketch.server.base;
  * -examples.html#d0e18352
  */
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -24,6 +20,10 @@ import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 
 /**
  * Runs and sets up the server.
@@ -42,7 +42,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * The main method that can be used to run a server.
      * @param args Input arguments that are running the server.
      */
-    public static void main(final String[] args) {
+    public static void main(final String... args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
         runner.start();
     }
@@ -54,7 +54,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @param arguments
      *            the arguments from the server are then parsed.
      */
-    protected GeneralConnectionRunner(final String[] arguments) {
+    protected GeneralConnectionRunner(final String... arguments) {
         super(arguments);
     }
 

@@ -11,12 +11,12 @@
 		<module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
+		<module>CourseSketchProjects/nettyBlank</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
-        <module>CourseSketchProjects/nettyBlank</module> <!-- temp move -->
 
 	</modules>
 
@@ -431,7 +431,7 @@
         <easymock.version>3.3</easymock.version>
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
-        <pmdVersion>3.2</pmdVersion>
+        <pmdVersion>3.3</pmdVersion>
 
         <!-- testing -->
 		<testLevel>85</testLevel>
