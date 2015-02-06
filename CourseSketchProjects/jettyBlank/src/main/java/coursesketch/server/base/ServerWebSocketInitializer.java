@@ -9,7 +9,11 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -74,6 +78,17 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         factory.setCreator(new SocketCreator());
     }
 
+    /**
+     * Turns off tracing.
+     * Tracing can be used by remote computers
+     * @param req
+     * @param resp
+     * @throws ServletException Always thrown
+     */
+    public final void doTrace(final HttpServletRequest req, final HttpServletResponse resp)
+            throws ServletException {
+        throw new ServletException("Trace is not supported by this server");
+    }
     /**
      * A custom web socket creator that checks to make sure that the.
      *
