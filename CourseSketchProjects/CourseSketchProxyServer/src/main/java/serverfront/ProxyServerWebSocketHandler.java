@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * A simple WebSocketServer implementation.
@@ -82,19 +83,12 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 } catch (ConnectionException e1) {
                     e1.printStackTrace();
                 }
-                /*
-                 * try {
-                 * getConnectionManager().send(TimeManager.serverSendTimeToClient
-                 * (), null, RecognitionConnection.class); } catch
-                 * (ConnectionException e1) { e1.printStackTrace(); } //
-                 */
 
-                /*
                 final Set<SocketSession> conns = getConnectionToId().keySet();
                 for (SocketSession conn : conns) {
                     send(conn, TimeManager.serverSendTimeToClient());
                 }
-                */
+
             }
         };
         TimeManager.setTimeEstablishedListener(listener);
@@ -123,7 +117,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             // conn.send(pending);
             return;
         }
-        if (!state.isLoggedIn()) {
+        if (!state.isLoggedIn() && req.getRequestType() != MessageType.TIME) {
             if (state.getTries() > MAX_LOGIN_TRIES) {
                 conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
                 return;
@@ -157,6 +151,10 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.UnusedPrivateMethod" })
     private void messageRouter(final SocketSession conn, final Request req, final MultiConnectionState state) {
+        if (!req.hasRequestType()) {
+            System.out.println("NO REQUEST TYPE SPECIFIED!!!!!!!!! ERROR ERROR");
+            send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
+        }
         final String sessionID = state.getKey();
         if (req.getRequestType() == MessageType.RECOGNITION) {
             System.out.println("REQUEST TYPE = RECOGNITION");

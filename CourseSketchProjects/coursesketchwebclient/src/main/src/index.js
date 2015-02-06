@@ -140,9 +140,9 @@ function() {
     function loadHomePage() {
         console.log("LOADING HOMEPAGE");
         if (CourseSketch.connection.isInstructor) {
-            CourseSketch.redirectContent("/src/instructor/homePage/homePage.html", "Welcome Instructor");
+            CourseSketch.redirectContent("/src/instructor/homepage/homePage.html", "Welcome Instructor");
         } else {
-            CourseSketch.redirectContent("/src/student/homePage/homePage.html", "Welcome Student");
+            CourseSketch.redirectContent("/src/student/homepage/homePage.html", "Welcome Student");
         }
 
         CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), function(evt, item) {

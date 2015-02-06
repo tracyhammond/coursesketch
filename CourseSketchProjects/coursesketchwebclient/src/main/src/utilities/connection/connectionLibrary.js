@@ -251,7 +251,6 @@ function Connection(uri, encrypted, attemptReconnect) {
         rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
         rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(self.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
-
         return rsp;
     }
 
