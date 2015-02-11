@@ -67,6 +67,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         }
     }
 
+    /**
+     * Sets the assignment locally into the local database.
+     */
     function setAssignment(assignment, assignmentCallback) {
         database.putInAssignments(assignment.id, assignment.toBase64(), function(e, request) {
             if (assignmentCallback) {
@@ -75,9 +78,17 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         });
     }
     parent.setAssignment = setAssignment;
-    parent.setAssignmentLocal = setAssignment;
 
-    function deleteAssignment(assignmentId, couresCallback) {
+    /**
+     * Deletes a assignment from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param assignmentId
+     *                ID of the assignment to delete
+     * @param assignmentCallback
+     *                function to be called after the deletion is done
+     */
+    function deleteAssignment(assignmentId, assignmentCallback) {
         database.deleteFromAssignments(assignmentId, function(e, request) {
             if (assignmentCallback) {
                 assignmentCallback(e, request);
@@ -85,6 +96,115 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         });
     }
     parent.deleteAssignment = deleteAssignment;
+
+    /**
+     * Sets a assignment in server database.
+     *
+     * @param assignment
+     *                assignment object to set
+     * @param assignmentCallback
+     *                function to be called after assignment setting is done
+     */
+    function insertAssignmentServer(assignment, assignmentCallback) {
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+            var resultArray = item.getReturnText().split(":");
+            var oldId = resultArray[1].trim();
+            var newId = resultArray[0].trim();
+            // we want to get the current course in the local database in case
+            // it has changed while the server was processing.
+            getAssignmentLocal(oldId, function(assignment2) {
+                deleteAssignment(oldId);
+                if (!isUndefined(assignment2) && !(assignment2 instanceof DatabaseException)) {
+                    assignment2.id = newId;
+                    setAssignment(assignment2, function() {
+                        assignmentCallback(assignment2);
+                    });
+                } else {
+                    assignment.id = newId;
+                    setAssignment(assignment, function(e, request) {
+                        assignmentCallback(assignment);
+                    });
+                }
+            });
+        });
+        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
+    }
+
+
+    /**
+     * Adds a new assignment to both local and server databases. Also updates the
+     * corresponding course given by the assignment's courseId.
+     *
+     * @param assignment
+     *                assignment object to insert
+     * @param localCallback
+     *                function to be called after local insert is done
+     * @param serverCallback
+     *                function to be called after server insert is done
+     */
+    function insertAssignment(assignment, localCallback, serverCallback) {
+        if (isUndefined(assignment.id) || assignment.id == null) {
+            assignment.id = generateUUID();
+        }
+        setAssignment(assignment, function(e, request) {
+            console.log("inserted locally :" + assignment.id)
+            if (!isUndefined(localCallback)) {
+                localCallback(assignment);
+            }
+            insertAssignmentServer(assignment, function(assignmentUpdated) {
+                parent.getCourse(assignment.courseId, function(course) {
+                    var assignmentList = course.assignmentList;
+
+                    // remove old Id (if it exists)
+                    if (assignmentList.indexOf(assignment.id) >= 0) {
+                        removeObjectFromArray(assignmentList, assignment.id);
+                    }
+                    assignmentList.push(assignmentUpdated.id);
+                    parent.setCourse(course, function() {
+                        if (!isUndefined(serverCallback)) {
+                            serverCallback(assignmentUpdated);
+                        }
+                    });
+                    // Course is set with its new assignment
+                });
+                // Finished with the course
+            });
+            // Finished with setting assignment
+        });
+        // Finished with local assignment
+    }
+    parent.insertAssignment = insertAssignment;
+
+    /**
+     * Sets a assignment in both local and server databases.
+     * Updates an existing assignment into the database. This assignment must already
+     * exist.
+     *
+     * @param assignment
+     *                assignment object to set
+     * @param localCallback
+     *                function to be called after local assignment setting is done
+     * @param serverCallback
+     *                function to be called after server assignment setting is done
+     */
+    function updateAssignment(assignment, localCallback, serverCallback) {
+        setAssignment(assignment, function() {
+            if (!isUndefined(localCallback)) {
+                localCallback();
+            }
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+                 // we do not need to make server changes we
+                                        // just need to make sure it was successful.
+                if (!isUndefined(serverCallback)) {
+                    serverCallback(item);
+                }
+            });
+            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
+        });
+    }
+    parent.updateAssignment = updateAssignment;
 
     /**
      * Gets an Assignment from the local database.
@@ -118,6 +238,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             }
         });
     }
+    parent.getAssignmentLocal = getAssignmentLocal;
 
     /**
      * Returns a list of all of the assignments from the local and server database for the given list
@@ -202,7 +323,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                     var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
                                     var assignment = school.assignments[0];
                                     if (isUndefined(assignment) || assignment instanceof DatabaseException) {
-
                                         var result = assignment;
                                         if (isUndefined(result)) {
                                             result = new DatabaseException("Nothing is in the server database!",
@@ -253,9 +373,17 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *            is asynchronous)
      */
     function getAssignment(assignmentId, assignmentCallback) {
-        getAssignments([ assignmentId ], function(assignmentList) {
-            assignmentCallback(assignmentList[0]);
-        });
+        if (isUndefined(assignmentCallback)) {
+            throw new DatabaseException("Calling get Assignment with an undefined callback");
+        }
+        var called = false;
+        function callOnce(assignmentList) {
+            if (!called) {
+                called = true;
+                assignmentCallback(assignmentList[0]);
+            }
+        }
+        getAssignments([ assignmentId ], callOnce, callOnce);
     }
     parent.getAssignment = getAssignment;
 }
