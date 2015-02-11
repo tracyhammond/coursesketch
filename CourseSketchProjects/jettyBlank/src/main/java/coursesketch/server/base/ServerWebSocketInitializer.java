@@ -70,6 +70,8 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     @Override
     public final void configure(final WebSocketServletFactory factory) {
         System.out.println("Configuring servlet");
+        factory.getPolicy().setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
+        factory.getPolicy().setMaxBinaryMessageSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
         if (timeoutTime > 0) {
             System.out.println("Adding a timeout to the socket: " + timeoutTime);
             factory.getPolicy().setIdleTimeout(timeoutTime);
