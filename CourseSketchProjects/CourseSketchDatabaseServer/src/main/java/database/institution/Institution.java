@@ -218,9 +218,9 @@ public interface Institution {
     String insertBankProblem(String userId, SrlBankProblem problem) throws AuthenticationException;
 
     /**
-     * Inserts the lecture into the the database.
+     * Updates an existing lecture in the database.
      *
-     * Upon insertion 1 step happen:
+     * Upon updating 1 step happen:
      * <ol>
      * <li>the lecture is updated in a lecture collection</li>
      * </ol>
@@ -239,11 +239,56 @@ public interface Institution {
     void updateLecture(String userId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
+     * Updates an existing course in the database.
+     *
+     * Upon updating 1 step happen:
+     * <ol>
+     * <li>The course is updated in a course collection</li>
+     * <li>After updating a user update is created.</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param course
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to update a
+     *             Course.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem updating the course.
+     *
+     */
+    void updateCourse(final String userId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Updates an existing assignment in the database.
+     *
+     * Upon updating 1 step happen:
+     * <ol>
+     * <li>the assignment is updated in a assignment collection</li>
+     * <li>After updating a user update is created.</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param assignment
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to update an
+     *             Assignment.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem updating the assignment.
+     *
+     */
+    void updateAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
+
+    /**
      * Inserts the lecture into the the database.
      *
      * Upon insertion 1 step happen:
      * <ol>
      * <li>the lecture slide is updated in a slide collection</li>
+     * <li>After updating a user update is created.</li>
      * </ol>
      *
      * @param userId
@@ -327,5 +372,6 @@ public interface Institution {
      */
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
+
 
 }
