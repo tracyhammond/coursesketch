@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 /*
  * this Multiview page goes off a single problem at a time and laods all student experiments of that
  * problem id.

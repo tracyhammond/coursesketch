@@ -105,6 +105,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after server insert is done
      */
     function insertLecture(lecture, localCallback, serverCallback) {
+        if (isUndefined(lecture.id) || lecture.id == null) {
+            lecture.id = generateUUID();
+        }
         setLecture(lecture, function(e, request) {
             console.log("inserted locally :" + lecture.id)
             if (!isUndefined(localCallback)) {
@@ -113,11 +116,16 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             insertLectureServer(lecture, function(lectureUpdated) {
                 parent.getCourse(lecture.courseId, function(course) {
                     var lectureList = course.lectureList;
+
+                    // remove old Id (if it exists)
+                    if (lectureList.indexOf(lecture.id) >= 0) {
+                        removeObjectFromArray(lectureList, lecture.id);
+                    }
                     lectureList.push(lectureUpdated.id);
                     course.lectureList = lectureList;
                     parent.setCourse(course, function() {
                         if (!isUndefined(serverCallback)) {
-                            serverCallback(course);
+                            serverCallback(lectureUpdated);
                         }
                     });
                     // Course is set with its new lecture
@@ -132,6 +140,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
 
     /**
      * Deletes a lecture from local database.
+     * This does not delete the id pointing to this item in the respective course.
      *
      * @param lectureId
      *                ID of the lecture to delete

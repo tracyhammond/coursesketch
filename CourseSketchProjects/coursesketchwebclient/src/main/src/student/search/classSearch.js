@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 (function() {
     /**
      * Once everything is loaded we will ask to get all public courses.
