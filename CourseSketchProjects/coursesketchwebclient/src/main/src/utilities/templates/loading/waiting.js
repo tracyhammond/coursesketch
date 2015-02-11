@@ -75,12 +75,11 @@ function WaitScreenManager() {
 				throw new Error("You can only call this while running");
 			}
 			running = false;
-			var node = this;
 			function remove() {
 				if (element.parentNode) {
-					element.parentNode.removeChild(node);
+					element.parentNode.removeChild(element);
 				}  else {
-					throw new Error("Element must be added before it can finish waiting");
+					// throw new Error("Element must be added before it can finish waiting");
 				}
 			}
 			if (delay) {
