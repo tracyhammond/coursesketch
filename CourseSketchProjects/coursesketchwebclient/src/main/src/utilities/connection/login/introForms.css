@@ -30,11 +30,6 @@ form:after {
         visibility: hidden;
 }
 
-form:before {
-        content: "powered by";
-        display: block;
-        clear:both;
-}
 .container { margin: 25px auto; position: relative; width: 900px; }
 #content {
         background: #f9f9f9;
