@@ -151,6 +151,10 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.UnusedPrivateMethod" })
     private void messageRouter(final SocketSession conn, final Request req, final MultiConnectionState state) {
+        if (!req.hasRequestType()) {
+            System.out.println("NO REQUEST TYPE SPECIFIED!!!!!!!!! ERROR ERROR");
+            send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
+        }
         final String sessionID = state.getKey();
         if (req.getRequestType() == MessageType.RECOGNITION) {
             System.out.println("REQUEST TYPE = RECOGNITION");
