@@ -93,7 +93,7 @@ form:before {
 #content:after,
 #content:before {
         background: #f9f9f9;
-        /*border: 1px solid #c4c6ca;*/
+        border: 1px solid #c4c6ca;
         content: "";
         display: block;
         height: 100%;

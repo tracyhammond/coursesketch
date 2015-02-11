@@ -66,7 +66,7 @@ public final class AssignmentManager {
      * Inserts an assignment into the mongo database.
      *
      * @param authenticator
-     *         the object that is performing authenticaton.
+     *         The object that is performing authenticaton.
      * @param dbs
      *         The database where the assignment is being stored.
      * @param userId
@@ -118,11 +118,11 @@ public final class AssignmentManager {
      * Grabs the assignment from mongo and performs checks making sure the user is valid before returning the assignment.
      *
      * @param authenticator
-     *         the object that is performing authentication.
+     *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
      * @param assignmentId
-     *         the id of the assignment that is being grabbed.
+     *         The id of the assignment that is being grabbed.
      * @param userId
      *         The id of the user that asking to insert the assignment.
      * @param checkTime
@@ -226,7 +226,7 @@ public final class AssignmentManager {
     }
 
     /**
-     * sets data of the assignment from the given cursor.
+     * Sets data of the assignment from the given cursor.
      *
      * @param exactAssignment
      *         The assignment that the data is being set to.
@@ -247,17 +247,17 @@ public final class AssignmentManager {
      * Sets data about the state of the assignment and its date.
      *
      * @param exactAssignment
-     *         a protobuf assignment builder.
+     *         A protobuf assignment builder.
      * @param stateBuilder
-     *         a protobuf state builder.
+     *         A protobuf state builder.
      * @param corsor
-     *         the current database pointer for the assignment.
+     *         The current database pointer for the assignment.
      * @param isAdmin
-     *         true if the user is acting as an admin.
+     *         True if the user is acting as an admin.
      * @param isMod
-     *         true if the user is acting as a moderator.
+     *         True if the user is acting as a moderator.
      * @param checkTime
-     *         the time that the check was performed.
+     *         The time that the check was performed.
      */
     private static void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder,
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
@@ -316,14 +316,14 @@ public final class AssignmentManager {
     }
 
     /**
-     * updates data from an assignment.
+     * Updates data from an assignment.
      *
      * @param authenticator
-     *         the object that is performing authentication.
+     *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
      * @param assignmentId
-     *         the id of the assignment that is being updated.
+     *         The id of the assignment that is being updated.
      * @param userId
      *         The id of the user that asking to insert the assignment.
      * @param assignment
@@ -457,12 +457,12 @@ public final class AssignmentManager {
      * problemId to its list of items.
      *
      * @param dbs
-     *         the database where the assignment is stored.
+     *         The database where the assignment is stored.
      * @param assignmentId
-     *         the assignment that the problem is being added to.
+     *         The assignment that the problem is being added to.
      * @param problemId
-     *         the id of the course problem that is being added to the assignment.
-     * @return true if it is successful.
+     *         The id of the course problem that is being added to the assignment.
+     * @return True if it is successful.
      */
     static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
@@ -484,11 +484,11 @@ public final class AssignmentManager {
      * assignment.
      *
      * @param dbs
-     *         the database where the data is stored.
+     *         The database where the data is stored.
      * @param assignmentId
-     *         the id of the assignment that is getting permissions.
+     *         The id of the assignment that is getting permissions.
      * @param ids
-     *         the list of list of permissions that is getting added.
+     *         The list of list of permissions that is getting added.
      */
     // package-private
     static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
@@ -507,13 +507,13 @@ public final class AssignmentManager {
      *
      * Returns a list of Id for the default group for an assignment.
      *
-     * the Ids are ordered as so: AdminGroup, ModGroup, UserGroup.
+     * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup.
      *
      * @param dbs
-     *         the database where the ids are stored.
+     *         The database where the ids are stored.
      * @param assignmentId
-     *         the id of the assignment that contains the ids.
-     * @return a list of id groups.
+     *         The id of the assignment that contains the ids.
+     * @return A list of id groups.
      */
     static List<String>[] mongoGetDefaultGroupId(final DB dbs, final String assignmentId) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));

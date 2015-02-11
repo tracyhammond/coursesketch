@@ -33,7 +33,7 @@ message SrlShape {
 
 message SrlStroke {
 	required string id = 1;
-	required uint64 time = 2;
+	required uint64 time = 2; // the time is equal to when the stroke is finished.
 	optional string name = 3;
 	repeated SrlPoint points = 4;
 	optional SrlBoundingBox boundingbox = 5;
