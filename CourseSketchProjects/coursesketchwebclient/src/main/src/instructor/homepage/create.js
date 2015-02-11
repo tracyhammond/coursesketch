@@ -231,7 +231,7 @@ validateFirstRun(document.currentScript);
      * and adds it to the database.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem() {
-        var courseId = document.querySelector("#course_list_column .selectedBox").id;
+        var courseId = document.querySelector("#class_list_column .selectedBox").id;
         var assignmentId = document.querySelector("#assignment_list_column .selectedBox").id;
         var problemColumn = document.getElementById('problem_list_column');
 
