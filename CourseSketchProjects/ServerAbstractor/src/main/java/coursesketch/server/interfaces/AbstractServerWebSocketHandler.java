@@ -22,7 +22,7 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * The max message size we will allow a message to support.
      */
-    public static final int MAX_MESSAGE_SIZE = 1049000;
+    public static final int MAX_MESSAGE_SIZE = 10000000;
 
     /**
      * The maximum number of connections.
