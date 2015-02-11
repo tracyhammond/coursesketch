@@ -14,7 +14,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 	};
 	parent.setCourseProblem = setCourseProblem;
 
-	function deleteCourseProblem(courseProblemId, couresCallback) {
+	function deleteCourseProblem(courseProblemId, courseProblemCallback) {
 		database.deleteFromCourseProblems(courseProblemId, function(e, request) {
 			if (courseProblemCallback) {
 				courseProblemCallback(e, request);
@@ -70,13 +70,13 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 deleteCourseProblem(oldId);
                 if (!isUndefined(courseProblem2) && !(courseProblem2 instanceof DatabaseException)) {
                     courseProblem2.id = newId;
-                    setCourseProblem(courseproblem2, function() {
-                        courseproblemCallback(courseproblem2);
+                    setCourseProblem(courseProblem2, function() {
+                        courseproblemCallback(courseProblem2);
                     });
                 } else {
                     courseproblem.id = newId;
-                    setCourseproblem(courseproblem, function(e, request) {
-                        courseproblemCallback(courseproblem);
+                    setCourseProblem(courseProblem, function(e, request) {
+                        courseProblemCallback(courseProblem);
                     });
                 }
             });
@@ -85,8 +85,35 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     }
 
     /**
+	 * Adds a new bankProblem to the server databases.
+	 *
+	 * @param bankProblem
+	 *                bankProblem object to insert.
+	 * @param serverCallback
+	 *                function to be called after server insert is done.  Called with the new updateId of the bank problem.
+	 */
+    function insertBankProblemServer(bankProblem, serverCallback) {
+    	if (isUndefined(bankProblem.id) || bankProblem.id == null) {
+			bankProblem.id = generateUUID();
+		}
+		advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
+			advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
+			var resultArray = item.getReturnText().split(":");
+			var oldId = resultArray[1].trim();
+			var newId = resultArray[0].trim();
+			// we want to get the current course in the local database in case
+			// it has changed while the server was processing.
+			serverCallback(newId);
+		});
+		sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
+    }
+
+    /**
      * Adds a new courseProblem to both local and server databases. Also updates the
      * corresponding course given by the courseProblem's courseId.
+     *
+     * Inserts the bank problem in the case that the course problem does not exist.
+     * This is detirmined if the courseproblem does not have a bankproblem id but does have the actual data for a bank problem.
      *
      * @param courseProblem
      *                courseProblem object to insert
@@ -102,26 +129,26 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 
         // used locally in two places
         function insertingCourseProblem() {
-        	setCourseproblem(courseProblem, function(e, request) {
+        	setCourseProblem(courseProblem, function(e, request) {
 				console.log("inserted locally :" + courseProblem.id)
 				if (!isUndefined(localCallback)) {
 					localCallback(courseProblem);
 				}
 				insertCourseProblemServer(courseProblem, function(courseProblemUpdated) {
-					parent.getCourse(courseProblem.courseId, function(course) {
-						var courseProblemList = course.courseProblemList;
+					parent.getAssignment(courseProblem.assignmentId, function(assignment) {
+						var courseProblemList = assignment.courseProblemList;
 
 						// remove old Id (if it exists)
 						if (courseProblemList.indexOf(courseProblem.id) >= 0) {
 							removeObjectFromArray(courseProblemList, courseProblem.id);
 						}
 						courseProblemList.push(courseProblemUpdated.id);
-						parent.setCourse(course, function() {
+						parent.setAssignment(assignment, function() {
 							if (!isUndefined(serverCallback)) {
 								serverCallback(courseProblemUpdated);
 							}
 						});
-						// Course is set with its new courseProblem
+						// Assignment is set with its new courseProblem
 					});
 					// Finished with the course
 				});

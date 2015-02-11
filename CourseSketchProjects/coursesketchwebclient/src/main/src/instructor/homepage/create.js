@@ -245,12 +245,14 @@ validateFirstRun(document.currentScript);
 
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
         courseProblem.courseId = courseId;
+        courseProblem.name = "Insert Problem Name";
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = "";
+        courseProblem.setProblemInfo(bankProblem);
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
         var alreadyInserted = false;
-        CourseSketch.dataManager.getAllProblemsFromAssignment(problemId, function(problemList) {
+        CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
             if (!alreadyInserted) {
                 alreadyInserted = true;
@@ -263,7 +265,7 @@ validateFirstRun(document.currentScript);
                 localProblemList = [];
             }
             var oldId = undefined;
-            CourseSketch.dataManager.insertCourseproblem(problem, function(insertedProblem) {
+            CourseSketch.dataManager.insertCourseProblem(courseProblem, function(insertedProblem) {
                 oldId = insertedProblem.id;
                 localProblemList.unshift(insertedProblem);
                 courseManagement.showProblems(localProblemList);
