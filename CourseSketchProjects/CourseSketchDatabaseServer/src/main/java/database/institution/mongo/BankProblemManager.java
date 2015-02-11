@@ -1,5 +1,20 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.DatabaseAccessException;
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.School.SrlPermission;
+
+import java.util.ArrayList;
+
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
@@ -13,24 +28,6 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
-
-import java.util.ArrayList;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -104,7 +101,6 @@ public final class BankProblemManager {
         exactProblem.setQuestionType(SrlBankProblem.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
         exactProblem.addAllOtherKeywords((ArrayList) corsor.get(KEYWORDS)); // change
                                                                             // arraylist
-
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
