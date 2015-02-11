@@ -243,7 +243,8 @@ public interface Institution {
      *
      * Upon updating 1 step happen:
      * <ol>
-     * <li>the course is updated in a lecture collection</li>
+     * <li>The course is updated in a course collection</li>
+     * <li>After updating a user update is created.</li>
      * </ol>
      *
      * @param userId
@@ -265,6 +266,7 @@ public interface Institution {
      * Upon updating 1 step happen:
      * <ol>
      * <li>the assignment is updated in a assignment collection</li>
+     * <li>After updating a user update is created.</li>
      * </ol>
      *
      * @param userId
@@ -286,6 +288,7 @@ public interface Institution {
      * Upon insertion 1 step happen:
      * <ol>
      * <li>the lecture slide is updated in a slide collection</li>
+     * <li>After updating a user update is created.</li>
      * </ol>
      *
      * @param userId
