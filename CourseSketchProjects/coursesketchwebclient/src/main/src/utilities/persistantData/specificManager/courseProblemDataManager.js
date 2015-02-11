@@ -142,7 +142,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 
         // Finished with local courseProblem
     }
-    parent.insertCourseproblem = insertCourseproblem;
+    parent.insertCourseProblem = insertCourseProblem;
 
 	/**
 	 * Returns a list of all of the course problems from the local and server database for the given list
