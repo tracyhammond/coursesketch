@@ -11,7 +11,7 @@ import protobuf.srl.school.School.SrlProblem;
 
 public class LocalAddProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {
-		String[] name = new String[]{"Problem1", "Problem2", "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16",
+		String[] name = new String[]{"Problem1", "Problem2"/*, "Problem3", "Problem4", "Problem5", "Problem6", "Problem7", "Problem8", "Problem9", "Problem10", "Problem11", "Problem12", "Problem13", "Problem14", "Problem15", "Problem16",
 		"Problem17", "Problem18", "Problem19", "Problem20", "Problem21", "Problem22", "Problem23", "Problem24", "Problem25", "Problem26", "Problem27", "Problem28", "Problem29", "Problem30", "Problem31", "Problem32", "Problem33", "Problem34",
 		"Problem35", "Problem36", "Problem37", "Problem38", "Problem39", "Problem40", "Problem41" /*, "Problem42", "Problem43", "Problem44", "Problem45", "Problem46", "Problem47", "Problem48", "Problem49", "Problem50", "Problem51", "Problem52"*/};
 		//10 is fuzzy logic
@@ -29,10 +29,12 @@ public class LocalAddProblems {
 		*/
 		String[] questionText = new String[] {
 
+					"Please draw the Lewis dot diagram for the element O",
+					"Please type how many free electrons He has"
 				/*
 					Assignment 8
 				*/
-
+				/*
 					"5.1.4a: Let P(n) be the statement that 1 <sup>3</sup> + 2<sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Basis)",
 
 					"5.1.4b: Let P(n) be the statement that 1 <sup>3</sup> + 2<sup>3</sup> + ... + n <sup>3</sup> = (n(n+1)/2) <sup>2</sup> for the positive integer n. Fill in the corresponding steps: (Want to Show) ",
@@ -124,7 +126,7 @@ public class LocalAddProblems {
 
 					"5.1.36d: Prove that 21 divides 4 <sup>n+1</sup> +5 <sup>2n-1</sup> whenever n is a positive integer by filling in the following steps: (Induction)",
 
-
+				*/
 				/*
 					Assignment 7
 				*/
@@ -534,19 +536,16 @@ public class LocalAddProblems {
 				*/
 				};
 		QuestionType[] questionType = new QuestionType[] {
-				QuestionType.CHECK_BOX,
-				QuestionType.FREE_RESP,
-				QuestionType.MULT_CHOICE,
-				QuestionType.SKETCH,
-				QuestionType.SKETCH
+			QuestionType.SKETCH,
+			QuestionType.FREE_RESP
 		};
-		for(int k = 0; k < 41 /*52*//*42*//*22*//*19*//*39*/; k ++) {
+		for(int k = 0; k < name.length; k ++) {
 			SrlBankProblem.Builder bankBuilder = SrlBankProblem.newBuilder();
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
 			permissions2.addUserPermission(courseId);
 			bankBuilder.setAccessPermission(permissions2.build());
-			bankBuilder.setQuestionType(QuestionType.SKETCH);
+			bankBuilder.setQuestionType(questionType[k]);
 			String resultantId = null;
 			try {
 				resultantId = MongoInstitution.getInstance().insertBankProblem(mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
