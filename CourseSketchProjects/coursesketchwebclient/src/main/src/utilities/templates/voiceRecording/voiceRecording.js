@@ -6,12 +6,12 @@ function VoiceRecording() {
 
         this.shadowRoot.querySelector("#recordBtn").onclick = function() {
             if (this.voiceBtnBool == true) {
-                clearInterval(this.voiceBtnTimer);
+                this.clearInterval(this.voiceBtnTimer);
                 this.voiceBtnBool = false;
                 this.shadowRoot.querySelector('#recordBtn').value = " ";
             }
             else {
-                this.blinking(this.shadowRoot.querySelector("#recordBtn"));
+                this.blinking($(this.shadowRoot.querySelector("#recordBtn")));
                 this.voiceBtnBool = true;
             }
         }.bind(this);
