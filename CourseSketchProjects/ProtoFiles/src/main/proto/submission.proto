@@ -9,40 +9,40 @@ package protobuf.srl.submission;
  * Contains extra metadata for an UpdateList
  */
 message SrlSubmission {
-    optional string id = 1;
-    optional int64 submissionTime = 2;
-    optional SrlChecksum checksum = 3;
-    oneof submissionType {
-        protobuf.srl.commands.SrlUpdateList updateList = 4; // if this is a collection of updates
-        protobuf.srl.sketch.SrlSketch sketch = 5; // if this is a sketch.
-        string textAnswer = 6; // if this is a sketch.
-        int32 answerChoice = 7; // if this is a sketch.
-    }
+	optional string id = 1;
+	optional int64 submissionTime = 2;
+	optional SrlChecksum checksum = 3;
+	oneof submissionType {
+		protobuf.srl.commands.SrlUpdateList updateList = 4; // if this is a collection of updates
+		protobuf.srl.sketch.SrlSketch sketch = 5; // if this is a sketch.
+		string textAnswer = 6; // if this is a sketch.
+		int32 answerChoice = 7; // if this is a sketch.
+	}
 }
 
 message SrlSolution {
-    optional bool allowedInProblemBank = 1;
-    optional bool isPracticeProblem = 2;
-    optional SrlSubmission submission = 3;
-    optional string problemBankId = 4;
+	optional bool allowedInProblemBank = 1;
+	optional bool isPracticeProblem = 2;
+	optional SrlSubmission submission = 3;
+	optional string problemBankId = 4;
 }
 
 // Students submit experiments!
 message SrlExperiment {
-    optional string courseId = 1;
-    optional string assignmentId = 2;
-    optional string problemId = 3;
-    optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
-    optional SrlSubmission submission = 6;
-    optional protobuf.srl.school.SrlPermission accessPermission = 7;
+	optional string courseId = 1;
+	optional string assignmentId = 2;
+	optional string problemId = 3;
+	optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
+	optional SrlSubmission submission = 6;
+	optional protobuf.srl.school.SrlPermission accessPermission = 7;
 }
 
 // the checksum contains 4 sets of longs
 message SrlChecksum {
-    required int64 firstBits = 1; // size and id of each command
-    required int64 secondBits = 2; // summation of times
+	required int64 firstBits = 1; // size and id of each command
+	required int64 secondBits = 2; // summation of times
 }
 
 message SrlExperimentList {
-    repeated SrlExperiment experiments = 1;
+	repeated SrlExperiment experiments = 1;
 }

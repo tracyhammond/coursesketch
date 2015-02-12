@@ -27,19 +27,25 @@ message SrlCourse {
 	repeated string lectureList = 13;
 
 	enum Accessibility {
-		SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
+		SUPER_PUBLIC = 0;// no registration check is needed for this course.
+		// (you do still have to register)
 		PUBLIC = 1; //Any student can access course without approval.
-		PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
-		PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
-		PRIVATE = 4; //No students can see course without instructor invitation, invitation only
+		PROTECTED = 2; //Any student can request access for course and public
+		// information it is searchable, requires instructor approval
+		PROTECTED_NOSEARCH = 3; //No students can see course without a special link,
+		// it is not searchable, requires instructor approval
+		PRIVATE = 4; //No students can see course without instructor invitation,
+		// invitation only
 	}
 }
 
 message SrlAssignment {
 	required string courseId = 1; // To know who the parent is.
-	required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
+	required string id = 2; // This must be unique within a course. We will strive for
+	// global uniqueness.
 	optional string name = 3;
-	optional AssignmentType type = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
+	optional AssignmentType type = 4 [default=HOMEWORK]; // used for grading purposes
+	// (and may change how it is displayed)
 	optional string other = 5; // Name of an Instructor-defined assignment type
 	optional string description = 6;
 	repeated string links = 7; // external links/resources. Field needs improvement.
@@ -48,7 +54,8 @@ message SrlAssignment {
 	optional float grade = 10; // Calculated grade for whole Assignment
 	optional DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
 	optional DateTime dueDate = 12; // Date that the late policy goes into affect
-	optional DateTime closeDate = 13; // Date that the assignment closes and can no longer be accessed
+	optional DateTime closeDate = 13; // Date that the assignment closes and can no longer
+	// be accessed
 	optional State state = 14;
 	optional string imageUrl = 15;
 	repeated string problemList = 16;
@@ -144,17 +151,20 @@ message DateTime { // Needs to be implemented with enums. Probably already exist
 	optional int32 hour = 4;
 	optional int32 minute = 5;
 	optional int32 second = 6;
-	optional uint64 millisecond = 7; // To ensure capabilities to communicate with systems with diverse date-time handling methods
+	optional uint64 millisecond = 7; // To ensure capabilities to communicate with systems with
+	// diverse date-time handling methods
 }
 
-message DomainInformation { // Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
+message DomainInformation { // Needs to be defined in its entirety. Josh has no idea what this is,
+	// but David said it belongs here.
 	optional string stuff = 1;
 }
 
 message State {
 	optional bool published = 1; // Instructor has finished construction of school item
 	optional bool accessible = 2; // Has been made the school item available to be viewed and worked on
-	optional bool pastDue = 3; // Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+	optional bool pastDue = 3; // Due Date has passed. 'Late' if also not completed. 'Closed' if
+	// also no long accessible.
 	optional bool started = 4; // Student has viewed or begun the school item
 	optional bool completed = 5; // Student has saved/submitted work on all parts of school item
 	optional bool graded = 6; // Instructor has finished grading the school item
