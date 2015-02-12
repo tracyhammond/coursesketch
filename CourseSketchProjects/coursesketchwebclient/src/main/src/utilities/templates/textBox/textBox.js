@@ -200,10 +200,10 @@ function TextBox() {
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
         if (dialog.style.display == "none") {
             var textToRead = textBoxProto.getText();
-            localScope.parentNode.removeChild(localScope);
+            this.parentNode.removeChild(this);
 
             // Speaking happens after DOM removal in case callback relies on element no longer existing
-            localScope.speakText(textToRead, localScope.getFinishedCallback()());
+            this.speakText(textToRead, this.getFinishedCallback()());
         }
     };
 
