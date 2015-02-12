@@ -149,27 +149,6 @@ if (isUndefined(getFormattedDateTime)) {
     }
 }
 
-/**
- * Does a very simple escaping of the id for css purposes.
- * A more complicated version is found here: https://mothereff.in/css-escapes
- * @param inputId The id we want escaped.
- * @return escaped value
- *
- * Example:
- * Input: 12a2b3c
- * Output: #\31 2a2b3c
- */
-if (isUndefined(cssEscapeId)) {
-    function cssEscapeId(inputId) {
-        var output = inputId;
-        var firstChar = inputId.charAt(0);
-        if (/\d/.test(firstChar)) {
-            output = '\\3' + firstChar + ' ' + output.slice(1);
-        }
-        return '#' + output;
-    }
-}
-
 if (isUndefined(BaseException)) {
     /**
      * @Class Defines the base exception class that can be extended by all other
@@ -231,5 +210,65 @@ if (isUndefined(loadJs)) {
         script.type= 'text/javascript';
         script.src= src;
         head.appendChild(script);
+    }
+}
+
+/**
+ * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+ * And prevents further execution of the script.
+ */
+if (isUndefined(validateFirstRun)) {
+    function validateFirstRun(scriptObject) {
+        // no var on purpose.
+        try {
+            scriptBay = scriptBay || {};
+        } catch(exception) {
+            scriptBay = {};
+        }
+        if (!isUndefined(scriptBay[scriptObject.src])) {
+            var errorEvent = {src: scriptObject.src};
+            var listener = function(event) {
+                if (typeof event.error === "object"
+                    && !isUndefined(event.error.src)
+                    && event.error.src === scriptObject.src) {
+                    event.preventDefault();event.stopPropagation();
+                    window.removeEventListener("error", listener, true);
+                }
+            }
+            window.addEventListener("error", listener, true);
+            throw errorEvent;
+        }
+        scriptBay[scriptObject.src] = {};
+    }
+}
+
+
+/**
+ * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+ * And prevents further execution of the script.
+ */
+if (isUndefined(validateFirstGlobalRun)) {
+    function validateFirstGlobalRun(scriptObject) {
+        // no var on purpose.
+        try {
+            CourseSketch.scriptBay = CourseSketch.scriptBay || {};
+        } catch(exception) {
+            CourseSketch.scriptBay = {};
+        }
+        if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
+            var errorEvent = {src: scriptObject.src};
+            var listener = function(event) {
+                if (typeof event.error === "object"
+                    && !isUndefined(event.error.src)
+                    && event.error.src === scriptObject.src) {
+                    event.preventDefault();event.stopPropagation();
+                    window.removeEventListener("error", listener, true);
+                }
+            }
+            window.addEventListener("error", listener, true);
+            throw errorEvent;
+        }
+        CourseSketch.scriptBay[scriptObject.src] = {};
+        validateFirstRun(scriptObject); // look locally too!
     }
 }

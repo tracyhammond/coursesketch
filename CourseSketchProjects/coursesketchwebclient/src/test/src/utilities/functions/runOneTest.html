@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Command Methods test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <script src="/src/utilities/functions/base.js"></script>
+
+    <!-- file being tested. -->
+    <script src="/test/utilities/functions/runOnceExampleScript.js" ></script>
+    <script src="/test/utilities/functions/runOnceExampleScript.js" ></script>
+    <script src="/test/utilities/functions/runOnceExampleScript.js" ></script>
+    <script src="/test/utilities/functions/runOnceExampleScript.js" ></script>
+    <script src="/test/utilities/functions/runOnceExampleScript.js" ></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+        QUnit.module("testModule1");
+        QUnit.test("checking counter value", function(assert) {
+            assert.equal(counter, 1, "counter needs to be one");
+        });
+    </script>
+</body>
