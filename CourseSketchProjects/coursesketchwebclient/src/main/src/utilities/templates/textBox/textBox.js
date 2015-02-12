@@ -3,16 +3,13 @@
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TextBox() {
-    var loadedData = undefined; // Utilized if the element does not exist when loadData() is called
-    var shadowRoot = undefined; // Used only to tell if the data is ready to be loaded.
-
     /**
      * @param textToRead {string} contains the text to be read
      * @param callback {function} is the callback to be run after the text has been spoken
      * This function speaks the text using the meSpeak library
      */
     this.speakText = function(textToRead, callback) {
-        meSpeak.speak(textToRead, callback);
+        meSpeak.speak(textToRead, {}, callback);
     };
 
     /**
@@ -54,7 +51,7 @@ function TextBox() {
      */
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
-        shadowRoot = this.createShadowRoot();
+        var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
         /**
@@ -70,12 +67,10 @@ function TextBox() {
                 if (confirm("You are about to permanently remove this element.")) {
                     localScope.saveData(event);
                     shadowRoot = undefined;
-                    loadedData = undefined;
                 }
                 return;
             }
             shadowRoot = undefined;
-            loadedData = undefined;
             localScope.parentNode.removeChild(localScope);
         };
 
@@ -115,7 +110,7 @@ function TextBox() {
         }
         enableDragging(localScope);
 
-        this.loadData(loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved.
+        this.loadData(this.loadedData); // Loads data if data exists. This should allow for editing of the element after it is created and saved.
     };
 
     this.setFinishedListener = function(listener) {
@@ -163,12 +158,10 @@ function TextBox() {
 
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id == null || this.id == "")) {
-            if (this.tagName == 'TEXT-BOX-CREATION') {
+            if (this.shadowRoot.querySelector("#speakText") == null) {
                 this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, true);
-            } else if (this.tagName == 'TTS-BOX-CREATION') {
-                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
             } else {
-                return;
+                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
             }
         }
         this.command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -183,19 +176,19 @@ function TextBox() {
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
     this.loadData = function(textBoxProto) {
-        if (isUndefined(shadowRoot)) {
-            loadedData = textBoxProto;
+        if (isUndefined(this.shadowRoot) || this.shadowRoot == null) {
+            this.loadedData = textBoxProto;
             return;
         }
         if (isUndefined(textBoxProto)) {
             return;
         }
-        var node = shadowRoot.querySelector('#creatorText');
-        var dialog = shadowRoot.querySelector('#textBoxDialog');
+        var node = this.shadowRoot.querySelector('#creatorText');
+        var dialog = this.shadowRoot.querySelector('#textBoxDialog');
 
         // If creatorText element does not exist, make the selected node the viewText element
         if (node == null) {
-            node = shadowRoot.querySelector('#viewText');
+            node = this.shadowRoot.querySelector('#viewText');
         }
         $(dialog).height(textBoxProto.getHeight()); // Sets dialog height
         $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
@@ -206,8 +199,11 @@ function TextBox() {
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
         if (dialog.style.display == "none") {
-            localScope.speakText(textBoxProto.getText(), localScope.getFinishedCallback());
+            var textToRead = textBoxProto.getText();
             localScope.parentNode.removeChild(localScope);
+
+            // Speaking happens after DOM removal in case callback relies on element no longer existing
+            localScope.speakText(textToRead, localScope.getFinishedCallback()());
         }
     };
 
