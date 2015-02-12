@@ -1,0 +1,10 @@
+#recordBtn {
+                height: 50px;
+                width: 50px;
+                border-radius: 50px;
+                border: 1px solid #FF0000;
+                background: #ff1919;
+                font-weight: bold;
+                line-height: 1;
+                text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+}
