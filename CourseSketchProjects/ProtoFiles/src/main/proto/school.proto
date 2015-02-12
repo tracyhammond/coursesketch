@@ -2,7 +2,7 @@ package protobuf.srl.school;
 
 // holds all data that is sent from server. (grades, roster, classes, assignments, problems
 message SrlSchool {
-	repeated SrlCourse courses = 1;
+        repeated SrlCourse courses = 1;
 	repeated SrlAssignment assignments = 2;
 	repeated SrlProblem problems = 3;
 	repeated SrlBankProblem bankProblems = 4;
@@ -61,6 +61,7 @@ message SrlAssignment {
 		EXAM = 4;
 		SURVEY = 5; // not for a grade!
 		OTHER = 6; // Allows instructors to create unique assignment types
+		GAME = 7;
 	}
 }
 
