@@ -11,7 +11,7 @@ Logic Game Team:
     Husain Alshehhi
     Michael Curry
 
-    Dr. Raymond
+    Dr. Dwayne Raymond
     David Turner    
     
 LogicGame Team
