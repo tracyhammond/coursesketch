@@ -17,11 +17,20 @@
     <div id="textbox"></div>
     
 	<script>
-        var template = (function() {
+        window.confirm = function() {return true}; // This is needed so the pop-up alert when closing does not affect the testing
+        var template = (function() { // This is the creation template
             var link1 = document.querySelector('#textBoxTemplateImport');
             var link = link1.import.querySelector('#textBoxTemplateImport');
             var template = link.import.querySelector('#textBoxCreation');
             var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+        
+        var template2 = (function() { // This is the viewing template
+            var link2 = document.querySelector('#textBoxTemplateImport');
+            var link = link2.import.querySelector('#textBoxTemplateImport');
+            var template2 = link.import.querySelector('#textBoxViewing');
+            var clone = document.importNode(template2.content, true);
             return clone;
         })();
 
@@ -29,9 +38,13 @@
             setupOnce : function() {
                 try {
                     var newElement = new TextBox();
+                    var newElement2 = new TextBox();
                     // test is not a typo
                     document.registerElement('test-box-creation', {
                         prototype : newElement
+                    });
+                    document.registerElement('test-box-viewing', {
+                        prototype: newElement2
                     });
                 } catch (exception) {
                 }
@@ -43,7 +56,9 @@
         });
 
         test("Save Test", function(assert) {
+            expect(7);
             var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
             real.initializeElement(template.cloneNode(true));
             $(real.shadowRoot.querySelector('#textBoxDialog')).height(100);
             $(real.shadowRoot.querySelector('#textBoxDialog')).width(250);
@@ -82,15 +97,16 @@
             simulate(close, 'click');
         });
         
-        test("Close button removes from dom", function(assert) {
+        test("Close button in creation mode calls finishedListener", function(assert) {
             expect(1);
             var real = document.createElement('test-box-creation');
             document.getElementById('textbox').appendChild(real);
             real.initializeElement(template.cloneNode(true));
-            real.setFinishedListener(function() {});
+            real.setFinishedListener(function() {
+                assert.ok(true, 'listener was called');
+            });
             var close = real.shadowRoot.querySelector('#closeButton');
             simulate(close, 'click');
-            assert.equal(document.getElementById('textbox').children.length, 0, "The textbox removed itself from the DOM");
         });
         
         test("Load Data", function(assert) {
@@ -125,5 +141,101 @@
             });
             real.saveData();
         });
+        
+        test("Save data button calls saveData()", function(assert) {
+            expect(1);
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.saveData = function() {
+                assert.ok(true, "Save data was called");
+            }
+            var save = real.shadowRoot.querySelector('#saveButton');
+            simulate(save, 'click');
+        });
+        
+        test("Saves x and y  position if the textbox is dragged (data-x and data-y created)", function(assert) {
+            expect(2);
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            console.log(real);
+            real.initializeElement(template.cloneNode(true));
+            $(real.shadowRoot.querySelector('#textBoxDialog')).offset({ top: 200, left: 100 });
+            real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-x', 50);
+            real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-y', 75);
+            real.setFinishedListener(function(command) {
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var x = decoded.getX();
+                var y = decoded.getY();
+                assert.equal(x, '150', 'Expected 100 for data-x. Got ' + x);
+                assert.equal(y, '275', 'Expected 200 for data-y. Got ' + y);
+            });
+            real.saveData();
+        });
+        
+        test("Load Data called before initializeElement is called", function(assert) {
+            expect(7);
+            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            textBoxProto.setText("Test text");
+            textBoxProto.setHeight(100);
+            textBoxProto.setWidth(250);
+            textBoxProto.setX(100);
+            textBoxProto.setY(200);
+            
+            var real = document.createElement('test-box-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.loadData(textBoxProto);
+            real.initializeElement(template.cloneNode(true));
+            real.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                        'Expecting command type CREATE_TEXTBOX from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var height = decoded.getHeight();
+                var width = decoded.getWidth();
+                var x = decoded.getX();
+                var y = decoded.getY();
+                var text = decoded.getText();
+                assert.equal(height, '100', 'Expected 100 for height. Got ' + height);
+                assert.equal(width, '250', 'Expected 250 for width. Got ' + width);
+                assert.equal(x, '100', 'Expected 100 for data-x. Got ' + x);
+                assert.equal(y, '200', 'Expected 200 for data-y. Got ' + y);
+                assert.equal(text, 'Test text', 'Expected "Test text" for value. Got "' + text + '"');
+            });
+            real.saveData();
+        });
+        
+        test("Continue button acts the same as close button in viewing mode (removes element from DOM)", function(assert) {
+            expect(1);
+            var real = document.createElement('test-box-viewing');
+            document.getElementById('textbox').appendChild(real);
+            console.log(real);
+            real.initializeElement(template2.cloneNode(true));
+            var continueButton = real.shadowRoot.querySelector('#continueButton');
+            simulate(continueButton, 'click');
+            assert.equal(document.getElementById('textbox').children.length, 0);
+        });
+        
+        test("Load data in viewing mode selects the node correctly", function(assert) {
+            expect(2);
+            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            textBoxProto.setText("Test text");
+            textBoxProto.setHeight(116); // Some really weird stuff happens with saving due to padding of elements. See textBox.js loadData method for slightly more info
+            textBoxProto.setWidth(250);
+            textBoxProto.setX(100);
+            textBoxProto.setY(200);
+            
+            var real = document.createElement('test-box-viewing');
+            document.getElementById('textbox').appendChild(real);
+            real.loadData(textBoxProto);
+            real.initializeElement(template2.cloneNode(true));
+            
+            // Expecting 100 is not a typo. Load data has to subtract 16 due to some weird padding stuff in the elements when saving and loading.
+            assert.equal($(real.shadowRoot.querySelector('#viewText')).height(), 100, "Set viewText height correctly");
+            assert.equal($(real.shadowRoot.querySelector('#viewText')).width(), 250, "Set viewText width correctly");
+        });
+        
     </script>
 </body>
