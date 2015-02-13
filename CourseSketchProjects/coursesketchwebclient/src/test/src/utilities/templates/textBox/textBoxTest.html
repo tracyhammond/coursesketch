@@ -84,14 +84,17 @@
             real.saveData();
         });
         
-        asyncTest("Close button calls save", function(assert) {
+        /**
+         * Close button calls save with an event parameter which then calls finishedListener
+         * The finishedListener has a case which removes the command from the proto upateList and removes the element from the DOM
+         */
+        test("Close button calls save", function(assert) {
             expect(1);
             var real = document.createElement('test-box-creation');
             document.getElementById('textbox').appendChild(real);
             real.initializeElement(template.cloneNode(true));
             real.setFinishedListener(function(command) {
                 assert.ok(true, 'After closing, .saveData is called');
-                QUnit.start();
             });
             var close = real.shadowRoot.querySelector('#closeButton');
             simulate(close, 'click');
@@ -158,7 +161,6 @@
             expect(2);
             var real = document.createElement('test-box-creation');
             document.getElementById('textbox').appendChild(real);
-            console.log(real);
             real.initializeElement(template.cloneNode(true));
             $(real.shadowRoot.querySelector('#textBoxDialog')).offset({ top: 200, left: 100 });
             real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-x', 50);
@@ -211,7 +213,6 @@
             expect(1);
             var real = document.createElement('test-box-viewing');
             document.getElementById('textbox').appendChild(real);
-            console.log(real);
             real.initializeElement(template2.cloneNode(true));
             var continueButton = real.shadowRoot.querySelector('#continueButton');
             simulate(continueButton, 'click');

@@ -96,10 +96,8 @@
             expect(2);
             var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
             textBoxProto.setText("Goodbye");
-            console.log(textBoxProto);
             var real = document.createElement('test-tts-viewing');
             document.getElementById('textbox').appendChild(real);
-            console.log(real);
             real.setFinishedListener(function() {
                 assert.ok(true, "Listener called");
                 assert.equal(document.getElementById('textbox').children.length, 0, "Hidden tts box removed itself from the DOM");

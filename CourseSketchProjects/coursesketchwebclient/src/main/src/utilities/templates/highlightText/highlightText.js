@@ -118,8 +118,12 @@ function HighlightText() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        this.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
-        this.textColor = shadowRoot.querySelector("#textColor").value;
+        if (isUndefined(this.backgroundColor)) {
+            this.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+        }
+        if (isUndefined(this.textColor)) {
+            this.textColor = shadowRoot.querySelector("#textColor").value;
+        }
         this.startPath = undefined;
         this.startOffset = undefined;
         this.endPath = undefined;
