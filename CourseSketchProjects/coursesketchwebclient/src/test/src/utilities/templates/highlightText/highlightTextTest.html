@@ -1,0 +1,203 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Highlight Text Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="highlightTextTemplateImport" rel="import" href="/src/utilities/templates/highlightText/highlightTextInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/highlightText/highlightText.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="highlightText">
+        <p>Test text</p> <p>Test text 2</p>
+    </div>
+    <div id="highlightTextTool"></div>
+    
+	<script>
+        window.confirm = function() {return true}; // This is needed so the pop-up alert when closing does not affect the testing
+        var template = (function() {
+            var link1 = document.querySelector('#highlightTextTemplateImport');
+            var link = link1.import.querySelector('#highlightTextTemplateImport');
+            var template = link.import.querySelector('#highlightTextCreation');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+        
+        function createTestHighlight() {
+            var real = document.createElement('highlight-test-creation');
+            document.getElementById('highlightTextTool').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.startPath = "/HTML[1]/BODY[1]/DIV[3]/P[1]/text()[1]";
+            real.startOffset = 0;
+            real.endPath = "/HTML[1]/BODY[1]/DIV[3]/P[1]/text()[1]"
+            real.endOffset = 4;
+            real.backgroundColor = "#0bc263";
+            real.textColor = "#7777af"
+            return real;
+        }
+        
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    var newElement = new HighlightText();
+                    // test is not a typo
+                    document.registerElement('highlight-test-creation', {
+                        prototype : newElement
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('highlightText').innerHTML = "<p>Test text</p> <p>Test text 2</p>";
+                document.getElementById('highlightTextTool').innerHTML = "";
+                $(document).off('mouseup');
+            }
+        });
+        
+        test("Save Test", function(assert) {
+            var real = createTestHighlight();
+            
+            real.setFinishedListener(function(command, event, commandId) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT,
+                        'Expecting command type CREATE_HIGHLIGHT_TEXT from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
+                var nodes = decoded.getSelectedNodePath();
+                var loadNode = nodes[0];
+                assert.equal(loadNode.getStartPath(), '/HTML[1]/BODY[1]/DIV[3]/P[1]/text()[1]');
+                assert.equal(loadNode.getStartOffset(), 0, 'Start offset saved correctly');
+                assert.equal(loadNode.getEndPath(), '/HTML[1]/BODY[1]/DIV[3]/P[1]/text()[1]');
+                assert.equal(loadNode.getEndOffset(), 4, 'End offset saved correctly');
+                assert.equal(loadNode.getBackgroundColor(), '#0bc263', 'Background color saved correctly');
+                assert.equal(loadNode.getTextColor(), '#7777af', 'Text color saved correctly');
+            });
+            real.saveData();
+        });
+        
+        /**
+         * This test creates a highlightText tool and clicks the checkbox to turn on highlightText mode
+         * It then creates a selection range in the document and simulates mouseup
+         * Since we are in highlightText mode, the mouseup event triggers a private highlightText function
+         * At the end of this function, saveData is called. So we overwrite saveData beforehand.
+         * If the mouseup event triggers highlightText as it should, it calls saveData and we get our assert
+         * Then the test clicks the highlightText checkbox again which should turn highlightText mode off
+         * When the mouseup event is simulated again, it should NOT run highlightText
+         * This means saveData should not be called which is why we expect only 1 assert
+         */
+        test("Checking highlightMode box binds highlightText function to mouseup", function(assert) {
+            expect(1)
+            var real = createTestHighlight();
+            real.saveData = function() {
+                assert.ok(true, 'saveData is called! This means highlightText is bound to mouseUp');
+            }
+            var highlight = real.shadowRoot.querySelector('#highlightMode');
+            simulate(highlight, 'click');
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            var range = document.createRange();
+            range.setStart(document.evaluate(real.startPath, document, null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(real.startOffset));
+            range.setEnd(document.evaluate(real.endPath, document, null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(real.endOffset));
+            selection.addRange(range);
+            simulate(real, 'mouseup');
+            
+            simulate(highlight, 'click');
+        });
+        
+        test("Close button calls finishedListener", function(assert) {
+            expect(1);
+            var real = createTestHighlight();
+            real.setFinishedListener(function() {
+                assert.ok(true, 'After closing, finishedListener is called');
+            });
+            var close = real.shadowRoot.querySelector('#closeButton');
+            simulate(close, 'click');
+        });
+        
+        test("Changing background/text color changes their respective values", function(assert) {
+            expect(2);
+            var real = createTestHighlight();
+            var bg = real.shadowRoot.querySelector('#backgroundColor');
+            var txt = real.shadowRoot.querySelector('#textColor');
+            bg.value = '#ff1234';
+            txt.value = '#870292';
+            simulate(bg, 'change');
+            simulate(txt, 'change');
+            assert.equal(real.backgroundColor, '#ff1234', 'Background color updated correctly');
+            assert.equal(real.textColor, '#870292', 'Text color updated correctly');
+        });
+        
+        test("Load Data", function(assert) {
+            expect(3);
+            var real = createTestHighlight();
+            var nodeProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
+            var highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            nodeProto.setStartPath(real.startPath);
+            nodeProto.setStartOffset(real.startOffset);
+            nodeProto.setEndPath(real.endPath);
+            nodeProto.setEndOffset(real.endOffset);
+            nodeProto.setBackgroundColor(real.backgroundColor);
+            nodeProto.setTextColor(real.textColor);
+            highlightProto.add('selectedNodePath', nodeProto);
+            
+            var real2 = document.createElement('highlight-test-creation');
+            document.getElementById('highlightTextTool').appendChild(real2);
+            real2.initializeElement(template.cloneNode(true));
+            real2.loadData(highlightProto);
+            console.log(window.getSelection());
+            console.log(window.getSelection().baseNode);
+            var testId = window.getSelection().baseNode.nextSibling.getAttribute('class');
+
+            /**
+             * When loadData is called, the data is loaded in and recreates the span tags wrapping the highlighted text
+             * After it does this, window.getSelection() is still set to a selection just before the entire recreated node
+             * Therefore if the class of nextSibling of baseNode of window.selection() is "highlightedText"
+             * then the load function recreated successfully
+             */
+            assert.equal(testId, "highlightedText", "Load Data recreated a highlightText node");
+            assert.equal(real2.backgroundColor, real.backgroundColor, 'backgroundColor loaded correctly');
+            assert.equal(real2.textColor, real.textColor, 'textColor loaded correctly');
+        });
+        
+        test("Load data called before initialize data", function(assert) {
+            expect(3);
+            var real = createTestHighlight();
+            var nodeProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
+            var highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            nodeProto.setStartPath(real.startPath);
+            nodeProto.setStartOffset(real.startOffset);
+            nodeProto.setEndPath(real.endPath);
+            nodeProto.setEndOffset(real.endOffset);
+            nodeProto.setBackgroundColor(real.backgroundColor);
+            nodeProto.setTextColor(real.textColor);
+            highlightProto.add('selectedNodePath', nodeProto);
+            
+            var real2 = document.createElement('highlight-test-creation');
+            document.getElementById('highlightTextTool').appendChild(real2);
+            real2.loadData(highlightProto);
+            real2.initializeElement(template.cloneNode(true));
+            console.log(window.getSelection());
+            console.log(window.getSelection().baseNode);
+            var testId = window.getSelection().baseNode.nextSibling.getAttribute('class');
+
+            /**
+             * When loadData is called, the data is loaded in and recreates the span tags wrapping the highlighted text
+             * After it does this, window.getSelection() is still set to a selection just before the entire recreated node
+             * Therefore if the class of nextSibling of baseNode of window.selection() is "highlightedText"
+             * then the load function recreated successfully
+             */
+            assert.equal(testId, "highlightedText", "Load Data recreated a highlightText node");
+            assert.equal(real2.backgroundColor, real.backgroundColor, 'backgroundColor loaded correctly');
+            assert.equal(real2.textColor, real.textColor, 'textColor loaded correctly');
+        });
+    </script>
+</body>

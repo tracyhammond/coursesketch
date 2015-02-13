@@ -3,6 +3,7 @@
 <link id="highlightTextTemplateImport" rel="import" href="highlightText.html">
 <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 <script src="highlightText.js"></script>
 
 <script>
@@ -29,7 +30,7 @@
                 this.initializeElement(clone.cloneNode(true));
             };
 
-            HighlightText.prototype.detachedCallback = function() 
+            HighlightText.prototype.detachedCallback = function() {
                 // This makes it so when the highlightText tool is removed, the highlighting mechanism bound to mouseup is turned off
                 $(document).off("mouseup");
             };
