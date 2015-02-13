@@ -26,14 +26,16 @@
             asyncTest("insert courseProblem local", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
-                        var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                    dataManager.setAssignment(assignment, function() {
+                        var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                         courseProblem.id = generateUUID();
-                        courseProblem.courseId = course.id;
-                        courseProblem.name= "I AM TEST";
+                        courseProblem.assignmentId = assignment.id;
+                        courseProblem.courseId = assignment.courseId;
+                        courseProblem.name = "I AM TEST";
                         dataManager.insertCourseProblem(courseProblem, function() {
                             assert.ok(true, "Local callback called.");
                             QUnit.start();
@@ -47,7 +49,7 @@
             asyncTest("create new courseProblem server", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
@@ -55,10 +57,12 @@
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROLBLEM;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                course.id = generateUUID();
-                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = generateUUID();
-                courseProblem.courseId = course.id;
+                courseProblem.assignmentId = assignment.id;
+                courseProblem.courseId = assignment.courseId;
                 courseProblem.name= "I AM TEST";
                 itemResult.returnText =  "1:" +courseProblem.id;
                 CourseSketch.connection.sendRequest = function(message) {
@@ -66,7 +70,7 @@
                    CourseSketch.connection.sendSelf(req);
                 }; //send request
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
+                    dataManager.setAssignment(assignment, function() {
                         dataManager.insertCourseProblem(courseProblem, undefined, function(courseProblem2) {
                             assert.ok(true, "Server callback called.");
                             QUnit.start();
@@ -77,10 +81,10 @@
 
             // next test
 
-            asyncTest("get courseProblems from course local callback", function(assert) {
+            asyncTest("get courseProblems from assignment local callback", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment(); // sets up server response.
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
@@ -88,17 +92,20 @@
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                course.id = generateUUID();
-                var courseProblem1 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
-                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
+                var courseProblem1 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem1.id = "firstCourseProblem";
                 courseProblem2.id = "secondCourseProblem";
                 courseProblem1.name = "I am a test!";
                 courseProblem2.name = "I am also a test!";
-                courseProblem1.courseId = course.id
-                courseProblem2.courseId = course.id;
+                courseProblem1.assignmentId = assignment.id
+                courseProblem2.assignmentId = assignment.id;
+                courseProblem1.courseId = assignment.courseId;
+                courseProblem2.courseId = assignment.courseId;
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
+                    dataManager.setAssignment(assignment, function() {
                         itemResult.returnText = "1Two" + ":" + courseProblem1.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
@@ -111,7 +118,7 @@
                                 CourseSketch.connection.sendSelf(req);
                             }; //send request
                                 dataManager.insertCourseProblem(courseProblem2, undefined,function() {
-                                    dataManager.getCourse(course.id, function(newCourse) {
+                                    dataManager.getAssignment(assignment.id, function(newCourse) {
                                         CourseSketch.connection.sendRequest = function(){};
                                             dataManager.getCourseProblems(newCourse.courseProblemList,  function(courseProblemList) {
                                                 assert.ok(true, "courseProblems can be fetched from the database.");
@@ -121,7 +128,7 @@
                                                 }
                                                 QUnit.start();
                                             }, undefined); // getcourseProblem loop
-                                    }); // getCourse
+                                    }); // getAssignment
                                 }); // insertcourseProblem courseProblem2
                         }); // insertcourseProblem courseProblem1
                     });
@@ -130,36 +137,38 @@
 
             // new test
 
-            asyncTest("get courseProblem server response from course part 2 testing DB local callback", function(assert) {
+            asyncTest("get courseProblem server response from assignment part 2 testing DB local callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
-                var SrlCourseProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
-                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var SrlProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeID;
-                courseProblem.courseId = course.id;
-                SrlCourseProblemdata.courseProblems = [ courseProblem];
-                itemResult.data =  SrlCourseProblemdata.toArrayBuffer();
+                courseProblem.assignmentId = assignment.id;
+                courseProblem.courseId = assignment.courseId;
+                SrlProblemdata.courseProblems = [ courseProblem];
+                itemResult.data =  SrlProblemdata.toArrayBuffer();
                 dataResult.results = [itemResult];
-                req.otherData= dataResult.toArrayBuffer();
+                req.otherData = dataResult.toArrayBuffer();
                 expect(1);
                 CourseSketch.connection.sendRequest = function(message) {
                     CourseSketch.connection.sendSelf(req);
                 }; //send request
                 var waitfor = 0;
                 waitForDatabase(dataManager, function() {
-                    dataManager.getCourseProblem(fakeID, function(result1) {
-                        console.log("result 1 is "+ result1.id);
+                    dataManager.getCourseProblem(fakeID, undefined, function(result1) {
+                        console.log("result 1 is " + result1.id);
                         courseProblem2.id = result1.id;
-                        assert.equal(courseProblem2.id, courseProblem.id,"Sent a courseProblem to server and recieved it");
+                        assert.equal(courseProblem2.id, courseProblem.id, "Sent a courseProblem to server and recieved it");
                         QUnit.start();
                     }); //get courseProblem
                 });
@@ -167,10 +176,10 @@
 
             //new test
 
-            asyncTest("get courseProblems from course part 2 testing DB server callback", function(assert) {
+            asyncTest("get courseProblems from assignment part 2 testing DB server callback", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment(); // sets up server response.
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
@@ -178,17 +187,20 @@
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                course.id = generateUUID();
-                var courseProblem1 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
-                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
+                var courseProblem1 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem1.id = "firstCourseProblem";
                 courseProblem2.id = "secondCourseProblem";
                 courseProblem1.name = "I am a test!";
                 courseProblem2.name = "I am also a test!";
-                courseProblem1.courseId = course.id
-                courseProblem2.courseId = course.id;
+                courseProblem1.assignmentId = assignment.id
+                courseProblem2.assignmentId = assignment.id;
+                courseProblem1.courseId = assignment.courseId;
+                courseProblem2.courseId = assignment.courseId;
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
+                    dataManager.setAssignment(assignment, function() {
                         itemResult.returnText = "1Two" + ":" + courseProblem1.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
@@ -201,7 +213,7 @@
                                 CourseSketch.connection.sendSelf(req);
                             }; //send request
                                 dataManager.insertCourseProblem(courseProblem2, undefined,function() {
-                                    dataManager.getCourse(course.id, function(newCourse) {
+                                    dataManager.getAssignment(assignment.id, function(newCourse) {
                                         CourseSketch.connection.sendRequest = function(){};
                                         //setTimeout(function(){
                                             dataManager.getCourseProblems(newCourse.courseProblemList,  function(courseProblemList) {
@@ -211,7 +223,7 @@
                                                 QUnit.start();
                                             }, undefined); // getcourseProblem loop
                                         //}, 100);// to prevent race condiction of getting before updating
-                                    }); // getCourse
+                                    }); // getAssignment
                                 }); // insertcourseProblem courseProblem2
                         }); // insertcourseProblem courseProblem1
                     });
@@ -241,11 +253,13 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
-                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeID;
-                courseProblem.courseId = course.id;
+                courseProblem.assignmentId = assignment.id;
+                courseProblem.courseId = assignment.courseId;
                 courseProblem.name = "Preupdated";
                 var waitfor = 0;
                 waitForDatabase(dataManager, function() {
@@ -271,21 +285,24 @@
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_UPDATE;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
-                var SrlCourseProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
-                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var SrlProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeID;
-                courseProblem.courseId = course.id;
+                courseProblem.assignmentId = assignment.id;
                 courseProblem.name ='preupdate';
                 courseProblem2.id = courseProblem.id;
-                courseProblem2.courseId = course.id;
+                courseProblem2.assignmentId = assignment.id;
                 courseProblem2.name = "Update complete!"
-                SrlCourseProblemdata.courseProblems = [ courseProblem];
-                itemResult.data =  SrlCourseProblemdata.toArrayBuffer();
+                courseProblem.courseId = assignment.courseId;
+                courseProblem2.courseId = assignment.courseId;
+                SrlProblemdata.courseProblems = [ courseProblem];
+                itemResult.data =  SrlProblemdata.toArrayBuffer();
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -311,18 +328,21 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                course.id = generateUUID();
-                var SrlCourseProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
-                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+                assignment.id = generateUUID();
+                assignment.courseId = generateUUID();
+                var SrlProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeID;
-                courseProblem.courseId = course.id;
+                courseProblem.assignmentId = assignment.id;
                 courseProblem.name = "Preupdated"
                 courseProblem2.id = courseProblem.id;
-                courseProblem2.courseId = course.id;
+                courseProblem2.assignmentId = assignment.id;
                 courseProblem2.name = "Update complete!"
-                SrlCourseProblemdata.courseProblems = [ courseProblem];
+                courseProblem.courseId = assignment.courseId;
+                courseProblem2.courseId = assignment.courseId;
+                SrlProblemdata.courseProblems = [ courseProblem];
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourseProblem(courseProblem,  function() {
                         dataManager.updateCourseProblem(courseProblem2, function() {
