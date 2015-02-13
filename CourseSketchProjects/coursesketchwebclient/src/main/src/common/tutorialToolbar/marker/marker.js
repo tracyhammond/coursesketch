@@ -21,8 +21,8 @@ function TimelineMarker() {
         element.onclick = function() {
             $(element).addClass('cross');
             var oldClickFunction = element.onclick;
-            var tim = setTimeout(function () { 
-                $(element).removeClass('cross'); 
+            var tim = setTimeout(function () {
+                $(element).removeClass('cross');
                 element.onclick = oldClickFunction;
             }, 5000);
             element.onclick = function() {

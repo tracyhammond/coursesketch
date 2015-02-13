@@ -80,7 +80,7 @@ function TextBox() {
                 localScope.saveData();
             };
         }
-        
+
         // Makes save button save data on creation mode
         saveButton = localScope.shadowRoot.querySelector("#saveButton");
         if (saveButton != null) {
@@ -88,12 +88,12 @@ function TextBox() {
                 localScope.saveData();
                 saveButton.textContent = 'Data saved';
             };
-            
+
             saveButton.onblur = function() {
                 saveButton.textContent = 'Save';
             };
         }
-        
+
         // Makes continue button close box on viewing mode
         if (localScope.shadowRoot.querySelector("#continueButton") != null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;

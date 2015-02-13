@@ -27,7 +27,7 @@ function HighlightText() {
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
                 },
-                
+
             })
             .inertia(false)
             .restrict({
@@ -36,7 +36,7 @@ function HighlightText() {
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         });
     }
-    
+
     /**
      * @param children {array} represents the childNodes in the selected text.
      * @return {boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
@@ -51,7 +51,7 @@ function HighlightText() {
         }
         return true;
     }
-    
+
     /**
      * Wraps the selected text in span tags with the color of the color selector
      * If the selection crosses elements, there is an alert to notify the user of an invalid selection
@@ -67,7 +67,7 @@ function HighlightText() {
                     var newNode = document.createElement('span'); // This node is created to encase the text in the highlighted color
                     newNode.setAttribute('class', 'highlightedText');
                     newNode.setAttribute('style', 'background:' + this.backgroundColor + '; color:' + this.textColor);
-                    
+
                     // These values are used for saving data
                     this.startPath = getXPath(range.startContainer);
                     this.startOffset = range.startOffset;
@@ -83,7 +83,7 @@ function HighlightText() {
             }
         }
     }
-    
+
     /**
      * @param node {node} is the node whose path we are getting
      * @param currentPath {string} is used within the function to append the previous sibling to the path
@@ -110,7 +110,7 @@ function HighlightText() {
      * @param {node} is a clone of the custom HTML template for highlighting text
      * This creates the element in the shadowRoot and turns highlight mode on by default
      * It tracks changes to the color selector and to the highlight mode checkbox
-     * When color selector is changed, the color variable updates. 
+     * When color selector is changed, the color variable updates.
      * When highlight checkbox is changed, the function for highlighting is bound or unbound to mouseup
      * Also enables dragging and sets the exit button to close the dialog
      */
@@ -138,7 +138,7 @@ function HighlightText() {
                 $(document).off("mouseup", highlightText.bind(this));
             }
         }.bind(this); // Binds this so the highlightText function can write to variables (this is to define the correct scope)
-            
+
         // Click action for the "X" that closes the dialog
         shadowRoot.querySelector("#closeButton").onclick = function() {
             if (confirm("You are about to permanently remove the highlighting from this step.")) {
@@ -146,24 +146,24 @@ function HighlightText() {
                 localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate); // Gets and calls finishedCallback
             }
         };
-        
+
         // Updates value of backgroundColor when the color selector value is changed by the user
         shadowRoot.querySelector("#backgroundColor").onchange = function() {
             localScope.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
         };
-        
+
         // Updates value of textColor when the color selecor value is changed by the user
         shadowRoot.querySelector("#textColor").onchange = function() {
             localScope.textColor = shadowRoot.querySelector("#textColor").value;
         };
-        
+
         enableDragging();
     };
-    
+
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };
-    
+
     /**
      * This saves data for the highlight tool
      * The highlight tool only appears once per tutorial step, but multiple selections is allowed
@@ -194,7 +194,7 @@ function HighlightText() {
         this.id = this.command.commandId; // Sets highlightText id to the same as the commandId
         this.getFinishedCallback()(this.command, undefined, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
     };
-    
+
     /**
      * This function loads data by recreating the node and then insert it into the webpage
      * @param protoData {protoCommand} is the CommandData to be loaded
@@ -228,7 +228,7 @@ function HighlightText() {
                 range.setEnd(document.evaluate(rangeEndNode, document, null,
                         XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(rangeEndOffset));
                 selection.addRange(range);
-            
+
                 var newNode = document.createElement('span');
                 newNode.setAttribute('class', 'highlightedText');
                 newNode.setAttribute('style', 'background:' + backgroundColor + '; color:' + textColor);
@@ -236,14 +236,14 @@ function HighlightText() {
                 range.insertNode(newNode);
             }
         }
-        
+
         // This will set the text/background color to the last used combination
         shadowRoot.querySelector('#textColor').value = textColor;
         shadowRoot.querySelector('#backgroundColor').value = backgroundColor;
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;
     };
-    
+
     this.getFinishedCallback = function() {
         return this.finishedCallback;
     };
