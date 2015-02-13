@@ -1,0 +1,340 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+            <title>Command Methods test</title>
+            <!-- test Library -->
+            <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+                <link rel="import"
+                    href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+                 <!-- file being tested. -->
+                    <script src="/src/utilities/persistantData/specificManager/courseproblemDataManager.js" data-cover></script>
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+
+        <script>
+            QUnit.module("courseProblem creation");
+            test("create new database", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                if (!isUndefined(dataManager)) {
+                    assert.ok(true, "The datamanager was successfully created.");
+                }
+            });
+            asyncTest("insert courseProblem local", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                waitForDatabase(dataManager, function() {
+                    dataManager.setCourse(course, function() {
+                        var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                        courseProblem.id = generateUUID();
+                        courseProblem.courseId = course.id;
+                        courseProblem.name= "I AM TEST";
+                        dataManager.insertCourseProblem(courseProblem, function() {
+                            assert.ok(true, "Local callback called.");
+                            QUnit.start();
+                        }, undefined);
+                    });
+                });
+            });
+
+            //next test
+
+            asyncTest("create new courseProblem server", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROLBLEM;
+                dataResult.results = [itemResult];
+                req.otherData = dataResult.toArrayBuffer();
+                course.id = generateUUID();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem.id = generateUUID();
+                courseProblem.courseId = course.id;
+                courseProblem.name= "I AM TEST";
+                itemResult.returnText =  "1:" +courseProblem.id;
+                CourseSketch.connection.sendRequest = function(message) {
+                   req.otherData = dataResult.toArrayBuffer();
+                   CourseSketch.connection.sendSelf(req);
+                }; //send request
+                waitForDatabase(dataManager, function() {
+                    dataManager.setCourse(course, function() {
+                        dataManager.insertCourseProblem(courseProblem, undefined, function(courseProblem2) {
+                            assert.ok(true, "Server callback called.");
+                            QUnit.start();
+                        });
+                    });
+                });
+            });
+
+            // next test
+
+            asyncTest("get courseProblems from course local callback", function(assert) {
+                expect(2);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
+                dataResult.results = [itemResult];
+                req.otherData = dataResult.toArrayBuffer();
+                course.id = generateUUID();
+                var courseProblem1 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem1.id = "firstCourseProblem";
+                courseProblem2.id = "secondCourseProblem";
+                courseProblem1.name = "I am a test!";
+                courseProblem2.name = "I am also a test!";
+                courseProblem1.courseId = course.id
+                courseProblem2.courseId = course.id;
+                waitForDatabase(dataManager, function() {
+                    dataManager.setCourse(course, function() {
+                        itemResult.returnText = "1Two" + ":" + courseProblem1.id;
+                        CourseSketch.connection.sendRequest = function(message) {
+                            req.otherData = dataResult.toArrayBuffer();
+                            CourseSketch.connection.sendSelf(req);
+                        }; //send request
+                        dataManager.insertCourseProblem(courseProblem1, undefined,function() {
+                            itemResult.returnText = "2Two" + ":" + courseProblem2.id;
+                            CourseSketch.connection.sendRequest = function(message) {
+                                req.otherData = dataResult.toArrayBuffer();
+                                CourseSketch.connection.sendSelf(req);
+                            }; //send request
+                                dataManager.insertCourseProblem(courseProblem2, undefined,function() {
+                                    dataManager.getCourse(course.id, function(newCourse) {
+                                        CourseSketch.connection.sendRequest = function(){};
+                                            dataManager.getCourseProblems(newCourse.courseProblemList,  function(courseProblemList) {
+                                                assert.ok(true, "courseProblems can be fetched from the database.");
+                                                assert.equal(courseProblemList.length, 2, "Two courseProblems were inserted and two courseProblems were returned.");
+                                                for (var i = 0; i < courseProblemList.length; ++i) {
+                                                    console.log(courseProblemList[i]);
+                                                }
+                                                QUnit.start();
+                                            }, undefined); // getcourseProblem loop
+                                    }); // getCourse
+                                }); // insertcourseProblem courseProblem2
+                        }); // insertcourseProblem courseProblem1
+                    });
+                });
+            });
+
+            // new test
+
+            asyncTest("get courseProblem server response from course part 2 testing DB local callback", function(assert) {
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var fakeID = generateUUID();
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
+                var SrlCourseProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem.id = fakeID;
+                courseProblem.courseId = course.id;
+                SrlCourseProblemdata.courseProblems = [ courseProblem];
+                itemResult.data =  SrlCourseProblemdata.toArrayBuffer();
+                dataResult.results = [itemResult];
+                req.otherData= dataResult.toArrayBuffer();
+                expect(1);
+                CourseSketch.connection.sendRequest = function(message) {
+                    CourseSketch.connection.sendSelf(req);
+                }; //send request
+                var waitfor = 0;
+                waitForDatabase(dataManager, function() {
+                    dataManager.getCourseProblem(fakeID, function(result1) {
+                        console.log("result 1 is "+ result1.id);
+                        courseProblem2.id = result1.id;
+                        assert.equal(courseProblem2.id, courseProblem.id,"Sent a courseProblem to server and recieved it");
+                        QUnit.start();
+                    }); //get courseProblem
+                });
+            });
+
+            //new test
+
+            asyncTest("get courseProblems from course part 2 testing DB server callback", function(assert) {
+                expect(2);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
+                dataResult.results = [itemResult];
+                req.otherData = dataResult.toArrayBuffer();
+                course.id = generateUUID();
+                var courseProblem1 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem1.id = "firstCourseProblem";
+                courseProblem2.id = "secondCourseProblem";
+                courseProblem1.name = "I am a test!";
+                courseProblem2.name = "I am also a test!";
+                courseProblem1.courseId = course.id
+                courseProblem2.courseId = course.id;
+                waitForDatabase(dataManager, function() {
+                    dataManager.setCourse(course, function() {
+                        itemResult.returnText = "1Two" + ":" + courseProblem1.id;
+                        CourseSketch.connection.sendRequest = function(message) {
+                            req.otherData = dataResult.toArrayBuffer();
+                            CourseSketch.connection.sendSelf(req);
+                        }; //send request
+                        dataManager.insertCourseProblem(courseProblem1, undefined,function() {
+                            itemResult.returnText = "2Two" + ":" + courseProblem2.id;
+                            CourseSketch.connection.sendRequest = function(message) {
+                                req.otherData = dataResult.toArrayBuffer();
+                                CourseSketch.connection.sendSelf(req);
+                            }; //send request
+                                dataManager.insertCourseProblem(courseProblem2, undefined,function() {
+                                    dataManager.getCourse(course.id, function(newCourse) {
+                                        CourseSketch.connection.sendRequest = function(){};
+                                        //setTimeout(function(){
+                                            dataManager.getCourseProblems(newCourse.courseProblemList,  function(courseProblemList) {
+
+                                                assert.equal(courseProblemList[0].id, '1Two', "courseProblem 1 was correct");
+                                                 assert.equal(courseProblemList[1].id, '2Two', "courseProblem 2 was correct");
+                                                QUnit.start();
+                                            }, undefined); // getcourseProblem loop
+                                        //}, 100);// to prevent race condiction of getting before updating
+                                    }); // getCourse
+                                }); // insertcourseProblem courseProblem2
+                        }); // insertcourseProblem courseProblem1
+                    });
+                });
+            });
+
+             //new test
+
+            asyncTest("test connection send request", function(assert) {
+                var fakeID = generateUUID();
+                CourseSketch.connection.sendRequest = function(message) {
+                    assert.equal(message.requestType, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST, "Message type is valid.");
+                    QUnit.start();
+                };
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                waitForDatabase(dataManager, function() {
+                    dataManager.getCourseProblem(fakeID, function(){});
+
+                });
+            });
+
+            //new test
+
+
+            asyncTest("Testing Delete ", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var fakeID = generateUUID();
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem.id = fakeID;
+                courseProblem.courseId = course.id;
+                courseProblem.name = "Preupdated";
+                var waitfor = 0;
+                waitForDatabase(dataManager, function() {
+                    dataManager.setCourseProblem(courseProblem, function() {
+                        dataManager.deleteCourseProblem(courseProblem.id, function() {
+                            setTimeout(function() {
+                                dataManager.getCourseProblemLocal(courseProblem.id,  function(courseProblem) {
+                                    assert.ok(courseProblem instanceof CourseSketch.DatabaseException, "CourseProblems can be fetched from the database.");
+                                    QUnit.start();
+                                }); // getCourseProblem
+                            }, 100);
+                        });
+                    }); // end set CourseProblem
+                });
+            });
+
+            // new tests
+            asyncTest("update CourseProblem server callback", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.PROTOBUF_UTIL.Request();
+                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_UPDATE;
+                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                var fakeID = generateUUID();
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
+                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
+                var SrlCourseProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem.id = fakeID;
+                courseProblem.courseId = course.id;
+                courseProblem.name ='preupdate';
+                courseProblem2.id = courseProblem.id;
+                courseProblem2.courseId = course.id;
+                courseProblem2.name = "Update complete!"
+                SrlCourseProblemdata.courseProblems = [ courseProblem];
+                itemResult.data =  SrlCourseProblemdata.toArrayBuffer();
+                dataResult.results = [itemResult];
+                req.otherData= dataResult.toArrayBuffer();
+                CourseSketch.connection.sendRequest = function(message) {
+                            req.otherData = dataResult.toArrayBuffer();
+                            CourseSketch.connection.sendSelf(req);
+                        }; //send request
+
+                waitForDatabase(dataManager, function() {
+                   dataManager.setCourseProblem(courseProblem, function() {
+                       dataManager.updateCourseProblem(courseProblem2, undefined, function() {
+                           dataManager.getCourseProblem(fakeID, function(result1) {
+                               console.log("result 1 is "+ result1.name + ","+courseProblem2.name);
+                               assert.equal( result1.name, courseProblem2.name,"Sent a courseProblem to server and updated it");
+                               QUnit.start();
+                            }); // get courseCourseProblem
+                        });// updateCourseProblem
+                    });//setCourseProblem
+                });//waitfor database
+             });
+
+             asyncTest("update CourseProblem local callback", function(assert) {
+                expect(1);
+                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
+                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                var fakeID = generateUUID();
+                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                course.id = generateUUID();
+                var SrlCourseProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlCourseProblem();
+                courseProblem.id = fakeID;
+                courseProblem.courseId = course.id;
+                courseProblem.name = "Preupdated"
+                courseProblem2.id = courseProblem.id;
+                courseProblem2.courseId = course.id;
+                courseProblem2.name = "Update complete!"
+                SrlCourseProblemdata.courseProblems = [ courseProblem];
+                waitForDatabase(dataManager, function() {
+                    dataManager.setCourseProblem(courseProblem,  function() {
+                        dataManager.updateCourseProblem(courseProblem2, function() {
+                            dataManager.getCourseProblem(fakeID,  function(result1) {
+                                console.log("result 1 is "+ result1.name + ","+courseProblem2.name);
+                                courseProblem2.id = result1.id;
+                                assert.equal(courseProblem2.name, result1.name,"Sent a courseProblem to local and updated it");
+                                QUnit.start();
+                            }); //get coursecourseProblem
+                        });
+                    });
+                });
+             });
+        </script>
+    </body>
