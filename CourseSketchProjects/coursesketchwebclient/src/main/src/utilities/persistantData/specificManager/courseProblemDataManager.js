@@ -49,6 +49,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 			}
 		});
 	}
+	parent.getCourseProblemLocal = getCourseProblemLocal;
 
     /**
      * Sets a courseproblem in server database.
@@ -71,10 +72,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 if (!isUndefined(courseProblem2) && !(courseProblem2 instanceof DatabaseException)) {
                     courseProblem2.id = newId;
                     setCourseProblem(courseProblem2, function() {
-                        courseproblemCallback(courseProblem2);
+                        courseProblemCallback(courseProblem2);
                     });
                 } else {
-                    courseproblem.id = newId;
+                    courseProblem.id = newId;
                     setCourseProblem(courseProblem, function(e, request) {
                         courseProblemCallback(courseProblem);
                     });
@@ -83,6 +84,37 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         });
         sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
     }
+
+	/**
+     * Sets a assignment in both local and server databases.
+     * Updates an existing assignment into the database. This assignment must already
+     * exist.
+     *
+     * @param assignment
+     *                assignment object to set
+     * @param localCallback
+     *                function to be called after local assignment setting is done
+     * @param serverCallback
+     *                function to be called after server assignment setting is done
+     */
+    function updateCourseProblem(courseProblem, localCallback, serverCallback) {
+        setCourseProblem(courseProblem, function() {
+            if (!isUndefined(localCallback)) {
+                localCallback();
+            }
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE,
+            	CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+                 // we do not need to make server changes we
+                                        // just need to make sure it was successful.
+                if (!isUndefined(serverCallback)) {
+                    serverCallback(item);
+                }
+            });
+            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
+        });
+    }
+    parent.updateCourseProblem = updateCourseProblem;
 
     /**
 	 * Adds a new bankProblem to the server databases.
@@ -291,9 +323,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 	 * @param courseProblemId The id of the courseProblem we want to find.
 	 * @param courseProblemCallback The method to call when the courseProblem has been found. (this is asynchronous)
 	 */
-	function getCourseProblem(courseProblemId, courseProblemCallback) {
+	function getCourseProblem(courseProblemId, courseProblemLocalCallback, courseProblemServerCallback) {
 		getCourseProblems([courseProblemId], function(courseProblemList) {
-			courseProblemCallback(courseProblemList[0]);
+			if (courseProblemLocalCallback) {
+				courseProblemLocalCallback(courseProblemList[0]);
+			}
+		}, function(courseProblemList) {
+			if (courseProblemServerCallback) {
+				courseProblemServerCallback(courseProblemList[0]);
+			}
 		});
 	};
 	parent.getCourseProblem = getCourseProblem;
