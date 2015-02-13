@@ -15,7 +15,7 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
     <div id="textbox"></div>
-    
+
 	<script>
         window.confirm = function() {return true}; // This is needed so the pop-up alert when closing does not affect the testing
         var template = (function() { // This is the creation template
@@ -25,7 +25,7 @@
             var clone = document.importNode(template.content, true);
             return clone;
         })();
-        
+
         var template2 = (function() { // This is the viewing template
             var link2 = document.querySelector('#textToSpeechTemplateImport');
             var link = link2.import.querySelector('#textToSpeechTemplateImport');
@@ -66,7 +66,7 @@
             var save = real.shadowRoot.querySelector('#speakText');
             simulate(save, 'click');
         });
-        
+
         asyncTest("meSpeak speakText calls callback when it is done", function(assert) {
             expect(1);
             var real = document.createElement('test-tts-creation');
@@ -78,7 +78,7 @@
             }
             real.speakText("Hello", callback);
         });
-        
+
         test("Save data creates correct protobuf object type", function(assert) {
             expect(2);
             var real = document.createElement('test-tts-creation');
@@ -91,7 +91,7 @@
             });
             real.saveData();
         });
-        
+
         asyncTest("Tts viewing mode test", function(assert) {
             expect(2);
             var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
@@ -105,7 +105,7 @@
             });
             real.loadData(textBoxProto);
             real.initializeElement(template2.cloneNode(true));
-            
+
         });
     </script>
 </body>

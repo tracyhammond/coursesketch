@@ -26,9 +26,9 @@ function Timeline () {
             continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
         };
     };
-    
+
     /**
-     * a tool area holds all of the different tools that can be used for tutorial creation, such 
+     * a tool area holds all of the different tools that can be used for tutorial creation, such
      * as textbox, tts, highlight, sketch surface, etc
      */
     this.addToolArea = function(parent) {
@@ -38,7 +38,7 @@ function Timeline () {
         addPlusButton(toolArea, this);
         this.index.addNewToolArea(toolArea);
     };
-    
+
     /**
      * the plus button calls show tools to list out the available tools
      */
@@ -53,7 +53,7 @@ function Timeline () {
             showTools(plusButton, parent, localScope);
         };
     }
-    
+
     /**
      * sketch surface is currently not fully implemented.  To see what it does, uncomment the line
      */
@@ -63,7 +63,7 @@ function Timeline () {
         addHighlightButton(plusButton, toolArea, localScope);
         //addSketchSurfaceButton(plusButton, toolArea, localScope);
     }
-    
+
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
@@ -74,17 +74,17 @@ function Timeline () {
         textBoxButton.title = "Add text box";
         textBoxButton.className = "textboxbutton";
         plusButton.appendChild(textBoxButton);
-        
+
         textBoxButton.onclick = function(event) {
             event.stopPropagation();
-            
+
             /* creating the textbox */
             var textBox = document.createElement('text-box-creation');
             document.body.appendChild(textBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
-            
+
             function closeTextBox(command) {
                 var textBox = document.getElementById(command.commandId);
                 var textBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
@@ -132,7 +132,7 @@ function Timeline () {
             textBoxMarker.id = textBox.id;
         };
     }
-    
+
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
@@ -143,17 +143,17 @@ function Timeline () {
         ttsBoxButton.title = "Add text to speech box";
         ttsBoxButton.className = "ttsboxbutton";
         plusButton.appendChild(ttsBoxButton);
-        
+
         ttsBoxButton.onclick = function(event) {
             event.stopPropagation();
-            
+
             /* creating the textbox */
             var ttsBox = document.createElement('tts-box-creation');
             document.body.appendChild(ttsBox);
             var currentUpdate = localScope.index.getCurrentUpdate();
             ttsBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
-            
+
             function closeTtsBox(command) {
                 var ttsBox = document.getElementById(command.commandId);
                 var ttsBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
@@ -165,14 +165,14 @@ function Timeline () {
                     ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
                 }
             }
-            
+
             var ttsBoxMarker = document.createElement("timeline-marker");
             ttsBoxMarker.className = "ttsbox";
             toolArea.appendChild(ttsBoxMarker);
             ttsBoxMarker.showBox = ttsBox;
             $(plusButton).empty();
             $(plusButton).removeClass("tall");
-            
+
             ttsBoxFinishedListener = function(command, event, currentUpdate) {
                 var ttsBox = document.getElementById(command.commandId);
                 if (isUndefined(currentUpdate.commands)) {
@@ -188,17 +188,17 @@ function Timeline () {
                 var textArea = ttsBox.shadowRoot.querySelector('textarea');
                 ttsBoxMarker.setPreviewText(textArea.value);
             };
-            
+
             ttsBoxMarker.setRemoveFunction(function() {
                 closeTtsBox(ttsBox.createdCommand);
             });
-            
+
             ttsBox.setFinishedListener(ttsBoxFinishedListener);
             ttsBox.saveData();
             ttsBoxMarker.id = ttsBox.id;
         };
     }
-    
+
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
@@ -211,17 +211,17 @@ function Timeline () {
         plusButton.appendChild(highlightButton);
         highlightButton.onclick = function(event) {
             event.stopPropagation();
-            
+
             // This prevents the user from making two highlightText tools in the same tutorial step
             if (document.querySelector('highlight-text-creation') == null) {
-            
+
                 /* creating the highlightTool */
                 var highlightText = document.createElement('highlight-text-creation');
                 document.body.appendChild(highlightText);
                 var currentUpdate = localScope.index.getCurrentUpdate();
                 highlightText.currentUpdate = currentUpdate;
                 /* end of creating the highlightTool */
-                
+
                 var highlightMarker = document.createElement("timeline-marker");
                 highlightMarker.className = "highlight";
                 toolArea.appendChild(highlightMarker);
@@ -233,7 +233,7 @@ function Timeline () {
                 $(plusButton).removeClass("tall");
                 return;
             }
-            
+
             function closeHighlightText(command) {
                 var highlightText = document.getElementById(command.commandId);
                 var highlightMarker = localScope.shadowRoot.getElementById(command.commandId);
@@ -247,7 +247,7 @@ function Timeline () {
                 $(".highlightedText").contents().unwrap();
                 document.normalize();
             }
-            
+
             highlightTextFinishedListener = function(command, event, currentUpdate) {
                 var highlightText = document.getElementById(command.commandId);
                 if (isUndefined(currentUpdate.commands)) {
@@ -261,11 +261,11 @@ function Timeline () {
                     return;
                 }
             };
-            
+
             highlightMarker.setRemoveFunction(function() {
                 closeHighlightText(highlightText.createdCommand);
             });
-            
+
             highlightText.setFinishedListener(highlightTextFinishedListener);
             highlightText.saveData();
             highlightMarker.id = highlightText.id;

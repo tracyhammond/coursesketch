@@ -15,7 +15,7 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
     <div id="textbox"></div>
-    
+
 	<script>
         window.confirm = function() {return true}; // This is needed so the pop-up alert when closing does not affect the testing
         var template = (function() { // This is the creation template
@@ -25,7 +25,7 @@
             var clone = document.importNode(template.content, true);
             return clone;
         })();
-        
+
         var template2 = (function() { // This is the viewing template
             var link2 = document.querySelector('#textBoxTemplateImport');
             var link = link2.import.querySelector('#textBoxTemplateImport');
@@ -83,7 +83,7 @@
             });
             real.saveData();
         });
-        
+
         /**
          * Close button calls save with an event parameter which then calls finishedListener
          * The finishedListener has a case which removes the command from the proto upateList and removes the element from the DOM
@@ -99,7 +99,7 @@
             var close = real.shadowRoot.querySelector('#closeButton');
             simulate(close, 'click');
         });
-        
+
         test("Close button in creation mode calls finishedListener", function(assert) {
             expect(1);
             var real = document.createElement('test-box-creation');
@@ -111,7 +111,7 @@
             var close = real.shadowRoot.querySelector('#closeButton');
             simulate(close, 'click');
         });
-        
+
         test("Load Data", function(assert) {
             expect(7);
             var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
@@ -120,7 +120,7 @@
             textBoxProto.setWidth(250);
             textBoxProto.setX(100);
             textBoxProto.setY(200);
-            
+
             var real = document.createElement('test-box-creation');
             document.getElementById('textbox').appendChild(real);
             real.initializeElement(template.cloneNode(true));
@@ -144,7 +144,7 @@
             });
             real.saveData();
         });
-        
+
         test("Save data button calls saveData()", function(assert) {
             expect(1);
             var real = document.createElement('test-box-creation');
@@ -156,7 +156,7 @@
             var save = real.shadowRoot.querySelector('#saveButton');
             simulate(save, 'click');
         });
-        
+
         test("Saves x and y  position if the textbox is dragged (data-x and data-y created)", function(assert) {
             expect(2);
             var real = document.createElement('test-box-creation');
@@ -175,7 +175,7 @@
             });
             real.saveData();
         });
-        
+
         test("Load Data called before initializeElement is called", function(assert) {
             expect(7);
             var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
@@ -184,7 +184,7 @@
             textBoxProto.setWidth(250);
             textBoxProto.setX(100);
             textBoxProto.setY(200);
-            
+
             var real = document.createElement('test-box-creation');
             document.getElementById('textbox').appendChild(real);
             real.loadData(textBoxProto);
@@ -208,7 +208,7 @@
             });
             real.saveData();
         });
-        
+
         test("Continue button acts the same as close button in viewing mode (removes element from DOM)", function(assert) {
             expect(1);
             var real = document.createElement('test-box-viewing');
@@ -218,7 +218,7 @@
             simulate(continueButton, 'click');
             assert.equal(document.getElementById('textbox').children.length, 0);
         });
-        
+
         test("Load data in viewing mode selects the node correctly", function(assert) {
             expect(2);
             var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
@@ -227,16 +227,16 @@
             textBoxProto.setWidth(250);
             textBoxProto.setX(100);
             textBoxProto.setY(200);
-            
+
             var real = document.createElement('test-box-viewing');
             document.getElementById('textbox').appendChild(real);
             real.loadData(textBoxProto);
             real.initializeElement(template2.cloneNode(true));
-            
+
             // Expecting 100 is not a typo. Load data has to subtract 16 due to some weird padding stuff in the elements when saving and loading.
             assert.equal($(real.shadowRoot.querySelector('#viewText')).height(), 100, "Set viewText height correctly");
             assert.equal($(real.shadowRoot.querySelector('#viewText')).width(), 250, "Set viewText width correctly");
         });
-        
+
     </script>
 </body>
