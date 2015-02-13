@@ -49,6 +49,7 @@ import static database.DatabaseStringConstants.USERS;
 
 /**
  * Manages assignments for mongo.
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
@@ -63,13 +64,20 @@ public final class AssignmentManager {
 
     /**
      * Inserts an assignment into the mongo database.
-     * @param authenticator the object that is performing authenticaton.
-     * @param dbs The database where the assignment is being stored.
-     * @param userId The id of the user that asking to insert the assignment.
-     * @param assignment The assignment that is being inserted.
+     *
+     * @param authenticator
+     *         The object that is performing authenticaton.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param userId
+     *         The id of the user that asking to insert the assignment.
+     * @param assignment
+     *         The assignment that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
-     * @throws DatabaseAccessException Thrown if there are problems inserting the assignment.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to perform the authentication.
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems inserting the assignment.
      */
     public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String userId, final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
@@ -108,25 +116,26 @@ public final class AssignmentManager {
 
     /**
      * Grabs the assignment from mongo and performs checks making sure the user is valid before returning the assignment.
+     *
      * @param authenticator
-     *            the object that is performing authentication.
+     *         The object that is performing authentication.
      * @param dbs
-     *            The database where the assignment is being stored.
+     *         The database where the assignment is being stored.
      * @param assignmentId
-     *            the id of the assignment that is being grabbed.
+     *         The id of the assignment that is being grabbed.
      * @param userId
-     *            The id of the user that asking to insert the assignment.
+     *         The id of the user that asking to insert the assignment.
      * @param checkTime
-     *            The time that the assignment was asked to be grabbed. (used to
-     *            check if the assignment is valid)
+     *         The time that the assignment was asked to be grabbed. (used to
+     *         check if the assignment is valid)
      * @return The assignment from the database.
      * @throws AuthenticationException
-     *             Thrown if the user did not have the authentication to get the
-     *             assignment.
+     *         Thrown if the user did not have the authentication to get the
+     *         assignment.
      * @throws DatabaseAccessException
-     *             Thrown if there are problems retrieving the assignment.
+     *         Thrown if there are problems retrieving the assignment.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
@@ -150,7 +159,10 @@ public final class AssignmentManager {
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
-        if (isUsers && !authenticator.isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
+
+        // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
+        if (isUsers && !isAdmin && !isMod && !authenticator
+                .isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
 
@@ -214,12 +226,12 @@ public final class AssignmentManager {
     }
 
     /**
-     * sets data of the assignment from the given cursor.
+     * Sets data of the assignment from the given cursor.
      *
      * @param exactAssignment
-     *            The assignment that the data is being set to.
+     *         The assignment that the data is being set to.
      * @param corsor
-     *            The database cursor pointing to a specific assignment.
+     *         The database cursor pointing to a specific assignment.
      */
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject corsor) {
         exactAssignment.setCourseId((String) corsor.get(COURSE_ID));
@@ -235,17 +247,17 @@ public final class AssignmentManager {
      * Sets data about the state of the assignment and its date.
      *
      * @param exactAssignment
-     *            a protobuf assignment builder.
+     *         A protobuf assignment builder.
      * @param stateBuilder
-     *            a protobuf state builder.
+     *         A protobuf state builder.
      * @param corsor
-     *            the current database pointer for the assignment.
+     *         The current database pointer for the assignment.
      * @param isAdmin
-     *            true if the user is acting as an admin.
+     *         True if the user is acting as an admin.
      * @param isMod
-     *            true if the user is acting as a moderator.
+     *         True if the user is acting as a moderator.
      * @param checkTime
-     *            the time that the check was performed.
+     *         The time that the check was performed.
      */
     private static void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder,
             final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
@@ -304,15 +316,23 @@ public final class AssignmentManager {
     }
 
     /**
-     * updates data from an assignment.
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the assignment is being stored.
-     * @param assignmentId the id of the assignment that is being updated.
-     * @param userId The id of the user that asking to insert the assignment.
-     * @param assignment The assignment that is being inserted.
+     * Updates data from an assignment.
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param assignmentId
+     *         The id of the assignment that is being updated.
+     * @param userId
+     *         The id of the user that asking to insert the assignment.
+     * @param assignment
+     *         The assignment that is being inserted.
      * @return true if the assignment was updated successfully.
-     * @throws AuthenticationException The user does not have permission to update the assignment.
-     * @throws DatabaseAccessException The assignment does not exist.
+     * @throws AuthenticationException
+     *         The user does not have permission to update the assignment.
+     * @throws DatabaseAccessException
+     *         The assignment does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
@@ -436,10 +456,13 @@ public final class AssignmentManager {
      * With that being said this allows an assignment to be updated adding the
      * problemId to its list of items.
      *
-     * @param dbs the database where the assignment is stored.
-     * @param assignmentId the assignment that the problem is being added to.
-     * @param problemId the id of the course problem that is being added to the assignment.
-     * @return true if it is successful.
+     * @param dbs
+     *         The database where the assignment is stored.
+     * @param assignmentId
+     *         The assignment that the problem is being added to.
+     * @param problemId
+     *         The id of the course problem that is being added to the assignment.
+     * @return True if it is successful.
      */
     static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
@@ -460,11 +483,15 @@ public final class AssignmentManager {
      * This is used to copy permissions from the parent course into the current
      * assignment.
      *
-     * @param dbs the database where the data is stored.
-     * @param assignmentId the id of the assignment that is getting permissions.
-     * @param ids the list of list of permissions that is getting added.
+     * @param dbs
+     *         The database where the data is stored.
+     * @param assignmentId
+     *         The id of the assignment that is getting permissions.
+     * @param ids
+     *         The list of list of permissions that is getting added.
      */
-    /*package-private*/ static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
+    // package-private
+    static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
@@ -480,10 +507,13 @@ public final class AssignmentManager {
      *
      * Returns a list of Id for the default group for an assignment.
      *
-     * the Ids are ordered as so: AdminGroup, ModGroup, UserGroup.
-     * @param dbs the database where the ids are stored.
-     * @param assignmentId the id of the assignment that contains the ids.
-     * @return a list of id groups.
+     * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup.
+     *
+     * @param dbs
+     *         The database where the ids are stored.
+     * @param assignmentId
+     *         The id of the assignment that contains the ids.
+     * @return A list of id groups.
      */
     static List<String>[] mongoGetDefaultGroupId(final DB dbs, final String assignmentId) {
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));

@@ -1,0 +1,78 @@
+<html>
+<head>
+<link rel="stylesheet" href="/css/utility/columns.css">
+<link rel="stylesheet" href="/css/courseSketch2.css">
+<link rel="stylesheet" href="/src/common/homepage/homePage.css">
+
+
+<!-- basic utilities -->
+<link rel="import" href="/src/utilities/defaultUtils.html">
+<script type="text/javascript" src="/src/utilities/functions/childScript.js"
+	data-namespace="courseManagement"></script>
+
+<!-- basic setup for this page -->
+<link rel="import"
+	href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+<link rel="import"
+	href="/src/utilities/templates/loading/loadingInclude.html">
+
+<!-- protobuf -->
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+<!-- homepage specific -->
+<script type="text/javascript" src="/src/utilities/functions/string.js"></script>
+<script type="text/javascript"
+	src="/src/common/homepage/courseManager.js"></script>
+
+<script>
+    $(document).ready(function() {
+        CourseSketch.courseManagement.initializeCourseManagment();
+    });
+</script>
+</head>
+<body>
+	<div class="wide_centre">
+		<div class="columnContainer" style="width: 100%; float: left;">
+			<div>
+				<h2 class="homePageHeader" style="text-align: center">Courses</h2>
+				<div id="column1"
+					class="centre faded_column gradient_faded_column_student fullScreenColumn"
+					style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
+					<button class="myButton2 centre"
+						onclick="CourseSketch.redirectContent('/src/student/search/classSearch.html','Search for classes');">Find
+						New Course</button>
+					<div id="class_list_column" class="school_div"></div>
+				</div>
+			</div>
+			<div>
+				<h2 class="homePageHeader" style="text-align: center">Assignments</h2>
+				<div id="column2"
+					class="centre faded_column gradient_faded_column_student fullScreenColumn"
+					style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
+					<div id="assignment_list_column" class="school_div">Please
+						click on the previous column</div>
+				</div>
+			</div>
+			<div>
+				<h2 class="homePageHeader" style="text-align: center">Problems</h2>
+				<div id="column3"
+					class="centre faded_column gradient_faded_column_student fullScreenColumn"
+					style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
+					<div id="problem_list_column" class="school_div">Please click
+						on the previous column</div>
+				</div>
+			</div>
+			<div>
+				<h2 class="homePageHeader" style="text-align: center">Lectures</h2>
+				<div id="column4"
+					class="centre faded_column gradient_faded_column_student fullScreenColumn"
+					style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
+					<div id="lecture_list_column" class="school_div">Please click
+						on the previous column</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

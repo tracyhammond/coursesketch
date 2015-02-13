@@ -9,7 +9,10 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -67,6 +70,8 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     @Override
     public final void configure(final WebSocketServletFactory factory) {
         System.out.println("Configuring servlet");
+        factory.getPolicy().setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
+        factory.getPolicy().setMaxBinaryMessageSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
         if (timeoutTime > 0) {
             System.out.println("Adding a timeout to the socket: " + timeoutTime);
             factory.getPolicy().setIdleTimeout(timeoutTime);
@@ -74,6 +79,15 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         factory.setCreator(new SocketCreator());
     }
 
+    /**
+     * {@inheritDoc}
+     * Turns off tracing.
+     */
+    @Override
+    public final void doTrace(final HttpServletRequest req, final HttpServletResponse resp)
+            throws ServletException {
+        throw new ServletException("Trace is not supported by this server");
+    }
     /**
      * A custom web socket creator that checks to make sure that the.
      *
