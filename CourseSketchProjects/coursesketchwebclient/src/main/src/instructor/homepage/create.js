@@ -281,11 +281,11 @@ validateFirstRun(document.currentScript);
                 oldElement.schoolItemData = updateProblem;
 
                 // updates the course too! (basically the problem list)
-                CourseSketch.dataManager.getCourse(courseId, function(course) {
-                    if (isUndefined(course) || course instanceof CourseSketch.DatabaseException) {
+                CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
+                    if (isUndefined(assignment) || assignment instanceof CourseSketch.DatabaseException) {
                         throw new Error("Course is not defined while trying to add problem.");
                     }
-                    document.getElementById('class_list_column').querySelector(cssEscapeId(courseId)).schoolItemData = course;
+                    document.getElementById('assignment_list_column').querySelector(cssEscapeId(assignmentId)).schoolItemData = assignment;
                 });
             });
         });
