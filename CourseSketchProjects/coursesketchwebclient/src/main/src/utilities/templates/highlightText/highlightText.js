@@ -4,8 +4,9 @@
  * The highlighting is done by adding span tags and will not break any formatting across other tags
  */
 function HighlightText() {
-    var loadedData = undefined; // Utilized if the element does not exist when loadData() is called
-    var shadowRoot = undefined; // Used only to tell if the data is ready to be loaded.
+    // Defined in this scope to make easer for save/Load to find shadowRoot. this.shadowRoot DNE for save/Load b/c of the parameter type
+    var shadowRoot = undefined;
+
     /**
      * This is for making the dialog moveable with the interact.js library
      * It selects the created dialog and makes it draggable with no inertia
@@ -158,6 +159,7 @@ function HighlightText() {
         };
 
         enableDragging();
+        this.loadData(this.loadedData);
     };
 
     this.setFinishedListener = function(listener) {
@@ -200,8 +202,8 @@ function HighlightText() {
      * @param protoData {protoCommand} is the CommandData to be loaded
      */
     this.loadData = function(protoData) {
-        if (isUndefined(shadowRoot)) {
-            loadedData = protoData;
+        if (isUndefined(this.shadowRoot) || this.shadowRoot == null) {
+            this.loadedData = protoData;
             return;
         }
         if (isUndefined(protoData)) {

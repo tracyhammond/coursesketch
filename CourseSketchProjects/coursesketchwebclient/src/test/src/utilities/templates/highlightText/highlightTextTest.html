@@ -29,6 +29,12 @@
             return clone;
         })();
 
+        /**
+         * @return real {object} is the highlightText range/node/selection to be highlighted
+         * This function essentially creates a test node for highlighting
+         * It assigns it the encompass the first 4 letters of the first paragraph in the highlightText div
+         * This function does not actually execute the highlight command
+         */
         function createTestHighlight() {
             var real = document.createElement('highlight-test-creation');
             document.getElementById('highlightTextTool').appendChild(real);
@@ -40,6 +46,24 @@
             real.backgroundColor = "#0bc263";
             real.textColor = "#7777af"
             return real;
+        }
+
+        /**
+         * @param real {object} is the highlightText range/node/selection to highlight
+         * This function highlights the selection range given by the parameter node.
+         * It creates the range in the document and simulates a mouseup event
+         * highlight mode should be enabled before calling this function by simulating a click on the highlightMode checkbox
+         */
+        function testHighlightRange(real) {
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            var range = document.createRange();
+            range.setStart(document.evaluate(real.startPath, document, null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(real.startOffset));
+            range.setEnd(document.evaluate(real.endPath, document, null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(real.endOffset));
+            selection.addRange(range);
+            simulate(real, 'mouseup');
         }
 
         QUnit.module("creation", {
@@ -100,15 +124,7 @@
             }
             var highlight = real.shadowRoot.querySelector('#highlightMode');
             simulate(highlight, 'click');
-            var selection = window.getSelection();
-            selection.removeAllRanges();
-            var range = document.createRange();
-            range.setStart(document.evaluate(real.startPath, document, null,
-                    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(real.startOffset));
-            range.setEnd(document.evaluate(real.endPath, document, null,
-                    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(real.endOffset));
-            selection.addRange(range);
-            simulate(real, 'mouseup');
+            testHighlightRange(real);
 
             simulate(highlight, 'click');
         });
@@ -198,6 +214,23 @@
             assert.equal(testId, "highlightedText", "Load Data recreated a highlightText node");
             assert.equal(real2.backgroundColor, real.backgroundColor, 'backgroundColor loaded correctly');
             assert.equal(real2.textColor, real.textColor, 'textColor loaded correctly');
+        });
+
+        test("loadData() without data test", function(assert) {
+            expect(1);
+            var real = createTestHighlight();
+            real.loadData();
+            assert.ok(true, "You'll get lots of undefined is not a function errors if this fails because loadData will try to run");
+        });
+
+        test("Invalid highlighting selection alerts the user", function(assert) {
+            expect(1);
+            window.alert = function() { assert.ok(true, 'Alerted user of invalid selection') };
+            var real = createTestHighlight();
+            real.endPath = "/HTML[1]/BODY[1]/DIV[3]/P[2]/text()[1]";
+            var highlight = real.shadowRoot.querySelector('#highlightMode');
+            simulate(highlight, 'click');
+            testHighlightRange(real);
         });
     </script>
 </body>
