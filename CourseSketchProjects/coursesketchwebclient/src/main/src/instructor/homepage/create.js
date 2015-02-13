@@ -242,6 +242,9 @@ validateFirstRun(document.currentScript);
         // by instructors
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
         bankProblem.questionText = prompt("Please enter the question text", "Default Question Text");
+        var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
+        permissions.userPermission = [courseId];
+        bankProblem.accessPermission = permissions;
 
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
         courseProblem.courseId = courseId;
