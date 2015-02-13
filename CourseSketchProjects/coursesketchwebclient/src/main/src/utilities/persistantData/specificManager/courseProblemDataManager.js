@@ -188,10 +188,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 	 *            grabbed.
 	 * TODO: implement the partial and complete system?
 	 */
-	function getCourseProblems(CourseProblemIdList, courseProblemCallback) {
+	function getCourseProblems(courseProblemIdList, courseProblemCallbackPartial, courseProblemCallbackComplete) {
 		/*
 		 * So what happens here might be a bit confusing to some new people so let me explain it.
-		 * #1 there is a loop that goes through every item in the CourseProblemIdList (which is a list of courseProblem ids)
+		 * #1 there is a loop that goes through every item in the courseProblemIdList (which is a list of courseProblem ids)
 		 *
 		 * #2 there is a function declaration inside the loop the reason for this is so that the courseProblemId is not overwritten
 		 * when the callback is called.
@@ -208,17 +208,20 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 		 */
 
 		// standard preventative checking
-		if (isUndefined(CourseProblemIdList) || CourseProblemIdList == null || CourseProblemIdList.length == 0) {
-			courseProblemCallback(new DatabaseException("The given list is not assigned", "getting Course Problem: " + CourseProblemIdList));
+		if (isUndefined(courseProblemIdList) || courseProblemIdList == null || courseProblemIdList.length == 0) {
+			courseProblemCallbackPartial(new DatabaseException("The given id is not assigned", "getting CourseProblem: " + courseProblemIdList));
+			if (courseProblemCallbackComplete) {
+				courseProblemCallbackComplete(new DatabaseException("The given id is not assigned", "getting CourseProblem: " + courseProblemIdList));
+			}
 		}
 
-		var barrier = CourseProblemIdList.length;
+		var barrier = courseProblemIdList.length;
 		var courseProblemList = [];
 		var leftOverId = [];
 
 		// create local courseProblem list so everything appears really fast!
-		for (var i = 0; i < CourseProblemIdList.length; i++) {
-			var courseProblemIdLoop = CourseProblemIdList[i];
+		for (var i = 0; i < courseProblemIdList.length; i++) {
+			var courseProblemIdLoop = courseProblemIdList[i];
 			// the purpose of this function is purely to scope the courseProblemId so that it changes
 			function loopContainer(courseProblemId) {
 				getCourseProblemLocal(courseProblemId, function(courseProblem) {
@@ -238,7 +241,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 
 								// after listener is removed
 								if (isUndefined(item.data) || item.data == null) {
-									courseProblemCallback(new DatabaseException("The data sent back from the server does not exist."));
+									courseProblemCallbackComplete(new DatabaseException("The data sent back from the server does not exist."));
 									return;
 								}
 								var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
@@ -249,8 +252,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 										result = new DatabaseException("Nothing is in the server database!",
 											"Grabbing courseProblem from server: " + leftOverId);
 									}
-									if (!isUndefined(courseProblemCallback)) {
-										courseProblemCallback(result);
+									if (!isUndefined(courseProblemCallbackComplete)) {
+										courseProblemCallbackComplete(result);
 									}
 									return;
 								} // undefined course problem
@@ -258,7 +261,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 									localScope.setCourseProblem(school.problems[i]);
 									courseProblemList.push(school.problems[i]);
 								}
-								courseProblemCallback(courseProblemList);
+								courseProblemCallbackComplete(courseProblemList);
 							});
 							// creates a request that is then sent to the server
 							sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, leftOverId);
@@ -266,7 +269,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 
 						// this calls actually before the response from the server is received!
 						if (courseProblemList.length > 0) {
-							courseProblemCallback(courseProblemList);
+							courseProblemCallbackPartial(courseProblemList);
+						} else {
+						    courseProblemCallbackPartial(new DatabaseException("Nothing is in the the local database!",
+							    "Grabbing courseProblem from server: " + leftOverId));
 						}
 					} // end of if(barrier == 0)
 				}); // end of getting local courseProblem
