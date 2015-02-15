@@ -86,16 +86,16 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     }
 
     /**
-     * Sets a assignment in both local and server databases.
-     * Updates an existing assignment into the database. This assignment must already
+     * updates a course problem in both local and server databases.
+     * Updates an existing course problem into the database. This courseProblem must already
      * exist.
      *
-     * @param assignment
-     *                assignment object to set
+     * @param courseProblem
+     *                courseProblem object to set
      * @param localCallback
-     *                function to be called after local assignment setting is done
+     *                function to be called after local courseProblem setting is done
      * @param serverCallback
-     *                function to be called after server assignment setting is done
+     *                function to be called after server courseProblem setting is done
      */
     function updateCourseProblem(courseProblem, localCallback, serverCallback) {
         setCourseProblem(courseProblem, function() {
@@ -115,6 +115,33 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         });
     }
     parent.updateCourseProblem = updateCourseProblem;
+
+    /**
+     * updates a bankProblem in both local and server databases.
+     * Updates an existing bankProblem into the database. This bankProblem must already
+     * exist.
+     *
+     * @param bankProblem
+     *                bankProblem object to set
+     * @param localCallback
+     *                function to be called after local bankProblem setting is done
+     * @param serverCallback
+     *                function to be called after server bankProblem setting is done
+     */
+    function updateBankProblem(bankProblem, localCallback, serverCallback) {
+        localCallback(bankProblem);
+        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE,
+            CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
+             // we do not need to make server changes we
+                                    // just need to make sure it was successful.
+            if (!isUndefined(serverCallback)) {
+                serverCallback(item);
+            }
+        });
+        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
+    }
+    parent.updateBankProblem = updateBankProblem;
 
     /**
      * Adds a new bankProblem to the server databases.
@@ -168,7 +195,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 }
                 insertCourseProblemServer(courseProblem, function(courseProblemUpdated) {
                     parent.getAssignment(courseProblem.assignmentId, function(assignment) {
-                        var courseProblemList = assignment.courseProblemList;
+                        var courseProblemList = assignment.problemList;
 
                         // remove old Id (if it exists)
                         if (courseProblemList.indexOf(courseProblem.id) >= 0) {
