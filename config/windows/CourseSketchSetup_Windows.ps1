@@ -9,11 +9,18 @@ $HOST.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") | OUT-NULL
 
 Write-Host ""
 $dirChoice = 0
+$firstTry = $TRUE
 while ( -not (Test-Path $dirChoice)) { #while the directory choice is not valid
-    if ( -not ($dirChoice -eq 0)) { #if the choice is not the default, tell them to enter a valid choice
+    if ( -not ($firstTry)) { #if the choice is not the default, tell them to enter a valid choice
         Write-Host "Please enter a directory that exists"
     }
+    if ($firstTry) {
+        $firstTry = $FALSE
+    }
     $dirChoice = Read-Host "Please enter the directory you wish to install maven/protobuf/protoc in (Ex: C:)"
+    if ($dirChoice -eq '') { #if they just pressed enter without entering a directory
+        $dirChoice = 0 #reset to a default value so they don't accidentally break out of the while loop
+    }
 }
 
 $mavenExist = Test-Path $dirChoice\maven
