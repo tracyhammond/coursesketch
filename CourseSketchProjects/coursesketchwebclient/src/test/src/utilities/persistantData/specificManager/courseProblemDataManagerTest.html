@@ -149,14 +149,14 @@
                 assignment.courseId = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
-                var SrlProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
+                var srlProblemdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeID;
                 courseProblem.assignmentId = assignment.id;
                 courseProblem.courseId = assignment.courseId;
-                SrlProblemdata.courseProblems = [ courseProblem];
-                itemResult.data =  SrlProblemdata.toArrayBuffer();
+                srlProblemdata.problems = [courseProblem];
+                itemResult.data =  srlProblemdata.toArrayBuffer();
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
                 expect(1);
