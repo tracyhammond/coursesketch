@@ -208,6 +208,7 @@ public final class CourseProblemManager {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
+        final DBCollection problemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
         boolean isAdmin, isMod;
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
@@ -246,6 +247,7 @@ public final class CourseProblemManager {
             }
         }
         if (update) {
+            problemCollection.update(corsor, updated);
             UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
         return true;

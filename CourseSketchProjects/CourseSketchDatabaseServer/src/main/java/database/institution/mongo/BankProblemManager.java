@@ -134,6 +134,7 @@ public final class BankProblemManager {
 
         boolean isAdmin;
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
+        final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!isAdmin) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -141,6 +142,7 @@ public final class BankProblemManager {
 
         final BasicDBObject updated = new BasicDBObject();
         if (problem.hasQuestionText()) {
+            problemCollection.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
             update = true;
         }
@@ -190,6 +192,7 @@ public final class BankProblemManager {
         }
 
         if (update) {
+            problemCollection.update(corsor, updated);
             final String[] users = (String[]) corsor.get(USERS);
             for (int i = 0; i < users.length; i++) {
                 UserUpdateHandler.insertUpdate(dbs, users[i], problemBankId, "PROBLEM");

@@ -205,10 +205,16 @@ validateFirstRun(document.currentScript);
         console.log(problem);
         for (var key of keyList) {
             console.log(key);
-            problem[key] = newValue.get(key);
+            if (key === 'description') {
+                var bankProblem = problem.getProblemInfo();
+                bankProblem.questionText = newValue.get(key);
+                problem.setProblemInfo(bankProblem);
+                CourseSketch.dataManager.updateBankProblem(bankProblem);
+            } else {
+                problem[key] = newValue.get(key);
+            }
         }
-        console.log(problem);
-        CourseSketch.dataManager.updateProblem(problem);
+        CourseSketch.dataManager.updateCourseProblem(problem);
     };
 
     courseManagement.commonShowProblems = courseManagement.showProblems;
