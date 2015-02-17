@@ -95,7 +95,6 @@ message SrlProblem {
     optional string assignmentId = 3; // To know who the parent is.
     optional string problemBankId = 4;
     optional string name = 5;
-    optional string description = 6;
     optional SrlBankProblem problemInfo = 7;
     optional string gradeWeight = 8; // Percentage of assignment grade
     optional float grade = 9; // Calculated grade of all subproblems for this problem
