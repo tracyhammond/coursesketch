@@ -25,7 +25,6 @@ import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
-import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
 import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
@@ -82,7 +81,7 @@ public final class CourseProblemManager {
                 .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
                 .append(MOD, problem.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(NAME, problem.getName())
-                .append(DESCRIPTION, problem.getDescription()).append(PROBLEM_NUMBER, problem.getProblemNumber());
+                .append(PROBLEM_NUMBER, problem.getProblemNumber());
         courseProblemCollection.insert(query);
         final DBObject corsor = courseProblemCollection.findOne(query);
 
@@ -164,7 +163,6 @@ public final class CourseProblemManager {
         exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
         exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
         exactProblem.setName((String) corsor.get(NAME));
-        exactProblem.setDescription((String) corsor.get(DESCRIPTION));
 
         // problem manager get problem from bank (as a user!)
         final SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
