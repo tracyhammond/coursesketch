@@ -1,0 +1,31 @@
+<html>
+<head>
+    <link id="voicePlaybackImport" rel="import" href="voicePlayback.html">
+    <script src="voicePlayback.js"></script>
+    <script>
+            (function(importDoc) {
+                $(document).ready(function() {
+                    var link = importDoc.querySelector('#voicePlaybackImport');
+                    var template = link.import.querySelector('template');
+                    var clone = document.importNode(template.content, true);
+
+                    var newElement = new VoicePlayback();
+
+                    VoicePlayback.prototype.attachedCallback = function() {
+                        this.initializeElement(clone.cloneNode(true));
+                    };
+
+                    VoicePlayback.prototype.detachedCallback = function() {
+                        if (this.finalize) {
+                            this.finalize();
+                        }
+                    };
+
+                    document.registerElement('voice-playback', {
+                        prototype : newElement
+                    });
+                });
+            })(document.currentScript.ownerDocument);
+        </script>
+</head>
+</html>
