@@ -4,6 +4,8 @@ import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import utilities.ConnectionException;
 import utilities.TimeManager;
@@ -17,6 +19,11 @@ import java.nio.ByteBuffer;
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class DataClientWebSocket extends ClientWebSocket {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DataClientWebSocket.class);
 
     /**
      * Creates a new connection for the Answer checker server.
@@ -50,7 +57,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, req.getSessionInfo(), DataClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             }
         } else {

@@ -2,6 +2,8 @@ package internalconnections;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
 import utilities.TimeManager;
 import coursesketch.server.base.ClientWebSocket;
@@ -23,6 +25,11 @@ import java.nio.ByteBuffer;
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class LoginClientWebSocket extends ClientWebSocket {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(LoginClientWebSocket.class);
 
     /**
      * Creates a new connection for the Answer checker server.
@@ -57,7 +64,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, request.getSessionInfo(), LoginClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             }
             return;
@@ -73,7 +80,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             state.addTry();
             if (login == null) {
-                System.out.println("Login failed to get to the client");
+                LOG.info("Login failed to get to the client");
                 final Request result = ProxyConnectionManager.createClientRequest(request);
                 final Request.Builder errorMessage = Request.newBuilder(result);
                 errorMessage.setResponseText(errorMessage.getResponseText()
@@ -129,7 +136,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             try {
                 this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataClientWebSocket.class);
             } catch (ConnectionException e) {
-                e.printStackTrace();
+                LOG.info("Exceptions: {}", e);
             }
         }
     }
