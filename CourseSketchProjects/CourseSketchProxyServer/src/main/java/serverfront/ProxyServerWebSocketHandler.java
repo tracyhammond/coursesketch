@@ -14,6 +14,8 @@ import internalconnections.LoginConnectionState;
 import internalconnections.ProxyConnectionManager;
 import internalconnections.RecognitionClientWebSocket;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
@@ -32,6 +34,11 @@ import java.util.Set;
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ProxyServerWebSocketHandler.class);
 
     /**
      * The name of the socket.
@@ -76,12 +83,12 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 try {
                     getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    e1.printStackTrace();
+                    LOG.info("Exception: {}", e1);
                 }
                 try {
                     getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    e1.printStackTrace();
+                    LOG.info("Exception: {}", e1);
                 }
 
                 final Set<SocketSession> conns = getConnectionToId().keySet();
@@ -123,7 +130,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 return;
             }
             final String sessionID = state.getKey();
-            System.out.println("Request type is " + req.getRequestType().name());
+            LOG.info("Request type is {}", req.getRequestType().name());
             try {
                 this.getConnectionManager().send(req, sessionID, LoginClientWebSocket.class);
             } catch (ConnectionException e) {
@@ -152,36 +159,36 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.UnusedPrivateMethod" })
     private void messageRouter(final SocketSession conn, final Request req, final MultiConnectionState state) {
         if (!req.hasRequestType()) {
-            System.out.println("NO REQUEST TYPE SPECIFIED!!!!!!!!! ERROR ERROR");
+            LOG.info("NO REQUEST TYPE SPECIFIED!!!!!!!!! ERROR ERROR");
             send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
         }
         final String sessionID = state.getKey();
         if (req.getRequestType() == MessageType.RECOGNITION) {
-            System.out.println("REQUEST TYPE = RECOGNITION");
+            LOG.info("REQUEST TYPE = RECOGNITION");
             try {
                 // No userId is sent for security reasons.
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, RecognitionClientWebSocket.class);
             } catch (ConnectionException e) {
-                System.err.println("Recognition error!");
+                LOG.error("Recognition error!");
                 send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
             }
         } else if (req.getRequestType() == MessageType.SUBMISSION) {
-            System.out.println("REQUEST TYPE = SUBMISSION");
+            LOG.info("REQUEST TYPE = SUBMISSION");
             try {
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, AnswerClientWebSocket.class,
                         ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
-                e.printStackTrace();
+                LOG.info("Exception: {}", e);
                 send(conn, createBadConnectionResponse(req, AnswerClientWebSocket.class));
             }
         } else if (req.getRequestType() == MessageType.DATA_REQUEST || req.getRequestType() == MessageType.DATA_INSERT
                 || req.getRequestType() == MessageType.DATA_UPDATE || req.getRequestType() == MessageType.DATA_REMOVE) {
-            System.out.println("REQUEST TYPE = DATA REQUEST");
+            LOG.info("REQUEST TYPE = DATA REQUEST");
             try {
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, DataClientWebSocket.class,
                         ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
-                e.printStackTrace();
+                LOG.info("Exception: {}", e);
                 send(conn, createBadConnectionResponse(req, DataClientWebSocket.class));
             }
         }
@@ -202,7 +209,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      * The listener sends a response to all of the clients to let them know of the issues.
      */
     public void initializeListeners() {
-        System.out.println("Creating the socket failed listeners for the server");
+        LOG.info("Creating the socket failed listeners for the server");
         final ActionListener listen = new ActionListener() {
             /**
              * Called when the message fails to send correctly.
@@ -212,7 +219,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             @SuppressWarnings("PMD.CommentRequired")
             @Override
             public void actionPerformed(final ActionEvent event) {
-                System.err.println("Looking at the failed messages");
+                LOG.error("Looking at the failed messages");
                 final ArrayList<ByteBuffer> failedMessages = (ArrayList<ByteBuffer>) event.getSource();
                 for (ByteBuffer message : failedMessages) {
                     try {
@@ -223,9 +230,9 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                         final Request result = createBadConnectionResponse(req, classType);
                         send(getIdToConnection().get(state), result);
                     } catch (InvalidProtocolBufferException e1) {
-                        e1.printStackTrace();
+                        LOG.info("Exception: {}", e1);
                     } catch (ClassNotFoundException e1) {
-                        e1.printStackTrace();
+                        LOG.info("Exceptions: {}", e1);
                     }
                 }
             }
