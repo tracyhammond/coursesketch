@@ -34,7 +34,7 @@
         var assignmentLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeAssignments.length);
         localBarrier.finalize(assignmentBarrier);
         for (var i = 0; i < CourseSketch.fakeAssignments.length; ++i) {
-            CourseSketch.dataManager.setAssignmentLocal(CourseSketch.fakeAssignments[i], assignmentLoadedCallback);
+            CourseSketch.dataManager.setAssignment(CourseSketch.fakeAssignments[i], assignmentLoadedCallback);
         }
     };
 

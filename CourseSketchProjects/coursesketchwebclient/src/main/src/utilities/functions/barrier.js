@@ -49,3 +49,14 @@ CallbackBarrier.prototype.finalize = function(callback) {
         this.callbackHandle();
     }
 }
+
+/**
+ * Creates a barrier with the specific amount and a callback.
+ * What is returned is the function that is called a number of times before callback is called.
+ */
+function createBarrier(amount, callback) {
+    var barrier = new CallbackBarrier();
+    var result = barrier.getCallbackAmount(amount);
+    barrier.finalize(callback);
+    return result;
+}

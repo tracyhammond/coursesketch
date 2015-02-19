@@ -132,6 +132,9 @@ function SchoolItem() {
                         oldData.set(element.dataset.type, oldContent);
                         var newData = new Map();
                         newData.set(element.dataset.type, contentElement.textContent);
+                        // Note: this only calls it with the element (but it contains a field schoolItemData
+                        // if it was built using the school item builder
+                        // this value can be used to get the protobuf object.
                         localScope.editFunction(element.dataset.type, oldData, newData, realParent);
                     }
                 };

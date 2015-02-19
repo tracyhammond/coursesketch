@@ -58,6 +58,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             final CloseableWebSocketClient client = new CloseableWebSocketClient();
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
+            client.setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
             client.connect(this, this.getURI(), request);
         } catch (IOException e) {
             e.printStackTrace();
