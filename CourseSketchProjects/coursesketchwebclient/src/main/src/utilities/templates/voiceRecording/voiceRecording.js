@@ -6,7 +6,7 @@ function VoiceRecording() {
 
         this.shadowRoot.querySelector("#recordBtn").onclick = function() {
             if (this.voiceBtnBool == true) {
-                this.clearInterval(this.voiceBtnTimer);
+                clearInterval(this.voiceBtnTimer);
                 this.voiceBtnBool = false;
                 this.shadowRoot.querySelector('#recordBtn').value = " ";
             }
