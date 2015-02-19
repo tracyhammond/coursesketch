@@ -62,20 +62,21 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
                     conn.send(createExceptionRequest(e1, req));
-                    e1.printStackTrace();
+                    LOG.info("Exception");
+                    LOG.info("Exception: {}", e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }
 
                 ((AnswerConnectionState) state).addPendingExperiment(
                         req.getSessionInfo(), student);
-                System.out.println("Student exp " + student);
+                LOG.info("Student exp {}", student);
                 try {
                     getConnectionManager().send(req,
                             req.getSessionInfo() + "+" + state.getKey(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     conn.send(createExceptionRequest(e1, req));
-                    e1.printStackTrace();
+                    LOG.info("Exception: {}", e1);
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
@@ -96,7 +97,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
                     conn.send(createExceptionRequest(e, req));
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             }
         }
