@@ -206,7 +206,7 @@ function SchoolItemBuilder() {
         if (boxFunction) {
             element.addEventListener('click', function() {
                 if (element.dataset.isediting === "false") {
-                    boxFunction(srlSchoolItem);
+                    boxFunction(element.schoolItemData);
                 }
             }, false);
             // GET THE ONCLICK LISTENTER TO DO THE CLICKING THING CORRECTLY!
