@@ -14,6 +14,9 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
 import utilities.TimeManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A simple WebSocketServer implementation.
  *
@@ -21,6 +24,11 @@ import utilities.TimeManager;
  */
 @WebSocket()
 public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AnswerCheckerServerWebSocketHandler.class);
 
     /**
      * A constructor that accepts a servlet.
@@ -48,7 +56,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             // then we submit!
             if (req.getResponseText().equals("student")) {
                 final MultiConnectionState state = getConnectionToId().get(conn);
-                System.out.println("Parsing as an experiment");
+                LOG.info("Parsing as an experiment");
                 SrlExperiment student = null;
                 try {
                     student = SrlExperiment.parseFrom(req.getOtherData());

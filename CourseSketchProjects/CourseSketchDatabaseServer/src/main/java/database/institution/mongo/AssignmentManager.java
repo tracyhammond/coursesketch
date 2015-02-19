@@ -47,6 +47,9 @@ import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Manages assignments for mongo.
  * @author gigemjt
@@ -54,6 +57,11 @@ import static database.DatabaseStringConstants.USERS;
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.UselessParentheses" })
 public final class AssignmentManager {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AssignmentManager.class);
 
     /**
      * Private constructor.
@@ -193,9 +201,9 @@ public final class AssignmentManager {
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
             stateBuilder.setAccessible(false);
-            System.err.println("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            System.err.println(exactAssignment.getAccessDate().getMillisecond() + " < " + checkTime + " < "
-                    + exactAssignment.getCloseDate().getMillisecond());
+            LOG.error("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.error("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
+                    exactAssignment.getCloseDate().getMillisecond());
             stateBuilder.setAccessible(false);
         }
 
@@ -471,7 +479,7 @@ public final class AssignmentManager {
 
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
-        System.out.println(updateQuery);
+        LOG.info("Updated Query: ", updateQuery);
         assignments.update(corsor, updateQuery);
     }
 

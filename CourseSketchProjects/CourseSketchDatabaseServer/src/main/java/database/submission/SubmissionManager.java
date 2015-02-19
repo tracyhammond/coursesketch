@@ -17,9 +17,13 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+//import sun.rmi.runtime.Log;
 import utilities.ConnectionException;
 
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
@@ -38,6 +42,11 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
  *
  */
 public final class SubmissionManager {
+
+    /**
+     * Declaration and Definition
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
 
     /**
      * Private constructor.
@@ -62,22 +71,24 @@ public final class SubmissionManager {
     public static void mongoInsertSubmission(final DB dbs, final String uniqueId, final String problemId,
             final String submissionId,
             final boolean experiment) {
-        System.out.println("Inserting an experiment " + experiment);
-        System.out.println("database is " + dbs);
-        System.out.println("Problem id: " + problemId);
+        LOG.info("Inserting an experiment ", experiment);
+        LOG.info("Database is ", dbs);
+        LOG.info("Problem id: ", problemId);
         final DBRef myDbRef = new DBRef(dbs, experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION, new ObjectId(problemId));
         final DBCollection collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
         final DBObject corsor = myDbRef.fetch();
-        System.out.println(corsor);
-        System.out.println("uniuq id " + uniqueId);
+
+        LOG.info("corsor: {}", corsor);
+        LOG.info("uniuq id: {}", uniqueId);
+
         final BasicDBObject queryObj = new BasicDBObject(experiment ? uniqueId : SOLUTION_ID, submissionId);
         if (corsor == null) {
-            System.out.println("creating a new instance for this problemId");
+            LOG.info("Creating a new instance to this old itemid");
             queryObj.append(SELF_ID, new ObjectId(problemId));
             collection.insert(queryObj);
             // we need to create a new corsor
         } else {
-            System.out.println("adding a new submission to this old itemid");
+            LOG.info("adding a new submission to this old itemid");
             // insert the submissionId, if it is an experiment then we need to
             // use the uniqueId to make it work.
             collection.update(corsor, new BasicDBObject("$set", queryObj));
@@ -106,7 +117,7 @@ public final class SubmissionManager {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
         final String sketchId = "" + corsor.get(userId);
-        System.out.println("SketchId " + sketchId);
+        LOG.info("SketchId: ", sketchId);
         if ("null".equals(sketchId)) {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
@@ -117,7 +128,7 @@ public final class SubmissionManager {
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             throw new DatabaseAccessException("Failed to send request to submission server for experiment", e);
         }
     }
@@ -171,18 +182,18 @@ public final class SubmissionManager {
                 continue;
             }
             final String sketchId = corsor.get(key).toString();
-            System.out.println("SketchId " + sketchId);
+            LOG.info("SketchId: ", sketchId);
             build.addItemId(sketchId);
         }
         build.setAdvanceQuery(review);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
         requestBuilder.setOtherData(data.build().toByteString());
-        System.out.println("Sending command " + requestBuilder.build());
+        LOG.info("Sending command: ", requestBuilder.build());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
         }
     }
 

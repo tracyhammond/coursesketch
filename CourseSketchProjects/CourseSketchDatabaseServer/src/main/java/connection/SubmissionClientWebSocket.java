@@ -19,12 +19,20 @@ import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class SubmissionClientWebSocket extends ClientWebSocket {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionClientWebSocket.class);
 
     /**
      * @see coursesketch.server.base.ClientWebSocket#ConnectionWrapper(URI, coursesketch.server.interfaces.AbstractServerWebSocketHandler).
@@ -47,12 +55,18 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
     @Override
     public final void onMessage(final ByteBuffer buffer) {
         final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
-        System.out.println("Got a response from the submission server!");
-        System.out.println(req.getSessionInfo());
+        
+        LOG.info("Got a response from the submission server!");
+        LOG.info(req.getSessionInfo());
+
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
-        System.out.println(sessionInfo[1]);
+
+        LOG.info(sessionInfo[1]);
+
         final MultiConnectionState state = getStateFromId(sessionInfo[1]);
-        System.out.println(state);
+
+        LOG.info("State {}", state);
+
         if (req.getRequestType() == MessageType.DATA_REQUEST) {
             final DataResult.Builder result2 = DataResult.newBuilder();
             // pass up the Id to the client
@@ -64,7 +78,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                         // we might have to do a lot of work here!
                         final ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
                         if (rev.getShowUserNames()) {
-                            System.err.println("Attempting to change out usernames!");
+                            LOG.error("Attempting to change out usernames!");
                             result2.addResults(item);
                         } else {
                             result2.addResults(item);
@@ -74,14 +88,14 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                     }
                 }
             } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
+                LOG.info("Exception {}", e);
             }
             final Request.Builder builder = Request.newBuilder(req);
             builder.setSessionInfo(sessionInfo[0]);
             final SocketSession connection = getConnectionFromState(state);
             builder.setOtherData(result2.build().toByteString());
             if (connection == null) {
-                System.err.println("SOCKET IS NULL");
+                LOG.error("SOCKET IS NULL");
             }
             this.getParentServer().send(getConnectionFromState(state), builder.build());
         }
