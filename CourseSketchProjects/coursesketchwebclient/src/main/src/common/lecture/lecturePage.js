@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 (function() {
     CourseSketch.lecturePage = [];
     CourseSketch.lecturePage.waitScreenManager = new WaitScreenManager();

@@ -2,24 +2,14 @@
 
 /**
  * *************************************************************
- * 
+ *
  * String Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
-/**
- * Replaces all instances of {@code find} with {@code replace}.
- */
-if (isUndefined(String.prototype.replaceAll)) {
-    /*
-	String.prototype.replaceAll = function(find, replace) {
-		return this.replace(new RegExp(find, 'g'), replace);
-	};
-	*/
-}
 
 if (isUndefined(replaceAll)) {
 	function replaceAll(find, replace, src) {
@@ -28,27 +18,15 @@ if (isUndefined(replaceAll)) {
 }
 
 /**
- * Replaces the character or a string at the specific index
- */
-if (isUndefined(String.prototype.replaceAt)) {
-    /*
-	String.prototype.replaceAt = function(index, string) {
-		return this.substr(0, index) + character
-				+ this.substr(index + character.length);
-	};
-	*/
-}
-
-/**
  * Uses canvas.measureText to compute and return the width of the given text of
  * given font in pixels.
- * 
+ *
  * @param {String}
  *            text The text to be rendered.
  * @param {String}
  *            font The css font descriptor that text is to be rendered with
  *            (e.g. "bold 14px verdana").
- * 
+ *
  * @see http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
  */
 if (isUndefined(getTextWidth)) {
@@ -59,5 +37,26 @@ if (isUndefined(getTextWidth)) {
         context.font = font;
         var metrics = context.measureText(text);
         return metrics.width;
+    }
+}
+
+/**
+ * Does a very simple escaping of the id for css purposes.
+ * A more complicated version is found here: https://mothereff.in/css-escapes
+ * @param inputId The id we want escaped.
+ * @return escaped value
+ *
+ * Example:
+ * Input: 12a2b3c
+ * Output: #\31 2a2b3c
+ */
+if (isUndefined(cssEscapeId)) {
+    function cssEscapeId(inputId) {
+        var output = inputId;
+        var firstChar = inputId.charAt(0);
+        if (/\d/.test(firstChar)) {
+            output = '\\3' + firstChar + ' ' + output.slice(1);
+        }
+        return '#' + output;
     }
 }
