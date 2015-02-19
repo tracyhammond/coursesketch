@@ -11,6 +11,9 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message.Request;
 import utilities.TimeManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A simple WebSocketServer implementation.
  *
@@ -19,6 +22,10 @@ import utilities.TimeManager;
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
 
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseServerWebSocketHandler.class);
     /**
      * @param parent Passes it up to super constructor.
      */
@@ -53,6 +60,6 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
                 send(conn, rsp);
             }
         }
-        System.out.println("Finished looking at query");
+        LOG.info("Finished looking at query");
     }
 }

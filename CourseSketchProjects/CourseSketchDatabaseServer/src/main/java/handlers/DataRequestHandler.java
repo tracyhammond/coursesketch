@@ -25,6 +25,11 @@ import protobuf.srl.school.School.SrlSchool;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sun.rmi.runtime.Log;
+
 /**
  * Handles all request for data.
  *
@@ -34,6 +39,11 @@ import java.util.List;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
 public final class DataRequestHandler {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DataRequestHandler.class);
 
     /**
      * A message returned when getting the data was successful.
@@ -76,8 +86,7 @@ public final class DataRequestHandler {
     public static void handleRequest(final Request req, final SocketSession conn, final String sessionId,
             final MultiConnectionManager internalConnections) {
         try {
-            System.out.println("Receiving DATA Request...");
-
+            LOG.info("Receiving DATA Request...");
             final String userId = req.getServersideId();
             final DataRequest request = DataRequest.parseFrom(req.getOtherData());
             if (userId == null) {
@@ -88,7 +97,7 @@ public final class DataRequestHandler {
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemRequest itrequest = request.getItemsList().get(p);
                 try {
-                    System.out.println("looking at query " + itrequest.getQuery().name());
+                    LOG.info("looking at query {}", itrequest.getQuery().name());
                     switch (itrequest.getQuery()) {
                         case COURSE: {
                             final List<SrlCourse> courseLoop = instance.getCourses(itrequest.getItemIdList(), userId);
@@ -120,7 +129,7 @@ public final class DataRequestHandler {
                         break;
                         case COURSE_SEARCH: {
                             final List<SrlCourse> courseLoop = instance.getAllPublicCourses();
-                            System.out.println("Searching all public courses: " + courseLoop);
+                            LOG.info("Searching all public courses: {}", courseLoop);
                             final SrlSchool.Builder courseSearch = SrlSchool.newBuilder();
                             courseSearch.addAllCourses(courseLoop);
                             results.add(ResultBuilder.buildResult(courseSearch.build().toByteString(), ItemQuery.COURSE_SEARCH));
@@ -143,7 +152,7 @@ public final class DataRequestHandler {
                             // MongoInstitution.mongoGetExperiment(assignementID, userId)
                             if (!itrequest.hasAdvanceQuery()) {
                                 for (String itemId : itrequest.getItemIdList()) {
-                                    System.out.println("Trying to retrieve an experiemnt from a user!");
+                                    LOG.info("Trying to retrieve an experiment from a user!");
                                     try {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
 
@@ -167,7 +176,7 @@ public final class DataRequestHandler {
                             if (itrequest.getItemIdCount() > 0) {
                                 lastRequestTime = Long.parseLong(itrequest.getItemId(0));
                             }
-                            System.out.println("Last request time! " + lastRequestTime);
+                            LOG.info("Last request time! {}", lastRequestTime);
                             // for now get all updates!
                             final SrlSchool updates = UserClient.mongoGetReleventUpdates(userId, lastRequestTime);
                             results.add(ResultBuilder.buildResult(updates.toByteString(), ItemQuery.UPDATE));
@@ -196,11 +205,11 @@ public final class DataRequestHandler {
                         build.setQuery(itrequest.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                     } else {
-                        e.printStackTrace();
+                        LOG.info("Exception: {}", e);
                         throw e;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itrequest.getQuery());
                     build.setData(itrequest.toByteString());
@@ -209,10 +218,10 @@ public final class DataRequestHandler {
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }
