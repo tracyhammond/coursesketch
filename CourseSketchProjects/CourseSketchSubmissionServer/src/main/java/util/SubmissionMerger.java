@@ -1,6 +1,8 @@
 package util;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 
 import java.util.ArrayList;
@@ -13,6 +15,12 @@ import java.util.List;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.NPathComplexity" })
 public final class SubmissionMerger {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
+
     /**
      * The lists that are being merged together.
      */
@@ -294,14 +302,14 @@ public final class SubmissionMerger {
                     final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
                     return sketchId.getIdChain(0);
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             } else if (command.getCommandType() == Commands.CommandType.CREATE_SKETCH) {
                 try {
                     final Commands.ActionCreateSketch createSketch = Commands.ActionCreateSketch.parseFrom(command.getCommandData());
                     return createSketch.getSketchId().getIdChain(0);
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             }
         }
@@ -329,7 +337,7 @@ public final class SubmissionMerger {
                         return i;
                     }
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             } else if (command.getCommandType() == Commands.CommandType.CREATE_SKETCH) {
                 try {
@@ -338,7 +346,7 @@ public final class SubmissionMerger {
                         return i;
                     }
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.info("Exception: {}", e);
                 }
             }
         }
