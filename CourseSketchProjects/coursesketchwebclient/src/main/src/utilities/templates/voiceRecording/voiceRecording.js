@@ -5,26 +5,26 @@ function VoiceRecording() {
         shadowRoot.appendChild(templateClone);
 
         this.shadowRoot.querySelector("#recordBtn").onclick = function() {
-            if (this.voiceBtnBool == true) {
-                this.clearInterval(this.voiceBtnTimer);
-                this.voiceBtnBool = false;
+            if (this.isBlinking) {
+                clearInterval(this.voiceBtnTimer);
+                this.isBlinking = false;
                 this.shadowRoot.querySelector('#recordBtn').value = " ";
             }
             else {
                 this.blinking($(this.shadowRoot.querySelector("#recordBtn")));
-                this.voiceBtnBool = true;
+                this.isBlinking = true;
             }
         }.bind(this);
 
         this.blinking = function(elm) {
             this.blink = function() {
                 this.shadowRoot.querySelector('#recordBtn').value = "REC";
-                elm.fadeOut(400, function() {
+                elm.fadeOut(400, function() { console.log(this.voiceBtnTimer);
                     elm.fadeIn(400);
                 });
-            }
-            this.voiceBtnTimer = setInterval(this.blink, 10);
-        }
+            }.bind(this);
+            this.voiceBtnTimer = setInterval(this.blink, 800);
+        }.bind(this);
     }
 }
 
