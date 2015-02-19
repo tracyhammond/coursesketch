@@ -1,7 +1,7 @@
 package protobuf.srl.query;
 
 message DataRequest {
-    repeated ItemRequest items = 1;
+    repeated ItemRequest items = 3;
 }
 
 message ItemRequest {
@@ -16,12 +16,12 @@ message ItemRequest {
  * Used when sending/updating results.
  */
 message DataSend {
-    repeated ItemSend items = 1;
+    repeated ItemSend items = 3;
 }
 
 message ItemSend {
     optional ItemQuery query = 1;
-    optional bytes data = 2;
+    optional bytes data = 3;
 }
 
 /**
@@ -41,7 +41,6 @@ message ItemResult {
 }
 
 enum ItemQuery {
-    NO_OP = -2; // no operation happens.
     ERROR = -1;
     COURSE = 0;
     ASSIGNMENT = 1;

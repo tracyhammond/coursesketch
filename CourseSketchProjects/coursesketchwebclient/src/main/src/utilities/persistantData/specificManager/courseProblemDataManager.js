@@ -1,11 +1,12 @@
-function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
-    /**
-     * Rename for code readability.
-     */
+function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
     var dataListener = advanceDataListener;
+    var database = parentDatabase;
+    var Request = request
+    var localScope = parent;
+    var ByteBuffer = buffer;
 
     function setCourseProblem(courseProblem, courseProblemCallback) {
-        parentDatabase.putInCourseProblems(courseProblem.id, courseProblem.toBase64(), function(e, request) {
+        database.putInCourseProblems(courseProblem.id, courseProblem.toBase64(), function(e, request) {
             if (courseProblemCallback) {
                 courseProblemCallback(e, request);
             }
@@ -14,7 +15,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     parent.setCourseProblem = setCourseProblem;
 
     function deleteCourseProblem(courseProblemId, courseProblemCallback) {
-        parentDatabase.deleteFromCourseProblems(courseProblemId, function(e, request) {
+        database.deleteFromCourseProblems(courseProblemId, function(e, request) {
             if (courseProblemCallback) {
                 courseProblemCallback(e, request);
             }
@@ -35,7 +36,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         if (isUndefined(courseProblemId) || courseProblemId == null) {
             courseProblemCallback(new DatabaseException("The given id is not assigned", "getting CourseProblem: " + courseProblemId));
         }
-        parentDatabase.getFromCourseProblems(courseProblemId, function(e, request, result) {
+        database.getFromCourseProblems(courseProblemId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseProblemCallback(new DatabaseException("The result is undefined", "getting CouseProblem: " + courseProblemId));
             } else if (result.data == nonExistantValue) {
@@ -51,15 +52,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     parent.getCourseProblemLocal = getCourseProblemLocal;
 
     /**
-     * Sets a courseProblem in server database.
+     * Sets a courseproblem in server database.
      *
-     * @param courseProblem
-     *                CourseProblem object to set.
-     * @param courseProblemCallback
-     *                Function to be called after courseProblem setting is done.
+     * @param courseproblem
+     *                courseproblem object to set
+     * @param courseproblemCallback
+     *                function to be called after courseproblem setting is done
      */
     function insertCourseProblemServer(courseProblem, courseProblemCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(event, item) {
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
             var resultArray = item.getReturnText().split(":");
             var oldId = resultArray[1].trim();
@@ -104,7 +105,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
             advanceDataListener.setListener(Request.MessageType.DATA_UPDATE,
                 CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
-                // We do not need to make server changes we just need to make sure it was successful.
+                 // we do not need to make server changes we
+                                        // just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
@@ -186,10 +188,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
             courseProblem.id = generateUUID();
         }
 
-        // This function is called after the bank problem is inserted if the course problem does not have a bank problem id.
-        // Otherwise it is called immediately.
+        // used locally in two places
         function insertingCourseProblem() {
-            setCourseProblem(courseProblem, function(event, item) {
+            setCourseProblem(courseProblem, function(e, request) {
                 console.log("inserted locally :" + courseProblem.id)
                 if (!isUndefined(localCallback)) {
                     localCallback(courseProblem);
@@ -218,7 +219,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
 
         // Inserts the bank problem first!
         if ((isUndefined(courseProblem.problemBankId) || courseProblem.problemBankId == null)
-                && (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo != null)) {
+            && (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo != null)) {
             insertBankProblemServer(courseProblem.problemInfo, function(updateId) {
                 courseProblem.problemBankId = updateId;
                 insertingCourseProblem();
@@ -237,7 +238,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *
      * This does attempt to pull course problems from the server!
      *
-     * @param courseProblemIdList
+     * @param CourseProblemIdList
      *            list of IDs of the courseproblems to get
      * @param courseProblemCallbackPartial
      *            {Function} called when course problems are grabbed from the local
@@ -246,6 +247,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      * @param courseProblemCallbackComplete
      *            {Function} called when the complete list of course problems are
      *            grabbed.
+     * TODO: implement the partial and complete system?
      */
     function getCourseProblems(courseProblemIdList, courseProblemCallbackPartial, courseProblemCallbackComplete) {
         /*
@@ -259,7 +261,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
          * list of Id we need to get from the server
          *
          * #4 after the entire list has been gone through (which terminates in the callback with barrier = 0)
-         * if there are course problems that need to be pulled from the server then that happens.
+         * if there are any that need to be pulled from the server then that happens
          *
          * #5 after talking to the server we get a response with a list of courseProblems,
          * these are combined with the local courseProblems then the original callback is called.
@@ -310,7 +312,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                                     var result = courseProblem;
                                     if (isUndefined(result)) {
                                         result = new DatabaseException("Nothing is in the server database!",
-                                                "failed while attempting to grab from server address: " + leftOverId);
+                                            "failed while attempting to grab from server address: " + leftOverId);
                                     }
                                     if (!isUndefined(courseProblemCallbackComplete)) {
                                         courseProblemCallbackComplete(result);
@@ -318,7 +320,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                                     return;
                                 } // undefined course problem
                                 for (var i = 0; i < school.problems.length; i++) {
-                                    parent.setCourseProblem(school.problems[i]);
+                                    localScope.setCourseProblem(school.problems[i]);
                                     courseProblemList.push(school.problems[i]);
                                 }
                                 courseProblemCallbackComplete(courseProblemList);
@@ -339,22 +341,17 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
             } // end of loopContainer
             loopContainer(courseProblemIdLoop);
         } // end of loop
-    }
+    };
     parent.getCourseProblems = getCourseProblems;
 
     /**
-     * Returns a courseProblem with the given courseId; this function will ask the server if it does not exist locally.
+     * Returns a courseProblem with the given couresId will ask the server if it does not exist locally
      *
-     * If the server is polled and the courseProblem still does not exist the function will call the callback with an exception.
+     * If the server is pulled and the courseProblem still does not exist the Id is set with nonExistantValue
+     * and the database is never polled for this item for the life of the program again.
      *
      * @param courseProblemId The id of the courseProblem we want to find.
-     * @param courseProblemLocalCallback
-     *            {Function} called when course problems are grabbed from the local
-     *            database only. This list may not be complete. This may also
-     *            not get called if there are no local course problems.
-     * @param courseProblemServerCallback
-     *            {Function} called when the complete list of course problems are
-     *            grabbed.
+     * @param courseProblemCallback The method to call when the courseProblem has been found. (this is asynchronous)
      */
     function getCourseProblem(courseProblemId, courseProblemLocalCallback, courseProblemServerCallback) {
         getCourseProblems([courseProblemId], function(courseProblemList) {
@@ -374,6 +371,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 courseProblemServerCallback(courseProblemList[0]);
             }
         });
-    }
+    };
     parent.getCourseProblem = getCourseProblem;
 }

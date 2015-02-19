@@ -127,8 +127,6 @@ public final class MongoInstitution implements Institution {
 
     /**
      * @return An instance of the mongo client. Creates it if it does not exist.
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      */
     @SuppressWarnings("checkstyle:innerassignment")
     public static MongoInstitution getInstance() {
