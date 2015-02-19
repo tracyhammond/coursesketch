@@ -7,6 +7,8 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import database.DatabaseClient;
 import database.SubmissionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
@@ -20,6 +22,11 @@ import utilities.ConnectionException;
  * Handles the request of a submission.
  */
 public final class SubmissionRequestHandler {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
     /**
      * Private constructor.
@@ -43,7 +50,7 @@ public final class SubmissionRequestHandler {
             final Request.Builder build = Request.newBuilder(req);
             build.setResponseText("Submission Succesful!");
             build.clearOtherData();
-            System.out.println(sessionInfo);
+            LOG.info("Session Info: {}", sessionInfo);
             if (result != null) {
                 // passes the data to the database for connecting
                 final Data.DataSend send = Data.DataSend.newBuilder().addItems(Data.ItemSend.newBuilder().setData(result).
@@ -51,7 +58,7 @@ public final class SubmissionRequestHandler {
                 final Request.Builder databaseRequest = Request.newBuilder(req);
                 databaseRequest.setRequestType(Request.MessageType.DATA_INSERT);
                 databaseRequest.setOtherData(send.toByteString());
-                System.out.println("Sending experiment data to database server");
+                LOG.info("Sending experiment data to database server");
                 internalConnections.send(databaseRequest.build(), "", DataClientWebSocket.class);
             }
             // sends the response back to the answer checker which can then send it back to the client.
@@ -63,7 +70,7 @@ public final class SubmissionRequestHandler {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             return build.build();
         } catch (ConnectionException e) {
             final Request.Builder build = Request.newBuilder();
@@ -72,7 +79,7 @@ public final class SubmissionRequestHandler {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
         }
         return null;
     }
