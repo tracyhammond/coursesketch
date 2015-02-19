@@ -29,11 +29,12 @@ validateFirstRun(document.currentScript);
     courseManagement.commonShowCourses = courseManagement.showCourses;
 
     /**
-     * Overwrote the old show courses to add some edit capabilities.
+     * Overwrote the old showCourses inside courseManagement.js to add some edit capabilities.
+     * This also calls original showCourses function in courseManagement after displaying the buttons.
      */
     courseManagement.showCourses = function(courseList) {
         courseManagement.commonShowCourses(courseList);
-        hideButton("problem_button");
+        hideButton("assignment_button");
         hideButton("problem_button");
         var children = document.getElementById('class_list_column').querySelectorAll("school-item");
         for (var i = 0; i < children.length; i++) {
@@ -105,19 +106,17 @@ validateFirstRun(document.currentScript);
     courseManagement.assignmentEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var keyList = newValue.keys();
         var assignment = element.schoolItemData;
-        console.log(assignment);
         for (var key of keyList) {
-            console.log(key);
             assignment[key] = newValue.get(key);
         }
-        console.log(assignment);
         CourseSketch.dataManager.updateAssignment(assignment);
     };
 
     courseManagement.commonShowAssignments = courseManagement.showAssignments;
 
     /**
-     * Overwrote the old show courses to add some edit capabilities.
+     * Overwrote the old showAssignments inside courseManagement.js to add some edit capabilities.
+     * This also calls original showAssignments function in courseManagement after displaying the buttons.
      */
     courseManagement.showAssignments = function(assignmentList) {
         showButton("assignment_button");
@@ -202,9 +201,7 @@ validateFirstRun(document.currentScript);
     courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var keyList = newValue.keys();
         var problem = element.schoolItemData;
-        console.log(problem);
         for (var key of keyList) {
-            console.log(key);
             if (key === 'description') {
                 var bankProblem = problem.getProblemInfo();
                 bankProblem.questionText = newValue.get(key);
@@ -220,7 +217,8 @@ validateFirstRun(document.currentScript);
     courseManagement.commonShowProblems = courseManagement.showProblems;
 
     /**
-     * Overwrote the old show courses to add some edit capabilities.
+     * Overwrote the old showProblems inside courseManagement.js to add some edit capabilities.
+     * This also calls original showProblems function in courseManagement after displaying the buttons.
      */
     courseManagement.showProblems = function(problemList) {
         showButton("problem_button");
@@ -233,8 +231,9 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Creates a new problem with default values.
-     * and adds it to the database.
+     * Creates a new bank problem and course problem with default values and adds it to the database.
+     *
+     * Displays the problem after it is added.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem() {
         var courseId = document.querySelector("#class_list_column .selectedBox").id;
@@ -258,8 +257,6 @@ validateFirstRun(document.currentScript);
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = "";
         courseProblem.setProblemInfo(bankProblem);
-        // course.accessDate = "mm/dd/yyyy";
-        // course.closeDate = "mm/dd/yyyy";
         var alreadyInserted = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
