@@ -16,6 +16,9 @@ import utilities.TimeManager;
 
 import java.security.GeneralSecurityException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A simple WebSocketServer implementation.
  *
@@ -23,6 +26,11 @@ import java.security.GeneralSecurityException;
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
+
+    /**
+     * Declaration and Definition of Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(LoginServerWebSocketHandler.class);
 
     /**
      * The name of the socket.
@@ -98,7 +106,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 loginUser(conn, req, login);
             }
         } catch (final InvalidProtocolBufferException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, false, null));
         }
     }
@@ -123,10 +131,10 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             // login user after registering user.
             loginUser(conn, req, login);
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         } catch (RegistrationException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }
@@ -156,7 +164,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
-            e.printStackTrace();
+            LOG.info("Exception: {}", e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }
@@ -169,7 +177,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * @return true if the user is an instructor false otherwise.
      */
     private static boolean checkUserInstructor(final String user, final LoginInformation login) {
-        System.out.println("About to check if user is an instructor!");
+        LOG.info("About to check if user is an instructor!");
         if (!login.hasIsInstructor()) {
             return DatabaseClient.defaultIsInstructor(user);
         } else {
