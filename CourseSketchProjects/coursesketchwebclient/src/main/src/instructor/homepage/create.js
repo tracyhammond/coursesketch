@@ -61,11 +61,11 @@ validateFirstRun(document.currentScript);
         // Spring, Su = Summer) ";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
-        var alreadyInserted = false;
+        var isInserting = false;
         CourseSketch.dataManager.getAllCourses(function(courseList) {
             // ensure that we only insert once.
-            if (!alreadyInserted) {
-                alreadyInserted = true;
+            if (!isInserting) {
+                isInserting = true;
             } else {
                 return;
             }
@@ -149,11 +149,11 @@ validateFirstRun(document.currentScript);
         assignment.description = "Insert description";
         // course.accessDate = "mm/dd/yyyy";
         // course.closeDate = "mm/dd/yyyy";
-        var alreadyInserted = false;
+        var isInserting = false;
         CourseSketch.dataManager.getAllAssignmentsFromCourse(courseId, function(assignmentList) {
             // ensure that we only insert once.
-            if (!alreadyInserted) {
-                alreadyInserted = true;
+            if (!isInserting) {
+                isInserting = true;
             } else {
                 return;
             }
@@ -250,11 +250,11 @@ validateFirstRun(document.currentScript);
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = "";
         courseProblem.setProblemInfo(bankProblem);
-        var alreadyInserted = false;
+        var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
-            if (!alreadyInserted) {
-                alreadyInserted = true;
+            if (!isInserting) {
+                isInserting = true;
             } else {
                 return;
             }
