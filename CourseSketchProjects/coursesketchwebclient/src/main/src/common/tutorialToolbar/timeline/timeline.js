@@ -13,6 +13,7 @@ function Timeline () {
         this.continueButton(shadowRoot);
         undoCreator();
         redoCreator();
+        createTutorialTutorial();
     };
 
     /**
@@ -289,6 +290,16 @@ function Timeline () {
             $(plusButton).removeClass("tall");
         };
     }
+
+    function createTutorialTutorial () {
+        var tutorialTutorial = document.body.querySelector.className("tutorialtutorial");
+        document.body.appendChild(tutorialTutorial);
+        tutorialTutorial.onclick = function(event) {
+            console.log("Hello, from function land!!");
+            event.stopPropagation();
+            this.parentNode.removeChild(this);
+        }
+    }  
     /**
      * creates undos
      */
