@@ -179,6 +179,25 @@
         return undefined;
     };
 
+    loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill){
+        var index = -1;
+        if (isUndefined(schoolItemData)) {
+        }  else {
+            try {
+                index = schoolItemData.latePolicy.subtractionType;
+            } catch(exception) {
+                console.log("Ignoring exception while setting subtraction type of element");
+                console.log(exception);
+                return null;
+            }
+        }
+        if (index > 0 || index === 0) {
+            nodeToFill.options[index].selected = true;
+            return nodeToFill.value;
+        }
+        return undefined;
+    }
+
     /**
      * @param parent {ShadowRoot} the root of the parent.
      * @return {Map} A map of the data mapped to the element.
