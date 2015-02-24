@@ -2,13 +2,13 @@ package protobuf.srl.school;
 
 // holds all data that is sent from server. (grades, roster, classes, assignments, problems
 message SrlSchool {
-
     repeated SrlCourse courses = 1;
     repeated SrlAssignment assignments = 2;
     repeated SrlProblem problems = 3;
     repeated SrlBankProblem bankProblems = 4;
     repeated SrlGrade grades = 5;
     //repeated SrlBankGrade bankGrades = 6; //????
+
 }
 
 message SrlCourse {
@@ -39,7 +39,7 @@ message SrlAssignment {
     required string courseId = 1; // To know who the parent is.
     required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
     optional string name = 3;
-    optional AssignmentType type = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
+    optional AssignmentType assignmentType = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
     optional string other = 5; // Name of an Instructor-defined assignment type
     optional string description = 6;
     repeated string links = 7; // external links/resources. Field needs improvement.
@@ -60,7 +60,7 @@ message SrlAssignment {
         LAB = 3;
         EXAM = 4;
         SURVEY = 5; // not for a grade!
-        GAME = 6;
+		GAME = 6;
         OTHER = 7; // Allows instructors to create unique assignment types
     }
 }
@@ -143,7 +143,6 @@ message SrlGrade {
 }
 
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
-
     optional int32 year = 1;
     optional int32 month = 2;
     optional int32 day = 3;
