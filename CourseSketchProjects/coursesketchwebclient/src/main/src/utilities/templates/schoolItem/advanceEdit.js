@@ -184,9 +184,9 @@
         if (isUndefined(schoolItemData)) {
         }  else {
             try {
-                index = schoolItemData.latePolicy.subtractionType;
+                index = schoolItemData.assignmentType;
             } catch(exception) {
-                console.log("Ignoring exception while setting subtraction type of element");
+                console.log("Ignoring exception while setting assignment type of element");
                 console.log(exception);
                 return null;
             }
@@ -267,7 +267,6 @@
             // cancel!
             function close(event) {
                 if (event.toElement == host) {
-                    console.log("We should not quit like this!");
                     return false;
                 }
                 event.stopPropagation();
