@@ -76,6 +76,11 @@ message LatePolicy {
         EXPONENTIAL = 2;
     }
 
+    /**
+     * The numbers are reversed because of how the client loads and saves data for options.
+     *
+     * Specifically this is used in the advance edit panel.
+     */
     enum TimeFrame {
         DAY = 3;
         HOUR = 2;
@@ -113,7 +118,7 @@ message SrlBankProblem {
     optional string subTopic = 7;
     optional string source = 8;
     repeated string otherKeywords = 9;
-    optional SrlPermission accessPermission = 10;
+    optional SrlPermission accessPermission= 10;
 
     enum QuestionType {
         SKETCH = 1; // sketching
