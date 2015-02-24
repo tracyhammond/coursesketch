@@ -29,6 +29,7 @@ form:after {
         clear: both;
         visibility: hidden;
 }
+
 .container { margin: 25px auto; position: relative; width: 900px; }
 #content {
         background: #f9f9f9;
