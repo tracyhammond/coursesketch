@@ -141,7 +141,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
-        CourseSketch.dataManager.getCourseProblems(assignment.problemList,function(problemList) {
+        CourseSketch.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
             courseManagement.showProblems(problemList, assignment);
         }, function(problemList) {
             courseManagement.showProblems(problemList, assignment);
