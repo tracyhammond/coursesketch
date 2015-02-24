@@ -11,6 +11,8 @@
     background: #00CC99;
     overflow-y: visible;
 	opacity: 0.8;
+    /*slide timeline up from bottom animation*/
+    -webkit-animation: timelinepop .6s;
 }
 
 .toolarea.focused {
@@ -18,6 +20,34 @@
 	z-index: -2;
 }
 
+.tutorialopen {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.tutorialopen:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+/*"Add step" button appearance*/
 .btn {
 	order: 2;
 	-moz-box-shadow: 0px 10px 14px -7px #3e7327;
@@ -60,6 +90,34 @@
 .btn:active {
 	position:relative;
 	top:1px;
+}
+
+.tutorialtutorial {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 292px;
+  margin: 10px;
+  padding: 20px;
+  overflow: hidden;
+  border: none;
+  font: normal 16px/1 "Times New Roman", Times, serif;
+  color: rgba(255,255,255,1);
+  text-align: center;
+  z-index: 10;
+  position: absolute;
+  bottom: 165px;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  background: #0199d9;
+  -webkit-box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+  box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+  opacity: .5;
+}
+
+.tutorialtutorial:hover {
+    opacity: 1;
 }
 
 .toolarea {
@@ -191,4 +249,10 @@ sketch-surface {
 @-webkit-keyframes fadein4 {
     from { opacity: 0; }
     to   { opacity: 1; }
+}
+
+/*Animations for timeline*/
+@-webkit-keyframes timelinepop {
+    from { top: 800px;}
+    to   { top: 640px;}
 }

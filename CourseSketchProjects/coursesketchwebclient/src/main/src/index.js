@@ -6,7 +6,11 @@ CourseSketch.redirector = {};
 
 $(document).ready(
 function() {
-
+    CourseSketch.loadCreateTutorial = function() {
+        var element = document.createElement("entire-timeline");
+        document.getElementById("tutorial").appendChild(element);
+ 
+    }
     CourseSketch.reloadContent = function() {
         var value = CourseSketch.redirector.getRedirect();
         CourseSketch.redirector.changeSourceNoEvent(value);
