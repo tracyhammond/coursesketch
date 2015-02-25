@@ -181,8 +181,7 @@
 
     loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill){
         var index = -1;
-        if (isUndefined(schoolItemData)) {
-        }  else {
+        if (!isUndefined(schoolItemData)) {
             try {
                 index = schoolItemData.assignmentType;
             } catch(exception) {
@@ -191,7 +190,7 @@
                 return null;
             }
         }
-        if (index > 0 || index === 0) {
+        if (index != -1) {
             nodeToFill.options[index].selected = true;
             return nodeToFill.value;
         }
