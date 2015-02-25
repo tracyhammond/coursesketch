@@ -190,13 +190,7 @@
     loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (!isUndefined(schoolItemData)) {
-            try {
-                index = schoolItemData.assignmentType;
-            } catch(exception) {
-                console.log("Ignoring exception while setting assignment type of element");
-                console.log(exception);
-                return null;
-            }
+            index = schoolItemData.assignmentType;
         }
         if (index > 0 || index === 0) {
             if (index > 6) {
