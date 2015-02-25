@@ -88,7 +88,7 @@ public final class AssignmentManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
         final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId()).append(NAME, assignment.getName())
-                .append(ASSIGNMENT_TYPE, assignment.getType().getNumber()).append(ASSIGNMENT_OTHER_TYPE, assignment.getOther())
+                .append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber()).append(ASSIGNMENT_OTHER_TYPE, assignment.getOther())
                 .append(DESCRIPTION, assignment.getDescription()).append(ASSIGNMENT_RESOURCES, assignment.getLinksList())
                 .append(GRADE_WEIGHT, assignment.getGradeWeight()).append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
                 .append(DUE_DATE, assignment.getDueDate().getMillisecond()).append(CLOSE_DATE, assignment.getCloseDate().getMillisecond())
@@ -236,7 +236,7 @@ public final class AssignmentManager {
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject corsor) {
         exactAssignment.setCourseId((String) corsor.get(COURSE_ID));
         exactAssignment.setName((String) corsor.get(NAME));
-        exactAssignment.setType(SrlAssignment.AssignmentType.valueOf((Integer) corsor.get(ASSIGNMENT_TYPE)));
+        exactAssignment.setAssignmentType(SrlAssignment.AssignmentType.valueOf((Integer) corsor.get(ASSIGNMENT_TYPE)));
         exactAssignment.setOther((String) corsor.get(ASSIGNMENT_OTHER_TYPE));
         exactAssignment.setDescription((String) corsor.get(DESCRIPTION));
         exactAssignment.addAllLinks((List) corsor.get(ASSIGNMENT_RESOURCES));
@@ -360,8 +360,8 @@ public final class AssignmentManager {
                 courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
-            if (assignment.hasType()) {
-                updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType().getNumber());
+            if (assignment.hasAssignmentType()) {
+                updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
                 courses.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
