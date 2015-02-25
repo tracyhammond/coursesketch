@@ -190,8 +190,8 @@
                 return null;
             }
         }
-        if (index > 0) {
-            if(index > 7) index = 7;
+        if (index > 0 || index === 0) {
+            if(index > 6) index = 6;
             nodeToFill.options[index].selected = true;
             return nodeToFill.value;
         }
