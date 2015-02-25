@@ -179,7 +179,15 @@
         return undefined;
     };
 
-    loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill){
+    /**
+     * yes I know these functions have an underscore.
+     * This is so that you don't have to dynamically capitalize the first letter.
+     * Each one returns a value if it exist otherwise undefined is returned.
+     * <br>
+     * loads an Assignment type object from the schoolItem.
+     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     */
+    loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (!isUndefined(schoolItemData)) {
             try {
@@ -191,7 +199,9 @@
             }
         }
         if (index > 0 || index === 0) {
-            if(index > 6) index = 6;
+            if (index > 6) {
+                index = 6;
+            }
             nodeToFill.options[index].selected = true;
             return nodeToFill.value;
         }
