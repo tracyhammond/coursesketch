@@ -55,13 +55,13 @@ message SrlAssignment {
     optional SrlPermission accessPermission = 17;
 
     enum AssignmentType {
-        HOMEWORK = 1;
-        QUIZ = 2;
-        LAB = 3;
-        EXAM = 4;
-        SURVEY = 5; // not for a grade!
-		GAME = 6;
-        OTHER = 7; // Allows instructors to create unique assignment types
+        HOMEWORK = 0;
+        QUIZ = 1;
+        LAB = 2;
+        EXAM = 3;
+        SURVEY = 4; // not for a grade!
+		GAME = 5;
+        OTHER = 6; // Allows instructors to create unique assignment types
     }
 }
 
