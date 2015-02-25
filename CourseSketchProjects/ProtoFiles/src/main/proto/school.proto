@@ -60,7 +60,7 @@ message SrlAssignment {
         LAB = 2;
         EXAM = 3;
         SURVEY = 4; // not for a grade!
-		GAME = 5;
+        GAME = 5;
         OTHER = 6; // Allows instructors to create unique assignment types
     }
 }
