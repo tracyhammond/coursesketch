@@ -353,7 +353,6 @@ public final class AssignmentManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final BasicDBObject updated = new BasicDBObject();
         if (isAdmin || isMod) {
             if (assignment.hasName()) {
                 updateObj = new BasicDBObject(NAME, assignment.getName());
@@ -429,7 +428,6 @@ public final class AssignmentManager {
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
-                        updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
                         updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
                         assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
                     }

@@ -14,6 +14,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
@@ -193,9 +194,9 @@ public final class BankProblemManager {
 
         if (update) {
             problemCollection.update(corsor, updated);
-            final String[] users = (String[]) corsor.get(USERS);
-            for (int i = 0; i < users.length; i++) {
-                UserUpdateHandler.insertUpdate(dbs, users[i], problemBankId, "PROBLEM");
+            final List<String> users = (List) corsor.get(USERS);
+            for (int i = 0; i < users.size(); i++) {
+                UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
             }
         }
 
