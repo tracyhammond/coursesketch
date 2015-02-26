@@ -102,6 +102,18 @@ public final class DataUpdateHandler {
                             results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
                         }
                         break;
+                        case COURSE_PROBLEM: {
+                            final School.SrlProblem srlProblem = School.SrlProblem.parseFrom(itemSet.getData());
+                            instance.updateCourseProblem(userId, srlProblem);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case BANK_PROBLEM: {
+                            final School.SrlBankProblem srlBankProblem = School.SrlBankProblem.parseFrom(itemSet.getData());
+                            instance.updateBankProblem(userId, srlBankProblem);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
                         default:
                             final ItemResult.Builder build = ItemResult.newBuilder();
                             build.setQuery(itemSet.getQuery());

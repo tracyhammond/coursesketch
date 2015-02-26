@@ -283,6 +283,50 @@ public interface Institution {
     void updateAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
+     * Updates an existing courseProblem in the database.
+     *
+     * Upon updating 1 step happen:
+     * <ol>
+     * <li>the courseProblem is updated in a courseProblem collection</li>
+     * <li>After updating a user update is created.</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param problem
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to update a
+     *             Courseproblem.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem updating the courseproblem.
+     *
+     */
+    void updateCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Updates an existing bankProblem in the database.
+     *
+     * Upon updating 1 step happen:
+     * <ol>
+     * <li>the bankProblem is updated in a bankProblem collection</li>
+     * <li>After updating a user update is created.</li>
+     * </ol>
+     *
+     * @param userId
+     *            The credentials used to authenticate the update
+     * @param problem
+     *            The object being updated
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to update a
+     *             bankProblem.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem updating the bankProblem.
+     *
+     */
+    void updateBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException;
+
+    /**
      * Inserts the lecture into the the database.
      *
      * Upon insertion 1 step happen:
@@ -296,10 +340,10 @@ public interface Institution {
      * @param lectureSlide
      *            The object being updated
      * @throws AuthenticationException
-     *             Thrown if the user does not have permission to insert an
-     *             Assignment.
+     *             Thrown if the user does not have permission to insert a
+     *             Lecture.
      * @throws DatabaseAccessException
-     *             Thrown if there is a problem inserting the assignment.
+     *             Thrown if there is a problem inserting the lecture.
      *
      */
     void updateLectureSlide(String userId, LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException;
@@ -372,6 +416,5 @@ public interface Institution {
      */
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
-
 
 }
