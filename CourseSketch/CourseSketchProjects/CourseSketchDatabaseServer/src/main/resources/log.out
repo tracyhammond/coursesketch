@@ -1,2 +1,0 @@
-[DEBUG] 2015-02-26 14:20:21,774 org.eclipse.jetty.io.IdleTimeout checkIdleTimeout - SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=1,kro=1} idle timeout check, elapsed: 29497 ms, remaining: 270503 ms
-[DEBUG] 2015-02-26 14:20:23,983 org.eclipse.jetty.io.IdleTimeout checkIdleTimeout - SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=1,kro=1} idle timeout check, elapsed: 29551 ms, remaining: 270449 ms
