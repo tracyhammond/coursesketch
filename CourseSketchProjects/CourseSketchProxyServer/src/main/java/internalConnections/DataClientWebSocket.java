@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import java.net.URI;
@@ -21,7 +22,7 @@ import java.nio.ByteBuffer;
 public final class DataClientWebSocket extends ClientWebSocket {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DataClientWebSocket.class);
 
@@ -57,7 +58,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, req.getSessionInfo(), DataClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    LOG.info("Exception: {}", e);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         } else {

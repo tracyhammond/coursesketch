@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public final class PasswordHash {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(PasswordHash.class);
 

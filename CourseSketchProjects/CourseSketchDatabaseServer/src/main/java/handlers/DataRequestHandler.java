@@ -27,8 +27,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.rmi.runtime.Log;
+import utilities.LoggingConstants;
 
 /**
  * Handles all request for data.
@@ -41,7 +40,7 @@ import sun.rmi.runtime.Log;
 public final class DataRequestHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DataRequestHandler.class);
 
@@ -205,11 +204,11 @@ public final class DataRequestHandler {
                         build.setQuery(itrequest.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                     } else {
-                        LOG.info("Exception: {}", e);
+                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
                 } catch (Exception e) {
-                    LOG.info("Exception: {}", e);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itrequest.getQuery());
                     build.setData(itrequest.toByteString());
@@ -218,10 +217,10 @@ public final class DataRequestHandler {
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }

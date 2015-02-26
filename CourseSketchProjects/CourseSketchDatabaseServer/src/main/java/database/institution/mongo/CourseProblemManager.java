@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 public final class CourseProblemManager {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(CourseProblemManager.class);
 

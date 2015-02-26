@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
+import utilities.LoggingConstants;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -15,7 +16,7 @@ import protobuf.srl.request.Message.Request;
 public final class ProxyConnectionManager extends MultiConnectionManager {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ProxyConnectionManager.class);
 
@@ -64,7 +65,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Data...");
@@ -72,7 +73,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Answer...");
@@ -80,7 +81,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         // System.out.println("Open Answer Checker Server...");
         // createAndAddConnection(serv, true, 8884, AnswerConnection.class);

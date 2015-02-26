@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseServerWebSocketHandler.class);
     /**

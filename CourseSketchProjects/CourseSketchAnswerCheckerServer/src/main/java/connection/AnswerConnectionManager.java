@@ -6,6 +6,7 @@ import utilities.ConnectionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * A manager for holding all of the connections that were created.
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class AnswerConnectionManager extends MultiConnectionManager {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(AnswerConnectionManager.class);
 
@@ -46,7 +47,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
             createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
                     PORT, this.isSecure(), SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 }

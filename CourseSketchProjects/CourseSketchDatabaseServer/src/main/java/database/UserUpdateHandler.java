@@ -10,6 +10,7 @@ import database.institution.mongo.UpdateManager;
 import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlSchool;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import static database.DatabaseStringConstants.USER_LIST;
 public final class UserUpdateHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(UserUpdateHandler.class);
 
@@ -112,7 +113,7 @@ public final class UserUpdateHandler {
             try {
                 UpdateManager.mongoInsertUpdate(database, users[i], objectAffectedId, TimeManager.getSystemTime(), classification);
             } catch (AuthenticationException | DatabaseAccessException e) {
-                LOG.info("Exception: {}", e);
+                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
     }
@@ -144,9 +145,9 @@ public final class UserUpdateHandler {
                 try {
                     UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
                 } catch (AuthenticationException e) {
-                    LOG.info("Exception: {}", e);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } catch (DatabaseAccessException e) {
-                    LOG.info("Exception: {}", e);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }

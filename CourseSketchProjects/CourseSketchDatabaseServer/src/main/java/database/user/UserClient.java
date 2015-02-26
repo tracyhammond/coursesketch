@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public final class UserClient {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(UserClient.class);
 

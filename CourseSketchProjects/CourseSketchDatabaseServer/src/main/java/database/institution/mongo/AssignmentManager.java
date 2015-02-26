@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
 public final class AssignmentManager {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(AssignmentManager.class);
 

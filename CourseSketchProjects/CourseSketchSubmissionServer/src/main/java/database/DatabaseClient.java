@@ -19,6 +19,7 @@ import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import util.MergeException;
 import util.SubmissionMerger;
+import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
 
@@ -44,7 +45,7 @@ import static database.DatabaseStringConstants.USER_ID;
 public class DatabaseClient {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
@@ -70,7 +71,7 @@ public class DatabaseClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -107,7 +108,7 @@ public class DatabaseClient {
                 database = mongoClient.getDB("submissions");
             }
         } catch (UnknownHostException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         instance = this;
     }
@@ -455,7 +456,7 @@ public class DatabaseClient {
                     result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary));
                 }
             } catch (InvalidProtocolBufferException e) {
-                LOG.info("Exception: {}", e);
+                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                 result = submission.getUpdateList();
             }
             try {

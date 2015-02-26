@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class UserManager {
     /**
-     * Logger declaration/definition
+     * Logger declaration/definition.
      */
     private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
     /**

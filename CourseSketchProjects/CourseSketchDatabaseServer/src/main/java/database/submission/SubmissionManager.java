@@ -44,7 +44,7 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 public final class SubmissionManager {
 
     /**
-     * Declaration and Definition
+     * Declaration and Definition.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
 

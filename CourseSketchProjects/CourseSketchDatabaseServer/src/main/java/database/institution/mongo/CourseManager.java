@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public final class CourseManager {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(CourseManager.class);
 
