@@ -170,18 +170,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                     + 'Please contact the instructor to let you view the problems');
             }
         }
-        for (var i = 0; i < problemList.length; i++) {
-            var q = problemList[i].description;
-            if (isUndefined(q) || q == "") {
-                var prob = problemList[i];
-                if (!isUndefined(prob.problemInfo)) {
-                    var text = prob.getProblemInfo().getQuestionText();
-                    problemList[i].setDescription(text);
-                } else {
-                    problemList[i].setDescription("No Description or question text");
-                }
-            }
-        }
         builder.setList(problemList);
         builder.showImage = false;
         builder.setBoxClickFunction(courseManagement.problemClicked);
