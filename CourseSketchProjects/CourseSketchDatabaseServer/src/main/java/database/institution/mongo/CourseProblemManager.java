@@ -163,6 +163,7 @@ public final class CourseProblemManager {
         exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
         exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
         exactProblem.setName((String) corsor.get(NAME));
+        exactProblem.setProblemNumber((Integer) corsor.get(PROBLEM_NUMBER));
 
         // problem manager get problem from bank (as a user!)
         final SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
