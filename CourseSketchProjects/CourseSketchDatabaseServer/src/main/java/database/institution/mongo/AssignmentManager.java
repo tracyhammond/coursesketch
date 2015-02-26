@@ -87,14 +87,22 @@ public final class AssignmentManager {
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
+
         final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId()).append(NAME, assignment.getName())
                 .append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber()).append(ASSIGNMENT_OTHER_TYPE, assignment.getOther())
                 .append(DESCRIPTION, assignment.getDescription()).append(ASSIGNMENT_RESOURCES, assignment.getLinksList())
                 .append(GRADE_WEIGHT, assignment.getGradeWeight()).append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
-                .append(DUE_DATE, assignment.getDueDate().getMillisecond()).append(CLOSE_DATE, assignment.getCloseDate().getMillisecond())
+                .append(DUE_DATE, assignment.getDueDate().getMillisecond())
                 .append(IMAGE, assignment.getImageUrl()).append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
                 .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+
+        // Sets a default date in the instance that a date was not given.
+        if (!assignment.hasCloseDate()) {
+            query.append(CLOSE_DATE, RequestConverter.getMaxTime());
+        } else {
+            query.append(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
+        }
         if (assignment.hasLatePolicy()) {
             query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
                     .append(LATE_POLICY_RATE, assignment.getLatePolicy().getRate())
