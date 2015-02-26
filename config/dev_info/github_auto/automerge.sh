@@ -1,5 +1,5 @@
 git stash
-git checkout master
+git checkout mergeScript
 git pull
 branches="branchNames"
 while IFS= read - r line
