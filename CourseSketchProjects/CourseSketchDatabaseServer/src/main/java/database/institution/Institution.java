@@ -296,7 +296,7 @@ public interface Institution {
      * @param problem
      *            The object being updated
      * @throws AuthenticationException
-     *             Thrown if the user does not have permission to update an
+     *             Thrown if the user does not have permission to update a
      *             Courseproblem.
      * @throws DatabaseAccessException
      *             Thrown if there is a problem updating the courseproblem.
@@ -318,7 +318,7 @@ public interface Institution {
      * @param problem
      *            The object being updated
      * @throws AuthenticationException
-     *             Thrown if the user does not have permission to update an
+     *             Thrown if the user does not have permission to update a
      *             bankProblem.
      * @throws DatabaseAccessException
      *             Thrown if there is a problem updating the bankProblem.
@@ -340,7 +340,7 @@ public interface Institution {
      * @param lectureSlide
      *            The object being updated
      * @throws AuthenticationException
-     *             Thrown if the user does not have permission to insert an
+     *             Thrown if the user does not have permission to insert a
      *             Lecture.
      * @throws DatabaseAccessException
      *             Thrown if there is a problem inserting the lecture.
