@@ -101,13 +101,12 @@ message SrlProblem {
     optional string assignmentId = 3; // To know who the parent is.
     optional string problemBankId = 4;
     optional string name = 5;
-    optional string description = 6;
-    optional SrlBankProblem problemInfo = 7;
-    optional string gradeWeight = 8; // Percentage of assignment grade
-    optional float grade = 9; // Calculated grade of all subproblems for this problem
-    optional State state = 10;
-    optional SrlPermission accessPermission = 11;
-    optional int32 problemNumber = 12; // the order in which the problem appears in the assignment.
+    optional SrlBankProblem problemInfo = 6;
+    optional string gradeWeight = 7; // Percentage of assignment grade
+    optional float grade = 8; // Calculated grade of all subproblems for this problem
+    optional State state = 9;
+    optional SrlPermission accessPermission = 10;
+    optional int32 problemNumber = 11; // the order in which the problem appears in the assignment.
 }
 
 message SrlBankProblem {
