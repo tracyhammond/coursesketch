@@ -19,7 +19,7 @@ public final class SubmissionMerger {
     /**
      * Declaration and Definition of Logger
      */
-    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionMerger.class);
 
     /**
      * The lists that are being merged together.
