@@ -1,0 +1,551 @@
+[DEBUG] 2015-02-26 14:19:47,156 org.eclipse.jetty.util.log initialized - Logging to org.slf4j.impl.Log4jLoggerAdapter(org.eclipse.jetty.util.log) via org.eclipse.jetty.util.log.Slf4jLog
+[INFO] 2015-02-26 14:19:47,162 org.eclipse.jetty.util.log initialized - Logging initialized @541ms
+[DEBUG] 2015-02-26 14:19:47,173 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.server.Server@a1d03ef added {qtp1551538302{STOPPED,8<=0<=200,i=0,q=0},AUTO}
+[DEBUG] 2015-02-26 14:19:47,189 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - HttpConnectionFactory@6f14021e{HTTP/1.1} added {HttpConfiguration@a97388b{32768,8192/8192,https://:0,[]},POJO}
+[DEBUG] 2015-02-26 14:19:47,192 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{null,[]}{0.0.0.0:0} added {org.eclipse.jetty.server.Server@a1d03ef,UNMANAGED}
+[DEBUG] 2015-02-26 14:19:47,192 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{null,[]}{0.0.0.0:0} added {qtp1551538302{STOPPED,8<=0<=200,i=0,q=0},AUTO}
+[DEBUG] 2015-02-26 14:19:47,192 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{null,[]}{0.0.0.0:0} added {org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@39346e64,AUTO}
+[DEBUG] 2015-02-26 14:19:47,193 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{null,[]}{0.0.0.0:0} added {org.eclipse.jetty.io.ArrayByteBufferPool@58d91c60,POJO}
+[DEBUG] 2015-02-26 14:19:47,193 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{null,[http/1.1]}{0.0.0.0:0} added {HttpConnectionFactory@6f14021e{HTTP/1.1},AUTO}
+[DEBUG] 2015-02-26 14:19:47,194 org.eclipse.jetty.server.ServerConnector addConnectionFactory - ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{0.0.0.0:0} added HttpConnectionFactory@6f14021e{HTTP/1.1}
+[DEBUG] 2015-02-26 14:19:47,196 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{0.0.0.0:0} added {org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@149838d9,MANAGED}
+[DEBUG] 2015-02-26 14:19:47,196 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.server.Server@a1d03ef added {ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{localhost:8885},AUTO}
+[DEBUG] 2015-02-26 14:19:47,236 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.servlet.ServletHandler@61019643 added {connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true,AUTO}
+[DEBUG] 2015-02-26 14:19:47,236 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.servlet.ServletHandler@61019643 added {[/*]=>connection.DatabaseServlet-4868bd35,POJO}
+[DEBUG] 2015-02-26 14:19:47,237 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49 added {org.eclipse.jetty.servlet.ServletHandler@61019643,AUTO}
+[DEBUG] 2015-02-26 14:19:47,239 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.server.handler.HandlerList@3138f11c[org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49] added {org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49,AUTO}
+[DEBUG] 2015-02-26 14:19:47,244 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.server.Server@a1d03ef added {org.eclipse.jetty.server.handler.HandlerList@3138f11c[org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49],AUTO}
+[DEBUG] 2015-02-26 14:19:47,245 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.server.Server@a1d03ef
+[INFO] 2015-02-26 14:19:47,249 org.eclipse.jetty.server.Server doStart - jetty-9.3.0.M1
+[DEBUG] 2015-02-26 14:19:47,267 org.eclipse.jetty.server.handler.AbstractHandler doStart - starting org.eclipse.jetty.server.Server@a1d03ef
+[DEBUG] 2015-02-26 14:19:47,267 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting qtp1551538302{STOPPED,8<=0<=200,i=0,q=0}
+[DEBUG] 2015-02-26 14:19:47,268 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @648ms qtp1551538302{STARTED,8<=8<=200,i=7,q=0}
+[DEBUG] 2015-02-26 14:19:47,269 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.server.handler.HandlerList@3138f11c[org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49]
+[DEBUG] 2015-02-26 14:19:47,269 org.eclipse.jetty.server.handler.AbstractHandler doStart - starting org.eclipse.jetty.server.handler.HandlerList@3138f11c[org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49]
+[DEBUG] 2015-02-26 14:19:47,269 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49
+[DEBUG] 2015-02-26 14:19:47,269 org.eclipse.jetty.server.handler.AbstractHandler doStart - starting org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49
+[DEBUG] 2015-02-26 14:19:47,270 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.servlet.ServletHandler@61019643
+[DEBUG] 2015-02-26 14:19:47,277 org.eclipse.jetty.servlet.ServletHandler updateMappings - Chose path=/* mapped to servlet=connection.DatabaseServlet-4868bd35 from default=false
+[DEBUG] 2015-02-26 14:19:47,278 org.eclipse.jetty.servlet.ServletHandler updateMappings - filterNameMap={}
+[DEBUG] 2015-02-26 14:19:47,278 org.eclipse.jetty.servlet.ServletHandler updateMappings - pathFilters=null
+[DEBUG] 2015-02-26 14:19:47,279 org.eclipse.jetty.servlet.ServletHandler updateMappings - servletFilterMap=null
+[DEBUG] 2015-02-26 14:19:47,279 org.eclipse.jetty.servlet.ServletHandler updateMappings - servletPathMap={/*=connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true}
+[DEBUG] 2015-02-26 14:19:47,279 org.eclipse.jetty.servlet.ServletHandler updateMappings - servletNameMap={connection.DatabaseServlet-4868bd35=connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true}
+[DEBUG] 2015-02-26 14:19:47,280 org.eclipse.jetty.servlet.ServletHandler doStart - Adding Default404Servlet to org.eclipse.jetty.servlet.ServletHandler@61019643
+[DEBUG] 2015-02-26 14:19:47,281 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.servlet.ServletHandler@61019643 added {org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4@c7acd753==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false,AUTO}
+[DEBUG] 2015-02-26 14:19:47,281 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.servlet.ServletHandler@61019643 added {[/]=>org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4,POJO}
+[DEBUG] 2015-02-26 14:19:47,282 org.eclipse.jetty.servlet.ServletHandler updateMappings - Chose path=/ mapped to servlet=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4 from default=false
+[DEBUG] 2015-02-26 14:19:47,282 org.eclipse.jetty.servlet.ServletHandler updateMappings - Chose path=/* mapped to servlet=connection.DatabaseServlet-4868bd35 from default=false
+[DEBUG] 2015-02-26 14:19:47,282 org.eclipse.jetty.servlet.ServletHandler updateMappings - filterNameMap={}
+[DEBUG] 2015-02-26 14:19:47,282 org.eclipse.jetty.servlet.ServletHandler updateMappings - pathFilters=null
+[DEBUG] 2015-02-26 14:19:47,282 org.eclipse.jetty.servlet.ServletHandler updateMappings - servletFilterMap=null
+[DEBUG] 2015-02-26 14:19:47,283 org.eclipse.jetty.servlet.ServletHandler updateMappings - servletPathMap={/*=connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true, /=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4@c7acd753==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false}
+[DEBUG] 2015-02-26 14:19:47,283 org.eclipse.jetty.servlet.ServletHandler updateMappings - servletNameMap={connection.DatabaseServlet-4868bd35=connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true, org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4=org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4@c7acd753==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false}
+[DEBUG] 2015-02-26 14:19:47,284 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true
+[DEBUG] 2015-02-26 14:19:47,298 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @678ms connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true
+[DEBUG] 2015-02-26 14:19:47,300 org.eclipse.jetty.servlet.ServletHolder initServlet - Servlet.init connection.DatabaseServlet@1776323e for connection.DatabaseServlet-4868bd35
+[DEBUG] 2015-02-26 14:19:47,318 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.websocket.server.WebSocketServerFactory@4c6c3e added {org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@1ec246b0,AUTO}
+[DEBUG] 2015-02-26 14:19:47,319 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.websocket.server.WebSocketServerFactory@4c6c3e added {org.eclipse.jetty.io.MappedByteBufferPool@19565a99,POJO}
+[DEBUG] 2015-02-26 14:19:47,342 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.websocket.server.WebSocketServerFactory@7c2d0928 added {org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@73c1f55,AUTO}
+[DEBUG] 2015-02-26 14:19:47,342 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.websocket.server.WebSocketServerFactory@7c2d0928 added {org.eclipse.jetty.io.MappedByteBufferPool@19565a99,POJO}
+[DEBUG] 2015-02-26 14:19:47,344 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.websocket.server.WebSocketServerFactory@7c2d0928
+[DEBUG] 2015-02-26 14:19:47,344 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@73c1f55
+[DEBUG] 2015-02-26 14:19:47,349 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @729ms org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@73c1f55
+[DEBUG] 2015-02-26 14:19:47,350 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @729ms org.eclipse.jetty.websocket.server.WebSocketServerFactory@7c2d0928
+[DEBUG] 2015-02-26 14:19:47,350 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4@c7acd753==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false
+[DEBUG] 2015-02-26 14:19:47,350 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @730ms org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-6175c6a4@c7acd753==org.eclipse.jetty.servlet.ServletHandler$Default404Servlet,-1,false
+[DEBUG] 2015-02-26 14:19:47,351 org.eclipse.jetty.server.handler.AbstractHandler doStart - starting org.eclipse.jetty.servlet.ServletHandler@61019643
+[DEBUG] 2015-02-26 14:19:47,351 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @731ms org.eclipse.jetty.servlet.ServletHandler@61019643
+[DEBUG] 2015-02-26 14:19:47,351 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @731ms org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49
+[DEBUG] 2015-02-26 14:19:47,351 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @731ms org.eclipse.jetty.server.handler.HandlerList@3138f11c[org.eclipse.jetty.server.handler.StatisticsHandler@4e61bc49]
+[DEBUG] 2015-02-26 14:19:47,352 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{localhost:8885}
+[DEBUG] 2015-02-26 14:19:47,361 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{localhost:8885} added {sun.nio.ch.ServerSocketChannelImpl[/127.0.0.1:8885],POJO}
+[DEBUG] 2015-02-26 14:19:47,361 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@39346e64
+[DEBUG] 2015-02-26 14:19:47,361 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @741ms org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@39346e64
+[DEBUG] 2015-02-26 14:19:47,361 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting HttpConnectionFactory@6f14021e{HTTP/1.1}
+[DEBUG] 2015-02-26 14:19:47,362 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @742ms HttpConnectionFactory@6f14021e{HTTP/1.1}
+[DEBUG] 2015-02-26 14:19:47,362 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@149838d9
+[DEBUG] 2015-02-26 14:19:47,364 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.io.SelectorManager$ManagedSelector@47238cce keys=-1 selected=-1
+[DEBUG] 2015-02-26 14:19:47,368 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @748ms org.eclipse.jetty.io.SelectorManager$ManagedSelector@47238cce keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,379 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.io.SelectorManager$ManagedSelector@732348b3 keys=-1 selected=-1
+[DEBUG] 2015-02-26 14:19:47,380 org.eclipse.jetty.io.SelectorManager run - Starting Thread[qtp1551538302-18-selector-ServerConnectorManager@149838d9/0,4,main] on org.eclipse.jetty.io.SelectorManager$ManagedSelector@47238cce keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,380 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @760ms org.eclipse.jetty.io.SelectorManager$ManagedSelector@732348b3 keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,380 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @760ms org.eclipse.jetty.server.ServerConnector$ServerConnectorManager@149838d9
+[DEBUG] 2015-02-26 14:19:47,381 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:47,381 org.eclipse.jetty.io.SelectorManager run - Starting Thread[qtp1551538302-17-selector-ServerConnectorManager@149838d9/1,4,main] on org.eclipse.jetty.io.SelectorManager$ManagedSelector@732348b3 keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,382 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:47,382 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{localhost:8885} added {acceptor-0@4fd654da,POJO}
+[INFO] 2015-02-26 14:19:47,382 org.eclipse.jetty.server.ServerConnector doStart - Started ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{localhost:8885}
+[DEBUG] 2015-02-26 14:19:47,383 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @762ms ServerConnector@20902a8b{HTTP/1.1,[http/1.1]}{localhost:8885}
+[INFO] 2015-02-26 14:19:47,384 org.eclipse.jetty.server.Server doStart - Started @764ms
+[DEBUG] 2015-02-26 14:19:47,384 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @764ms org.eclipse.jetty.server.Server@a1d03ef
+[DEBUG] 2015-02-26 14:19:47,395 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - coursesketch.server.base.CloseableWebSocketClient@60f3d040 added {null,POJO}
+[DEBUG] 2015-02-26 14:19:47,396 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - coursesketch.server.base.CloseableWebSocketClient@60f3d040 added {org.eclipse.jetty.io.MappedByteBufferPool@26ed4b7a,POJO}
+[DEBUG] 2015-02-26 14:19:47,396 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting coursesketch.server.base.CloseableWebSocketClient@60f3d040
+[DEBUG] 2015-02-26 14:19:47,396 org.eclipse.jetty.websocket.client.WebSocketClient doStart - Starting coursesketch.server.base.CloseableWebSocketClient@60f3d040
+[DEBUG] 2015-02-26 14:19:47,396 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - coursesketch.server.base.CloseableWebSocketClient@60f3d040 added {org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@24f64a8d,AUTO}
+[DEBUG] 2015-02-26 14:19:47,397 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@24f64a8d
+[DEBUG] 2015-02-26 14:19:47,397 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @777ms org.eclipse.jetty.util.thread.ScheduledExecutorScheduler@24f64a8d
+[DEBUG] 2015-02-26 14:19:47,398 org.eclipse.jetty.websocket.client.WebSocketClient doStart - Started coursesketch.server.base.CloseableWebSocketClient@60f3d040
+[DEBUG] 2015-02-26 14:19:47,398 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @778ms coursesketch.server.base.CloseableWebSocketClient@60f3d040
+[DEBUG] 2015-02-26 14:19:47,405 org.eclipse.jetty.websocket.client.WebSocketClient connect - connect websocket connection.SubmissionClientWebSocket@7b7f7411 to ws://localhost:8883/websocket/
+[DEBUG] 2015-02-26 14:19:47,406 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - coursesketch.server.base.CloseableWebSocketClient@60f3d040 added {WebSocketClient@1626591296{STOPPED,8<=0<=200,i=0,q=0},MANAGED}
+[DEBUG] 2015-02-26 14:19:47,408 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting WebSocketClient@1626591296{STOPPED,8<=0<=200,i=0,q=0}
+[DEBUG] 2015-02-26 14:19:47,410 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @789ms WebSocketClient@1626591296{STARTED,8<=8<=200,i=7,q=0}
+[DEBUG] 2015-02-26 14:19:47,413 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - coursesketch.server.base.CloseableWebSocketClient@60f3d040 added {org.eclipse.jetty.websocket.client.io.ConnectionManager@3017d3b4,MANAGED}
+[DEBUG] 2015-02-26 14:19:47,414 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.websocket.client.io.ConnectionManager@3017d3b4
+[DEBUG] 2015-02-26 14:19:47,417 org.eclipse.jetty.util.component.ContainerLifeCycle addBean - org.eclipse.jetty.websocket.client.io.ConnectionManager@3017d3b4 added {org.eclipse.jetty.websocket.client.io.WebSocketClientSelectorManager@f5f80d4,AUTO}
+[DEBUG] 2015-02-26 14:19:47,417 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.websocket.client.io.WebSocketClientSelectorManager@f5f80d4
+[DEBUG] 2015-02-26 14:19:47,418 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.io.SelectorManager$ManagedSelector@4702e62e keys=-1 selected=-1
+[DEBUG] 2015-02-26 14:19:47,418 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @798ms org.eclipse.jetty.io.SelectorManager$ManagedSelector@4702e62e keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,418 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting org.eclipse.jetty.io.SelectorManager$ManagedSelector@f55fa6e keys=-1 selected=-1
+[DEBUG] 2015-02-26 14:19:47,418 org.eclipse.jetty.io.SelectorManager run - Starting Thread[WebSocketClient@1626591296-26-selector-WebSocketClientSelectorManager@f5f80d4/0,5,main] on org.eclipse.jetty.io.SelectorManager$ManagedSelector@4702e62e keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,419 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:47,419 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @799ms org.eclipse.jetty.io.SelectorManager$ManagedSelector@f55fa6e keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,419 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @799ms org.eclipse.jetty.websocket.client.io.WebSocketClientSelectorManager@f5f80d4
+[DEBUG] 2015-02-26 14:19:47,419 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @799ms org.eclipse.jetty.websocket.client.io.ConnectionManager@3017d3b4
+[DEBUG] 2015-02-26 14:19:47,420 org.eclipse.jetty.io.SelectorManager run - Starting Thread[WebSocketClient@1626591296-27-selector-WebSocketClientSelectorManager@f5f80d4/1,5,main] on org.eclipse.jetty.io.SelectorManager$ManagedSelector@f55fa6e keys=0 selected=0
+[DEBUG] 2015-02-26 14:19:47,420 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:47,432 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=null,onBinary=null,onText=null,onFrame=null,onError=null,onClose=null], class coursesketch.server.base.ClientWebSocket, public final void coursesketch.server.base.ClientWebSocket.jettyClose(int,java.lang.String), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose())
+[DEBUG] 2015-02-26 14:19:47,438 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=null,onBinary=null,onText=null,onFrame=null,onError=null,onClose=OptionalSessionCallableMethod[public final void coursesketch.server.base.ClientWebSocket.jettyClose(int,java.lang.String)]], class coursesketch.server.base.ClientWebSocket, public final void coursesketch.server.base.ClientWebSocket.jettyOpen(org.eclipse.jetty.websocket.api.Session), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect())
+[DEBUG] 2015-02-26 14:19:47,442 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=CallableMethod[public final void coursesketch.server.base.ClientWebSocket.jettyOpen(org.eclipse.jetty.websocket.api.Session)],onBinary=null,onText=null,onFrame=null,onError=null,onClose=OptionalSessionCallableMethod[public final void coursesketch.server.base.ClientWebSocket.jettyClose(int,java.lang.String)]], class coursesketch.server.base.ClientWebSocket, public final void coursesketch.server.base.ClientWebSocket.jettyError(org.eclipse.jetty.websocket.api.Session,java.lang.Throwable), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketError())
+[DEBUG] 2015-02-26 14:19:47,445 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=CallableMethod[public final void coursesketch.server.base.ClientWebSocket.jettyOpen(org.eclipse.jetty.websocket.api.Session)],onBinary=null,onText=null,onFrame=null,onError=OptionalSessionCallableMethod[public final void coursesketch.server.base.ClientWebSocket.jettyError(org.eclipse.jetty.websocket.api.Session,java.lang.Throwable)],onClose=OptionalSessionCallableMethod[public final void coursesketch.server.base.ClientWebSocket.jettyClose(int,java.lang.String)]], class coursesketch.server.base.ClientWebSocket, public final void coursesketch.server.base.ClientWebSocket.jettyOnMessage(byte[],int,int), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage())
+[DEBUG] 2015-02-26 14:19:47,454 org.eclipse.jetty.websocket.client.WebSocketClient connect - Connect Promise: FutureCallback@2dfbc274{false,false,null}
+[DEBUG] 2015-02-26 14:19:47,461 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectorManager$ManagedSelector$Connect@279d45d6
+[DEBUG] 2015-02-26 14:19:47,462 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/0 selected
+[DEBUG] 2015-02-26 14:19:47,462 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectorManager$ManagedSelector$Connect@279d45d6
+[DEBUG] 2015-02-26 14:19:47,463 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:47,463 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 1/1 selected
+[DEBUG] 2015-02-26 14:19:47,467 org.eclipse.jetty.websocket.client.io.WebSocketClientSelectorManager connectionFailed - Connection Failed
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:739)
+	at org.eclipse.jetty.io.SelectorManager.finishConnect(SelectorManager.java:339)
+	at org.eclipse.jetty.io.SelectorManager$ManagedSelector.processConnect(SelectorManager.java:724)
+	at org.eclipse.jetty.io.SelectorManager$ManagedSelector.processKey(SelectorManager.java:686)
+	at org.eclipse.jetty.io.SelectorManager$ManagedSelector.select(SelectorManager.java:640)
+	at org.eclipse.jetty.io.SelectorManager$ManagedSelector.run(SelectorManager.java:528)
+	at org.eclipse.jetty.util.thread.NonBlockingThread.run(NonBlockingThread.java:52)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:620)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:540)
+	at java.lang.Thread.run(Thread.java:745)
+[DEBUG] 2015-02-26 14:19:47,478 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:51,760 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectorManager$ManagedSelector$Accept@27fd13f6
+[DEBUG] 2015-02-26 14:19:51,760 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/0 selected
+[DEBUG] 2015-02-26 14:19:51,763 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectorManager$ManagedSelector$Accept@27fd13f6
+[DEBUG] 2015-02-26 14:19:51,775 org.eclipse.jetty.io.AbstractEndPoint onOpen - onOpen SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,30000,null}{io=0,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:51,776 org.eclipse.jetty.io.IdleTimeout checkIdleTimeout - SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,30000,null}{io=0,kio=0,kro=0} idle timeout check, elapsed: 7 ms, remaining: 29993 ms
+[DEBUG] 2015-02-26 14:19:51,820 org.eclipse.jetty.http.PreEncodedHttpField <clinit> - HttpField encoders loaded: [org.eclipse.jetty.http.Http1FieldPreEncoder@128e28a]
+[DEBUG] 2015-02-26 14:19:51,833 org.eclipse.jetty.server.HttpConnection <init> - New HTTP Connection HttpConnection@2366c122{IDLE}
+[DEBUG] 2015-02-26 14:19:51,834 org.eclipse.jetty.io.AbstractConnection onOpen - onOpen HttpConnection@2366c122{IDLE}
+[DEBUG] 2015-02-26 14:19:51,835 org.eclipse.jetty.io.AbstractConnection fillInterested - fillInterested HttpConnection@2366c122{IDLE}
+[DEBUG] 2015-02-26 14:19:51,835 org.eclipse.jetty.io.AbstractConnection next - IDLE-->FILL_INTERESTED HttpConnection@2366c122{FILL_INTERESTED}
+[DEBUG] 2015-02-26 14:19:51,836 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - Changing interests in state UPDATED for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=0,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:51,837 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - changeInterests s=UPDATED 0->1 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=0,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:51,837 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectChannelEndPoint$1@6f4a3622
+[DEBUG] 2015-02-26 14:19:51,838 org.eclipse.jetty.io.SelectorManager createEndPoint - Created SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:51,838 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectChannelEndPoint$1@6f4a3622
+[DEBUG] 2015-02-26 14:19:51,839 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:51,839 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 0 -> 1 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:51,839 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:51,840 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 1/1 selected
+[DEBUG] 2015-02-26 14:19:51,840 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - Processing, state UPDATED for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:51,841 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - onSelected 1->0 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:51,841 org.eclipse.jetty.io.AbstractConnection next - FILL_INTERESTED-->FILLING HttpConnection@2366c122{FILLING}
+[DEBUG] 2015-02-26 14:19:51,841 org.eclipse.jetty.server.HttpConnection onFillable - HttpConnection@2366c122{FILLING} onFillable HttpChannelState@71282b42{s=IDLE i=true a=null}
+[DEBUG] 2015-02-26 14:19:51,842 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:51,843 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 1 -> 0 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:51,843 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:51,843 org.eclipse.jetty.io.ChannelEndPoint fill - filled 206 SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:51,847 org.eclipse.jetty.http.HttpParser parseNext - parseNext s=START HeapByteBuffer@db7e27a7[p=0,l=206,c=8192,r=206]={<<<GET /websocket/ H...l: no-cache\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}
+[DEBUG] 2015-02-26 14:19:51,848 org.eclipse.jetty.http.HttpParser setState - START --> SPACE1
+[DEBUG] 2015-02-26 14:19:51,849 org.eclipse.jetty.http.HttpParser setState - SPACE1 --> URI
+[DEBUG] 2015-02-26 14:19:51,850 org.eclipse.jetty.http.HttpParser setState - URI --> SPACE2
+[DEBUG] 2015-02-26 14:19:51,850 org.eclipse.jetty.http.HttpParser setState - SPACE2 --> REQUEST_VERSION
+[DEBUG] 2015-02-26 14:19:51,850 org.eclipse.jetty.http.HttpParser setState - REQUEST_VERSION --> HEADER
+[DEBUG] 2015-02-26 14:19:51,852 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:51,852 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,853 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_NAME
+[DEBUG] 2015-02-26 14:19:51,854 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_NAME --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:51,855 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,855 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,855 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_NAME
+[DEBUG] 2015-02-26 14:19:51,855 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_NAME --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:51,855 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,855 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,856 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,856 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,856 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:51,856 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:51,858 org.eclipse.jetty.http.HttpParser setState - HEADER --> END
+[DEBUG] 2015-02-26 14:19:51,859 org.eclipse.jetty.server.HttpChannel onRequestComplete - HttpChannelOverHttp@253be03d{r=1,c=false,a=IDLE,uri=-} onRequestComplete
+[DEBUG] 2015-02-26 14:19:51,859 org.eclipse.jetty.server.HttpInput messageComplete - HttpInputOverHTTP@660fb8b4 EOF
+[DEBUG] 2015-02-26 14:19:51,860 org.eclipse.jetty.server.HttpChannel handle - HttpChannelOverHttp@253be03d{r=1,c=false,a=IDLE,uri=-} handle enter
+[DEBUG] 2015-02-26 14:19:51,860 org.eclipse.jetty.server.HttpChannelState handling - HttpChannelState@71282b42{s=IDLE i=true a=null} handling IDLE
+[DEBUG] 2015-02-26 14:19:51,862 org.eclipse.jetty.server.HttpChannel handle - HttpChannelOverHttp@253be03d{r=1,c=false,a=DISPATCHED,uri=/websocket/} action REQUEST_DISPATCH
+[DEBUG] 2015-02-26 14:19:51,864 org.eclipse.jetty.server.Server handle - REQUEST /websocket/ on HttpChannelOverHttp@253be03d{r=1,c=false,a=DISPATCHED,uri=/websocket/}
+[DEBUG] 2015-02-26 14:19:51,865 org.eclipse.jetty.servlet.ServletHandler doScope - servlet null||/websocket/ -> connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true
+[DEBUG] 2015-02-26 14:19:51,865 org.eclipse.jetty.servlet.ServletHandler doHandle - chain=null
+[DEBUG] 2015-02-26 14:19:51,886 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=null,onBinary=null,onText=null,onFrame=null,onError=null,onClose=null], class coursesketch.server.base.ServerWebSocketHandler, public final void coursesketch.server.base.ServerWebSocketHandler.jettyClose(org.eclipse.jetty.websocket.api.Session,int,java.lang.String), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose())
+[DEBUG] 2015-02-26 14:19:51,886 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=null,onBinary=null,onText=null,onFrame=null,onError=null,onClose=OptionalSessionCallableMethod[public final void coursesketch.server.base.ServerWebSocketHandler.jettyClose(org.eclipse.jetty.websocket.api.Session,int,java.lang.String)]], class coursesketch.server.base.ServerWebSocketHandler, public final void coursesketch.server.base.ServerWebSocketHandler.jettyOpen(org.eclipse.jetty.websocket.api.Session), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect())
+[DEBUG] 2015-02-26 14:19:51,887 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=CallableMethod[public final void coursesketch.server.base.ServerWebSocketHandler.jettyOpen(org.eclipse.jetty.websocket.api.Session)],onBinary=null,onText=null,onFrame=null,onError=null,onClose=OptionalSessionCallableMethod[public final void coursesketch.server.base.ServerWebSocketHandler.jettyClose(org.eclipse.jetty.websocket.api.Session,int,java.lang.String)]], class coursesketch.server.base.ServerWebSocketHandler, public final void coursesketch.server.base.ServerWebSocketHandler.jettyError(org.eclipse.jetty.websocket.api.Session,java.lang.Throwable), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketError())
+[DEBUG] 2015-02-26 14:19:51,888 org.eclipse.jetty.websocket.common.events.JettyAnnotatedScanner onMethodAnnotation - onMethodAnnotation(JettyPojoMetadata[onConnect=CallableMethod[public final void coursesketch.server.base.ServerWebSocketHandler.jettyOpen(org.eclipse.jetty.websocket.api.Session)],onBinary=null,onText=null,onFrame=null,onError=OptionalSessionCallableMethod[public final void coursesketch.server.base.ServerWebSocketHandler.jettyError(org.eclipse.jetty.websocket.api.Session,java.lang.Throwable)],onClose=OptionalSessionCallableMethod[public final void coursesketch.server.base.ServerWebSocketHandler.jettyClose(org.eclipse.jetty.websocket.api.Session,int,java.lang.String)]], class coursesketch.server.base.ServerWebSocketHandler, public final void coursesketch.server.base.ServerWebSocketHandler.jettyOnMessage(org.eclipse.jetty.websocket.api.Session,byte[],int,int), @org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage())
+[DEBUG] 2015-02-26 14:19:51,891 org.eclipse.jetty.websocket.common.extensions.ExtensionStack negotiate - Extension Configs=[]
+[DEBUG] 2015-02-26 14:19:51,911 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - HttpConnection: HttpConnection@2366c122{FILLING}
+[DEBUG] 2015-02-26 14:19:51,913 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - WebSocketConnection: WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[NO_HANDLER,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:51,920 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=null,incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]]
+[DEBUG] 2015-02-26 14:19:51,921 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @5300ms WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=null,incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]]
+[DEBUG] 2015-02-26 14:19:51,926 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]
+[DEBUG] 2015-02-26 14:19:51,926 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @5306ms ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]
+[DEBUG] 2015-02-26 14:19:51,927 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - Handshake Response: org.eclipse.jetty.websocket.server.HandshakeRFC6455@6827a180
+[DEBUG] 2015-02-26 14:19:51,951 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - Websocket upgrade ws://localhost:8885/websocket/ 13 null WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:51,952 org.eclipse.jetty.server.Server handle - RESPONSE /websocket/  101 handled=true
+[DEBUG] 2015-02-26 14:19:51,952 org.eclipse.jetty.server.HttpChannelState unhandle - HttpChannelState@71282b42{s=DISPATCHED i=true a=null} unhandle DISPATCHED
+[DEBUG] 2015-02-26 14:19:51,955 org.eclipse.jetty.server.HttpChannel commit - Commit HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:51 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: ypUsCkV5cfo02q9CevPVM1S9RlE=
+Upgrade: WebSocket
+ to HttpChannelOverHttp@253be03d{r=1,c=true,a=COMPLETED,uri=/websocket/}
+[DEBUG] 2015-02-26 14:19:51,960 org.eclipse.jetty.server.HttpConnection process - org.eclipse.jetty.server.HttpConnection$SendCallback@43ae66c[PROCESSING][i=HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:51 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: ypUsCkV5cfo02q9CevPVM1S9RlE=
+Upgrade: WebSocket
+,cb=org.eclipse.jetty.server.HttpChannel$Commit100Callback@36edbe9f] generate: NEED_HEADER (null,[p=0,l=0,c=0,r=0],true)@START
+[DEBUG] 2015-02-26 14:19:51,962 org.eclipse.jetty.server.HttpConnection process - org.eclipse.jetty.server.HttpConnection$SendCallback@43ae66c[PROCESSING][i=HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:51 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: ypUsCkV5cfo02q9CevPVM1S9RlE=
+Upgrade: WebSocket
+,cb=org.eclipse.jetty.server.HttpChannel$Commit100Callback@36edbe9f] generate: FLUSH ([p=0,l=166,c=8192,r=166],[p=0,l=0,c=0,r=0],true)@COMPLETING
+[DEBUG] 2015-02-26 14:19:51,963 org.eclipse.jetty.io.WriteFlusher write - write: WriteFlusher@76b03b7f{IDLE} [HeapByteBuffer@496122e0[p=0,l=166,c=8192,r=166]={<<<HTTP/1.1 101 Swit...: WebSocket\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}]
+[DEBUG] 2015-02-26 14:19:51,963 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@76b03b7f{WRITING}:IDLE-->WRITING
+[DEBUG] 2015-02-26 14:19:51,965 org.eclipse.jetty.io.ChannelEndPoint flush - flushed 166 SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,W,300000,HttpConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:51,965 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@76b03b7f{IDLE}:WRITING-->IDLE
+[DEBUG] 2015-02-26 14:19:51,966 org.eclipse.jetty.server.HttpConnection process - org.eclipse.jetty.server.HttpConnection$SendCallback@43ae66c[PROCESSING][i=HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:51 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: ypUsCkV5cfo02q9CevPVM1S9RlE=
+Upgrade: WebSocket
+,cb=org.eclipse.jetty.server.HttpChannel$Commit100Callback@36edbe9f] generate: DONE ([p=166,l=166,c=8192,r=0],[p=0,l=0,c=0,r=0],true)@END
+[DEBUG] 2015-02-26 14:19:51,967 org.eclipse.jetty.server.HttpConnection completed - Upgrade from HttpConnection@2366c122{FILLING} to WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:51,968 org.eclipse.jetty.io.AbstractConnection onClose - onClose HttpConnection@2366c122{FILLING}
+[DEBUG] 2015-02-26 14:19:51,969 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - Notify State Listeners: CONNECTED
+[DEBUG] 2015-02-26 14:19:51,969 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketServerConnection.onConnectionStateChange(CONNECTED)
+[DEBUG] 2015-02-26 14:19:51,970 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onConnectionStateChange - SERVER Connection State Change: CONNECTED
+[DEBUG] 2015-02-26 14:19:51,970 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketSession.onConnectionStateChange(CONNECTED)
+[DEBUG] 2015-02-26 14:19:51,975 org.eclipse.jetty.websocket.common.events.AbstractEventDriver openSession - openSession(WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=WebSocketRemoteEndpoint@4a4fce76[batching=true],incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]])
+[DEBUG] 2015-02-26 14:19:52,083 org.eclipse.jetty.websocket.common.WebSocketRemoteEndpoint sendBytesByFuture - sendBytesByFuture with HeapByteBuffer@760e4c14[p=0,l=12,c=12,r=12]={<<<\x08\x0b\x1a\x0110\xD5\xC4\xAe\xBc\xBc)>>>}
+[DEBUG] 2015-02-26 14:19:52,086 org.eclipse.jetty.websocket.common.extensions.ExtensionStack outgoingFrame - Queuing BINARY[len=12,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:52,086 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Processing BINARY[len=12,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:52,086 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection outgoingFrame - outgoingFrame(BINARY[len=12,fin=true,rsv=...,masked=false], org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING])
+[DEBUG] 2015-02-26 14:19:52,087 org.eclipse.jetty.websocket.common.io.FrameFlusher enqueue - Flusher[queueSize=1,aggregateSize=0,failure=null] queued FrameEntry[BINARY[len=12,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING],AUTO,null]
+[DEBUG] 2015-02-26 14:19:52,088 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 1 entries: [FrameEntry[BINARY[len=12,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:52,093 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] acquired aggregate buffer java.nio.DirectByteBuffer[pos=0 lim=0 cap=10000000]
+[DEBUG] 2015-02-26 14:19:52,093 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] aggregated 1 frames: [FrameEntry[BINARY[len=0,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:52,093 org.eclipse.jetty.websocket.common.io.FutureWriteCallback writeSuccess - .writeSuccess
+[DEBUG] 2015-02-26 14:19:52,094 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:52,094 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:52,094 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing aggregate java.nio.DirectByteBuffer[pos=0 lim=14 cap=10000000]
+[DEBUG] 2015-02-26 14:19:52,095 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:52,095 org.eclipse.jetty.io.WriteFlusher write - write: WriteFlusher@76b03b7f{IDLE} [DirectByteBuffer@79112836[p=0,l=14,c=10000000,r=14]={<<<\x82\x0c\x08\x0b\x1a\x0110\xD5\xC4\xAe\xBc\xBc)>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}]
+[DEBUG] 2015-02-26 14:19:52,095 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@76b03b7f{WRITING}:IDLE-->WRITING
+[DEBUG] 2015-02-26 14:19:52,096 org.eclipse.jetty.io.ChannelEndPoint flush - flushed 14 SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,W,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,096 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@76b03b7f{IDLE}:WRITING-->IDLE
+[DEBUG] 2015-02-26 14:19:52,097 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=14,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:52,097 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=14,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:52,097 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=14,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:52,098 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Entering IDLE
+[DEBUG] 2015-02-26 14:19:52,098 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - Notify State Listeners: OPEN
+[DEBUG] 2015-02-26 14:19:52,098 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketServerConnection.onConnectionStateChange(OPEN)
+[DEBUG] 2015-02-26 14:19:52,098 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onConnectionStateChange - SERVER Connection State Change: OPEN
+[DEBUG] 2015-02-26 14:19:52,098 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onConnectionStateChange - fillInterested
+[DEBUG] 2015-02-26 14:19:52,099 org.eclipse.jetty.io.AbstractConnection fillInterested - fillInterested WebSocketServerConnection@4c2a511{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,099 org.eclipse.jetty.io.AbstractConnection next - IDLE-->FILL_INTERESTED WebSocketServerConnection@4c2a511{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,100 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - Changing interests in state UPDATED for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,101 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - changeInterests s=UPDATED 0->1 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,101 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectChannelEndPoint$1@6f4a3622
+[DEBUG] 2015-02-26 14:19:52,101 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketSession.onConnectionStateChange(OPEN)
+[DEBUG] 2015-02-26 14:19:52,102 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/1 selected
+[DEBUG] 2015-02-26 14:19:52,107 org.eclipse.jetty.websocket.common.WebSocketSession open - open -> WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@4c2a511{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=WebSocketRemoteEndpoint@4a4fce76[batching=true],incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]] - STARTED
+ +- incomingHandler : JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c]
+ +- outgoingHandler : ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection] - STARTED
+     +- Stack
+         +- Network  : WebSocketServerConnection@4c2a511{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+         +- Websocket: WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@4c2a511{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=WebSocketRemoteEndpoint@4a4fce76[batching=true],incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]]
+
+[DEBUG] 2015-02-26 14:19:52,108 org.eclipse.jetty.io.AbstractConnection onOpen - onOpen WebSocketServerConnection@4c2a511{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,111 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectChannelEndPoint$1@6f4a3622
+[DEBUG] 2015-02-26 14:19:52,112 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,112 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 0 -> 1 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,113 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:52,113 org.eclipse.jetty.http.HttpParser reset - reset HttpParser{s=END,0 of 0}
+[DEBUG] 2015-02-26 14:19:52,113 org.eclipse.jetty.http.HttpParser setState - END --> START
+[DEBUG] 2015-02-26 14:19:52,113 org.eclipse.jetty.server.HttpChannel handle - HttpChannelOverHttp@253be03d{r=1,c=false,a=IDLE,uri=-} handle exit, result COMPLETE
+[DEBUG] 2015-02-26 14:19:52,114 org.eclipse.jetty.io.AbstractConnection next - FILLING-->IDLE HttpConnection@2366c122{IDLE}
+[DEBUG] 2015-02-26 14:19:52,248 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 1/1 selected
+[DEBUG] 2015-02-26 14:19:52,249 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - Processing, state UPDATED for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:52,250 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - onSelected 1->0 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:52,251 org.eclipse.jetty.io.AbstractConnection next - FILL_INTERESTED-->FILLING WebSocketServerConnection@4c2a511{FILLING}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,251 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onFillable - SERVER onFillable()
+[DEBUG] 2015-02-26 14:19:52,252 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:52,252 org.eclipse.jetty.io.ChannelEndPoint fill - filled 20 SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:52,252 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection readParse - Filled 20 bytes - DirectByteBuffer@7f21f894[p=0,l=20,c=4096,r=20]={<<<\x82\x8e\xD9HQ\xA1\xD1CK\xA0\xEbjQ\x91v\x8d\xFf\x1dea>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}
+[DEBUG] 2015-02-26 14:19:52,252 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 1 -> 0 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:52,252 org.eclipse.jetty.websocket.common.Parser parseFrame - SERVER Parsing 20 bytes
+[DEBUG] 2015-02-26 14:19:52,253 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:52,253 org.eclipse.jetty.websocket.common.Parser parseFrame - SERVER OpCode BINARY, fin=true rsv=...
+[DEBUG] 2015-02-26 14:19:52,254 org.eclipse.jetty.websocket.common.Parser assertSanePayloadLength - SERVER Payload Length: 14 - Parser@57dd7469[ExtensionStack,s=PAYLOAD_LEN,c=0,len=14,f=BINARY[len=0,fin=true,rsv=...,masked=true],p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]
+[DEBUG] 2015-02-26 14:19:52,254 org.eclipse.jetty.websocket.common.Parser parsePayload - SERVER Window: DirectByteBuffer@28ab0e22[p=0,l=14,c=14,r=14]={<<<\xD1CK\xA0\xEbjQ\x91v\x8d\xFf\x1dea>>>}
+[DEBUG] 2015-02-26 14:19:52,254 org.eclipse.jetty.websocket.common.Parser parse - SERVER Parsed Frame: BINARY[len=14,fin=true,rsv=...,masked=true]
+[DEBUG] 2015-02-26 14:19:52,254 org.eclipse.jetty.websocket.common.Parser notifyFrame - SERVER Notify ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]
+[DEBUG] 2015-02-26 14:19:52,255 org.eclipse.jetty.websocket.common.events.AbstractEventDriver incomingFrame - incomingFrame(BINARY[len=14,fin=true,rsv=...,masked=true])
+[DEBUG] 2015-02-26 14:19:52,261 org.eclipse.jetty.websocket.common.WebSocketRemoteEndpoint sendBytesByFuture - sendBytesByFuture with HeapByteBuffer@2347f2c3[p=0,l=7,c=7,r=7]={<<<\x08\x0b\x1a\x0130K>>>}
+[DEBUG] 2015-02-26 14:19:52,261 org.eclipse.jetty.websocket.common.extensions.ExtensionStack outgoingFrame - Queuing BINARY[len=7,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:52,262 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Processing BINARY[len=7,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:52,262 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection outgoingFrame - outgoingFrame(BINARY[len=7,fin=true,rsv=...,masked=false], org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING])
+[DEBUG] 2015-02-26 14:19:52,262 org.eclipse.jetty.websocket.common.io.FrameFlusher enqueue - Flusher[queueSize=1,aggregateSize=0,failure=null] queued FrameEntry[BINARY[len=7,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING],AUTO,null]
+[DEBUG] 2015-02-26 14:19:52,263 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 1 entries: [FrameEntry[BINARY[len=7,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:52,270 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] acquired aggregate buffer java.nio.DirectByteBuffer[pos=0 lim=0 cap=10000000]
+[DEBUG] 2015-02-26 14:19:52,271 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] aggregated 1 frames: [FrameEntry[BINARY[len=0,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1c889fe1[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:52,271 org.eclipse.jetty.websocket.common.io.FutureWriteCallback writeSuccess - .writeSuccess
+[DEBUG] 2015-02-26 14:19:52,272 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:52,272 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:52,272 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing aggregate java.nio.DirectByteBuffer[pos=0 lim=9 cap=10000000]
+[DEBUG] 2015-02-26 14:19:52,272 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:52,272 org.eclipse.jetty.io.WriteFlusher write - write: WriteFlusher@76b03b7f{IDLE} [DirectByteBuffer@2dacd90a[p=0,l=9,c=10000000,r=9]={<<<\x82\x07\x08\x0b\x1a\x0130K>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}]
+[DEBUG] 2015-02-26 14:19:52,273 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@76b03b7f{WRITING}:IDLE-->WRITING
+[DEBUG] 2015-02-26 14:19:52,273 org.eclipse.jetty.io.ChannelEndPoint flush - flushed 9 SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,W,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,274 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@76b03b7f{IDLE}:WRITING-->IDLE
+[DEBUG] 2015-02-26 14:19:52,274 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=9,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:52,274 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=9,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:52,275 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=9,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:52,275 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Entering IDLE
+[INFO] 2015-02-26 14:19:52,275 connection.DatabaseServerWebSocketHandler onMessage - Finished looking at query
+[DEBUG] 2015-02-26 14:19:52,275 org.eclipse.jetty.websocket.common.Parser parseFrame - SERVER Parsing 0 bytes
+[DEBUG] 2015-02-26 14:19:52,276 org.eclipse.jetty.io.ChannelEndPoint fill - filled 0 SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,276 org.eclipse.jetty.io.AbstractConnection fillInterested - fillInterested WebSocketServerConnection@4c2a511{FILLING}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=14,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,277 org.eclipse.jetty.io.AbstractConnection next - FILLING-->FILLING_FILL_INTERESTED WebSocketServerConnection@4c2a511{FILLING_FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=14,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,277 org.eclipse.jetty.io.AbstractConnection next - FILLING_FILL_INTERESTED-->FILL_INTERESTED WebSocketServerConnection@4c2a511{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@57dd7469[ExtensionStack,s=START,c=0,len=14,f=null,p=WebSocketPolicy@c05c690[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:52,278 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - Changing interests in state UPDATED for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,278 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - changeInterests s=UPDATED 0->1 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,278 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectChannelEndPoint$1@6f4a3622
+[DEBUG] 2015-02-26 14:19:52,278 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/1 selected
+[DEBUG] 2015-02-26 14:19:52,278 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectChannelEndPoint$1@6f4a3622
+[DEBUG] 2015-02-26 14:19:52,279 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,279 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 0 -> 1 for SelectChannelEndPoint@265dbc82{/127.0.0.1:54681<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:52,279 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:53,967 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectorManager$ManagedSelector$Accept@c2bee08
+[DEBUG] 2015-02-26 14:19:53,967 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/0 selected
+[DEBUG] 2015-02-26 14:19:53,978 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectorManager$ManagedSelector$Accept@c2bee08
+[DEBUG] 2015-02-26 14:19:53,979 org.eclipse.jetty.io.AbstractEndPoint onOpen - onOpen SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,30000,null}{io=0,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:53,979 org.eclipse.jetty.io.IdleTimeout checkIdleTimeout - SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,30000,null}{io=0,kio=0,kro=0} idle timeout check, elapsed: 1 ms, remaining: 29999 ms
+[DEBUG] 2015-02-26 14:19:53,980 org.eclipse.jetty.server.HttpConnection <init> - New HTTP Connection HttpConnection@79d3dd34{IDLE}
+[DEBUG] 2015-02-26 14:19:53,980 org.eclipse.jetty.io.AbstractConnection onOpen - onOpen HttpConnection@79d3dd34{IDLE}
+[DEBUG] 2015-02-26 14:19:53,980 org.eclipse.jetty.io.AbstractConnection fillInterested - fillInterested HttpConnection@79d3dd34{IDLE}
+[DEBUG] 2015-02-26 14:19:53,981 org.eclipse.jetty.io.AbstractConnection next - IDLE-->FILL_INTERESTED HttpConnection@79d3dd34{FILL_INTERESTED}
+[DEBUG] 2015-02-26 14:19:53,981 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - Changing interests in state UPDATED for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=0,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:53,982 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - changeInterests s=UPDATED 0->1 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=0,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:53,982 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectChannelEndPoint$1@445fbf68
+[DEBUG] 2015-02-26 14:19:53,982 org.eclipse.jetty.io.SelectorManager createEndPoint - Created SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:53,983 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectChannelEndPoint$1@445fbf68
+[DEBUG] 2015-02-26 14:19:53,983 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:53,984 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 0 -> 1 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=0,kro=0}
+[DEBUG] 2015-02-26 14:19:53,984 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:54,007 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 1/1 selected
+[DEBUG] 2015-02-26 14:19:54,009 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - Processing, state UPDATED for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=1,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,009 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - onSelected 1->0 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,010 org.eclipse.jetty.io.AbstractConnection next - FILL_INTERESTED-->FILLING HttpConnection@79d3dd34{FILLING}
+[DEBUG] 2015-02-26 14:19:54,010 org.eclipse.jetty.server.HttpConnection onFillable - HttpConnection@79d3dd34{FILLING} onFillable HttpChannelState@6a0f67e9{s=IDLE i=true a=null}
+[DEBUG] 2015-02-26 14:19:54,011 org.eclipse.jetty.io.ChannelEndPoint fill - filled 206 SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,011 org.eclipse.jetty.http.HttpParser parseNext - parseNext s=START HeapByteBuffer@c1819fb5[p=0,l=206,c=8192,r=206]={<<<GET /websocket/ H...l: no-cache\r\n\r\n>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}
+[DEBUG] 2015-02-26 14:19:54,021 org.eclipse.jetty.http.HttpParser setState - START --> SPACE1
+[DEBUG] 2015-02-26 14:19:54,022 org.eclipse.jetty.http.HttpParser setState - SPACE1 --> URI
+[DEBUG] 2015-02-26 14:19:54,022 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,022 org.eclipse.jetty.http.HttpParser setState - URI --> SPACE2
+[DEBUG] 2015-02-26 14:19:54,022 org.eclipse.jetty.http.HttpParser setState - SPACE2 --> REQUEST_VERSION
+[DEBUG] 2015-02-26 14:19:54,022 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 1 -> 0 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,30000,HttpConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,022 org.eclipse.jetty.http.HttpParser setState - REQUEST_VERSION --> HEADER
+[DEBUG] 2015-02-26 14:19:54,023 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:54,023 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:54,023 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,023 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,023 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:54,023 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,024 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,024 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,024 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,024 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_NAME
+[DEBUG] 2015-02-26 14:19:54,024 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_NAME --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:54,024 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_NAME
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_NAME --> HEADER_VALUE
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER_VALUE --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,025 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,026 org.eclipse.jetty.http.HttpParser setState - HEADER --> HEADER_IN_VALUE
+[DEBUG] 2015-02-26 14:19:54,026 org.eclipse.jetty.http.HttpParser setState - HEADER_IN_VALUE --> HEADER
+[DEBUG] 2015-02-26 14:19:54,026 org.eclipse.jetty.http.HttpParser setState - HEADER --> END
+[DEBUG] 2015-02-26 14:19:54,026 org.eclipse.jetty.server.HttpChannel onRequestComplete - HttpChannelOverHttp@50c50bee{r=1,c=false,a=IDLE,uri=-} onRequestComplete
+[DEBUG] 2015-02-26 14:19:54,027 org.eclipse.jetty.server.HttpInput messageComplete - HttpInputOverHTTP@5f34b479 EOF
+[DEBUG] 2015-02-26 14:19:54,027 org.eclipse.jetty.server.HttpChannel handle - HttpChannelOverHttp@50c50bee{r=1,c=false,a=IDLE,uri=-} handle enter
+[DEBUG] 2015-02-26 14:19:54,027 org.eclipse.jetty.server.HttpChannelState handling - HttpChannelState@6a0f67e9{s=IDLE i=true a=null} handling IDLE
+[DEBUG] 2015-02-26 14:19:54,028 org.eclipse.jetty.server.HttpChannel handle - HttpChannelOverHttp@50c50bee{r=1,c=false,a=DISPATCHED,uri=/websocket/} action REQUEST_DISPATCH
+[DEBUG] 2015-02-26 14:19:54,028 org.eclipse.jetty.server.Server handle - REQUEST /websocket/ on HttpChannelOverHttp@50c50bee{r=1,c=false,a=DISPATCHED,uri=/websocket/}
+[DEBUG] 2015-02-26 14:19:54,028 org.eclipse.jetty.servlet.ServletHandler doScope - servlet null||/websocket/ -> connection.DatabaseServlet-4868bd35@ab9eb2bd==connection.DatabaseServlet,-1,true
+[DEBUG] 2015-02-26 14:19:54,028 org.eclipse.jetty.servlet.ServletHandler doHandle - chain=null
+[DEBUG] 2015-02-26 14:19:54,029 org.eclipse.jetty.websocket.common.extensions.ExtensionStack negotiate - Extension Configs=[]
+[DEBUG] 2015-02-26 14:19:54,030 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - HttpConnection: HttpConnection@79d3dd34{FILLING}
+[DEBUG] 2015-02-26 14:19:54,030 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - WebSocketConnection: WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[NO_HANDLER,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,031 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=null,incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]]
+[DEBUG] 2015-02-26 14:19:54,032 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @7411ms WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=null,incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]]
+[DEBUG] 2015-02-26 14:19:54,032 org.eclipse.jetty.util.component.AbstractLifeCycle setStarting - starting ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]
+[DEBUG] 2015-02-26 14:19:54,032 org.eclipse.jetty.util.component.AbstractLifeCycle setStarted - STARTED @7412ms ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]
+[DEBUG] 2015-02-26 14:19:54,033 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - Handshake Response: org.eclipse.jetty.websocket.server.HandshakeRFC6455@6827a180
+[DEBUG] 2015-02-26 14:19:54,034 org.eclipse.jetty.websocket.server.WebSocketServerFactory upgrade - Websocket upgrade ws://localhost:8885/websocket/ 13 null WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,034 org.eclipse.jetty.server.Server handle - RESPONSE /websocket/  101 handled=true
+[DEBUG] 2015-02-26 14:19:54,034 org.eclipse.jetty.server.HttpChannelState unhandle - HttpChannelState@6a0f67e9{s=DISPATCHED i=true a=null} unhandle DISPATCHED
+[DEBUG] 2015-02-26 14:19:54,035 org.eclipse.jetty.server.HttpChannel commit - Commit HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:54 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: XdCTmRwPN3dUjRud4kR744hLfL0=
+Upgrade: WebSocket
+ to HttpChannelOverHttp@50c50bee{r=1,c=true,a=COMPLETED,uri=/websocket/}
+[DEBUG] 2015-02-26 14:19:54,035 org.eclipse.jetty.server.HttpConnection process - org.eclipse.jetty.server.HttpConnection$SendCallback@27821609[PROCESSING][i=HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:54 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: XdCTmRwPN3dUjRud4kR744hLfL0=
+Upgrade: WebSocket
+,cb=org.eclipse.jetty.server.HttpChannel$Commit100Callback@4d74bd22] generate: NEED_HEADER (null,[p=0,l=0,c=0,r=0],true)@START
+[DEBUG] 2015-02-26 14:19:54,036 org.eclipse.jetty.server.HttpConnection process - org.eclipse.jetty.server.HttpConnection$SendCallback@27821609[PROCESSING][i=HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:54 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: XdCTmRwPN3dUjRud4kR744hLfL0=
+Upgrade: WebSocket
+,cb=org.eclipse.jetty.server.HttpChannel$Commit100Callback@4d74bd22] generate: FLUSH ([p=0,l=166,c=8192,r=166],[p=0,l=0,c=0,r=0],true)@COMPLETING
+[DEBUG] 2015-02-26 14:19:54,037 org.eclipse.jetty.io.WriteFlusher write - write: WriteFlusher@2b2d2ae8{IDLE} [HeapByteBuffer@e26b6aea[p=0,l=166,c=8192,r=166]={<<<HTTP/1.1 101 Swit...: WebSocket\r\n\r\n>>>a: no-cache\r\nCach...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}]
+[DEBUG] 2015-02-26 14:19:54,038 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@2b2d2ae8{WRITING}:IDLE-->WRITING
+[DEBUG] 2015-02-26 14:19:54,039 org.eclipse.jetty.io.ChannelEndPoint flush - flushed 166 SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,W,300000,HttpConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,039 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@2b2d2ae8{IDLE}:WRITING-->IDLE
+[DEBUG] 2015-02-26 14:19:54,040 org.eclipse.jetty.server.HttpConnection process - org.eclipse.jetty.server.HttpConnection$SendCallback@27821609[PROCESSING][i=HTTP/1.1 101
+Date: Thu, 26 Feb 2015 20:19:54 GMT
+Connection: Upgrade
+Sec-WebSocket-Accept: XdCTmRwPN3dUjRud4kR744hLfL0=
+Upgrade: WebSocket
+,cb=org.eclipse.jetty.server.HttpChannel$Commit100Callback@4d74bd22] generate: DONE ([p=166,l=166,c=8192,r=0],[p=0,l=0,c=0,r=0],true)@END
+[DEBUG] 2015-02-26 14:19:54,040 org.eclipse.jetty.server.HttpConnection completed - Upgrade from HttpConnection@79d3dd34{FILLING} to WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,041 org.eclipse.jetty.io.AbstractConnection onClose - onClose HttpConnection@79d3dd34{FILLING}
+[DEBUG] 2015-02-26 14:19:54,041 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - Notify State Listeners: CONNECTED
+[DEBUG] 2015-02-26 14:19:54,041 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketServerConnection.onConnectionStateChange(CONNECTED)
+[DEBUG] 2015-02-26 14:19:54,041 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onConnectionStateChange - SERVER Connection State Change: CONNECTED
+[DEBUG] 2015-02-26 14:19:54,041 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketSession.onConnectionStateChange(CONNECTED)
+[DEBUG] 2015-02-26 14:19:54,042 org.eclipse.jetty.websocket.common.events.AbstractEventDriver openSession - openSession(WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=WebSocketRemoteEndpoint@44dbdd2a[batching=true],incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]])
+[DEBUG] 2015-02-26 14:19:54,043 org.eclipse.jetty.websocket.common.WebSocketRemoteEndpoint sendBytesByFuture - sendBytesByFuture with HeapByteBuffer@4a91c3fe[p=0,l=12,c=12,r=12]={<<<\x08\x0b\x1a\x0110\xBb\xD4\xAe\xBc\xBc)>>>}
+[DEBUG] 2015-02-26 14:19:54,043 org.eclipse.jetty.websocket.common.extensions.ExtensionStack outgoingFrame - Queuing BINARY[len=12,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:54,043 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Processing BINARY[len=12,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:54,044 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection outgoingFrame - outgoingFrame(BINARY[len=12,fin=true,rsv=...,masked=false], org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING])
+[DEBUG] 2015-02-26 14:19:54,044 org.eclipse.jetty.websocket.common.io.FrameFlusher enqueue - Flusher[queueSize=1,aggregateSize=0,failure=null] queued FrameEntry[BINARY[len=12,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING],AUTO,null]
+[DEBUG] 2015-02-26 14:19:54,045 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 1 entries: [FrameEntry[BINARY[len=12,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:54,050 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] acquired aggregate buffer java.nio.DirectByteBuffer[pos=0 lim=0 cap=10000000]
+[DEBUG] 2015-02-26 14:19:54,051 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] aggregated 1 frames: [FrameEntry[BINARY[len=0,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:54,051 org.eclipse.jetty.websocket.common.io.FutureWriteCallback writeSuccess - .writeSuccess
+[DEBUG] 2015-02-26 14:19:54,052 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:54,052 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:54,052 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing aggregate java.nio.DirectByteBuffer[pos=0 lim=14 cap=10000000]
+[DEBUG] 2015-02-26 14:19:54,055 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:54,056 org.eclipse.jetty.io.WriteFlusher write - write: WriteFlusher@2b2d2ae8{IDLE} [DirectByteBuffer@4478e1b5[p=0,l=14,c=10000000,r=14]={<<<\x82\x0c\x08\x0b\x1a\x0110\xBb\xD4\xAe\xBc\xBc)>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}]
+[DEBUG] 2015-02-26 14:19:54,057 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@2b2d2ae8{WRITING}:IDLE-->WRITING
+[DEBUG] 2015-02-26 14:19:54,058 org.eclipse.jetty.io.ChannelEndPoint flush - flushed 14 SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,W,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,059 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@2b2d2ae8{IDLE}:WRITING-->IDLE
+[DEBUG] 2015-02-26 14:19:54,059 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=14,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:54,060 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=14,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:54,060 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=14,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:54,060 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Entering IDLE
+[DEBUG] 2015-02-26 14:19:54,061 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - Notify State Listeners: OPEN
+[DEBUG] 2015-02-26 14:19:54,061 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketServerConnection.onConnectionStateChange(OPEN)
+[DEBUG] 2015-02-26 14:19:54,061 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onConnectionStateChange - SERVER Connection State Change: OPEN
+[DEBUG] 2015-02-26 14:19:54,062 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onConnectionStateChange - fillInterested
+[DEBUG] 2015-02-26 14:19:54,062 org.eclipse.jetty.io.AbstractConnection fillInterested - fillInterested WebSocketServerConnection@475d6bd6{IDLE}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,063 org.eclipse.jetty.io.AbstractConnection next - IDLE-->FILL_INTERESTED WebSocketServerConnection@475d6bd6{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,064 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - Changing interests in state UPDATED for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,064 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - changeInterests s=UPDATED 0->1 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,064 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectChannelEndPoint$1@445fbf68
+[DEBUG] 2015-02-26 14:19:54,065 org.eclipse.jetty.websocket.common.io.IOState notifyStateListeners - WebSocketSession.onConnectionStateChange(OPEN)
+[DEBUG] 2015-02-26 14:19:54,065 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/1 selected
+[DEBUG] 2015-02-26 14:19:54,066 org.eclipse.jetty.websocket.common.WebSocketSession open - open -> WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@475d6bd6{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=WebSocketRemoteEndpoint@44dbdd2a[batching=true],incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]] - STARTED
+ +- incomingHandler : JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c]
+ +- outgoingHandler : ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection] - STARTED
+     +- Stack
+         +- Network  : WebSocketServerConnection@475d6bd6{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+         +- Websocket: WebSocketSession[websocket=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],behavior=SERVER,connection=WebSocketServerConnection@475d6bd6{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]},remote=WebSocketRemoteEndpoint@44dbdd2a[batching=true],incoming=JettyAnnotatedEventDriver[connection.DatabaseServerWebSocketHandler@6fd6733c],outgoing=ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]]
+
+[DEBUG] 2015-02-26 14:19:54,075 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectChannelEndPoint$1@445fbf68
+[DEBUG] 2015-02-26 14:19:54,076 org.eclipse.jetty.io.AbstractConnection onOpen - onOpen WebSocketServerConnection@475d6bd6{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,076 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,077 org.eclipse.jetty.http.HttpParser reset - reset HttpParser{s=END,0 of 0}
+[DEBUG] 2015-02-26 14:19:54,077 org.eclipse.jetty.http.HttpParser setState - END --> START
+[DEBUG] 2015-02-26 14:19:54,077 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 0 -> 1 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,078 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:54,078 org.eclipse.jetty.server.HttpChannel handle - HttpChannelOverHttp@50c50bee{r=1,c=false,a=IDLE,uri=-} handle exit, result COMPLETE
+[DEBUG] 2015-02-26 14:19:54,079 org.eclipse.jetty.io.AbstractConnection next - FILLING-->IDLE HttpConnection@79d3dd34{IDLE}
+[DEBUG] 2015-02-26 14:19:54,410 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 1/1 selected
+[DEBUG] 2015-02-26 14:19:54,411 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - Processing, state UPDATED for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,411 org.eclipse.jetty.io.SelectChannelEndPoint onSelected - onSelected 1->0 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,412 org.eclipse.jetty.io.AbstractConnection next - FILL_INTERESTED-->FILLING WebSocketServerConnection@475d6bd6{FILLING}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=0,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,412 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection onFillable - SERVER onFillable()
+[DEBUG] 2015-02-26 14:19:54,412 org.eclipse.jetty.io.ChannelEndPoint fill - filled 20 SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,412 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,413 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection readParse - Filled 20 bytes - DirectByteBuffer@13440bd8[p=0,l=20,c=4096,r=20]={<<<\x82\x8eAN\xB0\x8bIE\xAa\x8asl\xB0\xBb\xC4\x98\x1e7\xFdg>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}
+[DEBUG] 2015-02-26 14:19:54,413 org.eclipse.jetty.websocket.common.Parser parseFrame - SERVER Parsing 20 bytes
+[DEBUG] 2015-02-26 14:19:54,413 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 1 -> 0 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=1,kro=1}
+[DEBUG] 2015-02-26 14:19:54,413 org.eclipse.jetty.websocket.common.Parser parseFrame - SERVER OpCode BINARY, fin=true rsv=...
+[DEBUG] 2015-02-26 14:19:54,413 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
+[DEBUG] 2015-02-26 14:19:54,414 org.eclipse.jetty.websocket.common.Parser assertSanePayloadLength - SERVER Payload Length: 14 - Parser@4652d334[ExtensionStack,s=PAYLOAD_LEN,c=0,len=14,f=BINARY[len=0,fin=true,rsv=...,masked=true],p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]
+[DEBUG] 2015-02-26 14:19:54,414 org.eclipse.jetty.websocket.common.Parser parsePayload - SERVER Window: DirectByteBuffer@1299d847[p=0,l=14,c=14,r=14]={<<<IE\xAa\x8asl\xB0\xBb\xC4\x98\x1e7\xFdg>>>}
+[DEBUG] 2015-02-26 14:19:54,414 org.eclipse.jetty.websocket.common.Parser parse - SERVER Parsed Frame: BINARY[len=14,fin=true,rsv=...,masked=true]
+[DEBUG] 2015-02-26 14:19:54,414 org.eclipse.jetty.websocket.common.Parser notifyFrame - SERVER Notify ExtensionStack[queueSize=0,extensions=[],incoming=org.eclipse.jetty.websocket.common.WebSocketSession,outgoing=org.eclipse.jetty.websocket.server.WebSocketServerConnection]
+[DEBUG] 2015-02-26 14:19:54,414 org.eclipse.jetty.websocket.common.events.AbstractEventDriver incomingFrame - incomingFrame(BINARY[len=14,fin=true,rsv=...,masked=true])
+[DEBUG] 2015-02-26 14:19:54,415 org.eclipse.jetty.websocket.common.WebSocketRemoteEndpoint sendBytesByFuture - sendBytesByFuture with HeapByteBuffer@2347f2cd[p=0,l=7,c=7,r=7]={<<<\x08\x0b\x1a\x0130U>>>}
+[DEBUG] 2015-02-26 14:19:54,415 org.eclipse.jetty.websocket.common.extensions.ExtensionStack outgoingFrame - Queuing BINARY[len=7,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:54,415 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Processing BINARY[len=7,fin=true,rsv=...,masked=false]
+[DEBUG] 2015-02-26 14:19:54,415 org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection outgoingFrame - outgoingFrame(BINARY[len=7,fin=true,rsv=...,masked=false], org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING])
+[DEBUG] 2015-02-26 14:19:54,416 org.eclipse.jetty.websocket.common.io.FrameFlusher enqueue - Flusher[queueSize=1,aggregateSize=0,failure=null] queued FrameEntry[BINARY[len=7,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING],AUTO,null]
+[DEBUG] 2015-02-26 14:19:54,416 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 1 entries: [FrameEntry[BINARY[len=7,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:54,424 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] acquired aggregate buffer java.nio.DirectByteBuffer[pos=0 lim=0 cap=10000000]
+[DEBUG] 2015-02-26 14:19:54,425 org.eclipse.jetty.websocket.common.io.FrameFlusher batch - Flusher[queueSize=0,aggregateSize=0,failure=null] aggregated 1 frames: [FrameEntry[BINARY[len=0,fin=true,rsv=...,masked=false],org.eclipse.jetty.websocket.common.extensions.ExtensionStack$Flusher@1cb7468d[PROCESSING],AUTO,null]]
+[DEBUG] 2015-02-26 14:19:54,425 org.eclipse.jetty.websocket.common.io.FutureWriteCallback writeSuccess - .writeSuccess
+[DEBUG] 2015-02-26 14:19:54,425 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:54,426 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=0,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:54,426 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing aggregate java.nio.DirectByteBuffer[pos=0 lim=9 cap=10000000]
+[DEBUG] 2015-02-26 14:19:54,426 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=0,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:54,427 org.eclipse.jetty.io.WriteFlusher write - write: WriteFlusher@2b2d2ae8{IDLE} [DirectByteBuffer@324626db[p=0,l=9,c=10000000,r=9]={<<<\x82\x07\x08\x0b\x1a\x0130U>>>\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00}]
+[DEBUG] 2015-02-26 14:19:54,427 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@2b2d2ae8{WRITING}:IDLE-->WRITING
+[DEBUG] 2015-02-26 14:19:54,428 org.eclipse.jetty.io.ChannelEndPoint flush - flushed 9 SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,W,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,428 org.eclipse.jetty.io.WriteFlusher updateState - update WriteFlusher@2b2d2ae8{IDLE}:WRITING-->IDLE
+[DEBUG] 2015-02-26 14:19:54,428 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=9,failure=null] processing 0 entries: []
+[DEBUG] 2015-02-26 14:19:54,429 org.eclipse.jetty.websocket.common.io.FrameFlusher process - Flusher[queueSize=0,aggregateSize=9,failure=null] auto flushing
+[DEBUG] 2015-02-26 14:19:54,429 org.eclipse.jetty.websocket.common.io.FrameFlusher flush - Flusher[queueSize=0,aggregateSize=9,failure=null] flushing 0 frames: []
+[DEBUG] 2015-02-26 14:19:54,429 org.eclipse.jetty.websocket.common.extensions.ExtensionStack process - Entering IDLE
+[INFO] 2015-02-26 14:19:54,429 connection.DatabaseServerWebSocketHandler onMessage - Finished looking at query
+[DEBUG] 2015-02-26 14:19:54,430 org.eclipse.jetty.websocket.common.Parser parseFrame - SERVER Parsing 0 bytes
+[DEBUG] 2015-02-26 14:19:54,430 org.eclipse.jetty.io.ChannelEndPoint fill - filled 0 SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,-,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,430 org.eclipse.jetty.io.AbstractConnection fillInterested - fillInterested WebSocketServerConnection@475d6bd6{FILLING}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=14,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,431 org.eclipse.jetty.io.AbstractConnection next - FILLING-->FILLING_FILL_INTERESTED WebSocketServerConnection@475d6bd6{FILLING_FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=14,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,431 org.eclipse.jetty.io.AbstractConnection next - FILLING_FILL_INTERESTED-->FILL_INTERESTED WebSocketServerConnection@475d6bd6{FILL_INTERESTED}{f=Flusher[queueSize=0,aggregateSize=0,failure=null],g=Generator[SERVER,validating],p=Parser@4652d334[ExtensionStack,s=START,c=0,len=14,f=null,p=WebSocketPolicy@67a81efd[behavior=SERVER,maxTextMessageSize=65536,maxTextMessageBufferSize=32768,maxBinaryMessageSize=10000000,maxBinaryMessageBufferSize=10000000,asyncWriteTimeout=60000,idleTimeout=300000,inputBufferSize=4096]]}
+[DEBUG] 2015-02-26 14:19:54,432 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - Changing interests in state UPDATED for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,432 org.eclipse.jetty.io.SelectChannelEndPoint changeInterests - changeInterests s=UPDATED 0->1 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=0,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,432 org.eclipse.jetty.io.SelectorManager submit - Queued change org.eclipse.jetty.io.SelectChannelEndPoint$1@445fbf68
+[DEBUG] 2015-02-26 14:19:54,432 org.eclipse.jetty.io.SelectorManager select - Selector loop woken up from select, 0/1 selected
+[DEBUG] 2015-02-26 14:19:54,444 org.eclipse.jetty.io.SelectorManager runChange - Running change org.eclipse.jetty.io.SelectChannelEndPoint$1@445fbf68
+[DEBUG] 2015-02-26 14:19:54,445 org.eclipse.jetty.io.SelectChannelEndPoint updateKey - Updating key, state UPDATE_PENDING for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,445 org.eclipse.jetty.io.SelectChannelEndPoint setKeyInterests - Key interests update 0 -> 1 for SelectChannelEndPoint@2f9a8c72{/127.0.0.1:54684<->8885,Open,in,out,R,-,300000,WebSocketServerConnection}{io=1,kio=0,kro=1}
+[DEBUG] 2015-02-26 14:19:54,445 org.eclipse.jetty.io.SelectorManager select - Selector loop waiting on select
