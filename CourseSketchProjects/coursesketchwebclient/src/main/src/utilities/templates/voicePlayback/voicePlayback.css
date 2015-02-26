@@ -1,10 +1,73 @@
-#playbackBtn {
-                height: 50px;
-                width: 50px;
+#play-btn {
+                position:absolute;
+                top:10%;
+                left:20%;
+                height: 52px;
+                width: 52px;
                 border-radius: 50px;
-                border: 1px solid #FF0000;
-                background: #ff1919;
-                font-weight: bold;
-                line-height: 1;
-                text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-}
+                border: 1px solid #C1CDCD;
+                background: #C1CDCD;
+                background-image: url(/src/utilities/templates/voicePlayback/play_icon.svg);
+                background-size: 40px 40px;
+                background-repeat: no-repeat;
+                background-position: 60% 50%;
+             }
+#pause-btn {
+                position:absolute;
+                top:10%;
+                left:20%;
+                height: 52px;
+                width: 52px;
+                border-radius: 50px;
+                border: 1px solid #C1CDCD;
+                background: #C1CDCD;
+                background-image: url(/src/utilities/templates/voicePlayback/pause_icon.svg);
+                background-size: 40px 40px;
+                background-repeat: no-repeat;
+                background-position: 60% 50%;
+                display: none;
+             }
+#redo-btn {
+                height: 52px;
+                width: 52px;
+                border-radius: 50px;
+                border: 1px solid #C1CDCD;
+                background: #C1CDCD;
+                background-image: url(/src/utilities/templates/voicePlayback/redo_icon.svg);
+                background-size: 40px 40px;
+                background-repeat: no-repeat;
+                background-position: 60% 50%;
+             }
+#undo-btn {
+                height: 52px;
+                width: 52px;
+                border-radius: 50px;
+                border: 1px solid #C1CDCD;
+                background: #C1CDCD;
+                background-image: url(/src/utilities/templates/voicePlayback/undo_icon.svg);
+                background-size: 40px 40px;
+                background-repeat: no-repeat;
+                background-position: 60% 50%;
+             }
+#speedup-btn {
+                height: 52px;
+                width: 52px;
+                border-radius: 50px;
+                border: 1px solid #C1CDCD;
+                background: #C1CDCD;
+                background-image: url(/src/utilities/templates/voicePlayback/speedup_icon.svg);
+                background-size: 40px 40px;
+                background-repeat: no-repeat;
+                background-position: 60% 50%;
+             }
+#slowdown-btn {
+                height: 52px;
+                width: 52px;
+                border-radius: 50px;
+                border: 1px solid #C1CDCD;
+                background: #C1CDCD;
+                background-image: url(/src/utilities/templates/voicePlayback/slowdown_icon.svg);
+                background-size: 40px 40px;
+                background-repeat: no-repeat;
+                background-position: 60% 50%;
+             }
