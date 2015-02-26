@@ -12,6 +12,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import java.security.GeneralSecurityException;
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(LoginServerWebSocketHandler.class);
 
@@ -106,7 +107,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 loginUser(conn, req, login);
             }
         } catch (final InvalidProtocolBufferException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, false, null));
         }
     }
@@ -131,10 +132,10 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             // login user after registering user.
             loginUser(conn, req, login);
         } catch (GeneralSecurityException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         } catch (RegistrationException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }
@@ -164,7 +165,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }

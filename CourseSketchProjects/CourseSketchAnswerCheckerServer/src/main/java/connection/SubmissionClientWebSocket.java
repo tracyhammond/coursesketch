@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public final class SubmissionClientWebSocket extends ClientWebSocket {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionClientWebSocket.class);
 
@@ -52,7 +52,7 @@ public final class SubmissionClientWebSocket extends ClientWebSocket {
         // contains
         // the
         // solution
-        LOG.error("Error: {}", req.getSessionInfo());;
+        LOG.error("Error: {}", req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
         LOG.error("Error: {}", sessionInfo[1]);
         final AnswerConnectionState state = (AnswerConnectionState) getStateFromId(sessionInfo[1]);

@@ -17,6 +17,7 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 /**
  * Handles the request of a submission.
@@ -24,7 +25,7 @@ import utilities.ConnectionException;
 public final class SubmissionRequestHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
@@ -70,7 +71,7 @@ public final class SubmissionRequestHandler {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             return build.build();
         } catch (ConnectionException e) {
             final Request.Builder build = Request.newBuilder();
@@ -79,7 +80,7 @@ public final class SubmissionRequestHandler {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         return null;
     }

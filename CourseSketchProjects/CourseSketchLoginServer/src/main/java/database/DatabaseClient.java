@@ -25,6 +25,7 @@ import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * A client for the login database.
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class DatabaseClient {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
@@ -57,7 +58,7 @@ public class DatabaseClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -91,7 +92,7 @@ public class DatabaseClient {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                LOG.info("Exception: {}", e);
+                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;
@@ -157,7 +158,7 @@ public class DatabaseClient {
                 throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
             }
         } catch (GeneralSecurityException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new LoginException("An error occured while comparing passwords", e);
         }
     }

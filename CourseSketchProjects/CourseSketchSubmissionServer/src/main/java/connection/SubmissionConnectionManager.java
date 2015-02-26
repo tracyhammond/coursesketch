@@ -5,6 +5,7 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 /**
  * A manager for holding all of the connections that were created.
@@ -14,7 +15,7 @@ import utilities.ConnectionException;
 public final class SubmissionConnectionManager extends MultiConnectionManager {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionConnectionManager.class);
 
@@ -43,7 +44,7 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 }

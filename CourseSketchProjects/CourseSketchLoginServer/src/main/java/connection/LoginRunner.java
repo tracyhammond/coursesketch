@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class LoginRunner extends GeneralConnectionRunner {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(LoginRunner.class);
 

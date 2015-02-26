@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * Handles data being added or edited.
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public final class DataInsertHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DataInsertHandler.class);
 
@@ -156,7 +157,7 @@ public final class DataInsertHandler {
                         case EXPERIMENT: {
                             LOG.info("Inserting experiment!");
                             final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
-                            LOG.info("Experiment: {}", experiment);;
+                            LOG.info("Experiment: {}", experiment);
                             instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
                         }
                         break;
@@ -169,11 +170,12 @@ public final class DataInsertHandler {
                         build.setQuery(itemSet.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), itemSet.getQuery()));
                     } else {
-                        LOG.info("Exception: {}", e);
+                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
+
                 } catch (Exception e) {
-                    LOG.info("Exception: {}", e);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemSet.getQuery());
                     build.setData(itemSet.toByteString());
@@ -184,10 +186,10 @@ public final class DataInsertHandler {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
         } catch (AuthenticationException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            LOG.info("Exception: {}", e);
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }

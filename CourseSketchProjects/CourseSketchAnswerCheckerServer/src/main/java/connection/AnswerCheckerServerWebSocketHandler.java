@@ -12,6 +12,7 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(AnswerCheckerServerWebSocketHandler.class);
 
@@ -62,8 +63,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
                     conn.send(createExceptionRequest(e1, req));
-                    LOG.info("Exception");
-                    LOG.info("Exception: {}", e1);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }
 
@@ -76,7 +76,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     conn.send(createExceptionRequest(e1, req));
-                    LOG.info("Exception: {}", e1);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e1);
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
@@ -97,7 +97,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
                     conn.send(createExceptionRequest(e, req));
-                    LOG.info("Exception: {}", e);
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class DatabaseConnectionManager extends MultiConnectionManager {
 
     /**
-     *  Declaration and Definition of Logger
+     *  Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnectionManager.class);
 

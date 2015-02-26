@@ -30,12 +30,11 @@ import org.slf4j.LoggerFactory;
 public class SubmissionClientWebSocket extends ClientWebSocket {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionClientWebSocket.class);
 
     /**
-     * @see coursesketch.server.base.ClientWebSocket#ConnectionWrapper(URI, coursesketch.server.interfaces.AbstractServerWebSocketHandler).
      * @param destination
      *            The location the server is going as a URI. ex:
      *            http://example.com:1234
@@ -55,7 +54,6 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
     @Override
     public final void onMessage(final ByteBuffer buffer) {
         final Request req = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
-        
         LOG.info("Got a response from the submission server!");
         LOG.info(req.getSessionInfo());
 
