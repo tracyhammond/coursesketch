@@ -202,9 +202,16 @@ validateFirstRun(document.currentScript);
         var keyList = newValue.keys();
         var problem = element.schoolItemData;
         for (var key of keyList) {
-            problem[key] = newValue.get(key);
+            if (key === 'description') {
+                var bankProblem = problem.getProblemInfo();
+                bankProblem.questionText = newValue.get(key);
+                problem.setProblemInfo(bankProblem);
+                CourseSketch.dataManager.updateBankProblem(bankProblem);
+            } else {
+                problem[key] = newValue.get(key);
+            }
         }
-        CourseSketch.dataManager.updateProblem(problem);
+        CourseSketch.dataManager.updateCourseProblem(problem);
     };
 
     courseManagement.commonShowProblems = courseManagement.showProblems;
