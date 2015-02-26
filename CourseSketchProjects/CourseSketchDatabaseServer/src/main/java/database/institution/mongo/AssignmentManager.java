@@ -362,7 +362,7 @@ public final class AssignmentManager {
 
             if (assignment.hasAssignmentType()) {
                 update = true;
-                updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getType().getNumber());
+                updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
                 assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
             }
             if (assignment.hasOther()) {
