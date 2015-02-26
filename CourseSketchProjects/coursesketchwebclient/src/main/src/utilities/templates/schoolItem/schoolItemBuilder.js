@@ -240,10 +240,15 @@ function SchoolItemBuilder() {
             description.className = "description";
             description.textContent = srlSchoolItem.description;
             box.appendChild(description);
-        } else if (type === BANK_PROBLEM && srlSchoolItem.questionText) {
+        } else if (type === PROBLEM && srlSchoolItem.problemInfo) {
             var description = document.createElement('div');
             description.className = "description";
-            description.textContent = srlSchoolItem.questionText;
+            description.textContent = srlSchoolItem.getProblemInfo().getQuestionText();
+            box.appendChild(description);
+        }  else if (type === BANK_PROBLEM && srlSchoolItem.questionText) {
+            var description = document.createElement('div');
+            description.className = "description";
+            description.textContent = srlSchoolItem.getQuestionText();
             box.appendChild(description);
         }
 
