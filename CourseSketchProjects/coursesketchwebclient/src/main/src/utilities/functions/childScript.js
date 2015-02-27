@@ -31,6 +31,8 @@ var CourseSketch = parent.CourseSketch;
      * <script data-namespace="name1, name2,name3 , name4" src="childScript.js"></script>
      */
     var scriptElement = document.currentScript;
+
+    // prevents multiple additions of the name space.
     if (scriptElement.ownerDocument.URL.indexOf("FakePage.html") > -1 ) {
         return;
     }
