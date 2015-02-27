@@ -12,6 +12,11 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message.Request;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import utilities.LoggingConstants;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -21,6 +26,11 @@ import java.nio.ByteBuffer;
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 @SuppressWarnings("PMD.TooManyMethods")
 public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketHandler.class);
 
     /**
      * A constructor that accepts a servlet.
@@ -78,7 +88,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     public final void onError(final SocketSession session, final Throwable cause) {
-        System.err.println("Session: " + session.getRemoteAddress() + "\ncaused:" + cause);
+        LOG.error("Session: {} \n caused: {}", session.getRemoteAddress(), cause);
     }
 
     /**
@@ -94,7 +104,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
         try {
             onMessage(new JettySession(session), ByteBuffer.wrap(data, offset, length));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 
