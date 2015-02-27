@@ -9,6 +9,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Wraps around a basic client and maintains a sessions to a single server.
  *
@@ -21,6 +25,12 @@ import java.util.List;
  */
 @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField", "PMD.TooManyMethods" })
 public abstract class AbstractClientWebSocket {
+
+    /**
+     * Logger Declaration/Definition.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractClientWebSocket.class);
+
     /**
      * A websocket can only have a maximum of 10 failed starts.
      */
@@ -143,7 +153,7 @@ public abstract class AbstractClientWebSocket {
      */
     public final void onClose(final int statusCode, final String reason) {
         connected = false;
-        System.out.printf("%s closed: %d - %s%n", this.getClass().getSimpleName(), statusCode, reason);
+        LOG.info("%s closed: %d - %s%n", this.getClass().getSimpleName(), statusCode, reason);
         if (statusCode == CLOSE_ABNORMAL && reason.matches(CLOSE_EOF) || reachedEof) {
             reachedEof = true;
         }
@@ -162,7 +172,7 @@ public abstract class AbstractClientWebSocket {
         connected = true;
         queing = false;
         this.session = iSession;
-        System.out.println("Connection was succesful for: " + this.getClass().getSimpleName());
+        LOG.info("Connection was succesful for: ", this.getClass().getSimpleName());
     }
 
     /**
@@ -178,20 +188,20 @@ public abstract class AbstractClientWebSocket {
     public final void onError(final SocketSession erroredSession, final Throwable cause) {
         if (cause instanceof java.io.EOFException || cause instanceof java.net.SocketTimeoutException) {
             reachedEof = true;
-            System.out.println("This websocket timed out!");
+            LOG.info("This websocket timed out!");
         }
         if (erroredSession == null) {
-            System.err.println("Socket: " + this.getClass().getSimpleName() + " Error: " + cause);
+            LOG.error("Socket: {} Error: {}", this.getClass().getSimpleName(), cause);
             if (cause instanceof java.net.ConnectException) {
                 if (cause.getMessage().trim().equalsIgnoreCase("Connection refused")) {
                     // System.out.println("This error is caused by a server not being open yet!");
                     refusedConnection = true;
-                    System.err.println("Connection was refused");
+                    LOG.error("Connection was refused");
                 }
-                System.err.println("Connection had issues!");
+                LOG.error("Connection had issues!");
             }
         } else {
-            System.err.println("Socket: " + this.getClass().getSimpleName() + "Session Error: " + cause);
+            LOG.error("Socket: {}Session Error: {}", this.getClass().getSimpleName(), cause);
         }
     }
 
@@ -225,11 +235,11 @@ public abstract class AbstractClientWebSocket {
             connectionNotEstablishedSend(buffer);
         } else if (failedStarts >= MAX_FAILED_STARTS) {
             queing = false;
-            System.out.println(failedStarts);
-            System.out.println(MAX_FAILED_STARTS);
+            LOG.info("Failed Starts: {}", failedStarts);
+            LOG.info("MAX FAILED STARTS: {}", MAX_FAILED_STARTS);
             // adds this version because it has not been added before
             queuedMessages.add(buffer);
-            System.err.println(this.getClass().getSimpleName() + " failed to connect after multiple tries");
+            LOG.error("{} failed to connect after multiple tries", this.getClass().getSimpleName());
             if (socketFailedListener != null) {
                 socketFailedListener.actionPerformed(new ActionEvent(queuedMessages, 0, this.getClass().getName()));
             }
@@ -244,7 +254,7 @@ public abstract class AbstractClientWebSocket {
      * @param buffer The message that is trying to be sent.
      */
     private void connectedSend(final ByteBuffer buffer) {
-        System.out.println("Sending message to: " + this.getClass().getSimpleName());
+        LOG.info("Sending message to: {}", this.getClass().getSimpleName());
         session.send(buffer);
         if (queing) {
             while (!queuedMessages.isEmpty()) {
@@ -260,11 +270,11 @@ public abstract class AbstractClientWebSocket {
      */
     @SuppressWarnings("PMD.ConfusingTernary")
     private void connectionNotEstablishedSend(final ByteBuffer buffer) {
-        System.err.println("Trying to wait on " + this.getClass().getSimpleName() + ". It has not connected yet.");
+        LOG.error("Trying to wait on {}. It has not connected yet.", this.getClass().getSimpleName());
         if (!queing) {
             queing = true;
             failedStarts += 1;
-            System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
+            LOG.error("attempt {} out of {}", failedStarts, MAX_FAILED_STARTS);
             final Thread retryThread = new Thread() {
                 @Override
                 @SuppressWarnings("PMD.CommentRequired")
@@ -274,15 +284,15 @@ public abstract class AbstractClientWebSocket {
                         queing = false;
                         send(buffer);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                     } catch (ConnectionException e) {
-                        e.printStackTrace();
+                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                     }
                 }
             };
             retryThread.start();
         } else {
-            System.err.println("Adding a queuedMessage");
+            LOG.error("Adding a queuedMessage");
             queuedMessages.add(buffer);
         }
     }
@@ -296,10 +306,10 @@ public abstract class AbstractClientWebSocket {
     private void connectionEndedSend(final ByteBuffer buffer) {
         final String endReson = reachedEof || started ? "of a timeout" : refusedConnection ? "connection to the server was refused"
                 : "We do not know why";
-        System.err.println("Trying to reconnect " + this.getClass().getSimpleName() + ". It has ended because " + endReson);
+        LOG.error("Trying to reconnect {}. It has ended because  {}", this.getClass().getSimpleName(), endReson);
         if (!queing) {
             failedStarts += 1;
-            System.err.println("attempt " + failedStarts + " out of " + MAX_FAILED_STARTS);
+            LOG.error("attempt {} out of {}", failedStarts, MAX_FAILED_STARTS);
             queing = true;
             // maybe try reconnecting here?
             final Thread retryThread = new Thread() {
@@ -312,13 +322,13 @@ public abstract class AbstractClientWebSocket {
                         queing = false;
                         send(buffer);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                     }
                 }
             };
             retryThread.start();
         } else {
-            System.err.println("Adding a queuedMessage");
+            LOG.error("Adding a queuedMessage");
             queuedMessages.add(buffer);
         }
     }
@@ -327,7 +337,7 @@ public abstract class AbstractClientWebSocket {
      * Closes out the connection.
      */
     public final void close() {
-        System.out.println("Closing connection: " + this.getClass().getSimpleName());
+        LOG.info("Closing connection: {}", this.getClass().getSimpleName());
         if (session != null) {
             session.close();
         }
@@ -344,7 +354,7 @@ public abstract class AbstractClientWebSocket {
      *            is usually a message with details).
      */
     public final void close(final int statusCode, final String args) {
-        System.out.println("Closing connection: " + this.getClass().getSimpleName());
+        LOG.info("Closing connection: {}", this.getClass().getSimpleName());
         if (session != null) {
             session.close(statusCode, args);
         }
@@ -388,7 +398,7 @@ public abstract class AbstractClientWebSocket {
      */
     protected final MultiConnectionState getStateFromId(final String key) {
         if (this.getParentServer() == null) {
-            System.out.println("null parent");
+            LOG.info("null parent");
             return null;
         }
         return this.getParentServer().getIdToState().get(key);
@@ -402,7 +412,7 @@ public abstract class AbstractClientWebSocket {
      */
     protected final SocketSession getConnectionFromState(final MultiConnectionState state) {
         if (this.getParentServer() == null) {
-            System.out.println("null parent");
+            LOG.info("null parent");
             return null;
         }
         return this.getParentServer().getIdToConnection().get(state);
