@@ -14,6 +14,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
@@ -134,6 +135,7 @@ public final class BankProblemManager {
 
         boolean isAdmin;
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
+        final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!isAdmin) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -141,6 +143,7 @@ public final class BankProblemManager {
 
         final BasicDBObject updated = new BasicDBObject();
         if (problem.hasQuestionText()) {
+            problemCollection.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
             update = true;
         }
@@ -190,9 +193,10 @@ public final class BankProblemManager {
         }
 
         if (update) {
-            final String[] users = (String[]) corsor.get(USERS);
-            for (int i = 0; i < users.length; i++) {
-                UserUpdateHandler.insertUpdate(dbs, users[i], problemBankId, "PROBLEM");
+            problemCollection.update(corsor, updated);
+            final List<String> users = (List) corsor.get(USERS);
+            for (int i = 0; i < users.size(); i++) {
+                UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
             }
         }
 
