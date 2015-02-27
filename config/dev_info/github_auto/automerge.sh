@@ -8,5 +8,5 @@ do
 git checkout "$line"
 git merge mergeScript
 git push "$line"
-done <"$file"
+done <"$branches"
 git checkout mergeScript
