@@ -12,7 +12,6 @@ import io.netty.handler.ssl.SslContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -65,7 +64,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
-        System.out.println("Currently time out time is not used " + iTimeoutTime);
+        LOG.info("Currently time out time is not used " + iTimeoutTime);
         this.secure = iSecure;
         connectionServer = createServerSocket();
         manager = createConnectionManager(connectLocally, secure);
