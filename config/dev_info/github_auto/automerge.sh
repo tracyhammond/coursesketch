@@ -6,6 +6,6 @@ while IFS= read -r line
 do
 git checkout "$line"
 git merge mergeScript
-git push "$line"
+git push origin "$line"
 done <"$branches"
 git checkout mergeScript
