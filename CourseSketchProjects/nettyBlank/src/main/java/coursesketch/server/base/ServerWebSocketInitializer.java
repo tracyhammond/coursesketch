@@ -10,10 +10,20 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.ssl.SslContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
+
 /**
  * Created by gigemjt on 10/19/14.
  */
 public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel> implements ISocketInitializer {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketInitializer.class);
+
     /**
      * Max size used in aggregating http request.  which is 2^16.
      */
@@ -78,7 +88,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     @Override
     public final void reconnect() {
-        System.out.println("Reconnecting");
+        LOG.info("Reconnecting");
         if (manager != null) {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);

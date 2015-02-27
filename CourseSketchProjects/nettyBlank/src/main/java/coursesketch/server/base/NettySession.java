@@ -12,10 +12,19 @@ import protobuf.srl.request.Message;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by gigemjt on 10/19/14.
  */
 public final class NettySession implements SocketSession {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(NettySession.class);
+
     /**
      * The context of the socket.
      */
@@ -69,22 +78,22 @@ public final class NettySession implements SocketSession {
      */
     @Override
     public Future<Void> send(final ByteBuffer buffer) {
-        System.out.println("Sending");
-        System.out.println("local address " + session.channel().localAddress());
-        System.out.println("remote address " + session.channel().remoteAddress());
+        LOG.info("Sending");
+        LOG.info("local address {}", session.channel().localAddress());
+        LOG.info("remote address {}", session.channel().remoteAddress());
         final BinaryWebSocketFrame frame = new BinaryWebSocketFrame(Unpooled.copiedBuffer(buffer));
-        System.out.println(frame);
+        LOG.info("Frame: {}", frame);
         final ChannelFuture future = session.channel().write(frame);
         future.addListener(new GenericProgressiveFutureListener<ProgressiveFuture<Void>>() {
 
             @SuppressWarnings("PMD.CommentRequired")
             @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) {
-                System.out.println("huh? " + progress + ":" + total);
+                LOG.info("huh? {}, {}", progress, total);
             }
 
             /** {@inheritDoc} */
             @Override public void operationComplete(final ProgressiveFuture future) {
-                System.out.println("COMPELTE");
+                LOG.info("COMPELTE");
             }
         });
         return future;
