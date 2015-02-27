@@ -7,5 +7,6 @@ while IFS= read - r line
 do
 git checkout "$line"
 git merge mergeScript
+git push "$line"
 done <"$file"
-git checkout mergeScriptTest
+git checkout mergeScript
