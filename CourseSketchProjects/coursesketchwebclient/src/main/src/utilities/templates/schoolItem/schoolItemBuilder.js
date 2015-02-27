@@ -66,6 +66,7 @@ function SchoolItemBuilder() {
     var ASSIGNMENT = "Assignment";
     var PROBLEM = "Problem";
     var BANK_PROBLEM = "BankProblem";
+    var LECTURE = "BankProblem";
     var localScope = this;
 
     /***************************************************************************
@@ -133,10 +134,12 @@ function SchoolItemBuilder() {
             return COURSE;
         } else if (!isUndefined(object.problemList)) {
             return ASSIGNMENT;
-        } else if (!isUndefined(object.questionText)) {
+        } else if (!isUndefined(object.problemInfo)) {
             return PROBLEM;
-        } else {
+        } else if (!isUndefined(object.questionText)) {
             return BANK_PROBLEM;
+        } else {
+            return LECTURE;
         }
     }
 
@@ -206,7 +209,7 @@ function SchoolItemBuilder() {
         if (boxFunction) {
             element.addEventListener('click', function() {
                 if (element.dataset.isediting === "false") {
-                    boxFunction(srlSchoolItem);
+                    boxFunction.bind(element)(element.schoolItemData);
                 }
             }, false);
             // GET THE ONCLICK LISTENTER TO DO THE CLICKING THING CORRECTLY!
@@ -236,6 +239,16 @@ function SchoolItemBuilder() {
             var description = document.createElement('div');
             description.className = "description";
             description.textContent = srlSchoolItem.description;
+            box.appendChild(description);
+        } else if (type === PROBLEM && srlSchoolItem.problemInfo) {
+            var description = document.createElement('div');
+            description.className = "description";
+            description.textContent = srlSchoolItem.getProblemInfo().getQuestionText();
+            box.appendChild(description);
+        }  else if (type === BANK_PROBLEM && srlSchoolItem.questionText) {
+            var description = document.createElement('div');
+            description.className = "description";
+            description.textContent = srlSchoolItem.getQuestionText();
             box.appendChild(description);
         }
 

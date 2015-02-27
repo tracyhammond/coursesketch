@@ -1,3 +1,5 @@
+validateFirstRun(document.currentScript);
+
 (function() {
     $(document).ready(function() {
         CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
@@ -16,9 +18,9 @@
          *            protobuf element that has been edited
          */
         CourseSketch.lectureSelection.lectureEndEdit = function(
-            attributeChanged, oldValue, newValue, element) {
+            attributeChanged, oldValue, newValue, lectureObject) {
                 element[attributeChanged] = newValue;
-                CourseSketch.dataManager.setLecture(element);
+                CourseSketch.dataManager.updateLecture(lectureObject);
         };
 
         /**

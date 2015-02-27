@@ -12,6 +12,7 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.School;
 
 import java.util.ArrayList;
 
@@ -79,7 +80,35 @@ public final class DataUpdateHandler {
                             results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
                         }
                         break;
+                        case COURSE: {
+                            final School.SrlCourse course = School.SrlCourse.parseFrom(itemSet.getData());
+                            instance.updateCourse(userId, course);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case ASSIGNMENT: {
+                            final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
+                            instance.updateAssignment(userId, assignment);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case COURSE_PROBLEM: {
+                            final School.SrlProblem srlProblem = School.SrlProblem.parseFrom(itemSet.getData());
+                            instance.updateCourseProblem(userId, srlProblem);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case BANK_PROBLEM: {
+                            final School.SrlBankProblem srlBankProblem = School.SrlBankProblem.parseFrom(itemSet.getData());
+                            instance.updateBankProblem(userId, srlBankProblem);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
                         default:
+                            final ItemResult.Builder build = ItemResult.newBuilder();
+                            build.setQuery(itemSet.getQuery());
+                            results.add(ResultBuilder.buildResult(build.build().toByteString(), "Update is not supported for this type",
+                                    ItemQuery.ERROR));
                             break;
                     }
                 } catch (AuthenticationException e) {

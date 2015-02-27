@@ -48,7 +48,7 @@
 			//creating the drawing creator which submits strokes to the sketch
 			drawingCreator = new drawingInputCreator(input, callback, canvasContext);
 
-			// creating the highligheter which changes the color of strokes when they are highlighted
+			// creating the highlighter which changes the color of strokes when they are highlighted
 			highlighter = new Highlighter(input, sketch, callback, canvasContext);
 
 			commandManager = new UpdateManager(sketch, serverConnection, parent.ProtoUpdateCommandBuilder, function(exception) {

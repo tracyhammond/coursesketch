@@ -12,17 +12,17 @@ import java.util.Date;
 
 public class LocalAddAssignments {
 	public static void testAssignments(String courseId, String mastId) {
-		String[] name = new String[]{"Assignment8"};		/*Assignment7*//*Assignment6*//*"Assignment5"*//*"Assignment4"*//*"Assignment3"*/
-		String[] descsription = new String[]{"Due Friday 04/04/2014 at midnight. This is the seventh assignment."/*"Due Wednesday 2/26/2014 at midnight. This is the Fifth Assignment"*//*"This is the Fourth Assignment"*//*"This is the Third Assignment"*/};
+		String[] name = new String[]{"Assignment 1"};
+		String[] description = new String[]{"This is the first assignment over lewis dot diagrams"};
 		for (int k = 0; k < 1; k ++) {
 			SrlAssignment.Builder testBuilder = SrlAssignment.newBuilder();
 			testBuilder.setName(name[k]);
 			testBuilder.setCourseId(courseId);
-			testBuilder.setDescription(descsription[k]);
+			testBuilder.setDescription(description[k]);
 			testBuilder.setGradeWeight("50%");
 			//testBuilder.setLatePolicy(LatePolicy.POLICY1);
-			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds((new Date(System.currentTimeMillis() - 1000000).getTime())));
-			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds((new Date(1396673999000L/*1395291599000L*//*1394085599000L*//*1393480799000L*//*1392875999000L*//*1392703199000L*/).getTime())));
+			testBuilder.setAccessDate(RequestConverter.getProtoFromMilliseconds(0));
+			testBuilder.setCloseDate(RequestConverter.getProtoFromMilliseconds(315576000000000L));
 			Date d = new Date();
 			d.setYear(2014-1900);
 			d.setMonth(1);
