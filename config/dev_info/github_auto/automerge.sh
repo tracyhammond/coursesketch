@@ -2,8 +2,7 @@ git stash
 git checkout mergeScript
 git pull
 branches="branchNames"
-cd ..
-while IFS= read - r line
+while IFS= read -r line
 do
 git checkout "$line"
 git merge mergeScript
