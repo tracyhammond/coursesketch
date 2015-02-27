@@ -127,7 +127,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *                function to be called after server bankProblem setting is done
      */
     function updateBankProblem(bankProblem, localCallback, serverCallback) {
-        localCallback(bankProblem);
+        if (!isUndefined(localCallback)) {
+            localCallback(bankProblem);
+        }
         advanceDataListener.setListener(Request.MessageType.DATA_UPDATE,
             CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
