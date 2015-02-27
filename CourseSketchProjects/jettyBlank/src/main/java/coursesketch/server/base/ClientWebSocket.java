@@ -16,6 +16,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Wraps around a basic client and maintains a sessions to a single server.
  *
@@ -28,6 +32,12 @@ import java.nio.ByteBuffer;
 @SuppressWarnings("PMD.TooManyMethods")
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class ClientWebSocket extends AbstractClientWebSocket {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+
+    private static final Logger LOG = LoggerFactory.getLogger(ClientWebSocket.class);
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -61,7 +71,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             client.setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
             client.connect(this, this.getURI(), request);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new ConnectionException("an exception connecting", e);
         } catch (Exception e) {
             throw new ConnectionException("something went wrong when starting the client", e);
@@ -101,7 +111,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         try {
             onMessage(ByteBuffer.wrap(data, offset, length));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE);
         }
     }
 
