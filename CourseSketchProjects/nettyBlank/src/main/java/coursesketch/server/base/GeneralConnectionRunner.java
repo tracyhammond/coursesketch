@@ -17,11 +17,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Created by gigemjt on 10/19/14.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GeneralConnectionRunner.class);
 
     /**
      * 1000ms = 1s.
@@ -128,7 +137,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         try {
             sslCtx = SslContext.newServerContext(new File(iCertificatePath), new File(iKeystorePath));
         } catch (SSLException e) {
-            e.printStackTrace();
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 
@@ -159,7 +168,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                     final Channel channel = strap.sync().channel();
                     channel.closeFuture().sync();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } finally {
                     bossGroup.shutdownGracefully();
                     workerGroup.shutdownGracefully();
@@ -170,10 +179,10 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         try {
             Thread.sleep(ONE_SECOND);
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
-            System.out.println("Server is running hopefully = " + assumedRunning);
+            LOG.info("Server is running hopefully = {}", assumedRunning);
             getSocketInitailizerInstance().reconnect();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 

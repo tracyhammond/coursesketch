@@ -10,10 +10,18 @@ import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by gigemjt on 10/19/14.
  */
 public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketHandler.class);
 
     /**
      * A constructor that accepts a servlet.
@@ -87,7 +95,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     protected void onMessage(final SocketSession session, final Message.Request req) {
-        System.out.println(req);
+        LOG.info("Request: {}", req);
     }
 
     /**
