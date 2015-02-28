@@ -31,7 +31,7 @@ public final class TimeManager {
     /**
      * Declaration/Definition of Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractGeneralConnectionRunner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimeManager.class);
 
     /**
      * A message representing the state to send to the client.
