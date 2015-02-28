@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import org.joda.time.DateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 
 /**
@@ -25,6 +27,11 @@ import protobuf.srl.request.Message.Request;
  *
  */
 public final class TimeManager {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractGeneralConnectionRunner.class);
 
     /**
      * A message representing the state to send to the client.
@@ -113,11 +120,11 @@ public final class TimeManager {
      */
     private static Request clientReceiveTimeDiff(final Request req) {
         final long startCounter = getSystemTime();
-        System.out.println("Server Recieved Time");
+        LOG.info("Server Recieved Time");
         timeDifference = req.getMessageTime() - getSystemTime();
-        System.out.println("server time:" + milltoDate(req.getMessageTime()));
-        System.out.println("my (client) time:" + milltoDate(DateTime.now().getMillis()));
-        System.out.println("time difference:" + timeDifference);
+        LOG.info("server time: {}", milltoDate(req.getMessageTime()));
+        LOG.info("my (client) time: {}", milltoDate(DateTime.now().getMillis()));
+        LOG.info("time difference: {}", timeDifference);
         final Request.Builder rsp = Request.newBuilder();
         rsp.setRequestType(Request.MessageType.TIME);
         // message time plus adjusted time minus time it took to compute adjusted time.
@@ -152,7 +159,7 @@ public final class TimeManager {
      */
     private static Request serverSendLatencyToClient(final Request req) {
         final long latency = getSystemTime() - req.getMessageTime();
-        System.out.println("latency: " + latency);
+        LOG.info("latency: {}", latency);
 
         final Request.Builder rsp = Request.newBuilder();
 
@@ -173,7 +180,7 @@ public final class TimeManager {
         if (listen != null) {
             listen.actionPerformed(new ActionEvent(req, 0, null));
         }
-        System.out.println("Proxy Recived Time\nTotal Time Diff:" + totalTimeDifference);
+        LOG.info("Proxy Recived Time\nTotal Time Diff: {}", totalTimeDifference);
         return null;
     }
 
