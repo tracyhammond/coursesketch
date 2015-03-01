@@ -58,7 +58,7 @@ public class DatabaseClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -92,7 +92,7 @@ public class DatabaseClient {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;
@@ -158,7 +158,7 @@ public class DatabaseClient {
                 throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
             }
         } catch (GeneralSecurityException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new LoginException("An error occured while comparing passwords", e);
         }
     }

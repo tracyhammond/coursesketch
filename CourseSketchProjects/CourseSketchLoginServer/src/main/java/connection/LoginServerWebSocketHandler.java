@@ -107,7 +107,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 loginUser(conn, req, login);
             }
         } catch (final InvalidProtocolBufferException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, false, null));
         }
     }
@@ -132,10 +132,10 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             // login user after registering user.
             loginUser(conn, req, login);
         } catch (GeneralSecurityException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         } catch (RegistrationException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }
@@ -165,7 +165,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
     }
