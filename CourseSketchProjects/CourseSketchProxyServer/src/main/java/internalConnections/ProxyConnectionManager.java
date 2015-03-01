@@ -65,7 +65,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Data...");
@@ -73,7 +73,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Answer...");
@@ -81,7 +81,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         // System.out.println("Open Answer Checker Server...");
         // createAndAddConnection(serv, true, 8884, AnswerConnection.class);

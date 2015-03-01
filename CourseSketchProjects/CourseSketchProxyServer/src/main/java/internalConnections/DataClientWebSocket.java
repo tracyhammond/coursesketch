@@ -58,7 +58,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, req.getSessionInfo(), DataClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         } else {

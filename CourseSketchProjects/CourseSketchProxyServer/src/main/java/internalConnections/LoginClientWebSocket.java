@@ -65,7 +65,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, request.getSessionInfo(), LoginClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
             return;
@@ -137,7 +137,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             try {
                 this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataClientWebSocket.class);
             } catch (ConnectionException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
     }
