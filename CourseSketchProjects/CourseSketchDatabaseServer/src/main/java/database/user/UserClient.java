@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * A client for all user data.  This has its own database and instance.
@@ -50,7 +51,7 @@ public final class UserClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            LOG.info("Exception: {}", e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -101,7 +102,7 @@ public final class UserClient {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                LOG.info("Exception: {}", e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;

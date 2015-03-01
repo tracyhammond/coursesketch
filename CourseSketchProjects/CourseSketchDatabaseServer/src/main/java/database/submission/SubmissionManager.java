@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
@@ -71,9 +72,9 @@ public final class SubmissionManager {
     public static void mongoInsertSubmission(final DB dbs, final String uniqueId, final String problemId,
             final String submissionId,
             final boolean experiment) {
-        LOG.info("Inserting an experiment ", experiment);
-        LOG.info("Database is ", dbs);
-        LOG.info("Problem id: ", problemId);
+        LOG.info("Inserting an experiment {}", experiment);
+        LOG.info("Database is {}", dbs);
+        LOG.info("Problem id: {}", problemId);
         final DBRef myDbRef = new DBRef(dbs, experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION, new ObjectId(problemId));
         final DBCollection collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
         final DBObject corsor = myDbRef.fetch();
@@ -128,7 +129,7 @@ public final class SubmissionManager {
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info("Exception: {}", e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new DatabaseAccessException("Failed to send request to submission server for experiment", e);
         }
     }
@@ -193,7 +194,7 @@ public final class SubmissionManager {
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info("Exception: {}", e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 

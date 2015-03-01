@@ -43,6 +43,7 @@ import static database.DatabaseStringConstants.USER_GROUP_ID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * Interfaces with the database to manage course data.
@@ -179,7 +180,7 @@ public final class CourseManager {
             }
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
-            LOG.error("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.info("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.error("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactCourse.getAccessDate().getMillisecond(), checkTime,
                     exactCourse.getCloseDate().getMillisecond());
             stateBuilder.setAccessible(false);
@@ -191,7 +192,7 @@ public final class CourseManager {
             try {
                 exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             } catch (ClassCastException exception) {
-                LOG.info("Exception: {}", exception);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
             }
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
             permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
