@@ -10,7 +10,6 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 import utilities.LoggingConstants;
 
 /**
@@ -351,7 +350,7 @@ public abstract class AbstractGeneralConnectionRunner {
                         final String command = sysin.readLine();
                         localInstance.parseCommand(command, sysin);
                     } catch (IOException | InterruptedException e) {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         break;
                     }
                 }
