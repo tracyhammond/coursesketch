@@ -112,7 +112,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             handler.handshakeFuture().sync();
             LOG.error("Something happened? {}", channel.metadata());
         } catch (InterruptedException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             group.shutdownGracefully();
         }
     }
