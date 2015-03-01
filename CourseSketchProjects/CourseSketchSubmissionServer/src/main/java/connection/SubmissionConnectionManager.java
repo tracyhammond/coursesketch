@@ -44,7 +44,7 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 }
