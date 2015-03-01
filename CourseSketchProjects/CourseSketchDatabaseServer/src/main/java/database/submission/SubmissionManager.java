@@ -17,7 +17,6 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-//import sun.rmi.runtime.Log;
 import utilities.ConnectionException;
 
 import java.util.ArrayList;

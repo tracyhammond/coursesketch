@@ -121,7 +121,7 @@ public final class UserManager {
      * @param courseId The id of the course that is being added.
      */
     static void addCourseToUser(final DB database, final String userId, final String courseId) {
-        LOG.info("The users Id {}", userId);
+        LOG.debug("The users Id {}", userId);
         final DBCollection users = database.getCollection(USER_COLLECTION);
         final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
         final DBRef myDbRef = new DBRef(database, USER_COLLECTION, userId);

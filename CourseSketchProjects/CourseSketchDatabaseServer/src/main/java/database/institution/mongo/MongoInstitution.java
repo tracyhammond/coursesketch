@@ -459,7 +459,7 @@ public final class MongoInstitution implements Institution {
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        LOG.info("Getting experiment for user: {}", userId);
+        LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
         SubmissionManager.mongoGetExperiment(getInstance().database, userId, problemId, sessionInfo, internalConnections);
     }
