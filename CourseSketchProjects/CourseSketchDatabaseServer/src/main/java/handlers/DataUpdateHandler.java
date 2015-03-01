@@ -127,7 +127,7 @@ public final class DataUpdateHandler {
                         build.setQuery(itemSet.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                     } else {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
                 } catch (Exception e) {
@@ -135,17 +135,17 @@ public final class DataUpdateHandler {
                     build.setQuery(itemSet.getQuery());
                     build.setData(itemSet.toByteString());
                     results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
             if (!results.isEmpty()) {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
         } catch (AuthenticationException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to update data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }
