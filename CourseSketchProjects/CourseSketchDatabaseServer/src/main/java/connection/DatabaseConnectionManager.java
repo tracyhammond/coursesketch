@@ -7,6 +7,8 @@ import utilities.ConnectionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Creates a connection to the submission server.
  */
@@ -42,7 +44,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
             createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(),
                     SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            LOG.info("Exception: {}", e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 }

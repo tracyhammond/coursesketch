@@ -83,7 +83,7 @@ public final class MongoInstitution implements Institution {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -119,7 +119,7 @@ public final class MongoInstitution implements Institution {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;
