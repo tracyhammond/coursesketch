@@ -121,7 +121,7 @@ public abstract class AbstractServerWebSocketHandler {
         // uses actual variables as get methods produce unmodifiable maps
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
-        LOG.info("Session Key {}", uniqueState.getKey());
+        LOG.debug("Session Key {}", uniqueState.getKey());
         idToState.put(uniqueState.getKey(), uniqueState);
         LOG.info("ID ASSIGNED");
 
