@@ -110,7 +110,6 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             LOG.info("{} connecting to[ {} ]", this.getClass().getSimpleName() , getURI());
             final Channel channel = bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
             handler.handshakeFuture().sync();
-            LOG.error("Something happened? {}", channel.metadata());
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             group.shutdownGracefully();
