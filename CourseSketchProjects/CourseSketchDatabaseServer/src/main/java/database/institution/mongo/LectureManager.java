@@ -234,7 +234,7 @@ public final class LectureManager {
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate())) {
             stateBuilder.setAccessible(false);
             LOG.info("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            LOG.error("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactLecture.getAccessDate().getMillisecond(),
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactLecture.getAccessDate().getMillisecond(),
                     checkTime, exactLecture.getCloseDate().getMillisecond());
         }
 

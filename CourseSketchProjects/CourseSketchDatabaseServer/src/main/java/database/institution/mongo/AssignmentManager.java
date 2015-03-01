@@ -221,8 +221,8 @@ public final class AssignmentManager {
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
             stateBuilder.setAccessible(false);
-            LOG.error("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            LOG.error("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
+            LOG.info("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
                     exactAssignment.getCloseDate().getMillisecond());
             stateBuilder.setAccessible(false);
         }
