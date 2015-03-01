@@ -25,6 +25,7 @@ import database.PasswordHash;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * Manages different user infomation.
@@ -87,9 +88,9 @@ public final class UserManager {
                     .append(CREDENTIALS, PasswordHash.createHash(user.getEmail())).append(EMAIL, user.getEmail())
                     .append(ADMIN, PasswordHash.createHash(userId));
         } catch (NoSuchAlgorithmException e) {
-            LOG.info("Exception: {}", e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         } catch (InvalidKeySpecException e) {
-            LOG.info("Exception: {}", e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (query == null) {
             throw new DatabaseAccessException("An error occured creating password hash");
@@ -125,7 +126,6 @@ public final class UserManager {
         final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
         final DBRef myDbRef = new DBRef(database, USER_COLLECTION, userId);
         final DBObject corsor = myDbRef.fetch();
-        LOG.info("coros {}", corsor);
         LOG.info("query {}", query);
         LOG.info("courseId {}", courseId);
         users.update(corsor, query);

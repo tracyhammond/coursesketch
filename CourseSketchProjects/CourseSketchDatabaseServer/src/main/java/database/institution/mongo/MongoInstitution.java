@@ -170,7 +170,7 @@ public final class MongoInstitution implements Institution {
             try {
                 allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
             } catch (DatabaseAccessException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
         return allCourses;
@@ -186,7 +186,7 @@ public final class MongoInstitution implements Institution {
                 allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().auth, getInstance().database, problemID.get(index), userId,
                         currentTime));
             } catch (DatabaseAccessException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
@@ -209,7 +209,7 @@ public final class MongoInstitution implements Institution {
                 allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().auth, getInstance().database, assignmentID.get(assignments),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
@@ -232,12 +232,12 @@ public final class MongoInstitution implements Institution {
                 allLectures.add(LectureManager.mongoGetLecture(getInstance().auth, getInstance().database, lectureId.get(lectures),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
             } catch (AuthenticationException e) {
-                LOG.error("Error: {}", e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (e.getType() != AuthenticationException.INVALID_DATE) {
                     throw e;
                 }
@@ -256,12 +256,12 @@ public final class MongoInstitution implements Institution {
                 allSlides.add(SlideManager.mongoGetLectureSlide(getInstance().auth, getInstance().database, slideId.get(slides),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
             } catch (AuthenticationException e) {
-                LOG.error("Error: {}", e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (e.getType() != AuthenticationException.INVALID_DATE) {
                     throw e;
                 }
@@ -459,8 +459,8 @@ public final class MongoInstitution implements Institution {
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        LOG.info("Getting experiment for user: ", userId);
-        LOG.error("Problem: ", problemId);
+        LOG.info("Getting experiment for user: {}", userId);
+        LOG.info("Problem: {}", problemId);
         SubmissionManager.mongoGetExperiment(getInstance().database, userId, problemId, sessionInfo, internalConnections);
     }
 
