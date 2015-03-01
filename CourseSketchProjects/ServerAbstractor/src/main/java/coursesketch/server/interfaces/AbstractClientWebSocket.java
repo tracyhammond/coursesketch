@@ -172,7 +172,7 @@ public abstract class AbstractClientWebSocket {
         connected = true;
         queing = false;
         this.session = iSession;
-        LOG.info("Connection was succesful for: ", this.getClass().getSimpleName());
+        LOG.info("Connection was succesful for: {}", this.getClass().getSimpleName());
     }
 
     /**
@@ -191,7 +191,7 @@ public abstract class AbstractClientWebSocket {
             LOG.info("This websocket timed out!");
         }
         if (erroredSession == null) {
-            LOG.error("Socket: {} Error: {}", this.getClass().getSimpleName(), cause);
+            LOG.error("Socket threw an error, Socket: {} Error: {}", this.getClass().getSimpleName(), cause);
             if (cause instanceof java.net.ConnectException) {
                 if (cause.getMessage().trim().equalsIgnoreCase("Connection refused")) {
                     // System.out.println("This error is caused by a server not being open yet!");
@@ -292,7 +292,8 @@ public abstract class AbstractClientWebSocket {
             };
             retryThread.start();
         } else {
-            LOG.error("Adding a queuedMessage");
+            LOG.info("Adding a queuedMessage");
+            LOG.info("queuedMessage size is now: {}", queuedMessages.size());
             queuedMessages.add(buffer);
         }
     }
@@ -398,7 +399,7 @@ public abstract class AbstractClientWebSocket {
      */
     protected final MultiConnectionState getStateFromId(final String key) {
         if (this.getParentServer() == null) {
-            LOG.info("null parent");
+            LOG.info("parent server does not exist and is null");
             return null;
         }
         return this.getParentServer().getIdToState().get(key);
@@ -412,7 +413,7 @@ public abstract class AbstractClientWebSocket {
      */
     protected final SocketSession getConnectionFromState(final MultiConnectionState state) {
         if (this.getParentServer() == null) {
-            LOG.info("null parent");
+            LOG.info("parent server does not exist and is null");
             return null;
         }
         return this.getParentServer().getIdToConnection().get(state);
