@@ -3,7 +3,6 @@ package coursesketch.server.base;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
