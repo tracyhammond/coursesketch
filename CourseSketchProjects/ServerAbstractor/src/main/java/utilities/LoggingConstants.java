@@ -5,7 +5,7 @@ package utilities;
  */
 public class LoggingConstants {
     /**
-     * Stupid compiler raged so I had to make a constant. (Exception).
+     * A constant for the exception messages.
      */
     public static final String EXCEPTION_MESSAGE = "Exception: {}";
 }
