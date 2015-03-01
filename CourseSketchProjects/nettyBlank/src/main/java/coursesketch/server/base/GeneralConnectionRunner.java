@@ -137,7 +137,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         try {
             sslCtx = SslContext.newServerContext(new File(iCertificatePath), new File(iKeystorePath));
         } catch (SSLException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 
@@ -168,7 +168,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                     final Channel channel = strap.sync().channel();
                     channel.closeFuture().sync();
                 } catch (InterruptedException e) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } finally {
                     bossGroup.shutdownGracefully();
                     workerGroup.shutdownGracefully();
@@ -182,7 +182,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             LOG.info("Server is running hopefully = {}", assumedRunning);
             getSocketInitailizerInstance().reconnect();
         } catch (InterruptedException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 
