@@ -60,6 +60,6 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
                 send(conn, rsp);
             }
         }
-        LOG.info("Finished looking at query");
+        LOG.info("Finished looking at query {}", req); // Is this what you meant by print out request type??
     }
 }
