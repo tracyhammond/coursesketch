@@ -21,6 +21,7 @@ import protobuf.srl.request.Message.Request.MessageType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -76,7 +77,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                         // we might have to do a lot of work here!
                         final ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
                         if (rev.getShowUserNames()) {
-                            LOG.error("Attempting to change out usernames!");
+                            LOG.info("Attempting to change out usernames!");
                             result2.addResults(item);
                         } else {
                             result2.addResults(item);
@@ -86,7 +87,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                     }
                 }
             } catch (InvalidProtocolBufferException e) {
-                LOG.info("Exception {}", e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             final Request.Builder builder = Request.newBuilder(req);
             builder.setSessionInfo(sessionInfo[0]);
