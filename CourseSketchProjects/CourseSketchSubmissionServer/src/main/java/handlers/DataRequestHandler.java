@@ -59,7 +59,7 @@ public final class DataRequestHandler {
                     }
                 }
             } catch (Exception e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 final Request.Builder build = Request.newBuilder();
                 build.setRequestType(Request.MessageType.ERROR);
                 build.setResponseText(e.getMessage());
@@ -70,7 +70,7 @@ public final class DataRequestHandler {
             resultReq.setRequestType(MessageType.DATA_REQUEST);
             return resultReq.build();
         } catch (InvalidProtocolBufferException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             final Request.Builder build = Request.newBuilder();
             build.setRequestType(Request.MessageType.ERROR);
             build.setResponseText(e.getMessage());
@@ -96,7 +96,7 @@ public final class DataRequestHandler {
             experiment = DatabaseClient.getExperiment(itemReq.getItemId(0), DatabaseClient.getInstance());
         } catch (DatabaseAccessException e) {
             errorMessage = e.getMessage();
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         final ItemResult.Builder send = ItemResult.newBuilder();
@@ -129,7 +129,7 @@ public final class DataRequestHandler {
                 experiments.addExperiments(DatabaseClient.getExperiment(item, DatabaseClient.getInstance()));
             } catch (Exception e) {
                 errorMessage.append('\n').append(e.getMessage());
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
 

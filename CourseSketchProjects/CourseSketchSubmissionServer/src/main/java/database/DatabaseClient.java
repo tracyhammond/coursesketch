@@ -71,7 +71,7 @@ public class DatabaseClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -108,7 +108,7 @@ public class DatabaseClient {
                 database = mongoClient.getDB("submissions");
             }
         } catch (UnknownHostException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         instance = this;
     }
@@ -456,7 +456,7 @@ public class DatabaseClient {
                     result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary));
                 }
             } catch (InvalidProtocolBufferException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 result = submission.getUpdateList();
             }
             try {

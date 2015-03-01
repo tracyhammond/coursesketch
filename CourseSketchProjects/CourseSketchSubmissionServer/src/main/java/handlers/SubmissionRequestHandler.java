@@ -71,7 +71,7 @@ public final class SubmissionRequestHandler {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             return build.build();
         } catch (ConnectionException e) {
             final Request.Builder build = Request.newBuilder();
@@ -80,7 +80,7 @@ public final class SubmissionRequestHandler {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         return null;
     }
