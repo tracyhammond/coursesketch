@@ -52,11 +52,8 @@ public final class SubmissionClientWebSocket extends ClientWebSocket {
         // contains
         // the
         // solution
-        LOG.error("Error: {}", req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
-        LOG.error("Error: {}", sessionInfo[1]);
         final AnswerConnectionState state = (AnswerConnectionState) getStateFromId(sessionInfo[1]);
-        LOG.error("State: {}", state);
         if (req.getRequestType() == MessageType.DATA_REQUEST) {
             // SrlExperiment expr = state.getExperiment(sessionInfo[1]);
             // SrlSolution sol = null;
