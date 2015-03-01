@@ -84,12 +84,12 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 try {
                     getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, LoginClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                 }
                 try {
                     getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                 }
 
                 final Set<SocketSession> conns = getConnectionToId().keySet();
@@ -179,7 +179,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, AnswerClientWebSocket.class,
                         ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 send(conn, createBadConnectionResponse(req, AnswerClientWebSocket.class));
             }
         } else if (req.getRequestType() == MessageType.DATA_REQUEST || req.getRequestType() == MessageType.DATA_INSERT
@@ -189,7 +189,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, DataClientWebSocket.class,
                         ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
-                LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 send(conn, createBadConnectionResponse(req, DataClientWebSocket.class));
             }
         }
@@ -231,9 +231,9 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                         final Request result = createBadConnectionResponse(req, classType);
                         send(getIdToConnection().get(state), result);
                     } catch (InvalidProtocolBufferException e1) {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     } catch (ClassNotFoundException e1) {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     }
                 }
             }

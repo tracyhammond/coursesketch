@@ -58,7 +58,7 @@ public final class AnswerClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, request.getSessionInfo(), AnswerClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
             return;
