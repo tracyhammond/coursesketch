@@ -284,9 +284,9 @@ public abstract class AbstractClientWebSocket {
                         queing = false;
                         send(buffer);
                     } catch (InterruptedException e) {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     } catch (ConnectionException e) {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     }
                 }
             };
@@ -322,7 +322,7 @@ public abstract class AbstractClientWebSocket {
                         queing = false;
                         send(buffer);
                     } catch (Exception e) {
-                        LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     }
                 }
             };
