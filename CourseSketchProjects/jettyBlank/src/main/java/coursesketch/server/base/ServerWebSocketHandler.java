@@ -104,7 +104,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
         try {
             onMessage(new JettySession(session), ByteBuffer.wrap(data, offset, length));
         } catch (Exception e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 
