@@ -69,7 +69,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
 
                 ((AnswerConnectionState) state).addPendingExperiment(
                         req.getSessionInfo(), student);
-                LOG.info("Student exp {}", student);
+                LOG.info("Student experiment {}", student);
                 try {
                     getConnectionManager().send(req,
                             req.getSessionInfo() + "+" + state.getKey(),
