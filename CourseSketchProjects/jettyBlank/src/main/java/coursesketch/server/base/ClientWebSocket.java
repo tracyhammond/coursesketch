@@ -71,7 +71,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             client.setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
             client.connect(this, this.getURI(), request);
         } catch (IOException e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new ConnectionException("an exception connecting", e);
         } catch (Exception e) {
             throw new ConnectionException("something went wrong when starting the client", e);
@@ -111,7 +111,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         try {
             onMessage(ByteBuffer.wrap(data, offset, length));
         } catch (Exception e) {
-            LOG.info(LoggingConstants.EXCEPTION_MESSAGE);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE);
         }
     }
 

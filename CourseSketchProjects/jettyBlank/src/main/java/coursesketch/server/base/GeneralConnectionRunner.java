@@ -185,9 +185,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                     LOG.info("Server started at " + server.getURI());
                     server.join();
                 } catch (InterruptedException e) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } catch (Exception e) {
-                    LOG.info(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         };
