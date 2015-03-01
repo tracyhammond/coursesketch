@@ -88,7 +88,7 @@ public final class NettySession implements SocketSession {
 
             @SuppressWarnings("PMD.CommentRequired")
             @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) {
-                LOG.info("huh? {}, {}", progress, total);
+                LOG.info("current progress in sending message {}, {}", progress, total);
             }
 
             /** {@inheritDoc} */
