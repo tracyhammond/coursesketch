@@ -16,19 +16,7 @@ import protobuf.srl.school.School.SrlPermission;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.COURSE_TOPIC;
-import static database.DatabaseStringConstants.IMAGE;
-import static database.DatabaseStringConstants.KEYWORDS;
-import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
-import static database.DatabaseStringConstants.QUESTION_TEXT;
-import static database.DatabaseStringConstants.QUESTION_TYPE;
-import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.SET_COMMAND;
-import static database.DatabaseStringConstants.SOLUTION_ID;
-import static database.DatabaseStringConstants.SOURCE;
-import static database.DatabaseStringConstants.SUB_TOPIC;
-import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.*;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -59,7 +47,8 @@ public final class BankProblemManager {
                 .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
                 .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
-                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(KEYWORDS, problem.getOtherKeywordsList());
+                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(KEYWORDS, problem.getOtherKeywordsList())
+                .append(SCRIPT, problem.getScript());
 
         problemBankCollection.insert(query);
         final DBObject corsor = problemBankCollection.findOne(query);
@@ -108,6 +97,7 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
+        exactProblem.setScript((String) corsor.get(SCRIPT));
         return exactProblem.build();
 
     }
