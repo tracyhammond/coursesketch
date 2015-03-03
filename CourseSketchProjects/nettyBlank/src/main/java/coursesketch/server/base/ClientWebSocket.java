@@ -3,7 +3,6 @@ package coursesketch.server.base;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -23,10 +22,19 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Created by gigemjt on 10/22/14.
  */
 public class ClientWebSocket extends AbstractClientWebSocket {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ClientWebSocket.class);
 
     /**
      * The code that is used by the Html aggregator.
@@ -98,12 +106,11 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                                     handler);
                         }
                     });
-            System.out.println(this.getClass().getSimpleName() + " connecting to[" + getURI() + "]");
-            final Channel channel = bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
+            LOG.info("{} connecting to[ {} ]", this.getClass().getSimpleName() , getURI());
+            bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
             handler.handshakeFuture().sync();
-            System.err.println("Something happened?" + channel.metadata());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             group.shutdownGracefully();
         }
     }

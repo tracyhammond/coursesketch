@@ -48,45 +48,10 @@
 			</build>
 		</profile>
 		<profile>
-			<id>eclipse</id>
+			<id>makeSites</id>
 			<activation>
 				<property>
-					<name>!smart</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>findbugs-maven-plugin</artifactId>
-						<configuration>
-							<excludeFilterFile>${findbugSupressionLocation}</excludeFilterFile>
-							<includeTests>false</includeTests>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>compile</phase>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>findbugs-test-compile</id>
-								<phase>test-compile</phase>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>nosite</id>
-			<activation>
-				<property>
-					<name>!nosite</name>
+					<name>makeSites</name>
 				</property>
 			</activation>
 			<build>
@@ -505,6 +470,12 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4jVersion}</version>
 		</dependency>
 

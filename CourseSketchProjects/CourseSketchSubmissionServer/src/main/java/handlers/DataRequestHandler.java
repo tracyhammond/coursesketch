@@ -3,6 +3,8 @@ package handlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import database.DatabaseAccessException;
 import database.DatabaseClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
@@ -12,11 +14,17 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlExperimentList;
+import utilities.LoggingConstants;
 
 /**
  * Handles request for submissions.
  */
 public final class DataRequestHandler {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
     /**
      * Private constructor.
@@ -32,7 +40,7 @@ public final class DataRequestHandler {
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public static Request handleRequest(final Request req) {
-        System.out.println("Parsing data request!");
+        LOG.info("Parsing data request!");
         DataRequest dataReq;
         try {
             dataReq = DataRequest.parseFrom(req.getOtherData());
@@ -51,7 +59,7 @@ public final class DataRequestHandler {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 final Request.Builder build = Request.newBuilder();
                 build.setRequestType(Request.MessageType.ERROR);
                 build.setResponseText(e.getMessage());
@@ -62,7 +70,7 @@ public final class DataRequestHandler {
             resultReq.setRequestType(MessageType.DATA_REQUEST);
             return resultReq.build();
         } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             final Request.Builder build = Request.newBuilder();
             build.setRequestType(Request.MessageType.ERROR);
             build.setResponseText(e.getMessage());
@@ -81,14 +89,14 @@ public final class DataRequestHandler {
      * @return An item result that represents the data.
      */
     private static ItemResult handleSingleExperiment(final ItemRequest itemReq) {
-        System.out.println("attempting to get an experiment!");
+        LOG.info("attempting to get an experiment!");
         SrlExperiment experiment = null;
         String errorMessage = "";
         try {
             experiment = DatabaseClient.getExperiment(itemReq.getItemId(0), DatabaseClient.getInstance());
         } catch (DatabaseAccessException e) {
             errorMessage = e.getMessage();
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         final ItemResult.Builder send = ItemResult.newBuilder();
@@ -113,7 +121,7 @@ public final class DataRequestHandler {
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private static ItemResult getExperimentsForInstructor(final ItemRequest itemReq) {
-        System.out.println("attempting to get an experiment as an instructor");
+        LOG.info("attempting to get an experiment as an instructor");
         final SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
         final StringBuilder errorMessage = new StringBuilder();
         for (String item : itemReq.getItemIdList()) {
@@ -121,7 +129,7 @@ public final class DataRequestHandler {
                 experiments.addExperiments(DatabaseClient.getExperiment(item, DatabaseClient.getInstance()));
             } catch (Exception e) {
                 errorMessage.append('\n').append(e.getMessage());
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
 

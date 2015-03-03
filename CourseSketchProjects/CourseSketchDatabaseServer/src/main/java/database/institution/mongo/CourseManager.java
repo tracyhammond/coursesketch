@@ -41,6 +41,10 @@ import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Interfaces with the database to manage course data.
  *
@@ -48,6 +52,11 @@ import static database.DatabaseStringConstants.USER_GROUP_ID;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses" })
 public final class CourseManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(CourseManager.class);
 
     /**
      * Private constructor.
@@ -62,12 +71,21 @@ public final class CourseManager {
      */
     static String mongoInsertCourse(final DB dbs, final SrlCourse course) {
         final DBCollection courseCollection = dbs.getCollection(COURSE_COLLECTION);
+
         final BasicDBObject query = new BasicDBObject(DESCRIPTION, course.getDescription()).append(NAME, course.getName())
                 .append(COURSE_ACCESS, course.getAccess().getNumber()).append(COURSE_SEMESTER, course.getSemester())
-                .append(ACCESS_DATE, course.getAccessDate().getMillisecond()).append(CLOSE_DATE, course.getCloseDate().getMillisecond())
+                .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
                 .append(IMAGE, course.getImageUrl()).append(ADMIN, course.getAccessPermission().getAdminPermissionList())
                 .append(MOD, course.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, course.getAccessPermission().getUserPermissionList());
+
+        // Sets a default date in the instance that a date was not given.
+        if (!course.hasCloseDate()) {
+            query.append(CLOSE_DATE, RequestConverter.getMaxTime());
+        } else {
+            query.append(CLOSE_DATE, course.getCloseDate().getMillisecond());
+        }
+
         if (course.getAssignmentListList() != null) {
             query.append(ASSIGNMENT_LIST, course.getAssignmentListList());
         }
@@ -162,9 +180,9 @@ public final class CourseManager {
             }
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
-            System.err.println("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            System.err
-                    .println(exactCourse.getAccessDate().getMillisecond() + " < " + checkTime + " < " + exactCourse.getCloseDate().getMillisecond());
+            LOG.info("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactCourse.getAccessDate().getMillisecond(), checkTime,
+                    exactCourse.getCloseDate().getMillisecond());
             stateBuilder.setAccessible(false);
         }
 
@@ -174,7 +192,7 @@ public final class CourseManager {
             try {
                 exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             } catch (ClassCastException exception) {
-                exception.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
             }
             final SrlPermission.Builder permissions = SrlPermission.newBuilder();
             permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
@@ -256,7 +274,7 @@ public final class CourseManager {
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (course.hasAccessPermission()) {
-                System.out.println("Updating permissions!");
+                LOG.info("Updating permissions!");
                 final SrlPermission permissions = course.getAccessPermission();
                 if (permissions.getAdminPermissionList() != null) {
                     updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());

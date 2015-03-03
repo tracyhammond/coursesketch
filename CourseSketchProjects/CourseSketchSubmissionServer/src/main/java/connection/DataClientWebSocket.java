@@ -3,8 +3,11 @@ package connection;
 import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import java.net.URI;
@@ -15,6 +18,11 @@ import java.nio.ByteBuffer;
  */
 @WebSocket()
 public final class DataClientWebSocket extends ClientWebSocket {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DataClientWebSocket.class);
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -47,7 +55,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
                 try {
                     this.getParentManager().send(rsp, req.getSessionInfo(), DataClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }
