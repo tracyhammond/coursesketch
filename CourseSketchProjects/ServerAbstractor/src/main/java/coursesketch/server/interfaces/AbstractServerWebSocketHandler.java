@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientWebSocket}.
  *
@@ -18,6 +21,11 @@ import java.util.UUID;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public abstract class AbstractServerWebSocketHandler {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractServerWebSocketHandler.class);
 
     /**
      * The max message size we will allow a message to support.
@@ -87,13 +95,13 @@ public abstract class AbstractServerWebSocketHandler {
      */
     protected final void onClose(final SocketSession conn, final int statusCode, final String reason) {
         // FUTURE: find out how to see if the connection is closed by us or them.
-        System.out.println(conn.getRemoteAddress() + " has disconnected from The Server." + statusCode + "with reason : " + reason);
+        LOG.info("{} has disconnected from The Server. {} with reason : {}", conn.getRemoteAddress(), statusCode, reason);
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
             idToState.remove(stateId.getKey());
         } else {
-            System.err.println("Connection Id can not be found");
+            LOG.error("Connection Id can not be found");
         }
     }
 
@@ -105,7 +113,7 @@ public abstract class AbstractServerWebSocketHandler {
     protected final void onOpen(final SocketSession conn) {
         if (getConnectionToId().size() >= MAX_CONNECTIONS) {
             // Return negatative state.
-            System.out.println("FULL SERVER"); // send message to someone?
+            LOG.info("FULL SERVER"); // send message to someone?
             conn.close(STATE_SERVER_FULL, FULL_SERVER_MESSAGE);
         }
 
@@ -113,11 +121,11 @@ public abstract class AbstractServerWebSocketHandler {
         // uses actual variables as get methods produce unmodifiable maps
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
-        System.out.println("Session Key " + uniqueState.getKey());
+        LOG.debug("Session Key {}", uniqueState.getKey());
         idToState.put(uniqueState.getKey(), uniqueState);
-        System.out.println("ID ASSIGNED");
+        LOG.info("ID ASSIGNED");
 
-        System.out.println("Recieving connection " + getConnectionToId().size());
+        LOG.info("Recieving connection {}", getConnectionToId().size());
         openSession(conn);
     }
 
@@ -144,14 +152,14 @@ public abstract class AbstractServerWebSocketHandler {
         final Request req = Decoder.parseRequest(buffer);
         if (req == null) {
             send(session, createBadConnectionResponse(null, AbstractClientWebSocket.class));
-            System.out.println("protobuf error");
+            LOG.info("protobuf error");
             // this.
             // we need to somehow send an error to the client here
             return;
         }
 
         if (req.getRequestType().equals(Request.MessageType.CLOSE)) {
-            System.out.println("CLOSE THE SERVER FROM THE CLIENT");
+            LOG.info("CLOSE THE SERVER FROM THE CLIENT");
             session.close(STATE_CLIENT_CLOSE, CLIENT_CLOSE_MESSAGE);
             return;
         }
