@@ -38,6 +38,9 @@ import static database.DatabaseStringConstants.SLIDES;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Manages lectures for mongo.
  *
@@ -46,6 +49,11 @@ import static database.DatabaseStringConstants.USERS;
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.UselessParentheses" })
 public final class LectureManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(LectureManager.class);
 
     /**
      * Private constructor.
@@ -131,7 +139,7 @@ public final class LectureManager {
 
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
-        System.out.println(updateQuery);
+        LOG.info("Updated Query: {}", updateQuery);
         lectures.update(cursor, updateQuery);
     }
 
@@ -225,9 +233,9 @@ public final class LectureManager {
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate())) {
             stateBuilder.setAccessible(false);
-            System.err.println("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            System.err.println(exactLecture.getAccessDate().getMillisecond() + " < " + checkTime + " < "
-                    + exactLecture.getCloseDate().getMillisecond());
+            LOG.info("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactLecture.getAccessDate().getMillisecond(),
+                    checkTime, exactLecture.getCloseDate().getMillisecond());
         }
 
         exactLecture.setState(stateBuilder);
