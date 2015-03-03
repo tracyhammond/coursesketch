@@ -8,6 +8,13 @@ function clickSelectionManager() {
         this.selectItem(element);
     };
 
+    /**
+     * Toggles the selection of the given element.
+     */
+    this.toggleSelection = function(element) {
+        $(element).toggleClass(this.selectionClassName);
+    };
+
     this.selectItem = function(element) {
         element.className += this.selectionClassName;
     };
