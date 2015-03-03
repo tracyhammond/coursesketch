@@ -10,10 +10,14 @@ import database.institution.mongo.UpdateManager;
 import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlSchool;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static database.DatabaseStringConstants.CLASSIFICATION;
 import static database.DatabaseStringConstants.GROUP_PREFIX;
@@ -29,6 +33,11 @@ import static database.DatabaseStringConstants.USER_LIST;
  *
  */
 public final class UserUpdateHandler {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(UserUpdateHandler.class);
 
     /**
      * The maximum amount of time an update is saved.  (30 days)
@@ -97,14 +106,14 @@ public final class UserUpdateHandler {
      */
     public static void insertUpdates(final DB database, final String[] users, final String objectAffectedId, final String classification) {
         if (users == null) {
-            System.err.println("There are no users for this school item");
+            LOG.error("There are no users for this school item");
             return;
         }
         for (int i = 0; i < users.length; i++) {
             try {
                 UpdateManager.mongoInsertUpdate(database, users[i], objectAffectedId, TimeManager.getSystemTime(), classification);
             } catch (AuthenticationException | DatabaseAccessException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
     }
@@ -122,7 +131,7 @@ public final class UserUpdateHandler {
      */
     public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification) {
         if (users == null) {
-            System.err.println("There are no users for this school item");
+            LOG.error("There are no users for this school item");
             return;
         }
 
@@ -136,9 +145,9 @@ public final class UserUpdateHandler {
                 try {
                     UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
                 } catch (AuthenticationException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } catch (DatabaseAccessException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }
