@@ -12,12 +12,24 @@ import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
-import sun.font.Script;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.*;
+import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.COURSE_TOPIC;
+import static database.DatabaseStringConstants.IMAGE;
+import static database.DatabaseStringConstants.KEYWORDS;
+import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
+import static database.DatabaseStringConstants.QUESTION_TEXT;
+import static database.DatabaseStringConstants.QUESTION_TYPE;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.SOLUTION_ID;
+import static database.DatabaseStringConstants.SOURCE;
+import static database.DatabaseStringConstants.SUB_TOPIC;
+import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.SCRIPT;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -168,7 +180,7 @@ public final class BankProblemManager {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
             update = true;
         }
-        if (problem.getScript()) {
+        if (problem.hasScript()) {
             updated.append(SCRIPT, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
