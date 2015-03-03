@@ -504,7 +504,6 @@
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(error instanceof UndoRedoException, error);
                 QUnit.start();
-
             });
 
             var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
@@ -635,7 +634,7 @@
             QUnit.start();
         });
 
-        QUnit.asyncTest("a single undo then redo using udoAction and redoAction methods", function(assert) {
+        QUnit.asyncTest("a single undo then redo using undoAction and redoAction methods", function(assert) {
 
             var updateList = new UpdateManager(undefined, function(error) {
                 assert.ok(false, error);
@@ -796,7 +795,7 @@
             clock.tick(10);
         });
 
-        QUnit.test("adding a swtich sketch and then undoing that creation", function(assert) {
+        QUnit.test("adding a switch sketch and then undoing that creation", function(assert) {
 
             var clock = sinon.useFakeTimers();
 
