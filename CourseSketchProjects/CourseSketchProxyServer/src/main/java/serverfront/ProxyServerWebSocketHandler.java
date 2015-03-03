@@ -160,7 +160,8 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.UnusedPrivateMethod" })
     private void messageRouter(final SocketSession conn, final Request req, final MultiConnectionState state) {
         if (!req.hasRequestType()) {
-            LOG.info("NO REQUEST TYPE SPECIFIED!!!!!!!!! ERROR ERROR");
+            LOG.error("A request type was not specified for this request. This request will not be processed");
+            LOG.error("Request that did not contain type: {}", req);
             send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
         }
         final String sessionID = state.getKey();

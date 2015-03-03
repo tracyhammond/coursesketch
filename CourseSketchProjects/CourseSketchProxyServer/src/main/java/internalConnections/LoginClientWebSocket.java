@@ -81,7 +81,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             state.addTry();
             if (login == null) {
-                LOG.info("Login failed to get to the client");
+                LOG.error("Login failed to get to the client");
                 final Request result = ProxyConnectionManager.createClientRequest(request);
                 final Request.Builder errorMessage = Request.newBuilder(result);
                 errorMessage.setResponseText(errorMessage.getResponseText()

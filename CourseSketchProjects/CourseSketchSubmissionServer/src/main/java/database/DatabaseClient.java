@@ -78,7 +78,7 @@ public class DatabaseClient {
         }
         database = mongoClient.getDB("submissions");
         if (database == null) {
-            LOG.info("Db is null!");
+            LOG.error("Db is null!");
         } else {
             setUpIndexes();
         }
@@ -201,7 +201,7 @@ public class DatabaseClient {
                 .append(USER_ID, experiment.getUserId());
         LOG.info("Searching for existing solutions {}", findQuery);
         final DBCursor multipleObjectCursor = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
-        LOG.info("Do we have the next cursos {}", multipleObjectCursor.hasNext());
+        LOG.info("Do we have the next cursor {}", multipleObjectCursor.hasNext());
         LOG.info("Number of solutions found {}", multipleObjectCursor.count());
         DBObject cursor = null;
 
