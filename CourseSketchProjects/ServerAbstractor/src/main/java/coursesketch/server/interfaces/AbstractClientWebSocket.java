@@ -293,8 +293,8 @@ public abstract class AbstractClientWebSocket {
             retryThread.start();
         } else {
             LOG.info("Adding a queuedMessage");
-            LOG.info("queuedMessage size is now: {}", queuedMessages.size());
             queuedMessages.add(buffer);
+            LOG.info("queuedMessage size is now: {}", queuedMessages.size());
         }
     }
 
