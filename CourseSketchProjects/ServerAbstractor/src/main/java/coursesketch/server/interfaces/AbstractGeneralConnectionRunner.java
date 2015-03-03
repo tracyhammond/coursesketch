@@ -228,6 +228,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * @throws InterruptedException the thread is interrupted.
      */
     public final boolean parseCommand(final String command, final BufferedReader sysin) throws IOException, InterruptedException {
+        LOG.info("input command received: {}", command);
         if (command == null) {
             return true;
         }
