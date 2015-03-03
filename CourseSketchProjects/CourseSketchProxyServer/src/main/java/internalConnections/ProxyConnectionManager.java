@@ -59,7 +59,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         // System.out.println("Open Recognition...");
-        LOG.info("Open Login..,");
+        LOG.info("Open Login...");
         LOG.info("Is Connection Local? {}", isConnectionLocal());
         LOG.info("Is Secure? {}", isSecure());
         try {
