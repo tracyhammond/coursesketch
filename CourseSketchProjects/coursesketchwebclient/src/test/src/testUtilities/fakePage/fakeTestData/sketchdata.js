@@ -31,6 +31,8 @@
 	var update4 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
 	var update5 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
 
+	var update6 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+
 	/*
 	 * commands for adding strokes to updates, false is because the strokes are created in code
 	 * not from a user.
@@ -171,6 +173,12 @@
 	//update5.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch5"));
 	update5.commands.push(command5);
 
+	update6.updateId = "undo-update";
+	update6.commands = new Array();
+	var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
+	var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+	update6.commands.push(undoMarkerObject);
+
 	/*
 	 * initalizing the array of updates for the sketchs list of updates
 	 */
@@ -184,6 +192,7 @@
 		sketch1.list.push(update3);
 		sketch1.list.push(update4);
 		sketch1.list.push(update5);
+		sketch1.list.push(update6);
 	}
 	sketch1.setList(sketch1.list);
 

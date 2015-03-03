@@ -33,7 +33,7 @@ enum CommandType {
     REMOVE_OBJECT = 3;    // Removes an object:    This will only contain an IdChain in commandData.
     ASSIGN_ATTRIBUTE = 4;
     REMOVE_ATTRIBUTE = 5;
-    MARKER = 6;           //marker has a number and a MARKERTYPE
+    MARKER = 6;           // marker has a number and a MARKERTYPE
     CLEAR = 7;            // removes all data from the current sketch object
     CREATE_SKETCH = 8;    // This will contain ActionCreateSketch.  This will also switch to the sketch immediately. (Must be first command in update)
     SWITCH_SKETCH = 9;    // This should have an IdChain which contains a single id. (Must be first command in update)
