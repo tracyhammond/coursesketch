@@ -120,6 +120,7 @@ message SrlBankProblem {
     optional string source = 8;
     repeated string otherKeywords = 9;
     optional SrlPermission accessPermission= 10;
+    optional string script = 11;
 
     enum QuestionType {
         SKETCH = 1; // sketching
