@@ -12,14 +12,14 @@ import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
-//import sun.font.Script;
+
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
 
+import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
@@ -33,6 +33,7 @@ import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.SCRIPT;
+
 
 /**
  * Interfaces with the mongo database to manage bank problems.
