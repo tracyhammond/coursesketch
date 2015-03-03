@@ -1,3 +1,5 @@
+validateFirstGlobalRun(document.currentScript);
+
 /**
  * Adds a couple of really useful methods to the commands. depends on
  * /src/utilities/connection/protobufInclude.html

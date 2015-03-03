@@ -2,194 +2,199 @@ package protobuf.srl.school;
 
 // holds all data that is sent from server. (grades, roster, classes, assignments, problems
 message SrlSchool {
-	repeated SrlCourse courses = 1;
-	repeated SrlAssignment assignments = 2;
-	repeated SrlProblem problems = 3;
-	repeated SrlBankProblem bankProblems = 4;
-	repeated SrlGrade grades = 5;
-	//repeated SrlBankGrade bankGrades = 6; //????
+    repeated SrlCourse courses = 1;
+    repeated SrlAssignment assignments = 2;
+    repeated SrlProblem problems = 3;
+    repeated SrlBankProblem bankProblems = 4;
+    repeated SrlGrade grades = 5;
+    //repeated SrlBankGrade bankGrades = 6; //????
 
 }
 
 message SrlCourse {
-	required string id = 1; // This must be globally unique.
-	optional string name = 2;
-	optional SrlPermission accessPermission= 3;
-	optional Accessibility access = 4 [default=PROTECTED];
-	optional string description = 5;
-	optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
-	optional string imageUrl = 7;
-	optional float grade = 8; //Calculated grade for all Assignments in this course
-	optional DateTime accessDate = 9; //Date course can be accessed
-	optional DateTime closeDate = 10; //Date course can no longer be accessed
-	optional State state = 11;
-	repeated string assignmentList = 12;
-	repeated string lectureList = 13;
+    required string id = 1; // This must be globally unique.
+    optional string name = 2;
+    optional SrlPermission accessPermission= 3;
+    optional Accessibility access = 4 [default=PROTECTED];
+    optional string description = 5;
+    optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
+    optional string imageUrl = 7;
+    optional float grade = 8; //Calculated grade for all Assignments in this course
+    optional DateTime accessDate = 9; //Date course can be accessed
+    optional DateTime closeDate = 10; //Date course can no longer be accessed
+    optional State state = 11;
+    repeated string assignmentList = 12;
+    repeated string lectureList = 13;
 
-	enum Accessibility {
-		SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
-		PUBLIC = 1; //Any student can access course without approval.
-		PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
-		PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
-		PRIVATE = 4; //No students can see course without instructor invitation, invitation only
-	}
+    enum Accessibility {
+        SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
+        PUBLIC = 1; //Any student can access course without approval.
+        PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
+        PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
+        PRIVATE = 4; //No students can see course without instructor invitation, invitation only
+    }
 }
 
 message SrlAssignment {
-	required string courseId = 1; // To know who the parent is.
-	required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
-	optional string name = 3;
-	optional AssignmentType type = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
-	optional string other = 5; // Name of an Instructor-defined assignment type
-	optional string description = 6;
-	repeated string links = 7; // external links/resources. Field needs improvement.
-	optional LatePolicy latePolicy = 8;
-	optional string gradeWeight = 9; // Percentage of Assignment Category's total grade
-	optional float grade = 10; // Calculated grade for whole Assignment
-	optional DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
-	optional DateTime dueDate = 12; // Date that the late policy goes into affect
-	optional DateTime closeDate = 13; // Date that the assignment closes and can no longer be accessed
-	optional State state = 14;
-	optional string imageUrl = 15;
-	repeated string problemList = 16;
-	optional SrlPermission accessPermission = 17;
+    required string courseId = 1; // To know who the parent is.
+    required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
+    optional string name = 3;
+    optional AssignmentType assignmentType = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
+    optional string other = 5; // Name of an Instructor-defined assignment type
+    optional string description = 6;
+    repeated string links = 7; // external links/resources. Field needs improvement.
+    optional LatePolicy latePolicy = 8;
+    optional string gradeWeight = 9; // Percentage of Assignment Category's total grade
+    optional float grade = 10; // Calculated grade for whole Assignment
+    optional DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
+    optional DateTime dueDate = 12; // Date that the late policy goes into affect
+    optional DateTime closeDate = 13; // Date that the assignment closes and can no longer be accessed
+    optional State state = 14;
+    optional string imageUrl = 15;
+    repeated string problemList = 16;
+    optional SrlPermission accessPermission = 17;
 
-	enum AssignmentType {
-		HOMEWORK = 1;
-		QUIZ = 2;
-		LAB = 3;
-		EXAM = 4;
-		SURVEY = 5; // not for a grade!
-		OTHER = 6; // Allows instructors to create unique assignment types
-	}
+    enum AssignmentType {
+        HOMEWORK = 0;
+        QUIZ = 1;
+        LAB = 2;
+        EXAM = 3;
+        SURVEY = 4; // not for a grade!
+        GAME = 5;
+        OTHER = 6; // Allows instructors to create unique assignment types
+    }
 }
 
 message LatePolicy {
-	required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
-	optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
-	optional float rate = 3;
-	optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
+    required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
+    optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
+    optional float rate = 3;
+    optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
 
-	enum FunctionType {
-		STEPPING_FUNCTION = 0;
-		LINE = 1;
-		EXPONENTIAL = 2;
-	}
+    enum FunctionType {
+        STEPPING_FUNCTION = 0;
+        LINE = 1;
+        EXPONENTIAL = 2;
+    }
 
-	enum TimeFrame {
-		DAY = 3;
-		HOUR = 2;
-		MINUTE = 1;
-		CONSTANT = 0;
-	}
+    /**
+     * The numbers are reversed because of how the client loads and saves data for options.
+     *
+     * Specifically this is used in the advance edit panel.
+     */
+    enum TimeFrame {
+        DAY = 3;
+        HOUR = 2;
+        MINUTE = 1;
+        CONSTANT = 0;
+    }
 
-	enum SubtractionType {
-		CAP = 0;
-		PERCENT = 1;
-	}
+    enum SubtractionType {
+        CAP = 0;
+        PERCENT = 1;
+    }
 }
 
 message SrlProblem {
-	required string id = 1; // This must be unique within an assignment.
-	optional string courseId = 2; // To know who the grandParent is.
-	optional string assignmentId = 3; // To know who the parent is.
-	optional string problemBankId = 4;
-	optional string name = 5;
-	optional string description = 6;
-	optional SrlBankProblem problemInfo = 7;
-	optional string gradeWeight = 8; // Percentage of assignment grade
-	optional float grade = 9; // Calculated grade of all subproblems for this problem
-	optional State state = 10;
-	optional SrlPermission accessPermission = 11;
-	optional int32 problemNumber = 12; // the order in which the problem appears in the assignment.
+    required string id = 1; // This must be unique within an assignment.
+    optional string courseId = 2; // To know who the grandParent is.
+    optional string assignmentId = 3; // To know who the parent is.
+    optional string problemBankId = 4;
+    optional string name = 5;
+    optional SrlBankProblem problemInfo = 6;
+    optional string gradeWeight = 7; // Percentage of assignment grade
+    optional float grade = 8; // Calculated grade of all subproblems for this problem
+    optional State state = 9;
+    optional SrlPermission accessPermission = 10;
+    optional int32 problemNumber = 11; // the order in which the problem appears in the assignment.
 }
 
 message SrlBankProblem {
-	required string id = 1;
-	optional string questionText = 2;
-	optional QuestionType questionType = 3 [default=SKETCH];
-	optional string image = 4;
-	optional string solutionId = 5;
-	optional string courseTopic = 6;
-	optional string subTopic = 7;
-	optional string source = 8;
-	repeated string otherKeywords = 9;
-	optional SrlPermission accessPermission= 10;
+    required string id = 1;
+    optional string questionText = 2;
+    optional QuestionType questionType = 3 [default=SKETCH];
+    optional string image = 4;
+    optional string solutionId = 5;
+    optional string courseTopic = 6;
+    optional string subTopic = 7;
+    optional string source = 8;
+    repeated string otherKeywords = 9;
+    optional SrlPermission accessPermission= 10;
 
-	enum QuestionType {
-		SKETCH = 1; // sketching
-		MULT_CHOICE = 2;
-		FREE_RESP = 3; // typing
-		CHECK_BOX = 4;
-	}
+    enum QuestionType {
+        SKETCH = 1; // sketching
+        MULT_CHOICE = 2;
+        FREE_RESP = 3; // typing
+        CHECK_BOX = 4;
+    }
 }
 
 message SrlGrade {
-	required string id = 1;
-	required string problemId = 2;
-	required float grade = 3;
-	optional string comment = 4;
+    required string id = 1;
+    required string problemId = 2;
+    required float grade = 3;
+    optional string comment = 4;
 
-	//optional string subTopic = 7;
-	//optional string source = 8;
-	//repeated string otherKeywords = 9;
+    //optional string subTopic = 7;
+    //optional string source = 8;
+    //repeated string otherKeywords = 9;
 
 }
 
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
-	optional int32 year = 1;
-	optional int32 month = 2;
-	optional int32 day = 3;
-	optional int32 hour = 4;
-	optional int32 minute = 5;
-	optional int32 second = 6;
-	optional uint64 millisecond = 7; // To ensure capabilities to communicate with systems with diverse date-time handling methods
+    optional int32 year = 1;
+    optional int32 month = 2;
+    optional int32 day = 3;
+    optional int32 hour = 4;
+    optional int32 minute = 5;
+    optional int32 second = 6;
+    optional uint64 millisecond = 7; // To ensure capabilities to communicate with systems with diverse date-time handling methods
 }
 
 message DomainInformation { // Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
-	optional string stuff = 1;
+    optional string stuff = 1;
 }
 
 message State {
-	optional bool published = 1; // Instructor has finished construction of school item
-	optional bool accessible = 2; // Has been made the school item available to be viewed and worked on
-	optional bool pastDue = 3; // Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
-	optional bool started = 4; // Student has viewed or begun the school item
-	optional bool completed = 5; // Student has saved/submitted work on all parts of school item
-	optional bool graded = 6; // Instructor has finished grading the school item
+    optional bool published = 1; // Instructor has finished construction of school item
+    optional bool accessible = 2; // Has been made the school item available to be viewed and worked on
+    optional bool pastDue = 3; // Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+    optional bool started = 4; // Student has viewed or begun the school item
+    optional bool completed = 5; // Student has saved/submitted work on all parts of school item
+    optional bool graded = 6; // Instructor has finished grading the school item
 }
 
 message SrlUser {
-	required string username = 1; // Must be globally unique
-	optional string email = 2;
-	repeated string courseList = 3;
-	optional string schoolIdentity = 4;
-	optional string firstName = 5;
-	optional string lastName = 6;
-	optional string password = 7;
+    required string username = 1; // Must be globally unique
+    optional string email = 2;
+    repeated string courseList = 3;
+    optional string schoolIdentity = 4;
+    optional string firstName = 5;
+    optional string lastName = 6;
+    optional string password = 7;
 }
 
 enum UserType {
-	ADMIN = 1;
-	INSTRUCTOR = 2;
-	TEACHING_ASSISTANT = 3;
-	STUDENT = 4;
-	GUEST = 5;
+    ADMIN = 1;
+    INSTRUCTOR = 2;
+    TEACHING_ASSISTANT = 3;
+    STUDENT = 4;
+    GUEST = 5;
 }
 
 message SrlGroup {
-	repeated string userId = 1;
-	required string groupId = 2;
-	optional string groupName = 3;
-	repeated string admin = 4; // this is the only group of people who are allowed to use this group.
-	//(and see it outside the database)
+    repeated string userId = 1;
+    required string groupId = 2;
+    optional string groupName = 3;
+    repeated string admin = 4; // this is the only group of people who are allowed to use this group.
+    //(and see it outside the database)
 }
 
 /**
  * Also can be called SrlUserGroup
  */
 message SrlPermission {
-	repeated string adminPermission = 1;
-	repeated string moderatorPermission = 2;
-	repeated string userPermission = 3;
+    repeated string adminPermission = 1;
+    repeated string moderatorPermission = 2;
+    repeated string userPermission = 3;
 }

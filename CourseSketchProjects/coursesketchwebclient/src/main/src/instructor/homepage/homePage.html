@@ -24,7 +24,8 @@
 <script type="text/javascript"
 	src="/src/common/homepage/courseManager.js"></script>
 
-<!-- INSTRUCTOR SPECIFIC -->
+<!-- INSTRUCTOR SPECIFIC MUST BE AFTER COMMON-->
+<script type="text/javascript" src="/src/utilities/functions/string.js"></script>
 <script type="text/javascript" src="/src/instructor/homepage/create.js"></script>
 
 <script>
@@ -58,7 +59,7 @@
 						class="semi_wide_centre faded_column gradient_faded_column_instructor fullScreenColumn"
 						style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
 						<div id="assignment_button" style="display: none;">
-							<button class="myButton2 centre">Add New Assignment</button>
+							<button class="myButton2 centre" onclick="CourseSketch.courseManagement.addNewAssignment()">Add New Assignment</button>
 						</div>
 						<div id="assignment_list_column" class="school_div">Click on
 							a course</div>
@@ -70,7 +71,8 @@
 						class="semi_wide_centre faded_column gradient_faded_column_instructor fullScreenColumn"
 						style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
 						<div id="problem_button" style="display: none;">
-							<button class="myButton2 centre">Add New Problem</button>
+							<button class="myButton2 centre" onclick="CourseSketch.courseManagement.addNewCourseProblem()">Add New Problem</button>
+							<button class="myButton2 centre" onclick="CourseSketch.courseManagement.chooseExistingProblem()">Choose existing problem</button>
 						</div>
 						<div id="problem_list_column" class="school_div">Click on a
 							problem</div>

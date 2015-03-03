@@ -62,12 +62,21 @@ public final class CourseManager {
      */
     static String mongoInsertCourse(final DB dbs, final SrlCourse course) {
         final DBCollection courseCollection = dbs.getCollection(COURSE_COLLECTION);
+
         final BasicDBObject query = new BasicDBObject(DESCRIPTION, course.getDescription()).append(NAME, course.getName())
                 .append(COURSE_ACCESS, course.getAccess().getNumber()).append(COURSE_SEMESTER, course.getSemester())
-                .append(ACCESS_DATE, course.getAccessDate().getMillisecond()).append(CLOSE_DATE, course.getCloseDate().getMillisecond())
+                .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
                 .append(IMAGE, course.getImageUrl()).append(ADMIN, course.getAccessPermission().getAdminPermissionList())
                 .append(MOD, course.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, course.getAccessPermission().getUserPermissionList());
+
+        // Sets a default date in the instance that a date was not given.
+        if (!course.hasCloseDate()) {
+            query.append(CLOSE_DATE, RequestConverter.getMaxTime());
+        } else {
+            query.append(CLOSE_DATE, course.getCloseDate().getMillisecond());
+        }
+
         if (course.getAssignmentListList() != null) {
             query.append(ASSIGNMENT_LIST, course.getAssignmentListList());
         }
@@ -89,7 +98,7 @@ public final class CourseManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
@@ -200,7 +209,7 @@ public final class CourseManager {
     static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
         final DBObject corsor = myDbRef.fetch();
         DBObject updateObj = null;
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);

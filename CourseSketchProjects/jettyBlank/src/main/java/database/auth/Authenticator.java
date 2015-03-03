@@ -1,11 +1,11 @@
 package database.auth;
 
-import static database.DatabaseStringConstants.GROUP_PREFIX;
-import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
+import protobuf.srl.school.School.DateTime;
 
 import java.util.List;
 
-import protobuf.srl.school.School.DateTime;
+import static database.DatabaseStringConstants.GROUP_PREFIX;
+import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
 
 /**
  * A class that performs authentication.
@@ -305,7 +305,6 @@ public final class Authenticator {
      * @param checkTime The time that the date check is checking against.
      * @param checkType The rules at that give a correct or false response.
      * @return True if all checked values are valid
-     * @throws DatabaseAccessException
      */
     public boolean isAuthenticated(final String collection, final String itemId,
             final String userId, final long checkTime, final Authenticator.AuthType checkType) {

@@ -25,7 +25,6 @@ import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
-import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
 import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
@@ -38,27 +37,33 @@ import static database.DatabaseStringConstants.USERS;
 
 /**
  * Manages course problems for the mongo database.
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
-        "PMD.NPathComplexity" , "PMD.AvoidDeeplyNestedIfStmts" })
+        "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
 public final class CourseProblemManager {
 
     /**
      * Private constructor.
-     *
      */
     private CourseProblemManager() {
     }
 
     /**
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the course problem is being stored.
-     * @param userId The user that is asking to insert a course problem.
-     * @param problem the data of the course problem being inserted.
-     * @return the mongo database Id of the course problem.
-     * @throws AuthenticationException Thrown if the user does not have permission to insert the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database where the course problem is being stored.
+     * @param userId
+     *         The user that is asking to insert a course problem.
+     * @param problem
+     *         The data of the course problem being inserted.
+     * @return The mongo database Id of the course problem.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to insert the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String userId, final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
@@ -76,7 +81,7 @@ public final class CourseProblemManager {
                 .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
                 .append(MOD, problem.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(NAME, problem.getName())
-                .append(DESCRIPTION, problem.getDescription()).append(PROBLEM_NUMBER, problem.getProblemNumber());
+                .append(PROBLEM_NUMBER, problem.getProblemNumber());
         courseProblemCollection.insert(query);
         final DBObject corsor = courseProblemCollection.findOne(query);
 
@@ -91,14 +96,21 @@ public final class CourseProblemManager {
      *
      * If a problem is not within a valid date an exception is thrown.
      *
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the assignment is being stored.
-     * @param problemId the problem being requested.
-     * @param userId the user requesting the problem.
-     * @param checkTime the time at which the problem was requested.
-     * @return an SrlProblem if it exists and all checks pass.
-     * @throws AuthenticationException Thrown if the user does not have permission to get the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param problemId
+     *         The problem being requested.
+     * @param userId
+     *         The user requesting the problem.
+     * @param checkTime
+     *         The time at which the problem was requested.
+     * @return An SrlProblem if it exists and all checks pass.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to get the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
@@ -122,7 +134,9 @@ public final class CourseProblemManager {
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
         auth.setUser(true);
-        if (isUsers && !authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
+        // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
+        if (isUsers && !isAdmin && !isMod && !authenticator
+                .isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
         // states
@@ -149,7 +163,7 @@ public final class CourseProblemManager {
         exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
         exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
         exactProblem.setName((String) corsor.get(NAME));
-        exactProblem.setDescription((String) corsor.get(DESCRIPTION));
+        exactProblem.setProblemNumber((Integer) corsor.get(PROBLEM_NUMBER));
 
         // problem manager get problem from bank (as a user!)
         final SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
@@ -172,25 +186,33 @@ public final class CourseProblemManager {
     }
 
     /**
-     *
-     * @param authenticator the object that is performing authentication.
-     * @param dbs The database where the assignment is being stored.
-     * @param problemId the problem being updated.
-     * @param userId the user requesting the problem.
-     * @param problem the data of the problem itself.
-     * @return true if the data was updated successfully.
-     * @throws AuthenticationException Thrown if the user does not have permission to update the course problem.
-     * @throws DatabaseAccessException Thrown if there is data that is missing.
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param problemId
+     *         The problem being updated.
+     * @param userId
+     *         The user requesting the problem.
+     * @param problem
+     *         The data of the problem itself.
+     * @return True if the data was updated successfully.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = myDbRef.fetch();
+        DBObject updateObj = null;
+        final DBCollection problemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
         boolean isAdmin, isMod;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(MOD));
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(ADMIN));
+        isMod = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(MOD));
 
         if (!isAdmin && !isMod) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -198,14 +220,22 @@ public final class CourseProblemManager {
 
         final BasicDBObject updated = new BasicDBObject();
         if (isAdmin || isMod) {
+            if (problem.hasName()) {
+                updateObj = new BasicDBObject(NAME, problem.getName());
+                problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                update = true;
+            }
             if (problem.hasGradeWeight()) {
-                updated.append(SET_COMMAND, new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight()));
+                updateObj = new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight());
+                problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (problem.hasProblemBankId()) {
-                updated.append(SET_COMMAND, new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId()));
+                updateObj = new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId());
+                problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
+
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (problem.hasAccessPermission()) {
@@ -213,19 +243,23 @@ public final class CourseProblemManager {
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
-                        updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+                        updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
+                        problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                     }
                     if (permissions.getModeratorPermissionCount() > 0) {
-                        updated.append(SET_COMMAND, new BasicDBObject(MOD, permissions.getModeratorPermissionList()));
+                        updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
+                        problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                     }
                 }
                 if (permissions.getUserPermissionCount() > 0) {
-                    updated.append(SET_COMMAND, new BasicDBObject(USERS, permissions.getUserPermissionList()));
+                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
+                    problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 }
             }
         }
         if (update) {
-            UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
+            problemCollection.update(cursor, updated);
+            UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
         return true;
     }
@@ -236,9 +270,12 @@ public final class CourseProblemManager {
      * This is used to copy permissions from the parent assignment into the
      * current problem.
      *
-     * @param dbs The database where the assignment is being stored.
-     * @param courseProblemId the problem that the group is being inserted into.
-     * @param ids the list of id groupings that contain the ids being copied over.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param courseProblemId
+     *         The problem that the group is being inserted into.
+     * @param ids
+     *         The list of id groupings that contain the ids being copied over.
      */
     static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
