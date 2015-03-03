@@ -12,12 +12,13 @@ import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
-import sun.font.Script;
+//import sun.font.Script;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.*;
+import static database.DatabaseStringConstants.ADMIN;
+
 
 /**
  * Interfaces with the mongo database to manage bank problems.
