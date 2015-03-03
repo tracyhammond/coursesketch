@@ -23,6 +23,10 @@ import protobuf.srl.submission.Submission;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Handles data being added or edited.
  *
@@ -34,6 +38,11 @@ import java.util.ArrayList;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
 public final class DataInsertHandler {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DataInsertHandler.class);
 
     /**
      * The string used to separate ids when returning a result.
@@ -66,7 +75,7 @@ public final class DataInsertHandler {
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
     public static void handleData(final Request req, final SocketSession conn) {
         try {
-            System.out.println("Receiving DATA SEND Request...");
+            LOG.info("Recieving DATA SEND Request...");
 
             final String userId = req.getServersideId();
             final DataSend request = DataSend.parseFrom(req.getOtherData());
@@ -146,9 +155,9 @@ public final class DataInsertHandler {
                         }
                         break;
                         case EXPERIMENT: {
-                            System.out.println("Inserting experiment!");
+                            LOG.info("Inserting experiment!");
                             final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
-                            System.out.println(experiment);
+                            LOG.info("Experiment: {}", experiment);
                             instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
                         }
                         break;
@@ -161,11 +170,12 @@ public final class DataInsertHandler {
                         build.setQuery(itemSet.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), itemSet.getQuery()));
                     } else {
-                        e.printStackTrace();
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
+
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemSet.getQuery());
                     build.setData(itemSet.toByteString());
@@ -176,10 +186,10 @@ public final class DataInsertHandler {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }
