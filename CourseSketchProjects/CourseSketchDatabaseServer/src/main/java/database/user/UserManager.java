@@ -82,7 +82,7 @@ public final class UserManager {
         final DBCollection users = dbs.getCollection(USER_COLLECTION);
         // NOSHIP: userId must be hashed using the userName as a salt?
         BasicDBObject query = null;
-        LOG.info("userId: {}", userId);
+        LOG.debug("userId: {}", userId);
         try {
             query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>())
                     .append(CREDENTIALS, PasswordHash.createHash(user.getEmail())).append(EMAIL, user.getEmail())
