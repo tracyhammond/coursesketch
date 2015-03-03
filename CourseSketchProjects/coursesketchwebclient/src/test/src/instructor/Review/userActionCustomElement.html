@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="/src/instructor/review/userActionReviewInclude.html">
+    <script src="/src/utilities/functions/barrier.js"></script>
+    <script src="/src/sketching/plugins/playback.js"></script>
+    <link rel="import"
+          href="/src/test/src/testUtilities/fakePage/fakePageInclude.html">
+    <link rel="import"
+          href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+
+    <!-- includes files needed for testing -->
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+    <script src="/src/utilities/functions/barrier.js"></script>
+    <script src="/src/sketching/plugins/playback.js"></script>
+
+    <!-- d3 library, for the graphs -->
+    <link rel="import" href="/src/utilities/libraries/d3/d3include.html">
+
+    <script src="/src/sketching/storage/updateManager.js" data-cover></script>
+</head>
+<body style="background:#FFFFFF;">
+
+<user-action-graph id="hello" style="height:1005; width:100%;"></user-action-graph>
+
+<script>
+    var surface = document.body.querySelector("user-action-graph");
+    var graphics = surface.graphics;
+    //var updateManager = surface.getUpdateManager();
+    function playMe() {
+        var graphics = surface.graphics;
+        var updateList = surface.getUpdateList();
+        var copyList = [];
+        for (var i = 0; i < updateList.length; i++) {
+            copyList.push(updateList[i]);
+        }
+        var updateManager = surface.getUpdateManager();
+        updateManager.clearUpdates(false);
+
+        var playBack = new Playback(copyList, updateManager, graphics);
+        updateManager.addPlugin(playBack);
+        playBack.playNext();
+    }
+
+
+</script>
+</body>
+</html>
