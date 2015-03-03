@@ -12,6 +12,7 @@ import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlPermission;
+import sun.font.Script;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,6 +176,10 @@ public final class BankProblemManager {
         }
         if (problem.getOtherKeywordsCount() > 0) {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+            update = true;
+        }
+        if (problem.getScript()) {
+            updated.append(SCRIPT, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
         // Optimization: have something to do with pulling values of an
