@@ -16,6 +16,8 @@
   "quotmark" : "single"
   "undef" : true,
   "unused" : true,
+  "maxlen" : "150",
+  "maxcomplexity" : "10",
 
   /*
    * Globals
