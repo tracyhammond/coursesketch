@@ -23,6 +23,10 @@ import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.PasswordHash;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Manages different user infomation.
  *
@@ -30,7 +34,10 @@ import database.PasswordHash;
  *
  */
 public final class UserManager {
-
+    /**
+     * Logger declaration/definition.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
     /**
      * Private constructor.
      *
@@ -75,15 +82,15 @@ public final class UserManager {
         final DBCollection users = dbs.getCollection(USER_COLLECTION);
         // NOSHIP: userId must be hashed using the userName as a salt?
         BasicDBObject query = null;
-        System.out.println(userId);
+        LOG.debug("userId: {}", userId);
         try {
             query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>())
                     .append(CREDENTIALS, PasswordHash.createHash(user.getEmail())).append(EMAIL, user.getEmail())
                     .append(ADMIN, PasswordHash.createHash(userId));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (query == null) {
             throw new DatabaseAccessException("An error occured creating password hash");
@@ -114,14 +121,13 @@ public final class UserManager {
      * @param courseId The id of the course that is being added.
      */
     static void addCourseToUser(final DB database, final String userId, final String courseId) {
-        System.out.println("The users Id " + userId);
+        LOG.debug("The users Id {}", userId);
         final DBCollection users = database.getCollection(USER_COLLECTION);
         final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
         final DBRef myDbRef = new DBRef(database, USER_COLLECTION, userId);
         final DBObject corsor = myDbRef.fetch();
-        System.out.println("coros" + corsor);
-        System.out.println("query" + query);
-        System.out.println("courseId " + courseId);
+        LOG.info("query {}", query);
+        LOG.info("courseId {}", courseId);
         users.update(corsor, query);
     }
 

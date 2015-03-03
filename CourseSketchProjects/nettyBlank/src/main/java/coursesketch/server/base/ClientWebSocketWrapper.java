@@ -15,10 +15,19 @@ import io.netty.util.CharsetUtil;
 
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by gigemjt on 10/23/14.
  */
 class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
+
+    /**
+     * Declaration/Definition of Logger!
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ClientWebSocketWrapper.class);
+
     /**
      * The object that performs the upgrade handshake.
      */
@@ -113,13 +122,13 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
 
         final WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof BinaryWebSocketFrame) {
-            System.out.println("WebSocket Client received binary");
+            LOG.info("WebSocket Client received binary");
             onMessage(ctx, ((BinaryWebSocketFrame) frame));
             return;
         } else if (frame instanceof PongWebSocketFrame) {
-            System.out.println("WebSocket Client received pong");
+            LOG.info("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
-            System.out.println("WebSocket Client received closing");
+            LOG.info("WebSocket Client received closing");
             channel.close();
             socketHandler.onClose(((CloseWebSocketFrame) frame).statusCode(), ((CloseWebSocketFrame) frame).reasonText());
         } else {

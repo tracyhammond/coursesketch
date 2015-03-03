@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
 import protobuf.srl.request.Message.Request;
 
@@ -19,6 +21,11 @@ import protobuf.srl.request.Message.Request;
  * @author gigemjt
  */
 public class MultiConnectionManager {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(MultiConnectionManager.class);
 
     /**
      * The path that routes the server to the WebSocket instead of a different possible connection.
@@ -91,7 +98,7 @@ public class MultiConnectionManager {
         final String start = isSecure ? "wss://" : "ws://";
 
         final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port) + SOCKET_PATH;
-        System.out.println("Creating a client connecting to: " + location);
+        LOG.info("Creating a client connecting to: {}", location);
         return initializeConnection(location, connectionType, serv);
     }
 
@@ -143,7 +150,7 @@ public class MultiConnectionManager {
         final Request packagedRequest = AbstractServerWebSocketHandler.Encoder.requestIDBuilder(req, sessionID);
         final AbstractClientWebSocket connection = getBestConnection(connectionType);
         if (connection == null) {
-            System.out.println("Failed to get a local connection");
+            LOG.info("Failed to get a local connection");
             throw new ConnectionException("failed to get a connection of type " + connectionType.getSimpleName());
         }
         connection.send(ByteBuffer.wrap(packagedRequest.toByteArray()));
@@ -232,7 +239,7 @@ public class MultiConnectionManager {
             cons = new ArrayList<AbstractClientWebSocket>();
             cons.add(connection);
             connections.put(connectionType, cons);
-            System.out.println("creating a new connectionList for: " + connectionType + " with list: " + connections.get(connectionType));
+            LOG.info("creating a new connectionList for: {} with list: {}", connectionType, connections.get(connectionType));
         } else {
             cons.add(connection);
         }
@@ -251,7 +258,7 @@ public class MultiConnectionManager {
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
-        System.out.println("getting Connection: " + connectionType.getSimpleName());
+        LOG.info("getting Connection: {}", connectionType.getSimpleName());
         return cons.get(0); // lame best connection.
     }
 
@@ -267,7 +274,7 @@ public class MultiConnectionManager {
             for (Class<?> conKey : connections.keySet()) {
                 for (AbstractClientWebSocket connection : connections.get(conKey)) {
                     if (debugPrint) {
-                        System.out.println(connection.getURI());
+                        LOG.info("Connection URI: {}", connection.getURI());
                     }
                     connection.close();
                 }
