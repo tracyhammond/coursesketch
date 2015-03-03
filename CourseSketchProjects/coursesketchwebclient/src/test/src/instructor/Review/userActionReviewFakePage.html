@@ -1,13 +1,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-
     <!-- files for making fake data -->
     <link rel="import"
           href="/src/test/src/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
           href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
-
 
     <!-- includes files needed for testing -->
     <link rel="import" href="/src/sketching/sketchInclude.html">
@@ -80,79 +78,59 @@ var updateList = new UpdateManager(undefined, function(error) {
     console.log(error);
 });
 
+//begin creating test data
 var stubs = function(){
     return false;
 }
+
 CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
 CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
 
 var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
 var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
-updateList.addUpdate(assignUpdate);
-updateList.addUpdate(assignUpdate);
-updateList.addUpdate(assignUpdate);
 
+updateList.addUpdate(assignUpdate);
+updateList.addUpdate(assignUpdate);
+updateList.addUpdate(assignUpdate);
 updateList.undoAction(false);
 updateList.undoAction(false);
-
 updateList.redoAction(false);
-
 updateList.undoAction(false);
-
 updateList.redoAction(false);
-
-
-var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
 updateList.addUpdate(assignUpdate);
-
 updateList.undoAction(false);
-
 updateList.redoAction(false);
-
-var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
 updateList.addUpdate(assignUpdate);
-
 
 var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
 updateData.list=(updateList.getUpdateList());
 console.log(updateData);
+//end creating fake data
 
-var falseData = updateData;
-//var falseData = CourseSketch.fakeSketches[0];
-
-var base = new Node(undefined);
-
+//start putting data into tree structure
+var base = new Node("User Action History");
 var currentParent = base;
-
-var markerStore = [];
 var markerObject;
-
-for(var u = 0; u < falseData.list.length; u++){
+for(var u = 0; u < updateData.list.length; u++){
     //checks to see if current command corresponds to previous lowest marker
-    if(falseData.list[u].commands[0].getCommandTypeName()=="MARKER") {
-        markerObject = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(falseData.list[u].commands[0].commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+    if(updateData.list[u].commands[0].getCommandTypeName()=="MARKER") {
+        markerObject = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateData.list[u].commands[0].commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
         if(markerObject.otherData>0){
             currentParent=currentParent.children[currentParent.children.length-1];
-            currentParent.AddChild(new Node(falseData.list[u].commands[0].getCommandTypeName()));
+            currentParent.AddChild(new Node(updateData.list[u].commands[0].getCommandTypeName()));
         } else {
-            currentParent.AddChild(new Node(falseData.list[u].commands[0].getCommandTypeName()));
+            currentParent.AddChild(new Node(updateData.list[u].commands[0].getCommandTypeName()));
             currentParent = currentParent.parent;
         }
     } else {
-        currentParent.AddChild(new Node(falseData.list[u].commands[0].getCommandTypeName()));
+        currentParent.AddChild(new Node(updateData.list[u].commands[0].getCommandTypeName()));
     }
 }
 
-console.log(falseData);
-
-var jsondata=base;
-
-d3.json(jsondata, function(error) {
-    jsondata.x0 = 0;
-    jsondata.y0 = 0;
-    update(root = jsondata);
+d3.json(base, function(error) {
+    base.x0 = 0;
+    base.y0 = 0;
+    update(root = base);
 });
 
 function update(source) {
