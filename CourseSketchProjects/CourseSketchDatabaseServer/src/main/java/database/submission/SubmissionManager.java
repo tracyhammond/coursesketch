@@ -182,14 +182,14 @@ public final class SubmissionManager {
                 continue;
             }
             final String sketchId = corsor.get(key).toString();
-            LOG.info("SketchId: ", sketchId);
+            LOG.info("SketchId: {}", sketchId);
             build.addItemId(sketchId);
         }
         build.setAdvanceQuery(review);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
         requestBuilder.setOtherData(data.build().toByteString());
-        LOG.info("Sending command: ", requestBuilder.build());
+        LOG.info("Sending command: {}", requestBuilder.build());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
