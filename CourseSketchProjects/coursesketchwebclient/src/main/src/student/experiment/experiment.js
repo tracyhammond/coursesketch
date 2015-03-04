@@ -45,7 +45,9 @@ validateFirstRun(document.currentScript);
         }
 
         var problemScript = navigator.getProblemScript();
-        // todo: run the script
+        if (problemScript != "") {
+            executeScript(problemScript);
+        }
 
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
