@@ -124,6 +124,9 @@ validateFirstRun(document.currentScript);
             loadTyping(submissionData);
         }
 
+        var problemScript = navigator.getProblemScript();
+        // todo: run the script
+
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();
