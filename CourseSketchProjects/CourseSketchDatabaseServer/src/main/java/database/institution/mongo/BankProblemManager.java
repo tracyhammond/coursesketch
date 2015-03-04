@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADMIN;
-
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
