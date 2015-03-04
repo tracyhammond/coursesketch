@@ -1,6 +1,5 @@
 function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
-    const
-    COURSE_LIST = "COURSE_LIST";
+    var COURSE_LIST = "COURSE_LIST";
     var userCourseId = new Array();
     var userHasCourses = true;
     var dataListener = advanceDataListener;

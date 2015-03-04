@@ -112,11 +112,9 @@ function SketchSurface() {
 
     /**
      * @param InputListener
-     *            {InputListenerClass} a class that represents an input listener
-     * @param SketchEventConverter
-     *            {SketchEventConverterClass} a class that represents
+     *            {InputListenerClass} a class that represents an input listener.
      */
-    this.initializeInput = function(InputListener, SketchEventConverter) {
+    this.initializeInput = function(InputListener) {
         this.localInputListener = new InputListener();
 
         this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
@@ -214,7 +212,7 @@ function SketchSurface() {
         var update = updateList[0];
         if (!isUndefined(update)) {
             var firstCommand = update.commands[0];
-            if (firstCommand.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+            if (firstCommand.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
                 var sketch = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(firstCommand.commandData,
                     CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
                 this.id = sketch.sketchId.idChain[0];
@@ -275,7 +273,7 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
         this.initializeInput(InputListenerClass);
     }
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id == null || this.id == "") {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id === null || this.id === "") {
         this.id = generateUUID();
     }
 
