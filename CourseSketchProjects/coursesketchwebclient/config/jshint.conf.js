@@ -10,12 +10,12 @@
   "noarg": true,
   "noempty": true,
   "nonew": true,
-  "es5" : true,
   "noarg" : true,
-  "nonbsp" : true,
   "quotmark" : "single"
   "undef" : true,
   "unused" : true,
+  "maxlen" : "150",
+  "maxcomplexity" : "10",
 
   /*
    * Globals
