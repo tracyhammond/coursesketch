@@ -32,7 +32,7 @@ function MvSketch() {
         this.shadowRoot.querySelector(".correctButton").onclick = correct.bind(this);
         this.shadowRoot.querySelector(".wrongButton").onclick = wrong.bind(this);
         this.shadowRoot.querySelector("input").addEventListener("click",
-            function(event) {event.stopPropagation()}, false);
+            function(event) {event.stopPropagation();}, false);
         this.setupAttributes();
     };
 
@@ -40,15 +40,15 @@ function MvSketch() {
      * Looks at the data attributes of this element and configures the element appropriately.
      */
     this.setupAttributes = function() {
-        if (!isUndefined(this.dataset) && this.dataset.binary == "true" || this.dataset.binary == "") {
+        if (!isUndefined(this.dataset) && this.dataset.binary === "true" || this.dataset.binary === "") {
             this.shadowRoot.querySelector("#gradeInput").disabled = true;
         }
-        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_points) && this.dataset.max_points != "") {
+        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_points) && this.dataset.max_points !== "") {
             this.shadowRoot.querySelector("#gradeInput").max = this.dataset.max_points;
             this.shadowRoot.querySelector("#gradeInput").className = "point";
             this.maxValue = parseFloat(this.dataset.max_points);
         }
-        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_percent) && this.dataset.max_percent != "") {
+        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_percent) && this.dataset.max_percent !== "") {
             this.shadowRoot.querySelector("#gradeInput").max = this.dataset.max_percent;
             this.shadowRoot.querySelector("#gradeInput").className = "percent";
         }

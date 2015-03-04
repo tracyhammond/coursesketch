@@ -38,7 +38,7 @@ validateFirstRun(document.currentScript);
             } else {
                 CourseSketch.redirectContent("/src/student/lecture/lecturePage.html", "View Lecture");
             }
-        }
+        };
 
         /**
          * Renders a list of lectures to the screen.
@@ -106,8 +106,7 @@ validateFirstRun(document.currentScript);
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,
                             CourseSketch.lectureSelection.displayLectures);
-                            console.log("finished adding to course "
-                                + currentCourse);
+                            console.log("finished adding to course " + currentCourse);
                             if(!isUndefined(addLectureCallback)) {
                                 addLectureCallback(course);
                             }

@@ -63,7 +63,7 @@ function TextBox() {
          * If the element is removed from the DOM, it does not have height and width values and the values will not save correctly
          */
         localScope.shadowRoot.querySelector("#closeButton").onclick = function(event) {
-            if (localScope.shadowRoot.querySelector('#creatorText') != null) {
+            if (localScope.shadowRoot.querySelector('#creatorText') !== null) {
                 if (confirm("You are about to permanently remove this element.")) {
                     localScope.saveData(event);
                     shadowRoot = undefined;
@@ -75,7 +75,7 @@ function TextBox() {
         };
 
         // Saves data on blur of the element
-        if (localScope.shadowRoot.querySelector('textarea') != null) {
+        if (localScope.shadowRoot.querySelector('textarea') !== null) {
             localScope.shadowRoot.querySelector('textarea').onblur = function() {
                 localScope.saveData();
             };
@@ -83,7 +83,7 @@ function TextBox() {
 
         // Makes save button save data on creation mode
         saveButton = localScope.shadowRoot.querySelector("#saveButton");
-        if (saveButton != null) {
+        if (saveButton !== null) {
             saveButton.onclick = function() {
                 localScope.saveData();
                 saveButton.textContent = 'Data saved';
@@ -95,7 +95,7 @@ function TextBox() {
         }
 
         // Makes continue button close box on viewing mode
-        if (localScope.shadowRoot.querySelector("#continueButton") != null) {
+        if (localScope.shadowRoot.querySelector("#continueButton") !== null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
         }
 
@@ -103,7 +103,7 @@ function TextBox() {
          * Makes the speak text button speak the text in the creatorText textarea
          * This textarea only exists in creation mode, and the speak text button only exists in creator mode
          */
-        if (localScope.shadowRoot.querySelector("#speakText") != null) {
+        if (localScope.shadowRoot.querySelector("#speakText") !== null) {
             localScope.shadowRoot.querySelector("#speakText").onclick = function() {
                 localScope.speakText(shadowRoot.querySelector("#creatorText").value);
             };
@@ -134,10 +134,10 @@ function TextBox() {
         }
 
         // Checks if x or y values are blank strings. This occurs when the values are 0px, so it sets the variables to 0.
-        if (x == "" || x == " ") {
+        if (x === "" || x === " ") {
             x = 0;
         }
-        if (y == "" || y == " ") {
+        if (y === "" || y === " ") {
             y= 0;
         }
 
@@ -146,7 +146,7 @@ function TextBox() {
         y = parseInt(y);
 
         // Saves X and Y to proto message. Adds the 'data-x' and 'data-y' from dragging if it exists (if the box was dragged)
-        if (dialog.getAttribute('data-x') == null || dialog.getAttribute('data-y') == null) {
+        if (dialog.getAttribute('data-x') === null || dialog.getAttribute('data-y') === null) {
             textBoxProto.setX(x);
             textBoxProto.setY(y);
         } else {
@@ -157,8 +157,8 @@ function TextBox() {
         textBoxProto.setWidth(parseInt($(dialog).width())); // Sets width for proto message
 
         // If the textbox does not have an id, then a command has not been created for the textbox
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
-            if (this.shadowRoot.querySelector("#speakText") == null) {
+        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
+            if (this.shadowRoot.querySelector("#speakText") === null) {
                 this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, true);
             } else {
                 this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
@@ -176,7 +176,7 @@ function TextBox() {
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
     this.loadData = function(textBoxProto) {
-        if (isUndefined(this.shadowRoot) || this.shadowRoot == null) {
+        if (isUndefined(this.shadowRoot) || this.shadowRoot === null) {
             this.loadedData = textBoxProto;
             return;
         }
@@ -187,7 +187,7 @@ function TextBox() {
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
 
         // If creatorText element does not exist, make the selected node the viewText element
-        if (node == null) {
+        if (node === null) {
             node = this.shadowRoot.querySelector('#viewText');
         }
         $(dialog).height(textBoxProto.getHeight()); // Sets dialog height
@@ -198,7 +198,7 @@ function TextBox() {
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
-        if (dialog.style.display == "none") {
+        if (dialog.style.display === "none") {
             var textToRead = textBoxProto.getText();
             this.parentNode.removeChild(this);
 
