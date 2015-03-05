@@ -1,8 +1,4 @@
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
-    /**
-     * Rename for code readability.
-     */
-    var dataListener = advanceDataListener;
 
     function setCourseProblem(courseProblem, courseProblemCallback) {
         parentDatabase.putInCourseProblems(courseProblem.id, courseProblem.toBase64(), function(e, request) {
@@ -10,7 +6,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 courseProblemCallback(e, request);
             }
         });
-    };
+    }
     parent.setCourseProblem = setCourseProblem;
 
     function deleteCourseProblem(courseProblemId, courseProblemCallback) {
@@ -19,7 +15,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 courseProblemCallback(e, request);
             }
         });
-    };
+    }
     parent.deleteCourseProblem = deleteCourseProblem;
 
     /**
@@ -32,13 +28,13 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *                is the courseProblem object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getCourseProblemLocal(courseProblemId, courseProblemCallback) {
-        if (isUndefined(courseProblemId) || courseProblemId == null) {
+        if (isUndefined(courseProblemId) || courseProblemId === null) {
             courseProblemCallback(new DatabaseException("The given id is not assigned", "getting CourseProblem: " + courseProblemId));
         }
         parentDatabase.getFromCourseProblems(courseProblemId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseProblemCallback(new DatabaseException("The result is undefined", "getting CouseProblem: " + courseProblemId));
-            } else if (result.data == nonExistantValue) {
+            } else if (result.data === nonExistantValue) {
                 // the server holds this special value then it means the server does not have the value
                 courseProblemCallback(new DatabaseException("The database does not hold this value", "getting CourseProblem: " + courseProblemId));
             } else {
@@ -75,7 +71,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                     });
                 } else {
                     courseProblem.id = newId;
-                    setCourseProblem(courseProblem, function(e, request) {
+                    setCourseProblem(courseProblem, function() {
                         courseProblemCallback(courseProblem);
                     });
                 }
@@ -152,16 +148,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *                function to be called after server insert is done.  Called with the new updateId of the bank problem.
      */
     function insertBankProblemServer(bankProblem, serverCallback) {
-        if (isUndefined(bankProblem.id) || bankProblem.id == null) {
+        if (isUndefined(bankProblem.id) || bankProblem.id === null) {
             bankProblem.id = generateUUID();
         }
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
             var resultArray = item.getReturnText().split(":");
-            var oldId = resultArray[1].trim();
+            // We do not need the old id as it is never stored in a way that we need to delete.
             var newId = resultArray[0].trim();
-            // we want to get the current course in the local database in case
-            // it has changed while the server was processing.
+            // we return the new id knowing it was inserted in the database correctly.
             serverCallback(newId);
         });
         sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
@@ -182,15 +177,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *                function to be called after server insert is done
      */
     function insertCourseProblem(courseProblem, localCallback, serverCallback) {
-        if (isUndefined(courseProblem.id) || courseProblem.id == null) {
+        if (isUndefined(courseProblem.id) || courseProblem.id === null) {
             courseProblem.id = generateUUID();
         }
 
         // This function is called after the bank problem is inserted if the course problem does not have a bank problem id.
         // Otherwise it is called immediately.
         function insertingCourseProblem() {
-            setCourseProblem(courseProblem, function(event, item) {
-                console.log("inserted locally :" + courseProblem.id)
+            setCourseProblem(courseProblem, function() {
+                console.log("inserted locally :" + courseProblem.id);
                 if (!isUndefined(localCallback)) {
                     localCallback(courseProblem);
                 }
@@ -217,8 +212,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         } // insertingCourseProblem
 
         // Inserts the bank problem first!
-        if ((isUndefined(courseProblem.problemBankId) || courseProblem.problemBankId == null)
-                && (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo != null)) {
+        if ((isUndefined(courseProblem.problemBankId) || courseProblem.problemBankId === null) &&
+                (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo !== null)) {
             insertBankProblemServer(courseProblem.problemInfo, function(updateId) {
                 courseProblem.problemBankId = updateId;
                 insertingCourseProblem();
@@ -268,7 +263,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
          */
 
         // standard preventative checking
-        if (isUndefined(courseProblemIdList) || courseProblemIdList == null || courseProblemIdList.length == 0) {
+        if (isUndefined(courseProblemIdList) || courseProblemIdList === null || courseProblemIdList.length === 0) {
             courseProblemCallbackPartial(new DatabaseException("The given id is not assigned", "getting CourseProblem: " + courseProblemIdList));
             if (courseProblemCallbackComplete) {
                 courseProblemCallbackComplete(new DatabaseException("The given id is not assigned", "getting CourseProblem: " + courseProblemIdList));
@@ -291,7 +286,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                         leftOverId.push(courseProblemId);
                     }
                     barrier -= 1;
-                    if (barrier == 0) {
+                    if (barrier === 0) {
                         // after the entire list has been gone through pull the leftovers from the server
                         if (leftOverId.length >= 1) {
                             advanceDataListener.setListener(
@@ -300,7 +295,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                                         CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
 
                                 // after listener is removed
-                                if (isUndefined(item.data) || item.data == null) {
+                                if (isUndefined(item.data) || item.data === null) {
                                     courseProblemCallbackComplete(new DatabaseException("The data sent back from the server does not exist."));
                                     return;
                                 }
@@ -334,7 +329,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                             courseProblemCallbackPartial(new DatabaseException("Nothing is in the the local database!",
                                 "Grabbing courseProblem from server: " + leftOverId));
                         }
-                    } // end of if(barrier == 0)
+                    } // end of if(barrier === 0)
                 }); // end of getting local courseProblem
             } // end of loopContainer
             loopContainer(courseProblemIdLoop);

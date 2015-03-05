@@ -37,7 +37,7 @@ function SubmissionPanel() {
 
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes()[0];
-        if (toolbar == null) {
+        if (toolbar === null) {
             return; //quit before infinite loop
         }
         // toolbar may not be set up by the time this is called, so we wait till it is set up.
@@ -63,7 +63,7 @@ function SubmissionPanel() {
             }
             console.log(exception);
         }
-    }
+    };
 
     this.sendDataToServer = function(isSubmitting) {
         var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
@@ -101,7 +101,7 @@ function SubmissionPanel() {
             CourseSketch.connection.setSubmissionListener(undefined);
             alert(request.getMessageTime());
             alert(request.responseText);
-            if (problemIndex == this.problemIndex && this.problemType == CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
                 var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
                 // potential conflict if it was save multiple times in quick succession.
                 subPanel.getUpdateManager().setLastSaveTime(request.getMessageTime());
@@ -114,12 +114,15 @@ function SubmissionPanel() {
         CourseSketch.connection.sendRequest(request);
         QuestionType = undefined;
         submission = undefined;
-        var subPanel = undefined;
+        subPanel = undefined;
     };
 
     /**
      * gets the text that has been typed.
      * @return {SrlSubmission} object that is ready to be sent to the server.
+     *
+     * @param textArea {element} The element that contains the text answer
+     * @param isSubmtting {boolean} Currently ignored but in the future it may be used.
      */
     function createTextSubmission(textArea, isSubmitting) {
         var submission = createBaseSubmission();
@@ -141,7 +144,6 @@ function SubmissionPanel() {
             throw new SubmissionException("must make changes to save again.");
         }
 
-        var listLength = updateManager.getListLength();
         var MarkerType = CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
         var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([markerCommand]);
@@ -185,7 +187,7 @@ function SubmissionPanel() {
 
     this.setSpecificCallbacks = function(problemType, element, toolbar) {
         var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
-        if (problemType == QuestionType.SKETCH) {
+        if (problemType === QuestionType.SKETCH) {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton("/images/toolbar/clear_button.svg", function() {
                 var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, true);
@@ -205,9 +207,9 @@ function SubmissionPanel() {
                 var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
                 updateManager.addUpdate(update);
             });
-        }  else if (problemType == QuestionType.MULT_CHOICE) {
+        }  else if (problemType === QuestionType.MULT_CHOICE) {
             // add mult choice tools
-        }   else if (problemType == QuestionType.FREE_RESP) {
+        }   else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools
             toolbar.setUndoCallback(function() {
                 document.execCommand("undo", false, null);
