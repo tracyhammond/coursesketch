@@ -20,7 +20,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     var websocket;
     var wsUri = (encrypted?'wss://' : 'ws://') + uri;
     var timeoutVariable = false;
-    var self = this;
+    var localScope = this;
 
     var totalTimeDifferance = dcodeIO.Long.fromInt(0);
     var timeDifferance = dcodeIO.Long.fromInt(0);
@@ -39,7 +39,9 @@ function Connection(uri, encrypted, attemptReconnect) {
             websocket.binaryType = "arraybuffer"; // We are talking binary
             websocket.onopen = function(evt) {
                 connected = true;
-                if (onOpen) onOpen(evt);
+                if (onOpen) {
+                    onOpen(evt);
+                }
                 if (timeoutVariable) {
                     clearTimeout(timeoutVariable);
                     timeoutVariable = false;
@@ -58,7 +60,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                     console.log("going to attempt to reconnect in 3s");
                     timeoutVariable = setTimeout(function() {
                         console.log("attempting to reconnect now!");
-                        self.reconnect();
+                        localScope.reconnect();
                     }, 3000);
                 }
             };
@@ -71,7 +73,9 @@ function Connection(uri, encrypted, attemptReconnect) {
                     if (msg.requestType === MessageType.TIME) {
                         console.log("getting from time");
                         var rsp = onTime(evt, msg);
-                        if (rsp !== null) self.sendRequest(rsp);
+                        if (rsp !== null) {
+                            localScope.sendRequest(rsp);
+                        }
                     } else if (msg.requestType === MessageType.LOGIN && onLogin) {
                         console.log("getting from login");
                         onLogin(evt, msg);
@@ -95,14 +99,16 @@ function Connection(uri, encrypted, attemptReconnect) {
                             onError(evt, msg.getResponseText());
                         }
                         alert("ERROR: " + msg.getResponseText());
-                    } else if (onRequest) onRequest(evt, msg);
+                    } else if (onRequest) {
+                        onRequest(evt, msg);
+                    }
                 } catch (err) {
                     console.error(err.stack);
                     if (onError) {
                         onError(evt, err);
                     }
                 }
-                // decode with protobuff and pass object to client
+                // Decode with protobuff and pass object to client
             };
             websocket.onerror = function(evt) {
                 if (onError) {
@@ -193,7 +199,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     this.sendRequest = function(message) {
         try {
             websocket.send(message.toArrayBuffer());
-        } catch(err) {
+        } catch (err) {
             console.error(err);
             if (onError) {
                 onError(null, err);
@@ -202,16 +208,16 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * This is a test function that allows you to spoof messages to yourself.
+     * This is a test function that allows you to spoof messages to yourlocalScope.
      *
      * Only the data is the same right now.
      * The message is delayed but the function returns immediately.
      * TODO: complete the entirety of the event that can be spoofed.
      */
-    this.sendSelf = function(message) {
+    this.sendlocalScope = function(message) {
         setTimeout(function() {
             var event = {
-                data : message.toArrayBuffer()
+                data: message.toArrayBuffer()
             };
             websocket.onmessage(event);
         }, 100);
@@ -245,11 +251,11 @@ function Connection(uri, encrypted, attemptReconnect) {
     }
 
     function clientReciveTimeDiff(req) {
-        var startCounter = self.getCurrentTime();
-        timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(self.getCurrentTime());
+        var startCounter = localScope.getCurrentTime();
+        timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(localScope.getCurrentTime());
         var rsp = CourseSketch.PROTOBUF_UTIL.Request();
         rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
-        rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(self.getCurrentTime().subtract(startCounter)));
+        rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
         return rsp;
     }
