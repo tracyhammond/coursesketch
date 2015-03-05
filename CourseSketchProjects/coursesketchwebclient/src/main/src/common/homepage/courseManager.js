@@ -293,7 +293,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     }
 
-    var courseSelectionManager = new clickSelectionManager();
-    var assignmentSelectionManager = new clickSelectionManager();
-    var problemSelectionManager = new clickSelectionManager();
+    var courseSelectionManager = new ClickSelectionManager();
+    var assignmentSelectionManager = new ClickSelectionManager();
+    var problemSelectionManager = new ClickSelectionManager();
 })();

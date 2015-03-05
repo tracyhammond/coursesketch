@@ -53,7 +53,7 @@
             // Tests
             QUnit.config.testTimeout = 10000;
             QUnit.module("lecture UI");
-            CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+            CourseSketch.lectureSelection.courseSelectionManager = new ClickSelectionManager();
             asyncTest("show courses", function(assert) {
                 expect(1);
                 CourseSketch.lectureSelection.showCourses(courseList);
