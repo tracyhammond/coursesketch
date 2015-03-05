@@ -1,4 +1,4 @@
-// requires protobuf and connection library
+// Requires protobuf and connection library
 
 /**
  * A class that allows a user to login.
@@ -21,7 +21,7 @@ function LoginSystem() {
         connection = new Connection(location, encrytped, attemptReconnections);
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
             if (isUndefined(connection)) {
-                // if this became undefined then we should stop trying to connect.
+                // If this became undefined then we should stop trying to connect.
                 throw "this connection object is no longer valid";
             }
             if (evt.code === connection.CONNECTION_LOST) {
@@ -31,7 +31,7 @@ function LoginSystem() {
             } else if (evt.code === connection.SERVER_FULL) {
                 if (!attemptingToReconnect) {
                     alert(evt.reason); // Here we can try to connect to other
-                                        // servers.
+                                       // servers.
                 }
             } else {
                 if (!attemptingToReconnect) {
@@ -40,7 +40,7 @@ function LoginSystem() {
             }
         });
         connection.setOnOpenListener(function(evt) {
-            // do something on opening?
+            // Do something on opening?
             alert("You are now able to log in");
             connected = true;
         });
@@ -48,13 +48,8 @@ function LoginSystem() {
     };
 
     /**
-     * @param document
-     *            {document} The document in which the node is being imported
-     *            to.
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
-     *            content has already been imported and then added to this
-     *            element.
+     * @param {Document} document The document in which the node is being imported to.
+     * @param {Element} templateClone An element representing the data inside tag, its content has already been imported and then added to this element.
      */
     this.initializeElement = function(document, templateClone) {
         shadowRoot = this.createShadowRoot();
@@ -74,7 +69,7 @@ function LoginSystem() {
             var isInstructor = undefined;
             if (!isUndefined(message.getLogin) && !isUndefined(message.getLogin())) {
                 if (message.login && message.login.isLoggedIn) {
-                    // successful login here
+                    // Successful login here
                     isInstructor = message.login.isInstructor;
                     userId = message.login.userId;
                 }
@@ -84,7 +79,7 @@ function LoginSystem() {
                     console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
                         console.log("successfully login!");
-                        // successful login here
+                        // Successful login here
                         isInstructor = loginInfo.isInstructor;
                         userId = loginInfo.userId;
                     }
@@ -93,12 +88,12 @@ function LoginSystem() {
 
             if (!isUndefined(userId) && !isUndefined(isInstructor)) {
                 console.log("Sucessful login!!!");
-                // successful login here
+                // Successful login here
                 makeValueReadOnly(connection, 'isInstructor', isInstructor);
                 makeValueReadOnly(connection, 'userId', userId);
                 makeValueReadOnly(connection, 'userName', shadowRoot.querySelector("#username").value);
 
-                // remove oneself from being able to respond to login attempts
+                // Remove oneself from being able to respond to login attempts
                 connection.setLoginListener(undefined);
                 successLoginCallback(connection);
             } else {
@@ -182,7 +177,7 @@ function LoginSystem() {
     };
     /**
      * Removes all stored variables. so that hopefully most of this object can
-     * be garbe collected
+     * be garbage collected
      */
     this.finalize = function() {
         connection = undefined;
