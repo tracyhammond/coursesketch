@@ -11,7 +11,7 @@ function IndexManager (timeline) {
             switchIndex(getElementIndex(this));
         };
         timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
-    }
+    };
 
     /**
      * @param destination {integer} is the index of a step that is clicked on
@@ -19,7 +19,7 @@ function IndexManager (timeline) {
      * It then adds the focused class to the currently selected step
      */
     function switchIndex(destination) {
-        if (destination == index) {
+        if (destination === index) {
             return; // No need to switch if the destination index and current index are the same
         }
         var oldIndex = index;
@@ -38,7 +38,7 @@ function IndexManager (timeline) {
     function getElementIndex(child) {
         var i = -2; // There are 3 previous siblings to the initial toolArea until null, so count from -2 to make the initial have index 1
         // While the current child has a previous sibling. This then moves the "current" up one sibling and repeats
-        while ((child = child.previousSibling) != null) {
+        while ((child = child.previousSibling) !== null) {
             i++;
         }
         return i; // Initial toolArea will be index 1 (not 0)

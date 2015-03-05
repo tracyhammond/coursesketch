@@ -42,7 +42,7 @@ validateFirstGlobalRun(document.currentScript);
             var command = commandList[i];
             // the command needs to know what sketch object to act upon.
             command.getLocalSketchSurface = getLocalSketchSurface;
-            if (command.redo() == true) {
+            if (command.redo() === true) {
                 redraw = true;
             }
         }
@@ -66,7 +66,7 @@ validateFirstGlobalRun(document.currentScript);
         var redraw = false;
         for (var i = commandLength - 1; i >= 0; i--) {
             commandList[i].sketchId = this.sketchId;
-            if (commandList[i].undo() == true) redraw = true;
+            if (commandList[i].undo() === true) redraw = true;
         }
         return redraw;
     };
@@ -78,7 +78,7 @@ validateFirstGlobalRun(document.currentScript);
     ProtoSrlCommand.getCommandTypeName = function() {
         var commandType = this.getCommandType();
         for ( var type in CourseSketch.PROTOBUF_UTIL.CommandType) {
-            if (CourseSketch.PROTOBUF_UTIL.CommandType[type] == commandType) {
+            if (CourseSketch.PROTOBUF_UTIL.CommandType[type] === commandType) {
                 return '' + type;
             }
         }

@@ -145,7 +145,8 @@ function() {
             CourseSketch.redirectContent("/src/student/homepage/homePage.html", "Welcome Student");
         }
 
-        CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
+        CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection,
+                CourseSketch.PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
             console.log("default listener");
         });
         CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
@@ -157,8 +158,8 @@ function() {
 CourseSketch.isMenuSwipeable = true;
 CourseSketch.enableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = true;
-}
+};
 
 CourseSketch.disableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = false;
-}
+};

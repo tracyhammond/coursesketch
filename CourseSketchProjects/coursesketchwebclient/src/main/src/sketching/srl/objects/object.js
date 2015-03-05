@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
 
 /**
@@ -41,7 +42,7 @@ function SRL_Object() {
     /**
      * A list of possible interpretations for an object
      */
-    var m_interpretations = new Array();
+    var m_interpretations = [];
 
     /**
      * Was this object made up from a collection of subObjects? If so they are
@@ -49,7 +50,7 @@ function SRL_Object() {
      * list can be examined hierarchically. e.g., an arrow might have three
      * lines inside, and each line might have a stroke.
      */
-    var m_subObjects = new Array();
+    var m_subObjects = [];
 
     /**
      * Contains the bounds of this shape.
@@ -80,12 +81,10 @@ function SRL_Object() {
     this.getSubObjectById = function(objectId) {
         for (var i = 0; i < m_subObjects.length; i++) {
             var object = m_subObjects[i];
-            if (object.getId == objectId) {
+            if (object.getId === objectId) {
                 return object;
             }
-            ;
         }
-        ;
         return false;
     };
 
@@ -97,7 +96,7 @@ function SRL_Object() {
     this.removeSubObjectById = function(objectId) {
         for (var i = 0; i < m_subObjects.length; i++) {
             var object = m_subObjects[i];
-            if (object.getId() == objectId) {
+            if (object.getId() === objectId) {
                 return removeObjectByIndex(m_subObjects, i);
             }
         }
@@ -127,7 +126,7 @@ function SRL_Object() {
      * @return
      */
     this.getRecursiveSubObjectList = function() {
-        var completeList = new Array();
+        var completeList = [];
         completeList.push(this);
         for (var i = 0; i < m_subObjects.length; i++) {
             for (var j = 0; j < m_subObjects[i].length; j++) {
@@ -275,6 +274,6 @@ function SRL_Object() {
     this.getMaxY = function() {
         return boundingBox.getBottom();
     };
-};
+}
 
 SRL_Object.Inherits(Overloads);

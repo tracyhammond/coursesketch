@@ -12,7 +12,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     function stateCallback(assignment, assignmentCallback) {
         var state = assignment.getState();
         var updateAssignment = false;
-        if (isUndefined(state) || state == null) {
+        if (isUndefined(state) || state === null) {
             state = CourseSketch.PROTOBUF_UTIL.State();
             updateAssignment = true;
         }
@@ -22,7 +22,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             var close = assignment.getCloseDate().getMillisecond();
             var due = assignment.getDueDate().getMillisecond();
             var current = parent.getCurrentTime();
-            if (isUndefined(state.accessible) || state.accessible == null) {
+            if (isUndefined(state.accessible) || state.accessible === null) {
                 if (current.lessThan(access) || current.greaterThan(close)) {
                     state.accessible = false;
                 } else {
@@ -31,7 +31,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 updateAssignment = true;
             }
 
-            if (isUndefined(state.pastDue) || state.pastDue == null) {
+            if (isUndefined(state.pastDue) || state.pastDue === null) {
                 if (current.greaterThan(due)) {
                     state.pastDue = true;
                 } else {
@@ -144,11 +144,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *                function to be called after server insert is done
      */
     function insertAssignment(assignment, localCallback, serverCallback) {
-        if (isUndefined(assignment.id) || assignment.id == null) {
+        if (isUndefined(assignment.id) || assignment.id === null) {
             assignment.id = generateUUID();
         }
         setAssignment(assignment, function(e, request) {
-            console.log("inserted locally :" + assignment.id)
+            console.log("inserted locally :" + assignment.id);
             if (!isUndefined(localCallback)) {
                 localCallback(assignment);
             }
@@ -216,13 +216,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *                is the assignment object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getAssignmentLocal(assignmentId, assignmentCallback) {
-        if (isUndefined(assignmentId) || assignmentId == null) {
+        if (isUndefined(assignmentId) || assignmentId === null) {
             assignmentCallback(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentId));
         }
         database.getFromAssignments(assignmentId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 assignmentCallback(new DatabaseException("The result is undefined", "getting Assignment: " + assignmentId));
-            } else if (result.data == nonExistantValue) {
+            } else if (result.data === nonExistantValue) {
                 // the server holds this special value then it means the server
                 // does not have the value
                 assignmentCallback(new DatabaseException("The database does not hold this value", "getting Assignment: " + assignmentId));
@@ -282,7 +282,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
          */
 
         // standard preventative checking
-        if (isUndefined(assignmentIdList) || assignmentIdList == null || assignmentIdList.length == 0) {
+        if (isUndefined(assignmentIdList) || assignmentIdList === null || assignmentIdList.length === 0) {
             assignmentCallbackPartial(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
             if (assignmentCallbackComplete) {
                 assignmentCallbackComplete(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
@@ -316,7 +316,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                             CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
 
                                     // after listener is removed
-                                    if (isUndefined(item.data) || item.data == null) {
+                                    if (isUndefined(item.data) || item.data === null) {
                                         assignmentCallbackComplete(new DatabaseException("The data sent back from the server does not exist."));
                                         return;
                                     }
@@ -351,7 +351,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         if (assignmentList.length > 0) {
                             stateCallbackList(assignmentList, assignmentCallbackPartial);
                         }
-                    } // end of if(barrier == 0)
+                    } // end of if(barrier === 0)
                 }); // end of getting local assignment
             })(assignmentIdLoop); // end of loopContainer
         } // end of loop

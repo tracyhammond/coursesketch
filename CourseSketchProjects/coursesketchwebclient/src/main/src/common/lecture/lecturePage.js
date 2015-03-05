@@ -17,27 +17,27 @@ validateFirstRun(document.currentScript);
         target.style.height = newHeight + 'px';
 
         target.textContent = newWidth + '×' + newHeight;
-    }
+    };
 
     CourseSketch.lecturePage.loadTextBox = function(textBox) {
         var elem = CourseSketch.lecturePage.newTextBox();
         elem.loadData(textBox);
-    }
+    };
 
     CourseSketch.lecturePage.loadMultiChoiceQuestion = function(question) {
         var elem = CourseSketch.lecturePage.newMultiChoiceQuestion();
         elem.loadData(question);
-    }
+    };
 
     CourseSketch.lecturePage.loadImageBox = function(imageBox) {
         var elem = CourseSketch.lecturePage.newImage();
         elem.loadData(imageBox);
-    }
+    };
 
     CourseSketch.lecturePage.loadEmbeddedHtml = function(embeddedHtml) {
         var elem = CourseSketch.lecturePage.newEmbeddedHtml();
         elem.loadData(embeddedHtml);
-    }
+    };
 
     /**
      * Adds a new text box to the currently selected lecture slide.
@@ -52,7 +52,7 @@ validateFirstRun(document.currentScript);
         document.querySelector("#slide-content").appendChild(textBox);
         textBox.setFinishedListener(CourseSketch.lecturePage.saveTextBox);
         return textBox;
-    }
+    };
 
     /**
      * Adds a new sketch content element to the currently selected slide
@@ -64,7 +64,7 @@ validateFirstRun(document.currentScript);
             sketchSurface.resizeSurface();
         }, 500);
         return sketchSurface;
-    }
+    };
 
     /**
      * Adds a new image to the currently selected slide
@@ -77,7 +77,7 @@ validateFirstRun(document.currentScript);
         // TODO: Save resize info in DB; better to leave this disabled until that works
         // imagebox.className = "resize";
 
-        if (!isUndefined(input) && input != null && input.files && input.files[0]) {
+        if (!isUndefined(input) && input !== null && input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
                 imagebox.setSrc(e.target.result);
@@ -86,7 +86,7 @@ validateFirstRun(document.currentScript);
         }
         imagebox.setFinishedListener(CourseSketch.lecturePage.saveImageBox);
         return imagebox;
-    }
+    };
 
     /**
      * Adds a new embedded HTML element to the currently selected slide.
@@ -95,12 +95,12 @@ validateFirstRun(document.currentScript);
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
         document.querySelector("#slide-content").appendChild(embeddedHtml);
-        if(!isUndefined(form) && form != null) {
+        if(!isUndefined(form) && form !== null) {
             embeddedHtml.setHtml(form.html.value);
         }
         embeddedHtml.setFinishedListener(CourseSketch.lecturePage.saveEmbeddedHtml);
         return embeddedHtml;
-    }
+    };
 
     /**
      * Adds a new multiple choice question to the currently selected slide.
@@ -112,7 +112,7 @@ validateFirstRun(document.currentScript);
         question.addAnswerContent(multiChoice);
         question.setFinishedListener(CourseSketch.lecturePage.saveQuestion);
         return question;
-    }
+    };
 
     /**
      * Renders a slide to the DOM.
@@ -125,23 +125,23 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.currentSlide = slide;
         for (var i = 0; i < slide.elements.length; ++i) {
             var element = slide.elements[i];
-            if (!isUndefined(element.textBox) && element.textBox != null) {
+            if (!isUndefined(element.textBox) && element.textBox !== null) {
                 CourseSketch.lecturePage.loadTextBox(element.textBox);
-            } else if (!isUndefined(element.question) && element.question != null) {
-                if (!isUndefined(element.question.multipleChoice) && element.question.multipleChoice != null) {
+            } else if (!isUndefined(element.question) && element.question !== null) {
+                if (!isUndefined(element.question.multipleChoice) && element.question.multipleChoice !== null) {
                     CourseSketch.lecturePage.loadMultiChoiceQuestion(element.question);
                 } else {
                     throw "Sketch questions are not yet supported";
                 }
-            } else if (!isUndefined(element.image) && element.image != null) {
+            } else if (!isUndefined(element.image) && element.image !== null) {
                 CourseSketch.lecturePage.loadImageBox(element.image);
-            } else if (!isUndefined(element.embeddedHtml) && element.embeddedHtml != null) {
+            } else if (!isUndefined(element.embeddedHtml) && element.embeddedHtml !== null) {
                 CourseSketch.lecturePage.loadEmbeddedHtml(element.embeddedHtml);
             } else {
                 throw "Tried to load invalid element";
             }
         }
-    }
+    };
 
     /**
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
@@ -150,13 +150,13 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.waitScreenManager.buildOverlay(document.querySelector("body"));
         CourseSketch.lecturePage.waitScreenManager.buildWaitIcon(document.getElementById("overlay"));
         document.getElementById("overlay").querySelector(".waitingIcon").classList.add("centered");
-    }
+    };
 
     /**
      * Removes the wait overlay from the DOM if it exists.
      */
     CourseSketch.lecturePage.removeWaitOverlay = function() {
-        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
+        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") !== null) {
             document.querySelector("body").removeChild(document.getElementById("overlay"));
         }
     };

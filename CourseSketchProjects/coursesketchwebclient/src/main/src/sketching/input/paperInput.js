@@ -38,7 +38,7 @@ function InputListener() {
         //if shift is held, pans
         //if shift is not held, it starts a new path from the mouse point
         tool.onMouseDown = function(event) {
-            if (Key.isDown('shift') || event.event.button == 1) {
+            if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 startingPoint = ps.project.activeLayer.localToGlobal(event.point);
                 startingCenter= ps.project.activeLayer.localToGlobal(ps.view.center);
@@ -55,7 +55,7 @@ function InputListener() {
         //if shift is held, pans the view to follow the mouse
         //if shift is not held, it adds more points to the path created on MouseDown
         tool.onMouseDrag = function(event) {
-            if (Key.isDown('shift') || event.event.button == 1) {
+            if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 currentStroke = undefined;
                 ps.view.center =
@@ -116,7 +116,7 @@ function InputListener() {
 
         // makes zoom public.
         this.zoom = zoom;
-    }
+    };
 
     /**
      * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point
@@ -138,5 +138,5 @@ function InputListener() {
     // Creates a time stamp for every point.
     function createTimeStamp() {
         return new Date().getTime();
-    };
+    }
 }

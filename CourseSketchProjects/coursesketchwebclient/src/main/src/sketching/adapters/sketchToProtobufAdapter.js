@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 (function(localScope) {
     /**
      * Creates an SRL prtobuf version of a point
@@ -44,7 +45,7 @@
         var n = this.getTime();
         proto.setTime("" + n);
         proto.name = this.getName();
-        var array = new Array();
+        var array = [];
         var points = this.getPoints();
         for (var i=0; i<points.length; i++) {
             array.push(points[i].sendToProtobuf(scope));
@@ -59,7 +60,7 @@
     SRL_Stroke.createFromProtobuf = function(stroke) {
         var pointList = stroke.getPoints();
         var srlStroke = new SRL_Stroke();
-        for(i in pointList) {
+        for (var i in pointList) {
             var point = pointList[i];
             var currentPoint = SRL_Point.createFromProtobuf(point);
             srlStroke.addPoint(currentPoint);
@@ -79,16 +80,16 @@
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlShape();
 
         var interpretations = this.getInterpretations();
-        var protoInterp = new Array();
-        for(var i = 0; i < interpretations.length; i ++) {
+        var protoInterp = [];
+        for (var i = 0; i < interpretations.length; i ++) {
             var protoInter = interpretations[i];
             protoInterp = protoInter.sendToProtobuf(scope);
         }
         proto.setInterpretations(protoInterp);
 
-        var protoSubShapes = new Array();
+        var protoSubShapes = [];
         var subShapeList = this.getSubObjects();
-        for (var i = 0; i < subShapeList.length; i++) {
+        for (i = 0; i < subShapeList.length; i++) {
             protoSubShapes.push(encodeSrlObject(scope,subShapeList[i]));
         }
         proto.setSubComponents(protoSubShapes);
@@ -107,12 +108,12 @@
         var interpretations = shape.interpretations;
         var subObjects = shape.subComponents;
         var newShape = new SRL_Shape();
-        for(var i = 0; i < interpretations.length; i ++) {
+        for (var i = 0; i < interpretations.length; i ++) {
             var protoInter = interpretations[i];
             newShape.addInterpretation(protoInter.label, protoInter.confidence, protoInter.complexity);
         }
 
-        for(var i = 0; i < subObjects.length; i ++) {
+        for (i = 0; i < subObjects.length; i ++) {
             var protoObject = subObjects[i];
             newShape.addSubObject(decodeSrlObject(protoObject));
         }
@@ -146,24 +147,21 @@
         switch(objectType) {
             case proto.ObjectType.SHAPE:
                 return SRL_Shape.createFromProtobuf(scope.ProtoSrlShape.decode(object.object));
-            break;
-                case proto.ObjectType.STROKE:
+            case proto.ObjectType.STROKE:
                 return SRL_Stroke.createFromProtobuf(scope.ProtoSrlStroke.decode(object.object));
-            break;
-                case proto.ObjectType.POINT:
+            case proto.ObjectType.POINT:
                 return SRL_Point.createFromProtobuf(scope.ProtoSrlPoint.decode(object.object));
-            break;
         }
     }
 
     function encodeSrlObject(scope, object) {
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlIbject();
 
-        if (object.check_type() == SRL_ShapeType) {
+        if (object.check_type() === SRL_ShapeType) {
             proto.type = SrlObject.ObjectType.SHAPE;
-        } else if (object.check_type() == SRL_StrokeType) {
+        } else if (object.check_type() === SRL_StrokeType) {
             proto.type = SrlObject.ObjectType.STROKE;
-        } else if (object.check_type() == SRL_PointType) {
+        } else if (object.check_type() === SRL_PointType) {
             proto.type = SrlObject.ObjectType.POINT;
         }
 

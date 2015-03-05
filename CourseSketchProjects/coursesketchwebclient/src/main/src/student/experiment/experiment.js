@@ -17,7 +17,7 @@ validateFirstRun(document.currentScript);
             CourseSketch.dataManager.clearStates();
 
             if (isUndefined(panel.dataset.callbackset)) {
-                panel.dataset.callbackset = ""
+                panel.dataset.callbackset = "";
                 navigator.addCallback(loadProblem);
                 navigator.reloadProblems();
             }
@@ -72,7 +72,7 @@ validateFirstRun(document.currentScript);
      * Removes the wait overlay from the DOM if it exists.
      */
     CourseSketch.studentExperiment.removeWaitOverlay = function() {
-        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
+        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") !== null) {
             document.querySelector("body").removeChild(document.getElementById("overlay"));
         }
     };

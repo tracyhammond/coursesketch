@@ -2,7 +2,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
         sendData, request, buffer) {
     var dataListener = advanceDataListener;
     var database = parentDatabase;
-    var Request = request
+    var Request = request;
     var localScope = parent;
     var ByteBuffer = buffer;
 
@@ -105,11 +105,11 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after server insert is done
      */
     function insertLecture(lecture, localCallback, serverCallback) {
-        if (isUndefined(lecture.id) || lecture.id == null) {
+        if (isUndefined(lecture.id) || lecture.id === null) {
             lecture.id = generateUUID();
         }
         setLecture(lecture, function(e, request) {
-            console.log("inserted locally :" + lecture.id)
+            console.log("inserted locally :" + lecture.id);
             if (!isUndefined(localCallback)) {
                 localCallback(e, request);
             }
@@ -166,13 +166,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                is the lecture object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getLectureLocal(lectureId, lectureCallback) {
-        if (isUndefined(lectureId) || lectureId == null) {
+        if (isUndefined(lectureId) || lectureId === null) {
             lectureCallback(new DatabaseException("The given id is not assigned", "getting Lecture: " + lectureId));
         }
         database.getFromLectures(lectureId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 lectureCallback(new DatabaseException("Result is undefined!", "Grabbing lecture from server: " + lectureId));
-            } else if (result.data == nonExistantValue) {
+            } else if (result.data === nonExistantValue) {
                 lectureCallback(new DatabaseException("Nothing is in the server database!", "Grabbing lecture from server: " + lectureId));
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
@@ -221,7 +221,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *            grabbed.
      */
     function getCourseLectures(lectureIds, localCallback, serverCallback) {
-        if (isUndefined(lectureIds) || lectureIds == null || lectureIds.length == 0) {
+        if (isUndefined(lectureIds) || lectureIds === null || lectureIds.length === 0) {
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException("Result is undefined!", "Grabbing lecture from server: " + lectureIds));
             } else {
@@ -241,13 +241,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                         lectureIdsNotFound.push(lectureId);
                     }
                     barrier -= 1;
-                    if (barrier == 0) {
+                    if (barrier === 0) {
                         if (lectureIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
                                     CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
                                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
                                 // after listener is removed
-                                if (isUndefined(item.data) || item.data == null) {
+                                if (isUndefined(item.data) || item.data === null) {
                                     serverCallback(new DatabaseException("The data sent back from the server does not exist."));
                                     return;
                                 }
