@@ -46,6 +46,11 @@
         "requireParamTypes": true
     },
 
+    "validateParameterSeparator": ", ",
+    "safeContextKeyword": ["localScope"],
+    "requireSpacesInForStatement": true,
+    "requireCapitalizedComments": true,
+    "disallowNewlineBeforeBlockStatements": true,
     "validateIndentation": 4,
     "requireParenthesesAroundIIFE": true,
     "requireBlocksOnNewline": true,
@@ -66,10 +71,10 @@
     "requireSpaceBeforeBinaryOperators": [ "?", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=" ],
     "requireSpaceAfterBinaryOperators": [ "?", ":", ",", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
     "disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "!" ],
-    "disallowSpaceBeforePostfixUnaryOperators": ["++", "--" ],
-    "disallowSpaceBeforeBinaryOperators": [",", ":"],
+    "disallowSpaceBeforePostfixUnaryOperators": ["++", "--", ";" ],
+    "disallowSpaceBeforeBinaryOperators": [",", ":", ";" ],
     "disallowKeywords": [ "with" ],
-    "disallowKeywordsOnNewLine": [ "else" ],
+    "disallowKeywordsOnNewLine": [ "else", "catch" ],
     "requireLineFeedAtFileEnd": true,
     "disallowSpaceAfterObjectKeys": true,
     "validateLineBreaks": "LF",
@@ -78,6 +83,7 @@
     "comment": {
         "THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER": "rules below",
         "disallowMultipleLineBreaks": true,
-        "requireAlignedObjectValues": "skipWithFunction"
+        "requireAlignedObjectValues": "skipWithFunction",
+        "disallowKeywordsInComments": true
     }
 }
