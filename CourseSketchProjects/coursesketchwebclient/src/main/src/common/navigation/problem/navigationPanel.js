@@ -31,14 +31,18 @@ function NavigationPanel() {
      */
     function setUpButtons(nav) {
         var button = this.shadowRoot.querySelector("#buttonNext");
-        button.onclick = function() {nav.gotoNext();};
+        button.onclick = function() {
+            nav.gotoNext();
+        };
         if (nav.hasNext()) {
             button.disabled = false;
         } else {
             button.disabled = true;
         }
         button = this.shadowRoot.querySelector("#buttonPrev");
-        button.onclick = function() {nav.gotoPrevious();};
+        button.onclick = function() {
+            nav.gotoPrevious();
+        };
         if (nav.hasPrevious()) {
             button.disabled = false;
         } else {
@@ -47,7 +51,7 @@ function NavigationPanel() {
     }
 
     /*
-    window.onresize = function() {
+    Window.onresize = function() {
         var navWidth = document.getElementById("navPanel").offsetWidth;
         var navHeight = document.getElementById("navPanel").offsetHeight;
         var textWidth = document.getElementById("panelWrapper").offsetWidth - navWidth;

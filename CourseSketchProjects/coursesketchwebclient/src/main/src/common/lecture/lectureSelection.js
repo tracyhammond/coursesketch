@@ -2,7 +2,7 @@ validateFirstRun(document.currentScript);
 
 (function() {
     $(document).ready(function() {
-        CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+        CourseSketch.lectureSelection.courseSelectionManager = new ClickSelectionManager();
         CourseSketch.lectureSelection.currentCourse = undefined;
 
         /**
@@ -21,7 +21,7 @@ validateFirstRun(document.currentScript);
             attributeChanged, oldValue, newValue, lectureObject) {
                 element[attributeChanged] = newValue;
                 CourseSketch.dataManager.updateLecture(lectureObject);
-        };
+            };
 
         /**
          * Function that is called when a lecture is selected
@@ -32,7 +32,7 @@ validateFirstRun(document.currentScript);
          *            selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-            CourseSketch.dataManager.addState("currentLecture",lecture);
+            CourseSketch.dataManager.addState("currentLecture", lecture);
             if (CourseSketch.connection.isInstructor) {
                 CourseSketch.redirectContent("/src/instructor/lecture/lecturePage.html", "Edit Lecture");
             } else {
@@ -47,7 +47,7 @@ validateFirstRun(document.currentScript);
          *                list of lectures to display
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
-            if(lectureList[0] instanceof CourseSketch.DatabaseException) {
+            if (lectureList[0] instanceof CourseSketch.DatabaseException) {
                 throw lectureList[0];
             }
             var add = $("#add").clone();
@@ -106,10 +106,10 @@ validateFirstRun(document.currentScript);
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,
                             CourseSketch.lectureSelection.displayLectures);
-                            console.log("finished adding to course " + currentCourse);
-                            if(!isUndefined(addLectureCallback)) {
-                                addLectureCallback(course);
-                            }
+                        console.log("finished adding to course " + currentCourse);
+                        if (!isUndefined(addLectureCallback)) {
+                            addLectureCallback(course);
+                        }
                     });
             };
             CourseSketch.dataManager.insertLecture(lecture, insertCallback, insertCallback);
@@ -145,7 +145,7 @@ validateFirstRun(document.currentScript);
                     clearInterval(intervalVar);
                     CourseSketch.dataManager.pollUpdates(function() {
                         CourseSketch.dataManager.getAllCourses(loadCourses);
-                    }); // pollupdates
+                    }); // Pollupdates
                 }
             }, 100);
         }

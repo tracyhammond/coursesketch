@@ -8,11 +8,11 @@ validateFirstRun(document.currentScript);
     CourseSketch.lecturePage.doResize = function(event) {
         var target = event.target;
 
-        // add the change in coords to the previous width of the target element
+        // Add the change in coords to the previous width of the target element
         var newWidth  = parseFloat($(target).width()) + event.dx;
         var newHeight = parseFloat($(target).height()) + event.dy;
 
-        // update the element's style
+        // Update the element's style
         target.style.width  = newWidth + 'px';
         target.style.height = newHeight + 'px';
 
@@ -79,7 +79,7 @@ validateFirstRun(document.currentScript);
 
         if (!isUndefined(input) && input !== null && input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 imagebox.setSrc(e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
@@ -95,7 +95,7 @@ validateFirstRun(document.currentScript);
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
         document.querySelector("#slide-content").appendChild(embeddedHtml);
-        if(!isUndefined(form) && form !== null) {
+        if (!isUndefined(form) && form !== null) {
             embeddedHtml.setHtml(form.html.value);
         }
         embeddedHtml.setFinishedListener(CourseSketch.lecturePage.saveEmbeddedHtml);
