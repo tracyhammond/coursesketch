@@ -1,7 +1,7 @@
 {
   // Look at http://jslinterrors.com/ for more details on errors and to find how to suppress certain errors
   // Options
-  "maxparams": 3,
+  "maxparams": 7,
   "indent": false,
   "camelcase": true,
   "eqeqeq": true,
@@ -17,6 +17,7 @@
   "unused" : true,
   "maxlen" : "150",
   "maxcomplexity" : "10",
+  "loopfunc" : true, // This is a relaxer so it allows you to make functions in a loop when set to true
   "-W080" : false, // Suppresses "there is no need to initialize a variable to undefined" error
   "-W082" : false, // Suppresses "functions should not be defined in a block" error
 

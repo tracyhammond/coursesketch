@@ -10,11 +10,11 @@ function ImageBox() {
         localScope = this; // This sets the variable to the level of the custom element tag
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-    }
+    };
 
     this.setSrc = function(src) {
         this.shadowRoot.querySelector(".image").src = src;
-    }
+    };
 
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
@@ -29,7 +29,7 @@ function ImageBox() {
         imageProto.src = this.shadowRoot.querySelector(".image").src;
 
         // If the image does not have an id, then a command has not been created for the image
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_IMAGE,true);
         }
         this.command.setCommandData(imageProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -40,7 +40,7 @@ function ImageBox() {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return imageProto;
-    }
+    };
 
     /**
      * @param imageProto {protoCommand} is the data to be loaded from the proto
@@ -52,7 +52,7 @@ function ImageBox() {
             return;
         }
         this.shadowRoot.querySelector(".image").src = imageProto.src;
-    }
+    };
 
     /**
      * @return finishedCallback {function} is the callback set at implementation.

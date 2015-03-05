@@ -188,7 +188,7 @@ function HighlightText() {
         }
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -202,7 +202,7 @@ function HighlightText() {
      * @param protoData {protoCommand} is the CommandData to be loaded
      */
     this.loadData = function(protoData) {
-        if (isUndefined(this.shadowRoot) || this.shadowRoot == null) {
+        if (isUndefined(this.shadowRoot) || this.shadowRoot === null) {
             this.loadedData = protoData;
             return;
         }
@@ -210,6 +210,8 @@ function HighlightText() {
             return;
         }
         var nodes = protoData.getSelectedNodePath(); // This is a list of all the nodes to recreate
+        var backgroundColor;
+        var textColor;
         this.highlightProto = protoData; // This sets highlightProto to the previous list so that you can add new selections in edit mode
         for (var i=0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
             var loadNode = nodes[i]; // The current node to be loaded
@@ -217,8 +219,8 @@ function HighlightText() {
             var rangeStartOffset = loadNode.getStartOffset();
             var rangeEndNode = loadNode.getEndPath();
             var rangeEndOffset = loadNode.getEndOffset();
-            var backgroundColor = loadNode.getBackgroundColor();
-            var textColor = loadNode.getTextColor();
+            backgroundColor = loadNode.getBackgroundColor();
+            textColor = loadNode.getTextColor();
 
             // This recreates the node based on selection start/end node/offset and text/background colors
             if (!isUndefined(window.getSelection)) {

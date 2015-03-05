@@ -15,23 +15,23 @@ function Question() {
 
         shadowRoot.getElementById("actions").onclick = function(event) {
             shadowRoot.getElementById("actions-dialog").open = true;
-        }
+        };
         shadowRoot.getElementById("dialog-close").onclick = function(event) {
             shadowRoot.getElementById("actions-dialog").open = false;
-        }
+        };
         shadowRoot.getElementById("correct-lecture").onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset["lecture-" + value]);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById("correct-slide"));
-        }
+        };
         shadowRoot.getElementById("incorrect-lecture").onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset["lecture-" + value]);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById("incorrect-slide"));
-        }
-    }
+        };
+    };
 
     /**
      * Loads the lectures that can be navigated to in the question.
@@ -60,9 +60,9 @@ function Question() {
                 localScope.loadSlides(localScope.lectures[0].idList, shadowRoot.getElementById("incorrect-slide"));
             }
             $(localScope.shadowRoot.getElementById("actions-box")).removeClass("hide");
-        }
+        };
         CourseSketch.dataManager.getCourseLectures(lectureIds, callback, callback);
-    }
+    };
 
     /**
      * Loads slides into a slide select element.
@@ -71,7 +71,7 @@ function Question() {
      */
     this.loadSlides = function(idList, slideSelect) {
         var callback = function(slides) {
-            slideSelect.innerHTML = ""
+            slideSelect.innerHTML = "";
             for(var i = 0; i < slides.length; ++i) {
                 var option = document.createElement("option");
                 option.textContent = i + 1;
@@ -81,13 +81,13 @@ function Question() {
             if(slides.length > 0) {
                 slideSelect.disabled = false;
             }
-        }
+        };
         var slideIds = [];
         for(var i = 0; i < idList.length; ++i) {
             slideIds.push(idList[i].id);
         }
         CourseSketch.dataManager.getLectureSlides(slideIds, callback, callback);
-    }
+    };
 
     /**
      * Adds multiple choice content to the question
@@ -96,7 +96,7 @@ function Question() {
     this.addAnswerContent = function(answerContent) {
         answerContent.className = "answer";
         this.appendChild(answerContent);
-    }
+    };
 
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
@@ -130,14 +130,15 @@ function Question() {
         var correctSlide = shadowRoot.getElementById("correct-slide");
         var incorrectLecture = shadowRoot.getElementById("incorrect-lecture");
         var incorrectSlide = shadowRoot.getElementById("incorrect-slide");
-        if (!isUndefined(correctLecture) && !isUndefined(correctSlide) && !isUndefined(incorrectLecture) && !isUndefined(incorrectSlide)
-                && correctLecture != null && correctSlide != null && incorrectLecture != null && incorrectSlide != null) {
+        if (!isUndefined(correctLecture) && !isUndefined(correctSlide) && !isUndefined(incorrectLecture) && !isUndefined(incorrectSlide) &&
+                correctLecture !== null && correctSlide !== null && incorrectLecture !== null && incorrectSlide !== null) {
             var correctLectureId = correctLecture.value;
             var correctSlideStr = correctSlide.value;
             var incorrectLectureId = incorrectLecture.value;
             var incorrectSlideStr = incorrectSlide.value;
-            if (!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) && !isUndefined(incorrectSlideStr)
-                    && correctLectureId !== "" && correctSlideStr !== "" && incorrectLectureId !== "" && incorrectSlideStr !== "") {
+            if (!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) &&
+                    !isUndefined(incorrectSlideStr) && correctLectureId !== "" && correctSlideStr !== "" && incorrectLectureId !== "" &&
+                    incorrectSlideStr !== "") {
                 var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
                 var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
                 correctNav.nextLectureId = correctLectureId;
@@ -150,7 +151,7 @@ function Question() {
         }
 
         // If the textbox does not have an id, then a command has not been created for the question
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,true);
         }
         this.command.setCommandData(questionProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -161,7 +162,7 @@ function Question() {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return questionProto;
-    }
+    };
 
     /**
      * @param textBoxProto {protoCommand} is the data to be loaded from the proto
@@ -176,11 +177,12 @@ function Question() {
         }
         this.shadowRoot.querySelector("#text").value = questionProto.getQuestionText();
         var nodes = this.shadowRoot.querySelector('content').getDistributedNodes();
-        if(!isUndefined(questionProto.multipleChoice) && questionProto.multipleChoice != null && nodes.length > 0 && (nodes[0] instanceof MultiChoice)) {
+        if(!isUndefined(questionProto.multipleChoice) && questionProto.multipleChoice !== null && nodes.length > 0 &&
+                (nodes[0] instanceof MultiChoice)) {
             var answerContent = nodes[0];
             answerContent.loadData(questionProto.multipleChoice);
-        } else if(!isUndefined(questionProto.sketchQuestion) && questionProto.sketchQuestion != null) {
-            throw "Sketch questions are not yet supported"
+        } else if(!isUndefined(questionProto.sketchQuestion) && questionProto.sketchQuestion !== null) {
+            throw "Sketch questions are not yet supported";
         }
 
         // TODO: Currently just one nav for correct/incorrect; add navs for different answer choices (also needs to work with sketch)
@@ -192,7 +194,7 @@ function Question() {
             shadowRoot.getElementById("incorrect-lecture").value = incorrectNav.nextLectureId;
             shadowRoot.getElementById("incorrect-slide").value = incorrectNav.nextSlide;
         }
-    }
+    };
 
     /**
      * @return finishedCallback {function} is the callback set at implementation.

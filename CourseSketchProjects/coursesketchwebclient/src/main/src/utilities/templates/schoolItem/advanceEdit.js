@@ -40,7 +40,7 @@
         } else {
             name = schoolItemData.name;
         }
-        if (name != "") {
+        if (name !=="") {
             nodeToFill.value = name;
             return name;
         }
@@ -68,7 +68,7 @@
         } else {
             description = schoolItemData.description;
         }
-        if (description != "") {
+        if (description !=="") {
             nodeToFill.value = description;
             return description;
         }
@@ -87,10 +87,10 @@
         var id = "";
         if (isUndefined(schoolItemData)) {
             //console.log(schoolItemElement.id);
-        }  else {
+        } else {
             id = schoolItemData.id;
         }
-        if (id != "") {
+        if (id !=="") {
             nodeToFill.textContent = id;
         } else {
             nodeToFill.textContent = "No Id assigned yet";
@@ -200,7 +200,7 @@
             return nodeToFill.value;
         }
         return undefined;
-    }
+    };
 
     /**
      * @param parent {ShadowRoot} the root of the parent.
@@ -211,7 +211,7 @@
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var result = loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
-            if (result != null) {
+            if (result !==null) {
                 mappedInput.set(inputList[i].dataset.prop, result);
             }
         }
@@ -223,7 +223,7 @@
      */
     SchoolItem.prototype.finalize = function() {
         if (!isUndefined(this.advanceEditPanel)) {
-            if (this.advanceEditPanel.parentNode != null) {
+            if (this.advanceEditPanel.parentNode !==null) {
                 this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
             }
         }
@@ -270,7 +270,7 @@
 
             // cancel!
             function close(event) {
-                if (event.toElement == host) {
+                if (event.toElement === host) {
                     return false;
                 }
                 event.stopPropagation();
@@ -280,10 +280,10 @@
                 } catch(exception) {
                     // ignored if this throws an error.
                 }
-            };
+            }
 
             shadow.querySelector("button.closeButton").onclick = close;
             document.body.addEventListener("click", close);
         });
-    }
+    };
 })();

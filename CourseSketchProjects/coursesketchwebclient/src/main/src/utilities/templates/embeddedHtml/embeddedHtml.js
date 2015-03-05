@@ -10,11 +10,11 @@ function EmbeddedHtml() {
         localScope = this; // This sets the variable to the level of the custom element tag
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-    }
+    };
 
     this.setHtml = function(html) {
         this.shadowRoot.innerHTML = html;
-    }
+    };
 
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
@@ -29,7 +29,7 @@ function EmbeddedHtml() {
         embeddedHtmlProto.embeddedHtml = this.shadowRoot.innerHTML;
 
         // If the image does not have an id, then a command has not been created for the image
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_EMBEDDED_HTML,true);
         }
         this.command.setCommandData(embeddedHtmlProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -40,7 +40,7 @@ function EmbeddedHtml() {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return embeddedHtmlProto;
-    }
+    };
 
     /**
      * @param embeddedHtmlProto {protoCommand} is the data to be loaded from the proto
@@ -52,7 +52,7 @@ function EmbeddedHtml() {
             return;
         }
         this.shadowRoot.innerHTML = embeddedHtmlProto.embeddedHtml;
-    }
+    };
 
     /**
      * @return finishedCallback {function} is the callback set at implementation.

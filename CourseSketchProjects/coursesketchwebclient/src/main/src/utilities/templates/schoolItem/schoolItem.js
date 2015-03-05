@@ -22,7 +22,7 @@ function SchoolItem() {
         var descriptionContent = this.shadowRoot.querySelector('.description content');
 
         var nodes = descriptionContent.getDistributedNodes();
-        if (!nodes || nodes == null || nodes.length == 0) {
+        if (!nodes || nodes === null || nodes.length === 0) {
             descriptionContent.dataset.overflow = "false";
             return false;
         }
@@ -34,7 +34,7 @@ function SchoolItem() {
         var usedWidth = $(window).width();
         for (var i = 0; i < widths.length; i++) {
             var width = widths[i];
-            if (typeof width == "string") {
+            if (typeof width === "string") {
                 if (width.endsWith && width.endsWith("px")) {
                     width = width.substring(0, width.indexOf("px"));
                     width = parseInt(width);
@@ -207,7 +207,7 @@ function SchoolItem() {
  */
 var getHostElement = function(parent) {
     var grandParent = parent.parentNode;
-    while (grandParent != null) {
+    while (grandParent !== null) {
         parent = grandParent;
         grandParent = grandParent.parentNode;
     }
