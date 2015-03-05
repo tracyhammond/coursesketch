@@ -24,7 +24,7 @@ function NavigationPanel() {
         }.bind(this));
 
         setUpButtons(this.itemNavigator);
-    }
+    };
 
     /**
      * @param {ProblemNavigator} sets bindings and disables buttons if they can not do anything.
@@ -84,7 +84,7 @@ function NavigationPanel() {
      */
     this.getNavigator = function() {
         return this.itemNavigator;
-    }
+    };
 }
 
 NavigationPanel.prototype = Object.create(HTMLElement.prototype);

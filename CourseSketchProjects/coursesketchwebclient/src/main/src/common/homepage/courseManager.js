@@ -59,7 +59,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             courseManagement.courseClicked(course);
         });
 
-        if (courseList instanceof CourseSketch.DatabaseException || courseList.length == 0) {
+        if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
             if (CourseSketch.connection.isInstructor) {
                 builder.setEmptyListMessage('Please Create a new course to get started!');
             } else {
@@ -100,7 +100,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 // waiting icon
             }
         });
-    }
+    };
 
     /**
      * Called to show a specific set of assignments with the given list.
@@ -113,7 +113,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            if (!isUndefined(course) && course.getState() != null &&!(course.getState().accessible)) {
+            if (!isUndefined(course) && course.getState() !== null &&!(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
             assignmentList = [];
@@ -127,7 +127,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         });
         builder.build(document.querySelector('#assignment_list_column'));
         document.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
-    }
+    };
 
 
     /**
@@ -150,7 +150,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 // waiting icon
             }
         });
-    }
+    };
 
     /**
      * Displays the list of problems for the user to pick from.
@@ -165,9 +165,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
             problemList = [];
-            if (!isUndefined(assignment) && assignment.getState() != null && !assignment.getState().accessible) {
-                builder.setEmptyListMessage('This assignment is currently not available. '
-                    + 'Please contact the instructor to let you view the problems');
+            if (!isUndefined(assignment) && assignment.getState() !== null && !assignment.getState().accessible) {
+                builder.setEmptyListMessage('This assignment is currently not available. ' +
+                        'Please contact the instructor to let you view the problems');
             }
         }
         builder.setList(problemList);
@@ -225,7 +225,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             // note that queryselector is not allowed on these types of ids
             changeSelection(clickedElement, problemSelectionManager);
         }
-    }
+    };
 
     function setNotSelectedMessage(number) {
         var builder = new SchoolItemBuilder();
@@ -274,16 +274,16 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             if (src && content) {
                 toReplace.appendChild(content.cloneNode(true));
             } else {
-                toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>'
-                        + '<h2 style = "text-align:center">Click an item to edit</h2>';
+                toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
+                        '<h2 style = "text-align:center">Click an item to edit</h2>';
             }
         }
 
         function onerror(event) {
             var toReplace = document.getElementById('editable_unit');
             removeAllChildren(toReplace);
-            toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>'
-                    + '<h2 style = "text-align:center">Click an item to edit</h2>';
+            toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
+                    '<h2 style = "text-align:center">Click an item to edit</h2>';
         }
 
         try {

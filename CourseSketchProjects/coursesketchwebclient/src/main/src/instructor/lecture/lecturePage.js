@@ -24,7 +24,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.textBox = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
@@ -33,7 +33,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.question = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
@@ -42,7 +42,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.image = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         CourseSketch.lecturePage.saveEmbeddedHtml = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
@@ -51,7 +51,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.embeddedHtml = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         /**
          * Selects a specific lecture slide.
@@ -64,14 +64,14 @@ validateFirstRun(document.currentScript);
             var completionHandler = function() {
                 $(".slide-thumb").each(function() {
                     $(this).removeClass("selected");
-                })
+                });
                 $("#" + slideIndex + ".slide-thumb").addClass("selected");
                 CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
                 CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
                     .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
                     CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
-            }
+            };
             if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
                 CourseSketch.lecturePage.addWaitOverlay();
 
@@ -91,7 +91,7 @@ validateFirstRun(document.currentScript);
             } else {
                 completionHandler();
             }
-        }
+        };
 
         /**
          * Adds a new slide to the current lecture.
@@ -110,12 +110,12 @@ validateFirstRun(document.currentScript);
                 CourseSketch.lecturePage.lecture = lecture;
                 CourseSketch.lecturePage.displaySlides();
                 CourseSketch.lecturePage.removeWaitOverlay();
-            }
+            };
             var finishInsert = function(slide) {
                 CourseSketch.dataManager.getCourseLecture(slide.lectureId, finishGetCourse, finishGetCourse);
-            }
+            };
             CourseSketch.dataManager.insertSlide(slide, finishInsert, finishInsert);
-        }
+        };
 
         // Do setup
         if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {

@@ -66,7 +66,7 @@ validateFirstRun(document.currentScript);
      */
     function getNav() {
         return document.querySelector("navigation-panel").getNavigator();
-    };
+    }
 
     /*
      * deletes the sketch data in the sketch-area element
@@ -81,7 +81,7 @@ validateFirstRun(document.currentScript);
             document.getElementById("dialogPanel").close();
         };
         CourseSketch.dataManager.waitForDatabase(function() {
-            var navPanel = document.querySelector("navigation-panel")
+            var navPanel = document.querySelector("navigation-panel");
             var navigator = getNav();
             var assignment = CourseSketch.dataManager.getState("currentAssignment");
             if (!isUndefined(assignment)) {
@@ -93,7 +93,7 @@ validateFirstRun(document.currentScript);
             }
             CourseSketch.dataManager.clearStates();
             if (isUndefined(navPanel.dataset.callbackset)) {
-                navPanel.dataset.callbackset = ""
+                navPanel.dataset.callbackset = "";
                 navigator.addCallback(function(navigator) {
                     multiviewSketchDelete();
                     createMvList(navigator);
@@ -138,7 +138,7 @@ validateFirstRun(document.currentScript);
             studentExperiment.submission = submission;
             return studentExperiment;
         });
-    }
+    };
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
@@ -170,7 +170,7 @@ validateFirstRun(document.currentScript);
         updateList = null;
         element = null;
         //console.log(submission);
-    }
+    };
 
     /**
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
@@ -185,7 +185,7 @@ validateFirstRun(document.currentScript);
      * Removes the wait overlay from the DOM if it exists.
      */
     CourseSketch.multiViewPage.removeWaitOverlay = function() {
-        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") != null) {
+        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") !== null) {
             document.querySelector("body").removeChild(document.getElementById("overlay"));
         }
     };

@@ -1,11 +1,11 @@
-
+/* jshint camelcase: false */
 /**
  **************************************************************
  *
  *
  * SRL_IntersectionHandler SRL_Library
  * @author Daniel Tan
- * 
+ *
  *
  *
  **************************************************************
@@ -27,13 +27,13 @@ function SRL_IntersectionHandler(parentObjectHandler) {
 	 * An area smaller than the maximum area means the points are very dense.
 	 * A small number of points means the density is very low.
 	 */
-	var subBounds = new Array();
+	var subBounds = [];
 	var currentBounds = new SRL_BoundingBox();
 	var currentBoundsBackup = new SRL_BoundingBox();
 	var minIndex = 0;
-	const MAX_POINTS = 50;
-	const MAX_AREA = 100;
-	const EXPANDING_CONSTANT = 3;
+	var MAX_POINTS = 50;
+	var MAX_AREA = 100;
+	var EXPANDING_CONSTANT = 3;
 	var parentObject = parentObjectHandler;
 
 	/**
@@ -43,7 +43,7 @@ function SRL_IntersectionHandler(parentObjectHandler) {
 	 */
 	this.addPoint = function addPoint(point, index) {
 		currentBoundsBackup.addPoint(point);
-		if (currentBoundsBackup.getArea() > MAX_AREA || index - minIndex > MAX_POINTS) {	
+		if (currentBoundsBackup.getArea() > MAX_AREA || index - minIndex > MAX_POINTS) {
 			currentBounds.setIndexes(minIndex, index);
 			currentBounds.addPoint(point);
 			currentBounds.scale(EXPANDING_CONSTANT);
@@ -65,7 +65,7 @@ function SRL_IntersectionHandler(parentObjectHandler) {
 			subBounds.push(currentBounds);
 		}
 	};
-	
+
 	this.addSubObject = function addSubObject(object, index) {
 		subBounds.add(object.getBoundingBox());
 		object.getBoundingBox().setIndexes(index, index);
@@ -80,8 +80,8 @@ function SRL_IntersectionHandler(parentObjectHandler) {
 			var box = subBounds[i];
 			if (box.containsCoordinate(x,y)) {
 				return true; // fixme: add a queue so that all of the items are checked in the queue at once.
-			};
-		};
+			}
+		}
 	};
 
 	function isIntersectingStroke(x,y) {

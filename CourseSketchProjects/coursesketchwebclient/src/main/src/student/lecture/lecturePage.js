@@ -28,27 +28,26 @@ validateFirstRun(document.currentScript);
             var completionHandler = function() {
                 $(".slide-thumb").each(function() {
                     $(this).removeClass("selected");
-                })
+                });
                 $("#" + slideIndex + ".slide-thumb").addClass("selected");
                 CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
                 CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
                     .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
                     CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
-            }
+            };
             if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
                 CourseSketch.lecturePage.addWaitOverlay();
 
                 // Need to do small delay here so the wait overlay actually shows up
                 setTimeout(function() {
-                    var elements = document.getElementById("slide-content").children;
                     completionHandler();
                 }, 10);
 
             } else {
                 completionHandler();
             }
-        }
+        };
 
         $(document).keydown(function(e) {
             switch(e.which) {

@@ -30,11 +30,10 @@ if (isUndefined(generateUUID)) {
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+            return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
         });
         return uuid;
     }
-    ;
 }
 
 /**
@@ -66,7 +65,7 @@ if (isUndefined(createTimeStamp)) {
 if (isUndefined(addScopedLoadEvent)) {
     function addScopedLoadEvent(scope, func) {
         var oldonload = scope.onload;
-        if (typeof scope.onload != 'function') {
+        if (typeof scope.onload !== 'function') {
             scope.onload = func;
         } else {
             scope.onload = function() {
@@ -141,7 +140,7 @@ if (isUndefined(getFormattedDateTime)) {
         if (dateTime.getHours() >= 12) {
             timeType = "PM";
         }
-        if (dateTime.getHours() == 0) {
+        if (dateTime.getHours() === 0) {
             hours = 12;
         }
         var time = make2Digits(hours) + ":" + make2Digits(dateTime.getMinutes()) + timeType;
@@ -228,13 +227,11 @@ if (isUndefined(validateFirstRun)) {
         if (!isUndefined(scriptBay[scriptObject.src])) {
             var errorEvent = {src: scriptObject.src};
             var listener = function(event) {
-                if (typeof event.error === "object"
-                    && !isUndefined(event.error.src)
-                    && event.error.src === scriptObject.src) {
+                if (typeof event.error === "object" && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
                     window.removeEventListener("error", listener, true);
                 }
-            }
+            };
             window.addEventListener("error", listener, true);
             throw errorEvent;
         }
@@ -258,13 +255,11 @@ if (isUndefined(validateFirstGlobalRun)) {
         if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
             var errorEvent = {src: scriptObject.src};
             var listener = function(event) {
-                if (typeof event.error === "object"
-                    && !isUndefined(event.error.src)
-                    && event.error.src === scriptObject.src) {
+                if (typeof event.error === "object" && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
                     window.removeEventListener("error", listener, true);
                 }
-            }
+            };
             window.addEventListener("error", listener, true);
             throw errorEvent;
         }

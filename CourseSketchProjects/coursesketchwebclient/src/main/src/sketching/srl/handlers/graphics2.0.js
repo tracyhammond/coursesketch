@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 /**
  * Installs PaperScope globally, and attaches it to the DomObject canvasElement
  */
@@ -25,7 +26,7 @@ function Graphics(canvasElement, sketchManager) {
         var oldWidth = canvasElement.width;
         canvasElement.height = $(canvasElement).parent().height();
         canvasElement.width = $(canvasElement).parent().width();
-        if (oldHeight != canvasElement.height || oldWidth != canvasElement.width) {
+        if (oldHeight !== canvasElement.height || oldWidth !== canvasElement.width) {
             ps.view.viewSize.setHeight(canvasElement.height);
             ps.view.viewSize.setWidth(canvasElement.width);
         }
@@ -42,7 +43,7 @@ function Graphics(canvasElement, sketchManager) {
         var boundary = new ps.Rectangle(ps.view.bounds);
         ps.project.activeLayer.fitBounds(boundary);
         ps.view.update();
-    }
+    };
 
     /**
      * Updates the view at 60fps
@@ -120,7 +121,7 @@ function Graphics(canvasElement, sketchManager) {
     function loadStroke(stroke) {
         ps.activate();
         var object = ps.project.getItem({data: {id : stroke.getId()} });
-        if (!isUndefined(object) && object != null) {
+        if (!isUndefined(object) && object !== null) {
             return; // already added to the sketch.
         }
         var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
@@ -143,15 +144,15 @@ function Graphics(canvasElement, sketchManager) {
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
+            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
                 var stroke = command.decodedData;
-                if (lastUpdateType == 0 || lastUpdateType == 1) {
+                if (lastUpdateType === 0 || lastUpdateType === 1) {
                     loadStroke(stroke);
-                } else if (lastUpdateType == -1) {
+                } else if (lastUpdateType === -1) {
                     removeItem(stroke.getId());
                 }
-            } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
-                if (lastUpdateType == 0 || lastUpdateType == 1) {
+            } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
+                if (lastUpdateType === 0 || lastUpdateType === 1) {
                     ps.project.activeLayer.removeChildren();
                 } else {
                     loadSketch();
@@ -161,7 +162,7 @@ function Graphics(canvasElement, sketchManager) {
         if (redraw) {
             ps.view.update();
         }
-    }
+    };
 
     /**
      * @param drawInstant {boolean} If false this will tell the graphics to not draw anytime it receives an update.

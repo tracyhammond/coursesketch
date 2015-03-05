@@ -5,7 +5,7 @@ function DatabaseException(message, request) {
     if (request) {
         this.request = request;
     }
-};
+}
 
 DatabaseException.prototype.message = "Generic database message";
 DatabaseException.prototype.request = "Generic request";
