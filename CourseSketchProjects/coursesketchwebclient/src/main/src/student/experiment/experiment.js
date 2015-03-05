@@ -25,7 +25,7 @@ validateFirstRun(document.currentScript);
     });
 
     /**
-     * loads the problem, called every time a user navigates to a different problem.
+     * Loads the problem, called every time a user navigates to a different problem.
      */
     function loadProblem(navigator) {
         var problemType = navigator.getProblemType();
@@ -84,7 +84,7 @@ validateFirstRun(document.currentScript);
         var typingSurface = document.createElement("textarea");
         typingSurface.className = "sub-panel";
         typingSurface.style.width = "100%";
-        typingSurface.style.height="calc(100% - 110px)";
+        typingSurface.style.height = "calc(100% - 110px)";
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById("problemPanel").appendChild(typingSurface);
@@ -106,8 +106,8 @@ validateFirstRun(document.currentScript);
     function loadSketch(navigator) {
         var sketchSurface = document.createElement("sketch-surface");
         sketchSurface.className = "wide_rule sub-panel";
-        sketchSurface.style.width="100%";
-        sketchSurface.style.height="calc(100% - 110px)";
+        sketchSurface.style.width = "100%";
+        sketchSurface.style.height = "calc(100% - 110px)";
         sketchSurface.setErrorListener(function(exception) {
             console.log(exception);
             alert(exception);
