@@ -2,17 +2,17 @@
 
 /**
  * *************************************************************
- * 
+ *
  * Inheritance Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 
 /**
  * @Method sets up inheritance for functions
- * 
+ *
  * this.Inherits(SuperClass); // super call inside object AND
  * SubClass.Inherits(SuperClass);
  */
@@ -49,16 +49,16 @@ Function.prototype.Inherits = function(parent) {
 
 /**
  * *************************************************************
- * 
+ *
  * Object Functions
- * 
+ *
  * @author gigemjt
- * 
+ *
  * *************************************************************
  */
 if (isUndefined(makeValueReadOnly)) {
     function makeValueReadOnly(obj, property, value) {
-        if (typeof property != "string") {
+        if (typeof property !== "string") {
             throw new Error("property argument must be a string");
         }
         Object.defineProperty(obj, property, {

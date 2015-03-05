@@ -48,7 +48,7 @@ CallbackBarrier.prototype.finalize = function(callback) {
     if (this.asyncCount === 0) {
         this.callbackHandle();
     }
-}
+};
 
 /**
  * Creates a barrier with the specific amount and a callback.

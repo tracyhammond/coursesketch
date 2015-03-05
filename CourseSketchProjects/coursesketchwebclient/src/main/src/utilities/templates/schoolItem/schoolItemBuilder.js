@@ -43,8 +43,8 @@ function SchoolItemBuilder() {
      * Creates a set method for every variable in the current object. EX:
      * setWidth, setImageClicked ...
      **************************************************************************/
-    for (obj in this) {
-        if (obj != this.resetValues && ('' + obj) != 'resetValues') {
+    for (var obj in this) {
+        if (obj !== this.resetValues && ('' + obj) !== 'resetValues') {
             var objectName = '' + obj;
             // scopes the loop so that the memory of the object stays
             (function(objectName, scope) {
@@ -67,7 +67,6 @@ function SchoolItemBuilder() {
     var PROBLEM = "Problem";
     var BANK_PROBLEM = "BankProblem";
     var LECTURE = "BankProblem";
-    var localScope = this;
 
     /***************************************************************************
      * CREATING LIST LOGIC
@@ -76,7 +75,7 @@ function SchoolItemBuilder() {
     this.build = function(id) {
 
         var hostElement = undefined;
-        if (typeof id == "string") {
+        if (typeof id === "string") {
             hostElement = document.getElementById(id);
         } else {
             hostElement = id;
@@ -87,13 +86,13 @@ function SchoolItemBuilder() {
             hostElement.innerHTML = "";
         }
 
+        var element = document.createElement('h1');
         // if there is no list add the empty message and then exit
         if (!this.list || this.list.length <= 0) {
             var message = 'There are no items in this list!';
             if (this.emptyListMessage) {
                 message = '' + this.emptyListMessage;
             }
-            var element = document.createElement('h1');
             element.textContent = message;
             hostElement.appendChild(element);
             return;
@@ -101,7 +100,6 @@ function SchoolItemBuilder() {
 
         // adds a title
         if (this.listTitle) {
-            var element = document.createElement('h1');
             element.textContent = this.listTitle;
             hostElement.appendChild(element);
         }
@@ -183,7 +181,7 @@ function SchoolItemBuilder() {
             return;
         }
         var itemState = srlSchoolItem.state;
-        if (itemState != null && !isUndefined(itemState)) {
+        if (itemState !== null && !isUndefined(itemState)) {
             // TODO: add state for an assignment that has been graded.
             if (itemState.graded) {
                 $(box).addClass("graded");
@@ -205,7 +203,7 @@ function SchoolItemBuilder() {
      * Adds an onclick function to the element if the function exists, does
      * nothing otherwise.
      */
-    this.addClickFunction = function addClickFunction(element, boxFunction, editFunction, srlSchoolItem) {
+    this.addClickFunction = function addClickFunction(element, boxFunction, editFunction) {
         if (boxFunction) {
             element.addEventListener('click', function() {
                 if (element.dataset.isediting === "false") {
@@ -235,24 +233,22 @@ function SchoolItemBuilder() {
             box.appendChild(name);
         }
 
+        var description = document.createElement('div');
         if (srlSchoolItem.description) {
-            var description = document.createElement('div');
             description.className = "description";
             description.textContent = srlSchoolItem.description;
             box.appendChild(description);
         } else if (type === PROBLEM && srlSchoolItem.problemInfo) {
-            var description = document.createElement('div');
             description.className = "description";
             description.textContent = srlSchoolItem.getProblemInfo().getQuestionText();
             box.appendChild(description);
         }  else if (type === BANK_PROBLEM && srlSchoolItem.questionText) {
-            var description = document.createElement('div');
             description.className = "description";
             description.textContent = srlSchoolItem.getQuestionText();
             box.appendChild(description);
         }
 
-        if (type == ASSIGNMENT && this.showDate) {
+        if (type === ASSIGNMENT && this.showDate) {
             this.showFormattedDate(box, srlSchoolItem, currentDate, type);
         }
     };
@@ -269,8 +265,9 @@ function SchoolItemBuilder() {
         // if the close date has passed show only the close date
 
         var accessDate = srlSchoolItem.accessDate;
+        var element;
         if (accessDate) {
-            var element = document.createElement('span');
+            element = document.createElement('span');
             element.setAttribute('class', 'accessDate');
             element.textContent = getFormattedDateTime(new Date(accessDate.millisecond.toNumber()));
             box.appendChild(element);
@@ -278,7 +275,7 @@ function SchoolItemBuilder() {
 
         var dueDate = srlSchoolItem.dueDate;
         if (dueDate) {
-            var element = document.createElement('span');
+            element = document.createElement('span');
             element.setAttribute('class', 'dueDate');
             element.textContent = getFormattedDateTime(new Date(dueDate.millisecond.toNumber()));
             box.appendChild(element);
@@ -287,10 +284,10 @@ function SchoolItemBuilder() {
         var closeDate = srlSchoolItem.closeDate;
         var showCloseDate = true;
         if (dueDate && closeDate) {
-            showCloseDate = closeDate.millisecond.toNumber() != dueDate.millisecond.toNumber();
+            showCloseDate = closeDate.millisecond.toNumber() !== dueDate.millisecond.toNumber();
         }
         if (closeDate && showCloseDate) {
-            var element = document.createElement('span');
+            element = document.createElement('span');
             element.setAttribute('class', 'closeDate');
             element.textContent = getFormattedDateTime(new Date(closeDate.millisecond.toNumber()));
             box.appendChild(element);

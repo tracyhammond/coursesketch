@@ -20,7 +20,7 @@ function RegisterSystem() {
     this.createConnection = function(location, encrytped, attemptReconnections) {
         connection = new Connection(location, encrytped, attemptReconnections);
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
-            if (evt.code == connection.CONNECTION_LOST) {
+            if (evt.code === connection.CONNECTION_LOST) {
                 if (isUndefined(connection)) {
                     // if this became undefined then we should stop trying to connect.
                     throw "this connection object is no longer valid";
@@ -28,7 +28,7 @@ function RegisterSystem() {
                 if (!attemptingToReconnect) {
                     alert('can not connect to the server');
                 }
-            } else if (evt.code == connection.SERVER_FULL) {
+            } else if (evt.code === connection.SERVER_FULL) {
                 if (!attemptingToReconnect) {
                     alert(evt.reason); // Here we can try to connect to other
                                         // servers.
@@ -114,9 +114,9 @@ function RegisterSystem() {
     function formSubmit() {
         function sendLogin(arg1, arg2, email , isInstructor) {
             if (!connection.isConnected()) {
-                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using"
-                        + " \n the newest version of chrome. If you are still unable to login please email"
-                        + " \n server@coursesketch.com with your device, and web browser");
+                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using" +
+                        " \n the newest version of chrome. If you are still unable to login please email" +
+                        " \n server@coursesketch.com with your device, and web browser");
                 return;
             }
             var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
@@ -139,7 +139,7 @@ function RegisterSystem() {
 
         var p1 = shadowRoot.querySelector("#password1").value;
         var p2 = shadowRoot.querySelector("#password2").value;
-        if (p1 != p2) {
+        if (p1 !== p2) {
             alert("The passwords must match");
             return;
         }
@@ -175,11 +175,11 @@ function RegisterSystem() {
      */
     this.setOnSuccessLogin = function(callback) {
         successLoginCallback = callback;
-    }
+    };
 
     this.getFormSubmitFunction = function() {
         return formSubmitFunction;
-    }
+    };
 
     /**
      * @Method
@@ -187,7 +187,7 @@ function RegisterSystem() {
      */
     this.setCancelCallback = function(callback) {
         cancelCallback = callback;
-    }
+    };
     /**
      * Removes all stored variables. so that hopefully most of this object can
      * be garbe collected
@@ -196,7 +196,7 @@ function RegisterSystem() {
         connection = undefined;
         shadowRoot = undefined;
         successLoginCallback = undefined;
-    }
+    };
 }
 
 RegisterSystem.prototype = Object.create(HTMLElement.prototype);

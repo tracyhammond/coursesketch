@@ -24,11 +24,11 @@ function LoginSystem() {
                 // if this became undefined then we should stop trying to connect.
                 throw "this connection object is no longer valid";
             }
-            if (evt.code == connection.CONNECTION_LOST) {
+            if (evt.code === connection.CONNECTION_LOST) {
                 if (!attemptingToReconnect) {
                     alert('can not connect to the server');
                 }
-            } else if (evt.code == connection.SERVER_FULL) {
+            } else if (evt.code === connection.SERVER_FULL) {
                 if (!attemptingToReconnect) {
                     alert(evt.reason); // Here we can try to connect to other
                                         // servers.
@@ -116,9 +116,9 @@ function LoginSystem() {
         console.log("Submitting something?");
         function sendLogin(arg1, arg2) {
             if (!connection.isConnected()) {
-                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using"
-                        + " \n the newest version of chrome. If you are still unable to login please email"
-                        + " \n server@coursesketch.com with your device, and web browser");
+                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using" +
+                        " \n the newest version of chrome. If you are still unable to login please email" +
+                        " \n server@coursesketch.com with your device, and web browser");
                 return;
             }
             var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
@@ -167,11 +167,11 @@ function LoginSystem() {
      */
     this.setOnSuccessLogin = function(callback) {
         successLoginCallback = callback;
-    }
+    };
 
     this.getFormSubmitFunction = function() {
         return formSubmitFunction;
-    }
+    };
 
     /**
      * @Method
@@ -179,7 +179,7 @@ function LoginSystem() {
      */
     this.setRegisterCallback = function(callback) {
         registerCallback = callback;
-    }
+    };
     /**
      * Removes all stored variables. so that hopefully most of this object can
      * be garbe collected
@@ -188,7 +188,7 @@ function LoginSystem() {
         connection = undefined;
         shadowRoot = undefined;
         successLoginCallback = undefined;
-    }
+    };
 }
 
 LoginSystem.prototype = Object.create(HTMLElement.prototype);

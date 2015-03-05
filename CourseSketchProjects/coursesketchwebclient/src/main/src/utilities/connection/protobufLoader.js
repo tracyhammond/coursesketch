@@ -5,7 +5,7 @@ function ProtobufException(message) {
     this.setMessage(message);
     this.message = "";
     this.htmlMessage = "";
-};
+}
 ProtobufException.prototype = BaseException;
 
 /**
@@ -114,7 +114,7 @@ function ProtobufSetup() {
         if (isUndefined(preString)) {
             preString = '';
         }
-        for (object in protoPackage) {
+        for (var object in protoPackage) {
             (function(classType) {
                 var objectName = preString + object;
                 if (isFunction(classType)) {
@@ -355,7 +355,7 @@ function ProtobufSetup() {
                 onError(exception);
             }
         }
-        if (isUndefined(data) || data == null || typeof data != 'object') {
+        if (isUndefined(data) || data === null || typeof data !== 'object') {
             throw new ProtobufException("Data type is not supported:" + typeof data);
         }
         var decoded = proto.decode(data);
@@ -370,12 +370,12 @@ function ProtobufSetup() {
     };
 
     // makes all of the methods read only
-    for (obj in localScope) {
+    for (var obj in localScope) {
         makeValueReadOnly(localScope, obj, localScope[obj]);
     }
     // making ProtobufException read only
     makeValueReadOnly(localScope, "ProtobufException", ProtobufException);
-};
+}
 
 (function(scope) {
     if (isUndefined(scope.CourseSketch)) {

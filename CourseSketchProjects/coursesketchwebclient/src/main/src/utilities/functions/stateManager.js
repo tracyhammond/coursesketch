@@ -1,6 +1,6 @@
 /**
  * @Class Handles the window state.
- * 
+ *
  * Right now this is missing a couple of items but ill describe them here.
  * <ol>
  * <li>A way to add and pop off states (you can not undo redo though so dont
@@ -31,7 +31,7 @@ function Redirector(scope, affectedWindow) {
     var FILE_ENDINGS = "html";
     /**
      * Sets the hash url to the file location.
-     * 
+     *
      * This allows us to find the url if something were to happen.
      */
     this.setRedirect = function setRedirect(url) {
@@ -43,21 +43,21 @@ function Redirector(scope, affectedWindow) {
         // ending
         var replacedHash = ('' + window.location).split('#')[0] + '#' + trimmedHash;
         scope.location.replace(replacedHash);
-    }
+    };
 
     function replaceAll(find, replace, str) {
         return str.replace(new RegExp(find, 'g'), replace);
-    }
+    };
 
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
         var addedSlashes = STARTING_URL + '/' + replaceAll('\\.', '/', starting) + '.' + FILE_ENDINGS;
         return addedSlashes;
-    }
+    };
 
     this.moveWindow = function(url) {
         affectedWindow.src = url;
-    }
+    };
 
     /**
      * Redirects the window but does not actually add an event.

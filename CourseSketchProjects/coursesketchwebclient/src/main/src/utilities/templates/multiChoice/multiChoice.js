@@ -11,7 +11,7 @@ function MultiChoice() {
      */
     this.removeAnswer = function(event, answer) {
         this.shadowRoot.querySelector("#answer-choices").removeChild(answer);
-    }
+    };
 
     /**
      * Marks an answer choice as correct.
@@ -25,7 +25,7 @@ function MultiChoice() {
         }
         answer.querySelector(".correct").textContent = "✔";
         this.correctId = answer.id;
-    }
+    };
 
     /**
      * Adds an answer choice to this multiple choice element.
@@ -57,7 +57,7 @@ function MultiChoice() {
         // Radio label (will be an input for instructors)
         var label = document.createElement("input");
         label.className = "label";
-        label.placeholder = "Answer choice"
+        label.placeholder = "Answer choice";
         answer.appendChild(label);
 
         // Correct check box
@@ -65,7 +65,7 @@ function MultiChoice() {
         correct.className = "correct";
         correct.onclick = function(event) {
             localScope.setCorrectAnswer(event, answer);
-        }
+        };
         answer.appendChild(correct);
 
         // Close icon
@@ -74,12 +74,12 @@ function MultiChoice() {
         close.textContent = "×";
         close.onclick = function(event) {
             localScope.removeAnswer(event, answer);
-        }
+        };
         answer.appendChild(close);
 
         // Now that we are done creating the answer choice, add it
         this.shadowRoot.querySelector("#answer-choices").appendChild(answer);
-    }
+    };
 
     /**
      * @param templateClone {node} is a clone of the custom HTML Element for the text box
@@ -93,8 +93,8 @@ function MultiChoice() {
         // Bind addAnswer to click
         localScope.shadowRoot.querySelector("#add").onclick = function(event) {
             localScope.addAnswer(event);
-        }
-    }
+        };
+    };
 
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
@@ -116,7 +116,7 @@ function MultiChoice() {
         mcProto.correctId = this.correctId;
 
         // If the multi-choice item does not have an id, then a command has not been created for the multi-choice item
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE,true);
         }
         this.command.setCommandData(mcProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -127,7 +127,7 @@ function MultiChoice() {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return mcProto;
-    }
+    };
 
     /**
      * @param textBoxProto {protoCommand} is the data to be loaded from the proto
@@ -147,7 +147,7 @@ function MultiChoice() {
         }
         this.correctId = mcProto.correctId;
         this.shadowRoot.getElementById(this.correctId).querySelector(".correct").textContent = "✔";
-    }
+    };
 
     /**
      * @return finishedCallback {function} is the callback set at implementation.

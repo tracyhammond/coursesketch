@@ -25,8 +25,8 @@ function WaitScreenManager() {
 	 * Creates a set method for every variable in the current object.
 	 * EX: setWidth, setImageClicked ...
 	 ***************/
-	for (obj in this) {
-		if (obj != this.resetValues && ('' + obj) != 'resetValues') {
+	for (var obj in this) {
+		if (obj !== this.resetValues && ('' + obj) !== 'resetValues') {
 			var objectName = '' + obj;
 			// scopes the loop so that the memory of the object stays
 			(function(objectName, scope) {
@@ -55,9 +55,9 @@ function WaitScreenManager() {
 		var running = false;
 		var element = document.createElement("div");
 		element.setAttribute("class", "waiting_box");
-		if (this.waitType == this.TYPE_PERCENT) {
+		if (this.waitType === this.TYPE_PERCENT) {
 			this.buildPercent(element);
-		} else if (this.waitType == this.TYPE_WIOD) {
+		} else if (this.waitType === this.TYPE_WIOD) {
 			this.buildWaitIcon(element);
 		}
 
