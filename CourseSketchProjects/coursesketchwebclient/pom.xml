@@ -8,6 +8,19 @@
 	<name>WebClient</name>
 	<packaging>pom</packaging>
 
+	<profiles>
+		<profile>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<properties>
+				<nodeVersion>v0.10.28</nodeVersion>
+			</properties>
+		</profile>
+	</profiles>
+
 	<parent>
 		<groupId>CourseSketch</groupId>
 		<artifactId>CourseSketch-parent</artifactId>
@@ -19,6 +32,7 @@
 		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
 		<testDirectory>${basedir}/src/main/test</testDirectory>
+		<nodeVersion>v0.10.30</nodeVersion>
 	</properties>
 
 	<reporting>
@@ -88,7 +102,7 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v0.10.30</nodeVersion>
+							<nodeVersion>${nodeVersion}</nodeVersion>
 							<npmVersion>1.4.21</npmVersion>
 						</configuration>
 					</execution>
