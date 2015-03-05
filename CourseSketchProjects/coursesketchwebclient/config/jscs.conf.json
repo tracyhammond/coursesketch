@@ -67,7 +67,7 @@
     "requireSpaceAfterBinaryOperators": [ "?", ":", ",", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
     "disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "!" ],
     "disallowSpaceBeforePostfixUnaryOperators": ["++", "--" ],
-    "disallowSpaceBeforeBinaryOperators": [","],
+    "disallowSpaceBeforeBinaryOperators": [",", ":"],
     "disallowKeywords": [ "with" ],
     "disallowKeywordsOnNewLine": [ "else" ],
     "requireLineFeedAtFileEnd": true,
@@ -77,6 +77,7 @@
 
     "comment": {
         "THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER": "rules below",
-        "disallowMultipleLineBreaks": true
+        "disallowMultipleLineBreaks": true,
+        "requireAlignedObjectValues": "skipWithFunction"
     }
 }
