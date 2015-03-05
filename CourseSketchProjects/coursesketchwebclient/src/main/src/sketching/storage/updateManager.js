@@ -20,6 +20,7 @@ UndoRedoException.prototype = new UpdateException();
  * Goals: The update manager can be used for multiple sketches (using the switch
  * sketch command)
  *
+ * @param {SketchManager} sketchManager
  * @param {Function} onError A method that is called when an error occurs
  */
 function UpdateManager(sketchManager, onError) {
@@ -110,7 +111,7 @@ function UpdateManager(sketchManager, onError) {
      * Adds the update in a synchronous manner, if the local queue is not empty this will empty it then add the update list.
      * Throws an exception if the queue is currently locked.  Please do not use often.
      *
-     * @param {SrlUpdate) update The update that is being added to this specific
+     * @param {SrlUpdate} update The update that is being added to this specific
      *            update manager.
      */
     this.addSynchronousUpdate = function(update) {
