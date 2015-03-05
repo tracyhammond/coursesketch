@@ -31,3 +31,7 @@ target/
 .idea
 
 *.iml
+
+node/
+npm-debug.log
+node_modules/

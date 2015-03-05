@@ -1,6 +1,7 @@
 {
   // Look at http://jslinterrors.com/ for more details on errors and to find how to suppress certain errors
-  // Options
+  // ENFORCERS
+
   "bitwise"       : true,     // Prohibit bitwise operators (&, |, ^, etc.).
   "newcap"        : true,     // Require capitalization of all constructor functions e.g. `new F()`.
   "curly"         : true,     // Require {} for every new block or scope.
@@ -26,7 +27,7 @@
 
   "loopfunc"      : true,     // This is a relaxer so it allows you to make functions in a loop when set to true
   "boss"          : false,    // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
-  "es5"           : true,    // Allow EcmaScript 5 syntax.
+  "es5"           : true,     // Allow EcmaScript 5 syntax.
   "esnext"        : false,    // Allow ES.next specific features such as `const` and `let`.
   "asi"           : false,    // Tolerate Automatic Semicolon Insertion (no semicolons).
   "debug"         : false,    // Allow debugger statements e.g. browser breakpoints.
