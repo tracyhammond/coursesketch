@@ -219,7 +219,7 @@ function SketchSurface() {
                 this.sketchManager.setParentSketchId(this.id);
             }
         }
-    }
+    };
 
     /**
      * Loads all of the updates into the sketch.
