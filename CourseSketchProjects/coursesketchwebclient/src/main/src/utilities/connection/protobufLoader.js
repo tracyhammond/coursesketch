@@ -33,8 +33,8 @@ function ProtobufSetup() {
     var PROTOBUF_PACKAGE = 'protobuf';
     var protobufDirectory = "/other/protobuf/";
 
-    var objectList = new Array();
-    var enumList = new Array();
+    var objectList = [];
+    var enumList = [];
 
     /**
      * @returns {ProtobufSetup} an instance of itself.
@@ -114,39 +114,61 @@ function ProtobufSetup() {
         if (isUndefined(preString)) {
             preString = '';
         }
-        for (var object in protoPackage) {
-            (function(classType) {
-                var objectName = preString + object;
-                if (isFunction(classType)) {
-                    objectList.push(objectName);
-                    Object.defineProperty(localScope, objectName, {
-                        value : function() {
-                            if (arguments.length > 0) {
-                                throw new ProtobufException("you can not create this object with arguments.");
-                            }
-                            return new classType();
-                        },
-                        writable : false
-                    });
-
-                    Object.defineProperty(localScope, "get" + objectName + "Class", {
-                        value : function() {
-                            // somehow change it to make this read only?
-                            return classType;
-                        },
-                        writable : false
-                    });
-                } else {
-                    enumList.push(objectName);
-                    Object.defineProperty(localScope, objectName, {
-                        get : function() {
-                            return classType;
-                        }
-                    });
-                }
-
-            })(protoPackage[object]);
+        for (var messageName in protoPackage) {
+            if (protoPackage.hasOwnProperty(messageName)) {
+                createProtoMethod(protoPackage[messageName], messageName, preString);
+            }
         }
+    }
+
+    /**
+     * Creates a method that becomes a part of the protobuf singleton object.
+     * It creates two method:
+     * <ul>
+     * <li>The first method is the name of the message.  This creates an instance of the message.
+     * An example is Request calling <code>PROTOBUF_UTIL.Request()</code> creates an instance of the Request class.
+     * If the message is an enum then you can call it without the () an example is: <code>PROTOBUF_UTIL.CommandType.ADD_STROKE</code>
+     * </li>
+     * <li> The second method is the class of the message.  This can be useful to get access to messages inside messages.
+     * This second method only exist for messages and does not exist for enums.
+     * an example is: <code>PROTOBUF_UTIL.getRequestClass()</code></li>
+     *
+     * @param classType {function|enum} the actual data that represents the protobuf data.
+     * If the classType is not a function then we treat it like an enum.
+     * @param object {string} the name of the message.
+     * @param preString {string} a string that is used to preprend the messageName.
+     * This can be used to prevent conflicts. The value must not be undefined.
+     */
+    function createProtoMethod(classType, messageName, preString) {
+        var objectName = preString + messageName;
+        if (isFunction(classType)) {
+            objectList.push(objectName);
+            Object.defineProperty(localScope, objectName, {
+                value : function() {
+                    if (arguments.length > 0) {
+                        throw new ProtobufException("you can not create this object with arguments.");
+                    }
+                    return new classType();
+                },
+                writable : false
+            });
+
+            Object.defineProperty(localScope, "get" + objectName + "Class", {
+                value : function() {
+                    // somehow change it to make this read only?
+                    return classType;
+                },
+                writable : false
+            });
+        } else {
+            enumList.push(objectName);
+            Object.defineProperty(localScope, objectName, {
+                get : function() {
+                    return classType;
+                }
+            });
+        }
+
     }
 
     /**
@@ -371,7 +393,9 @@ function ProtobufSetup() {
 
     // makes all of the methods read only
     for (var obj in localScope) {
-        makeValueReadOnly(localScope, obj, localScope[obj]);
+        if (localScope.hasOwnProperty(obj)) {
+            makeValueReadOnly(localScope, obj, localScope[obj]);
+        }
     }
     // making ProtobufException read only
     makeValueReadOnly(localScope, "ProtobufException", ProtobufException);
