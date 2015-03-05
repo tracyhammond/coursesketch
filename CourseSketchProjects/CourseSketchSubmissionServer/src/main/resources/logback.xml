@@ -11,7 +11,7 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%file:%line] %msg %n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>Submission.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <FileNamePattern>log/Submission/Submission.%d{yyyy-MM-dd}.log</FileNamePattern>
         </rollingPolicy>
     </appender>
     <!--<logger name="deng" level="I"/>-->
