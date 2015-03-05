@@ -33,3 +33,5 @@ target/
 *.iml
 
 *Log.out*
+
+*.log
