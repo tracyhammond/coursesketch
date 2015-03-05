@@ -14,7 +14,6 @@
             <FileNamePattern>log/Database/Database.%d{yyyy-MM-dd}.log</FileNamePattern>
         </rollingPolicy>
     </appender>
-    <!--<logger name="deng" level="I"/>-->
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="file"/>
