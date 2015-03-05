@@ -1,0 +1,27 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>problemNavigator methods test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/common/navigation/problem/problemNavigator.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+/**
+<script>
+        QUnit.module("testModule1");
+        test("getProblemScript", function(assert) {
+            var nav = new ProblemNavigator("54ef6da250fc2d33077fb431",false,0);
+            //nav.reloadProblems();
+            //nav.currentProblem.problemInfo.script = "testValue";
+            assert.equal("testValue", nav.getProblemScript(), "Testing Return Value");
+        });
+</script>
+</body>
