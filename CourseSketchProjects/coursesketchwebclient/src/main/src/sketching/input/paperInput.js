@@ -26,9 +26,9 @@ function InputListener() {
             var oldZoom = totalZoom;
             totalZoom += delta;
             if (totalZoom < 0 && totalZoom > -1) {
-                ps.view.zoom = -1/(totalZoom - 1);
+                ps.view.zoom = -1 / (totalZoom - 1);
             } else if (totalZoom <= -1) {
-                 ps.view.zoom = -1/(totalZoom - 1);
+                ps.view.zoom = -1 / (totalZoom - 1);
             } else {
                 //console.log(totalZoom);
                 ps.view.zoom = totalZoom + 1;
@@ -41,7 +41,7 @@ function InputListener() {
             if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 startingPoint = ps.project.activeLayer.localToGlobal(event.point);
-                startingCenter= ps.project.activeLayer.localToGlobal(ps.view.center);
+                startingCenter = ps.project.activeLayer.localToGlobal(ps.view.center);
 
             } else {
                 currentPoint = createPointFromEvent(event);
@@ -82,7 +82,7 @@ function InputListener() {
                 if (strokeCreationCallback) {
                     strokeCreationCallback(currentStroke); // Sends back the current stroke.
                 }
-            } catch(err) {
+            } catch (err) {
                 currentStroke = false;
                 currentPoint = false;
                 console.log(err);
@@ -98,7 +98,7 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(delta/3);
+            zoom(delta / 3);
         });
 
         $(sketchCanvas).bind('touchy-pinch', function(event, $target, data) {
@@ -111,7 +111,7 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             //var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(data.scale-data.previousScale);
+            zoom(data.scale - data.previousScale);
         });
 
         // makes zoom public.
