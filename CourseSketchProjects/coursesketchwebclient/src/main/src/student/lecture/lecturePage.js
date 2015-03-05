@@ -6,11 +6,11 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.doResize = function(event) {
             var target = event.target;
 
-            // add the change in coords to the previous width of the target element
+            // Add the change in coords to the previous width of the target element
             var newWidth  = parseFloat($(target).width()) + event.dx;
             var newHeight = parseFloat($(target).height()) + event.dy;
 
-            // update the element's style
+            // Update the element's style
             target.style.width  = newWidth + 'px';
             target.style.height = newHeight + 'px';
 
@@ -20,7 +20,7 @@ validateFirstRun(document.currentScript);
         /**
          * Selects a specific lecture slide.
          *
-         * @param slideIndex
+         * @param { int } slideIndex
          *            index of the slide in the current lecture's protobuf
          *            object.
          */
@@ -36,7 +36,7 @@ validateFirstRun(document.currentScript);
                     CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
             };
-            if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
+            if (!isUndefined(CourseSketch.lecturePage.currentSlide)) {
                 CourseSketch.lecturePage.addWaitOverlay();
 
                 // Need to do small delay here so the wait overlay actually shows up
@@ -50,30 +50,36 @@ validateFirstRun(document.currentScript);
         };
 
         $(document).keydown(function(e) {
-            switch(e.which) {
-                case 37: // left
+            switch (e.which) {
+                case 37: { // left
                     if (CourseSketch.lecturePage.selectedSlideIndex > 0) {
                         CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex - 1);
                     }
-                break;
+                    break;
+                }
 
-                case 38: // up
-                break;
+                case 38: { // up
+                    break;
+                }
 
-                case 39: // right
+                case 39: {// right
                     if (CourseSketch.lecturePage.selectedSlideIndex < CourseSketch.lecturePage.lecture.idList.length - 1) {
                         CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex + 1);
                     }
 
-                break;
+                    break;
+                }
 
-                case 40: // down
-                break;
+                case 40: { // down
+                    break;
+                }
 
-                case 27: // escape!
-
-                break;
-                default: return; // exit this handler for other keys
+                case 27: {// escape!
+                    break;
+                }
+                default: {
+                    return; // exit this handler for other keys
+                }
             }
             e.preventDefault(); // prevent the default action (scroll / move caret)
         });
