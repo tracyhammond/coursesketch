@@ -6,11 +6,13 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.School.SrlGrade;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -416,5 +418,38 @@ public interface Institution {
      */
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Returns the state for a given school item.
+     * Right now only the completed/started state is applied
+     * @param userId
+     *         the id of the user asking for the state.
+     * @param classification
+     *         if it is a course, assignment, ...
+     * @param itemId
+     *         the id of the related state (assignmentId, courseId, ...)
+     * @return the sate of the assignment.
+     * @throws DatabaseAccessException
+     *         thrown if connecting to sql database cause an error.
+     */
+     SrlGrade getGrade(final String userId, final String classification, final String itemId)
+            throws DatabaseAccessException;
+
+    /**
+     * Creates the state if it does not exist otherwise it updates the old state.
+     * @param userId
+     *         the id of the user asking for the state.
+     * @param classification
+     *         if it is a course, assignment, ...
+     * @param itemId
+     *         the id of the related state (assignmentId, courseId, ...)
+     * @param grade
+     *         what the grade is being set to.
+     * @return result of set: "SET", "INSERT", "ERROR"
+     * @throws DatabaseAccessException
+     *         thrown if connecting to sql database cause an error.
+     */
+    String setGrade(final String userId, final String classification, final String itemId, final SrlGrade grade)
+            throws DatabaseAccessException;
 
 }
