@@ -1,7 +1,7 @@
 (function() {
 
     /**
-     * @param parent {ShadowRoot} the root of the parent.
+     * @param {ShadowRoot} parent the root of the parent.
      * @return {Map} A map of the data mapped to the element.
      */
     function getInput(parent) {
@@ -33,14 +33,14 @@
             try {
                 // grabs the content element then gets the first inserted node.
                 name = schoolItemElement.shadowRoot.querySelector(".name content").getDistributedNodes()[0].textContent;
-            } catch(exception) {
+            } catch (exception) {
                 console.log("Ignoring exception while setting name of element");
                 console.log(exception);
             }
         } else {
             name = schoolItemData.name;
         }
-        if (name !=="") {
+        if (name !== "") {
             nodeToFill.value = name;
             return name;
         }
@@ -61,7 +61,7 @@
             try {
                 // grabs the content element then gets the first inserted node.
                 description = schoolItemElement.shadowRoot.querySelector(".description content").getDistributedNodes()[0].textContent;
-            } catch(exception) {
+            } catch (exception) {
                 console.log("Ignoring exception while setting description of element");
                 console.log(exception);
             }
@@ -86,11 +86,11 @@
     loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
         var id = "";
         if (isUndefined(schoolItemData)) {
-            //console.log(schoolItemElement.id);
+            console.log(schoolItemElement.id);
         } else {
             id = schoolItemData.id;
         }
-        if (id !=="") {
+        if (id !== "") {
             nodeToFill.textContent = id;
         } else {
             nodeToFill.textContent = "No Id assigned yet";
@@ -108,11 +108,11 @@
      */
     loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
-        if (isUndefined(schoolItemData)) {
-        }  else {
+       // if (isUndefined(schoolItemData)) {
+       // }  else {
             try {
                 index = schoolItemData.latePolicy.functionType;
-            } catch(exception) {
+            } catch (exception) {
                 console.log("Ignoring exception while setting function type of element");
                 console.log(exception);
                 return null;
@@ -135,11 +135,11 @@
      */
     loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
-        if (isUndefined(schoolItemData)) {
-        }  else {
+        //if (isUndefined(schoolItemData)) {
+        //}  else {
             try {
                 index = schoolItemData.latePolicy.timeFrameType;
-            } catch(exception) {
+            } catch (exception) {
                 console.log("Ignoring exception while setting timeFrame type of element");
                 console.log(exception);
                 return null;
@@ -162,11 +162,11 @@
      */
     loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
-        if (isUndefined(schoolItemData)) {
-        }  else {
+       // if (isUndefined(schoolItemData)) {
+       // }  else {
             try {
                 index = schoolItemData.latePolicy.subtractionType;
-            } catch(exception) {
+            } catch (exception) {
                 console.log("Ignoring exception while setting subtraction type of element");
                 console.log(exception);
                 return null;
@@ -203,7 +203,7 @@
     };
 
     /**
-     * @param parent {ShadowRoot} the root of the parent.
+     * @param {ShadowRoot} parent the root of the parent.
      * @return {Map} A map of the data mapped to the element.
      */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
@@ -223,7 +223,7 @@
      */
     SchoolItem.prototype.finalize = function() {
         if (!isUndefined(this.advanceEditPanel)) {
-            if (this.advanceEditPanel.parentNode !==null) {
+            if (this.advanceEditPanel.parentNode !== null) {
                 this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
             }
         }
@@ -231,9 +231,9 @@
 
     /**
      * Sets up the advance edit panel for editing advance data.
-     * @param element {Element} The edit button that opens up the panel when clicked.
-     * @param localScope {SchoolItem} The school item that this advance panel is associated with.
-     * @param parentNode {Node} The node that is a parent to the button.  This is used to get the school item after saving.
+     * @param {Element} element The edit button that opens up the panel when clicked.
+     * @param {SchoolItem} localScope  The school item that this advance panel is associated with.
+     * @param {Node} parentNode The node that is a parent to the button.  This is used to get the school item after saving.
      */
     SchoolItem.prototype.createAdvanceEditPanel = function(element, localScope, parentNode) {
         $(element).click(function(event) {
@@ -244,7 +244,7 @@
             host.className = "advanceEditHost";
             var pos = $(localScope).offset();
             var leftPos = (pos.left + $(localScope).width());
-            $(host).offset({top:pos.top, left:leftPos});
+            $(host).offset({ top:pos.top, left:leftPos });
 
             // add html to host
             var shadow = host.createShadowRoot();
@@ -277,7 +277,7 @@
                 document.body.removeEventListener("click", close);
                 try {
                     document.body.removeChild(host);
-                } catch(exception) {
+                } catch (exception) {
                     // ignored if this throws an error.
                 }
             }
