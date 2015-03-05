@@ -25,13 +25,13 @@ UndoRedoException.prototype = new UpdateException();
 function UpdateManager(sketchManager, onError) {
 
     /**
-     * the id of the current sketch that is being used by the update list (this
+     * The id of the current sketch that is being used by the update list (this
      * may switch multiple times)
      */
     var currentSketchId;
 
     /**
-     * holds a state of updates (for undoing and redoing).
+     * Holds a state of updates (for undoing and redoing).
      * Note that this always points after the last executed update.
      * If there have been no undo's or redo's or the list is currently not in undo redo mode this will be the same as the updateList length
      * after execution of the update.
@@ -39,18 +39,19 @@ function UpdateManager(sketchManager, onError) {
     var currentUpdateIndex = 0;
 
     /**
-     * holds the pointer to the end of the list (only really used with markers)
+     * Holds the pointer to the end of the list (only really used with markers)
      */
     var currentEndingIndex = 0;
 
     /**
-     * if a marker is executed with an index larger than what we have then we
+     * If a marker is executed with an index larger than what we have then we
      * wait.
      */
     var skippingMarkerMode = false;
     var amountToSkip = 0;
     var localScope = this;
     var lastSubmissionPointer = 0;
+
     /**
      * Records the last type of update.
      * 0 = normal update
@@ -59,8 +60,9 @@ function UpdateManager(sketchManager, onError) {
      * 2 =
      */
     var lastUpdateType = 0;
+
     /**
-     * updates on every save and every submission.
+     * Updates on every save and every submission.
      */
     var lastSavePointer = 0;
 
@@ -79,7 +81,7 @@ function UpdateManager(sketchManager, onError) {
     var executionLock = false;
 
     var inRedoUndoMode = false;
-    var netCount = 0; // this is equal to undo - redo
+    var netCount = 0; // This is equal to undo - redo
 
     /**
      * Holds the entire list of updates
@@ -91,7 +93,7 @@ function UpdateManager(sketchManager, onError) {
      *
      * Adds an update to the queue that then executes them as quick as possible.  This will not freeze up the browser.
      *
-     * @param {SrlUpdate} update the update that is being added to this specific
+     * @param {SrlUpdate} update The update that is being added to this specific
      *            update manager.
      */
     this.addUpdate = function(update) {
@@ -108,7 +110,7 @@ function UpdateManager(sketchManager, onError) {
      * Adds the update in a synchronous manner, if the local queue is not empty this will empty it then add the update list.
      * Throws an exception if the queue is currently locked.  Please do not use often.
      *
-     * @param {SrlUpdate) update the update that is being added to this specific
+     * @param {SrlUpdate) update The update that is being added to this specific
      *            update manager.
      */
     this.addSynchronousUpdate = function(update) {
@@ -122,11 +124,11 @@ function UpdateManager(sketchManager, onError) {
     /**
      * Adds a plugin that is called after each update is added.
      * This can be used by graphics or for recognition purposes.
-     * @param {Object.addUpdate} plugin plugin that has an addUpdate method that can be called.
-     * @callback addUpdate
-     * @callbackParam {ProtobufUpdate} update the update the was just executed by the update manager.
-     * @callbackParam {Boolean} redraw true if the sketch should be redrawn after executing this update.
-     * @callbackParam index, what index this update was.  (Typically is or close to the number of updates in the list)
+     * @param {Object.addUpdate} plugin Plugin that has an addUpdate method that can be called.
+     * @callback {Function} addUpdate
+     * @callbackParam {ProtobufUpdate} update The update the was just executed by the update manager.
+     * @callbackParam {Boolean} redraw True if the sketch should be redrawn after executing this update.
+     * @callbackParam {Integer} index What index this update was.  (Typically is or close to the number of updates in the list)
      */
     this.addPlugin = function(plugin) {
         plugins.push(plugin);
@@ -135,8 +137,8 @@ function UpdateManager(sketchManager, onError) {
     /**
      * Clears the current updates.
      *
-     * @param {Boolean} redraw if true then the sketch will be redrawn.
-     * @param {Boolean} deepClear if true does some manual unlinking to hopefully help out the gc
+     * @param {Boolean} redraw If true then the sketch will be redrawn.
+     * @param {Boolean} deepClear If true does some manual unlinking to hopefully help out the gc
      */
     this.clearUpdates = function clearUpdates(redraw, deepClear) {
         currentUpdateIndex = 0;
@@ -150,7 +152,7 @@ function UpdateManager(sketchManager, onError) {
             }
         }
 
-        // empties the array
+        // Empties the array
         while (updateList.length > 0) {
             updateList.pop();
         }
@@ -183,8 +185,8 @@ function UpdateManager(sketchManager, onError) {
      *
      * @param {Boolean} userCreated True if the user created this marker.
      * @param {MarkerType} markerType The type that the marker is.
-     * @param {string} otherData Contains other important data.
-     * @returns {SrlCommnand}.
+     * @param {String} otherData Contains other important data.
+     * @returns {SrlCommand}
      */
     this.createMarker = function createMarker(userCreated, markerType, otherData) {
         var marker = CourseSketch.PROTOBUF_UTIL.Marker();
@@ -202,7 +204,7 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
-     * executes the update locking execution.
+     * Executes the update locking execution.
      * NOTE: This should only be called be emptyLocalQueue and emptyLocalQueueSynchronously.
      */
     function executeUpdateLocked() {
@@ -250,7 +252,7 @@ function UpdateManager(sketchManager, onError) {
                     emptyLocalQueue();
                 }, 10);
             } else {
-                // we wait and try again when the executionLock is gone
+                // We wait and try again when the executionLock is gone
                 setTimeout(function() {
                     emptyLocalQueue();
                 }, 10);
@@ -282,7 +284,7 @@ function UpdateManager(sketchManager, onError) {
      * Does special handling with redo and undo
      *
      * @param {SrlUpdate} update
-     * @returns {boolean} true if the object needs to be redrawn.
+     * @returns {boolean} True if the object needs to be redrawn.
      */
     function executeUpdate(update) {
         /*
@@ -369,7 +371,7 @@ function UpdateManager(sketchManager, onError) {
      * reached.
      *
      * @param {SrlUpdate} update
-     * @returns {Boolean} true if the sketch needs to be redrawn.
+     * @returns {Boolean} True if the sketch needs to be redrawn.
      */
     function redoUpdate(update) {
         var command = update.getCommands()[0];
@@ -423,7 +425,7 @@ function UpdateManager(sketchManager, onError) {
      * reached
      *
      * @param {SrlUpdate} update
-     * @returns {Boolean} true if the sketch needs to be redrawn.
+     * @returns {Boolean} True if the sketch needs to be redrawn.
      */
     function undoUpdate(update) {
 
@@ -463,7 +465,7 @@ function UpdateManager(sketchManager, onError) {
      * Returns a copy of the updateList for the purpose of not being edited
      * while in use.
      *
-     * this is a delayed method to prevent javascript from freezing the browser.
+     * This is a delayed method to prevent javascript from freezing the browser.
      *
      * @param {Function} callback
      */
@@ -515,7 +517,7 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
-     * @returns {Integer} the length of the current list.
+     * @returns {Integer} The length of the current list.
      */
     this.getListLength = function() {
         return updateList.length;
@@ -627,7 +629,7 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
-     * creates and adds a redo update to the stack.
+     * Creates and adds a redo update to the stack.
      *
      * @param {Boolean} userCreated True if the userCreated the command false otherwise.
      */
@@ -638,7 +640,7 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
-     * creates and adds a redo update to the stack.
+     * Creates and adds a redo update to the stack.
      *
      * @param {Boolean} userCreated True if the userCreated the command false otherwise.
      */
@@ -657,7 +659,7 @@ function UpdateManager(sketchManager, onError) {
     };
 
     /**
-     * cleans the update to make sure it is the same as all new versions
+     * Cleans the update to make sure it is the same as all new versions
      */
     function cleanUpdate(update) {
         return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
