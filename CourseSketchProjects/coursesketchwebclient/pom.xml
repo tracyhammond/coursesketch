@@ -59,7 +59,7 @@
 				</executions>
 				<configuration>
 					<version>2.4.1</version>
-					<configFile>config/jshint.conf.js</configFile>
+					<configFile>config/jshint.conf.json</configFile>
 					<directories>
 						<directory>src/main/src</directory>
 					</directories>

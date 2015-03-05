@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         jshint: {
             options: {
-                jshintrc: 'config/jshint.conf.js',
+                jshintrc: 'config/jshint.conf.json',
                 ignores : ['src/main/src/utilities/libraries/**/*.js', 'src/test/src/testUtilities/**/*.js'],
                 globals: {
                     module: true
@@ -19,9 +19,9 @@ module.exports = function(grunt) {
             files: ['Gruntfile.js', 'src/main/src/**/*.js','src/test/src/**/*.js']
         },
         jscs: {
-            src: "src/main/src/**/*.js",
+            src: "<%= jshint.files %>",
             options: {
-                config: "config/jscs.conf.js",
+                config: 'config/jscs.conf.json',
             }
         },
         connect: {
@@ -85,5 +85,5 @@ module.exports = function(grunt) {
                 'qunit'
             ]);
         });
-    grunt.registerTask('default', ['test', 'jshint']);
+    grunt.registerTask('default', ['jscs', 'test', 'jshint']);
 };
