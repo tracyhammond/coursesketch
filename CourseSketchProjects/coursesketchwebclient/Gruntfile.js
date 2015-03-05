@@ -1,3 +1,4 @@
+var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-jscs");
     grunt.loadNpmTasks('grunt-contrib-connect');
@@ -30,23 +31,42 @@ module.exports = function(grunt) {
                 debug: true
             },
             rules: [
-                // Internal rewrite
-                {from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1'},
-                // Internal rewrite
-                {from: '^/test/(.*)$', to: 'src/test/src/$1'},
-                // Internal rewrite
-                {from: '^/other(.*)$', to: 'src/main/resources/other/$1'}
+               {from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1'},
+               {from: '^/test(.*)$', to: '/src/test/src$1', redirect: "permanent"},
+               {from: '^/other(.*)$', to: 'src/main/resources/other/$1'}
             ],
+            development: {
+                options: {
+                    middleware: function (connect, options) {
+                        var middlewares = [];
+
+                        // RewriteRules support
+                        middlewares.push(rewriteRulesSnippet);
+
+                        if (!Array.isArray(options.base)) {
+                            options.base = [options.base];
+                        }
+
+                        var directory = options.directory || options.base[options.base.length - 1];
+                        options.base.forEach(function (base) {
+                            // Serve static files.
+                            middlewares.push(connect.static(base));
+                        });
+
+                        // Make directory browse-able.
+                        middlewares.push(connect.directory(directory));
+
+                        return middlewares;
+                    }
+                }
+            }
         },
         qunit: {
             options: {
                 httpBase: 'http://localhost:9001',
-                urls: [
-                  'http://localhost:9001/test/instructor/homePage/courseManagementTest.html',
-                  'http://localhost:9001/test/instructor/homePage/NOURL.html',
-                ]
+                timeout: 2000
             },
-            all: ['src/test/src/**/*.html']
+            all: ['src/test/src/**/*Test.html']
         },
     });
 
@@ -54,7 +74,7 @@ module.exports = function(grunt) {
     grunt.registerTask('server', function (target) {
         grunt.task.run([
             'configureRewriteRules',
-            'connect'
+            'connect:development'
         ]);
     });
 
