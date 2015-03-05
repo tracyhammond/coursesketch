@@ -2,9 +2,9 @@
  * Plays back the user's commands from the beginning.
  * Strokes are drawn in real time, in sequence.
  * The other commands, such as undo/redo/clear are also called in sequence.
- * @param updateList {Array} the list of updates to be inserted in real time.
- * @param updateManager {UpdateManager} The manager of the updates.
- * @param graphics {Graphics} used to draw objects to the screen.
+ * @param {Array} updateList the list of updates to be inserted in real time.
+ * @param {UpdateManager} updateManager  The manager of the updates.
+ * @param {Graphics} graphics used to draw objects to the screen.
  */
 function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
@@ -31,7 +31,7 @@ function Playback(updateList, updateManager, graphics) {
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
 
-                    var strokePath = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+                    var strokePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
                     strokeBarrier.finalize(function() {
                         strokePath.simplify();
                         commandFinished();
