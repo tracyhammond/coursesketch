@@ -1,15 +1,15 @@
-/* depends on objectAndInheritance.js */
+/* Depends on objectAndInheritance.js */
 
 /**
  * ******************************
- * 
- * 
+ *
+ *
  * Point data class
- * 
+ *
  * @author hammond; Daniel Tan
  * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&M University
- * 
- * 
+ *
+ *
  * ******************************
  */
 
