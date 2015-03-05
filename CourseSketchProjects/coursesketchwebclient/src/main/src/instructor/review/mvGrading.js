@@ -1,19 +1,19 @@
 validateFirstRun(document.currentScript);
 
 /*
- * this Multiview page goes off a single problem at a time and laods all student experiments of that
+ * This Multiview page goes off a single problem at a time and laods all student experiments of that
  * problem id.
  */
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
     /*
-     * a list of experiments to laod into the sketching pannels
+     * A list of experiments to laod into the sketching pannels
      * gets all experiments that hold the current problem id and places them is
      * sketchList
      */
     function getSketches(callback, navigator) {
         CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
-             if (isUndefined(sketchList)) {
+            if (isUndefined(sketchList)) {
                 if (element.isRunning()) {
                     element.finishWaiting();
                 }
@@ -26,7 +26,7 @@ validateFirstRun(document.currentScript);
     }
 
     /*
-     * used to get list of experiments and then calls createMvSketch to create
+     * Used to get list of experiments and then calls createMvSketch to create
      * all sketches on to the grade screen.
      */
     function createMvList(navigator) {
@@ -34,7 +34,7 @@ validateFirstRun(document.currentScript);
     }
 
     /*
-     * creates a multiview sketch panel and attaches it to the grading area
+     * Creates a multiview sketch panel and attaches it to the grading area
      * this can be done dynamically
      */
     function createMvSketch(array, navigator) {
@@ -50,7 +50,7 @@ validateFirstRun(document.currentScript);
     }
 
     /*
-     * gets a specific set of sketch data to be used in the multiview sketch panel
+     * Gets a specific set of sketch data to be used in the multiview sketch panel
      *
      *@param array
      *       {array<experiments>}
@@ -62,18 +62,18 @@ validateFirstRun(document.currentScript);
     }
 
     /*
-     * returns the navigation panel element to be used by other pages.
+     * Returns the navigation panel element to be used by other pages.
      */
     function getNav() {
         return document.querySelector("navigation-panel").getNavigator();
     }
 
     /*
-     * deletes the sketch data in the sketch-area element
+     * Deletes the sketch data in the sketch-area element
      */
     function multiviewSketchDelete() {
         var parent = document.getElementById("sketch-area");
-        parent.innerHTML= '';
+        parent.innerHTML = '';
     }
 
     $(document).ready(function() {
@@ -104,7 +104,7 @@ validateFirstRun(document.currentScript);
     });
 
     /**
-     * loads the problem, called every time a user navigates to a different problem.
+     * Loads the problem, called every time a user navigates to a different problem.
      */
     CourseSketch.multiViewPage.loadProblem = function(navigator, submissionData) {
         document.getElementById("dialogPanel").show();
@@ -146,8 +146,8 @@ validateFirstRun(document.currentScript);
     CourseSketch.multiViewPage.loadSketch = function(updateList) {
         var sketchSurface = document.createElement("sketch-surface");
         sketchSurface.className = "wide_rule sub-panel";
-        sketchSurface.style.width="100%";
-        sketchSurface.style.height="calc(100%)";
+        sketchSurface.style.width = "100%";
+        sketchSurface.style.height = "calc(100%)";
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         CourseSketch.multiViewPage.addWaitOverlay();
         document.getElementById("percentBar").appendChild(element);
