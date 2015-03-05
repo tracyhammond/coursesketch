@@ -11,9 +11,9 @@ function MvSketch() {
     this.gradeValue = undefined;
 
     /**
-     * sets the update list.
+     * Sets the update list.
      * after the update list is done loading
-     * @param updateList  a list that contains all the changes made in sketch.
+     * @param {SrlUpdateList} updateList  a list that contains all the changes made in sketch.
      */
     this.setUpdateList = function(updateList)  {
         this.shadowRoot.querySelector("sketch-surface").loadUpdateList(updateList, undefined, function() {
@@ -32,7 +32,9 @@ function MvSketch() {
         this.shadowRoot.querySelector(".correctButton").onclick = correct.bind(this);
         this.shadowRoot.querySelector(".wrongButton").onclick = wrong.bind(this);
         this.shadowRoot.querySelector("input").addEventListener("click",
-            function(event) {event.stopPropagation();}, false);
+            function(event) {
+                event.stopPropagation();
+            }, false);
         this.setupAttributes();
     };
 
@@ -60,7 +62,7 @@ function MvSketch() {
     function correct(event) {
         event.stopPropagation();
         this.gradeValue = this.maxValue;
-        this.shadowRoot.querySelector("#outer").className='outerCorrect';
+        this.shadowRoot.querySelector("#outer").className = 'outerCorrect';
         this.shadowRoot.querySelector("#gradeInput").value = parseFloat(this.gradeValue);
     }
 
@@ -70,7 +72,7 @@ function MvSketch() {
     function wrong(event) {
         event.stopPropagation();
         this.gradeValue = 0;
-        this.shadowRoot.querySelector("#outer").className='outerWrong';
+        this.shadowRoot.querySelector("#outer").className = 'outerWrong';
         this.shadowRoot.querySelector("#gradeInput").value = parseFloat(this.gradeValue);
     }
 
