@@ -1,4 +1,4 @@
-/* depends on the protobuf library, base.js, objectAndInheritance.js */
+/* Depends on the protobuf library, base.js, objectAndInheritance.js */
 
 function ProtobufException(message) {
     this.name = "ProtobufException";
@@ -24,7 +24,7 @@ ProtobufException.prototype = BaseException;
  *        protobuf object creator before it is created)
  */
 function ProtobufSetup() {
-    // sets it locally and only uses the local version from now on.
+    // Sets it locally and only uses the local version from now on.
     this.dcodeIO = dcodeIO;
 
     var localDcodeIo = this.dcodeIO;
