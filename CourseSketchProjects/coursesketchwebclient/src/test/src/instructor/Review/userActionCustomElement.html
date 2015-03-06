@@ -2,17 +2,12 @@
 <head>
     <meta charset="UTF-8">
     <link rel="import" href="/src/instructor/review/userActionReviewInclude.html">
-    <script src="/src/utilities/functions/barrier.js"></script>
-    <script src="/src/sketching/plugins/playback.js"></script>
     <link rel="import"
           href="/src/test/src/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
           href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
     <!-- includes files needed for testing -->
-    <link rel="import" href="/src/sketching/sketchInclude.html">
-    <script src="/src/utilities/functions/barrier.js"></script>
-    <script src="/src/sketching/plugins/playback.js"></script>
 
     <!-- d3 library, for the graphs -->
     <link rel="import" href="/src/utilities/libraries/d3/d3include.html">
@@ -23,24 +18,53 @@
 
 <user-action-graph id="hello" style="height:1005; width:100%;"></user-action-graph>
 
-<script>
-    var surface = document.body.querySelector("user-action-graph");
-    var graphics = surface.graphics;
-    //var updateManager = surface.getUpdateManager();
-    function playMe() {
-        var graphics = surface.graphics;
-        var updateList = surface.getUpdateList();
-        var copyList = [];
-        for (var i = 0; i < updateList.length; i++) {
-            copyList.push(updateList[i]);
-        }
-        var updateManager = surface.getUpdateManager();
-        updateManager.clearUpdates(false);
 
-        var playBack = new Playback(copyList, updateManager, graphics);
-        updateManager.addPlugin(playBack);
-        playBack.playNext();
+<div id="textbox"></div>
+
+<script>
+    var updateList = new UpdateManager(undefined, function(error) {
+        console.log(error);
+    });
+
+    //begin creating test data
+    var stubs = function(){
+        return false;
     }
+
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+
+    var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+    var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+
+    updateList.addUpdate(assignUpdate);
+    updateList.addUpdate(assignUpdate);
+    updateList.addUpdate(assignUpdate);
+    updateList.undoAction(false);
+    updateList.undoAction(false);
+    updateList.redoAction(false);
+    updateList.undoAction(false);
+    updateList.redoAction(false);
+    updateList.addUpdate(assignUpdate);
+    updateList.undoAction(false);
+    updateList.redoAction(false);
+    updateList.addUpdate(assignUpdate);
+
+    var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+    updateData.list=(updateList.getUpdateList());
+    console.log(updateData);
+    //end creating test data
+
+    var userGraph = document.body.querySelector("user-action-graph");
+    userGraph.loadData(updateData);
+
+    var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+
+    var real = document.createElement('user-action-graph');
+    console.log(real.loadData);
+    document.getElementById('textbox').appendChild(real);
+    console.log('Test');
+    real.loadData(updateData);
 
 
 </script>
