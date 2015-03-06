@@ -3,19 +3,21 @@ function HeaderHandler() {
     var handler = this;
     this.animateHeader = function(value) {
         var height = $(".ui-header").height();
-        if (value) { // close header
+        if (value) { // Close header
             $(".ui-header").animate({
-                top: '-'+(height+2)+'px',
-                }, 300, function () {
+                top: '-' + (height + 2) + 'px',
+                }, 300, function() {
                     open = false;
-            });
+                }
+            );
             return false;
-        } else { // open header
+        } else { // Open header
             $(".ui-header").animate({
                 top: "0px",
-                }, 300, function () {
+                }, 300, function() {
                     open = true;
-            });
+                }
+            );
             return false;
         }
     };

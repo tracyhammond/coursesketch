@@ -8,28 +8,26 @@ validateFirstRun(document.currentScript);
         /**
          * Function to be called when a lecture has finished editing.
          *
-         * @param attributeChanged
+         * @param {protoObjectAttribute} attributeChanged
          *            the name of the protobuf attribute that changed
-         * @param oldValue
+         * @param {protoObjectAttributeValue} oldValue
          *            the attribute's old value
-         * @param newValue
+         * @param {protoObjectAttribute} newValue
          *            the attribute's new value
-         * @param element
+         * @param {protoObject} element
          *            protobuf element that has been edited
          */
-        CourseSketch.lectureSelection.lectureEndEdit = function(
-            attributeChanged, oldValue, newValue, lectureObject) {
-                element[attributeChanged] = newValue;
-                CourseSketch.dataManager.updateLecture(lectureObject);
-            };
+        CourseSketch.lectureSelection.lectureEndEdit = function(attributeChanged, oldValue, newValue, lectureObject) {
+            element[attributeChanged] = newValue;
+            CourseSketch.dataManager.updateLecture(lectureObject);
+        };
 
         /**
          * Function that is called when a lecture is selected
          * (clicked on)
          *
-         * @param lecture
-         *            protobuf object of the lecture that was
-         *            selected
+         * @param {protoObject} lecture
+         *            protobuf object of the lecture that was selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
             CourseSketch.dataManager.addState("currentLecture", lecture);
@@ -43,7 +41,7 @@ validateFirstRun(document.currentScript);
         /**
          * Renders a list of lectures to the screen.
          *
-         * @param lectureList
+         * @param {list} lectureList
          *                list of lectures to display
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
@@ -69,7 +67,7 @@ validateFirstRun(document.currentScript);
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
          *
-         * @param course
+         * @param {object} course
          *                course object of the selected element
          */
         CourseSketch.lectureSelection.courseSelected = function(course) {
@@ -91,7 +89,7 @@ validateFirstRun(document.currentScript);
         /**
          * Adds a new lecture to the currently selected course.
          *
-         * @param evt
+         * @param {event} evt
          *                event from click (or other) action
          */
         CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
@@ -118,7 +116,7 @@ validateFirstRun(document.currentScript);
         /**
          * Renders a list of courses to the screen.
          *
-         * @param courseList list of courses to display
+         * @param {list} courseList list of courses to display
          */
         CourseSketch.lectureSelection.showCourses = function(courseList) {
             CourseSketch.lectureSelection.schoolItemBuilder = new SchoolItemBuilder();

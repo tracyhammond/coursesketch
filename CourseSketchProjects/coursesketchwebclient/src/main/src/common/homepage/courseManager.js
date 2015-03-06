@@ -154,8 +154,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Displays the list of problems for the user to pick from.
-     * @param {problemList} The list of problems that are wanting to be showed
-     * @param {assignment} (optional) The assignment that created this problem list
+     * @param {list} problemList The list of problems that are wanting to be showed
+     * @param {assignment} assignment (optional) The assignment that created this problem list
      */
     courseManagement.showProblems = function(problemList, assignment) {
         var builder = new SchoolItemBuilder();
