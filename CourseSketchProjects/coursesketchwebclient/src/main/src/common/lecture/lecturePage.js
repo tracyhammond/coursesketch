@@ -68,7 +68,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new image to the currently selected slide
-     * @param input the input element from the form specifying the image
+     * @param {element} input the input element from the form specifying the image
      */
     CourseSketch.lecturePage.newImage = function(input) {
         var imagebox = document.createElement('image-box');
@@ -90,7 +90,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new embedded HTML element to the currently selected slide.
-     * @param form the form that contains the HTML element to be added
+     * @param {element} form the form that contains the HTML element to be added
      */
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
@@ -117,7 +117,7 @@ validateFirstRun(document.currentScript);
     /**
      * Renders a slide to the DOM.
 
-     * @param slide
+     * @param {protoObject} slide
      *            protobuf slide element to be rendered
      */
     CourseSketch.lecturePage.renderSlide = function(slide) {
