@@ -10,12 +10,20 @@ import protobuf.srl.request.Message.Request.MessageType;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class SubmissionClientWebSocket extends ClientWebSocket {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionClientWebSocket.class);
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -44,11 +52,8 @@ public final class SubmissionClientWebSocket extends ClientWebSocket {
         // contains
         // the
         // solution
-        System.err.println(req.getSessionInfo());
         final String[] sessionInfo = req.getSessionInfo().split("\\+");
-        System.err.println(sessionInfo[1]);
         final AnswerConnectionState state = (AnswerConnectionState) getStateFromId(sessionInfo[1]);
-        System.err.println(state);
         if (req.getRequestType() == MessageType.DATA_REQUEST) {
             // SrlExperiment expr = state.getExperiment(sessionInfo[1]);
             // SrlSolution sol = null;
@@ -70,7 +75,7 @@ public final class SubmissionClientWebSocket extends ClientWebSocket {
             builder.setSessionInfo(sessionInfo[0]);
             final SocketSession connection = getConnectionFromState(state);
             if (connection == null) {
-                System.err.println("SOCKET IS NULL");
+                LOG.error("SOCKET IS NULL");
             }
             this.getParentServer().send(getConnectionFromState(state),
                     builder.build());
