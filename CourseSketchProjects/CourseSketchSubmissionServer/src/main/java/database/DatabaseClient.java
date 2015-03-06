@@ -10,6 +10,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.submission.Submission.SrlExperiment;
@@ -17,6 +19,7 @@ import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import util.MergeException;
 import util.SubmissionMerger;
+import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
 
@@ -40,6 +43,12 @@ import static database.DatabaseStringConstants.USER_ID;
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class DatabaseClient {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
+
     /**
      * A single instance of the mongo institution.
      */
@@ -62,14 +71,14 @@ public class DatabaseClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
         }
         database = mongoClient.getDB("submissions");
         if (database == null) {
-            System.out.println("Db is null!");
+            LOG.error("Db is null!");
         } else {
             setUpIndexes();
         }
@@ -99,7 +108,7 @@ public class DatabaseClient {
                 database = mongoClient.getDB("submissions");
             }
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         instance = this;
     }
@@ -138,7 +147,7 @@ public class DatabaseClient {
      *         problems
      */
     public static String saveSolution(final SrlSolution solution, final DatabaseClient client) throws DatabaseAccessException {
-        System.out.println("\n\n\nsaving the experiment!");
+        LOG.info("\n\n\nsaving the experiment!");
         final DBCollection solutions = client.getDb().getCollection(SOLUTION_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
@@ -150,7 +159,7 @@ public class DatabaseClient {
             final DBObject updateObj = new BasicDBObject(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
             solutions.update(resultCursor, new BasicDBObject("$set", updateObj));
         } else {
-            System.out.println("No existing submissions found");
+            LOG.info("No existing submissions found");
 
             final BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
                     .append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
@@ -183,21 +192,21 @@ public class DatabaseClient {
      */
     public static String saveExperiment(final DatabaseClient client, final SrlExperiment experiment, final long submissionTime)
             throws DatabaseAccessException {
-        System.out.println("saving the experiment!");
+        LOG.info("saving the experiment!");
         verifyInput(experiment);
 
         final DBCollection experiments = client.getDb().getCollection(EXPERIMENT_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
                 .append(USER_ID, experiment.getUserId());
-        System.out.println("Searching for existing solutions " + findQuery);
+        LOG.info("Searching for existing solutions {}", findQuery);
         final DBCursor multipleObjectCursor = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
-        System.out.println("Do we have the next cursos " + multipleObjectCursor.hasNext());
-        System.out.println("Number of solutions found" + multipleObjectCursor.count());
+        LOG.info("Do we have the next cursor {}", multipleObjectCursor.hasNext());
+        LOG.info("Number of solutions found {}", multipleObjectCursor.count());
         DBObject cursor = null;
 
         if (multipleObjectCursor.count() > 0) {
-            System.out.println("UPDATING AN EXPERIMENT!!!!!!!!");
+            LOG.info("UPDATING AN EXPERIMENT!!!!!!!!");
             cursor = multipleObjectCursor.next();
 
             // TODO figure out how to update a document with a single command
@@ -281,7 +290,7 @@ public class DatabaseClient {
      *         thrown if there are problems getting the item
      */
     public static SrlExperiment getExperiment(final String itemId, final DatabaseClient client) throws DatabaseAccessException {
-        System.out.println("Fetching experiment");
+        LOG.info("Fetching experiment");
         final DBObject cursor = client.getDb().getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
         if (cursor == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
@@ -299,7 +308,7 @@ public class DatabaseClient {
             throw new DatabaseAccessException("Error getting submission data", e);
         }
         build.setSubmission(sub);
-        System.out.println("Experiment successfully fetched");
+        LOG.info("Experiment successfully fetched");
         return build.build();
     }
 
@@ -447,7 +456,7 @@ public class DatabaseClient {
                     result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary));
                 }
             } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 result = submission.getUpdateList();
             }
             try {
@@ -550,8 +559,8 @@ public class DatabaseClient {
      * Sets up the index to allow for quicker access to the submission.
      */
     public final void setUpIndexes() {
-        System.out.println("Setting up an index");
-        System.out.println("Experiment Index command: " + new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
+        LOG.info("Setting up an index");
+        LOG.info("Experiment Index command: {}", new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
         database.getCollection(EXPERIMENT_COLLECTION).createIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1).append("unique", true));
         database.getCollection(SOLUTION_COLLECTION).createIndex(new BasicDBObject(PROBLEM_BANK_ID, 1).append("unique", true));
     }

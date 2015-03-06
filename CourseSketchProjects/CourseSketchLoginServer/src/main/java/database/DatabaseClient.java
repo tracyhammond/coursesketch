@@ -23,10 +23,19 @@ import static database.DatabaseStringConstants.LOGIN_DATABASE;
 import connection.LoginServerWebSocketHandler;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * A client for the login database.
  */
 public class DatabaseClient {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
     /**
      * A single instance of the database client.
@@ -49,7 +58,7 @@ public class DatabaseClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -83,7 +92,7 @@ public class DatabaseClient {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;
@@ -149,7 +158,7 @@ public class DatabaseClient {
                 throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
             }
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new LoginException("An error occured while comparing passwords", e);
         }
     }
@@ -228,7 +237,7 @@ public class DatabaseClient {
 
         final DBObject cursor = table.findOne(query);
         if (cursor == null) {
-            System.out.println("Unable to find user!");
+            LOG.info("Unable to find user!");
             return false;
         }
         return (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
