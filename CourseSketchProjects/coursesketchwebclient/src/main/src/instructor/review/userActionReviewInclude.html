@@ -9,7 +9,6 @@
     <!-- Jquery library -->
     <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
-
     <!-- user action graph -->
     <link id="userActionGraphImport" rel="import"
           href="/src/instructor/review/userActionReview.html">
@@ -22,30 +21,27 @@
     <meta charset="UTF-8">
     <script>
     (function(importDoc) {
-        $(document).ready(function() {
+        var link = importDoc.querySelector('#userActionGraphImport');
+        var template = link.import.querySelector('template');
+        var clone = document.importNode(template.content, true);
 
-            var link = importDoc.querySelector('#userActionGraphImport');
-            var template = link.import.querySelector('template');
-            var clone = document.importNode(template.content, true);
+        var newElement = new UserActionGraph();
 
-            var newElement = new UserActionGraph();
+        newElement.createdCallback = function() {
+            this.initializeElement(clone.cloneNode(true));
+            console.log('Include initialize');
+        };
 
-            UserActionGraph.prototype.createdCallback = function() {
-                this.initializeElement(clone.cloneNode(true));
-            };
+        newElement.attachedCallback = function() {
 
-            UserActionGraph.prototype.attachedCallback = function() {
-                this.initializeGraph();
-            };
+        };
 
-            UserActionGraph.prototype.detachedCallback = function() {
-                this.finalize();
-            };
+        newElement.detachedCallback = function() {
+            //this.finalize();
+        };
 
-            document.registerElement('user-action-graph', {
-                prototype : newElement
-            });
-
+        document.registerElement('user-action-graph', {
+            prototype : newElement
         });
     })(document.currentScript.ownerDocument);
 </script>
