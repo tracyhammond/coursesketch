@@ -24,8 +24,8 @@ SubmissionException.prototype = BaseException;
 function SubmissionPanel() {
 
     /**
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
+     * @param
+     *            {Element} templateClone an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -38,9 +38,9 @@ function SubmissionPanel() {
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector("#toolbar").getDistributedNodes()[0];
         if (toolbar === null) {
-            return; //quit before infinite loop
+            return; //Quit before infinite loop
         }
-        // toolbar may not be set up by the time this is called, so we wait till it is set up.
+        // Toolbar may not be set up by the time this is called, so we wait till it is set up.
         var timeout = setInterval(function() {
             if (!isUndefined(toolbar.setSaveCallback)) {
                 clearInterval(timeout);
@@ -57,7 +57,7 @@ function SubmissionPanel() {
     this.sendDataToServerExceptionWrapped = function(isSubmitting, suppressAlert) {
         try {
             this.sendDataToServer(isSubmitting);
-        } catch(exception) {
+        } catch (exception) {
             if (!suppressAlert) {
                 alert(exception.toString());
             }
@@ -75,19 +75,21 @@ function SubmissionPanel() {
         }
         var submission = undefined;
         var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
-        switch(this.problemType) {
-            case QuestionType.SKETCH:
+        switch (this.problemType) {
+            case QuestionType.SKETCH: {
                 submission = createSketchSubmission(subPanel, isSubmitting);
                 break;
-            case QuestionType.FREE_RESP:
+            }
+            case QuestionType.FREE_RESP: {
                 submission = createTextSubmission(subPanel, isSubmitting);
                 break;
+            }
         }
         if (isUndefined(submission)) {
             throw new SubmissionException("submission type not supported, aborting");
         }
         if (isUndefined(this.wrapperFunction)) {
-            // you need to set the wrapper function to either create an experiment or solution.
+            // You need to set the wrapper function to either create an experiment or solution.
             throw new SubmissionException("Wrapper function is not set, aborting");
         }
         var submittingValue = this.wrapperFunction(submission);
@@ -103,7 +105,7 @@ function SubmissionPanel() {
             alert(request.responseText);
             if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
                 var subPanel = this.shadowRoot.querySelector("#sub-panel").getDistributedNodes()[0];
-                // potential conflict if it was save multiple times in quick succession.
+                // Potential conflict if it was save multiple times in quick succession.
                 subPanel.getUpdateManager().setLastSaveTime(request.getMessageTime());
                 console.log("submission has been updated with the latest time", request.getMessageTime().toString());
             }
@@ -118,11 +120,11 @@ function SubmissionPanel() {
     };
 
     /**
-     * gets the text that has been typed.
+     * Gets the text that has been typed.
      * @return {SrlSubmission} object that is ready to be sent to the server.
      *
-     * @param textArea {element} The element that contains the text answer
-     * @param isSubmtting {boolean} Currently ignored but in the future it may be used.
+     * @param {element} textArea The element that contains the text answer
+     * @param isSubmtting {boolean} value Currently ignored but in the future it may be used.
      */
     function createTextSubmission(textArea, isSubmitting) {
         var submission = createBaseSubmission();
@@ -146,7 +148,7 @@ function SubmissionPanel() {
 
         var MarkerType = CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
-        var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([markerCommand]);
+        var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerCommand ]);
         updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
@@ -163,7 +165,7 @@ function SubmissionPanel() {
     /**
      * Sets the wrapperFunction, This function takes in a submission and wraps it as either the experiment or solution.
      * This wrapped value is returned from the function and then it is sent to the server internally.
-     * @param wrapperFunction {Function} used to wrap the submission in its required data.
+     * @param  {Function} wrapperFunction used to wrap the submission in its required data.
      */
     this.setWrapperFunction = function(wrapperFunction) {
         this.wrapperFunction = wrapperFunction;
@@ -191,20 +193,20 @@ function SubmissionPanel() {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton("/images/toolbar/clear_button.svg", function() {
                 var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
             toolbar.appendChild(clearButton);
 
             toolbar.setUndoCallback(function() {
                 var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
 
             toolbar.setRedoCallback(function() {
                 var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([command]);
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
         }  else if (problemType === QuestionType.MULT_CHOICE) {
@@ -227,7 +229,7 @@ function SubmissionPanel() {
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param problem {SrlProblem} sets the problem element
+ * @param {SrlProblem} problem sets the problem element
  */
 SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
