@@ -77,7 +77,7 @@
 					<configFile>config/jshint.conf.js</configFile>
 					<directories>
 						<directory>src/main/src</directory>
-					</directories>
+					</directories>jshint.conf
 					<excludes>
 						<exclude>src/main/src/utilities/libraries</exclude>
 						<exclude>src/main/src/sketching/srl/legacy</exclude>

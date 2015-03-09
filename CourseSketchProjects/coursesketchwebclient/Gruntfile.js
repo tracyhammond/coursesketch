@@ -22,7 +22,7 @@ module.exports = function(grunt) {
         jscs: {
             src: '<%= jshint.files %>',
             options: {
-                config: 'config/jscs.conf.json',
+                config: 'config/jscs.conf.jscsrc',
                 reporterOutput: 'target/jscsReport.txt'
             }
         },
