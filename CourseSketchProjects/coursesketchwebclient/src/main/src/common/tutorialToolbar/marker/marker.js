@@ -4,7 +4,7 @@
  */
 function TimelineMarker() {
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -21,7 +21,7 @@ function TimelineMarker() {
         element.onclick = function() {
             $(element).addClass('cross');
             var oldClickFunction = element.onclick;
-            var tim = setTimeout(function () {
+            var tim = setTimeout(function() {
                 $(element).removeClass('cross');
                 element.onclick = oldClickFunction;
             }, 5000);
@@ -34,15 +34,16 @@ function TimelineMarker() {
     }
 
     /**
-     * @param remove {function} the element is removed and calls this function during the process
+     * @param {function} remove The element is removed and calls this function during the process
      */
     this.setRemoveFunction = function(remove) {
         this.removeFunction = remove;
     };
     /**
+     * @param {string} text
      * For the user to see what text they have typed inside of the textboxes
      */
-    this.setPreviewText = function (text) {
+    this.setPreviewText = function(text) {
         this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10) + (text.length > 10 ? "..." : "");
     };
 }

@@ -4,8 +4,8 @@
  */
 function ProblemToolBar() {
     /**
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
+     * @param {element} templateClone
+     *            An element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */

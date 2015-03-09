@@ -15,7 +15,7 @@ function() {
     CourseSketch.redirectContent = function(url, title) {
         CourseSketch.redirector.changeSourceNoEvent(url);
 
-        // document.getElementById('iframeContent').src = url;
+        /* document.getElementById('iframeContent').src = url; */
         CourseSketch.redirector.setRedirect(url);
 
         if (title && CourseSketch.headerManager) {
@@ -32,7 +32,7 @@ function() {
 
     var element = document.querySelector("#loginLocation");
 
-    // creates the scuccess funciton.
+    // Creates the scuccess funciton.
     var successLogin = function(loggedInConnection) {
         CourseSketch.connection = loggedInConnection;
         $("#loginLocation").empty();
@@ -103,14 +103,14 @@ function() {
         function animateMenu(value) {
             if (value) { // close menu
                 $("#content").animate({
-                    marginLeft : "0px",
+                    marginLeft: "0px",
                 }, 300, function() {
                     menuStatus = false;
                 });
                 return false;
             } else { // open menu
                 $("#content").animate({
-                    marginLeft : "200px",
+                    marginLeft: "200px",
                 }, 300, function() {
                     menuStatus = true;
                 });

@@ -27,7 +27,7 @@ function NavigationPanel() {
     };
 
     /**
-     * @param {ProblemNavigator} sets bindings and disables buttons if they can not do anything.
+     * @param {ProblemNavigator} nav sets bindings and disables buttons if they can not do anything.
      */
     function setUpButtons(nav) {
         var button = this.shadowRoot.querySelector("#buttonNext");
@@ -61,7 +61,7 @@ function NavigationPanel() {
     */
 
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {

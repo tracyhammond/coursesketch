@@ -20,10 +20,10 @@ function Timeline () {
      * recognition on when a html page is changed or when input from a user is obtained
      */
     this.continueButton = function(shadowRoot) {
-        var continueButtonScope = this;
+        var localScope = this;
         var continueButton = shadowRoot.querySelector(".btn");
         continueButton.onclick = function() {
-            continueButtonScope.addToolArea(shadowRoot.querySelector('.timeline'));
+            localScope.addToolArea(shadowRoot.querySelector('.timeline'));
         };
     };
 

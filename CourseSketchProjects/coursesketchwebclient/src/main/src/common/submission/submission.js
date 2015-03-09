@@ -24,8 +24,8 @@ SubmissionException.prototype = BaseException;
 function SubmissionPanel() {
 
     /**
-     * @param
-     *            {Element} templateClone an element representing the data inside tag, its
+     * @param {element} templateClone
+     *            An element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -124,7 +124,7 @@ function SubmissionPanel() {
      * @return {SrlSubmission} object that is ready to be sent to the server.
      *
      * @param {element} textArea The element that contains the text answer
-     * @param isSubmtting {boolean} value Currently ignored but in the future it may be used.
+     * @param {boolean} isSubmitting value Currently ignored but in the future it may be used.
      */
     function createTextSubmission(textArea, isSubmitting) {
         var submission = createBaseSubmission();
@@ -229,7 +229,7 @@ function SubmissionPanel() {
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param {SrlProblem} problem sets the problem element
+ * @param {SrlProblem} problemType sets the problem element
  */
 SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
