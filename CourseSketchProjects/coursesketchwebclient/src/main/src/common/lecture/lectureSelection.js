@@ -14,7 +14,7 @@ validateFirstRun(document.currentScript);
          *            the attribute's old value
          * @param {protoObjectAttribute} newValue
          *            the attribute's new value
-         * @param {protoObject} element
+         * @param {protoObject} lectureObject
          *            protobuf element that has been edited
          */
         CourseSketch.lectureSelection.lectureEndEdit = function(attributeChanged, oldValue, newValue, lectureObject) {

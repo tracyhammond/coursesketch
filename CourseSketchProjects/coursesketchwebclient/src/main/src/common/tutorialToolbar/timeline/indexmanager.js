@@ -1,20 +1,20 @@
 /**
- * @param timeline {object} is the timeline object that the index manager will be associated with
+ * @param {object} timeline is the timeline object that the index manager will be associated with
  * Creates an IndexManager for a tutorial timeline
  * Manages currently selected element as well as undoing and redoing update steps when editing tutorial
  */
 function IndexManager (timeline) {
     var current; // Used to set currently selected index class to 'focused'
     var index = -1; // Tracks the current index in the IndexManager
-    this.addNewToolArea = function (toolArea) {
-        toolArea.onclick = function () {
+    this.addNewToolArea = function(toolArea) {
+        toolArea.onclick = function() {
             switchIndex(getElementIndex(this));
         };
         timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
     };
 
     /**
-     * @param destination {integer} is the index of a step that is clicked on
+     * @param {integer} destination is the index of a step that is clicked on
      * This removes the focused class from the previously selected step
      * It then adds the focused class to the currently selected step
      */
@@ -31,8 +31,8 @@ function IndexManager (timeline) {
     }
 
     /**
-     * @param child {object} is the toolArea/step being queried
-     * @return i {integer} is the index of the queried toolArea/step
+     * @param {object} child is the toolArea/step being queried
+     * @returns {integer} i is the index of the queried toolArea/step
      * Used to query the index in the step/toolArea order of the current element
      */
     function getElementIndex(child) {
@@ -45,21 +45,21 @@ function IndexManager (timeline) {
     }
 
     /**
-     * @return update {object} is the protobuf update of the currently selected step/toolArea
+     * @return {object} update is the protobuf update of the currently selected step/toolArea
      */
-    this.getCurrentUpdate = function () {
+    this.getCurrentUpdate = function() {
         var update;
         if (index < 1) {
             update = timeline.updateList.list[0];
         } else {
-            update = timeline.updateList.list[index-1];
+            update = timeline.updateList.list[index - 1];
         }
         return update;
     };
 
     /**
-     * @param oldIndex {integer} is the index to change away from
-     * @param newIndex {integer} is the index to change to
+     * @param {int} oldIndex is the index to change away from
+     * @param {int} newIndex is the index to change to
      * Runs protobuf undo function on the update corresponding to oldIndex
      * Runs protobuf redo function on the update corresponding to newIndex
      */

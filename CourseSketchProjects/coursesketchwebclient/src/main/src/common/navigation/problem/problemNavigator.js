@@ -15,7 +15,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var currentProblem;
     var callbackList = [];
     var currentIndex = 0;
-    var navScope = this;
+    var localScope = this;
     var eventMappingCallback = {};
     var dataLoaded = false;
     var uiLoaded = false;
@@ -28,14 +28,14 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * @param {Number} index attempts to change to the next problem.
+     * Attempts to change to the next problem.
      */
     this.gotoNext = function() {
         changeProblem(currentIndex + 1);
     };
 
     /**
-     * @param {Number} index attempts to change to the previous problem.
+     * Attempts to change to the previous problem.
      */
     this.gotoPrevious = function() {
         changeProblem(currentIndex - 1);
@@ -84,7 +84,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     function callBacker(scopedIndex) {
         setTimeout(function() {
-            callbackList[scopedIndex](navScope);
+            callbackList[scopedIndex](localScope);
         }, 20);
     }
 

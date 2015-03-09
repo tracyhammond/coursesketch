@@ -164,7 +164,7 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a slide thumbnail to the DOM.
      *
-     * @param slideIndex
+     * @param {int} slideIndex
      *            index of the slide in the current lecture's protobuf
      *            object.
      */
