@@ -3,9 +3,6 @@ function VoicePlayback() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        var surface = document.body.querySelector("sketch-surface");
-        var graphics = surface.graphics;
-        var updateManager = surface.getUpdateManager();
 
         this.shadowRoot.querySelector("#play-btn").onclick = function(){
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "block";
@@ -16,6 +13,10 @@ function VoicePlayback() {
             localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
         }
+
+        var surface = document.body.querySelector("sketch-surface");
+        var graphics = surface.graphics;
+        var updateManager = surface.getUpdateManager();
 
         function playMe() {
             var graphics = surface.graphics;
@@ -30,6 +31,8 @@ function VoicePlayback() {
             var playBack = new Playback(copyList, updateManager, graphics);
             updateManager.addPlugin(playBack);
             playBack.playNext();
+            localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
+            localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
         }
     }
 
