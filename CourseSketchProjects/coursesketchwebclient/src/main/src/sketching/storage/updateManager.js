@@ -222,16 +222,14 @@ function UpdateManager(sketchManager, onError) {
                 var offset = lastUpdateType == -1 ? 0 : 1;
                 var pluginUpdate = updateList[updateIndex - offset];
                 var updateType = lastUpdateType;
-                setTimeout(function() {
-                    for (var i = 0; i < plugins.length; i++) {
-                        if (!isUndefined(plugins[i].addUpdate)) {
-                            plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
-                        }
+                for (var i = 0; i < plugins.length; i++) {
+                    if (!isUndefined(plugins[i].addUpdate)) {
+                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
                     }
-                    updateType = undefined;
-                    pluginUpdate = undefined;
-                    updateIndex = undefined;
-                }, 10);
+                }
+                updateType = undefined;
+                pluginUpdate = undefined;
+                updateIndex = undefined;
             }
         } catch (exception) {
             executionLock = false;

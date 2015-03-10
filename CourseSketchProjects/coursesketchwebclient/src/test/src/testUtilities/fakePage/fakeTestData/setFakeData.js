@@ -34,7 +34,7 @@
         var assignmentLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeAssignments.length);
         localBarrier.finalize(assignmentBarrier);
         for (var i = 0; i < CourseSketch.fakeAssignments.length; ++i) {
-            CourseSketch.dataManager.setAssignmentLocal(CourseSketch.fakeAssignments[i], assignmentLoadedCallback);
+            CourseSketch.dataManager.setAssignment(CourseSketch.fakeAssignments[i], assignmentLoadedCallback);
         }
     };
 
@@ -111,4 +111,34 @@
             }
         }, 50);
     }
+
+    /**
+     * Returns a request given an input request from the server for some certain data.
+     */
+    CourseSketch.serverResponseForBankProblems = function(req) {
+        var dataRequest = CourseSketch.PROTOBUF_UTIL.getDataRequestClass().decode(req.otherData);
+        var itemRequest = dataRequest.items[0];
+        var totalLength = CourseSketch.fakeBankProblems.length;
+        var school = CourseSketch.PROTOBUF_UTIL.SrlSchool();
+        school.bankProblems = [];
+
+        // maybe use slice in the future! but not today.
+        for (var i = itemRequest.page * 10; (i < totalLength && i < (itemRequest.page + 1) * 10); i++) {
+            school.bankProblems.push(CourseSketch.fakeBankProblems[i]);
+        }
+
+        var result = CourseSketch.PROTOBUF_UTIL.ItemResult();
+        if (school.bankProblems.length > 0) {
+            result.data = school.toArrayBuffer();
+        } else {
+            result.noData = true;
+        }
+        result.query = itemRequest.query;
+
+        var dataResults = CourseSketch.PROTOBUF_UTIL.DataResult();
+        dataResults.results = [result];
+        var resultingRequest = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataResults,
+                req.requestType);
+        return resultingRequest;
+    };
 })();
