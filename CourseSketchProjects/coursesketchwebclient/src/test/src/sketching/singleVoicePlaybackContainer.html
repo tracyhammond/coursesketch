@@ -9,27 +9,11 @@
 
     <body style="background:#FFFFFF;">
         <voice-playback id="hello"></voice-playback>
-
+        <br><br><br>
         <sketch-surface id="hello" style="height:1005; width:100%; border: 5px solid red;"></sketch-surface>
 
         <script>
-            var surface = document.body.querySelector("sketch-surface");
-            var graphics = surface.graphics;
-            var updateManager = surface.getUpdateManager();
-            function playMe() {
-                var graphics = surface.graphics;
-                var updateList = surface.getUpdateList();
-                var copyList = [];
-                for (var i = 0; i < updateList.length; i++) {
-                copyList.push(updateList[i]);
-            }
-            var updateManager = surface.getUpdateManager();
-            updateManager.clearUpdates(false);
 
-            var playBack = new Playback(copyList, updateManager, graphics);
-            updateManager.addPlugin(playBack);
-            playBack.playNext();
-        }
         </script>
     </body>
 </html>
