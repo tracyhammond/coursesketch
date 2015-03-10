@@ -23,7 +23,7 @@
         var point = new SRL_Point(proto.x, proto.y);
         point.setId(proto.id);
         if (proto.time)
-            point.setTime(proto.time);
+            point.setTime(parseInt(proto.time.toString()));
         if (proto.name)
             point.setName(proto.name);
         if (proto.size)
