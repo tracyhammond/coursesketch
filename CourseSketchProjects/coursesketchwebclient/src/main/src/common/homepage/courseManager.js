@@ -141,7 +141,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
-        CourseSketch.dataManager.getCourseProblems(assignment.problemList,function(problemList) {
+        CourseSketch.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
             courseManagement.showProblems(problemList, assignment);
         }, function(problemList) {
             courseManagement.showProblems(problemList, assignment);
@@ -168,18 +168,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             if (!isUndefined(assignment) && assignment.getState() != null && !assignment.getState().accessible) {
                 builder.setEmptyListMessage('This assignment is currently not available. '
                     + 'Please contact the instructor to let you view the problems');
-            }
-        }
-        for (var i = 0; i < problemList.length; i++) {
-            var q = problemList[i].description;
-            if (isUndefined(q) || q == "") {
-                var prob = problemList[i];
-                if (!isUndefined(prob.problemInfo)) {
-                    var text = prob.getProblemInfo().getQuestionText();
-                    problemList[i].setDescription(text);
-                } else {
-                    problemList[i].setDescription("No Description or question text");
-                }
             }
         }
         builder.setList(problemList);

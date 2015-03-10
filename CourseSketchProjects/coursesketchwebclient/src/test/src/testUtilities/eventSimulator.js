@@ -1,6 +1,11 @@
 // http://stackoverflow.com/a/6158050/2187510
 // example simulate(document.getElementById("btn"), "click", { pointerX: 123, pointerY: 321 })
 
+// supported events:
+// HTMLEVENTS: load, unload, about, error, select, change, submit, reset, focus, blur, resize, scroll
+// MOUSEEVENTS: click, dblclick, mousedown, mouseup, mouseover, mousemove, mouseout
+// TouchEvents: touchend, touchstart, touchmove
+
 function extend(destination, source) {
     for ( var property in source)
         destination[property] = source[property];
@@ -30,16 +35,24 @@ defaultOptions = {
 
 /**
  * Simulates an event.
- * 
- * @param element
+ *
+ * Supported events:
+ * HTMLEVENTS:
+ *              load, unload, about, error, select, change, submit, reset, focus, blur, resize, scroll
+ * MOUSEEVENTS:
+ *              click, dblclick, mousedown, mouseup, mouseover, mousemove, mouseout
+ * TouchEvents:
+ *              touchend, touchstart, touchmove
+ *
+ * @param element {Element}
  *            The element that is affected by the event. It is returned at the
  *            end.
- * @param eventName
- *            the name of the event ex: "click" or "mousedown"
- * @param inputOptions
- *            {Object} a list of options that extend the default list of
+ * @param eventName {String}
+ *            The name of the event ex: "click" or "mousedown".  A list of supported events is above.
+ * @param inputOptions {Object}
+ *            a list of options that extend the default list of
  *            options.
- * @returns the element that the event is simulated on
+ * @returns The element that the event is simulated on
  */
 function simulate(element, eventName, inputOptions) {
     var options = extend(defaultOptions, inputOptions || {});
