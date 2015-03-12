@@ -223,7 +223,7 @@ if (isUndefined(validateFirstRun)) {
         // no var on purpose.
         try {
             scriptBay = scriptBay || {};
-        } catch(exception) {
+        } catch (exception) {
             scriptBay = {};
         }
         if (!isUndefined(scriptBay[scriptObject.src])) {

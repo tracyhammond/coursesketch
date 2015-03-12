@@ -9,9 +9,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     /**
      * Sets a lecture in local database.
      *
-     * @param lecture
+     * @param {SrlLecture} lecture
      *                lecture object to set
-     * @param lectureCallback
+     * @param {Function} lectureCallback
      *                function to be called after the lecture setting is done
      */
     function setLecture(lecture, lectureCallback) {
@@ -34,9 +34,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     /**
      * Sets a lecture in server database.
      *
-     * @param lecture
+     * @param {SrlLecture} lecture
      *                lecture object to set
-     * @param lectureCallback
+     * @param {Function} lectureCallback
      *                function to be called after lecture setting is done
      */
     function insertLectureServer(lecture, lectureCallback) {
@@ -68,11 +68,11 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     /**
      * Sets a lecture in both local and server databases.
      *
-     * @param lecture
+     * @param {SrlLecture} lecture
      *                lecture object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local lecture setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server lecture setting is done
      */
     function updateLecture(lecture, localCallback, serverCallback) {
@@ -97,11 +97,11 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      * Adds a new lecture to both local and server databases. Also updates the
      * corresponding course given by the lecture's courseId.
      *
-     * @param lecture
+     * @param {SrlLecture} lecture
      *                lecture object to insert
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local insert is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server insert is done
      */
     function insertLecture(lecture, localCallback, serverCallback) {
@@ -142,9 +142,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      * Deletes a lecture from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
-     * @param lectureId
+     * @param {String} lectureId
      *                ID of the lecture to delete
-     * @param lectureCallback
+     * @param {Function} lectureCallback
      *                function to be called after the deletion is done
      */
     function deleteLecture(lectureId, lectureCallback) {
@@ -159,9 +159,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     /**
      * Gets a lecture from the local database.
      *
-     * @param lectureId
+     * @param {String} lectureId
      *                ID of the lecture to get
-     * @param lectureCallback
+     * @param {Function} lectureCallback
      *                function to be called after getting is complete, parameter
      *                is the lecture object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
@@ -189,9 +189,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
     /**
      * Gets a lecture from the local and server databases.
      *
-     * @param lectureId
+     * @param {String} lectureId
      *                ID of the lecture to get
-     * @param lectureCallback
+     * @param {Function} lectureCallback
      *                function to be called after getting is complete, paramater
      *                is the lecture object
      */
@@ -210,13 +210,13 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *
      * This does attempt to pull lectures from the server!
      *
-     * @param lectureIds
+     * @param {String} lectureIds
      *            list of IDs of the lectures to get
-     * @param localCallback
+     * @param {Function} localCallback
      *            {Function} called when lectures are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local lectures.
-     * @param serverCallback
+     * @param {Function} serverCallback
      *            {Function} called when the complete list of lectures are
      *            grabbed.
      */

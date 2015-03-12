@@ -2,18 +2,18 @@
  * Attempts to use data as a database, pulls data from the server if it does not
  * exist
  *
- * @param userId
+ * @param {String} userId
  *            The user that this database is associated with.
- * @param connection
- *            The connection to the server which will handle all connections
- *            relating to certain queries.
- * @param advanceDataListener
+ * @param {AdvanceDataListener} advanceDataListener
  *            An instance of {@link AdvanceDataListener} this is used for
  *            responses to queries made by the database server
- * @param Request
+ * @param {Connection} connection
+ *            The connection to the server which will handle all connections
+ *            relating to certain queries.
+ * @param {Request} Request
  *            The class representing the Request protobuf used to get the
  *            message type.
- * @param byteBuffer
+ * @param {ByteBuffer} ByteBuffer
  *            The static instance that is used for encoding and decoding data.
  */
 function SchoolDataManager(userId, advanceDataListener, connection, Request, ByteBuffer) {
@@ -75,8 +75,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
-                "id" : objectId,
-                "data" : objectToAdd
+                "id": objectId,
+                "data": objectToAdd
             });
         };
 
@@ -272,16 +272,15 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * A helper function for testing that waits for the database to be loaded before calling a callback.
-     * @param dataManager The database we are waiting to stop.
-     * @param callback called when the database is ready.
+     * @param {Function} callback Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
-        var dataManager = this;
+        var localScope = this;
         var interval = setInterval(function() {
-            if (dataManager.isDatabaseReady()) {
+            if (localScope.isDatabaseReady()) {
                 clearInterval(interval);
                 callback();
-            } // endif
+            } // Endif
         }, 50);
     };
 }

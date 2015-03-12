@@ -15,10 +15,10 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	 *
 	 * This does attempt to pull experiment from the server!
 	 *
-	 * @param problemId
+	 * @param {String} problemId
 	 *            submission
-	 * @param submissionCallback
-	 *            {Function} called when experiment is grabbed from the database.
+	 * @param {Function} submissionCallback
+	 *            called when experiment is grabbed from the database.
 	 *			  This is only called once.  Either it exists in the local database or it is grabbed from the server database.
 	 */
 	function getSubmission(problemId, submissionCallback) {
@@ -89,8 +89,9 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 	parent.getAllExperiments = getAllExperiments;
 
 	/**
-	 * @param submission the submission that is being added
-	 * @param id the id to which this submission is being added.
+	 * @param {SrlSubmission} submission the submission that is being added
+	 * @param {String} problemId the id to which this submission is being added.
+	 * @param {Function} submissionCallback called when the submission is saved.
 	 */
 	function setSubmission(problemId, submission, submissionCallback) {
 		database.putInSubmissions(problemId, submission.toBase64(), function(e, request) {

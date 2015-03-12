@@ -24,8 +24,8 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     /**
      * Sets a slide in the server database
      *
-     * @param slide is a slide object
-     * @param slideCallback function to be called after the slide setting is done
+     * @param {SrlSlide} slide is a slide object
+     * @param {Function} slideCallback function to be called after the slide setting is done
      */
     function insertSlideServer(slide, slideCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
@@ -55,11 +55,11 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     /**
      * Sets a lecture in both local and server databases.
      *
-     * @param lecture
+     * @param {SrlLecture} lecture
      *                lecture object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called local lecture setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server lecture setting is done
      */
     function updateSlide(slide, localCallback, serverCallback) {
@@ -76,9 +76,9 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      * Adds a new slide to both local and server databases. Also updates the
      * corresponding slide given by the lecture's courseId.
      *
-     * @param slide slide object to insert
-     * @param localCallback function to be called after local insert is done
-     * @param serverCallback function to be called after server insert is done
+     * @param {SrlSlide} slide slide object to insert
+     * @param {Function} localCallback function to be called after local insert is done
+     * @param {Function} serverCallback function to be called after server insert is done
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function(e, request) {
@@ -117,8 +117,8 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     /**
      * Deletes a slide from local database.
      *
-     * @param slideId ID of the lecture to delete
-     * @param lectureCallback function to be called after the deletion is done
+     * @param {String} slideId ID of the lecture to delete
+     * @param {Function} lectureCallback function to be called after the deletion is done
      */
     function deleteSlide (slideId, slideCallback) {
         database.deleteFromSlides (slideId, function (e, request) {
@@ -132,9 +132,9 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     /**
      * Gets a slide from the local database.
      *
-     * @param slideId ID of the slide to get
+     * @param {String} slideId ID of the slide to get
      *
-     * @param slideCallback function to be called after getting is complete,
+     * @param {Function} slideCallback function to be called after getting is complete,
      * paramater is the slide object
      */
     function getSlideLocal (slideId, slideCallback) {
@@ -156,8 +156,8 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     /**
      * Gets a slide from the local and server databases.
      *
-     * @param slideId ID of the slide to get
-     * @param slideCallback function to be called after getting is complete,
+     * @param {String} slideId ID of the slide to get
+     * @param {Function} slideCallback function to be called after getting is complete,
      * paramater is the slide object
      */
     function getLectureSlide (slideId, localCallback, serverCallback) {
@@ -172,8 +172,8 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     /**
      * Gets a list of slides from the local and server databases.
      *
-     * @param slideIds IDs of the slides to get
-     * @param slideCallback function to be called after getting is complete,
+     * @param {String} slideIds IDs of the slides to get
+     * @param {Function} slideCallback function to be called after getting is complete,
      * paramater is a list of slide objects
      */
     function getLectureSlides (slideIds, localCallback, serverCallback) {

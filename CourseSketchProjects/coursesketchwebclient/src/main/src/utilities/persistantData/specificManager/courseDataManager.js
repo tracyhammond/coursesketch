@@ -57,9 +57,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Gets an Course from the local database.
      *
-     * @param courseId
+     * @param {String} courseId
      *                ID of the course to get
-     * @param courseCallback
+     * @param {Function} courseCallback
      *                function to be called after getting is complete, parameter
      *                is the course object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
@@ -97,9 +97,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * with nonExistantValue and the database is never polled for this item for
      * the life of the program again.
      *
-     * @param courseId
+     * @param {String} courseId
      *            The id of the course we want to find.
-     * @param courseCallback
+     * @param {Function} courseCallback
      *            The method to call when the course has been found. (this is
      *            asynchronous)
      */
@@ -136,9 +136,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Sets a course in local database.
      *
-     * @param course
+     * @param {SrlCourse} course
      *                course object to set
-     * @param courseCallback
+     * @param {Function} courseCallback
      *                function to be called after the course setting is done
      */
     function setCourse(course, courseCallback) {
@@ -159,11 +159,11 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Updates an existing course into the database. This course must already
      * exist.
      *
-     * @param course
+     * @param {SrlCourse} course
      *                course object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local course setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server course setting is done
      */
     function updateCourse(course, localCallback, serverCallback) {
@@ -206,8 +206,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Returns a list of all of the courses in database.
      *
      * This does attempt to pull courses from the server!
-     * @param courseCallback called when the courses are loaded (this may be called more than once)
-     * @param onlyLocal {Boolean} true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
+     * @param {Function} courseCallback called when the courses are loaded (this may be called more than once)
+     * @param {Boolean} onlyLocal true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
      */
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
@@ -276,11 +276,11 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *
      * If there is a problem courseCallback is called with an exception.
      *
-     * @param course
-     * @param courseCallback
+     * @param {SrlCourse} course
+     * @param {Function} courseCallback
      *            is called after the insertion of course into the local
      *            database. (this can be used for instant refresh)
-     * @param serverCallback
+     * @param {Function} serverCallback
      *            serverCallback is called after the insertion of course into
      *            the server and the return of the server with the correct
      *            courseId
