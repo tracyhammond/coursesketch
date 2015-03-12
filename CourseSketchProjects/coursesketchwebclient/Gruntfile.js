@@ -5,6 +5,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-connect-rewrite');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-jsdoc');
     grunt.initConfig({
         jshint: {
             options: {
@@ -70,6 +71,15 @@ module.exports = function(grunt) {
             },
             all: [ 'src/test/src/**/*Test.html' ]
         },
+        jsdoc : {
+            dist : {
+                src: ['Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
+                        '!src/test/src/testUtilities/**/*.js'],
+                options: {
+                    destination: 'doc'
+                }
+            }
+        }
     });
 
     // sets up tasks relating to starting the server
@@ -95,5 +105,6 @@ module.exports = function(grunt) {
             'jshint'
         ]);
     });
+    // 'jsdoc'  wait till 3.3.0
     grunt.registerTask('default', [ 'checkstyle', 'test' ]);
 };
