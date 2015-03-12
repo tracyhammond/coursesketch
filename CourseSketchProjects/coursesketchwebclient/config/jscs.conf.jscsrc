@@ -43,7 +43,7 @@
     "validateParameterSeparator": ", ",
     "safeContextKeyword": ["localScope"],
     "requireSpacesInForStatement": true,
-    "requireCapitalizedComments": true,
+
     "disallowNewlineBeforeBlockStatements": true,
     "validateIndentation": 4,
     "requireParenthesesAroundIIFE": true,
@@ -77,6 +77,7 @@
     /*
         THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER
 
+        "requireCapitalizedComments": true,
         "requireCamelCaseOrUpperCaseIdentifiers": true,
         "disallowMultipleLineBreaks": true,
         "requireAlignedObjectValues": "skipWithFunction",

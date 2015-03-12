@@ -1,7 +1,7 @@
 function recognitionConnection(serverConnection) {
     /**
      * Holds the list of updates that are waiting to be sent to the server.
-     * 
+     *
      * This list should almost always be near empty.
      */
     var queuedServerUpdates = new Array();
@@ -27,7 +27,7 @@ function recognitionConnection(serverConnection) {
                     this.emptyQueue(); // recursion! (kind of)
                 }
             }
-        }.bind(this),10);
+        }.bind(this), 10);
     };
 }
 

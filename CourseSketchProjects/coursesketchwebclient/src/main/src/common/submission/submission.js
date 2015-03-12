@@ -209,9 +209,9 @@ function SubmissionPanel() {
                 var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
-        }  else if (problemType === QuestionType.MULT_CHOICE) {
+        } else if (problemType === QuestionType.MULT_CHOICE) {
             // add mult choice tools
-        }   else if (problemType === QuestionType.FREE_RESP) {
+        } else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools
             toolbar.setUndoCallback(function() {
                 document.execCommand("undo", false, null);
