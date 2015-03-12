@@ -6,11 +6,11 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.doResize = function(event) {
             var target = event.target;
 
-            // add the change in coords to the previous width of the target element
+            // Add the change in coords to the previous width of the target element
             var newWidth  = parseFloat($(target).width()) + event.dx;
             var newHeight = parseFloat($(target).height()) + event.dy;
 
-            // update the element's style
+            // Update the element's style
             target.style.width  = newWidth + 'px';
             target.style.height = newHeight + 'px';
 
@@ -56,7 +56,7 @@ validateFirstRun(document.currentScript);
         /**
          * Selects a specific lecture slide.
          *
-         * @param slideIndex
+         * @param {Integer} slideIndex
          *            index of the slide in the current lecture's protobuf
          *            object.
          */
@@ -72,7 +72,7 @@ validateFirstRun(document.currentScript);
                     CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
             };
-            if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
+            if (!isUndefined(CourseSketch.lecturePage.currentSlide)) {
                 CourseSketch.lecturePage.addWaitOverlay();
 
                 // Need to do small delay here so the wait overlay actually shows up
@@ -82,7 +82,7 @@ validateFirstRun(document.currentScript);
                     // Need to remove all the old elements; they will be replaced by the new ones
                     CourseSketch.lecturePage.currentSlide.elements = [];
 
-                    for(var i = 0; i < elements.length; ++i) {
+                    for (var i = 0; i < elements.length; ++i) {
                         elements[i].saveData();
                     }
                     CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler);

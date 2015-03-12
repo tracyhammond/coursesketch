@@ -71,10 +71,10 @@ module.exports = function(grunt) {
             },
             all: [ 'src/test/src/**/*Test.html' ]
         },
-        jsdoc : {
-            dist : {
-                src: ['Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                        '!src/test/src/testUtilities/**/*.js'],
+        jsdoc: {
+            dist: {
+                src: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
+                        '!src/test/src/testUtilities/**/*.js' ],
                 options: {
                     destination: 'doc'
                 }

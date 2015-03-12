@@ -23,16 +23,21 @@
     SRL_Point.createFromProtobuf = function(proto) {
         var point = new SRL_Point(proto.x, proto.y);
         point.setId(proto.id);
-        if (proto.time)
+        if (proto.time) {
             point.setTime(proto.time);
-        if (proto.name)
+        }
+        if (proto.name) {
             point.setName(proto.name);
-        if (proto.size)
+        }
+        if (proto.size) {
             point.setSize(proto.size);
-        if (proto.pressure)
+        }
+        if (proto.pressure) {
             point.setPressure(proto.pressure);
-        if (proto.speed)
+        }
+        if (proto.speed) {
             point.setSpeed(proto.speed);
+        }
         return point;
     };
 
@@ -47,7 +52,7 @@
         proto.name = this.getName();
         var array = [];
         var points = this.getPoints();
-        for (var i=0; i<points.length; i++) {
+        for (var i = 0; i < points.length; i++) {
             array.push(points[i].sendToProtobuf(scope));
         }
         proto.setPoints(array); // THIS FUNCTION SUCKS!
@@ -81,7 +86,7 @@
 
         var interpretations = this.getInterpretations();
         var protoInterp = [];
-        for (var i = 0; i < interpretations.length; i ++) {
+        for (var i = 0; i < interpretations.length; i++) {
             var protoInter = interpretations[i];
             protoInterp = protoInter.sendToProtobuf(scope);
         }
@@ -90,7 +95,7 @@
         var protoSubShapes = [];
         var subShapeList = this.getSubObjects();
         for (i = 0; i < subShapeList.length; i++) {
-            protoSubShapes.push(encodeSrlObject(scope,subShapeList[i]));
+            protoSubShapes.push(encodeSrlObject(scope, subShapeList[i]));
         }
         proto.setSubComponents(protoSubShapes);
 
@@ -108,12 +113,12 @@
         var interpretations = shape.interpretations;
         var subObjects = shape.subComponents;
         var newShape = new SRL_Shape();
-        for (var i = 0; i < interpretations.length; i ++) {
+        for (var i = 0; i < interpretations.length; i++) {
             var protoInter = interpretations[i];
             newShape.addInterpretation(protoInter.label, protoInter.confidence, protoInter.complexity);
         }
 
-        for (i = 0; i < subObjects.length; i ++) {
+        for (i = 0; i < subObjects.length; i++) {
             var protoObject = subObjects[i];
             newShape.addSubObject(decodeSrlObject(protoObject));
         }
@@ -144,13 +149,16 @@
         }
 
         var objectType = object.type; // FIXME: change this to objectType
-        switch(objectType) {
-            case proto.ObjectType.SHAPE:
+        switch (objectType) {
+            case proto.ObjectType.SHAPE: {
                 return SRL_Shape.createFromProtobuf(scope.ProtoSrlShape.decode(object.object));
-            case proto.ObjectType.STROKE:
+            }
+            case proto.ObjectType.STROKE: {
                 return SRL_Stroke.createFromProtobuf(scope.ProtoSrlStroke.decode(object.object));
-            case proto.ObjectType.POINT:
+            }
+            case proto.ObjectType.POINT: {
                 return SRL_Point.createFromProtobuf(scope.ProtoSrlPoint.decode(object.object));
+            }
         }
     }
 
