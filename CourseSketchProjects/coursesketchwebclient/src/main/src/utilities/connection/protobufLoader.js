@@ -101,10 +101,10 @@ function ProtobufSetup() {
 
     /**
      * @Method
-     * @param protoPackage
+     * @param {String} protoPackage
      *            the package that the protofiles live in (this should basically
      *            hold a list of protoObjects)
-     * @param namePrefix
+     * @param {String} namePrefix
      *            allows a string to be precede the name of the function being
      *            created.
      */
@@ -133,38 +133,38 @@ function ProtobufSetup() {
      * This second method only exist for messages and does not exist for enums.
      * an example is: <code>PROTOBUF_UTIL.getRequestClass()</code></li>
      *
-     * @param classType {function|enum} the actual data that represents the protobuf data.
+     * @param {Function|Enum} ClassType the actual data that represents the protobuf data.
      * If the classType is not a function then we treat it like an enum.
-     * @param object {string} the name of the message.
-     * @param preString {string} a string that is used to preprend the messageName.
+     * @param {String} object the name of the message.
+     * @param {String} preString a string that is used to preprend the messageName.
      * This can be used to prevent conflicts. The value must not be undefined.
      */
-    function createProtoMethod(classType, messageName, preString) {
+    function createProtoMethod(ClassType, messageName, preString) {
         var objectName = preString + messageName;
-        if (isFunction(classType)) {
+        if (isFunction(ClassType)) {
             objectList.push(objectName);
             Object.defineProperty(localScope, objectName, {
-                value : function() {
+                value: function() {
                     if (arguments.length > 0) {
                         throw new ProtobufException("you can not create this object with arguments.");
                     }
-                    return new classType();
+                    return new ClassType();
                 },
-                writable : false
+                writable: false
             });
 
             Object.defineProperty(localScope, "get" + objectName + "Class", {
-                value : function() {
+                value: function() {
                     // somehow change it to make this read only?
-                    return classType;
+                    return ClassType;
                 },
-                writable : false
+                writable: false
             });
         } else {
             enumList.push(objectName);
             Object.defineProperty(localScope, objectName, {
-                get : function() {
-                    return classType;
+                get: function() {
+                    return ClassType;
                 }
             });
         }
@@ -178,10 +178,10 @@ function ProtobufSetup() {
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
      *
-     * @param commands
-     *            {Array<SrlCommand>} a list of commands stored as an array.
-     * @param requestType
-     *            {MessageType} the type that the request is.
+     * @param {Array<SrlCommand>} commands
+     *            a list of commands stored as an array.
+     * @param {MessageType} requestType
+     *            the type that the request is.
      * @return {Request}
      */
     this.createRequestFromCommands = function createRequestFromCommands(commands, requestType) {
@@ -191,10 +191,10 @@ function ProtobufSetup() {
     /**
      * Given a protobuf object compile it to other data and return a request.
      *
-     * @param data
-     *            {Protobuf} An uncompiled protobuf object.
-     * @param requestType
-     *            {MessageType} The message type of the request.
+     * @param {Protobuf} data
+     *            An uncompiled protobuf object.
+     * @param {MessageType} requestType
+     *            The message type of the request.
      * @return {Request}
      */
     this.createRequestFromData = function(data, requestType) {
@@ -211,8 +211,8 @@ function ProtobufSetup() {
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
      *
-     * @param commands
-     *            {Array<SrlCommand>} a list of commands stored as an array.
+     * @param {Array<SrlCommand>} commands
+     *            a list of commands stored as an array.
      * @return {SrlUpdate}
      */
     this.createUpdateFromCommands = function createUpdateFromCommands(commands) {
@@ -249,10 +249,10 @@ function ProtobufSetup() {
 
     /**
      * @Method Given an SrlUpdate a Request is created.
-     * @param update
-     *            {SrlUpdate} a valid and complete object.
-     * @param requestType
-     *            {MessageType} the type that the request is.
+     * @param {SrlUpdate} update
+     *            a valid and complete object.
+     * @param {MessageType} requestType
+     *            the type that the request is.
      * @return {Request} used for all requesting needs
      */
     this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
@@ -270,11 +270,11 @@ function ProtobufSetup() {
     /**
      * Creates a command given the commandType and if the user created.
      *
-     * @param commandType
-     *            {CommandType} the enum object of the commandType (found at
+     * @param {CommandType} commandType
+     *            the enum object of the commandType (found at
      *            CourseSketch.PROTOBUF_UTIL.CommandType).
-     * @param userCreated
-     *            {boolean} true if the user created this command, false if the
+     * @param {Boolean} userCreated
+     *            true if the user created this command, false if the
      *            command is system created.
      * @returns {SrlCommand}
      */
@@ -288,8 +288,8 @@ function ProtobufSetup() {
 
     /**
      * Creates a protobuf date time object.
-     * @param inputDateTime {Number | Date | Long} representing the time that this object should be created with.
-     * @return {DateTime} a protobuf date time objct that can be used for date stuff.
+     * @param {Number|Date|Long} inputDateTime representing the time that this object should be created with.
+     * @return {DateTime} A protobuf date time objct that can be used for date stuff.
      */
     this.createProtoDateTime = function(inputDateTime) {
         var preConvertedDate = inputDateTime;
@@ -311,11 +311,12 @@ function ProtobufSetup() {
 
     /**
      * Creates a new sketch command.
-     * @param x the x location of the sketch as an offset of its parent sketch.
-     * @param y the y location of the sketch as an offset of its parent sketch.
-     * @param width the width of the sketch.
-     * @param height the height of the sketch.
-     * @param id the id of the sketch, undefined if you want a random id given.
+     * @param {String} id the id of the sketch, undefined if you want a random id given.
+     * @param {Number} x the x location of the sketch as an offset of its parent sketch.
+     * @param {Number} y the y location of the sketch as an offset of its parent sketch.
+     * @param {Number} width the width of the sketch.
+     * @param {Number} height the height of the sketch.
+     *
      * @return {SrlCommand} a create sketch command
      */
     this.createNewSketch = function createNewSketch(id, x, y, width, height) {
@@ -358,13 +359,13 @@ function ProtobufSetup() {
     /**
      * Decodes the data and preserves the bytebuffer for later use
      *
-     * @param data
-     *            {ArrayBuffer} a compiled set of data in the protobuf object.
-     * @param proto
-     *            {ProtobufClass} The protobuf object that is being decoded.
+     * @param {ArrayBuffer} data
+     *            a compiled set of data in the protobuf object.
+     * @param {ProtobufClass} proto
+     *            The protobuf object that is being decoded.
      *            This can be grabbed by using CourseSketch.PROTOBUF_UTIL.get<objectName>Class();
-     * @param onError
-     *            {Function} A callback that is called when an error occurs
+     * @param {Function} [onError]
+     *            A callback that is called when an error occurs
      *            (optional). This will be called before the result is returned
      *            and may be called up to two times.
      * @return {ProyobufObject} decoded protobuf object.

@@ -87,7 +87,7 @@ validateFirstRun(document.currentScript);
                 CourseSketch.classSearch.registerClass(id);
                 setTimeVar = setTimeout(function() {
                     alert("Your have successfully registered")
-                    }, 3000);
+                }, 3000);
             }
             button.textContent = "Register";
             button.style.position = "absolute";
@@ -102,13 +102,13 @@ validateFirstRun(document.currentScript);
             $("#" + id).animate({
                 marginLeft: moveAmount,
                 }, 300, function() {
-                                });
+                });
         } else {
             $("#" + id).animate({
                 marginLeft: "0px",
                 }, 300, function() {
                     localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
-                                });
+                });
         }
     }
 
@@ -127,6 +127,6 @@ validateFirstRun(document.currentScript);
             marginLeft: "0px",
             }, 300, function() {
                 localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
-                        });
+            });
     };
 })();
