@@ -199,16 +199,12 @@
         return undefined;
     };
 
-    /**
-     * @param {ShadowRoot} parent the root of the parent.
-     * @return {Map} A map of the data mapped to the element.
-     */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
         var inputList = editPanel.querySelectorAll(".need-loading");
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var result = loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
-            if (result !==null) {
+            if (result !== null) {
                 mappedInput.set(inputList[i].dataset.prop, result);
             }
         }
