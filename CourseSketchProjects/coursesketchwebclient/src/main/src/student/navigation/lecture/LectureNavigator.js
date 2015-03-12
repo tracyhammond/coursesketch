@@ -85,8 +85,10 @@ function LectureNavigator(lectureId, preferredIndex) {
      * this way the browser is not locked up by callbacks.
      */
     function callBacker(scopedIndex) {
-        var navScope = this;
-        setTimeout(function() {callbackList[scopedIndex](navScope);},20);
+        var localScope = this;
+        setTimeout(function() {
+            callbackList[scopedIndex](localScope);
+        }, 20);
     }
 
     function changeSlide(index) {
@@ -100,8 +102,8 @@ function LectureNavigator(lectureId, preferredIndex) {
 
     /**
      * Loads a slide with an id and the index at which this slide exist.
-     * @param index The new index that will become the current index.
-     * @param nextSlideId the id of the next slide that will become the current slide.
+     * @param {String} nextSlideId the id of the next slide that will become the current slide.
+     * @param {Integer} index The new index that will become the current index.
      */
     function loadSlide(nextSlideId, index) {
         function hasSlide(slide) {
@@ -114,9 +116,9 @@ function LectureNavigator(lectureId, preferredIndex) {
 
     /**
      * loads a lecture from the given lecture id
-     * @param nextLectureId
+     * @param {String} nextLectureId
      *         id of next lecture
-     * @param index
+     * @param {Integer} index
      *         the index of the slide in the lecture we want
      */
     function loadLecture(nextLectureId, index) {
@@ -181,7 +183,7 @@ function LectureNavigator(lectureId, preferredIndex) {
      */
     this.removeCallback = function(callback) {
         var index = callbackList.indexOf(callback);
-        if (index >= 0 ) {
+        if (index >= 0) {
             callbackList.splice(index, 1);
         }
     };

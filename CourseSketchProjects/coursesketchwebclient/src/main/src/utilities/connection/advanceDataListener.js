@@ -62,7 +62,7 @@ function AdvanceDataListener(connection, Request, defListener) {
                 if (!isUndefined(func)) {
                     try {
                         func(evt, item);
-                            } catch (exception) {
+                    } catch (exception) {
                         console.error(exception);
                         console.error(exception.stack);
                         console.log(msg);

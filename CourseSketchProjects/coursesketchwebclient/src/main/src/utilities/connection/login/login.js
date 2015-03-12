@@ -49,7 +49,8 @@ function LoginSystem() {
 
     /**
      * @param {Document} document The document in which the node is being imported to.
-     * @param {Element} templateClone An element representing the data inside tag, its content has already been imported and then added to this element.
+     * @param {Element} templateClone An element representing the data inside tag,
+     *                  its content has already been imported and then added to this element.
      */
     this.initializeElement = function(document, templateClone) {
         shadowRoot = this.createShadowRoot();

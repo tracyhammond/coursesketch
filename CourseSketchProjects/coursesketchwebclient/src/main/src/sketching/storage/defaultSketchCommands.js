@@ -203,16 +203,21 @@ validateFirstGlobalRun(document.currentScript);
 
     CourseSketch.PROTOBUF_UTIL.getMarkerClass().prototype.getCommandTypeName = function() {
         switch (this.getType()) {
-            case this.MarkerType.SUBMISSION:
+            case this.MarkerType.SUBMISSION: {
                 return 'SUBMISSION';
-            case CourseSketch.PROTOBUF_UTIL.CommandType.FEEDBACK:
+            }
+            case CourseSketch.PROTOBUF_UTIL.CommandType.FEEDBACK: {
                 return 'FEEDBACK';
-            case CourseSketch.PROTOBUF_UTIL.CommandType.SAVE:
+            }
+            case CourseSketch.PROTOBUF_UTIL.CommandType.SAVE: {
                 return 'SAVE';
-            case CourseSketch.PROTOBUF_UTIL.CommandType.SPLIT:
+            }
+            case CourseSketch.PROTOBUF_UTIL.CommandType.SPLIT: {
                 return 'SPLIT';
-            case CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR:
+            }
+            case CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR: {
                 return 'CLEAR';
+            }
         }
         return "NO_NAME # is: " + this.getCommandType();
     };
@@ -224,17 +229,18 @@ validateFirstGlobalRun(document.currentScript);
     /**
      * Moves the shapes from the old container to the new container.
      *
-     * @param sketch
-     *            {SrlSketch} the sketch object that is being affected by these
+     * @param {SrlSketch} sketch
+     *            the sketch object that is being affected by these
      *            changes.
      */
     CourseSketch.PROTOBUF_UTIL.getActionPackageShapeClass().prototype.redo = function(sketch) {
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
         var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 
-        if (oldContainingObject == newContainingObject)
-        // done moving to same place.
-        return;
+        if (oldContainingObject == newContainingObject) {
+            // done moving to same place.
+            return;
+        }
         for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
             var shapeId = this.shapesToBeContained[shapeIndex];
             var object = oldContainingObject.removeSubObjectById(shapeId);
@@ -247,17 +253,18 @@ validateFirstGlobalRun(document.currentScript);
      *
      * This is a reverse of the process used in redo.
      *
-     * @param sketch
-     *            {SrlSketch} the sketch object that is being affected by these
+     * @param {SrlSketch} sketch
+     *            the sketch object that is being affected by these
      *            changes.
      */
     CourseSketch.PROTOBUF_UTIL.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 
-        if (oldContainingObject == newContainingObject)
-        // done moving to same place.
-        return;
+        if (oldContainingObject == newContainingObject) {
+            // done moving to same place.
+            return;
+        }
 
         for (shapeId in this.shapesToBeContained) {
             var object = oldContainingObject.removeSubObjectById(shapeId);

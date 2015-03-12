@@ -66,7 +66,9 @@ validateFirstGlobalRun(document.currentScript);
         var redraw = false;
         for (var i = commandLength - 1; i >= 0; i--) {
             commandList[i].sketchId = this.sketchId;
-            if (commandList[i].undo() === true) redraw = true;
+            if (commandList[i].undo() === true) {
+                redraw = true;
+            }
         }
         return redraw;
     };
@@ -77,7 +79,7 @@ validateFirstGlobalRun(document.currentScript);
      */
     ProtoSrlCommand.getCommandTypeName = function() {
         var commandType = this.getCommandType();
-        for ( var type in CourseSketch.PROTOBUF_UTIL.CommandType) {
+        for (var type in CourseSketch.PROTOBUF_UTIL.CommandType) {
             if (CourseSketch.PROTOBUF_UTIL.CommandType[type] === commandType) {
                 return '' + type;
             }
