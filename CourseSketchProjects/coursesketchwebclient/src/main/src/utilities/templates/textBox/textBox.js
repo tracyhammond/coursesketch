@@ -4,8 +4,8 @@
  */
 function TextBox() {
     /**
-     * @param textToRead {string} contains the text to be read
-     * @param callback {function} is the callback to be run after the text has been spoken
+     * @param {String} textToRead contains the text to be read
+     * @param {Function} callback is the callback to be run after the text has been spoken
      * This function speaks the text using the meSpeak library
      */
     this.speakText = function(textToRead, callback) {
@@ -23,10 +23,10 @@ function TextBox() {
         interact(localScope.shadowRoot.querySelector(".draggable"))
             .ignoreFrom("textarea, button")
             .draggable({
-                onmove: function (event) {
-                    var target = event.target,
-                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                onmove: function(event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
                     target.style.transform =
@@ -46,7 +46,7 @@ function TextBox() {
     }
 
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -171,7 +171,7 @@ function TextBox() {
     };
 
     /**
-     * @param textBoxProto {protoCommand} is the data to be loaded from the proto
+     * @param {ProtoCommand} textBoxProto is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */

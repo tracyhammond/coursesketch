@@ -6,8 +6,8 @@ function MultiChoice() {
 
     /**
      * Removes an answer choice from this multiple choice element.
-     * @param event the event that triggered this function
-     * @param answer the answer element to be removed
+     * @param {Event} event the event that triggered this function
+     * @param {Element} answer the answer element to be removed
      */
     this.removeAnswer = function(event, answer) {
         this.shadowRoot.querySelector("#answer-choices").removeChild(answer);
@@ -15,8 +15,8 @@ function MultiChoice() {
 
     /**
      * Marks an answer choice as correct.
-     * @param event the event that triggered this function
-     * @param answer the answer element to set as the correct answer
+     * @param {Event} event the event that triggered this function
+     * @param {Element} answer the answer element to set as the correct answer
      */
     this.setCorrectAnswer = function(event, answer) {
         var answerChoices = this.shadowRoot.querySelectorAll(".answer-choice");
@@ -29,7 +29,7 @@ function MultiChoice() {
 
     /**
      * Adds an answer choice to this multiple choice element.
-     * @param event the event that triggered this function
+     * @param {Event} event the event that triggered this function
      */
     this.addAnswer = function(event) {
         // Set up the parent
@@ -82,7 +82,7 @@ function MultiChoice() {
     };
 
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -99,7 +99,7 @@ function MultiChoice() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param event event that triggered this function
+     * @param {Event} event event that triggered this function
      * @return the created protobuf object
      */
     this.saveData = function(event) {
@@ -107,7 +107,7 @@ function MultiChoice() {
 
         // Populate data in the proto object
         var answerChoices = this.shadowRoot.querySelectorAll(".answer-choice");
-        for(var i = 0; i < answerChoices.length; ++i) {
+        for (var i = 0; i < answerChoices.length; ++i) {
             var answerChoice = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
             answerChoice.id = answerChoices[i].id;
             answerChoice.text = answerChoices[i].querySelector(".label").value;
@@ -117,7 +117,7 @@ function MultiChoice() {
 
         // If the multi-choice item does not have an id, then a command has not been created for the multi-choice item
         if ((isUndefined(this.id) || this.id === null || this.id === "")) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE,true);
+            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE, true);
         }
         this.command.setCommandData(mcProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -130,7 +130,7 @@ function MultiChoice() {
     };
 
     /**
-     * @param textBoxProto {protoCommand} is the data to be loaded from the proto
+     * @param {ProtoCommand} mcProto is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -150,7 +150,7 @@ function MultiChoice() {
     };
 
     /**
-     * @return finishedCallback {function} is the callback set at implementation.
+     * @return {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

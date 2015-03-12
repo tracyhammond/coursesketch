@@ -1,8 +1,8 @@
 function SchoolItem() {
 
     /**
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
+     * @param {Element} templateClone
+     *            an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -48,7 +48,7 @@ function SchoolItem() {
         }
         var padding = 20; // left right padding is 10
         var isOverflow = checkTextOverflow(usedWidth - padding, text, $(element).css('font'));
-        descriptionContent.dataset.overflow = ""+isOverflow;
+        descriptionContent.dataset.overflow = "" + isOverflow;
         return isOverflow;
     };
 
@@ -110,7 +110,7 @@ function SchoolItem() {
         var editingClass = 'currentlyEditing';
         // calls the function for ever instance of the editButton
         var list = localScope.shadowRoot.querySelectorAll('.editButton');
-        for(var i = 0; i < list.length; ++i) {
+        for (var i = 0; i < list.length; ++i) {
             (function(element) {
                 var parentNode = element.parentNode;
                 var content = parentNode.querySelector('content');
@@ -185,13 +185,13 @@ function SchoolItem() {
 
     /**
      * @Method
-     * @param func
+     * @param {Function} func
      *            A function that is called at the end of an edit.
-     * @callbackParam type {string} this is the class of the item that was
+     * @callbackParam {String} type this is the class of the item that was
      *                edited (description, name, accessDate, dueDate,
      *                closedDate)
-     * @callbackParam oldValue {string} the old value.
-     * @callbackParam newValue {string} the value that the element was changed
+     * @callbackParam {String} oldValue the old value.
+     * @callbackParam {String} newValue the value that the element was changed
      *                to.
      */
     this.setEditCallback = function(func) {

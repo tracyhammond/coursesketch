@@ -206,12 +206,12 @@ function ProtoDatabase(databaseName, version, openCallback) {
     function emptyDB(databaseName) {
         try {
             var result = confirm("Do you want to empty all of the local data?");
-            if(result == true) {
+            if (result == true) {
                 var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
-                dbreq.onsuccess = function (event) {
+                dbreq.onsuccess = function(event) {
                     output_trace("indexedDB: " + databaseName + " deleted");
                 };
-                dbreq.onerror = function (event) {
+                dbreq.onerror = function(event) {
                     output_trace("indexedDB.delete Error: " + event.message);
                 };
             } else {
