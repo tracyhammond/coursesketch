@@ -14,6 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The default servlet it creates a single websocket instance that is then used
  * on all messages.
@@ -24,6 +27,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Course Sketch WebSocket Servlet", urlPatterns = { "/websocket" })
 public class ServerWebSocketInitializer extends WebSocketServlet implements ISocketInitializer {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketInitializer.class);
 
     /**
      * The server that the servlet is connected to.
@@ -56,9 +64,9 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
         this.timeoutTime = iTimeoutTime;
         this.secure = iSecure;
-        System.out.println("Creating a new connectionServer");
+        LOG.info("Creating a new connectionServer");
         connectionServer = createServerSocket();
-        System.out.println("Creating a new connectionManager");
+        LOG.info("Creating a new connectionManager");
         manager = createConnectionManager(connectLocally, secure);
     }
 
@@ -69,11 +77,11 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     @Override
     public final void configure(final WebSocketServletFactory factory) {
-        System.out.println("Configuring servlet");
+        LOG.info("Configuring servlet");
         factory.getPolicy().setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
         factory.getPolicy().setMaxBinaryMessageSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
         if (timeoutTime > 0) {
-            System.out.println("Adding a timeout to the socket: " + timeoutTime);
+            LOG.info("Adding a timeout to the socket: {}", timeoutTime);
             factory.getPolicy().setIdleTimeout(timeoutTime);
         }
         factory.setCreator(new SocketCreator());
@@ -105,12 +113,12 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
          */
         @Override
         public final Object createWebSocket(final ServletUpgradeRequest req, final ServletUpgradeResponse resp) {
-            System.out.println("Recieved Upgrade request");
+            LOG.info("Recieved Upgrade request");
             if (secure && !req.isSecure()) {
-                System.out.println("Refusing an insecure connection");
+                LOG.info("Refusing an insecure connection");
                 return null;
             }
-            System.out.println("Returning a websocket with name " + connectionServer.getName());
+            LOG.info("Returning a websocket with name {}", connectionServer.getName());
             return connectionServer;
         }
 
@@ -121,7 +129,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     @Override
     public final void stop() {
-        System.out.println("Stopping socket");
+        LOG.info("Stopping socket");
         connectionServer.stop();
         if (manager != null) {
             manager.dropAllConnection(true, false);
@@ -159,7 +167,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     @Override
     public final void reconnect() {
-        System.out.println("Reconnecting");
+        LOG.info("Reconnecting");
         if (manager != null) {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
