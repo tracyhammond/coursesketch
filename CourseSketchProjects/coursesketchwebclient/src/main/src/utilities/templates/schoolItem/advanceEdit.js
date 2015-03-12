@@ -117,7 +117,6 @@
                 console.log(exception);
                 return null;
             }
-        }
         if (index > 0 || index === 0) {
             nodeToFill.options[index].selected = true;
             return nodeToFill.value;

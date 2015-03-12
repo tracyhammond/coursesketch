@@ -44,7 +44,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
                 });
                 // creates a request that is then sent to the server
-                sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId]);
+                sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ]);
             } else if (result.data == nonExistantValue) {
                 // the server holds this special value then it means the server does not have the value
                 submissionCallback(nonExistantValue);
@@ -70,7 +70,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             var list;
             try {
                 list = CourseSketch.PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data);
-            } catch(exception) {
+            } catch (exception) {
                 console.log(exception);
                 submissionCallback(new DatabaseException("Exception decoding experiment data data: " + exception.toString()));
                 return;
@@ -84,13 +84,13 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
         var advanceQuery = CourseSketch.PROTOBUF_UTIL.ExperimentReview();
         advanceQuery.allowEditing = true;
         advanceQuery.showUserNames = false;
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [problemId], advanceQuery);
+        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ], advanceQuery);
     }
     parent.getAllExperiments = getAllExperiments;
 
     /**
-     * @param {SrlSubmission} submission the submission that is being added
      * @param {String} problemId the id to which this submission is being added.
+     * @param {SrlSubmission} submission the submission that is being added.
      * @param {Function} submissionCallback called when the submission is saved.
      */
     function setSubmission(problemId, submission, submissionCallback) {

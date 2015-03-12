@@ -191,9 +191,11 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *
      * @param {String} lectureId
      *                ID of the lecture to get
-     * @param {Function} lectureCallback
+     * @param {Function} localCallback
      *                function to be called after getting is complete, paramater
      *                is the lecture object
+     * @param {Function} serverCallback
+     *                function to be called after looking for the lecture in the server.
      */
     function getCourseLecture(lectureId, localCallback, serverCallback) {
         getCourseLectures([ lectureId ], isUndefined(localCallback) ? undefined : function(lectureList) {
@@ -233,7 +235,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
         var lectureIdsNotFound = [];
         for (var i = 0; i < lectureIds.length; i++) {
             var currentLectureId = lectureIds[i];
-            (function (lectureId) {
+            (function(lectureId) {
                 getLectureLocal(lectureId, function(lecture) {
                     if (!isUndefined(lecture) && !(lecture instanceof DatabaseException)) {
                         lecturesFound.push(lecture);

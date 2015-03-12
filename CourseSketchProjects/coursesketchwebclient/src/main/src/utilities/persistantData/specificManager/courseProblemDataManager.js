@@ -344,15 +344,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *
      * @param {String} courseProblemId The id of the courseProblem we want to find.
      * @param {Function} courseProblemLocalCallback
-     *            {Function} called when course problems are grabbed from the local
+     *            called when course problems are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
      * @param {Function} courseProblemServerCallback
-     *            {Function} called when the complete list of course problems are
+     *            called when the complete list of course problems are
      *            grabbed.
      */
     function getCourseProblem(courseProblemId, courseProblemLocalCallback, courseProblemServerCallback) {
-        getCourseProblems([courseProblemId], function(courseProblemList) {
+        getCourseProblems([ courseProblemId ], function(courseProblemList) {
             if (!isUndefined(courseProblemLocalCallback) && courseProblemList instanceof CourseSketch.DatabaseException) {
                 courseProblemLocalCallback(new DatabaseException("Error with grabbing local course problem", courseProblemList));
                 return;

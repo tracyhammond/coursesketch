@@ -5,7 +5,7 @@ function Question() {
     this.lectures = [];
 
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -35,7 +35,7 @@ function Question() {
 
     /**
      * Loads the lectures that can be navigated to in the question.
-     * @param lectureIds list of lecture IDs to load
+     * @param {String} lectureIds list of lecture IDs to load
      */
     this.loadLectures = function(lectureIds) {
         var localScope = this;
@@ -66,24 +66,24 @@ function Question() {
 
     /**
      * Loads slides into a slide select element.
-     * @param idList list of "idsInLecture" containing the slides to load
-     * @param slideSelect select element to load the slides into
+     * @param {List<String>} idList list of "idsInLecture" containing the slides to load
+     * @param {Element} slideSelect select element to load the slides into
      */
     this.loadSlides = function(idList, slideSelect) {
         var callback = function(slides) {
             slideSelect.innerHTML = "";
-            for(var i = 0; i < slides.length; ++i) {
+            for (var i = 0; i < slides.length; ++i) {
                 var option = document.createElement("option");
                 option.textContent = i + 1;
                 option.value = i;
                 slideSelect.appendChild(option);
             }
-            if(slides.length > 0) {
+            if (slides.length > 0) {
                 slideSelect.disabled = false;
             }
         };
         var slideIds = [];
-        for(var i = 0; i < idList.length; ++i) {
+        for (var i = 0; i < idList.length; ++i) {
             slideIds.push(idList[i].id);
         }
         CourseSketch.dataManager.getLectureSlides(slideIds, callback, callback);
@@ -91,7 +91,7 @@ function Question() {
 
     /**
      * Adds multiple choice content to the question
-     * @param multiChoice the MultiChoice element to add
+     * @param {Element} answerContent the MultiChoice element to add
      */
     this.addAnswerContent = function(answerContent) {
         answerContent.className = "answer";
@@ -101,7 +101,7 @@ function Question() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param event event that triggered this function
+     * @param {Event} event event that triggered this function
      * @return the created protobuf object
      */
     this.saveData = function(event) {
@@ -152,20 +152,20 @@ function Question() {
 
         // If the textbox does not have an id, then a command has not been created for the question
         if ((isUndefined(this.id) || this.id === null || this.id === "")) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,true);
+            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION, true);
         }
         this.command.setCommandData(questionProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
         this.id = this.command.commandId;
         var callback = this.getFinishedCallback();
-        if(!isUndefined(callback)) {
+        if (!isUndefined(callback)) {
             callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
         }
         return questionProto;
     };
 
     /**
-     * @param textBoxProto {protoCommand} is the data to be loaded from the proto
+     * @param {ProtoCommand} textBoxProto is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      *
@@ -177,16 +177,16 @@ function Question() {
         }
         this.shadowRoot.querySelector("#text").value = questionProto.getQuestionText();
         var nodes = this.shadowRoot.querySelector('content').getDistributedNodes();
-        if(!isUndefined(questionProto.multipleChoice) && questionProto.multipleChoice !== null && nodes.length > 0 &&
+        if (!isUndefined(questionProto.multipleChoice) && questionProto.multipleChoice !== null && nodes.length > 0 &&
                 (nodes[0] instanceof MultiChoice)) {
             var answerContent = nodes[0];
             answerContent.loadData(questionProto.multipleChoice);
-        } else if(!isUndefined(questionProto.sketchQuestion) && questionProto.sketchQuestion !== null) {
+        } else if (!isUndefined(questionProto.sketchQuestion) && questionProto.sketchQuestion !== null) {
             throw "Sketch questions are not yet supported";
         }
 
         // TODO: Currently just one nav for correct/incorrect; add navs for different answer choices (also needs to work with sketch)
-        if(questionProto.navs.length >= 2) {
+        if (questionProto.navs.length >= 2) {
             var correctNav = questionProto.navs[0];
             var incorrectNav = questionProto.navs[1];
             shadowRoot.getElementById("correct-lecture").value = correctNav.nextLectureId;
