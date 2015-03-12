@@ -108,8 +108,7 @@
      */
     loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
-       // if (isUndefined(schoolItemData)) {
-       // }  else {
+        if (!isUndefined(schoolItemData)) {
             try {
                 index = schoolItemData.latePolicy.functionType;
             } catch (exception) {
@@ -117,6 +116,7 @@
                 console.log(exception);
                 return null;
             }
+        }
         if (index > 0 || index === 0) {
             nodeToFill.options[index].selected = true;
             return nodeToFill.value;
@@ -134,8 +134,7 @@
      */
     loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
-        //if (isUndefined(schoolItemData)) {
-        //}  else {
+        if (!isUndefined(schoolItemData)) {
             try {
                 index = schoolItemData.latePolicy.timeFrameType;
             } catch (exception) {
@@ -161,8 +160,7 @@
      */
     loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
-       // if (isUndefined(schoolItemData)) {
-       // }  else {
+        if (!isUndefined(schoolItemData)) {
             try {
                 index = schoolItemData.latePolicy.subtractionType;
             } catch (exception) {

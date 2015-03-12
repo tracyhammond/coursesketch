@@ -16,10 +16,10 @@ function HighlightText() {
         interact(shadowRoot.querySelector("#highlightTextDialog"))
             .ignoreFrom("button")
             .draggable({
-                onmove: function (event) {
-                    var target = event.target,
-                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                onmove: function(event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
                     target.style.transform =
@@ -39,7 +39,7 @@ function HighlightText() {
     }
 
     /**
-     * @param children {array} represents the childNodes in the selected text.
+     * @param {Array} children represents the childNodes in the selected text.
      * @return {boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
      * If false then the text selected will not be highlighted
      * It will not be highlighted because it contains node types such as H2 and adding span tags will ruin the formatting of the text
@@ -86,9 +86,9 @@ function HighlightText() {
     }
 
     /**
-     * @param node {node} is the node whose path we are getting
-     * @param currentPath {string} is used within the function to append the previous sibling to the path
-     * @return currentPath {string} is the XML Path of the input node
+     * @param {Node} node is the node whose path we are getting
+     * @param {String} currentPath is used within the function to append the previous sibling to the path
+     * @return {String} currentPath is the XML Path of the input node
      */
     function getXPath (node, currentPath) {
         currentPath = currentPath || '';
@@ -108,7 +108,7 @@ function HighlightText() {
     }
 
     /**
-     * @param {node} is a clone of the custom HTML template for highlighting text
+     * @param {Node} templateClone is a clone of the custom HTML template for highlighting text
      * This creates the element in the shadowRoot and turns highlight mode on by default
      * It tracks changes to the color selector and to the highlight mode checkbox
      * When color selector is changed, the color variable updates.
@@ -199,7 +199,7 @@ function HighlightText() {
 
     /**
      * This function loads data by recreating the node and then insert it into the webpage
-     * @param protoData {protoCommand} is the CommandData to be loaded
+     * @param {ProtoCommand} protoData is the CommandData to be loaded
      */
     this.loadData = function(protoData) {
         if (isUndefined(this.shadowRoot) || this.shadowRoot === null) {
@@ -213,7 +213,7 @@ function HighlightText() {
         var backgroundColor;
         var textColor;
         this.highlightProto = protoData; // This sets highlightProto to the previous list so that you can add new selections in edit mode
-        for (var i=0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
+        for (var i = 0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
             var loadNode = nodes[i]; // The current node to be loaded
             var rangeStartNode = loadNode.getStartPath();
             var rangeStartOffset = loadNode.getStartOffset();

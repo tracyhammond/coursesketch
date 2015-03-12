@@ -138,7 +138,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      *                paramater is the slide object
      */
     function getSlideLocal (slideId, slideCallback) {
-        database.getFromSlides(slideId, function (e, request, result) {
+        database.getFromSlides(slideId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 slideCallback (undefined);
             } else if (result.data == nonExistantValue) {
@@ -202,7 +202,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                     if (barrier == 0) {
                         if (slideIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function (evt, item) {
+                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
                                 var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
                                 var slide = school.slides[0];
                                 if (isUndefined(slide) || slide instanceof DatabaseException) {
