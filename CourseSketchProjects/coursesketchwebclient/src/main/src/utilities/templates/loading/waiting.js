@@ -126,7 +126,7 @@ function WaitScreenManager() {
     /**
      * Adds a semi-transparent overlay to the specified element, preventing user interaction.
      *
-     * @param element element to which the overlay will be added
+     * @param {Element} element element to which the overlay will be added
      */
     this.buildOverlay = function(element) {
         var overlay = document.createElement("dialog");
