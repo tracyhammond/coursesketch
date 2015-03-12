@@ -130,7 +130,7 @@ function TextBox() {
             x = x.substring(0, x.length - 2);
         }
         if (y.indexOf("px") > 0) {
-            y= y.substring(0, y.length - 2);
+            y = y.substring(0, y.length - 2);
         }
 
         // Checks if x or y values are blank strings. This occurs when the values are 0px, so it sets the variables to 0.
@@ -138,7 +138,7 @@ function TextBox() {
             x = 0;
         }
         if (y === "" || y === " ") {
-            y= 0;
+            y = 0;
         }
 
         // x and y are strings but need to save as Ints
