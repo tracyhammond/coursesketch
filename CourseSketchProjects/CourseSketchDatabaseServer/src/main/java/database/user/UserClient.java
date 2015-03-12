@@ -15,12 +15,21 @@ import database.institution.mongo.MongoInstitution;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * A client for all user data.  This has its own database and instance.
  * @author gigemjt
  *
  */
 public final class UserClient {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(UserClient.class);
 
     /**
      * A specific instance used for client actions.
@@ -42,7 +51,7 @@ public final class UserClient {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -93,7 +102,7 @@ public final class UserClient {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;
