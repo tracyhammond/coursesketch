@@ -165,7 +165,7 @@ function Question() {
     };
 
     /**
-     * @param {ProtoCommand} textBoxProto is the data to be loaded from the proto
+     * @param {ProtoCommand} questionProto is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      *
