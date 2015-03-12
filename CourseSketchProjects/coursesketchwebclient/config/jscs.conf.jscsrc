@@ -49,7 +49,7 @@
     "requireParenthesesAroundIIFE": true,
     "requireBlocksOnNewline": true,
     "requireCommaBeforeLineBreak": true,
-    "requireCamelCaseOrUpperCaseIdentifiers": true,
+
     "maximumLineLength": 150,
     "disallowTrailingWhitespace": true,
     "requireCapitalizedConstructors": true,
@@ -74,10 +74,12 @@
     "validateLineBreaks": "LF"
 
 
-    /*"comment": {
-        "THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER": "rules below",
+    /*
+        THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER
+
+        "requireCamelCaseOrUpperCaseIdentifiers": true,
         "disallowMultipleLineBreaks": true,
         "requireAlignedObjectValues": "skipWithFunction",
         "disallowKeywordsInComments": true
-    }*/
+    */
 }
