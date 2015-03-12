@@ -48,11 +48,11 @@ function RegisterSystem() {
     };
 
     /**
-     * @param document
-     *            {document} The document in which the node is being imported
+     * @param {document}document
+     *            The document in which the node is being imported
      *            to.
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
+     * @param {Element} templateClone
+     *            an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -112,7 +112,7 @@ function RegisterSystem() {
      * Also the only difference between login.js and register.js
      */
     function formSubmit() {
-        function sendLogin(arg1, arg2, email , isInstructor) {
+        function sendLogin(arg1, arg2, email, isInstructor) {
             if (!connection.isConnected()) {
                 alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using" +
                         " \n the newest version of chrome. If you are still unable to login please email" +

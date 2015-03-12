@@ -135,7 +135,7 @@ function ProtobufSetup() {
      *
      * @param {Function|Enum} ClassType the actual data that represents the protobuf data.
      * If the classType is not a function then we treat it like an enum.
-     * @param {String} object the name of the message.
+     * @param {String} messageName the name of the message.
      * @param {String} preString a string that is used to preprend the messageName.
      * This can be used to prevent conflicts. The value must not be undefined.
      */

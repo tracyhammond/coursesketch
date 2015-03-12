@@ -33,7 +33,7 @@ var CourseSketch = parent.CourseSketch;
     var scriptElement = document.currentScript;
 
     // prevents multiple additions of the name space.
-    if (scriptElement.ownerDocument.URL.indexOf("FakePage.html") > -1 ) {
+    if (scriptElement.ownerDocument.URL.indexOf("FakePage.html") > -1) {
         return;
     }
     if (typeof scriptElement.dataset.namespace !== "undefined") {

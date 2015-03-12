@@ -62,8 +62,8 @@ if (isUndefined(makeValueReadOnly)) {
             throw new Error("property argument must be a string");
         }
         Object.defineProperty(obj, property, {
-            value : value,
-            writable : false
+            value:      value,
+            writable:   false
         });
     }
 }
