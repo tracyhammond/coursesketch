@@ -21,9 +21,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     /**
      * Gets a courseProblem from the local database.
      *
-     * @param courseProblemId
+     * @param {String} courseProblemId
      *                ID of the courseProblem to get
-     * @param courseProblemCallback
+     * @param {Function} courseProblemCallback
      *                function to be called after getting is complete, parameter
      *                is the courseProblem object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
@@ -49,9 +49,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     /**
      * Sets a courseProblem in server database.
      *
-     * @param courseProblem
+     * @param {SrlCourseProblem} courseProblem
      *                CourseProblem object to set.
-     * @param courseProblemCallback
+     * @param {Function} courseProblemCallback
      *                Function to be called after courseProblem setting is done.
      */
     function insertCourseProblemServer(courseProblem, courseProblemCallback) {
@@ -85,11 +85,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      * Updates an existing course problem into the database. This courseProblem must already
      * exist.
      *
-     * @param courseProblem
+     * @param {SrlCourseProblem} courseProblem
      *                courseProblem object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local courseProblem setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server courseProblem setting is done
      */
     function updateCourseProblem(courseProblem, localCallback, serverCallback) {
@@ -115,11 +115,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      * Updates an existing bankProblem into the database. This bankProblem must already
      * exist.
      *
-     * @param bankProblem
+     * @param {SrlBankProblem} bankProblem
      *                bankProblem object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local bankProblem setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server bankProblem setting is done
      */
     function updateBankProblem(bankProblem, localCallback, serverCallback) {
@@ -142,9 +142,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     /**
      * Adds a new bankProblem to the server databases.
      *
-     * @param bankProblem
+     * @param {SrlBankProblem} bankProblem
      *                bankProblem object to insert.
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server insert is done.  Called with the new updateId of the bank problem.
      */
     function insertBankProblemServer(bankProblem, serverCallback) {
@@ -169,11 +169,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      * Inserts the bank problem in the case that the course problem does not exist.
      * This is detirmined if the courseproblem does not have a bankproblem id but does have the actual data for a bank problem.
      *
-     * @param courseProblem
+     * @param {SrlCourseProblem} courseProblem
      *                courseProblem object to insert
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local insert is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server insert is done
      */
     function insertCourseProblem(courseProblem, localCallback, serverCallback) {
@@ -232,13 +232,13 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *
      * This does attempt to pull course problems from the server!
      *
-     * @param courseProblemIdList
+     * @param {List<String>} courseProblemIdList
      *            list of IDs of the courseproblems to get
-     * @param courseProblemCallbackPartial
+     * @param {Function} courseProblemCallbackPartial
      *            {Function} called when course problems are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
-     * @param courseProblemCallbackComplete
+     * @param {Function} courseProblemCallbackComplete
      *            {Function} called when the complete list of course problems are
      *            grabbed.
      */
@@ -342,12 +342,12 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *
      * If the server is polled and the courseProblem still does not exist the function will call the callback with an exception.
      *
-     * @param courseProblemId The id of the courseProblem we want to find.
-     * @param courseProblemLocalCallback
+     * @param {String} courseProblemId The id of the courseProblem we want to find.
+     * @param {Function} courseProblemLocalCallback
      *            {Function} called when course problems are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
-     * @param courseProblemServerCallback
+     * @param {Function} courseProblemServerCallback
      *            {Function} called when the complete list of course problems are
      *            grabbed.
      */

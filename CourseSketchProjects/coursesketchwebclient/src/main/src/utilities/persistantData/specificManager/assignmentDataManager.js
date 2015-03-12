@@ -83,9 +83,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Deletes a assignment from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
-     * @param assignmentId
+     * @param {String} assignmentId
      *                ID of the assignment to delete
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *                function to be called after the deletion is done
      */
     function deleteAssignment(assignmentId, assignmentCallback) {
@@ -100,9 +100,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     /**
      * Sets a assignment in server database.
      *
-     * @param assignment
+     * @param {SrlAssignment} assignment
      *                assignment object to set
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *                function to be called after assignment setting is done
      */
     function insertAssignmentServer(assignment, assignmentCallback) {
@@ -136,11 +136,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Adds a new assignment to both local and server databases. Also updates the
      * corresponding course given by the assignment's courseId.
      *
-     * @param assignment
+     * @param {String} assignment
      *                assignment object to insert
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local insert is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server insert is done
      */
     function insertAssignment(assignment, localCallback, serverCallback) {
@@ -181,11 +181,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Updates an existing assignment into the database. This assignment must already
      * exist.
      *
-     * @param assignment
+     * @param {SrlAssignment} assignment
      *                assignment object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local assignment setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server assignment setting is done
      */
     function updateAssignment(assignment, localCallback, serverCallback) {
@@ -209,9 +209,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     /**
      * Gets an Assignment from the local database.
      *
-     * @param assignmentId
+     * @param {String} assignmentId
      *                ID of the assignment to get
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *                function to be called after getting is complete, parameter
      *                is the assignment object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
@@ -246,13 +246,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *
      * This does attempt to pull assignments from the server!
      *
-     * @param assignmentIdList
+     * @param {List<String>} assignmentIdList
      *            list of IDs of the assignments to get
-     * @param assignmentCallbackPartial
+     * @param {Function} assignmentCallbackPartial
      *            {Function} called when assignments are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local assignments.
-     * @param assignmentCallbackComplete
+     * @param {Function} assignmentCallbackComplete
      *            {Function} called when the complete list of assignments are
      *            grabbed.
      */
@@ -366,9 +366,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * set with nonExistantValue and the database is never polled for this item
      * for the life of the program again.
      *
-     * @param assignmentId
+     * @param {String} assignmentId
      *            The id of the assignment we want to find.
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *            The method to call when the assignment has been found. (this
      *            is asynchronous)
      */

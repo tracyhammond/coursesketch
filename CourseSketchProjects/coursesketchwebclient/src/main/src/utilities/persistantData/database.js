@@ -12,7 +12,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
         // window.alert("Your browser doesn't support a stable version of
         // IndexedDB. So storing your data will not be possible");
     }
-    var self = this;
+    var localScope = this;
     var dbNameSpace = {};
     if (databaseSupported) {
         dbNameSpace.indexedDB = window.indexedDB;
@@ -39,16 +39,13 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * }
      * </code>
      *
-     * @param tableName
+     * @param {String} tableName
      *            The name of the specific table to be created.
-     * @param keyValue
+     * @param {String} keyValue
      *            This is the key for that specific table
-     * @param addingFunction
+     * @param {Function} addingFunction
      *            Takes in a store and then creates and returns a request see
      *            sample above.
-     * @param gettingFunction
-     * @param callback
-     *            Is called upon success of a data change (either adding or
      */
     this.createTable = function(tableName, keyValue, addingFunction) {
         return {
@@ -61,10 +58,10 @@ function ProtoDatabase(databaseName, version, openCallback) {
     this.open = function() {
         var tableCreationCalled = false;
         try {
-            // lets do browser checking for compatability.
+            // Lets do browser checking for compatability.
             var request = indexedDB.open(databaseName, version);
 
-            // We can only create Object stores in a versionchange transaction.
+            // We can only create Object stores in a version change transaction.
             request.onupgradeneeded = function(e) {
                 var db = e.target.result;
                 // A versionchange transaction is started automatically.
@@ -75,7 +72,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     if (db.objectStoreNames.contains(table.name)) {
                         db.deleteObjectStore(table.name);
                     }
-                    var store = db.createObjectStore(table.name, {keyPath: table.key});
+                    var store = db.createObjectStore(table.name, { keyPath: table.key });
                 }
             };
             request.onsuccess = function(e) {
@@ -96,7 +93,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     createTableFunctions();
                 }
             }
-        } catch(exception) {
+        } catch (exception) {
             console.error(exception);
             // if there is an exception then we should continue
             dbNameSpace.indexedDB = null;
@@ -124,13 +121,13 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for adding items to the database.
                  */
-                self['putIn' + localTable.name] = function(objectId, objectToAdd, callback) {
+                localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB) {
                         return; // fail silently
                     }
 
                     var db = dbNameSpace.indexedDB.db;
-                    var trans = db.transaction([localTable.name], "readwrite");
+                    var trans = db.transaction([ localTable.name ], "readwrite");
                     var store = trans.objectStore(localTable.name);
                     var request = localTable.add(store, objectId, objectToAdd);
                     trans.oncomplete = function(e) {
@@ -151,13 +148,13 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for deleting items from the database.
                  */
-                self['deleteFrom' + localTable.name] = function(objectId, callback) {
+                localScope[ 'deleteFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db) {
                         return; // fail silently
                     }
 
                     var db = dbNameSpace.indexedDB.db;
-                    var trans = db.transaction([localTable.name], "readwrite");
+                    var trans = db.transaction([ localTable.name ], "readwrite");
                     var store = trans.objectStore(localTable.name);
                     var request = store.delete(objectId);
                     trans.oncomplete = function(e) {
@@ -174,7 +171,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for deleting items from the database.
                  */
-                self['getFrom' + localTable.name] = function(objectId, callback) {
+                localScope[ 'getFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB) {
                         // return undefined
                         callback(undefined, undefined, undefined);
@@ -182,7 +179,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     }
 
                     var db = dbNameSpace.indexedDB.db;
-                    var trans = db.transaction([localTable.name]);
+                    var trans = db.transaction([ localTable.name ]);
                     var store = trans.objectStore(localTable.name);
                     var request = store.get(objectId);
                     request.onsuccess = function(e) {
@@ -209,7 +206,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     function emptyDB(databaseName) {
         try {
             var result = confirm("Do you want to empty all of the local data?");
-            if (result == true) {
+            if(result == true) {
                 var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
                 dbreq.onsuccess = function (event) {
                     output_trace("indexedDB: " + databaseName + " deleted");
@@ -220,8 +217,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             } else {
                 alert("The local data was not emptied");
             }
-        }
-        catch (e) {
+        } catch (e) {
             output_trace("Error: " + e.message);
         }
     };

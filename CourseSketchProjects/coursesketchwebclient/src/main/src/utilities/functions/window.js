@@ -62,8 +62,8 @@ if (isUndefined(setHeightToContent)) {
         var frameScope = scope.document.getElementById(iframeId).contentWindow.document;
         var iFrame = scope.document.getElementById(iframeId);
 
-        var totalHeight = frameScope.getElementById(contentId).offsetHeight
-                + offset;
+        var totalHeight = frameScope.getElementById(contentId).offsetHeight +
+                offset;
         iFrame.height = totalHeight + 1;
         iFrame.style.height = iFrame.height;
     }
@@ -79,8 +79,8 @@ if (isUndefined(setWidthToContent)) {
         }
         var frameScope = scope.document.getElementById(iframeId).contentWindow.document;
         var iFrame = scope.document.getElementById(iframeId);
-        var totalWidth = frameScope.getElementById(contentId).offsetWidth
-                + offset;
+        var totalWidth = frameScope.getElementById(contentId).offsetWidth +
+                offset;
         iFrame.width = totalWidth + 1;
         iFrame.style.width = iFrame.width;
     }
@@ -147,5 +147,5 @@ if (isUndefined(makeNotFullScreen)) {
             element.webkitExitFullscreen();
         }
     }
-        element.webkitExitFullscreen();
+    element.webkitExitFullscreen();
 }
