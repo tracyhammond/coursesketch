@@ -12,9 +12,9 @@
 
 
 if (isUndefined(replaceAll)) {
-	function replaceAll(find, replace, src) {
-		return src.replace(new RegExp(find, 'g'), replace);
-	}
+    function replaceAll(find, replace, src) {
+        return src.replace(new RegExp(find, 'g'), replace);
+    }
 }
 
 /**

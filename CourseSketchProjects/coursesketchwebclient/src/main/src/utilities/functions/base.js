@@ -154,19 +154,19 @@ if (isUndefined(BaseException)) {
      *        exceptions.
      */
     var BaseException = {
-        name : "BaseException",
+        name:           "BaseException",
         /**
          * The level defines how bad it is. level 5 is the okayest exception
          * (with 6+ typically being ignored completely) and level 0 is the worst
          * exception (with <0 being treated as 0).
          */
-        level : 5,
-        message : "BaseException Thrown.\n Please subclass this to create a better exception.",
-        htmlMessage : "BaseException Thrown<br> Please subclass this to create a better exception.",
-        toString : function() {
+        level:          5,
+        message:        "BaseException Thrown.\n Please subclass this to create a better exception.",
+        htmlMessage:    "BaseException Thrown<br> Please subclass this to create a better exception.",
+        toString: function() {
             return this.name + ": " + this.message + (this.specificMessage ? "\n" + this.specificMessage : "");
         },
-        setMessage : function(messageValue) {
+        setMessage: function(messageValue) {
             this.specificMessage = messageValue;
         }
     };
@@ -180,7 +180,7 @@ if (isUndefined(getTypeName)) {
         var t = typeof value;
         switch (t) {
             case "function":
-            case "object":
+            case "object": {
                 if (value.constructor) {
                     if (value.constructor.name) {
                         return value.constructor.name;
@@ -196,18 +196,20 @@ if (isUndefined(getTypeName)) {
                 }
                 // fallback, for nameless constructors etc.
                 return Object.prototype.toString.call(value).match(/^\[object (.+)\]$/)[1];
-            default:
+            }
+            default: {
                 return t;
+            }
         }
     }
 }
 
 if (isUndefined(loadJs)) {
     function loadJs(src) {
-        var head= document.getElementsByTagName('head')[0];
-        var script= document.createElement('script');
-        script.type= 'text/javascript';
-        script.src= src;
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = src;
         head.appendChild(script);
     }
 }
@@ -225,7 +227,7 @@ if (isUndefined(validateFirstRun)) {
             scriptBay = {};
         }
         if (!isUndefined(scriptBay[scriptObject.src])) {
-            var errorEvent = {src: scriptObject.src};
+            var errorEvent = { src: scriptObject.src };
             var listener = function(event) {
                 if (typeof event.error === "object" && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
@@ -249,11 +251,11 @@ if (isUndefined(validateFirstGlobalRun)) {
         // no var on purpose.
         try {
             CourseSketch.scriptBay = CourseSketch.scriptBay || {};
-        } catch(exception) {
+        } catch (exception) {
             CourseSketch.scriptBay = {};
         }
         if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
-            var errorEvent = {src: scriptObject.src};
+            var errorEvent = { src: scriptObject.src };
             var listener = function(event) {
                 if (typeof event.error === "object" && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
