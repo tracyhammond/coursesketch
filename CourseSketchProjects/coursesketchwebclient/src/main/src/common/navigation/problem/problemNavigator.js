@@ -8,7 +8,6 @@
  * @param {Boolean} loop true if the problems should loop, false otherwise.
  * @param  {Number}preferredIndex The starting index to start problems at.
  * @class ProblemNavigator
- * @namespace ProblemNavigator
  */
 function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var currentAssignmentId = assignmentId;
@@ -26,7 +25,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @param {Number} index {Number} the problem that we want to switch to.
      */
     this.goToProblem = function goToProblem(index) {
-        changeProblem(index)
+        changeProblem(index);
     };
 
     /**
@@ -46,7 +45,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     // Sets the current index.
     if (!isUndefined(preferredIndex)) {
         try {
-            currentIndex = parseInt(preferredIndex);
+            currentIndex = parseInt(preferredIndex, 10);
         } catch (exception) {
             console.error('could not parse preferredIndex using 0 instead');
         }
@@ -217,6 +216,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
+     * @return {SrlAssignment} the current assignment.
+     */
+    this.getCurrentAssignment = function() {
+        return currentAssignment;
+    };
+
+    /**
      * Loads all of the problems given an assignment.
      */
     this.reloadProblems = function() {
@@ -275,7 +281,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * The failure of one event should not affect the other events.
      * The order of events firing is not guaranteed.
      */
-    this.executeEvent = function(key, arguments) {
+    this.executeEvent = function(key, funcArgs) {
         var list = eventMappingCallback[key];
         if (isUndefined(eventMappingCallback[key])) {
             return;
@@ -285,7 +291,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
                 setTimeout(function() {
                     funct(args);
                 }, 10);
-            })(list[i], arguments);
+            })(list[i], funcArgs);
         }
     };
 

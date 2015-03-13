@@ -5,11 +5,15 @@ validateFirstGlobalRun(document.currentScript);
  * /src/utilities/connection/protobufInclude.html
  */
 (function() {
+    /**
+     * @class CommandException
+     * @extends BaseException
+     */
     function CommandException(message) {
-        this.name = "CommandException";
+        this.name = 'CommandException';
         this.setMessage(message);
-        this.message = "";
-        this.htmlMessage = "";
+        this.message = '';
+        this.htmlMessage = '';
     }
     CommandException.prototype = BaseException;
 

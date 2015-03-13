@@ -1,9 +1,5 @@
-function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
-    var dataListener = advanceDataListener;
-    var database = parentDatabase;
-    var Request = request
+function SlideDataManager(parent, advanceDataListener, database, sendData, Request, ByteBuffer) {
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Sets a slide in the local database
@@ -82,7 +78,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function(e, request) {
-            console.log('inserted locally :' + slide.id)
+            console.log('inserted locally :' + slide.id);
             if (!isUndefined(localCallback)) {
                 try {
                     localCallback(e, request);
@@ -141,7 +137,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         database.getFromSlides(slideId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 slideCallback (undefined);
-            } else if (result.data == nonExistantValue) {
+            } else if (result.data === nonExistantValue) {
                 slideCallback (nonExistantValue);
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
@@ -167,7 +163,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
         }, isUndefined(serverCallback) ? undefined : function(slideList) {
             serverCallback(slideList[0]);
         });
-    };
+    }
     parent.getLectureSlide = getLectureSlide;
 
     /**
@@ -179,7 +175,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      * @param {Function} serverCallback function to be called after looking in the server for the slide.
      */
     function getLectureSlides (slideIds, localCallback, serverCallback) {
-        if (isUndefined (slideIds) || slideIds == null || slideIds.length == 0) {
+        if (isUndefined (slideIds) || slideIds === null || slideIds.length === 0) {
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException('Result is undefined!', 'Grabbing slide from server: ' + slideIds));
             } else {
@@ -199,7 +195,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                         slideIdsNotFound.push(slideId);
                     }
                     barrier -= 1;
-                    if (barrier == 0) {
+                    if (barrier === 0) {
                         if (slideIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
                                     CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
@@ -232,6 +228,6 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                 });// end of getSlideLocal
             })(currentSlideId);
         } // end for slideIds
-    };
+    }
     parent.getLectureSlides = getLectureSlides;
 }

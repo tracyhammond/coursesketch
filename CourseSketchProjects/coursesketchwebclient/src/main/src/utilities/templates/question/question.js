@@ -21,13 +21,13 @@ function Question() {
         };
         shadowRoot.getElementById('correct-lecture').onchange = function(event) {
             var value = event.srcElement.value;
-            var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value]);
+            var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById('correct-slide'));
         };
         shadowRoot.getElementById('incorrect-lecture').onchange = function(event) {
             var value = event.srcElement.value;
-            var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value]);
+            var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById('incorrect-slide'));
         };
@@ -142,9 +142,9 @@ function Question() {
                 var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
                 var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
                 correctNav.nextLectureId = correctLectureId;
-                correctNav.nextSlide = parseInt(correctSlideStr);
+                correctNav.nextSlide = parseInt(correctSlideStr, 10);
                 incorrectNav.nextLectureId = incorrectLectureId;
-                incorrectNav.nextSlide = parseInt(incorrectSlideStr);
+                incorrectNav.nextSlide = parseInt(incorrectSlideStr, 10);
                 questionProto.navs[0] = correctNav;
                 questionProto.navs[1] = incorrectNav;
             }

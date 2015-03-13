@@ -66,9 +66,11 @@
         var pointList = stroke.getPoints();
         var srlStroke = new SRL_Stroke();
         for (var i in pointList) {
-            var point = pointList[i];
-            var currentPoint = SRL_Point.createFromProtobuf(point);
-            srlStroke.addPoint(currentPoint);
+            if (pointList.hasOwnProperty(i)) {
+                var point = pointList[i];
+                var currentPoint = SRL_Point.createFromProtobuf(point);
+                srlStroke.addPoint(currentPoint);
+            }
         }
         if (!srlStroke) {
             srlStroke = new SRL_Stroke();
@@ -150,15 +152,12 @@
 
         var objectType = object.type; // FIXME: change this to objectType
         switch (objectType) {
-            case proto.ObjectType.SHAPE: {
+            case proto.ObjectType.SHAPE:
                 return SRL_Shape.createFromProtobuf(scope.ProtoSrlShape.decode(object.object));
-            }
-            case proto.ObjectType.STROKE: {
+            case proto.ObjectType.STROKE:
                 return SRL_Stroke.createFromProtobuf(scope.ProtoSrlStroke.decode(object.object));
-            }
-            case proto.ObjectType.POINT: {
+            case proto.ObjectType.POINT:
                 return SRL_Point.createFromProtobuf(scope.ProtoSrlPoint.decode(object.object));
-            }
         }
     }
 

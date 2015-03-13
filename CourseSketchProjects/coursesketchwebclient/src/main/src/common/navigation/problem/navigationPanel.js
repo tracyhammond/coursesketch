@@ -1,11 +1,10 @@
 /**
  *
  * The custom element for navigating a problem.
- * @class
- * @namespace NavigationPanel
- * @attribute loop {existence} If this property exist the navigator will loop.  (Setting the navigator overrides this property).
- * @attribute assignment_id {string} uses the given value as the assignment id inside the navigator.
- * @attribute index {number} if the value exist then this is the number used to define the current index.
+ * @class NavigationPanel
+ * @attribute loop {Existence} If this property exist the navigator will loop.  (Setting the navigator overrides this property).
+ * @attribute assignment_id {String} uses the given value as the assignment id inside the navigator.
+ * @attribute index {Number} if the value exist then this is the number used to define the current index.
  *
  */
 function NavigationPanel() {

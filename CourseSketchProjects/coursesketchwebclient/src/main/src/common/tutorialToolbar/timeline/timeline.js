@@ -4,7 +4,6 @@ function Timeline () {
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
-        var localScope = this; // This sets the variable to the level of the custom element tag
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
@@ -248,7 +247,6 @@ function Timeline () {
             }
 
             highlightTextFinishedListener = function(command, event, currentUpdate) {
-                var highlightText = document.getElementById(command.commandId);
                 if (isUndefined(currentUpdate.commands)) {
                     return;
                 }

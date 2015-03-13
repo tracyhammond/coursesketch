@@ -8,12 +8,12 @@
   "eqeqeq"        : true,     // Require triple equals i.e. `===`.
   "forin"         : true,     // Tolerate `for in` loops without `hasOwnPrototype`.
   "immed"         : true,     // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
-  "latedef"       : false,     // Prohibit variable use before definition.
+  "latedef"       : true,     // Prohibit variable use before definition.
   "noarg"         : true,     // Prohibit use of `arguments.caller` and `arguments.callee`.
   "noempty"       : true,     // Prohibit use of empty blocks.
   "nonew"         : true,     // Prohibit use of constructors for side-effects.
-  "undef"         : true,     // Require all non-global variables be declared before they are used.
-  "unused"        : true,     // An error if a variable is not used
+  "undef"         : false,    // Require all non-global variables be declared before they are used.
+  "unused"        : false,    // An error if a variable is not used
   "trailing"      : true,     // Prohibit trailing whitespaces.
   "indent"        : false,    // Checks for indentation [this is off because jscs does a better job]
   "maxparams"     : 7,        // Max number of parameters a function can take
@@ -43,10 +43,10 @@
   "regexdash"     : false,    // Tolerate unescaped last dash i.e. `[-...]`.
   "scripturl"     : false,    // Tolerate script-targeted URLs.
   "smarttabs"     : false,    // Tolerate mixed tabs and spaces when the latter are used for alignmnent only.
-  "shadow"        : false,    // Allows re-define variables later in code e.g. `var x=1; x=2;`.
   "sub"           : false,    // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
   "supernew"      : false,    // Tolerate `new function () { ... };` and `new Object;`.
   "validthis"     : false,    // Tolerate strict violations when the code is running in strict mode and you use this in a non-constructor function.
+  "shadow"        : "outer",  // Allows re-define variables later in code e.g. `var x=1; x=2;`.
 
   // SUPRESSIONS
 

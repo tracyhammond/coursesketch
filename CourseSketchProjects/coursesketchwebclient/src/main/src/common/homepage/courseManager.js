@@ -246,53 +246,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         selectionManager.addSelectedItem(id);
     }
 
-    function manageHeight() {
-        var iframe = document.getElementById('edit_frame_id');
-        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        // Gets the visual height.
-        if (innerDoc) {
-            var iFrameElement = innerDoc.getElementById('iframeBody') || innerDoc.getElementsByTagName('body')[0];
-            if (!iFrameElement) {
-                return;
-            }
-            var height = iFrameElement.scrollHeight;
-            iframe.height = height;
-        }
-    }
-
-    /**
-     * Given the source this will create an iframe that will manage its own
-     * height. TODO: make this more general.
-     */
-    function replaceEditContent(src) {
-
-        function onload(event) {
-            var toReplace = document.getElementById('editable_unit');
-            removeAllChildren(toReplace);
-            var link = event.srcElement;
-            var content = link.import.querySelector('#iframeBody');
-            if (src && content) {
-                toReplace.appendChild(content.cloneNode(true));
-            } else {
-                toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
-                        '<h2 style = "text-align:center">Click an item to edit</h2>';
-            }
-        }
-
-        function onerror(event) {
-            var toReplace = document.getElementById('editable_unit');
-            removeAllChildren(toReplace);
-            toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>' +
-                    '<h2 style = "text-align:center">Click an item to edit</h2>';
-        }
-
-        try {
-            loader.replaceFile(false, src, 'html', onload, onerror, 'editable_import', 'editable_import');
-        } catch (exception) {
-            loader.loadFile(src, 'html', onload, onerror, 'editable_import');
-        }
-    }
-
     var courseSelectionManager = new ClickSelectionManager();
     var assignmentSelectionManager = new ClickSelectionManager();
     var problemSelectionManager = new ClickSelectionManager();

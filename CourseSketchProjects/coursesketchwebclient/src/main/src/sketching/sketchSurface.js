@@ -89,7 +89,7 @@ function SketchSurface() {
             // sets up the plugin that draws the strokes as they are added to the update list.
             this.updateManager.addPlugin(this.graphics);
         } else {
-            throw new Error("Update list is already defined");
+            throw new Error('Update list is already defined');
         }
     };
 
@@ -261,6 +261,7 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
 
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
+    /*jshint maxcomplexity:13 */
     this.initializeSketch();
     this.initializeGraphics();
 

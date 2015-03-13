@@ -1,3 +1,7 @@
+/**
+ * @class DatabaseException
+ * @extends BaseException
+ */
 function DatabaseException(message, request) {
     if (message) {
         this.message = message;

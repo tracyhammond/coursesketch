@@ -26,7 +26,6 @@
  * </ol>
  */
 function Redirector(scope, affectedWindow) {
-    var scope = scope;
     var activeState = false;
     var STARTING_URL = 'src';
     var FILE_ENDINGS = 'html';
@@ -48,7 +47,7 @@ function Redirector(scope, affectedWindow) {
 
     function replaceAll(find, replace, str) {
         return str.replace(new RegExp(find, 'g'), replace);
-    };
+    }
 
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
@@ -68,5 +67,5 @@ function Redirector(scope, affectedWindow) {
         docWindow.location.replace(url); // it allows the url to change
         // without adding an event to the
         // history!
-    }
+    };
 }

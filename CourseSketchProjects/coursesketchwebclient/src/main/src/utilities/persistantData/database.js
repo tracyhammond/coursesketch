@@ -3,6 +3,7 @@
  * opened.
  *
  * It will also create all the functions needed for the specific database.
+ * @class ProtoDatabase
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     var databaseSupported = true;
@@ -92,7 +93,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     tableCreationCalled = true;
                     createTableFunctions();
                 }
-            }
+            };
         } catch (exception) {
             console.error(exception);
             // if there is an exception then we should continue
@@ -109,7 +110,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * successful database creation.
      */
     function createTableFunctions() {
-        if (upgradeTables == null) {
+        if (upgradeTables === null) {
             if (openCallback) {
                 openCallback();
             }
@@ -186,7 +187,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                         if (callback) {
                             callback(e, request, request.result);
                         }
-                    }
+                    };
 
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -206,7 +207,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     function emptyDB(databaseName) {
         try {
             var result = confirm('Do you want to empty all of the local data?');
-            if (result == true) {
+            if (result === true) {
                 var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
                 dbreq.onsuccess = function(event) {
                     output_trace('indexedDB: ' + databaseName + ' deleted');
@@ -220,5 +221,5 @@ function ProtoDatabase(databaseName, version, openCallback) {
         } catch (e) {
             output_trace('Error: ' + e.message);
         }
-    };
-};
+    }
+}

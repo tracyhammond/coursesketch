@@ -1,3 +1,7 @@
+/**
+ * @class UpdateException
+ * @extends BaseException
+ */
 function UpdateException(message) {
     this.name = 'UpdateException';
     this.setMessage(message);
@@ -7,6 +11,10 @@ function UpdateException(message) {
 
 UpdateException.prototype = BaseException;
 
+/**
+ * @class UndoRedoException
+ * @extends UpdateException
+ */
 function UndoRedoException(message) {
     this.name = 'UndoRedoException';
     this.setMessage(message);
@@ -22,6 +30,7 @@ UndoRedoException.prototype = new UpdateException();
  *
  * @param {SketchManager} sketchManager
  * @param {Function} onError A method that is called when an error occurs
+ * @class UpdateManager
  */
 function UpdateManager(sketchManager, onError) {
 
@@ -274,7 +283,7 @@ function UpdateManager(sketchManager, onError) {
                 executeUpdateLocked();
                 executionLock = false;
             } else {
-                throw new UpdateException('Execution is locked can\'t add update synchronously');
+                throw new UpdateException('Execution is locked can not add update synchronously');
             }
         }
     }
@@ -288,6 +297,7 @@ function UpdateManager(sketchManager, onError) {
      * @returns {Boolean} True if the object needs to be redrawn.
      */
     function executeUpdate(update) {
+        /*jshint maxcomplexity:11 */
         /*
         update.getLocalSketchSurface = function() {
             return sketchManager.get(this.sketchId);
@@ -333,7 +343,7 @@ function UpdateManager(sketchManager, onError) {
         if (command === CourseSketch.PROTOBUF_UTIL.CommandType.REDO) {
             lastUpdateType = 1;
             if (netCount >= 0) {
-                throw new UndoRedoException('Can't Redo Anymore');
+                throw new UndoRedoException('Can not Redo Anymore');
             }
             updateList.push(update);
             currentEndingIndex += 1;
@@ -344,7 +354,7 @@ function UpdateManager(sketchManager, onError) {
         } else if (command === CourseSketch.PROTOBUF_UTIL.CommandType.UNDO) {
             lastUpdateType = -1;
             if (currentUpdateIndex <= 0) {
-                throw new UndoRedoException('Can't Undo Anymore');
+                throw new UndoRedoException('Can not Undo Anymore');
             }
             if (!inRedoUndoMode) {
                 netCount = 0;
@@ -375,15 +385,16 @@ function UpdateManager(sketchManager, onError) {
      * @returns {Boolean} True if the sketch needs to be redrawn.
      */
     function redoUpdate(update) {
+        /*jshint maxcomplexity:13 */
         var command = update.getCommands()[0];
         // Marker will not have any other commands with its update
         if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
             var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
             if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
                 var tempIndex = currentUpdateIndex;
-                currentUpdateIndex += parseInt(marker.otherData) + 1;
+                currentUpdateIndex += parseInt(marker.otherData, 10) + 1;
                 if (currentUpdateIndex > updateList.length) {
-                    amountToSkip = parseInt(marker.otherData) + 1;
+                    amountToSkip = parseInt(marker.otherData, 10) + 1;
                     skippingMarkerMode = true;
                 }
             } else if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SUBMISSION) {
@@ -434,7 +445,7 @@ function UpdateManager(sketchManager, onError) {
         if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.MARKER) {
             var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
             if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
-                currentUpdateIndex += parseInt(marker.otherData) - 1;
+                currentUpdateIndex += parseInt(marker.otherData, 10) - 1;
             }
             // Does not actually change sketch so no drawing happens
             return false;

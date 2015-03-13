@@ -1,9 +1,10 @@
 // Requires protobuf and connection library
+/*jshint scripturl:true*/
+/*jshint quotmark:false*/
 
 /**
  * A class that allows a user to login.
  * @class LoginSystem
- * @namespace LoginSystem
  */
 function LoginSystem() {
     var connection = undefined;
