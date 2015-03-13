@@ -172,8 +172,6 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
         database.getFromLectures(lectureId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 lectureCallback(new DatabaseException('Result is undefined!', 'Grabbing lecture from server: ' + lectureId));
-            } else if (result.data === nonExistantValue) {
-                lectureCallback(new DatabaseException('Nothing is in the server database!', 'Grabbing lecture from server: ' + lectureId));
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
                 if (!isUndefined(lectureCallback)) {

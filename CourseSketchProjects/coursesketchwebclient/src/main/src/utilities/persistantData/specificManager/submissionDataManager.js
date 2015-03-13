@@ -45,9 +45,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 });
                 // creates a request that is then sent to the server
                 sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ]);
-            } else if (result.data === nonExistantValue) {
-                // the server holds this special value then it means the server does not have the value
-                submissionCallback(nonExistantValue);
             } else {
                 // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);

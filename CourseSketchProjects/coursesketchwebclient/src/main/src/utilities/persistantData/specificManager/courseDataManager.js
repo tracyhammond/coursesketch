@@ -72,10 +72,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         database.getFromCourses(courseId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
-            } else if (result.data === nonExistantValue) {
-                // the server holds this special value then it means the server
-                // does not have the value
-                courseCallback(new DatabaseException('The database does not hold this value', 'getting Course: ' + courseId));
             } else {
                 // gets the data from the database and calls the callback
                 try {
@@ -94,9 +90,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Returns a course with the given couresId will ask the server if it does
      * not exist locally.
      *
-     * If the server is pulled and the course still does not exist the Id is set
-     * with nonExistantValue and the database is never polled for this item for
-     * the life of the program again.
      *
      * @param {String} courseId
      *            The id of the course we want to find.
