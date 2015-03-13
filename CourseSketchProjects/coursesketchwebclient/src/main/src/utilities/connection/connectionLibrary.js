@@ -209,13 +209,13 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * This is a test function that allows you to spoof messages to yourlocalScope.
+     * This is a test function that allows you to spoof messages to yourself.
      *
      * Only the data is the same right now.
      * The message is delayed but the function returns immediately.
      * TODO: complete the entirety of the event that can be spoofed.
      */
-    this.sendlocalScope = function(message) {
+    this.sendSelf = function(message) {
         setTimeout(function() {
             var event = {
                 data: message.toArrayBuffer()
