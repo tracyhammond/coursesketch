@@ -8,7 +8,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     var databaseSupported = true;
     if (!window.indexedDB || typeof window.indexedDB === 'undefined') {
         databaseSupported = false;
-        console.log('Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible');
+        console.log('Your browser does not support a stable version of IndexedDB. So storing your data will not be possible');
         // window.alert('Your browser doesn't support a stable version of
         // IndexedDB. So storing your data will not be possible');
     }

@@ -148,7 +148,7 @@ function LoginSystem() {
 
         var formElement = shadowRoot.querySelector('#submitForm');
 
-        formElement.action = 'Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()';
+        formElement.action = "Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()";
     }
 
     /**

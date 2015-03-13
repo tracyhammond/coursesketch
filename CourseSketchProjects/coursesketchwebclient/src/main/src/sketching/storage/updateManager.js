@@ -274,7 +274,7 @@ function UpdateManager(sketchManager, onError) {
                 executeUpdateLocked();
                 executionLock = false;
             } else {
-                throw new UpdateException('Execution is locked can't add update synchronously');
+                throw new UpdateException('Execution is locked can\'t add update synchronously');
             }
         }
     }

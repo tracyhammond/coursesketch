@@ -15,8 +15,8 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after the lecture setting is done
      */
     function setLecture(lecture, lectureCallback) {
-        if (isUndefined(lecture)){
-            lectureCallback(new DatabaseException('can't set undefined lecture', 'Settting lecture locally: '));
+        if (isUndefined(lecture)) {
+            lectureCallback(new DatabaseException('can not set undefined lecture', 'Settting lecture locally: '));
             return;
         }
         if (lecture instanceof DatabaseException) {

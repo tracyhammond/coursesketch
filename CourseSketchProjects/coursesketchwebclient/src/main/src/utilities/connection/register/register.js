@@ -160,7 +160,7 @@ function RegisterSystem() {
 
         var formElement = shadowRoot.querySelector('#submitForm');
 
-        formElement.action = 'Javascript:(function() { document.querySelector('register-system').getFormSubmitFunction()();})()';
+        formElement.action = "Javascript:(function() { document.querySelector('register-system').getFormSubmitFunction()();})()";
     }
 
     /**
