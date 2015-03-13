@@ -82,6 +82,7 @@
                 "callbackParam": true
             }
         },
+        "enforceExistence": true,
         "checkParamNames": true,
         "requireParamTypes": true,
         "checkRedundantParams": true,
@@ -102,6 +103,6 @@
         "disallowKeywordsInComments": true
 
         inside jsdoc
-        "enforceExistence": true,
+
     */
 }
