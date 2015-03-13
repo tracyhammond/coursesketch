@@ -17,7 +17,7 @@
  *            The static instance that is used for encoding and decoding data.
  */
 function SchoolDataManager(userId, advanceDataListener, connection, Request, ByteBuffer) {
-    var LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
+    var LAST_UPDATE_TIME = 'LAST_UPDATE_TIME';
     var localScope = this;
     var localUserId = userId;
     var stateMachine = new Map();
@@ -59,7 +59,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         if (!localScope.start) {
             var intervalVar = setInterval(function() {
                 if (localScope.start) {
-                    console.log("Checking if higher database is truly ready!");
+                    console.log('Checking if higher database is truly ready!');
                     clearInterval(intervalVar);
                     localScope.start();
                 }
@@ -75,21 +75,21 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
-                "id": objectId,
-                "data": objectToAdd
+                'id': objectId,
+                'data': objectToAdd
             });
         };
 
         var tables = [];
-        tables.push(database.createTable("Courses", "id", addFunction));
-        tables.push(database.createTable("Assignments", "id", addFunction));
-        tables.push(database.createTable("CourseProblems", "id", addFunction));
-        tables.push(database.createTable("BankProblems", "id", addFunction));
-        tables.push(database.createTable("Submissions", "id", addFunction));
-        tables.push(database.createTable("Grades", "id", addFunction));
-        tables.push(database.createTable("Lectures", "id", addFunction));
-        tables.push(database.createTable("Slides", "id", addFunction));
-        tables.push(database.createTable("Other", "id", addFunction));
+        tables.push(database.createTable('Courses', 'id', addFunction));
+        tables.push(database.createTable('Assignments', 'id', addFunction));
+        tables.push(database.createTable('CourseProblems', 'id', addFunction));
+        tables.push(database.createTable('BankProblems', 'id', addFunction));
+        tables.push(database.createTable('Submissions', 'id', addFunction));
+        tables.push(database.createTable('Grades', 'id', addFunction));
+        tables.push(database.createTable('Lectures', 'id', addFunction));
+        tables.push(database.createTable('Slides', 'id', addFunction));
+        tables.push(database.createTable('Other', 'id', addFunction));
 
         database.setTables(tables);
         database.open();
@@ -155,7 +155,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         lectureDataManager = new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         slideDataManager = new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
 
-        console.log("Database is ready for use! with user: " + userId);
+        console.log('Database is ready for use! with user: ' + userId);
         databaseFinishedLoading = true;
     };
 
@@ -168,7 +168,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         var getAssignments = this.getAssignments;
         this.getCourse(courseId, function(course) {
             if (isUndefined(course)) {
-                throw new Error("Course not defined");
+                throw new Error('Course not defined');
             }
             if (course.assignmentList.length <= 0) {
                 assignmentCallback([]);
@@ -186,7 +186,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         var getCourseProblems = this.getCourseProblems;
         this.getAssignment(assignmentId, function(assignment) {
             if (isUndefined(assignment)) {
-                throw new Error("Assignment not defined");
+                throw new Error('Assignment not defined');
             }
             getCourseProblems(assignment.problemList, problemCallback);
         });
@@ -284,5 +284,5 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         }, 50);
     };
 }
-var CURRENT_QUESTION = "CURRENT_QUESTION";
-var CURRENT_ASSIGNMENT = "CURRENT_ASSIGNMENT";
+var CURRENT_QUESTION = 'CURRENT_QUESTION';
+var CURRENT_ASSIGNMENT = 'CURRENT_ASSIGNMENT';

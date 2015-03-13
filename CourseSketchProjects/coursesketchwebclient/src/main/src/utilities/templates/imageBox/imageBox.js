@@ -13,7 +13,7 @@ function ImageBox() {
     };
 
     this.setSrc = function(src) {
-        this.shadowRoot.querySelector(".image").src = src;
+        this.shadowRoot.querySelector('.image').src = src;
     };
 
     /**
@@ -26,10 +26,10 @@ function ImageBox() {
         var imageProto = CourseSketch.PROTOBUF_UTIL.Image();
 
         // Populate data in the proto object
-        imageProto.src = this.shadowRoot.querySelector(".image").src;
+        imageProto.src = this.shadowRoot.querySelector('.image').src;
 
         // If the image does not have an id, then a command has not been created for the image
-        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === '')) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_IMAGE, true);
         }
         this.command.setCommandData(imageProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -51,7 +51,7 @@ function ImageBox() {
         if (isUndefined(shadowRoot) || isUndefined(imageProto)) {
             return;
         }
-        this.shadowRoot.querySelector(".image").src = imageProto.src;
+        this.shadowRoot.querySelector('.image').src = imageProto.src;
     };
 
     /**

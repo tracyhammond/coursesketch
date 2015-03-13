@@ -1,14 +1,14 @@
 function UpdateException(message) {
-    this.name = "UpdateException";
+    this.name = 'UpdateException';
     this.setMessage(message);
-    this.message = "";
-    this.htmlMessage = "";
+    this.message = '';
+    this.htmlMessage = '';
 }
 
 UpdateException.prototype = BaseException;
 
 function UndoRedoException(message) {
-    this.name = "UndoRedoException";
+    this.name = 'UndoRedoException';
     this.setMessage(message);
 }
 UndoRedoException.prototype = new UpdateException();
@@ -170,10 +170,10 @@ function UpdateManager(sketchManager, onError) {
      */
     function switchToSketch(id) {
         if (isUndefined(sketchManager)) {
-            throw new UpdateException("Can not switch sketch with an invalid manager");
+            throw new UpdateException('Can not switch sketch with an invalid manager');
         }
         if (isUndefined(id)) {
-            throw new UpdateException("Can not switch to an undefined sketch");
+            throw new UpdateException('Can not switch to an undefined sketch');
         }
         currentSketchId = id;
         sketchManager.setCurrentSketch(id);
@@ -274,7 +274,7 @@ function UpdateManager(sketchManager, onError) {
                 executeUpdateLocked();
                 executionLock = false;
             } else {
-                throw new UpdateException("Execution is locked can't add update synchronously");
+                throw new UpdateException('Execution is locked can't add update synchronously');
             }
         }
     }
@@ -294,7 +294,7 @@ function UpdateManager(sketchManager, onError) {
         };
         */
         if (update.getCommands().length <= 0) {
-            throw new UpdateException("Can not execute an empty update.");
+            throw new UpdateException('Can not execute an empty update.');
         }
         var command = update.getCommands()[0].commandType;
         if (skippingMarkerMode) {
@@ -313,13 +313,13 @@ function UpdateManager(sketchManager, onError) {
 
                 // Creates and inserts the first marker [update] -> [marker] ->
                 // [unreachable update]
-                var startingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "" +
+                var startingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, '' +
                         splitDifference);
                 updateList.splice(currentUpdateIndex, 0, CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ startingMarker ]));
 
                 // Creates and inserts the second marker [unreachable update
                 // (probably undo or redo)] -> [marker] -> [index out of range]
-                var endingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, "" +
+                var endingMarker = localScope.createMarker(false, CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT, '' +
                         (0 - splitDifference));
                 updateList.push(CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ endingMarker ]));
 
@@ -333,7 +333,7 @@ function UpdateManager(sketchManager, onError) {
         if (command === CourseSketch.PROTOBUF_UTIL.CommandType.REDO) {
             lastUpdateType = 1;
             if (netCount >= 0) {
-                throw new UndoRedoException("Can't Redo Anymore");
+                throw new UndoRedoException('Can't Redo Anymore');
             }
             updateList.push(update);
             currentEndingIndex += 1;
@@ -344,7 +344,7 @@ function UpdateManager(sketchManager, onError) {
         } else if (command === CourseSketch.PROTOBUF_UTIL.CommandType.UNDO) {
             lastUpdateType = -1;
             if (currentUpdateIndex <= 0) {
-                throw new UndoRedoException("Can't Undo Anymore");
+                throw new UndoRedoException('Can't Undo Anymore');
             }
             if (!inRedoUndoMode) {
                 netCount = 0;
@@ -595,7 +595,7 @@ function UpdateManager(sketchManager, onError) {
      */
     this.setUpdateList = function(list, percentBar, finishedCallback) {
         if (!Array.isArray(list)) {
-            throw new UpdateException("Input list is not an array: " + list);
+            throw new UpdateException('Input list is not an array: ' + list);
         }
         var initializing = true;
         this.clearUpdates(false);

@@ -240,7 +240,7 @@ function SketchSurface() {
      */
     this.fillCanvas = function() {
         if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
-            throw new BaseException("This can only be performed on read only sketch surfaces");
+            throw new BaseException('This can only be performed on read only sketch surfaces');
         }
     };
 }
@@ -256,7 +256,7 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
     root.appendChild(templateClone);
     this.shadowRoot = this;
     document.body.appendChild(templateClone);
-    this.sketchCanvas = this.shadowRoot.querySelector("#drawingCanvas");
+    this.sketchCanvas = this.shadowRoot.querySelector('#drawingCanvas');
 };
 
 
@@ -268,7 +268,7 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
         this.initializeInput(InputListenerClass);
     }
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id === null || this.id === "") {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id === null || this.id === '') {
         this.id = generateUUID();
     }
 

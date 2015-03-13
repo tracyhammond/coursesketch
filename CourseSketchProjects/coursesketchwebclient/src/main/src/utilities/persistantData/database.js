@@ -6,11 +6,11 @@
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     var databaseSupported = true;
-    if (!window.indexedDB || typeof window.indexedDB === "undefined") {
+    if (!window.indexedDB || typeof window.indexedDB === 'undefined') {
         databaseSupported = false;
-        console.log("Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible");
-        // window.alert("Your browser doesn't support a stable version of
-        // IndexedDB. So storing your data will not be possible");
+        console.log('Your browser doesn't support a stable version of IndexedDB. So storing your data will not be possible');
+        // window.alert('Your browser doesn't support a stable version of
+        // IndexedDB. So storing your data will not be possible');
     }
     var localScope = this;
     var dbNameSpace = {};
@@ -33,8 +33,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * <code>
      * function adding(store, todoText) {
      *         return store.put({
-     *             "text": todoText,
-     *             "timeStamp" : new Date().getTime()
+     *             'text': todoText,
+     *             'timeStamp' : new Date().getTime()
      *         });
      * }
      * </code>
@@ -76,7 +76,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 }
             };
             request.onsuccess = function(e) {
-                console.log("Database has opened");
+                console.log('Database has opened');
                 dbNameSpace.indexedDB.db = e.target.result;
                 if (!tableCreationCalled) {
                     tableCreationCalled = true;
@@ -85,7 +85,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             };
             request.onerror = function(e) {
                 console.log(e);
-                console.log("Exception has occured when getting data");
+                console.log('Exception has occured when getting data');
                 // if there is an exception then we should continue
                 dbNameSpace.indexedDB = null;
                 if (!tableCreationCalled) {
@@ -127,7 +127,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     }
 
                     var db = dbNameSpace.indexedDB.db;
-                    var trans = db.transaction([ localTable.name ], "readwrite");
+                    var trans = db.transaction([ localTable.name ], 'readwrite');
                     var store = trans.objectStore(localTable.name);
                     var request = localTable.add(store, objectId, objectToAdd);
                     trans.oncomplete = function(e) {
@@ -154,7 +154,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     }
 
                     var db = dbNameSpace.indexedDB.db;
-                    var trans = db.transaction([ localTable.name ], "readwrite");
+                    var trans = db.transaction([ localTable.name ], 'readwrite');
                     var store = trans.objectStore(localTable.name);
                     var request = store.delete(objectId);
                     trans.oncomplete = function(e) {
@@ -205,20 +205,20 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
     function emptyDB(databaseName) {
         try {
-            var result = confirm("Do you want to empty all of the local data?");
+            var result = confirm('Do you want to empty all of the local data?');
             if (result == true) {
                 var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
                 dbreq.onsuccess = function(event) {
-                    output_trace("indexedDB: " + databaseName + " deleted");
+                    output_trace('indexedDB: ' + databaseName + ' deleted');
                 };
                 dbreq.onerror = function(event) {
-                    output_trace("indexedDB.delete Error: " + event.message);
+                    output_trace('indexedDB.delete Error: ' + event.message);
                 };
             } else {
-                alert("The local data was not emptied");
+                alert('The local data was not emptied');
             }
         } catch (e) {
-            output_trace("Error: " + e.message);
+            output_trace('Error: ' + e.message);
         }
     };
 };

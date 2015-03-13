@@ -12,7 +12,7 @@ function CallbackBarrier() {
  */
 CallbackBarrier.prototype.getCallback = function() {
     if (this.finalized) {
-        throw "You can't add a callback after finalizing";
+        throw 'You can't add a callback after finalizing';
     }
     this.asyncCount++;
     return function() {
@@ -29,7 +29,7 @@ CallbackBarrier.prototype.getCallback = function() {
  */
 CallbackBarrier.prototype.getCallbackAmount = function(amount) {
     if (this.finalized) {
-        throw "You can't add a callback after finalizing";
+        throw 'You can't add a callback after finalizing';
     }
     this.asyncCount = amount;
     return function() {

@@ -92,7 +92,7 @@ function InputListener() {
         };
 
         //zooms the view with the mousewheel
-        sketchCanvas.addEventListener("mousewheel", function(event) {
+        sketchCanvas.addEventListener('mousewheel', function(event) {
             //event.stopPropagation();
             //event.preventDefault();
             // cross-browser wheel delta

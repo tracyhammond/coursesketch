@@ -62,11 +62,11 @@ function SchoolItemBuilder() {
     /***************************************************************************
      * LOCAL VARIABLES
      **************************************************************************/
-    var COURSE = "Course";
-    var ASSIGNMENT = "Assignment";
-    var PROBLEM = "Problem";
-    var BANK_PROBLEM = "BankProblem";
-    var LECTURE = "BankProblem";
+    var COURSE = 'Course';
+    var ASSIGNMENT = 'Assignment';
+    var PROBLEM = 'Problem';
+    var BANK_PROBLEM = 'BankProblem';
+    var LECTURE = 'BankProblem';
 
     /***************************************************************************
      * CREATING LIST LOGIC
@@ -75,7 +75,7 @@ function SchoolItemBuilder() {
     this.build = function(id) {
 
         var hostElement = undefined;
-        if (typeof id === "string") {
+        if (typeof id === 'string') {
             hostElement = document.getElementById(id);
         } else {
             hostElement = id;
@@ -83,7 +83,7 @@ function SchoolItemBuilder() {
 
         if (this.clearList) {
             // TODO: make this use the faster way of clearing
-            hostElement.innerHTML = "";
+            hostElement.innerHTML = '';
         }
 
         var element = document.createElement('h1');
@@ -154,11 +154,11 @@ function SchoolItemBuilder() {
         box.dataset.isediting = false;
 
         if (!this.instructorCard && this.boxClickFunction) {
-            box.dataset.clickable = "";
+            box.dataset.clickable = '';
         }
 
         if (this.instructorCard) {
-            box.dataset.instructor = "";
+            box.dataset.instructor = '';
         }
 
         box.setAttribute('data-item_number', index);
@@ -184,17 +184,17 @@ function SchoolItemBuilder() {
         if (itemState !== null && !isUndefined(itemState)) {
             // TODO: add state for an assignment that has been graded.
             if (itemState.graded) {
-                $(box).addClass("graded");
-                box.dataset.state = "graded";
+                $(box).addClass('graded');
+                box.dataset.state = 'graded';
             } else if (!itemState.accessible && itemState.pastDue) {
-                $(box).addClass("closed");
-                box.dataset.state = "closed";
+                $(box).addClass('closed');
+                box.dataset.state = 'closed';
             } else if (itemState.completed) {
-                box.dataset.state = "completed";
+                box.dataset.state = 'completed';
             } else if (itemState.started) {
-                box.dataset.state = "inProgress";
+                box.dataset.state = 'inProgress';
             } else if (!itemState.accessible) {
-                box.dataset.state = "notOpen";
+                box.dataset.state = 'notOpen';
             }
         }
     };
@@ -206,7 +206,7 @@ function SchoolItemBuilder() {
     this.addClickFunction = function addClickFunction(element, boxFunction, editFunction) {
         if (boxFunction) {
             element.addEventListener('click', function() {
-                if (element.dataset.isediting === "false") {
+                if (element.dataset.isediting === 'false') {
                     boxFunction.bind(element)(element.schoolItemData);
                 }
             }, false);
@@ -228,22 +228,22 @@ function SchoolItemBuilder() {
 
         if (srlSchoolItem.name) {
             var name = document.createElement('span');
-            name.className = "name";
+            name.className = 'name';
             name.textContent = srlSchoolItem.name;
             box.appendChild(name);
         }
 
         var description = document.createElement('div');
         if (srlSchoolItem.description) {
-            description.className = "description";
+            description.className = 'description';
             description.textContent = srlSchoolItem.description;
             box.appendChild(description);
         } else if (type === PROBLEM && srlSchoolItem.problemInfo) {
-            description.className = "description";
+            description.className = 'description';
             description.textContent = srlSchoolItem.getProblemInfo().getQuestionText();
             box.appendChild(description);
         }  else if (type === BANK_PROBLEM && srlSchoolItem.questionText) {
-            description.className = "description";
+            description.className = 'description';
             description.textContent = srlSchoolItem.getQuestionText();
             box.appendChild(description);
         }
@@ -295,7 +295,7 @@ function SchoolItemBuilder() {
 
         // if there is a single date element involved.
         if (accessDate || dueDate || (closeDate && showCloseDate)) {
-            $(box).addClass("validDate");
+            $(box).addClass('validDate');
         }
     };
 }

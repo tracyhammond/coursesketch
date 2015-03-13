@@ -14,10 +14,10 @@
  * Creates an ArrayException object that returns exception values.
  */
 function ArrayException(message) {
-    this.name = "ArrayException";
+    this.name = 'ArrayException';
     this.specificMessage = message;
-    this.message = "";
-    this.htmlMessage = "";
+    this.message = '';
+    this.htmlMessage = '';
 }
 ArrayException.prototype = BaseException;
 
@@ -34,7 +34,7 @@ if (isUndefined(removeObjectFromArray)) {
             array.splice(index, 1);
             return result;
         }
-        throw new ArrayException("attempt to remove invalid object");
+        throw new ArrayException('attempt to remove invalid object');
     }
 }
 
@@ -50,7 +50,7 @@ if (isUndefined(removeObjectByIndex)) {
             array.splice(index, 1);
             return result;
         }
-        throw new ArrayException("attempt to remove at invalid index");
+        throw new ArrayException('attempt to remove at invalid index');
     }
 }
 

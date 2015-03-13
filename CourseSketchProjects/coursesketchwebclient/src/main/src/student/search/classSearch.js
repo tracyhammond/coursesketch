@@ -45,23 +45,23 @@ validateFirstRun(document.currentScript);
         schoolItemBuilder.setBoxClickFunction(CourseSketch.classSearch.courseClickerFunction);
 
         if (courseList1.length > 0) {
-            schoolItemBuilder.setList(courseList1).build("class_list_column1");
+            schoolItemBuilder.setList(courseList1).build('class_list_column1');
         }
         if (courseList2.length > 0) {
-            schoolItemBuilder.setList(courseList2).build("class_list_column2");
+            schoolItemBuilder.setList(courseList2).build('class_list_column2');
         }
 
-        localDoc.getElementById("loadingIcon").style.display = "none";
+        localDoc.getElementById('loadingIcon').style.display = 'none';
     });
 
     CourseSketch.dataListener.setErrorListener(function(msg) {
-        localDoc.getElementById("loadingIcon").innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
+        localDoc.getElementById('loadingIcon').innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
         clearTimeout(setTimeVar);
     });
 
     CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
             CourseSketch.PROTOBUF_UTIL.ItemQuery.REGISTER, function(evt, item) {
-        alert("User is already registered for this course");
+        alert('User is already registered for this course');
         clearTimeout(setTimeVar);
     });
 
@@ -73,41 +73,41 @@ validateFirstRun(document.currentScript);
         var id = course.id;
         var element = localDoc.getElementById(id);
         var width = element.offsetWidth / 2;
-        var moveAmount = width + "px";
-        //console.log("style "  + element.style.marginLeft);
-        if (element.style.marginLeft == "" || element.style.marginLeft == "0px") {
+        var moveAmount = width + 'px';
+        //console.log('style '  + element.style.marginLeft);
+        if (element.style.marginLeft == '' || element.style.marginLeft == '0px') {
             if (courseRightSide[id]) {
-                moveAmount = "" + moveAmount;
+                moveAmount = '' + moveAmount;
             } else {
-                moveAmount = "-" + moveAmount;
+                moveAmount = '-' + moveAmount;
             }
             var button = localDoc.createElement('button');
-            button.setAttribute("id", "button" + id);
+            button.setAttribute('id', 'button' + id);
             button.onclick = function() {
                 CourseSketch.classSearch.registerClass(id);
                 setTimeVar = setTimeout(function() {
-                    alert("Your have successfully registered")
+                    alert('Your have successfully registered')
                 }, 3000);
             }
-            button.textContent = "Register";
-            button.style.position = "absolute";
+            button.textContent = 'Register';
+            button.style.position = 'absolute';
             if (courseRightSide[id]) {
-                button.style.left = element.offsetLeft + "px";
+                button.style.left = element.offsetLeft + 'px';
             } else {
-                button.style.left = (element.offsetLeft + element.offsetWidth - width / 2) + "px";
+                button.style.left = (element.offsetLeft + element.offsetWidth - width / 2) + 'px';
             }
-            button.style.top = element.offsetHeight / 2 + element.offsetTop + "px";
+            button.style.top = element.offsetHeight / 2 + element.offsetTop + 'px';
             //localDoc.appendChild(button);
-            localDoc.getElementById("registerButton").appendChild(button);
-            $("#" + id).animate({
+            localDoc.getElementById('registerButton').appendChild(button);
+            $('#' + id).animate({
                 marginLeft: moveAmount,
                 }, 300, function() {
                 });
         } else {
-            $("#" + id).animate({
-                marginLeft: "0px",
+            $('#' + id).animate({
+                marginLeft: '0px',
                 }, 300, function() {
-                    localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
+                    localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
                 });
         }
     }
@@ -123,10 +123,10 @@ validateFirstRun(document.currentScript);
         request.items = [ item ];
         CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
             CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT));
-        $("#" + id).animate({
-            marginLeft: "0px",
+        $('#' + id).animate({
+            marginLeft: '0px',
             }, 300, function() {
-                localDoc.getElementById("registerButton").removeChild(localDoc.getElementById("button" + id));
+                localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });
     };
 })();

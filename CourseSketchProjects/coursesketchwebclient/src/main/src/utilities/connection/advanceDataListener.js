@@ -24,7 +24,7 @@ function AdvanceDataListener(connection, Request, defListener) {
      */
     this.setListener = function(messageType, queryType, func) {
         var localMap = requestMap[messageType];
-        //console.log("Adding listener");
+        //console.log('Adding listener');
         //console.log(messageType);
         //console.log(queryType);
         localMap[queryType] = func;
@@ -35,7 +35,7 @@ function AdvanceDataListener(connection, Request, defListener) {
      */
     this.removeListener = function(messageType, queryType) {
         var localMap = requestMap[messageType];
-        //console.log("Adding listener");
+        //console.log('Adding listener');
         //console.log(messageType);
         //console.log(queryType);
         localMap[queryType] = undefined;
@@ -56,7 +56,7 @@ function AdvanceDataListener(connection, Request, defListener) {
             }
             var dataList = CourseSketch.PROTOBUF_UTIL.getDataResultClass().decode(msg.otherData).results;
             for (var i = 0; i < dataList.length; i++) {
-                //console.log("Decoding listener");
+                //console.log('Decoding listener');
                 var item = dataList[i];
                 var func = localMap[item.query];
                 if (!isUndefined(func)) {
@@ -74,7 +74,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         } catch (exception) {
             console.error(exception);
             console.error(exception.stack);
-            console.log("decoding data failed: ", msg);
+            console.log('decoding data failed: ', msg);
             if (errorListener) {
                 errorListener(msg);
             }

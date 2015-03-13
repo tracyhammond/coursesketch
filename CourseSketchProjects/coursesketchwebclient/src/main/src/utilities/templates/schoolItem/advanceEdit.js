@@ -5,7 +5,7 @@
      * @return {Map} A map of the data mapped to the element.
      */
     function getInput(parent) {
-        var inputList = parent.querySelectorAll(".need-saving");
+        var inputList = parent.querySelectorAll('.need-saving');
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var value = inputList[i].value;
@@ -28,19 +28,19 @@
      * @return {Undefined|String} the name or undefined.
      */
     loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var name = "";
+        var name = '';
         if (isUndefined(schoolItemData)) {
             try {
                 // grabs the content element then gets the first inserted node.
-                name = schoolItemElement.shadowRoot.querySelector(".name content").getDistributedNodes()[0].textContent;
+                name = schoolItemElement.shadowRoot.querySelector('.name content').getDistributedNodes()[0].textContent;
             } catch (exception) {
-                console.log("Ignoring exception while setting name of element");
+                console.log('Ignoring exception while setting name of element');
                 console.log(exception);
             }
         } else {
             name = schoolItemData.name;
         }
-        if (name !== "") {
+        if (name !== '') {
             nodeToFill.value = name;
             return name;
         }
@@ -56,19 +56,19 @@
      * @return {Undefined|String} undefined or the description.
      */
     loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var description = "";
+        var description = '';
         if (isUndefined(schoolItemData)) {
             try {
                 // grabs the content element then gets the first inserted node.
-                description = schoolItemElement.shadowRoot.querySelector(".description content").getDistributedNodes()[0].textContent;
+                description = schoolItemElement.shadowRoot.querySelector('.description content').getDistributedNodes()[0].textContent;
             } catch (exception) {
-                console.log("Ignoring exception while setting description of element");
+                console.log('Ignoring exception while setting description of element');
                 console.log(exception);
             }
         } else {
             description = schoolItemData.description;
         }
-        if (description !== "") {
+        if (description !== '') {
             nodeToFill.value = description;
             return description;
         }
@@ -84,16 +84,16 @@
      * @return {Null} This returns null to differentiate it from other possible values as this is not saveable.
      */
     loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var id = "";
+        var id = '';
         if (isUndefined(schoolItemData)) {
             console.log(schoolItemElement.id);
         } else {
             id = schoolItemData.id;
         }
-        if (id !== "") {
+        if (id !== '') {
             nodeToFill.textContent = id;
         } else {
-            nodeToFill.textContent = "No Id assigned yet";
+            nodeToFill.textContent = 'No Id assigned yet';
         }
         return null;
     };
@@ -112,7 +112,7 @@
             try {
                 index = schoolItemData.latePolicy.functionType;
             } catch (exception) {
-                console.log("Ignoring exception while setting function type of element");
+                console.log('Ignoring exception while setting function type of element');
                 console.log(exception);
                 return null;
             }
@@ -138,7 +138,7 @@
             try {
                 index = schoolItemData.latePolicy.timeFrameType;
             } catch (exception) {
-                console.log("Ignoring exception while setting timeFrame type of element");
+                console.log('Ignoring exception while setting timeFrame type of element');
                 console.log(exception);
                 return null;
             }
@@ -164,7 +164,7 @@
             try {
                 index = schoolItemData.latePolicy.subtractionType;
             } catch (exception) {
-                console.log("Ignoring exception while setting subtraction type of element");
+                console.log('Ignoring exception while setting subtraction type of element');
                 console.log(exception);
                 return null;
             }
@@ -200,7 +200,7 @@
     };
 
     function loadData(schoolItemElement, schoolItemData, editPanel) {
-        var inputList = editPanel.querySelectorAll(".need-loading");
+        var inputList = editPanel.querySelectorAll('.need-loading');
         var mappedInput = new Map();
         for (var i = 0; i < inputList.length; i++) {
             var result = loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
@@ -233,8 +233,8 @@
             event.stopPropagation();
 
             // create host and position it
-            var host = document.createElement("dialog");
-            host.className = "advanceEditHost";
+            var host = document.createElement('dialog');
+            host.className = 'advanceEditHost';
             var pos = $(localScope).offset();
             var leftPos = (pos.left + $(localScope).width());
             $(host).offset({ top:pos.top, left:leftPos });
@@ -251,14 +251,14 @@
             document.body.appendChild(host);
 
             // save data
-            var saveButton = shadow.querySelector("button.save");
+            var saveButton = shadow.querySelector('button.save');
             saveButton.onclick = function() {
                 var newData = getInput(shadow);
                 var schoolItem = getHostElement(parentNode);
                 document.body.removeChild(host);
                 console.log(schoolItem);
                 console.log(localScope);
-                schoolItem.editFunction("advance", currentData, newData, schoolItem);
+                schoolItem.editFunction('advance', currentData, newData, schoolItem);
             };
 
             // cancel!
@@ -267,7 +267,7 @@
                     return false;
                 }
                 event.stopPropagation();
-                document.body.removeEventListener("click", close);
+                document.body.removeEventListener('click', close);
                 try {
                     document.body.removeChild(host);
                 } catch (exception) {
@@ -275,8 +275,8 @@
                 }
             }
 
-            shadow.querySelector("button.closeButton").onclick = close;
-            document.body.addEventListener("click", close);
+            shadow.querySelector('button.closeButton').onclick = close;
+            document.body.addEventListener('click', close);
         });
     };
 })();
