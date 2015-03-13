@@ -34,13 +34,13 @@ function TimelineMarker() {
     }
 
     /**
-     * @param {function} remove The element is removed and calls this function during the process
+     * @param {Function} remove The element is removed and calls this function during the process
      */
     this.setRemoveFunction = function(remove) {
         this.removeFunction = remove;
     };
     /**
-     * @param {string} text
+     * @param {String} text
      * For the user to see what text they have typed inside of the textboxes
      */
     this.setPreviewText = function(text) {

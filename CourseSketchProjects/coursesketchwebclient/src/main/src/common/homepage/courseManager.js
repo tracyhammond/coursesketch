@@ -2,7 +2,7 @@ validateFirstRun(document.currentScript);
 
 CourseSketch.courseManagement.waitingIcon = (function() {
     var manage = new WaitScreenManager();
-    manage.waitIconText = "loading data";
+    manage.waitIconText = 'loading data';
     return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 (function() {
@@ -75,7 +75,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a user clicks on a course school item.
-     * This loads the assignments from the database then calls "showAssignments" to display them.
+     * This loads the assignments from the database then calls 'showAssignments' to display them.
      */
     courseManagement.courseClicked = function(course) {
         var classColumn = document.querySelector('#class_list_column');
@@ -185,15 +185,15 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
         if (problemSelectionManager.isItemSelected(clickedElement)) {
             var itemNumber = clickedElement.dataset.item_number;
-            CourseSketch.dataManager.addState("currentProblemIndex", itemNumber);
-            CourseSketch.dataManager.addState("currentAssignment", problem.assignmentId);
-            CourseSketch.dataManager.addState("CURRENT_QUESTION", problem.id);
+            CourseSketch.dataManager.addState('currentProblemIndex', itemNumber);
+            CourseSketch.dataManager.addState('currentAssignment', problem.assignmentId);
+            CourseSketch.dataManager.addState('CURRENT_QUESTION', problem.id);
             // change source to the problem page! and load problem
             if (CourseSketch.connection.isInstructor) {
                 // solution editor page!
-                CourseSketch.redirectContent("/src/instructor/review/multiviewGrading.html", "Grading problems!");
+                CourseSketch.redirectContent('/src/instructor/review/multiviewGrading.html', 'Grading problems!');
             } else {
-                CourseSketch.redirectContent("/src/student/experiment/experiment.html", "Starting Problem");
+                CourseSketch.redirectContent('/src/student/experiment/experiment.html', 'Starting Problem');
             }
         } else {
             // TODO: find a more lightweight popup library
@@ -201,17 +201,17 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             var element = document.getElementById(id);
             var myOpenTip = new Opentip(element, {
                 target : element,
-                tipJoint : "bottom"
+                tipJoint : 'bottom'
             });
             myOpenTip.prepareToShow(); // Shows the tooltip after the given
             // delays. This could get interrupted
 
-            if (CourseSketch.dataManager.getState("isInstructor")) {
-                myOpenTip.setContent("Click again to edit the solution"); // Updates
+            if (CourseSketch.dataManager.getState('isInstructor')) {
+                myOpenTip.setContent('Click again to edit the solution'); // Updates
                 // Opentips
                 // content
             } else {
-                myOpenTip.setContent("Click again to open up a problem"); // Updates
+                myOpenTip.setContent('Click again to open up a problem'); // Updates
                 // Opentips
                 // content
             }
@@ -270,7 +270,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             var toReplace = document.getElementById('editable_unit');
             removeAllChildren(toReplace);
             var link = event.srcElement;
-            var content = link.import.querySelector("#iframeBody");
+            var content = link.import.querySelector('#iframeBody');
             if (src && content) {
                 toReplace.appendChild(content.cloneNode(true));
             } else {
@@ -287,9 +287,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
 
         try {
-            loader.replaceFile(false, src, "html", onload, onerror, 'editable_import', 'editable_import');
+            loader.replaceFile(false, src, 'html', onload, onerror, 'editable_import', 'editable_import');
         } catch (exception) {
-            loader.loadFile(src, "html", onload, onerror, 'editable_import');
+            loader.loadFile(src, 'html', onload, onerror, 'editable_import');
         }
     }
 

@@ -5,29 +5,26 @@
   "bitwise"       : true,     // Prohibit bitwise operators (&, |, ^, etc.).
   "newcap"        : true,     // Require capitalization of all constructor functions e.g. `new F()`.
   "curly"         : true,     // Require {} for every new block or scope.
-  "camelcase"     : true,     // Require all variables to be in camelCase
   "eqeqeq"        : true,     // Require triple equals i.e. `===`.
   "forin"         : true,     // Tolerate `for in` loops without `hasOwnPrototype`.
   "immed"         : true,     // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
-  "latedef"       : true,     // Prohibit variable use before definition.
+  "latedef"       : false,     // Prohibit variable use before definition.
   "noarg"         : true,     // Prohibit use of `arguments.caller` and `arguments.callee`.
   "noempty"       : true,     // Prohibit use of empty blocks.
   "nonew"         : true,     // Prohibit use of constructors for side-effects.
   "undef"         : true,     // Require all non-global variables be declared before they are used.
   "unused"        : true,     // An error if a variable is not used
   "trailing"      : true,     // Prohibit trailing whitespaces.
-  "indent"        : false,    // Checks for indentation [this is currently off until we find a way to make it slightly better]
+  "indent"        : false,    // Checks for indentation [this is off because jscs does a better job]
   "maxparams"     : 7,        // Max number of parameters a function can take
   "quotmark"      : "single", // all quotations must be single quotes
   "maxcomplexity" : "10",     // max complexity of a function
   "maxlen"        : "150",    // max length of a line
-  "indent"        : 4,        // Specify indentation spacing
 
   // RELAXERS
 
   "loopfunc"      : true,     // This is a relaxer so it allows you to make functions in a loop when set to true
   "boss"          : false,    // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
-  "es5"           : true,     // Allow EcmaScript 5 syntax.
   "esnext"        : false,    // Allow ES.next specific features such as `const` and `let`.
   "asi"           : false,    // Tolerate Automatic Semicolon Insertion (no semicolons).
   "debug"         : false,    // Allow debugger statements e.g. browser breakpoints.
@@ -67,6 +64,7 @@
    * Globals
    */
   "globals": {
-     "$": false
+     "$": true,
+     "CourseSketch": true
   }
 }

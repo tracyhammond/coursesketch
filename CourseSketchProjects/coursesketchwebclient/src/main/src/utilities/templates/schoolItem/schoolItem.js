@@ -177,14 +177,14 @@ function SchoolItem() {
     }
 
     /**
-     * @returns True if the description has larger text size than is allowed.
+     * @returns {Boolean} True if the description has larger text size than is allowed.
      */
     this.isDescriptionOverflow = function() {
         return this.shadowRoot.querySelector('.description content').dataset.overflow ===  'true';
     };
 
     /**
-     * @Method
+     * @function
      * @param {Function} func
      *            A function that is called at the end of an edit.
      * @callbackParam {String} type this is the class of the item that was

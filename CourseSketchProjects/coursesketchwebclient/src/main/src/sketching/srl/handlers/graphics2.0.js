@@ -80,7 +80,7 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * @return the PaperScope (will return scope of a specific element via a parameter)
+     * @return {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
      */
     this.getPaper = function() {
         return ps;

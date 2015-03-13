@@ -7,6 +7,8 @@
  * @param {UUID} assignmentId the id that the problem is created with.
  * @param {Boolean} loop true if the problems should loop, false otherwise.
  * @param  {Number}preferredIndex The starting index to start problems at.
+ * @class ProblemNavigator
+ * @namespace ProblemNavigator
  */
 function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var currentAssignmentId = assignmentId;
@@ -46,7 +48,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         try {
             currentIndex = parseInt(preferredIndex);
         } catch (exception) {
-            console.error("could not parse preferredIndex using 0 instead");
+            console.error('could not parse preferredIndex using 0 instead');
         }
     }
 
@@ -72,7 +74,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns the information of the current problem.
+     * @returns {SrlProblemBank} the information of the current problem.
      */
     function getProblemInfo() {
         return currentProblem.problemInfo;
@@ -125,35 +127,35 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns true if there is a previous problem that can be navigated to.
+     * @returns {Boolean} true if there is a previous problem that can be navigated to.
      */
     this.hasPrevious = function() {
         return loop || currentIndex > 0;
     };
 
     /**
-     * Returns true if there is a next problem that can be navigated to.
+     * @returns {Boolean} true if there is a next problem that can be navigated to.
      */
     this.hasNext = function() {
         return loop || currentIndex < problemList.length;
     };
 
     /**
-     * Returns the current problem number in a human readable format.
+     * @returns {Number} the current problem number in a human readable format.
      */
     this.getCurrentNumber = function() {
         return currentIndex + 1;
     };
 
     /**
-     * Returns the number of problems seen by this problem Navigator.
+     * @returns {Number} the number of problems seen by this problem Navigator.
      */
     this.getLength = function() {
         return problemList.length;
     };
 
     /**
-     * Returns the problem text of the current problem.
+     * @returns {String} the problem text of the current problem.
      */
     this.getProblemText = function() {
         return getProblemInfo().questionText;
@@ -174,14 +176,14 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns the Id of the current problem.
+     * @returns {String} the Id of the current problem.
      */
     this.getCurrentProblemId = function() {
         return currentProblem.id;
     };
 
     /**
-     * @return the type of the base problem.
+     * @return {String} the type of the base problem.
      */
     this.getProblemType = function() {
         var type = getProblemInfo().questionType;
@@ -287,6 +289,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         }
     };
 
-    this.SUBMIT_EVENT = "submit";
-    this.COMPLETED_PROBLEM_EVENT = "completion";
+    this.SUBMIT_EVENT = 'submit';
+    this.COMPLETED_PROBLEM_EVENT = 'completion';
 }

@@ -2,6 +2,8 @@
 
 /**
  * A class that allows a user to login.
+ * @class LoginSystem
+ * @namespace LoginSystem
  */
 function LoginSystem() {
     var connection = undefined;
@@ -11,7 +13,7 @@ function LoginSystem() {
     var registerCallback = undefined;
 
     /**
-     * @returns the connection that was created by this login system.
+     * @returns {Connection} the connection that was created by this login system.
      */
     this.getConnection = function() {
         return connection;
@@ -105,7 +107,10 @@ function LoginSystem() {
     }
 
     /**
-     * @Method the function used for submitting login information.
+     * @access private
+     * @memberof LoginSystem
+     * @function formSubmit
+     * the function used for submitting login information.
      * Also the only difference between login.js and register.js
      */
     function formSubmit() {
@@ -147,7 +152,7 @@ function LoginSystem() {
     }
 
     /**
-     * @Method
+     * @function setupCallbacks
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
@@ -157,8 +162,10 @@ function LoginSystem() {
             }
         };
     }
+
     /**
-     * @Method The callback is called with one parameter.
+     * @function setOnSuccessLogin
+     * The callback is called with one parameter.
      * @callbackParam {Connection} An instance of the connection object object.
      */
     this.setOnSuccessLogin = function(callback) {
@@ -170,12 +177,13 @@ function LoginSystem() {
     };
 
     /**
-     * @Method
+     * @function setRegisterCallback
      * The callback is called when the register button is pressed.
      */
     this.setRegisterCallback = function(callback) {
         registerCallback = callback;
     };
+
     /**
      * Removes all stored variables. so that hopefully most of this object can
      * be garbage collected

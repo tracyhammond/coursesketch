@@ -25,11 +25,14 @@ validateFirstGlobalRun(document.currentScript);
     }
 
     /**
-     * @Method Calls redo on an {@link SrlCommand} list in the order they are
-     *         added to the list.
+     * Calls redo on an {@link SrlCommand} list in the order they are added to the list.
      *
-     * @returns {boolean} true if the sketch needs to be redrawn, false
+     * @returns {Boolean} true if the sketch needs to be redrawn, false
      *          otherwise.
+     *
+     * @memberof SrlUpdate
+     * @function redo
+     * @instance
      */
     CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.redo = function() {
         var redraw = false;
@@ -51,14 +54,15 @@ validateFirstGlobalRun(document.currentScript);
 
     /**
      *
-     * @Method Calls undo on an {@link SrlCommand} list in the reverse of the
-     *         order they are added to the list
-     *
-     * @returns {boolean} true if the sketch needs to be redrawn, false
-     *          otherwise.
+     * Calls undo on an {@link SrlCommand} list in the reverse of the order they are added to the list
      *
      * <b>Note</b> that we do not add the methods we added in redo.
      * This is because we assert that you can not undo something until it has been redone first.  So the methods already exist.
+     * @returns {Boolean} true if the sketch needs to be redrawn, false otherwise.
+     *
+     * @memberof SrlUpdate
+     * @function undo
+     * @instance
      */
     CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.undo = function() {
         var commandList = this.getCommands();
@@ -74,8 +78,10 @@ validateFirstGlobalRun(document.currentScript);
     };
 
     /**
-     * @Method
-     * @returns The human readable name of the given command type.
+     * @memberof SrlCommand
+     * @function getCommandTypeName
+     * @instance
+     * @returns {String} The human readable name of the given command type.
      */
     ProtoSrlCommand.getCommandTypeName = function() {
         var commandType = this.getCommandType();
@@ -89,6 +95,13 @@ validateFirstGlobalRun(document.currentScript);
 
     ProtoSrlCommand.decodedData = false;
 
+    /**
+     * Redoes the specific command.  How the command is redone depends on the command type.
+     * @memberof SrlCommand
+     * @function redo
+     * @instance
+     * @returns {Boolean} true if redoing the command requires a redraw of the screen.
+     */
     ProtoSrlCommand.redo = function() {
         var redoFunc = this["redo" + this.getCommandType()];
         if (isUndefined(redoFunc)) {
@@ -97,6 +110,13 @@ validateFirstGlobalRun(document.currentScript);
         return redoFunc.bind(this)();
     };
 
+    /**
+     * Undoes the specific command.  How the command is undone depends on the command type.
+     * @memberof SrlCommand
+     * @function undo
+     * @instance
+     * @returns {Boolean} true if undoing the command requires a redraw of the screen.
+     */
     ProtoSrlCommand.undo = function() {
         var undoFunc = this["undo" + this.getCommandType()];
         if (isUndefined(undoFunc)) {
@@ -107,6 +127,9 @@ validateFirstGlobalRun(document.currentScript);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function addRedoMethod
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
@@ -120,6 +143,9 @@ validateFirstGlobalRun(document.currentScript);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function removeRedoMethod
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod = function(commandType) {
         if (isUndefined(commandType)) {
@@ -133,6 +159,9 @@ validateFirstGlobalRun(document.currentScript);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function addUndoMethod
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
@@ -146,6 +175,9 @@ validateFirstGlobalRun(document.currentScript);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function removeUndoMethod
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod = function(commandType) {
         if (isUndefined(commandType)) {

@@ -1,5 +1,5 @@
 /**
- * @param {object} timeline is the timeline object that the index manager will be associated with
+ * @param {Object} timeline is the timeline object that the index manager will be associated with
  * Creates an IndexManager for a tutorial timeline
  * Manages currently selected element as well as undoing and redoing update steps when editing tutorial
  */
@@ -14,7 +14,7 @@ function IndexManager (timeline) {
     };
 
     /**
-     * @param {integer} destination is the index of a step that is clicked on
+     * @param {Integer} destination is the index of a step that is clicked on
      * This removes the focused class from the previously selected step
      * It then adds the focused class to the currently selected step
      */
@@ -31,8 +31,8 @@ function IndexManager (timeline) {
     }
 
     /**
-     * @param {object} child is the toolArea/step being queried
-     * @returns {integer} i is the index of the queried toolArea/step
+     * @param {Object} child is the toolArea/step being queried
+     * @returns {Integer} i is the index of the queried toolArea/step
      * Used to query the index in the step/toolArea order of the current element
      */
     function getElementIndex(child) {
@@ -45,7 +45,7 @@ function IndexManager (timeline) {
     }
 
     /**
-     * @return {object} update is the protobuf update of the currently selected step/toolArea
+     * @return {Object} update is the protobuf update of the currently selected step/toolArea
      */
     this.getCurrentUpdate = function() {
         var update;
@@ -58,8 +58,8 @@ function IndexManager (timeline) {
     };
 
     /**
-     * @param {int} oldIndex is the index to change away from
-     * @param {int} newIndex is the index to change to
+     * @param {Integer} oldIndex is the index to change away from
+     * @param {Integer} newIndex is the index to change to
      * Runs protobuf undo function on the update corresponding to oldIndex
      * Runs protobuf redo function on the update corresponding to newIndex
      */

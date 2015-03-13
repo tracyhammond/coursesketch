@@ -49,7 +49,7 @@ validateFirstRun(document.currentScript);
         } else {
             textBox = document.createElement('text-box-viewing');
         }
-        document.querySelector("#slide-content").appendChild(textBox);
+        document.querySelector('#slide-content').appendChild(textBox);
         textBox.setFinishedListener(CourseSketch.lecturePage.saveTextBox);
         return textBox;
     };
@@ -59,7 +59,7 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.lecturePage.newSketchContent = function() {
         var sketchSurface = document.createElement('sketch-surface');
-        document.querySelector("#slide-content").appendChild(sketchSurface);
+        document.querySelector('#slide-content').appendChild(sketchSurface);
         setTimeout(function() {
             sketchSurface.resizeSurface();
         }, 500);
@@ -72,10 +72,10 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.lecturePage.newImage = function(input) {
         var imagebox = document.createElement('image-box');
-        document.querySelector("#slide-content").appendChild(imagebox);
+        document.querySelector('#slide-content').appendChild(imagebox);
 
         // TODO: Save resize info in DB; better to leave this disabled until that works
-        // imagebox.className = "resize";
+        // imagebox.className = 'resize';
 
         if (!isUndefined(input) && input !== null && input.files && input.files[0]) {
             var reader = new FileReader();
@@ -94,7 +94,7 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
-        document.querySelector("#slide-content").appendChild(embeddedHtml);
+        document.querySelector('#slide-content').appendChild(embeddedHtml);
         if (!isUndefined(form) && form !== null) {
             embeddedHtml.setHtml(form.html.value);
         }
@@ -106,9 +106,9 @@ validateFirstRun(document.currentScript);
      * Adds a new multiple choice question to the currently selected slide.
      */
     CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
-        var question = document.createElement("question-element");
-        var multiChoice = document.createElement("multi-choice");
-        document.getElementById("slide-content").appendChild(question);
+        var question = document.createElement('question-element');
+        var multiChoice = document.createElement('multi-choice');
+        document.getElementById('slide-content').appendChild(question);
         question.addAnswerContent(multiChoice);
         question.setFinishedListener(CourseSketch.lecturePage.saveQuestion);
         return question;
@@ -121,7 +121,7 @@ validateFirstRun(document.currentScript);
      *            protobuf slide element to be rendered
      */
     CourseSketch.lecturePage.renderSlide = function(slide) {
-        document.getElementById("slide-content").innerHTML = "";
+        document.getElementById('slide-content').innerHTML = '';
         CourseSketch.lecturePage.currentSlide = slide;
         for (var i = 0; i < slide.elements.length; ++i) {
             var element = slide.elements[i];
@@ -131,14 +131,14 @@ validateFirstRun(document.currentScript);
                 if (!isUndefined(element.question.multipleChoice) && element.question.multipleChoice !== null) {
                     CourseSketch.lecturePage.loadMultiChoiceQuestion(element.question);
                 } else {
-                    throw "Sketch questions are not yet supported";
+                    throw 'Sketch questions are not yet supported';
                 }
             } else if (!isUndefined(element.image) && element.image !== null) {
                 CourseSketch.lecturePage.loadImageBox(element.image);
             } else if (!isUndefined(element.embeddedHtml) && element.embeddedHtml !== null) {
                 CourseSketch.lecturePage.loadEmbeddedHtml(element.embeddedHtml);
             } else {
-                throw "Tried to load invalid element";
+                throw 'Tried to load invalid element';
             }
         }
     };
@@ -147,17 +147,17 @@ validateFirstRun(document.currentScript);
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
      */
     CourseSketch.lecturePage.addWaitOverlay = function() {
-        CourseSketch.lecturePage.waitScreenManager.buildOverlay(document.querySelector("body"));
-        CourseSketch.lecturePage.waitScreenManager.buildWaitIcon(document.getElementById("overlay"));
-        document.getElementById("overlay").querySelector(".waitingIcon").classList.add("centered");
+        CourseSketch.lecturePage.waitScreenManager.buildOverlay(document.querySelector('body'));
+        CourseSketch.lecturePage.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
+        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**
      * Removes the wait overlay from the DOM if it exists.
      */
     CourseSketch.lecturePage.removeWaitOverlay = function() {
-        if (!isUndefined(document.getElementById("overlay")) && document.getElementById("overlay") !== null) {
-            document.querySelector("body").removeChild(document.getElementById("overlay"));
+        if (!isUndefined(document.getElementById('overlay')) && document.getElementById('overlay') !== null) {
+            document.querySelector('body').removeChild(document.getElementById('overlay'));
         }
     };
 
@@ -169,22 +169,22 @@ validateFirstRun(document.currentScript);
      *            object.
      */
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
-        var slideThumb = document.createElement("span");
+        var slideThumb = document.createElement('span');
         slideThumb.id = slideIndex;
-        slideThumb.className = "slide-thumb";
+        slideThumb.className = 'slide-thumb';
         slideThumb.textContent = slideIndex + 1;
         slideThumb.onclick = function() {
             CourseSketch.lecturePage.selectSlide(slideIndex);
         };
-        document.querySelector("#slides>.content").appendChild(slideThumb);
+        document.querySelector('#slides>.content').appendChild(slideThumb);
     };
 
     /**
      * Displays all of the slides for the current lecture.
      */
     CourseSketch.lecturePage.displaySlides = function() {
-        $("#lecture-title").text(CourseSketch.lecturePage.lecture.name);
-        $(".slide-thumb:not(\"#add\")").each(function() {
+        $('#lecture-title').text(CourseSketch.lecturePage.lecture.name);
+        $('.slide-thumb:not("#add")').each(function() {
             $(this).remove();
         });
         for (var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {

@@ -285,7 +285,7 @@ function UpdateManager(sketchManager, onError) {
      * Does special handling with redo and undo
      *
      * @param {SrlUpdate} update
-     * @returns {boolean} True if the object needs to be redrawn.
+     * @returns {Boolean} True if the object needs to be redrawn.
      */
     function executeUpdate(update) {
         /*

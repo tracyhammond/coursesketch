@@ -150,8 +150,8 @@ if (isUndefined(getFormattedDateTime)) {
 
 if (isUndefined(BaseException)) {
     /**
-     * @Class Defines the base exception class that can be extended by all other
-     *        exceptions.
+     * @class BaseException
+     * Defines the base exception class that can be extended by all other exceptions.
      */
     var BaseException = {
         name:           "BaseException",

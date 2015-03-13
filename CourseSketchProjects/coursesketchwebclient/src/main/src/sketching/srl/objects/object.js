@@ -123,7 +123,7 @@ function SRL_Object() {
      * recursive search through all of the subobjects. This objects is also
      * included on the list.
      *
-     * @return
+     * @return {List<SrlObject>} a list of objects.
      */
     this.getRecursiveSubObjectList = function() {
         var completeList = [];
@@ -248,28 +248,28 @@ function SRL_Object() {
     };
 
     /**
-     * returns the minimum x value in an object
+     * @returns the minimum x value in an object
      */
     this.getMinX = function() {
         return boundingBox.getLeft();// minx;
     };
 
     /**
-     * return minimum y value in an object
+     * @return minimum y value in an object
      */
     this.getMinY = function() {
         return boundingBox.getTop();// miny;
     };
 
     /**
-     * return maximum x value in an object
+     * @return maximum x value in an object
      */
     this.getMaxX = function() {
         return boundingBox.getRight();// maxx;
     };
 
     /**
-     * return maximum x value in an object
+     * @return maximum x value in an object
      */
     this.getMaxY = function() {
         return boundingBox.getBottom();
