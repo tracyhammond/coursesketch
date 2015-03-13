@@ -248,7 +248,6 @@ function SketchSurface() {
 SketchSurface.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param {document} document The document in which the node is being imported to.
  * @param {Element} templateClone an element representing the data inside tag, its content
  *            has already been imported and then added to this element.
  */

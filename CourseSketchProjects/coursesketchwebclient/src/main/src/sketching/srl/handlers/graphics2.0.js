@@ -59,7 +59,7 @@ function Graphics(canvasElement, sketchManager) {
      * Starts a new path in the view at the given point
      */
     this.createNewPath = function(point) {
-        livePath = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        livePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
         livePath.add(point);
     };
 
@@ -108,7 +108,7 @@ function Graphics(canvasElement, sketchManager) {
      * Removes an item from the view.
      */
     this.removeItem = function(itemId) {
-        var object = ps.project.getItem({data: {id : itemId} });
+        var object = ps.project.getItem({ data: { id: itemId } });
         object.remove();
         ps.view.update();
     };
@@ -116,15 +116,15 @@ function Graphics(canvasElement, sketchManager) {
 
     /**
      * Draws a single stroke onto the screen.
-     * @param stroke {Srl_Stroke} the stroke to be drawn.
+     * @param {Srl_Stroke} stroke the stroke to be drawn.
      */
     function loadStroke(stroke) {
         ps.activate();
-        var object = ps.project.getItem({data: {id : stroke.getId()} });
+        var object = ps.project.getItem({ data: { id: stroke.getId() } });
         if (!isUndefined(object) && object !== null) {
             return; // already added to the sketch.
         }
-        var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        var path = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
         path.data.id = stroke.getId();
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
@@ -165,7 +165,7 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * @param drawInstant {boolean} If false this will tell the graphics to not draw anytime it receives an update.
+     * @param {Boolean} drawInstant If false this will tell the graphics to not draw anytime it receives an update.
      */
     this.setDrawUpdate = function(drawInstant) {
         drawUpdate = drawInstant;
