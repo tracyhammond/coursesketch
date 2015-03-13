@@ -25,6 +25,7 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.School.SrlGrade;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -469,5 +470,22 @@ public final class MongoInstitution implements Institution {
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
+    }
+
+    @Override
+    public SrlGrade getGrade(final String userId, final String classification, final String itemId) throws DatabaseAccessException {
+        throw new UnsupportedOperationException("This method is not supported in mongo. Only in SQL");
+    }
+
+    @Override
+    public String setGrade(final String userId, final String classification, final String itemId, final SrlGrade grade)
+            throws DatabaseAccessException {
+        throw new UnsupportedOperationException("This method is not supported in mongo. Only in SQL");
+    }
+
+    @Override
+    public List<String> getCourseRoster(final String userId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException {
+        return CourseManager.mongoGetCourseRoster(getInstance().auth, getInstance().database, userId, courseId);
     }
 }
