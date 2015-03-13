@@ -59,6 +59,15 @@
 					</includes>
 				</configuration>
 			</plugin>
+<<<<<<< HEAD
+=======
+		</plugins>
+	</reporting>
+
+	<build>
+		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
+		<plugins>
+>>>>>>> mavenWebsite
 			<!--
 			<plugin>
 				<groupId>com.cj.jshintmojo</groupId>

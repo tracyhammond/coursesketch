@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utilities/connection/connectionLibrary.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utilities/connection/connectionLibrary.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Creates a new connection to the wsUri.
+ *
+ * With this connection you can send information which is encoded via protobufs.
+ */
+function Connection(uri, encrypted, attemptReconnect) {
+
+    console.log('Creating connection');
+    var connected = false;
+    var onOpen = false;
+    var onClose = false;
+    var onRequest = false;
+    var onLogin = false;
+    var onRecognition = false;
+    var onAnswerChecker = false;
+    var onSubmission = false;
+    var onSchoolData = false;
+    var onError = false;
+
+    var websocket;
+    var wsUri = (encrypted?'wss://' : 'ws://') + uri;
+    var timeoutVariable = false;
+    var localScope = this;
+
+    var totalTimeDifferance = dcodeIO.Long.fromInt(0);
+    var timeDifferance = dcodeIO.Long.fromInt(0);
+    var latency = dcodeIO.Long.fromInt(0);
+    var SEND_TIME_TO_CLIENT_MSG = '1';
+    var CLIENT_REQUEST_LATENCY_MSG = '2';
+    var SEND_LATENCY_TO_CLIENT_MSG = '3';
+
+    /**
+     * Creates a websocket and adds typical websocket methods to it.
+     */
+    function createWebSocket() {
+        try {
+            console.log('Creating socket at ' + wsUri);
+            websocket = new WebSocket(wsUri);
+            websocket.binaryType = 'arraybuffer'; // We are talking binary
+            websocket.onopen = function(evt) {
+                connected = true;
+                if (onOpen) {
+                    onOpen(evt);
+                }
+                if (timeoutVariable) {
+                    clearTimeout(timeoutVariable);
+                    timeoutVariable = false;
+                }
+            };
+
+            websocket.onclose = function(evt) {
+                connected = false;
+                websocket.close();
+                if (onClose) {
+                    onClose(evt, attemptReconnect);
+                } else {
+                    alert('Connection to server closed');
+                }
+                if (attemptReconnect) {
+                    console.log('going to attempt to reconnect in 3s');
+                    timeoutVariable = setTimeout(function() {
+                        console.log('attempting to reconnect now!');
+                        localScope.reconnect();
+                    }, 3000);
+                }
+            };
+            websocket.onmessage = function(evt) {
+                /*jshint maxcomplexity:15 */
+                try {
+                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
+                    // Decode the Request
+                    var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
+                    // console.log('request decoded succesfully ');
+                    if (msg.requestType === MessageType.TIME) {
+                        console.log('getting from time');
+                        var rsp = onTime(evt, msg);
+                        if (rsp !== null) {
+                            localScope.sendRequest(rsp);
+                        }
+                    } else if (msg.requestType === MessageType.LOGIN &amp;&amp; onLogin) {
+                        console.log('getting from login');
+                        onLogin(evt, msg);
+                    } else if (msg.requestType === MessageType.RECOGNITION &amp;&amp; onRecognition) {
+                        console.log('getting from recognition');
+                        onRecognition(evt, msg);
+                    } else if (msg.requestType === MessageType.SUBMISSION &amp;&amp; onSubmission) {
+                        console.log('getting from submission');
+                        onSubmission(evt, msg);
+                    } else if (msg.requestType === MessageType.FEEDBACK &amp;&amp; onAnswerChecker) {
+                        console.log('getting from answer checker');
+                        onAnswerChecker(evt, msg);
+                    } else if ((msg.requestType === MessageType.DATA_REQUEST || msg.requestType === MessageType.DATA_INSERT ||
+                            msg.requestType === MessageType.DATA_UPDATE || msg.requestType === MessageType.DATA_REMOVE) &amp;&amp; onSchoolData) {
+                        console.log('getting from school data');
+                        console.log(msg);
+                        onSchoolData(evt, msg);
+                    } else if (msg.requestType === MessageType.ERROR) {
+                        console.log(msg.getResponseText());
+                        if (onError) {
+                            onError(evt, msg.getResponseText());
+                        }
+                        alert('ERROR: ' + msg.getResponseText());
+                    } else if (onRequest) {
+                        onRequest(evt, msg);
+                    }
+                } catch (err) {
+                    console.error(err.stack);
+                    if (onError) {
+                        onError(evt, err);
+                    }
+                }
+                // Decode with protobuff and pass object to client
+            };
+            websocket.onerror = function(evt) {
+                if (onError) {
+                    onError(evt, null);
+                }
+            };
+        } catch (error) {
+            console.error(error);
+            if (onError) {
+                onError(null, error);
+            }
+        }
+    }
+
+    /**
+     * Attempts to restart the websocket so it can be reused.
+     */
+    this.reconnect = function() {
+        if (!isUndefined(websocket)) {
+            websocket.close();
+        }
+        createWebSocket();
+    };
+
+    /**
+     * Returns true if the websocket is connected correctly.
+     */
+    this.isConnected = function() {
+        return connected;
+    };
+
+    /**
+     * Sets the listeners for the different functions:
+     *
+     * On Open - called when the connection is open. Recieves event object.  (called after everything is set up too)
+     * On Close - called when the connection is closed. Recieves event object.
+     * On Recieve - called the client recieves a message. Recieves event object and message Object.
+     * On Error - called when an error is thrown. Recieves event object.  It may be passed an error object.
+     */
+    this.setListeners = function(open, close, message, error) {
+        onOpen = open;
+        onClose = close;
+        onRequest = message;
+        onError = error;
+    };
+
+    this.setLoginListener = function(listener) {
+        onLogin = listener;
+    };
+
+    this.setRecognitionListener = function(listener) {
+        onRecognition = listener;
+    };
+
+    this.setAnswerCheckingListener = function(listener) {
+        onAnswerChecker = listener;
+    };
+
+    this.setSubmissionListener = function(listener) {
+        onSubmission = listener;
+    };
+
+    this.setSchoolDataListener = function(listener) {
+        onSchoolData = listener;
+    };
+
+    this.setOnOpenListener = function(listener) {
+        onOpen = listener;
+    };
+
+    this.setOnCloseListener = function(listener) {
+        onClose = listener;
+    };
+
+    this.setOnMessageListener = function(listener) {
+        onRequest = listener;
+    };
+
+    this.setOnErrorListener = function(listener) {
+        onError = listener;
+    };
+
+    /**
+     * Given a Request object (message defined in proto), send it over the wire.
+     *
+     * The message must be a protobuf object.
+     */
+    this.sendRequest = function(message) {
+        try {
+            websocket.send(message.toArrayBuffer());
+        } catch (err) {
+            console.error(err);
+            if (onError) {
+                onError(null, err);
+            }
+        }
+    };
+
+    /**
+     * This is a test function that allows you to spoof messages to yourlocalScope.
+     *
+     * Only the data is the same right now.
+     * The message is delayed but the function returns immediately.
+     * TODO: complete the entirety of the event that can be spoofed.
+     */
+    this.sendlocalScope = function(message) {
+        setTimeout(function() {
+            var event = {
+                data: message.toArrayBuffer()
+            };
+            websocket.onmessage(event);
+        }, 100);
+    };
+    /**
+     * Closes the websocket.
+     *
+     * Also performs other closing tasks.
+     */
+    this.close = function() {
+        websocket.close();
+    };
+
+    /**
+     * Gets the current time that is the same as the time the server sees.
+     */
+    this.getCurrentTime = function() {
+        var longVersion = dcodeIO.Long.fromString('' + (createTimeStamp() + totalTimeDifferance));
+        return longVersion;
+    };
+
+    CourseSketch.getCurrentTime = this.getCurrentTime;
+
+    function onTime(evt, msg) {
+        if (msg.getResponseText() === SEND_TIME_TO_CLIENT_MSG) { // client
+            return clientReciveTimeDiff(msg);
+        } else if (msg.getResponseText() === SEND_LATENCY_TO_CLIENT_MSG) { // client
+            return clientReciveLatency(msg);
+        }
+        return null;
+    }
+
+    function clientReciveTimeDiff(req) {
+        var startCounter = localScope.getCurrentTime();
+        timeDifferance = dcodeIO.Long.fromString('' + req.getMessageTime()).subtract(localScope.getCurrentTime());
+        var rsp = CourseSketch.PROTOBUF_UTIL.Request();
+        rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
+        rsp.setMessageTime(dcodeIO.Long.fromString('' + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
+        rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
+        return rsp;
+    }
+
+    function clientReciveLatency(req) {
+        latency = dcodeIO.Long.fromString('' + req.getMessageTime());
+        totalTimeDifferance = timeDifferance.add(latency);
+        return null;
+    }
+}
+
+makeValueReadOnly(Connection.prototype, 'CONNECTION_LOST', 1006);
+makeValueReadOnly(Connection.prototype, 'INCORRECT_LOGIN', 4002);
+makeValueReadOnly(Connection.prototype, 'SERVER_FULL', 4001);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BaseException.html">BaseException</a></li><li><a href="CommandException.html">CommandException</a></li><li><a href="DatabaseException.html">DatabaseException</a></li><li><a href="Graphics.html">Graphics</a></li><li><a href="LoginSystem.html">LoginSystem</a></li><li><a href="NavigationPanel.html">NavigationPanel</a></li><li><a href="ProblemNavigator.html">ProblemNavigator</a></li><li><a href="ProtobufSetup.html">ProtobufSetup</a></li><li><a href="ProtoDatabase.html">ProtoDatabase</a></li><li><a href="Redirector.html">Redirector</a></li><li><a href="RegisterSystem.html">RegisterSystem</a></li><li><a href="SchoolDataManager.html">SchoolDataManager</a></li><li><a href="SchoolItem.html">SchoolItem</a></li><li><a href="SketchSurface.html">SketchSurface</a></li><li><a href="UndoRedoException.html">UndoRedoException</a></li><li><a href="UpdateException.html">UpdateException</a></li><li><a href="UpdateManager.html">UpdateManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#addAnswerContent">addAnswerContent</a></li><li><a href="global.html#addCallback">addCallback</a></li><li><a href="global.html#addClickFunction">addClickFunction</a></li><li><a href="global.html#addEventMapping">addEventMapping</a></li><li><a href="global.html#addSynchronousUpdate">addSynchronousUpdate</a></li><li><a href="global.html#addToolArea">addToolArea</a></li><li><a href="global.html#addUpdate">addUpdate</a></li><li><a href="global.html#AdvanceDataListener">AdvanceDataListener</a></li><li><a href="global.html#ArrayException">ArrayException</a></li><li><a href="global.html#assignValues">assignValues</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#buildExpandEvent">buildExpandEvent</a></li><li><a href="global.html#buildOverlay">buildOverlay</a></li><li><a href="global.html#buildPercent">buildPercent</a></li><li><a href="global.html#buildWaitIcon">buildWaitIcon</a></li><li><a href="global.html#CallbackBarrier">CallbackBarrier</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#clearCallbacks">clearCallbacks</a></li><li><a href="global.html#clearUpdates">clearUpdates</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#Connection">Connection</a></li><li><a href="global.html#continueButton">continueButton</a></li><li><a href="global.html#correctSize">correctSize</a></li><li><a href="global.html#CourseSketch">CourseSketch</a></li><li><a href="global.html#createBarrier">createBarrier</a></li><li><a href="global.html#createButton">createButton</a></li><li><a href="global.html#createFancySchoolItem">createFancySchoolItem</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#createNewPath">createNewPath</a></li><li><a href="global.html#createSchoolList">createSchoolList</a></li><li><a href="global.html#createSketch">createSketch</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#deleteSketch">deleteSketch</a></li><li><a href="global.html#detachedCallback">detachedCallback</a></li><li><a href="global.html#EmbeddedHtml">EmbeddedHtml</a></li><li><a href="global.html#emptyQueue">emptyQueue</a></li><li><a href="global.html#endPath">endPath</a></li><li><a href="global.html#executeEvent">executeEvent</a></li><li><a href="global.html#fillCanvas">fillCanvas</a></li><li><a href="global.html#finalize">finalize</a></li><li><a href="global.html#getCleanUpdateList">getCleanUpdateList</a></li><li><a href="global.html#getConnection">getConnection</a></li><li><a href="global.html#getCurrentAssignment">getCurrentAssignment</a></li><li><a href="global.html#getCurrentNumber">getCurrentNumber</a></li><li><a href="global.html#getCurrentProblemId">getCurrentProblemId</a></li><li><a href="global.html#getCurrentSketch">getCurrentSketch</a></li><li><a href="global.html#getCurrentTime">getCurrentTime</a></li><li><a href="global.html#getCurrentUpdate">getCurrentUpdate</a></li><li><a href="global.html#getFinishedCallback">getFinishedCallback</a></li><li><a href="global.html#getHostElement">getHostElement</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getListLength">getListLength</a></li><li><a href="global.html#getPaper">getPaper</a></li><li><a href="global.html#getProblemText">getProblemText</a></li><li><a href="global.html#getProblemType">getProblemType</a></li><li><a href="global.html#getSketch">getSketch</a></li><li><a href="global.html#getSupportedEnums">getSupportedEnums</a></li><li><a href="global.html#getSupportedObjects">getSupportedObjects</a></li><li><a href="global.html#getUpdateList">getUpdateList</a></li><li><a href="global.html#GivenanSrlUpdateaRequestiscreated.">Given an SrlUpdate a Request is created.</a></li><li><a href="global.html#gotoNext">gotoNext</a></li><li><a href="global.html#goToNextSlide">goToNextSlide</a></li><li><a href="global.html#gotoPrevious">gotoPrevious</a></li><li><a href="global.html#goToProblem">goToProblem</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#hasPrevious">hasPrevious</a></li><li><a href="global.html#HighlightText">HighlightText</a></li><li><a href="global.html#ImageBox">ImageBox</a></li><li><a href="global.html#IndexManager">IndexManager</a></li><li><a href="global.html#Inheritssetsupinheritanceforfunctionsthis.Inherits(SuperClass);//supercallinsideobjectANDSubClass.Inherits(SuperClass);">Inherits
+sets up inheritance for functions
+
+this.Inherits(SuperClass); // super call inside object AND
+SubClass.Inherits(SuperClass);</a></li><li><a href="global.html#initializeCanvas">initializeCanvas</a></li><li><a href="global.html#initializeElement">initializeElement</a></li><li><a href="global.html#InputListener">InputListener</a></li><li><a href="global.html#isConnected">isConnected</a></li><li><a href="global.html#isDataLoaded">isDataLoaded</a></li><li><a href="global.html#isDescriptionOverflow">isDescriptionOverflow</a></li><li><a href="global.html#isLastUpdateSave">isLastUpdateSave</a></li><li><a href="global.html#isLastUpdateSubmission">isLastUpdateSubmission</a></li><li><a href="global.html#isValidForSaving">isValidForSaving</a></li><li><a href="global.html#isValidForSubmission">isValidForSubmission</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#loadLectures">loadLectures</a></li><li><a href="global.html#loadSketch">loadSketch</a></li><li><a href="global.html#loadSlides">loadSlides</a></li><li><a href="global.html#MultiChoice">MultiChoice</a></li><li><a href="global.html#Playback">Playback</a></li><li><a href="global.html#ProblemToolBar">ProblemToolBar</a></li><li><a href="global.html#Question">Question</a></li><li><a href="global.html#reconnect">reconnect</a></li><li><a href="global.html#redoAction">redoAction</a></li><li><a href="global.html#refresh">refresh</a></li><li><a href="global.html#reloadAssignment">reloadAssignment</a></li><li><a href="global.html#reloadProblems">reloadProblems</a></li><li><a href="global.html#removeAnswer">removeAnswer</a></li><li><a href="global.html#removeCallback">removeCallback</a></li><li><a href="global.html#removeEventMapping">removeEventMapping</a></li><li><a href="global.html#removeItem">removeItem</a></li><li><a href="global.html#removeListener">removeListener</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html">runCommand
+Runs a specific command given its lastUpdateType.</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#SchoolItemBuilder">SchoolItemBuilder</a></li><li><a href="global.html#sendlocalScope">sendlocalScope</a></li><li><a href="global.html#sendRequest">sendRequest</a></li><li><a href="global.html#setAssignmentId">setAssignmentId</a></li><li><a href="global.html#setBoxState">setBoxState</a></li><li><a href="global.html#setCancelCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setCancelCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setCorrectAnswer">setCorrectAnswer</a></li><li><a href="global.html#setCurrentSketch">setCurrentSketch</a></li><li><a href="global.html#setDrawUpdate">setDrawUpdate</a></li><li><a href="global.html#setEditCallback">setEditCallback</a></li><li><a href="global.html#setLastSaveTime">setLastSaveTime</a></li><li><a href="global.html#setListener">setListener</a></li><li><a href="global.html#setListeners">setListeners</a></li><li><a href="global.html#setOnSuccessLoginThecallbackiscalledwithoneparameter.">setOnSuccessLogin
+The callback is called with one parameter.</a></li><li><a href="global.html#setParentSketch">setParentSketch</a></li><li><a href="global.html#setParentSketchId">setParentSketchId</a></li><li><a href="global.html#setPreferredIndex">setPreferredIndex</a></li><li><a href="global.html#setPreviewText">setPreviewText</a></li><li><a href="global.html#setRedoCallback">setRedoCallback</a></li><li><a href="global.html#setRegisterCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setRegisterCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setRemoveFunction">setRemoveFunction</a></li><li><a href="global.html#setSaveCallback">setSaveCallback</a></li><li><a href="global.html#setSketch">setSketch</a></li><li><a href="global.html#setSketchClickedFunction">setSketchClickedFunction</a></li><li><a href="global.html#setSketchManager">setSketchManager</a></li><li><a href="global.html#setSubmissionInformation">setSubmissionInformation</a></li><li><a href="global.html#setSubmitCallback">setSubmitCallback</a></li><li><a href="global.html#setUiLoaded">setUiLoaded</a></li><li><a href="global.html#setUndoCallback">setUndoCallback</a></li><li><a href="global.html#setupAttributes">setupAttributes</a></li><li><a href="global.html#setupCallbacksSetupsupthecallbackfortheregisterbuttonandthelostpasswordbutton.">setupCallbacks
+Setups up the callback for the register button and the lost password button.</a></li><li><a href="global.html#setUpdateList">setUpdateList</a></li><li><a href="global.html#setUpdateTime">setUpdateTime</a></li><li><a href="global.html#setUpEditButtons">setUpEditButtons</a></li><li><a href="global.html#setWrapperFunction">setWrapperFunction</a></li><li><a href="global.html#showFormattedDate">showFormattedDate</a></li><li><a href="global.html#SketchSurfaceManager">SketchSurfaceManager</a></li><li><a href="global.html#speakText">speakText</a></li><li><a href="global.html#SubmissionPanel">SubmissionPanel</a></li><li><a href="global.html#TextBox">TextBox</a></li><li><a href="global.html#TimelineMarker">TimelineMarker</a></li><li><a href="global.html#toggleSelection">toggleSelection</a></li><li><a href="global.html#undoAction">undoAction</a></li><li><a href="global.html#updatePath">updatePath</a></li><li><a href="global.html#writeTextData">writeTextData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a> on Fri Mar 13 2015 04:13:07 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
