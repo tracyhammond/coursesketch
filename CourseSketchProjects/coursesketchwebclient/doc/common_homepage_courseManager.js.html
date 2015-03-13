@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: common/homepage/courseManager.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: common/homepage/courseManager.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>validateFirstRun(document.currentScript);
+
+CourseSketch.courseManagement.waitingIcon = (function() {
+    var manage = new WaitScreenManager();
+    manage.waitIconText = 'loading data';
+    return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
+})();
+(function() {
+
+    var waitingIcon = CourseSketch.courseManagement.waitingIcon;
+    var courseManagement = CourseSketch.courseManagement;
+
+    /**
+     * Polls for all updates to the user and then shows the courses.
+     *
+     * This will wait till the database is ready before it polls for updates and
+     * shows the courses.
+     */
+    CourseSketch.courseManagement.initializeCourseManagment = function() {
+        if (!document.querySelector('#class_list_column')) {
+            return false;
+        }
+        document.querySelector('#class_list_column').appendChild(waitingIcon);
+        CourseSketch.courseManagement.waitingIcon.startWaiting();
+
+        var loadCourses = function(courseList) {
+            if (waitingIcon.isRunning()) {
+                waitingIcon.finishWaiting();
+            }
+            courseManagement.showCourses(courseList);
+        };
+        if (CourseSketch.dataManager.isDatabaseReady()) {
+            CourseSketch.dataManager.pollUpdates(function() {
+                CourseSketch.dataManager.getAllCourses(loadCourses);
+            });
+        } else {
+            var intervalVar = setInterval(function() {
+                if (CourseSketch.dataManager.isDatabaseReady()) {
+                    clearInterval(intervalVar);
+                    CourseSketch.dataManager.pollUpdates(function() {
+                        CourseSketch.dataManager.getAllCourses(loadCourses);
+                    });
+                }
+            }, 100);
+        }
+    };
+
+    /**
+     * Given a list of {@link SrlCourse} a bunch of school items are built then
+     * added to the clss_list_column div.
+     */
+    courseManagement.showCourses = function showCourses(courseList) {
+        var builder = new SchoolItemBuilder();
+        if (CourseSketch.connection.isInstructor === true) {
+            builder.setInstructorCard(true);
+        }
+        builder.showImage = false;
+        builder.setBoxClickFunction(function(course) {
+            courseManagement.courseClicked(course);
+        });
+
+        if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
+            if (CourseSketch.connection.isInstructor) {
+                builder.setEmptyListMessage('Please Create a new course to get started!');
+            } else {
+                builder.setEmptyListMessage('Please add a new course to get started');
+            }
+            courseList = [];
+        }
+
+        builder.setList(courseList);
+        builder.build(document.querySelector('#class_list_column'));
+        setNotSelectedMessage(2);
+    };
+
+    /**
+     * Called when a user clicks on a course school item.
+     * This loads the assignments from the database then calls 'showAssignments' to display them.
+     */
+    courseManagement.courseClicked = function(course) {
+        var classColumn = document.querySelector('#class_list_column');
+        setNotSelectedMessage(2);
+
+        // note that query selector does not work on ids that start with a number.
+        changeSelection(classColumn.querySelector(cssEscapeId(course.id)), courseSelectionManager);
+        assignmentSelectionManager.clearAllSelectedItems();
+        problemSelectionManager.clearAllSelectedItems();
+
+        // waiting icon
+        document.querySelector('#assignment_list_column').appendChild(waitingIcon);
+        waitingIcon.startWaiting();
+
+        // we can make this faster because we have the list of assignments
+        CourseSketch.dataManager.getAssignments(course.assignmentList, function(assignmentList) {
+            courseManagement.showAssignments(assignmentList, course);
+        }, function(assignmentList) {
+            courseManagement.showAssignments(assignmentList, course);
+            if (waitingIcon.isRunning()) {
+                waitingIcon.finishWaiting(); // stops the
+                // waiting icon
+            }
+        });
+    };
+
+    /**
+     * Called to show a specific set of assignments with the given list.
+     */
+    courseManagement.showAssignments = function(assignmentList, course) {
+        console.log(assignmentList);
+        var builder = new SchoolItemBuilder();
+        if (CourseSketch.connection.isInstructor === true) {
+            builder.setInstructorCard(true);
+        }
+        builder.setEmptyListMessage('There are no assignments for this course!');
+        if (assignmentList instanceof CourseSketch.DatabaseException) {
+            if (!isUndefined(course) &amp;&amp; course.getState() !== null &amp;&amp;!(course.getState().accessible)) {
+                builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
+            }
+            assignmentList = [];
+        }
+
+        builder.setList(assignmentList);
+        builder.showImage = false;
+
+        builder.setBoxClickFunction(function(assignment) {
+            courseManagement.assignmentClicked(assignment);
+        });
+        builder.build(document.querySelector('#assignment_list_column'));
+        document.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
+    };
+
+
+    /**
+     * Called when an assignment is clicked.
+     */
+    courseManagement.assignmentClicked = function(assignment) {
+        var assignmentColumn = document.querySelector('#assignment_list_column');
+        changeSelection(assignmentColumn.querySelector(cssEscapeId(assignment.id)), assignmentSelectionManager);
+        problemSelectionManager.clearAllSelectedItems();
+
+        // waiting icon
+        document.getElementById('problem_list_column').appendChild(waitingIcon);
+        waitingIcon.startWaiting();
+        CourseSketch.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
+            courseManagement.showProblems(problemList, assignment);
+        }, function(problemList) {
+            courseManagement.showProblems(problemList, assignment);
+            if (waitingIcon.isRunning()) {
+                waitingIcon.finishWaiting(); // stops the
+                // waiting icon
+            }
+        });
+    };
+
+    /**
+     * Displays the list of problems for the user to pick from.
+     * @param {list} problemList The list of problems that are wanting to be showed
+     * @param {assignment} assignment (optional) The assignment that created this problem list
+     */
+    courseManagement.showProblems = function(problemList, assignment) {
+        var builder = new SchoolItemBuilder();
+        if (CourseSketch.connection.isInstructor === true) {
+            builder.setInstructorCard(true);
+        }
+        builder.setEmptyListMessage('There are no problems for this assignment!');
+        if (problemList instanceof CourseSketch.DatabaseException) {
+            problemList = [];
+            if (!isUndefined(assignment) &amp;&amp; assignment.getState() !== null &amp;&amp; !assignment.getState().accessible) {
+                builder.setEmptyListMessage('This assignment is currently not available. ' +
+                        'Please contact the instructor to let you view the problems');
+            }
+        }
+        builder.setList(problemList);
+        builder.showImage = false;
+        builder.setBoxClickFunction(courseManagement.problemClicked);
+        builder.build('problem_list_column');
+    };
+
+    /**
+     * Called when a problem is displayed.
+     */
+    courseManagement.problemClicked = function(problem) {
+        var problemColumn = document.querySelector('#problem_list_column');
+        var clickedElement = problemColumn.querySelector(cssEscapeId(problem.id));
+
+        if (problemSelectionManager.isItemSelected(clickedElement)) {
+            var itemNumber = clickedElement.dataset.item_number;
+            CourseSketch.dataManager.addState('currentProblemIndex', itemNumber);
+            CourseSketch.dataManager.addState('currentAssignment', problem.assignmentId);
+            CourseSketch.dataManager.addState('CURRENT_QUESTION', problem.id);
+            // change source to the problem page! and load problem
+            if (CourseSketch.connection.isInstructor) {
+                // solution editor page!
+                CourseSketch.redirectContent('/src/instructor/review/multiviewGrading.html', 'Grading problems!');
+            } else {
+                CourseSketch.redirectContent('/src/student/experiment/experiment.html', 'Starting Problem');
+            }
+        } else {
+            // TODO: find a more lightweight popup library
+            /*
+            var element = document.getElementById(id);
+            var myOpenTip = new Opentip(element, {
+                target : element,
+                tipJoint : 'bottom'
+            });
+            myOpenTip.prepareToShow(); // Shows the tooltip after the given
+            // delays. This could get interrupted
+
+            if (CourseSketch.dataManager.getState('isInstructor')) {
+                myOpenTip.setContent('Click again to edit the solution'); // Updates
+                // Opentips
+                // content
+            } else {
+                myOpenTip.setContent('Click again to open up a problem'); // Updates
+                // Opentips
+                // content
+            }
+
+            var pastToolTip = problemSelectionManager['currentToolTip'];
+            if (pastToolTip) {
+                pastToolTip.deactivate();
+            }
+            problemSelectionManager['currentToolTip'] = myOpenTip;
+            */
+            // note that queryselector is not allowed on these types of ids
+            changeSelection(clickedElement, problemSelectionManager);
+        }
+    };
+
+    function setNotSelectedMessage(number) {
+        var builder = new SchoolItemBuilder();
+
+        if (number > 0) {
+            builder.setEmptyListMessage('Please select an assignment to see the list of problems.');
+            builder.build(document.querySelector('#problem_list_column'));
+        }
+
+        if (number > 1) {
+            builder.setEmptyListMessage('Please select a course to see the list of assignments.');
+            builder.build(document.querySelector('#assignment_list_column'));
+        }
+    }
+
+    function changeSelection(id, selectionManager) {
+        selectionManager.clearAllSelectedItems();
+        selectionManager.addSelectedItem(id);
+    }
+
+    var courseSelectionManager = new ClickSelectionManager();
+    var assignmentSelectionManager = new ClickSelectionManager();
+    var problemSelectionManager = new ClickSelectionManager();
+})();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BaseException.html">BaseException</a></li><li><a href="CommandException.html">CommandException</a></li><li><a href="DatabaseException.html">DatabaseException</a></li><li><a href="Graphics.html">Graphics</a></li><li><a href="LoginSystem.html">LoginSystem</a></li><li><a href="NavigationPanel.html">NavigationPanel</a></li><li><a href="ProblemNavigator.html">ProblemNavigator</a></li><li><a href="ProtobufSetup.html">ProtobufSetup</a></li><li><a href="ProtoDatabase.html">ProtoDatabase</a></li><li><a href="Redirector.html">Redirector</a></li><li><a href="RegisterSystem.html">RegisterSystem</a></li><li><a href="SchoolDataManager.html">SchoolDataManager</a></li><li><a href="SchoolItem.html">SchoolItem</a></li><li><a href="SketchSurface.html">SketchSurface</a></li><li><a href="UndoRedoException.html">UndoRedoException</a></li><li><a href="UpdateException.html">UpdateException</a></li><li><a href="UpdateManager.html">UpdateManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#addAnswerContent">addAnswerContent</a></li><li><a href="global.html#addCallback">addCallback</a></li><li><a href="global.html#addClickFunction">addClickFunction</a></li><li><a href="global.html#addEventMapping">addEventMapping</a></li><li><a href="global.html#addSynchronousUpdate">addSynchronousUpdate</a></li><li><a href="global.html#addToolArea">addToolArea</a></li><li><a href="global.html#addUpdate">addUpdate</a></li><li><a href="global.html#AdvanceDataListener">AdvanceDataListener</a></li><li><a href="global.html#ArrayException">ArrayException</a></li><li><a href="global.html#assignValues">assignValues</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#buildExpandEvent">buildExpandEvent</a></li><li><a href="global.html#buildOverlay">buildOverlay</a></li><li><a href="global.html#buildPercent">buildPercent</a></li><li><a href="global.html#buildWaitIcon">buildWaitIcon</a></li><li><a href="global.html#CallbackBarrier">CallbackBarrier</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#clearCallbacks">clearCallbacks</a></li><li><a href="global.html#clearUpdates">clearUpdates</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#Connection">Connection</a></li><li><a href="global.html#continueButton">continueButton</a></li><li><a href="global.html#correctSize">correctSize</a></li><li><a href="global.html#CourseSketch">CourseSketch</a></li><li><a href="global.html#createBarrier">createBarrier</a></li><li><a href="global.html#createButton">createButton</a></li><li><a href="global.html#createFancySchoolItem">createFancySchoolItem</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#createNewPath">createNewPath</a></li><li><a href="global.html#createSchoolList">createSchoolList</a></li><li><a href="global.html#createSketch">createSketch</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#deleteSketch">deleteSketch</a></li><li><a href="global.html#detachedCallback">detachedCallback</a></li><li><a href="global.html#EmbeddedHtml">EmbeddedHtml</a></li><li><a href="global.html#emptyQueue">emptyQueue</a></li><li><a href="global.html#endPath">endPath</a></li><li><a href="global.html#executeEvent">executeEvent</a></li><li><a href="global.html#fillCanvas">fillCanvas</a></li><li><a href="global.html#finalize">finalize</a></li><li><a href="global.html#getCleanUpdateList">getCleanUpdateList</a></li><li><a href="global.html#getConnection">getConnection</a></li><li><a href="global.html#getCurrentAssignment">getCurrentAssignment</a></li><li><a href="global.html#getCurrentNumber">getCurrentNumber</a></li><li><a href="global.html#getCurrentProblemId">getCurrentProblemId</a></li><li><a href="global.html#getCurrentSketch">getCurrentSketch</a></li><li><a href="global.html#getCurrentTime">getCurrentTime</a></li><li><a href="global.html#getCurrentUpdate">getCurrentUpdate</a></li><li><a href="global.html#getFinishedCallback">getFinishedCallback</a></li><li><a href="global.html#getHostElement">getHostElement</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getListLength">getListLength</a></li><li><a href="global.html#getPaper">getPaper</a></li><li><a href="global.html#getProblemText">getProblemText</a></li><li><a href="global.html#getProblemType">getProblemType</a></li><li><a href="global.html#getSketch">getSketch</a></li><li><a href="global.html#getSupportedEnums">getSupportedEnums</a></li><li><a href="global.html#getSupportedObjects">getSupportedObjects</a></li><li><a href="global.html#getUpdateList">getUpdateList</a></li><li><a href="global.html#GivenanSrlUpdateaRequestiscreated.">Given an SrlUpdate a Request is created.</a></li><li><a href="global.html#gotoNext">gotoNext</a></li><li><a href="global.html#goToNextSlide">goToNextSlide</a></li><li><a href="global.html#gotoPrevious">gotoPrevious</a></li><li><a href="global.html#goToProblem">goToProblem</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#hasPrevious">hasPrevious</a></li><li><a href="global.html#HighlightText">HighlightText</a></li><li><a href="global.html#ImageBox">ImageBox</a></li><li><a href="global.html#IndexManager">IndexManager</a></li><li><a href="global.html#Inheritssetsupinheritanceforfunctionsthis.Inherits(SuperClass);//supercallinsideobjectANDSubClass.Inherits(SuperClass);">Inherits
+sets up inheritance for functions
+
+this.Inherits(SuperClass); // super call inside object AND
+SubClass.Inherits(SuperClass);</a></li><li><a href="global.html#initializeCanvas">initializeCanvas</a></li><li><a href="global.html#initializeElement">initializeElement</a></li><li><a href="global.html#InputListener">InputListener</a></li><li><a href="global.html#isConnected">isConnected</a></li><li><a href="global.html#isDataLoaded">isDataLoaded</a></li><li><a href="global.html#isDescriptionOverflow">isDescriptionOverflow</a></li><li><a href="global.html#isLastUpdateSave">isLastUpdateSave</a></li><li><a href="global.html#isLastUpdateSubmission">isLastUpdateSubmission</a></li><li><a href="global.html#isValidForSaving">isValidForSaving</a></li><li><a href="global.html#isValidForSubmission">isValidForSubmission</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#loadLectures">loadLectures</a></li><li><a href="global.html#loadSketch">loadSketch</a></li><li><a href="global.html#loadSlides">loadSlides</a></li><li><a href="global.html#MultiChoice">MultiChoice</a></li><li><a href="global.html#Playback">Playback</a></li><li><a href="global.html#ProblemToolBar">ProblemToolBar</a></li><li><a href="global.html#Question">Question</a></li><li><a href="global.html#reconnect">reconnect</a></li><li><a href="global.html#redoAction">redoAction</a></li><li><a href="global.html#refresh">refresh</a></li><li><a href="global.html#reloadAssignment">reloadAssignment</a></li><li><a href="global.html#reloadProblems">reloadProblems</a></li><li><a href="global.html#removeAnswer">removeAnswer</a></li><li><a href="global.html#removeCallback">removeCallback</a></li><li><a href="global.html#removeEventMapping">removeEventMapping</a></li><li><a href="global.html#removeItem">removeItem</a></li><li><a href="global.html#removeListener">removeListener</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html">runCommand
+Runs a specific command given its lastUpdateType.</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#SchoolItemBuilder">SchoolItemBuilder</a></li><li><a href="global.html#sendlocalScope">sendlocalScope</a></li><li><a href="global.html#sendRequest">sendRequest</a></li><li><a href="global.html#setAssignmentId">setAssignmentId</a></li><li><a href="global.html#setBoxState">setBoxState</a></li><li><a href="global.html#setCancelCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setCancelCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setCorrectAnswer">setCorrectAnswer</a></li><li><a href="global.html#setCurrentSketch">setCurrentSketch</a></li><li><a href="global.html#setDrawUpdate">setDrawUpdate</a></li><li><a href="global.html#setEditCallback">setEditCallback</a></li><li><a href="global.html#setLastSaveTime">setLastSaveTime</a></li><li><a href="global.html#setListener">setListener</a></li><li><a href="global.html#setListeners">setListeners</a></li><li><a href="global.html#setOnSuccessLoginThecallbackiscalledwithoneparameter.">setOnSuccessLogin
+The callback is called with one parameter.</a></li><li><a href="global.html#setParentSketch">setParentSketch</a></li><li><a href="global.html#setParentSketchId">setParentSketchId</a></li><li><a href="global.html#setPreferredIndex">setPreferredIndex</a></li><li><a href="global.html#setPreviewText">setPreviewText</a></li><li><a href="global.html#setRedoCallback">setRedoCallback</a></li><li><a href="global.html#setRegisterCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setRegisterCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setRemoveFunction">setRemoveFunction</a></li><li><a href="global.html#setSaveCallback">setSaveCallback</a></li><li><a href="global.html#setSketch">setSketch</a></li><li><a href="global.html#setSketchClickedFunction">setSketchClickedFunction</a></li><li><a href="global.html#setSketchManager">setSketchManager</a></li><li><a href="global.html#setSubmissionInformation">setSubmissionInformation</a></li><li><a href="global.html#setSubmitCallback">setSubmitCallback</a></li><li><a href="global.html#setUiLoaded">setUiLoaded</a></li><li><a href="global.html#setUndoCallback">setUndoCallback</a></li><li><a href="global.html#setupAttributes">setupAttributes</a></li><li><a href="global.html#setupCallbacksSetupsupthecallbackfortheregisterbuttonandthelostpasswordbutton.">setupCallbacks
+Setups up the callback for the register button and the lost password button.</a></li><li><a href="global.html#setUpdateList">setUpdateList</a></li><li><a href="global.html#setUpdateTime">setUpdateTime</a></li><li><a href="global.html#setUpEditButtons">setUpEditButtons</a></li><li><a href="global.html#setWrapperFunction">setWrapperFunction</a></li><li><a href="global.html#showFormattedDate">showFormattedDate</a></li><li><a href="global.html#SketchSurfaceManager">SketchSurfaceManager</a></li><li><a href="global.html#speakText">speakText</a></li><li><a href="global.html#SubmissionPanel">SubmissionPanel</a></li><li><a href="global.html#TextBox">TextBox</a></li><li><a href="global.html#TimelineMarker">TimelineMarker</a></li><li><a href="global.html#toggleSelection">toggleSelection</a></li><li><a href="global.html#undoAction">undoAction</a></li><li><a href="global.html#updatePath">updatePath</a></li><li><a href="global.html#writeTextData">writeTextData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a> on Fri Mar 13 2015 04:13:07 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
