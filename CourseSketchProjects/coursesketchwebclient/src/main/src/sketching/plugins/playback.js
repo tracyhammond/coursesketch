@@ -70,7 +70,7 @@ function Playback(updateList, updateManager, graphics) {
         if (currentIndex >= length) {
             graphics.setDrawUpdate(true);
             console.log("Finished");
-            return;
+            return true;
         }
         updateManager.addUpdate(updateList[currentIndex]);
 

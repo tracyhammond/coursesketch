@@ -14,11 +14,8 @@ function VoicePlayback() {
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
         }
 
-        var surface = document.body.querySelector("sketch-surface");
-        var graphics = surface.graphics;
-        var updateManager = surface.getUpdateManager();
-
         function playMe() {
+            var surface = document.body.querySelector("sketch-surface");
             var graphics = surface.graphics;
             var updateList = surface.getUpdateList();
             var copyList = [];
@@ -30,11 +27,16 @@ function VoicePlayback() {
 
             var playBack = new Playback(copyList, updateManager, graphics);
             updateManager.addPlugin(playBack);
-            playBack.playNext();
+            if (playBack.playNext()) fixButton();
+
+        }
+        function fixButton(){
             localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
         }
+
     }
+
 
 }
 
