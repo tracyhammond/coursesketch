@@ -5,23 +5,23 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param attributeChanged
+     * @param {String} attributeChanged
      *            the name of the protobuf attribute that changed
-     * @param oldValue
+     * @param {String|Number|Object} oldValue
      *            the attribute's old value
-     * @param newValue
+     * @param {String|Number|Object} newValue
      *            the attribute's new value
-     * @param element
+     * @param {Element} element
      *            protobuf element that has been edited
      */
     courseManagement.courseEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var keyList = newValue.keys();
         var srlCourse = element.schoolItemData;
         console.log(srlCourse);
-        for (var key of keyList) {
+        newValue.forEach(function(value, key, mapObj) {
             console.log(key);
-            srlCourse[key] = newValue.get(key);
-        }
+            srlCourse[key] = value;
+        });
         console.log(srlCourse);
         CourseSketch.dataManager.updateCourse(srlCourse);
     };
@@ -94,21 +94,21 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param attributeChanged
+     * @param {String} attributeChanged
      *            the name of the protobuf attribute that changed
-     * @param oldValue
+     * @param {String|Number|Object} oldValue
      *            the attribute's old value
-     * @param newValue
+     * @param {String|Number|Object} newValue
      *            the attribute's new value
-     * @param element
+     * @param {Element} element
      *            protobuf element that has been edited
      */
     courseManagement.assignmentEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var keyList = newValue.keys();
         var assignment = element.schoolItemData;
-        for (var key of keyList) {
-            assignment[key] = newValue.get(key);
-        }
+        newValue.forEach(function(value, key, mapObj) {
+            console.log(key);
+            assignment[key] = value;
+        });
         CourseSketch.dataManager.updateAssignment(assignment);
     };
 
@@ -189,28 +189,27 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param attributeChanged
+     * @param {String} attributeChanged
      *            the name of the protobuf attribute that changed
-     * @param oldValue
+     * @param {String|Number|Object} oldValue
      *            the attribute's old value
-     * @param newValue
+     * @param {String|Number|Object} newValue
      *            the attribute's new value
-     * @param element
+     * @param {Element} element
      *            protobuf element that has been edited
      */
     courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var keyList = newValue.keys();
         var problem = element.schoolItemData;
-        for (var key of keyList) {
+        newValue.forEach(function(value, key, mapObj) {
             if (key === 'description') {
                 var bankProblem = problem.getProblemInfo();
-                bankProblem.questionText = newValue.get(key);
+                bankProblem.questionText = value;
                 problem.setProblemInfo(bankProblem);
                 CourseSketch.dataManager.updateBankProblem(bankProblem);
             } else {
-                problem[key] = newValue.get(key);
+                problem[key] = value;
             }
-        }
+        });
         CourseSketch.dataManager.updateCourseProblem(problem);
     };
 
@@ -248,7 +247,7 @@ validateFirstRun(document.currentScript);
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
         bankProblem.questionText = prompt("Please enter the question text", "Default Question Text");
         var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
-        permissions.userPermission = [courseId];
+        permissions.userPermission = [ courseId ];
         bankProblem.accessPermission = permissions;
 
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();

@@ -435,8 +435,6 @@ function UpdateManager(sketchManager, onError) {
             var marker = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
             if (marker.type === CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType.SPLIT) {
                 currentUpdateIndex += parseInt(marker.otherData) - 1;
-            } else {
-                // TODO: make it actually perform more complex actions! like actually skiping over this and running everything with the next item.
             }
             // Does not actually change sketch so no drawing happens
             return false;

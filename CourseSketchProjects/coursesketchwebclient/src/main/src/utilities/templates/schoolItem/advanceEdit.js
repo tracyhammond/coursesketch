@@ -68,7 +68,7 @@
         } else {
             description = schoolItemData.description;
         }
-        if (description !=="") {
+        if (description !== "") {
             nodeToFill.value = description;
             return description;
         }
