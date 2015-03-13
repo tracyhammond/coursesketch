@@ -1,22 +1,22 @@
 <html>
 <head>
-    <link rel="stylesheet" href="/src/sketching/plugins/backgrounds.css">
     <!-- Utilities -->
-    <script src="/src/utilities/functions/base.js"></script>
-    <script src="/src/utilities/functions/objectAndInheritance.js"></script>
     <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
     <!-- Jquery library -->
     <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
-    <!-- user action graph -->
-    <link id="userActionGraphImport" rel="import"
-          href="/src/instructor/review/userActionReview.html">
-    <script src="userActionReview.js"></script>
+     <!-- d3 library, for the graphs -->
+    <link rel="import" href="/src/utilities/libraries/d3/d3include.html">
 
     <!-- Sketch Storage -->
     <link rel="import"
           href="/src/sketching/storage/sketchStorageInclude.html">
+
+    <!-- user action graph -->
+    <link id="userActionGraphImport" rel="import"
+          href="/src/instructor/review/userActionReview.html">
+    <script src="userActionReview.js"></script>
 
     <meta charset="UTF-8">
     <script>
@@ -29,7 +29,6 @@
 
         newElement.createdCallback = function() {
             this.initializeElement(clone.cloneNode(true));
-            console.log('Include initialize');
         };
 
         newElement.attachedCallback = function() {
@@ -37,7 +36,7 @@
         };
 
         newElement.detachedCallback = function() {
-            //this.finalize();
+            //this.finalize(); this should be implemented
         };
 
         document.registerElement('user-action-graph', {
