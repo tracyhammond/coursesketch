@@ -61,7 +61,7 @@ function HighlightText() {
     function highlightText() {
         if (window.getSelection().type !== 'None') {
             var myText = window.getSelection();
-            var range = myText.getRangeAt();
+            var range = myText.getRangeAt(0);
             children = range.cloneContents().childNodes;
             if (myText.toString().length > 0) { // Makes sure the selection contains characters so blank span tags are not added
                 if (checkChildrenNodes(children)) { // Makes sure adding span tags will not ruin the selected text formatting

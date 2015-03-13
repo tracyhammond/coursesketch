@@ -136,9 +136,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     function getSlideLocal (slideId, slideCallback) {
         database.getFromSlides(slideId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                slideCallback (undefined);
-            } else if (result.data === nonExistantValue) {
-                slideCallback (nonExistantValue);
+                slideCallback(undefined);
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
                 if (!isUndefined(slideCallback)) {

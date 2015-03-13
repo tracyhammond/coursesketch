@@ -33,10 +33,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         }
         parentDatabase.getFromCourseProblems(courseProblemId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                courseProblemCallback(new DatabaseException('The result is undefined', 'getting CouseProblem: ' + courseProblemId));
-            } else if (result.data === nonExistantValue) {
-                // the server holds this special value then it means the server does not have the value
-                courseProblemCallback(new DatabaseException('The database does not hold this value', 'getting CourseProblem: ' + courseProblemId));
+                courseProblemCallback(new DatabaseException('The result is undefined', 'getting CourseProblem: ' + courseProblemId));
             } else {
                 // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
