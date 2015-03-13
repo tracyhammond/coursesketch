@@ -32,10 +32,10 @@ target/
 
 *.iml
 
+*Log.out*
+doc
 node/
 npm-debug.log
 node_modules/
 node_temp
-
-*Log.out*
-doc
+node_tmp
