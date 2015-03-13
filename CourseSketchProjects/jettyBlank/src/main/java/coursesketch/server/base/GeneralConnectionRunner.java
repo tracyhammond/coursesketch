@@ -25,6 +25,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Runs and sets up the server.
  * @author gigemjt
@@ -32,6 +36,11 @@ import java.net.InetSocketAddress;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
+
+    /**
+     * Declaration/Definition og Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GeneralConnectionRunner.class);
 
     /**
      * A jetty server that is called upon by all of the other data.
@@ -71,7 +80,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         // Configure SSL
 
         // Use the real certificate
-        System.out.println("Loaded real keystore");
+        LOG.info("Loaded real keystore");
         contextfactor.setKeyStorePath(keystorePath/* "srl01_tamu_edu.jks" */);
         contextfactor.setTrustStorePath(keystorePath);
         contextfactor.setTrustStorePassword(iCertificatePath);
@@ -127,12 +136,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @Override
     public final void createServer() {
         if (isLocal()) {
-            System.out.println("Running it as a local server");
+            LOG.info("Running it as a local server");
             server = new Server(new InetSocketAddress("localhost", getPort()));
         } else {
             server = new Server(getPort());
         }
-        System.out.println("Server has been created on port: " + getPort());
+        LOG.info("Server has been created on port: " + getPort());
     }
 
     /**
@@ -149,7 +158,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
          */
         final ServletHandler servletHandler = new ServletHandler();
 
-        System.out.println("Creating a new servlet");
+        LOG.info("Creating a new servlet");
 
         servletHandler.addServletWithMapping(new ServletHolder((ServerWebSocketInitializer) getSocketInitailizerInstance()), "/*");
         stats.setHandler(servletHandler);
@@ -173,12 +182,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                 try {
                     server.start();
                     getSocketInitailizerInstance().reconnect();
-                    System.out.println("Server started at " + server.getURI());
+                    LOG.info("Server started at " + server.getURI());
                     server.join();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         };
@@ -205,7 +214,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @SuppressWarnings("checkstyle:designforextension")
     public ServerWebSocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
         if (!isSecure && isProduction()) {
-            System.err.println("Running an insecure server");
+            LOG.info("Running an insecure server");
         }
         return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
     }
@@ -230,7 +239,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @SuppressWarnings("checkstyle:designforextension")
     public boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
         if ("connectionNumber".equals(command)) {
-            System.out.println(getSocketInitailizerInstance().getCurrentConnectionNumber());
+            LOG.info("Connect Number: {}", getSocketInitailizerInstance().getCurrentConnectionNumber());
             return true;
         }
         return false;

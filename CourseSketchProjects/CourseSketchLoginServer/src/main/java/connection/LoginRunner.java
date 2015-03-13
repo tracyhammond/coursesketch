@@ -4,12 +4,20 @@ import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import database.DatabaseClient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Starts the login server.
  *
  * @author gigemjt
  */
 public class LoginRunner extends GeneralConnectionRunner {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(LoginRunner.class);
 
     /**
      * The port on which the login server lies.
@@ -41,7 +49,7 @@ public class LoginRunner extends GeneralConnectionRunner {
      */
     @Override
     public final void executeLocalEnvironment() {
-        System.out.println("Setting the login database to connect locally");
+        LOG.info("Setting the login database to connect locally");
         new DatabaseClient(false, null); // makes the database point locally
     }
 

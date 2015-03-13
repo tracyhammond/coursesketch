@@ -32,6 +32,7 @@ target/
 
 *.iml
 
+*Log.out*
 node/
 npm-debug.log
 node_modules/
