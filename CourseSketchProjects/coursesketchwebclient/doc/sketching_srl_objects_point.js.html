@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sketching/srl/objects/point.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sketching/srl/objects/point.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* Depends on objectAndInheritance.js */
+
+/**
+ * ******************************
+ *
+ *
+ * Point data class
+ *
+ * @author hammond; Daniel Tan
+ * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&amp;M University
+ *
+ *
+ * ******************************
+ */
+
+function SRL_Point(x, y) {
+    // this.Inherits(SRL_Shape);
+    this.superConstructor();
+
+    /**
+     * Points can have pressure depending on the input device
+     */
+    var pressure = 1;
+    /**
+     * Points can have size depending on the input device
+     */
+    var size = 1;
+    /**
+     * Gives the instantaneous speed calculated from this and the previous
+     * point.
+     */
+    var speed = 0;
+    /**
+     * Computes the thickness for the stroke based off of a number of factors.
+     *
+     * Used to create more natural lines that vary in thickness.
+     */
+    var thickness = 0;
+    /**
+     * Holds an history list of the x points Purpose is so that we can redo and
+     * undo and go back to the original points
+     */
+    var m_xList = new Array();
+    /**
+     * Holds a history list of the y points Purpose is so that we can redo and
+     * undo and go back to the original points
+     */
+    var m_yList = new Array();
+    /**
+     * A counter that keeps track of where you are in the history of points
+     */
+    var m_currentElement = -1;
+
+    /**
+     * Points can have pressure depending on the input device
+     *
+     * @return the pressure of the point
+     */
+    this.getPressure = function() {
+        return pressure;
+    };
+
+    /**
+     * Points can have pressure depending on the input device
+     *
+     * @param pressure
+     */
+    this.setPressure = function(pointPressure) {
+        if (typeof pressure === "number") {
+            pressure = pointPressure;
+        } else {
+            throw "argument of .setPressure must be a 'number'";
+        }
+    };
+
+    /**
+     * Points can have pressure depending on the input device
+     *
+     * @param pressure
+     */
+    this.setSize = function(pointSize) {
+        if (typeof size === "number") {
+            size = pointSize;
+        } else {
+            throw "argument of .setPressure must be a 'number'";
+        }
+    };
+
+    this.getSize = function() {
+        return size;
+    };
+
+    /**
+     * Updates the location of the point Also add this point to the history of
+     * the points so this can be undone.
+     *
+     * @param x
+     *            the new x location for the point
+     * @param y
+     *            the new y location for the point
+     */
+    this.setP = function(x, y) {
+        if (typeof x === "number" &amp;&amp; typeof y === "number") {
+            m_xList.push(x);
+            m_yList.push(y);
+            m_currentElement = m_xList.length - 1;
+        } else {
+            throw "arguments of .setP must be 'number'";
+        }
+    };
+
+    /**
+     * Creates a point with the initial points at x,y
+     *
+     * @param x
+     *            the initial x point
+     * @param y
+     *            the initial y point
+     */
+    if (x != undefined &amp;&amp; y != undefined) {
+        this.setP(x, y);
+        // addInterpretation("Point", 1, 1);
+    } else {
+        // do nothing;
+    }
+
+    /**
+     * Get the current x value of the point
+     *
+     * @return current x value of the point
+     */
+    this.getX = function() {
+        return m_xList[m_currentElement];
+    };
+
+    /**
+     * Get the current y value of the point
+     *
+     * @return current y value of the point
+     */
+    this.getY = function() {
+        return m_yList[m_currentElement];
+    };
+
+    this.setSpeed = function(point) {
+        if (point instanceof SRL_Point) {
+            var distance = this.distance(point.getX(), point.getY());
+            var timeDiff = point.getTime() - this.getTime();
+            if (timeDiff == 0) {
+                return false;
+            }
+            speed = distance / timeDiff;
+            return true;
+        }
+    };
+
+    this.getSpeed = function() {
+        return speed;
+    };
+
+    this.distance.SRL_Point = function(arg1, arg2, arg3, arg4) {
+        /**
+         * Return the distance from point rp to this point.
+         *
+         * @param rp
+         *            the other point
+         * @return the distance
+         */
+        if (arg1 instanceof SRL_Point) {
+            return this.distance(arg1.getX(), arg1.getY());
+
+            /**
+             * Return the distance from the point specified by (x,y) to this
+             * point
+             *
+             * @param x
+             *            the x value of the other point
+             * @param y
+             *            the y value of the other point
+             * @return the distance
+             */
+        } else if (typeof arg1 === "number" &amp;&amp; typeof arg2 === "number" &amp;&amp; arg3 === undefined &amp;&amp; arg4 === undefined) {
+            var xdiff = Math.abs(arg1 - this.getX());
+            var ydiff = Math.abs(arg2 - this.getY());
+            return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+
+            /**
+             * Return the distance from the point specified by (x,y) to this
+             * point
+             *
+             * @param x
+             *            the x value of the other point
+             * @param y
+             *            the y value of the other point
+             * @return the distance
+             */
+        } else if (typeof arg1 === "number" &amp;&amp; typeof arg2 === "number" &amp;&amp; typeof arg3 === "number" &amp;&amp; typeof arg4 === "number") {
+            var xdiff = arg1 - arg3;
+            var ydiff = arg2 - arg4;
+            return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+        } else {
+            throw "arguments of .distance are wrong";
+        }
+    };
+
+    /**
+     * Delete the entire point history and use these values as the starting
+     * point
+     *
+     * @param x
+     *            new initial x location
+     * @param y
+     *            new initial y location
+     */
+    this.setOrigP = function(x, y) {
+        if (typeof x === "number" &amp;&amp; typeof y === "number") {
+            m_xList = [];
+            m_yList = [];
+            this.setP(x, y);
+        } else {
+            throw "arguments of .setP must be 'number'";
+        }
+    };
+
+    /**
+     * Remove last point update If there is only one x,y value in the history,
+     * then it does nothing Returns the updated shape (this)
+     */
+    this.undoLastChange = function() {
+        if (m_xList.length &lt; 2) {
+            return this;
+        }
+        if (m_yList.length &lt; 2) {
+            return this;
+        }
+        m_xList.pop();
+        m_yList.pop();
+        m_currentElement -= 1;
+        return this;
+    };
+
+    /**
+     * Get the original value of the point
+     *
+     * @return a point where getx and gety return the first values that were
+     *         added to the history
+     */
+    this.goBackToInitial = function() {
+        if (m_currentElement >= 0) {
+            m_currentElement = 0;
+        }
+        return this;
+    };
+
+    /**
+     * Get the x value for the first point in the history
+     *
+     * @return {Number} the first x point.
+     */
+    this.getInitialX = function() {
+        if (m_xList.length === 0) {
+            return Number.NaN;
+        }
+        return m_xList[0];
+    };
+
+    /**
+     * Get the y value for the first point in the history
+     *
+     * @return {Number} the first y point.
+     */
+    this.getInitialY = function() {
+        if (m_yList.length === 0) {
+            return Number.NaN;
+        }
+        return m_yList[0];
+    };
+
+    /**
+     * Just returns the x value with is obviously the same as the min return x
+     * value
+     */
+    this.getMinX.SRL_Point = function() {
+        return this.getX();
+    };
+
+    /**
+     * Just returns the y value with is obviously the same as the min return y
+     * value
+     */
+    this.getMinY.SRL_Point = function() {
+        return this.getY();
+    };
+
+    /**
+     * Just returns the x value with is obviously the same as the max return x
+     * value
+     */
+    this.getMaxX.SRL_Point = function() {
+        return this.getX();
+    };
+
+    /**
+     * Just returns the y value with is obviously the same as the max return y
+     * value
+     */
+    this.getMaxY.SRL_Point = function() {
+        return this.getY();
+    };
+
+    this.test_functions = function() {
+        console.log("testing .getPressure");
+        console.log(this.getPressure());
+
+        console.log("testing .setPressure");
+        console.log("setting pressure = 2");
+        this.setPressure(2);
+        console.log(this.getPressure());
+        /*
+         * // throws an error console.log("setting pressure = \"string\"");
+         * test_point.setPressure("string");
+         * console.log(test_point.getPressure()); //
+         */
+
+        console.log("testing .setP");
+        console.log("show status of arrays");
+        this.temp_print();
+        console.log("adding a point");
+        this.setP(10, 10);
+        this.temp_print();
+        console.log("adding a point");
+        this.setP(2, 5);
+        this.temp_print();
+
+    };
+
+    this.temp_print = function() {
+        console.log("printing m_xList");
+        console.log(m_xList);
+        console.log("printing m_yList");
+        console.log(m_yList);
+        console.log("printing m_currentElement");
+        console.log(m_currentElement);
+    };
+};
+
+SRL_Point.Inherits(SRL_Shape);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Defines%2520the%2520base%2520exception%2520class%2520that%2520can%2520be%2520extended%2520by%2520all%2520other%250A%2520%2520%2520%2520%2520%2520%2520exceptions..html">Defines the base exception class that can be extended by all other
+       exceptions.</a></li><li><a href="Handles%2520the%2520window%2520state.%250A%250ARight%2520now%2520this%2520is%2520missing%2520a%2520couple%2520of%2520items%2520but%2520ill%2520describe%2520them%2520here.%250A_ol_%250A_li_A%2520way%2520to%2520add%2520and%2520pop%2520off%2520states%2520(you%2520can%2520not%2520undo%2520redo%2520though%2520so%2520dont%250Aworry%2520about%2520that).__li_%250A_li_when%2520moving%2520through%2520peer%2520states%2520the%2520most%2520previous%2520state%2520should%2520be%250Areplaced__li_%250A_li_each%2520state%2520should%2520probably%2520have%2520a%2520url%2520or%2520template_document%2520id%2520that%250Apoints%2520to%2520the%2520html%2520code%2520to%2520be%2520displayed__li_%250A_li_when%2520a%2520state%2520is%2520popped%2520off%2520forcibly%2520delete%2520as%2520much%2520as%2520possible%2520to%2520make%250Ait%2520easier%2520to%2520reclaim%2520memory__li_%250A_li_%2520States%2520are%2520described%2520through%2520the%2520url.%2520There%2520are%2520a%2520couple%2520ways%2520to%2520do%2520this%250Athough.%250A_ul_%250A_li_One%2520is%2520to%2520have%2520a%2520mechanism%2520that%2520unviersally%2520knows%2520how%2520to%2520handle%2520all%250Apossible%2520states__li_%250A_li_Another%2520is%2520to%2520have%2520a%2520state%2520map%2520file%2520in%2520json%2520that%2520describes%2520how%2520to%2520handle%250Aeach%2520state__li_%250A_li_The%2520final%2520way%2520I%2520thought%2520of%2520is%2520to%2520have%2520each%2520level%2520know%2520how%2520to%2520handle%2520the%250Astate%2520and%2520then%2520pass%2520the%2520state%2520down%2520to%2520the%2520level%2520below%2520it__li_%250A__ul_%250A__li_%250A__ol_.html">Handles the window state.
+
+Right now this is missing a couple of items but ill describe them here.
+<ol>
+<li>A way to add and pop off states (you can not undo redo though so dont
+worry about that).</li>
+<li>when moving through peer states the most previous state should be
+replaced</li>
+<li>each state should probably have a url or template/document id that
+points to the html code to be displayed</li>
+<li>when a state is popped off forcibly delete as much as possible to make
+it easier to reclaim memory</li>
+<li> States are described through the url. There are a couple ways to do this
+though.
+<ul>
+<li>One is to have a mechanism that unviersally knows how to handle all
+possible states</li>
+<li>Another is to have a state map file in json that describes how to handle
+each state</li>
+<li>The final way I thought of is to have each level know how to handle the
+state and then pass the state down to the level below it</li>
+</ul>
+</li>
+</ol></a></li><li><a href="Has%2520utilities%2520for%2520protobufs%2520and%2520is%2520a%2520convient%2520accessor%2520to%2520create%2520new%250A%2520%2520%2520%2520%2520%2520%2520instances%2520of%2520protobuf%2520files%2520.html">Has utilities for protobufs and is a convient accessor to create new
+       instances of protobuf files (and prevents the modification of a
+       protobuf object creator before it is created)</a></li><li><a href="SketchSurface.html">SketchSurface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAllSubObjects">addAllSubObjects</a></li><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#addAnswerContent">addAnswerContent</a></li><li><a href="global.html#addCallback">addCallback</a></li><li><a href="global.html#addClickFunction">addClickFunction</a></li><li><a href="global.html#addCoordinate">addCoordinate</a></li><li><a href="global.html#addEventMapping">addEventMapping</a></li><li><a href="global.html#addInterpretation">addInterpretation</a></li><li><a href="global.html#addPoint">addPoint</a></li><li><a href="global.html#addState">addState</a></li><li><a href="global.html#addSubObject">addSubObject</a></li><li><a href="global.html#addSynchronousUpdate">addSynchronousUpdate</a></li><li><a href="global.html#addToolArea">addToolArea</a></li><li><a href="global.html#AdvanceDataListener">AdvanceDataListener</a></li><li><a href="global.html#ArrayException">ArrayException</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#buildExpandEvent">buildExpandEvent</a></li><li><a href="global.html#buildOverlay">buildOverlay</a></li><li><a href="global.html#buildPercent">buildPercent</a></li><li><a href="global.html#buildWaitIcon">buildWaitIcon</a></li><li><a href="global.html#CallbackBarrier">CallbackBarrier</a></li><li><a href="global.html#Callsredoonan%257B@linkSrlCommand%257Dlistintheordertheyareaddedtothelist.">Calls redo on an {@link SrlCommand} list in the order they are
+        added to the list.</a></li><li><a href="global.html#Callsundoonan%257B@linkSrlCommand%257Dlistinthereverseoftheordertheyareaddedtothelist">Calls undo on an {@link SrlCommand} list in the reverse of the
+        order they are added to the list</a></li><li><a href="global.html#changeSourceNoEvent">changeSourceNoEvent</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#clearCallbacks">clearCallbacks</a></li><li><a href="global.html#clearUpdates">clearUpdates</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#Connection">Connection</a></li><li><a href="global.html#containsCoordinate">containsCoordinate</a></li><li><a href="global.html#containsPoint">containsPoint</a></li><li><a href="global.html#continueButton">continueButton</a></li><li><a href="global.html#correctSize">correctSize</a></li><li><a href="global.html#CourseSketch">CourseSketch</a></li><li><a href="global.html#createBarrier">createBarrier</a></li><li><a href="global.html#createBaseCommand">createBaseCommand</a></li><li><a href="global.html#createBaseUpdate">createBaseUpdate</a></li><li><a href="global.html#createButton">createButton</a></li><li><a href="global.html#createFancySchoolItem">createFancySchoolItem</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#createNewPath">createNewPath</a></li><li><a href="global.html#createNewSketch">createNewSketch</a></li><li><a href="global.html#createProtoDateTime">createProtoDateTime</a></li><li><a href="global.html#createRequestFromCommands">createRequestFromCommands</a></li><li><a href="global.html#createRequestFromData">createRequestFromData</a></li><li><a href="global.html#createSchoolList">createSchoolList</a></li><li><a href="global.html#createSketch">createSketch</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#createUpdateFromCommands">createUpdateFromCommands</a></li><li><a href="global.html#decodeProtobuf">decodeProtobuf</a></li><li><a href="global.html#deleteSketch">deleteSketch</a></li><li><a href="global.html#detachedCallback">detachedCallback</a></li><li><a href="global.html#distance">distance</a></li><li><a href="global.html#EmbeddedHtml">EmbeddedHtml</a></li><li><a href="global.html#emptyQueue">emptyQueue</a></li><li><a href="global.html#endPath">endPath</a></li><li><a href="global.html#executeEvent">executeEvent</a></li><li><a href="global.html#fillCanvas">fillCanvas</a></li><li><a href="global.html#finalize">finalize</a></li><li><a href="global.html#getAllAssignmentsFromCourse">getAllAssignmentsFromCourse</a></li><li><a href="global.html#getAllProblemsFromAssignment">getAllProblemsFromAssignment</a></li><li><a href="global.html#getArea">getArea</a></li><li><a href="global.html#getBoundingBox">getBoundingBox</a></li><li><a href="global.html#getBoundingBoxDiagonalAngle">getBoundingBoxDiagonalAngle</a></li><li><a href="global.html#getCenterX">getCenterX</a></li><li><a href="global.html#getCenterY">getCenterY</a></li><li><a href="global.html#getCleanUpdateList">getCleanUpdateList</a></li><li><a href="global.html#getConnection">getConnection</a></li><li><a href="global.html#getCurrentId">getCurrentId</a></li><li><a href="global.html#getCurrentNumber">getCurrentNumber</a></li><li><a href="global.html#getCurrentProblemId">getCurrentProblemId</a></li><li><a href="global.html#getCurrentSketch">getCurrentSketch</a></li><li><a href="global.html#getCurrentTime">getCurrentTime</a></li><li><a href="global.html#getCurrentUpdate">getCurrentUpdate</a></li><li><a href="global.html#getEndAngleCosine">getEndAngleCosine</a></li><li><a href="global.html#getEndAngleSine">getEndAngleSine</a></li><li><a href="global.html#getEuclideanDistance">getEuclideanDistance</a></li><li><a href="global.html#getExtremeValues">getExtremeValues</a></li><li><a href="global.html#getFinishedCallback">getFinishedCallback</a></li><li><a href="global.html#getFirstPoint">getFirstPoint</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getHostElement">getHostElement</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getInitialX">getInitialX</a></li><li><a href="global.html#getInitialY">getInitialY</a></li><li><a href="global.html#getInterpretations">getInterpretations</a></li><li><a href="global.html#getLastPoint">getLastPoint</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthOfDiagonal">getLengthOfDiagonal</a></li><li><a href="global.html#getListLength">getListLength</a></li><li><a href="global.html#getMaximumSpeed">getMaximumSpeed</a></li><li><a href="global.html#getMaxX">getMaxX</a></li><li><a href="global.html#getMaxY">getMaxY</a></li><li><a href="global.html#getMinX">getMinX</a></li><li><a href="global.html#getMinY">getMinY</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getNavigator">getNavigator</a></li><li><a href="global.html#getNumPoints">getNumPoints</a></li><li><a href="global.html#getPaper">getPaper</a></li><li><a href="global.html#getPoint">getPoint</a></li><li><a href="global.html#getPoints">getPoints</a></li><li><a href="global.html#getPressure">getPressure</a></li><li><a href="global.html#getProblemText">getProblemText</a></li><li><a href="global.html#getProblemType">getProblemType</a></li><li><a href="global.html#getRectangle">getRectangle</a></li><li><a href="global.html#getRecursiveStrokes">getRecursiveStrokes</a></li><li><a href="global.html#getRecursiveSubObjectList">getRecursiveSubObjectList</a></li><li><a href="global.html#getRotationAbsolute">getRotationAbsolute</a></li><li><a href="global.html#getRotationSquared">getRotationSquared</a></li><li><a href="global.html#getRotationSum">getRotationSum</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#getSketch">getSketch</a></li><li><a href="global.html#getStartAngleCosine">getStartAngleCosine</a></li><li><a href="global.html#getStartAngleSine">getStartAngleSine</a></li><li><a href="global.html#getStrokeLength">getStrokeLength</a></li><li><a href="global.html#getSubObjectById">getSubObjectById</a></li><li><a href="global.html#getSubObjectByIdChain">getSubObjectByIdChain</a></li><li><a href="global.html#getSubObjects">getSubObjects</a></li><li><a href="global.html#getSupportedEnums">getSupportedEnums</a></li><li><a href="global.html#getSupportedObjects">getSupportedObjects</a></li><li><a href="global.html#getTime">getTime</a></li><li><a href="global.html#getTotalTime">getTotalTime</a></li><li><a href="global.html#getUpdateList">getUpdateList</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#getX">getX</a></li><li><a href="global.html#getY">getY</a></li><li><a href="global.html#GivenanSrlUpdateaRequestiscreated.">Given an SrlUpdate a Request is created.</a></li><li><a href="global.html#goBackToInitial">goBackToInitial</a></li><li><a href="global.html#gotoNext">gotoNext</a></li><li><a href="global.html#goToNextSlide">goToNextSlide</a></li><li><a href="global.html#gotoPrevious">gotoPrevious</a></li><li><a href="global.html#goToProblem">goToProblem</a></li><li><a href="global.html#Graphics">Graphics</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#hasPrevious">hasPrevious</a></li><li><a href="global.html#HighlightText">HighlightText</a></li><li><a href="global.html#ImageBox">ImageBox</a></li><li><a href="global.html#IndexManager">IndexManager</a></li><li><a href="global.html#initializeBuf">initializeBuf</a></li><li><a href="global.html#initializeCanvas">initializeCanvas</a></li><li><a href="global.html#initializeElement">initializeElement</a></li><li><a href="global.html#InputListener">InputListener</a></li><li><a href="global.html#isConnected">isConnected</a></li><li><a href="global.html#isDatabaseReady">isDatabaseReady</a></li><li><a href="global.html#isDataLoaded">isDataLoaded</a></li><li><a href="global.html#isDescriptionOverflow">isDescriptionOverflow</a></li><li><a href="global.html#isLastUpdateSave">isLastUpdateSave</a></li><li><a href="global.html#isLastUpdateSubmission">isLastUpdateSubmission</a></li><li><a href="global.html#isUserCreated">isUserCreated</a></li><li><a href="global.html#isValidForSaving">isValidForSaving</a></li><li><a href="global.html#isValidForSubmission">isValidForSubmission</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#loadLectures">loadLectures</a></li><li><a href="global.html#loadSketch">loadSketch</a></li><li><a href="global.html#loadSlides">loadSlides</a></li><li><a href="global.html#LoginSystem">LoginSystem</a></li><li><a href="global.html#MultiChoice">MultiChoice</a></li><li><a href="global.html#NavigationPanel">NavigationPanel</a></li><li><a href="global.html#Playback">Playback</a></li><li><a href="global.html#pollUpdates">pollUpdates</a></li><li><a href="global.html#ProblemNavigator">ProblemNavigator</a></li><li><a href="global.html#ProblemToolBar">ProblemToolBar</a></li><li><a href="global.html#ProtoDatabase">ProtoDatabase</a></li><li><a href="global.html#Question">Question</a></li><li><a href="global.html#reconnect">reconnect</a></li><li><a href="global.html#redoAction">redoAction</a></li><li><a href="global.html#refresh">refresh</a></li><li><a href="global.html#RegisterSystem">RegisterSystem</a></li><li><a href="global.html#reloadAssignment">reloadAssignment</a></li><li><a href="global.html#reloadProblems">reloadProblems</a></li><li><a href="global.html#removeAnswer">removeAnswer</a></li><li><a href="global.html#removeCallback">removeCallback</a></li><li><a href="global.html#removeCoordinateDuplicates">removeCoordinateDuplicates</a></li><li><a href="global.html#removeEventMapping">removeEventMapping</a></li><li><a href="global.html#removeItem">removeItem</a></li><li><a href="global.html#removeListener">removeListener</a></li><li><a href="global.html#removeSubObject">removeSubObject</a></li><li><a href="global.html#removeSubObjectById">removeSubObjectById</a></li><li><a href="global.html#removeSubObjectByIdChain">removeSubObjectByIdChain</a></li><li><a href="global.html#removeTimeDuplicates">removeTimeDuplicates</a></li><li><a href="global.html#resetSketch">resetSketch</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html#rotationAtAPoint">rotationAtAPoint</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#scale">scale</a></li><li><a href="global.html#SchoolDataManager">SchoolDataManager</a></li><li><a href="global.html#SchoolItemBuilder">SchoolItemBuilder</a></li><li><a href="global.html#sendlocalScope">sendlocalScope</a></li><li><a href="global.html#sendRequest">sendRequest</a></li><li><a href="global.html#setAssignmentId">setAssignmentId</a></li><li><a href="global.html#setBoxState">setBoxState</a></li><li><a href="global.html#setCorrectAnswer">setCorrectAnswer</a></li><li><a href="global.html#setCurrentSketch">setCurrentSketch</a></li><li><a href="global.html#setDrawUpdate">setDrawUpdate</a></li><li><a href="global.html#setEditCallback">setEditCallback</a></li><li><a href="global.html#setId">setId</a></li><li><a href="global.html#setLastSaveTime">setLastSaveTime</a></li><li><a href="global.html#setListener">setListener</a></li><li><a href="global.html#setListeners">setListeners</a></li><li><a href="global.html#setName">setName</a></li><li><a href="global.html#setNavigator">setNavigator</a></li><li><a href="global.html#setOrigP">setOrigP</a></li><li><a href="global.html#setP">setP</a></li><li><a href="global.html#setParentSketch">setParentSketch</a></li><li><a href="global.html#setParentSketchId">setParentSketchId</a></li><li><a href="global.html#setPreferredIndex">setPreferredIndex</a></li><li><a href="global.html#setPressure">setPressure</a></li><li><a href="global.html#setPreviewText">setPreviewText</a></li><li><a href="global.html#setRedirect">setRedirect</a></li><li><a href="global.html#setRedoCallback">setRedoCallback</a></li><li><a href="global.html#setRemoveFunction">setRemoveFunction</a></li><li><a href="global.html#setsupinheritanceforfunctionsthis.Inherits(SuperClass);//supercallinsideobjectANDSubClass.Inherits(SuperClass);">sets up inheritance for functions
+
+this.Inherits(SuperClass); // super call inside object AND
+SubClass.Inherits(SuperClass);</a></li><li><a href="global.html#setSaveCallback">setSaveCallback</a></li><li><a href="global.html#setSize">setSize</a></li><li><a href="global.html#setSketch">setSketch</a></li><li><a href="global.html#setSketchClickedFunction">setSketchClickedFunction</a></li><li><a href="global.html#setSketchManager">setSketchManager</a></li><li><a href="global.html#setSubmissionInformation">setSubmissionInformation</a></li><li><a href="global.html#setSubmitCallback">setSubmitCallback</a></li><li><a href="global.html#setTime">setTime</a></li><li><a href="global.html#setUiLoaded">setUiLoaded</a></li><li><a href="global.html#setUndoCallback">setUndoCallback</a></li><li><a href="global.html#setupAttributes">setupAttributes</a></li><li><a href="global.html#setUpdateList">setUpdateList</a></li><li><a href="global.html#setUpdateTime">setUpdateTime</a></li><li><a href="global.html#setUpEditButtons">setUpEditButtons</a></li><li><a href="global.html#setUpNavigator">setUpNavigator</a></li><li><a href="global.html#Setupsupthecallbackfortheregisterbuttonandthelostpasswordbutton.">Setups up the callback for the register button and the lost password button.</a></li><li><a href="global.html#setUserCreated">setUserCreated</a></li><li><a href="global.html#setWrapperFunction">setWrapperFunction</a></li><li><a href="global.html#showFormattedDate">showFormattedDate</a></li><li><a href="global.html#SketchSurfaceManager">SketchSurfaceManager</a></li><li><a href="global.html#speakText">speakText</a></li><li><a href="global.html#SRL_BoundingBox">SRL_BoundingBox</a></li><li><a href="global.html#SRL_Interpretation">SRL_Interpretation</a></li><li><a href="global.html#SRL_Object">SRL_Object</a></li><li><a href="global.html#SRL_Point">SRL_Point</a></li><li><a href="global.html#SRL_Shape">SRL_Shape</a></li><li><a href="global.html#SRL_Stroke">SRL_Stroke</a></li><li><a href="global.html#SubmissionPanel">SubmissionPanel</a></li><li><a href="global.html#TextBox">TextBox</a></li><li><a href="global.html#Thecallbackiscalledwhentheregisterbuttonispressed.">The callback is called when the register button is pressed.</a></li><li><a href="global.html#Thecallbackiscalledwithoneparameter.">The callback is called with one parameter.</a></li><li><a href="global.html#thefunctionusedforsubmittinglogininformation.Alsotheonlydifferencebetweenlogin.jsandregister.js">the function used for submitting login information.
+Also the only difference between login.js and register.js</a></li><li><a href="global.html#thefunctionusedforsubmittingregisterinformation.Alsotheonlydifferencebetweenlogin.jsandregister.js">the function used for submitting register information.
+Also the only difference between login.js and register.js</a></li><li><a href="global.html#TimelineMarker">TimelineMarker</a></li><li><a href="global.html#toggleSelection">toggleSelection</a></li><li><a href="global.html#undoAction">undoAction</a></li><li><a href="global.html#undoLastChange">undoLastChange</a></li><li><a href="global.html#UpdateManager">UpdateManager</a></li><li><a href="global.html#updatePath">updatePath</a></li><li><a href="global.html#waitForDatabase">waitForDatabase</a></li><li><a href="global.html#writeTextData">writeTextData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a> on Thu Mar 12 2015 21:20:23 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
