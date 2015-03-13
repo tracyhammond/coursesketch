@@ -223,10 +223,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         database.getFromAssignments(assignmentId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
-            } else if (result.data === nonExistantValue) {
-                // the server holds this special value then it means the server
-                // does not have the value
-                assignmentCallback(new DatabaseException('The database does not hold this value', 'getting Assignment: ' + assignmentId));
             } else {
                 // gets the data from the database and calls the callback
                 try {
@@ -362,10 +358,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     /**
      * Returns a assignment with the given assignmentId will ask the server if it
      * does not exist locally
-     *
-     * If the server is pulled and the assignment still does not exist the Id is
-     * set with nonExistantValue and the database is never polled for this item
-     * for the life of the program again.
      *
      * @param {String} assignmentId
      *            The id of the assignment we want to find.
