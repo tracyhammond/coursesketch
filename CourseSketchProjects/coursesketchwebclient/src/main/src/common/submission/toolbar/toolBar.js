@@ -4,8 +4,8 @@
  */
 function ProblemToolBar() {
     /**
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
+     * @param {element} templateClone
+     *            An element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -19,28 +19,28 @@ function ProblemToolBar() {
      * Sets the callback for the submit button.
      */
     this.setSubmitCallback = function(submitCallback) {
-        this.shadowRoot.querySelector("#submission").onclick = submitCallback;
+        this.shadowRoot.querySelector('#submission').onclick = submitCallback;
     };
 
     /**
      * Sets the callback for the save button.
      */
     this.setSaveCallback = function(saveCallback) {
-        this.shadowRoot.querySelector("#save").onclick = saveCallback;
+        this.shadowRoot.querySelector('#save').onclick = saveCallback;
     };
 
     /**
      * Sets the callback for the undo button.
      */
     this.setUndoCallback = function(undoCallback) {
-        this.shadowRoot.querySelector("#undo").onclick = undoCallback;
+        this.shadowRoot.querySelector('#undo').onclick = undoCallback;
     };
 
     /**
      * Sets the callback for the redo button.
      */
     this.setRedoCallback = function(redoCallback) {
-        this.shadowRoot.querySelector("#redo").onclick = redoCallback;
+        this.shadowRoot.querySelector('#redo').onclick = redoCallback;
     };
 
     /**
@@ -58,11 +58,11 @@ function ProblemToolBar() {
      * It will have the custom load functions and click functions
      */
     this.createButton = function(imgLocation, onclickFunction, onloadFunction) {
-        var element = document.createElement("img");
+        var element = document.createElement('img');
         element.src = imgLocation;
         element.onclick = onclickFunction;
         element.onload = onloadFunction;
-        element.className = "specific_button";
+        element.className = 'specific_button';
         return element;
     };
 
