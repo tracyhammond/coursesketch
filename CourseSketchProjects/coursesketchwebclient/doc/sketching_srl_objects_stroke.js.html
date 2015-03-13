@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sketching/srl/objects/stroke.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sketching/srl/objects/stroke.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* jshint camelcase: false */
+/* depends on objectAndInheritance.js */
+
+/**
+ * ******************************
+ *
+ *
+ * Stroke data class
+ *
+ * @author hammond; Daniel Tan
+ * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&amp;M University
+ *
+ *
+ * ******************************
+ */
+
+function SRL_Stroke(startPoint) {
+    // this.Inherits(SRL_Shape);
+    this.superConstructor();
+    /**
+     * List of points in the stroke.
+     */
+    var points = [];
+
+    var intersector = new SRL_IntersectionHandler(this);
+    /**
+     * Adding another point to the stroke
+     *
+     * @param point
+     */
+    this.addPoint = function(point) {
+        if (point instanceof SRL_Point) {
+            points.push(point);
+            this.getBoundingBox().addPoint(point);
+            intersector.addPoint(point, points.length - 1);
+        }
+    };
+
+    /**
+     * Constructor setting the initial point in the stroke
+     *
+     * @param startPoint
+     */
+    if (startPoint instanceof SRL_Point) {
+        this.addPoint(startPoint);
+    }
+
+    /**
+     * Gets the complete list of points in the stroke
+     *
+     * @return list of points in the stroke
+     */
+    this.getPoints = function() {
+        return points;
+    };
+
+    this.finish = function() {
+        intersector.finish();
+    };
+
+    /**
+     * Get the i'th point in the stroke The first point has index i = 0
+     *
+     * @param i
+     *            the index of the stroke
+     * @return the point at index i
+     */
+    this.getPoint = function(i) {
+        if (typeof i === "number") {
+            if (i >= points.length) {
+                return null;
+            }
+            return points[i];
+        }
+    };
+
+    /**
+     * Goes through every object in this list of objects. (Brute force).
+     *
+     * @return the object if it exist, returns false otherwise.
+     */
+    this.getSubObjectById = function(objectId) {
+        for (var object in points) {
+            if (object.getId === objectId) {
+                return object;
+            }
+        }
+        return false;
+    };
+
+    /**
+     * Goes through every object in this list of objects. (Brute force).
+     *
+     * @return the object if it exist, returns false otherwise.
+     */
+    this.removeSubObjectById = function(objectId) {
+        for (var i = 0; i &lt; points.length; i++) {
+            var object = points[i];
+            if (object.getId() === objectId) {
+                return removeObjectByIndex(points, i);
+            }
+        }
+    };
+
+    /**
+     * Given an object, remove this instance of the object.
+     */
+    this.removeSubObject = function(srlObject) {
+        return removeObjectFromArray(points, srlObject);
+    };
+
+    /**
+     * Gets the list of subobjects
+     *
+     * @return list of objects that make up this object
+     */
+    this.getSubObjects = function() {
+        return points;
+    };
+
+    /**
+     * Gets the number of points in the stroke
+     *
+     * @return number of points in the stroke
+     */
+    this.getNumPoints = function() {
+        return points.length;
+    };
+
+    /**
+     * Returns the first point in the stroke. if the stroke has no points, it
+     * returns null.
+     *
+     * @return first point in the stroke
+     */
+    this.getFirstPoint = function() {
+        if (points.length === 0) {
+            return null;
+        }
+        return points[0];
+    };
+
+    /**
+     * Returns the last point in the stroke If the stroke has no points, it
+     * returns null.
+     *
+     * @return last point in the stroke.
+     */
+    this.getLastPoint = function() {
+        if (points.length === 0) {
+            return null;
+        }
+        return points[points.length - 1];
+    };
+
+    this.getStrokeIntersector = function() {
+        return intersector;
+    };
+
+    /**
+     * returns the minimum x value in a stroke return minimum x value in a
+     * stroke
+     */
+    this.getMinX.SRL_Stroke = function() {
+        /*
+         * var minx = this.getFirstPoint().getX(); for(var i=0; i&lt;points.length;
+         * i++){ if(points[i].getX() &lt; minx){ minx = points[i].getX(); } }
+         */
+        return boundingBox.getLeft();// minx;
+    };
+
+    /**
+     * returns the minimum y value in a stroke return minimum y value in a
+     * stroke
+     */
+    this.getMinY.SRL_Stroke = function() {
+        /*
+         * var miny = this.getFirstPoint().getY(); for(var i=0; i&lt;points.length;
+         * i++){ if(points[i].getY() &lt; miny){ miny = points[i].getY(); } }
+         */
+        return boundingBox.getTop();// miny;
+    };
+
+    /**
+     * returns the maximum x value in a stroke return maximum x value in a
+     * stroke
+     */
+    this.getMaxX.SRL_Stroke = function() {
+        /*
+         *
+         * var maxx = this.getFirstPoint().getX(); for(var i=0; i&lt;points.length;
+         * i++){ if(points[i].getX() > maxx){ maxx = points[i].getX(); } }
+         */
+        return boundingBox.getRight();// maxx;
+    };
+
+    /**
+     * returns the maximum x value in a stroke return maximum x value in a
+     * stroke
+     */
+    this.getMaxY.SRL_Stroke = function() {
+        /*
+         * var maxy = this.getFirstPoint().getY(); for(var i=0; i&lt;points.length;
+         * i++){ if(points[i].getY() > maxy){ maxy = points[i].getY(); } }
+         */
+        return boundingBox.getBottom();// maxy;
+    };
+
+    /**
+     * Return the cosine of the starting angle of the stroke This takes the
+     * angle between the initial point and the point specified as the
+     * secondPoint If there are fewer than that many points, it uses the last
+     * point. If there are only 0 or 1 points, this returns NaN. Note that this
+     * is also feature 1 of Rubine.
+     *
+     * @param secondPoint
+     *            which number point should be used for the second point
+     * @return cosine of the starting angle of the stroke
+     */
+    this.getStartAngleCosine = function(inputSecondPoint) {
+        var secondPoint = inputSecondPoint;
+        if (typeof secondPoint === "number") {
+            if (this.getNumPoints() &lt;= 1) return Number.NaN;
+            if (this.getNumPoints() &lt;= secondPoint) {
+                secondPoint = this.getNumPoints() - 1;
+            }
+
+            var xStart, xEnd, yStart, yEnd;
+            xStart = this.getPoint(0).getX();
+            yStart = this.getPoint(0).getY();
+            xEnd = this.getPoint(secondPoint).getX();
+            yEnd = this.getPoint(secondPoint).getY();
+
+            if (xStart === xEnd &amp;&amp; yStart === yEnd) {
+                return Number.NaN;
+            }
+
+            var sectionWidth = xEnd - xStart;
+            var sectionHeight = yEnd - yStart;
+            var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
+            return sectionWidth / hypotenuse;
+        }
+        throw ".getStartAngleCosine needs an int argument";
+    };
+
+    /**
+     * Return the sine of the starting angle of the stroke This takes the angle
+     * between the initial point and the point specified as the secondPoint If
+     * there are fewer than that many points, it uses the last point. If there
+     * are only 0 or 1 points, this returns NaN. Note that this is also feature
+     * 1 of Rubine.
+     *
+     * @param secondPoint
+     *            which number point should be used for the second point
+     * @return cosine of the starting angle of the stroke
+     */
+    this.getStartAngleSine = function(inputSecondPoint) {
+        var secondPoint = inputSecondPoint;
+        if (typeof secondPoint === "number") {
+            if (this.getNumPoints() &lt;= 1) return Number.NaN;
+            if (this.getNumPoints() &lt;= secondPoint) {
+                secondPoint = this.getNumPoints() - 1;
+            }
+
+            var xStart, xEnd, yStart, yEnd;
+            xStart = this.getPoint(0).getX();
+            yStart = this.getPoint(0).getY();
+            xEnd = this.getPoint(secondPoint).getX();
+            yEnd = this.getPoint(secondPoint).getY();
+
+            if (xStart === xEnd &amp;&amp; yStart === yEnd) {
+                return Number.NaN;
+            }
+
+            var sectionWidth = xEnd - xStart;
+            var sectionHeight = yEnd - yStart;
+            var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
+            return sectionHeight / hypotenuse;
+        }
+    };
+
+    /**
+     * Return the Euclidean distance from the starting point to the ending point
+     * of the stroke
+     *
+     * @return the distance between the starting and ending points of the stroke
+     */
+    this.getEuclideanDistance = function() {
+        var x0, xn, y0, yn;
+        if (this.getPoints().length === 0) return 0;
+        x0 = this.getFirstPoint().getX();
+        y0 = this.getFirstPoint().getY();
+        xn = this.getLastPoint().getX();
+        yn = this.getLastPoint().getY();
+        return Math.sqrt(Math.pow(xn - x0, 2) + Math.pow(yn - y0, 2));
+    };
+
+    /**
+     * Return the cosine of the angle between the start and end point
+     *
+     * @return cosine of the ending angle
+     */
+    this.getEndAngleCosine = function() {
+        if (this.getNumPoints() &lt;= 1) return Number.NaN;
+        if (this.getEuclideanDistance() === 0) return Number.NaN;
+        var xDistance = this.getLastPoint().getX() - this.getFirstPoint().getX();
+        return xDistance / this.getEuclideanDistance();
+    };
+
+    /**
+     * Return the cosine of the angle between the start and end point
+     *
+     * @return cosine of the ending angle
+     */
+    this.getEndAngleSine = function() {
+        if (this.getNumPoints() &lt;= 1) return Number.NaN;
+        if (this.getEuclideanDistance() === 0) return Number.NaN;
+        var yDistance = this.getLastPoint().getY() - this.getFirstPoint().getY();
+        return yDistance / this.getEuclideanDistance();
+    };
+
+    /**
+     * Returns the length of the stroke, complete with all of its turns
+     *
+     * @return length of the stroke
+     */
+    this.getStrokeLength = function() {
+        var sum = 0;
+        var deltaX, deltaY;
+        for (var i = 0; i &lt; this.getPoints().length - 1; i++) {
+            deltaX = this.getPoint(i + 1).getX() - this.getPoint(i).getX();
+            deltaY = this.getPoint(i + 1).getY() - this.getPoint(i).getY();
+            sum += Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        }
+        return sum;
+    };
+
+    /**
+     * Return the total stroke time
+     *
+     * @return total time of the stroke
+     */
+    this.getTotalTime = function() {
+        console.log("TODO - need to implement a .getTime()");
+        throw 'unspoorted function call: "getTotalTime"';
+        // if (this.getPoints().length === 0) return Number.NaN;
+        // return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
+    };
+
+    /**
+     * Auxiliary method used to return a list containing all points but with
+     * duplicated (based on time) removed
+     *
+     * @return list of points with duplicates (based on time) removed
+     */
+    this.removeTimeDuplicates = function() {
+        console.log("TODO - need to implement a .getTime()");
+        throw 'unspoorted function call: "removeTimeDuplicates"';
+        /*
+        var points = [];
+        for (var i = 0; i &lt; points.length; i++) {
+            if (points.length > 0) {
+                if(points[points.size()-1].getTime() === p.getTime()){
+                continue; } //
+            }
+            points.push(points[i]);
+        }
+        return points;
+        */
+    };
+
+    /**
+     * Auxiliary method used to return a list containing all points but with
+     * duplicated (based on X,Y coordinates) removed
+     *
+     * @return list of points with duplicates (based on coordinates) removed
+     */
+    this.removeCoordinateDuplicates = function() {
+        var p = [];
+        var x1, x2, y1, y2;
+        p.push(this.getPoint(0));
+        for (var i = 0; i &lt; this.getPoints().length - 1; i++) {
+            x1 = this.getPoint(i).getX();
+            y1 = this.getPoint(i).getY();
+            x2 = this.getPoint(i + 1).getX();
+            y2 = this.getPoint(i + 1).getY();
+            if (x1 !== x2 || y1 !== y2) p.push(this.getPoint(i + 1));
+        }
+        return p;
+    };
+
+    /**
+     * Return the maximum stroke speed reached
+     *
+     * @return maximum stroke speed reached
+     */
+    this.getMaximumSpeed = function() {
+        console.log("TODO - need to implement a .getTime()");
+        throw 'unspoorted function call: "getMaximumSpeed"';
+        /*
+        if (this.getPoints().length === 0) return Number.NaN;
+        var max = 0;
+        var deltaX, deltaY;
+        var deltaT;
+        var p = this.removeTimeDuplicates();
+        for (var i = 0; i &lt; p.length - 1; i++) {
+            deltaX = p[i + 1].getX() - p[i].getX();
+            deltaY = p[i + 1].getY() - p[i].getY();
+            // deltaT = p.get(i+1).getTime()-p.get(i).getTime();
+            var speed = (Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) / Math.pow(deltaT, 2);
+            if (speed > max) max = speed;
+        }
+        return max;
+        */
+    };
+
+    /**
+     * Calculates the rotation from point startP to two points further.
+     * Calculates the line between startP and the next point, and then the next
+     * two points, and then returns the angle between the two.
+     *
+     * @param points
+     * @param startP
+     * @return
+     */
+    this.rotationAtAPoint = function(startP) {
+        if (points[0] instanceof SRL_Point &amp;&amp; typeof startP === "number") {
+            if (points.length &lt; startP + 2) {
+                return Number.NaN;
+            }
+            var mx = points.get[startP + 1].getX() - points.get[startP].getX();
+            var my = points.get[startP + 1].getY() - points.get[startP].getY();
+            return Math.atan2(my, mx);
+        }
+        throw 'and error occured! (probably because the argument was not a number)';
+    };
+
+    /**
+     * Return the total rotation of the stroke from start to end points
+     *
+     * @return total rotation of the stroke
+     */
+    this.getRotationSum = function() {
+        var p = this.removeCoordinateDuplicates();
+        var sum = 0;
+        var lastrot = Number.NaN;
+        for (var i = 1; i &lt; p.length - 2; i++) {
+            var rot = this.rotationAtAPoint(p, i);
+            if (lastrot === Number.NaN) lastrot = rot;
+            while ((i > 0) &amp;&amp; (rot - lastrot > Math.PI)) {
+                rot = rot - 2 * Math.PI;
+            }
+            while ((i > 0) &amp;&amp; (lastrot - rot > Math.PI)) {
+                rot = rot + 2 * Math.PI;
+            }
+            sum += rot;
+        }
+        return sum;
+    };
+
+    /**
+     * Return the absolute rotation of the stroke from start to end points
+     *
+     * @return total absolute rotation of the stroke
+     */
+    this.getRotationAbsolute = function() {
+        var p = this.removeCoordinateDuplicates();
+        var sum = 0;
+        var lastrot = Number.NaN;
+        for (var i = 1; i &lt; p.length - 2; i++) {
+            var rot = this.rotationAtAPoint(p, i);
+            if (lastrot === Number.NaN) lastrot = rot;
+            while ((i > 0) &amp;&amp; (rot - lastrot > Math.PI)) {
+                rot = rot - 2 * Math.PI;
+            }
+            while ((i > 0) &amp;&amp; (lastrot - rot > Math.PI)) {
+                rot = rot + 2 * Math.PI;
+            }
+            sum += Math.abs(rot);
+        }
+        return sum;
+    };
+
+    /**
+     * Return the squared rotation of the stroke from start to end points
+     *
+     * @return total squared rotation of the stroke
+     */
+    this.getRotationSquared = function() {
+        var p = this.removeCoordinateDuplicates();
+        var sum = 0;
+        var lastrot = Number.NaN;
+        for (var i = 1; i &lt; p.length - 2; i++) {
+            var rot = this.rotationAtAPoint(p, i);
+            if (lastrot === Number.NaN) lastrot = rot;
+            while ((i > 0) &amp;&amp; (rot - lastrot > Math.PI)) {
+                rot = rot - 2 * Math.PI;
+            }
+            while ((i > 0) &amp;&amp; (lastrot - rot > Math.PI)) {
+                rot = rot + 2 * Math.PI;
+            }
+            sum += rot * rot;
+        }
+        return sum;
+    };
+
+    this.temp_print = function() {
+        for (var i = 0; i &lt; points.length; i++) {
+            points[i].temp_print();
+        }
+    };
+}
+
+SRL_Stroke.Inherits(SRL_Shape);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Defines%2520the%2520base%2520exception%2520class%2520that%2520can%2520be%2520extended%2520by%2520all%2520other%250A%2520%2520%2520%2520%2520%2520%2520exceptions..html">Defines the base exception class that can be extended by all other
+       exceptions.</a></li><li><a href="Handles%2520the%2520window%2520state.%250A%250ARight%2520now%2520this%2520is%2520missing%2520a%2520couple%2520of%2520items%2520but%2520ill%2520describe%2520them%2520here.%250A_ol_%250A_li_A%2520way%2520to%2520add%2520and%2520pop%2520off%2520states%2520(you%2520can%2520not%2520undo%2520redo%2520though%2520so%2520dont%250Aworry%2520about%2520that).__li_%250A_li_when%2520moving%2520through%2520peer%2520states%2520the%2520most%2520previous%2520state%2520should%2520be%250Areplaced__li_%250A_li_each%2520state%2520should%2520probably%2520have%2520a%2520url%2520or%2520template_document%2520id%2520that%250Apoints%2520to%2520the%2520html%2520code%2520to%2520be%2520displayed__li_%250A_li_when%2520a%2520state%2520is%2520popped%2520off%2520forcibly%2520delete%2520as%2520much%2520as%2520possible%2520to%2520make%250Ait%2520easier%2520to%2520reclaim%2520memory__li_%250A_li_%2520States%2520are%2520described%2520through%2520the%2520url.%2520There%2520are%2520a%2520couple%2520ways%2520to%2520do%2520this%250Athough.%250A_ul_%250A_li_One%2520is%2520to%2520have%2520a%2520mechanism%2520that%2520unviersally%2520knows%2520how%2520to%2520handle%2520all%250Apossible%2520states__li_%250A_li_Another%2520is%2520to%2520have%2520a%2520state%2520map%2520file%2520in%2520json%2520that%2520describes%2520how%2520to%2520handle%250Aeach%2520state__li_%250A_li_The%2520final%2520way%2520I%2520thought%2520of%2520is%2520to%2520have%2520each%2520level%2520know%2520how%2520to%2520handle%2520the%250Astate%2520and%2520then%2520pass%2520the%2520state%2520down%2520to%2520the%2520level%2520below%2520it__li_%250A__ul_%250A__li_%250A__ol_.html">Handles the window state.
+
+Right now this is missing a couple of items but ill describe them here.
+<ol>
+<li>A way to add and pop off states (you can not undo redo though so dont
+worry about that).</li>
+<li>when moving through peer states the most previous state should be
+replaced</li>
+<li>each state should probably have a url or template/document id that
+points to the html code to be displayed</li>
+<li>when a state is popped off forcibly delete as much as possible to make
+it easier to reclaim memory</li>
+<li> States are described through the url. There are a couple ways to do this
+though.
+<ul>
+<li>One is to have a mechanism that unviersally knows how to handle all
+possible states</li>
+<li>Another is to have a state map file in json that describes how to handle
+each state</li>
+<li>The final way I thought of is to have each level know how to handle the
+state and then pass the state down to the level below it</li>
+</ul>
+</li>
+</ol></a></li><li><a href="Has%2520utilities%2520for%2520protobufs%2520and%2520is%2520a%2520convient%2520accessor%2520to%2520create%2520new%250A%2520%2520%2520%2520%2520%2520%2520instances%2520of%2520protobuf%2520files%2520.html">Has utilities for protobufs and is a convient accessor to create new
+       instances of protobuf files (and prevents the modification of a
+       protobuf object creator before it is created)</a></li><li><a href="SketchSurface.html">SketchSurface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAllSubObjects">addAllSubObjects</a></li><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#addAnswerContent">addAnswerContent</a></li><li><a href="global.html#addCallback">addCallback</a></li><li><a href="global.html#addClickFunction">addClickFunction</a></li><li><a href="global.html#addCoordinate">addCoordinate</a></li><li><a href="global.html#addEventMapping">addEventMapping</a></li><li><a href="global.html#addInterpretation">addInterpretation</a></li><li><a href="global.html#addPoint">addPoint</a></li><li><a href="global.html#addState">addState</a></li><li><a href="global.html#addSubObject">addSubObject</a></li><li><a href="global.html#addSynchronousUpdate">addSynchronousUpdate</a></li><li><a href="global.html#addToolArea">addToolArea</a></li><li><a href="global.html#AdvanceDataListener">AdvanceDataListener</a></li><li><a href="global.html#ArrayException">ArrayException</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#buildExpandEvent">buildExpandEvent</a></li><li><a href="global.html#buildOverlay">buildOverlay</a></li><li><a href="global.html#buildPercent">buildPercent</a></li><li><a href="global.html#buildWaitIcon">buildWaitIcon</a></li><li><a href="global.html#CallbackBarrier">CallbackBarrier</a></li><li><a href="global.html#Callsredoonan%257B@linkSrlCommand%257Dlistintheordertheyareaddedtothelist.">Calls redo on an {@link SrlCommand} list in the order they are
+        added to the list.</a></li><li><a href="global.html#Callsundoonan%257B@linkSrlCommand%257Dlistinthereverseoftheordertheyareaddedtothelist">Calls undo on an {@link SrlCommand} list in the reverse of the
+        order they are added to the list</a></li><li><a href="global.html#changeSourceNoEvent">changeSourceNoEvent</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#clearCallbacks">clearCallbacks</a></li><li><a href="global.html#clearUpdates">clearUpdates</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#Connection">Connection</a></li><li><a href="global.html#containsCoordinate">containsCoordinate</a></li><li><a href="global.html#containsPoint">containsPoint</a></li><li><a href="global.html#continueButton">continueButton</a></li><li><a href="global.html#correctSize">correctSize</a></li><li><a href="global.html#CourseSketch">CourseSketch</a></li><li><a href="global.html#createBarrier">createBarrier</a></li><li><a href="global.html#createBaseCommand">createBaseCommand</a></li><li><a href="global.html#createBaseUpdate">createBaseUpdate</a></li><li><a href="global.html#createButton">createButton</a></li><li><a href="global.html#createFancySchoolItem">createFancySchoolItem</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#createNewPath">createNewPath</a></li><li><a href="global.html#createNewSketch">createNewSketch</a></li><li><a href="global.html#createProtoDateTime">createProtoDateTime</a></li><li><a href="global.html#createRequestFromCommands">createRequestFromCommands</a></li><li><a href="global.html#createRequestFromData">createRequestFromData</a></li><li><a href="global.html#createSchoolList">createSchoolList</a></li><li><a href="global.html#createSketch">createSketch</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#createUpdateFromCommands">createUpdateFromCommands</a></li><li><a href="global.html#decodeProtobuf">decodeProtobuf</a></li><li><a href="global.html#deleteSketch">deleteSketch</a></li><li><a href="global.html#detachedCallback">detachedCallback</a></li><li><a href="global.html#distance">distance</a></li><li><a href="global.html#EmbeddedHtml">EmbeddedHtml</a></li><li><a href="global.html#emptyQueue">emptyQueue</a></li><li><a href="global.html#endPath">endPath</a></li><li><a href="global.html#executeEvent">executeEvent</a></li><li><a href="global.html#fillCanvas">fillCanvas</a></li><li><a href="global.html#finalize">finalize</a></li><li><a href="global.html#getAllAssignmentsFromCourse">getAllAssignmentsFromCourse</a></li><li><a href="global.html#getAllProblemsFromAssignment">getAllProblemsFromAssignment</a></li><li><a href="global.html#getArea">getArea</a></li><li><a href="global.html#getBoundingBox">getBoundingBox</a></li><li><a href="global.html#getBoundingBoxDiagonalAngle">getBoundingBoxDiagonalAngle</a></li><li><a href="global.html#getCenterX">getCenterX</a></li><li><a href="global.html#getCenterY">getCenterY</a></li><li><a href="global.html#getCleanUpdateList">getCleanUpdateList</a></li><li><a href="global.html#getConnection">getConnection</a></li><li><a href="global.html#getCurrentId">getCurrentId</a></li><li><a href="global.html#getCurrentNumber">getCurrentNumber</a></li><li><a href="global.html#getCurrentProblemId">getCurrentProblemId</a></li><li><a href="global.html#getCurrentSketch">getCurrentSketch</a></li><li><a href="global.html#getCurrentTime">getCurrentTime</a></li><li><a href="global.html#getCurrentUpdate">getCurrentUpdate</a></li><li><a href="global.html#getEndAngleCosine">getEndAngleCosine</a></li><li><a href="global.html#getEndAngleSine">getEndAngleSine</a></li><li><a href="global.html#getEuclideanDistance">getEuclideanDistance</a></li><li><a href="global.html#getExtremeValues">getExtremeValues</a></li><li><a href="global.html#getFinishedCallback">getFinishedCallback</a></li><li><a href="global.html#getFirstPoint">getFirstPoint</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getHostElement">getHostElement</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getInitialX">getInitialX</a></li><li><a href="global.html#getInitialY">getInitialY</a></li><li><a href="global.html#getInterpretations">getInterpretations</a></li><li><a href="global.html#getLastPoint">getLastPoint</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getLengthOfDiagonal">getLengthOfDiagonal</a></li><li><a href="global.html#getListLength">getListLength</a></li><li><a href="global.html#getMaximumSpeed">getMaximumSpeed</a></li><li><a href="global.html#getMaxX">getMaxX</a></li><li><a href="global.html#getMaxY">getMaxY</a></li><li><a href="global.html#getMinX">getMinX</a></li><li><a href="global.html#getMinY">getMinY</a></li><li><a href="global.html#getName">getName</a></li><li><a href="global.html#getNavigator">getNavigator</a></li><li><a href="global.html#getNumPoints">getNumPoints</a></li><li><a href="global.html#getPaper">getPaper</a></li><li><a href="global.html#getPoint">getPoint</a></li><li><a href="global.html#getPoints">getPoints</a></li><li><a href="global.html#getPressure">getPressure</a></li><li><a href="global.html#getProblemText">getProblemText</a></li><li><a href="global.html#getProblemType">getProblemType</a></li><li><a href="global.html#getRectangle">getRectangle</a></li><li><a href="global.html#getRecursiveStrokes">getRecursiveStrokes</a></li><li><a href="global.html#getRecursiveSubObjectList">getRecursiveSubObjectList</a></li><li><a href="global.html#getRotationAbsolute">getRotationAbsolute</a></li><li><a href="global.html#getRotationSquared">getRotationSquared</a></li><li><a href="global.html#getRotationSum">getRotationSum</a></li><li><a href="global.html#getSize">getSize</a></li><li><a href="global.html#getSketch">getSketch</a></li><li><a href="global.html#getStartAngleCosine">getStartAngleCosine</a></li><li><a href="global.html#getStartAngleSine">getStartAngleSine</a></li><li><a href="global.html#getStrokeLength">getStrokeLength</a></li><li><a href="global.html#getSubObjectById">getSubObjectById</a></li><li><a href="global.html#getSubObjectByIdChain">getSubObjectByIdChain</a></li><li><a href="global.html#getSubObjects">getSubObjects</a></li><li><a href="global.html#getSupportedEnums">getSupportedEnums</a></li><li><a href="global.html#getSupportedObjects">getSupportedObjects</a></li><li><a href="global.html#getTime">getTime</a></li><li><a href="global.html#getTotalTime">getTotalTime</a></li><li><a href="global.html#getUpdateList">getUpdateList</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#getX">getX</a></li><li><a href="global.html#getY">getY</a></li><li><a href="global.html#GivenanSrlUpdateaRequestiscreated.">Given an SrlUpdate a Request is created.</a></li><li><a href="global.html#goBackToInitial">goBackToInitial</a></li><li><a href="global.html#gotoNext">gotoNext</a></li><li><a href="global.html#goToNextSlide">goToNextSlide</a></li><li><a href="global.html#gotoPrevious">gotoPrevious</a></li><li><a href="global.html#goToProblem">goToProblem</a></li><li><a href="global.html#Graphics">Graphics</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#hasPrevious">hasPrevious</a></li><li><a href="global.html#HighlightText">HighlightText</a></li><li><a href="global.html#ImageBox">ImageBox</a></li><li><a href="global.html#IndexManager">IndexManager</a></li><li><a href="global.html#initializeBuf">initializeBuf</a></li><li><a href="global.html#initializeCanvas">initializeCanvas</a></li><li><a href="global.html#initializeElement">initializeElement</a></li><li><a href="global.html#InputListener">InputListener</a></li><li><a href="global.html#isConnected">isConnected</a></li><li><a href="global.html#isDatabaseReady">isDatabaseReady</a></li><li><a href="global.html#isDataLoaded">isDataLoaded</a></li><li><a href="global.html#isDescriptionOverflow">isDescriptionOverflow</a></li><li><a href="global.html#isLastUpdateSave">isLastUpdateSave</a></li><li><a href="global.html#isLastUpdateSubmission">isLastUpdateSubmission</a></li><li><a href="global.html#isUserCreated">isUserCreated</a></li><li><a href="global.html#isValidForSaving">isValidForSaving</a></li><li><a href="global.html#isValidForSubmission">isValidForSubmission</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#loadLectures">loadLectures</a></li><li><a href="global.html#loadSketch">loadSketch</a></li><li><a href="global.html#loadSlides">loadSlides</a></li><li><a href="global.html#LoginSystem">LoginSystem</a></li><li><a href="global.html#MultiChoice">MultiChoice</a></li><li><a href="global.html#NavigationPanel">NavigationPanel</a></li><li><a href="global.html#Playback">Playback</a></li><li><a href="global.html#pollUpdates">pollUpdates</a></li><li><a href="global.html#ProblemNavigator">ProblemNavigator</a></li><li><a href="global.html#ProblemToolBar">ProblemToolBar</a></li><li><a href="global.html#ProtoDatabase">ProtoDatabase</a></li><li><a href="global.html#Question">Question</a></li><li><a href="global.html#reconnect">reconnect</a></li><li><a href="global.html#redoAction">redoAction</a></li><li><a href="global.html#refresh">refresh</a></li><li><a href="global.html#RegisterSystem">RegisterSystem</a></li><li><a href="global.html#reloadAssignment">reloadAssignment</a></li><li><a href="global.html#reloadProblems">reloadProblems</a></li><li><a href="global.html#removeAnswer">removeAnswer</a></li><li><a href="global.html#removeCallback">removeCallback</a></li><li><a href="global.html#removeCoordinateDuplicates">removeCoordinateDuplicates</a></li><li><a href="global.html#removeEventMapping">removeEventMapping</a></li><li><a href="global.html#removeItem">removeItem</a></li><li><a href="global.html#removeListener">removeListener</a></li><li><a href="global.html#removeSubObject">removeSubObject</a></li><li><a href="global.html#removeSubObjectById">removeSubObjectById</a></li><li><a href="global.html#removeSubObjectByIdChain">removeSubObjectByIdChain</a></li><li><a href="global.html#removeTimeDuplicates">removeTimeDuplicates</a></li><li><a href="global.html#resetSketch">resetSketch</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html#rotationAtAPoint">rotationAtAPoint</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#scale">scale</a></li><li><a href="global.html#SchoolDataManager">SchoolDataManager</a></li><li><a href="global.html#SchoolItemBuilder">SchoolItemBuilder</a></li><li><a href="global.html#sendlocalScope">sendlocalScope</a></li><li><a href="global.html#sendRequest">sendRequest</a></li><li><a href="global.html#setAssignmentId">setAssignmentId</a></li><li><a href="global.html#setBoxState">setBoxState</a></li><li><a href="global.html#setCorrectAnswer">setCorrectAnswer</a></li><li><a href="global.html#setCurrentSketch">setCurrentSketch</a></li><li><a href="global.html#setDrawUpdate">setDrawUpdate</a></li><li><a href="global.html#setEditCallback">setEditCallback</a></li><li><a href="global.html#setId">setId</a></li><li><a href="global.html#setLastSaveTime">setLastSaveTime</a></li><li><a href="global.html#setListener">setListener</a></li><li><a href="global.html#setListeners">setListeners</a></li><li><a href="global.html#setName">setName</a></li><li><a href="global.html#setNavigator">setNavigator</a></li><li><a href="global.html#setOrigP">setOrigP</a></li><li><a href="global.html#setP">setP</a></li><li><a href="global.html#setParentSketch">setParentSketch</a></li><li><a href="global.html#setParentSketchId">setParentSketchId</a></li><li><a href="global.html#setPreferredIndex">setPreferredIndex</a></li><li><a href="global.html#setPressure">setPressure</a></li><li><a href="global.html#setPreviewText">setPreviewText</a></li><li><a href="global.html#setRedirect">setRedirect</a></li><li><a href="global.html#setRedoCallback">setRedoCallback</a></li><li><a href="global.html#setRemoveFunction">setRemoveFunction</a></li><li><a href="global.html#setsupinheritanceforfunctionsthis.Inherits(SuperClass);//supercallinsideobjectANDSubClass.Inherits(SuperClass);">sets up inheritance for functions
+
+this.Inherits(SuperClass); // super call inside object AND
+SubClass.Inherits(SuperClass);</a></li><li><a href="global.html#setSaveCallback">setSaveCallback</a></li><li><a href="global.html#setSize">setSize</a></li><li><a href="global.html#setSketch">setSketch</a></li><li><a href="global.html#setSketchClickedFunction">setSketchClickedFunction</a></li><li><a href="global.html#setSketchManager">setSketchManager</a></li><li><a href="global.html#setSubmissionInformation">setSubmissionInformation</a></li><li><a href="global.html#setSubmitCallback">setSubmitCallback</a></li><li><a href="global.html#setTime">setTime</a></li><li><a href="global.html#setUiLoaded">setUiLoaded</a></li><li><a href="global.html#setUndoCallback">setUndoCallback</a></li><li><a href="global.html#setupAttributes">setupAttributes</a></li><li><a href="global.html#setUpdateList">setUpdateList</a></li><li><a href="global.html#setUpdateTime">setUpdateTime</a></li><li><a href="global.html#setUpEditButtons">setUpEditButtons</a></li><li><a href="global.html#setUpNavigator">setUpNavigator</a></li><li><a href="global.html#Setupsupthecallbackfortheregisterbuttonandthelostpasswordbutton.">Setups up the callback for the register button and the lost password button.</a></li><li><a href="global.html#setUserCreated">setUserCreated</a></li><li><a href="global.html#setWrapperFunction">setWrapperFunction</a></li><li><a href="global.html#showFormattedDate">showFormattedDate</a></li><li><a href="global.html#SketchSurfaceManager">SketchSurfaceManager</a></li><li><a href="global.html#speakText">speakText</a></li><li><a href="global.html#SRL_BoundingBox">SRL_BoundingBox</a></li><li><a href="global.html#SRL_Interpretation">SRL_Interpretation</a></li><li><a href="global.html#SRL_Object">SRL_Object</a></li><li><a href="global.html#SRL_Point">SRL_Point</a></li><li><a href="global.html#SRL_Shape">SRL_Shape</a></li><li><a href="global.html#SRL_Stroke">SRL_Stroke</a></li><li><a href="global.html#SubmissionPanel">SubmissionPanel</a></li><li><a href="global.html#TextBox">TextBox</a></li><li><a href="global.html#Thecallbackiscalledwhentheregisterbuttonispressed.">The callback is called when the register button is pressed.</a></li><li><a href="global.html#Thecallbackiscalledwithoneparameter.">The callback is called with one parameter.</a></li><li><a href="global.html#thefunctionusedforsubmittinglogininformation.Alsotheonlydifferencebetweenlogin.jsandregister.js">the function used for submitting login information.
+Also the only difference between login.js and register.js</a></li><li><a href="global.html#thefunctionusedforsubmittingregisterinformation.Alsotheonlydifferencebetweenlogin.jsandregister.js">the function used for submitting register information.
+Also the only difference between login.js and register.js</a></li><li><a href="global.html#TimelineMarker">TimelineMarker</a></li><li><a href="global.html#toggleSelection">toggleSelection</a></li><li><a href="global.html#undoAction">undoAction</a></li><li><a href="global.html#undoLastChange">undoLastChange</a></li><li><a href="global.html#UpdateManager">UpdateManager</a></li><li><a href="global.html#updatePath">updatePath</a></li><li><a href="global.html#waitForDatabase">waitForDatabase</a></li><li><a href="global.html#writeTextData">writeTextData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a> on Thu Mar 12 2015 21:20:23 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
