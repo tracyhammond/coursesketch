@@ -1,133 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>CourseSketch</groupId>
-	<artifactId>WebClient</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>WebClient</name>
-	<packaging>pom</packaging>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>CourseSketch</groupId>
+    <artifactId>WebClient</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>WebClient</name>
+    <packaging>pom</packaging>
 
-	<parent>
-		<groupId>CourseSketch</groupId>
-		<artifactId>CourseSketch-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../</relativePath>
-	</parent>
+    <profiles>
+        <profile>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <nodeVersion>v0.10.28</nodeVersion>
+            </properties>
+        </profile>
+    </profiles>
 
-	<properties>
-		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
-		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
-		<testDirectory>${basedir}/src/main/test</testDirectory>
-	</properties>
+    <parent>
+        <groupId>CourseSketch</groupId>
+        <artifactId>CourseSketch-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
+    </parent>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>${pmdVersion}</version>
-				<configuration>
-					<language>javascript</language>
-					<rulesets>
-						<ruleset>ecmascript-basic</ruleset>
-						<ruleset>ecmascript-braces</ruleset>
-						<ruleset>ecmascript-unnecessary</ruleset>
-					</rulesets>
-					<includes>
-						<include>**/*.js</include>
-					</includes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
+    <properties>
+        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+        <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
+        <testDirectory>${basedir}/src/main/test</testDirectory>
+        <nodeVersion>v0.10.30</nodeVersion>
+    </properties>
 
-	<build>
-		<sourceDirectory>${basedir}/src/main/src</sourceDirectory>
-		<plugins>
-			<!--
-			<plugin>
-				<groupId>com.cj.jshintmojo</groupId>
-				<artifactId>jshint-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>jshint</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>lint</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<version>2.4.1</version>
-					<configFile>config/jshint.conf.json</configFile>
-					<directories>
-						<directory>src/main/src</directory>
-					</directories>
-					<excludes>
-						<exclude>src/main/src/utilities/libraries</exclude>
-					</excludes>
-					<reporter>jslint</reporter>
-					<reportFile>target/jshint.xml</reportFile>
-					<failOnError>true</failOnError>
-				</configuration>
-			</plugin>
-			-->
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
-				<version>0.0.22</version>
+    <reporting>
+        <plugins>
+        </plugins>
+    </reporting>
 
-				<executions>
+    <build>
+        <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${pmdVersion}</version>
+                <configuration>
+                    <language>javascript</language>
+                    <rulesets>
+                        <ruleset>ecmascript-basic</ruleset>
+                        <ruleset>ecmascript-braces</ruleset>
+                        <ruleset>ecmascript-unnecessary</ruleset>
+                    </rulesets>
+                    <includes>
+                        <include>**/*.js</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>com.cj.jshintmojo</groupId>
+                <artifactId>jshint-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jshint</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>2.4.1</version>
+                    <configFile>config/jshint.conf.js</configFile>
+                    <directories>
+                        <directory>src/main/src</directory>
+                    </directories>
+                    <excludes>
+                        <exclude>src/main/src/utilities/libraries</exclude>
+                        <exclude>src/main/src/sketching/srl/legacy</exclude>
+                    </excludes>
+                    <reporter>jslint</reporter>
+                    <reportFile>target/jshint.xml</reportFile>
+                    <failOnError>true</failOnError>
+                </configuration>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
+                <version>0.0.22</version>
 
-					<execution>
-						<id>install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>v0.10.30</nodeVersion>
-							<npmVersion>1.4.21</npmVersion>
-						</configuration>
-					</execution>
+                <executions>
 
-					<execution>
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<!-- Optional configuration which provides for running any npm command -->
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>${nodeVersion}</nodeVersion>
+                            <npmVersion>1.4.21</npmVersion>
+                        </configuration>
+                    </execution>
 
-					<execution>
-						<id>bower install</id>
-						<goals>
-							<goal>bower</goal>
-						</goals>
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <!-- Optional configuration which provides for running any npm command -->
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
 
-					<execution>
-						<id>grunt build</id>
-						<goals>
-							<goal>grunt</goal>
-						</goals>
-						<configuration>
-							<arguments>--no-color</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+                    <execution>
+                        <id>bower install</id>
+                        <goals>
+                            <goal>bower</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
 
-	<dependencies>
-	</dependencies>
+                    <execution>
+                        <id>grunt build</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>--no-color</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+    </dependencies>
 
 </project>

@@ -1,6 +1,6 @@
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 module.exports = function(grunt) {
-    grunt.loadNpmTasks("grunt-jscs");
+    grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-connect-rewrite');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         jshint: {
             options: {
-                jshintrc: 'config/jshint.conf.json',
+                jshintrc: 'config/jshint.conf.js',
                 ignores: [ 'src/main/src/utilities/libraries/**/*.js', 'src/test/src/testUtilities/**/*.js' ],
                 globals: {
                     module: true
@@ -18,12 +18,12 @@ module.exports = function(grunt) {
                 reporterOutput: 'target/jshint.xml'
             },
             files: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                    '!src/test/src/testUtilities/**/*.js' ]
+                    '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
         },
         jscs: {
             src: '<%= jshint.files %>',
             options: {
-                config: 'config/jscs.conf.json',
+                config: 'config/jscs.conf.jscsrc',
                 reporterOutput: 'target/jscsReport.txt'
             }
         },
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
             },
             rules: [
                { from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1' },
-               { from: '^/test(.*)$', to: '/src/test/src$1', redirect: "permanent" },
+               { from: '^/test(.*)$', to: '/src/test/src$1', redirect: 'permanent' },
                { from: '^/other(.*)$', to: 'src/main/resources/other/$1' }
             ],
             development: {
@@ -71,19 +71,20 @@ module.exports = function(grunt) {
             },
             all: [ 'src/test/src/**/*Test.html' ]
         },
-        jsdoc : {
-            dist : {
-                src: ['Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                        '!src/test/src/testUtilities/**/*.js'],
+        jsdoc: {
+            dist: {
+                src: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
+                        '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ],
                 options: {
                     destination: 'doc'
                 }
             }
         }
     });
+    // target is a parameter to all registration functions, it is not used.
 
     // sets up tasks relating to starting the server
-    grunt.registerTask('server', function(target) {
+    grunt.registerTask('server', function() {
         grunt.task.run([
             'configureRewriteRules',
             'connect:development'
@@ -91,7 +92,7 @@ module.exports = function(grunt) {
     });
 
     // sets up tasks related to testing
-    grunt.registerTask('test', function(target) {
+    grunt.registerTask('test', function() {
         grunt.task.run([
             'server',
             'qunit'
@@ -99,12 +100,12 @@ module.exports = function(grunt) {
     });
 
     // sets up tasks related to checkstyle
-    grunt.registerTask('checkstyle', function(target) {
+    grunt.registerTask('checkstyle', function() {
         grunt.task.run([
             'jscs',
             'jshint'
         ]);
     });
-    // 'jsdoc'  wait till 3.3.0
-    grunt.registerTask('default', [ 'checkstyle', 'test' ]);
+    // 'test'  wait till browsers are better supported
+    grunt.registerTask('default', [ 'checkstyle', 'jsdoc' ]);
 };

@@ -1,5 +1,5 @@
 {
-    "requireCurlyBraces": [ "if", "else", "for", "while", "do", "try", "catch", "case", "default" ],
+    "requireCurlyBraces": [ "if", "else", "for", "while", "do", "try", "catch"],
 
     "requireSpaceAfterKeywords": [
         "if",
@@ -16,12 +16,6 @@
         "beforeOpeningCurlyBrace": true
     },
     "disallowSpacesInFunctionExpression": {
-        "beforeOpeningRoundBrace": true
-    },
-    "disallowSpacesInAnonymousFunctionExpression": {
-        "beforeOpeningRoundBrace": true
-    },
-    "disallowSpacesInNamedFunctionExpression": {
         "beforeOpeningRoundBrace": true
     },
     "requireOperatorBeforeLineBreak": [
@@ -49,13 +43,13 @@
     "validateParameterSeparator": ", ",
     "safeContextKeyword": ["localScope"],
     "requireSpacesInForStatement": true,
-    "requireCapitalizedComments": true,
+
     "disallowNewlineBeforeBlockStatements": true,
     "validateIndentation": 4,
     "requireParenthesesAroundIIFE": true,
     "requireBlocksOnNewline": true,
     "requireCommaBeforeLineBreak": true,
-    "requireCamelCaseOrUpperCaseIdentifiers": true,
+
     "maximumLineLength": 150,
     "disallowTrailingWhitespace": true,
     "requireCapitalizedConstructors": true,
@@ -79,11 +73,35 @@
     "disallowSpaceAfterObjectKeys": true,
     "validateLineBreaks": "LF",
 
+    "plugins": ["jscs-jsdoc"],
+    "jsDoc": {
+        "checkAnnotations": {
+            "preset": "jsdoc3",
+            "extra": {
+                "attribute": true,
+                "callbackParam": true
+            }
+        },
+        "checkParamNames": true,
+        "requireParamTypes": true,
+        "checkRedundantParams": true,
+        "checkReturnTypes": true,
+        "checkRedundantReturns": true,
+        "requireReturnTypes": true,
+        "checkTypes": "capitalizedNativeCase"
+    }
 
-    "comment": {
-        "THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER": "rules below",
+
+    /*
+        THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER
+
+        "requireCapitalizedComments": true,
+        "requireCamelCaseOrUpperCaseIdentifiers": true,
         "disallowMultipleLineBreaks": true,
         "requireAlignedObjectValues": "skipWithFunction",
         "disallowKeywordsInComments": true
-    }
+
+        inside jsdoc
+        "enforceExistence": true,
+    */
 }
