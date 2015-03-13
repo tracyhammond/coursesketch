@@ -70,7 +70,7 @@ function SketchSurface() {
 
     /**
      * binds the sketch surface to an update manager.
-     * @param UpdateManagerClass {UpdateManager instance | UpdateManager class} this takes an either an instance of an update manager.
+     * @param {UpdateManager instance | UpdateManager class} UpdateManagerClass this takes an either an instance of an update manager.
      * Or a update manager class that is then constructed.
      * You can only bind an update list to a sketch once.
      */
@@ -97,8 +97,7 @@ function SketchSurface() {
      * Draws the stroke then creates an update that is added to the update
      * manager, given a stroke.
      *
-     * @param stroke
-     *            {SRL_Stroke} a stroke that is added to the sketch.
+     * @param {SRL_Stroke} stroke a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
 
@@ -111,8 +110,7 @@ function SketchSurface() {
     }
 
     /**
-     * @param InputListener
-     *            {InputListenerClass} a class that represents an input listener.
+     * @param {InputListenerClass} InputListener a class that represents an input listener.
      */
     this.initializeInput = function(InputListener) {
         this.localInputListener = new InputListener();
@@ -125,7 +123,7 @@ function SketchSurface() {
     };
 
     /**
-     * resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
+     * Resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
      */
     this.resizeSurface = function() {
         this.sketchCanvas.height = $(this.sketchCanvas).height();
@@ -224,12 +222,12 @@ function SketchSurface() {
     /**
      * Loads all of the updates into the sketch.
      * This should only be done after the sketch surface is inserted into the dom.
-     * @param updateList {Array<SrlUpdate>}
+     * @param {Array<SrlUpdate>} updateList
      */
     this.loadUpdateList = function(updateList, percentBar, finishedCallback) {
         try {
             this.extractIdFromList(updateList);
-        } catch(exception) {
+        } catch (exception) {
             console.error(exception);
             throw exception;
         }
@@ -250,10 +248,8 @@ function SketchSurface() {
 SketchSurface.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param document
- *            {document} The document in which the node is being imported to.
- * @param templateClone
- *            {Element} an element representing the data inside tag, its content
+ * @param {document} document The document in which the node is being imported to.
+ * @param {Element} templateClone an element representing the data inside tag, its content
  *            has already been imported and then added to this element.
  */
 SketchSurface.prototype.initializeElement = function(templateClone) {
