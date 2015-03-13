@@ -220,7 +220,7 @@ validateFirstGlobalRun(document.currentScript);
                 return 'CLEAR';
             }
         }
-        return "NO_NAME # is: " + this.getCommandType();
+        return 'NO_NAME # is: ' + this.getCommandType();
     };
 
     /***************************************************************************

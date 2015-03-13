@@ -34,9 +34,9 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.showCourses = function(courseList) {
         courseManagement.commonShowCourses(courseList);
-        hideButton("assignment_button");
-        hideButton("problem_button");
-        var children = document.getElementById('class_list_column').querySelectorAll("school-item");
+        hideButton('assignment_button');
+        hideButton('problem_button');
+        var children = document.getElementById('class_list_column').querySelectorAll('school-item');
         for (var i = 0; i < children.length; i++) {
             var schoolItem = children[i];
             schoolItem.setEditCallback(courseManagement.courseEndEdit);
@@ -55,12 +55,12 @@ validateFirstRun(document.currentScript);
         // by instructors
         var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
         // course.id = "Course_01";
-        course.name = "Insert name";
-        course.description = "Insert description";
-        // course.semester = "Should be in format: '_F13' (_F = Fall, Sp =
-        // Spring, Su = Summer) ";
-        // course.accessDate = "mm/dd/yyyy";
-        // course.closeDate = "mm/dd/yyyy";
+        course.name = 'Insert name';
+        course.description = 'Insert description';
+        // course.semester = 'Should be in format: '_F13' (_F = Fall, Sp =
+        // Spring, Su = Summer) ';
+        // course.accessDate = 'mm/dd/yyyy';
+        // course.closeDate = 'mm/dd/yyyy';
         var isInserting = false;
         CourseSketch.dataManager.getAllCourses(function(courseList) {
             // ensure that we only insert once.
@@ -76,7 +76,7 @@ validateFirstRun(document.currentScript);
             }
             var oldId = undefined;
             CourseSketch.dataManager.insertCourse(course, function(insertedCourse) {
-                console.log("inserting course", insertedCourse);
+                console.log('inserting course', insertedCourse);
                 oldId = insertedCourse.id;
                 localCourseList.unshift(insertedCourse);
                 courseManagement.showCourses(localCourseList);
@@ -119,10 +119,10 @@ validateFirstRun(document.currentScript);
      * This also calls original showAssignments function in courseManagement after displaying the buttons.
      */
     courseManagement.showAssignments = function(assignmentList) {
-        showButton("assignment_button");
-        hideButton("problem_button");
+        showButton('assignment_button');
+        hideButton('problem_button');
         courseManagement.commonShowAssignments(assignmentList);
-        var children = document.getElementById('assignment_list_column').querySelectorAll("school-item");
+        var children = document.getElementById('assignment_list_column').querySelectorAll('school-item');
         for (var i = 0; i < children.length; i++) {
             var schoolItem = children[i];
             schoolItem.setEditCallback(courseManagement.assignmentEndEdit);
@@ -134,7 +134,7 @@ validateFirstRun(document.currentScript);
      * and adds it to the database.
      */
     courseManagement.addNewAssignment = function addNewAssignment() {
-        var courseId = document.querySelector("#class_list_column .selectedBox").id;
+        var courseId = document.querySelector('#class_list_column .selectedBox').id;
         var assignmentColumn = document.getElementById('assignment_list_column');
 
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
@@ -143,12 +143,12 @@ validateFirstRun(document.currentScript);
 
         // by instructors
         var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-        assignment.name = "Insert name";
+        assignment.name = 'Insert name';
         assignment.courseId = courseId;
         alert(courseId);
-        assignment.description = "Insert description";
-        // course.accessDate = "mm/dd/yyyy";
-        // course.closeDate = "mm/dd/yyyy";
+        assignment.description = 'Insert description';
+        // course.accessDate = 'mm/dd/yyyy';
+        // course.closeDate = 'mm/dd/yyyy';
         var isInserting = false;
         CourseSketch.dataManager.getAllAssignmentsFromCourse(courseId, function(assignmentList) {
             // ensure that we only insert once.
@@ -178,7 +178,7 @@ validateFirstRun(document.currentScript);
                 // updates the course too! (basically the assignment list)
                 CourseSketch.dataManager.getCourse(courseId, function(course) {
                     if (isUndefined(course) || course instanceof CourseSketch.DatabaseException) {
-                        throw new Error("Course is not defined while trying to add assignment.");
+                        throw new Error('Course is not defined while trying to add assignment.');
                     }
                     document.getElementById('class_list_column').querySelector(cssEscapeId(courseId)).schoolItemData = course;
                 });
@@ -220,9 +220,9 @@ validateFirstRun(document.currentScript);
      * This also calls original showProblems function in courseManagement after displaying the buttons.
      */
     courseManagement.showProblems = function(problemList) {
-        showButton("problem_button");
+        showButton('problem_button');
         courseManagement.commonShowProblems(problemList);
-        var children = document.getElementById('problem_list_column').querySelectorAll("school-item");
+        var children = document.getElementById('problem_list_column').querySelectorAll('school-item');
         for (var i = 0; i < children.length; i++) {
             var schoolItem = children[i];
             schoolItem.setEditCallback(courseManagement.problemEndEdit);
@@ -235,8 +235,8 @@ validateFirstRun(document.currentScript);
      * Displays the problem after it is added.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem() {
-        var courseId = document.querySelector("#class_list_column .selectedBox").id;
-        var assignmentId = document.querySelector("#assignment_list_column .selectedBox").id;
+        var courseId = document.querySelector('#class_list_column .selectedBox').id;
+        var assignmentId = document.querySelector('#assignment_list_column .selectedBox').id;
         var problemColumn = document.getElementById('problem_list_column');
 
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
@@ -245,16 +245,16 @@ validateFirstRun(document.currentScript);
 
         // by instructors
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-        bankProblem.questionText = prompt("Please enter the question text", "Default Question Text");
+        bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
         var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
         permissions.userPermission = [ courseId ];
         bankProblem.accessPermission = permissions;
 
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
         courseProblem.courseId = courseId;
-        courseProblem.name = "Insert Problem Name";
+        courseProblem.name = 'Insert Problem Name';
         courseProblem.assignmentId = assignmentId;
-        courseProblem.description = "";
+        courseProblem.description = '';
         courseProblem.setProblemInfo(bankProblem);
         var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
@@ -285,7 +285,7 @@ validateFirstRun(document.currentScript);
                 // updates the course too! (basically the problem list)
                 CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
                     if (isUndefined(assignment) || assignment instanceof CourseSketch.DatabaseException) {
-                        throw new Error("Course is not defined while trying to add problem.");
+                        throw new Error('Course is not defined while trying to add problem.');
                     }
                     document.getElementById('assignment_list_column').querySelector(cssEscapeId(assignmentId)).schoolItemData = assignment;
                 });
@@ -299,7 +299,7 @@ validateFirstRun(document.currentScript);
     function showButton(id) {
         var element = document.getElementById(id);
         if (element) {
-            element.style.display = "block";
+            element.style.display = 'block';
         }
     }
 
@@ -309,7 +309,7 @@ validateFirstRun(document.currentScript);
     function hideButton(id) {
         var element = document.getElementById(id);
         if (element) {
-            element.style.display = "none";
+            element.style.display = 'none';
         }
     }
 })();

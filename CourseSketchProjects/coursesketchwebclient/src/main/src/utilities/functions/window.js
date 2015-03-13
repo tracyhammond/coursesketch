@@ -34,7 +34,7 @@ if (isUndefined(fillHeight)) {
         var height = scope.window.innerHeight - 4;
         var element = scope.document.getElementById(id);
         element.height = height - element.offsetTop;
-        element.style.height = element.height + "px";
+        element.style.height = element.height + 'px';
     }
 }
 

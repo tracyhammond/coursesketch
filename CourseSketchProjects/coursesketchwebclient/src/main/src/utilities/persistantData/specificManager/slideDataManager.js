@@ -29,9 +29,9 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlideServer(slide, slideCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
-            console.log("RESPONSE PLEASE!!!!");
+            console.log('RESPONSE PLEASE!!!!');
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
-            var resultArray = item.getReturnText().split(":");
+            var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
             getSlideLocal(oldId, function(slide2) {
@@ -82,7 +82,7 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function(e, request) {
-            console.log("inserted locally :" + slide.id)
+            console.log('inserted locally :' + slide.id)
             if (!isUndefined(localCallback)) {
                 try {
                     localCallback(e, request);
@@ -91,13 +91,13 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
                 }
             }
             insertSlideServer(slide, function(slideUpdated) {
-                console.log("SLIDE IS UPADTED FROM SERVER! " + slideUpdated.id);
+                console.log('SLIDE IS UPADTED FROM SERVER! ' + slideUpdated.id);
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
                     var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
                     idInLecture.id = slideUpdated.id;
                     idInLecture.isSlide = true;
-                    console.log("SLIDE IS STUFF! " + idInLecture);
+                    console.log('SLIDE IS STUFF! ' + idInLecture);
                     idsInLectureList.push(idInLecture);
                     parent.setLecture(lecture, function() {
                         if (!isUndefined(serverCallback)) {
@@ -181,9 +181,9 @@ function SlideDataManager(parent, advanceDataListener, parentDatabase, sendData,
     function getLectureSlides (slideIds, localCallback, serverCallback) {
         if (isUndefined (slideIds) || slideIds == null || slideIds.length == 0) {
             if (!isUndefined(localCallback)) {
-                localCallback(new DatabaseException("Result is undefined!", "Grabbing slide from server: " + slideIds));
+                localCallback(new DatabaseException('Result is undefined!', 'Grabbing slide from server: ' + slideIds));
             } else {
-                serverCallback(new DatabaseException("Nothing is in the server database!", "Grabbing slide from server: " + slideIds));
+                serverCallback(new DatabaseException('Nothing is in the server database!', 'Grabbing slide from server: ' + slideIds));
             }
         }
         var barrier = slideIds.length;

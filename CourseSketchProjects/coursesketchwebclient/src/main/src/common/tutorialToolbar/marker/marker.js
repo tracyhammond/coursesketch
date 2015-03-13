@@ -11,7 +11,7 @@ function TimelineMarker() {
         var localScope = this; // This sets the variable to the level of the custom element tag
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        addCross(shadowRoot.querySelector("#picture"), this);
+        addCross(shadowRoot.querySelector('#picture'), this);
 
     };
 	/**
@@ -44,7 +44,7 @@ function TimelineMarker() {
      * For the user to see what text they have typed inside of the textboxes
      */
     this.setPreviewText = function(text) {
-        this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10) + (text.length > 10 ? "..." : "");
+        this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10) + (text.length > 10 ? '...' : '');
     };
 }
 TimelineMarker.prototype = Object.create(HTMLElement.prototype);

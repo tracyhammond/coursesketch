@@ -4,7 +4,7 @@
  */
 if (typeof isUndefined === 'undefined') {
     function isUndefined(object) {
-        return typeof object === "undefined";
+        return typeof object === 'undefined';
     }
 }
 
@@ -114,14 +114,14 @@ if (isUndefined(isFunction)) {
  */
 if (isUndefined(make2Digits)) {
     function make2Digits(num) {
-        return ("0" + Number(num)).slice(-2);
+        return ('0' + Number(num)).slice(-2);
     }
 }
 
 if (isUndefined(getMillitaryFormattedDateTime)) {
     function getMillitaryFormattedDateTime(dateTime) {
-        var date = make2Digits(dateTime.getMonth() + 1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();
-        var time = make2Digits(dateTime.getHours()) + ":" + make2Digits(dateTime.getMinutes());
+        var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
+        var time = make2Digits(dateTime.getHours()) + ':' + make2Digits(dateTime.getMinutes());
         return date + ' ' + time;
     }
 }
@@ -131,19 +131,19 @@ if (isUndefined(getMillitaryFormattedDateTime)) {
  */
 if (isUndefined(getFormattedDateTime)) {
     function getFormattedDateTime(dateTime) {
-        var date = make2Digits(dateTime.getMonth() + 1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();
+        var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
         var hours = dateTime.getHours();
-        var timeType = "AM";
+        var timeType = 'AM';
         if (dateTime.getHours() > 12) {
             hours -= 12;
         }
         if (dateTime.getHours() >= 12) {
-            timeType = "PM";
+            timeType = 'PM';
         }
         if (dateTime.getHours() === 0) {
             hours = 12;
         }
-        var time = make2Digits(hours) + ":" + make2Digits(dateTime.getMinutes()) + timeType;
+        var time = make2Digits(hours) + ':' + make2Digits(dateTime.getMinutes()) + timeType;
         return date + ' ' + time;
     }
 }
@@ -154,17 +154,17 @@ if (isUndefined(BaseException)) {
      * Defines the base exception class that can be extended by all other exceptions.
      */
     var BaseException = {
-        name:           "BaseException",
+        name:           'BaseException',
         /**
          * The level defines how bad it is. level 5 is the okayest exception
          * (with 6+ typically being ignored completely) and level 0 is the worst
          * exception (with <0 being treated as 0).
          */
         level:          5,
-        message:        "BaseException Thrown.\n Please subclass this to create a better exception.",
-        htmlMessage:    "BaseException Thrown<br> Please subclass this to create a better exception.",
+        message:        'BaseException Thrown.\n Please subclass this to create a better exception.',
+        htmlMessage:    'BaseException Thrown<br> Please subclass this to create a better exception.',
         toString: function() {
-            return this.name + ": " + this.message + (this.specificMessage ? "\n" + this.specificMessage : "");
+            return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '');
         },
         setMessage: function(messageValue) {
             this.specificMessage = messageValue;
@@ -175,12 +175,12 @@ if (isUndefined(BaseException)) {
 if (isUndefined(getTypeName)) {
     function getTypeName(value) {
         if (value === null) {
-            return "null";
+            return 'null';
         }
         var t = typeof value;
         switch (t) {
-            case "function":
-            case "object": {
+            case 'function':
+            case 'object': {
                 if (value.constructor) {
                     if (value.constructor.name) {
                         return value.constructor.name;
@@ -229,12 +229,12 @@ if (isUndefined(validateFirstRun)) {
         if (!isUndefined(scriptBay[scriptObject.src])) {
             var errorEvent = { src: scriptObject.src };
             var listener = function(event) {
-                if (typeof event.error === "object" && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
+                if (typeof event.error === 'object' && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
-                    window.removeEventListener("error", listener, true);
+                    window.removeEventListener('error', listener, true);
                 }
             };
-            window.addEventListener("error", listener, true);
+            window.addEventListener('error', listener, true);
             throw errorEvent;
         }
         scriptBay[scriptObject.src] = {};
@@ -257,12 +257,12 @@ if (isUndefined(validateFirstGlobalRun)) {
         if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
             var errorEvent = { src: scriptObject.src };
             var listener = function(event) {
-                if (typeof event.error === "object" && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
+                if (typeof event.error === 'object' && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
-                    window.removeEventListener("error", listener, true);
+                    window.removeEventListener('error', listener, true);
                 }
             };
-            window.addEventListener("error", listener, true);
+            window.addEventListener('error', listener, true);
             throw errorEvent;
         }
         CourseSketch.scriptBay[scriptObject.src] = {};

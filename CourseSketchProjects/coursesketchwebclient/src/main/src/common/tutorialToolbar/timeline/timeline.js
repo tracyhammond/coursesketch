@@ -21,7 +21,7 @@ function Timeline () {
      */
     this.continueButton = function(shadowRoot) {
         var localScope = this;
-        var continueButton = shadowRoot.querySelector(".btn");
+        var continueButton = shadowRoot.querySelector('.btn');
         continueButton.onclick = function() {
             localScope.addToolArea(shadowRoot.querySelector('.timeline'));
         };
@@ -32,8 +32,8 @@ function Timeline () {
      * as textbox, tts, highlight, sketch surface, etc
      */
     this.addToolArea = function(parent) {
-        var toolArea = document.createElement("div");
-        toolArea.className = "toolarea";
+        var toolArea = document.createElement('div');
+        toolArea.className = 'toolarea';
         parent.appendChild(toolArea);
         addPlusButton(toolArea, this);
         this.index.addNewToolArea(toolArea);
@@ -43,13 +43,13 @@ function Timeline () {
      * the plus button calls show tools to list out the available tools
      */
     function addPlusButton (parent, localScope) {
-        var plusButton = document.createElement("div");
-        plusButton.title = "Add tutorial element";
-        plusButton.className = "plusbutton";
+        var plusButton = document.createElement('div');
+        plusButton.title = 'Add tutorial element';
+        plusButton.className = 'plusbutton';
         parent.appendChild(plusButton);
         plusButton.onclick = function() {
             $(plusButton).empty();
-            $(plusButton).addClass("tall");
+            $(plusButton).addClass('tall');
             showTools(plusButton, parent, localScope);
         };
     }
@@ -66,13 +66,13 @@ function Timeline () {
 
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
-     * when clicked, the "preview" button will be added to the step
+     * when clicked, the 'preview' button will be added to the step
      * This allows the user to create a text box to further explain steps in the tutorial
      */
     function addTextBoxButton (plusButton, toolArea, localScope) {
-        var textBoxButton = document.createElement("div");
-        textBoxButton.title = "Add text box";
-        textBoxButton.className = "textboxbutton";
+        var textBoxButton = document.createElement('div');
+        textBoxButton.title = 'Add text box';
+        textBoxButton.className = 'textboxbutton';
         plusButton.appendChild(textBoxButton);
 
         textBoxButton.onclick = function(event) {
@@ -97,15 +97,15 @@ function Timeline () {
                 }
             }
 
-            var textBoxMarker = document.createElement("timeline-marker");
-            textBoxMarker.className = "textbox";
+            var textBoxMarker = document.createElement('timeline-marker');
+            textBoxMarker.className = 'textbox';
             toolArea.appendChild(textBoxMarker);
             textBoxMarker.showBox = textBox;
             $(plusButton).empty();
             /**
              * alter the css tall class to show more rows for more tools
              */
-            $(plusButton).removeClass("tall");
+            $(plusButton).removeClass('tall');
             textBoxFinishedListener = function(command, event, currentUpdate) {
                 var textBox = document.getElementById(command.commandId);
                 //textBox.id = command.commandId;
@@ -139,9 +139,9 @@ function Timeline () {
      * This allows the user to create audible text
      */
     function addTtsBoxButton (plusButton, toolArea, localScope) {
-        var ttsBoxButton = document.createElement("div");
-        ttsBoxButton.title = "Add text to speech box";
-        ttsBoxButton.className = "ttsboxbutton";
+        var ttsBoxButton = document.createElement('div');
+        ttsBoxButton.title = 'Add text to speech box';
+        ttsBoxButton.className = 'ttsboxbutton';
         plusButton.appendChild(ttsBoxButton);
 
         ttsBoxButton.onclick = function(event) {
@@ -166,12 +166,12 @@ function Timeline () {
                 }
             }
 
-            var ttsBoxMarker = document.createElement("timeline-marker");
-            ttsBoxMarker.className = "ttsbox";
+            var ttsBoxMarker = document.createElement('timeline-marker');
+            ttsBoxMarker.className = 'ttsbox';
             toolArea.appendChild(ttsBoxMarker);
             ttsBoxMarker.showBox = ttsBox;
             $(plusButton).empty();
-            $(plusButton).removeClass("tall");
+            $(plusButton).removeClass('tall');
 
             ttsBoxFinishedListener = function(command, event, currentUpdate) {
                 var ttsBox = document.getElementById(command.commandId);
@@ -205,18 +205,18 @@ function Timeline () {
      * The highlight tool will highlight any valid text  for a given step.  Saving the highlighting still needs to be worked on
      */
     function addHighlightButton (plusButton, toolArea, localScope) {
-        var highlightButton = document.createElement("div");
-        highlightButton.title = "Highlight text";
-        highlightButton.className = "highlightbutton";
+        var highlightButton = document.createElement('div');
+        highlightButton.title = 'Highlight text';
+        highlightButton.className = 'highlightbutton';
         plusButton.appendChild(highlightButton);
         highlightButton.onclick = function(event) {
             event.stopPropagation();
 
             // This prevents the user from making two highlightText tools in the same tutorial step
             if (document.querySelector('highlight-text-creation') !== null) {
-                alert("You already have a highlight tool for this step!");
+                alert('You already have a highlight tool for this step!');
                 $(plusButton).empty();
-                $(plusButton).removeClass("tall");
+                $(plusButton).removeClass('tall');
                 return;
             }
 
@@ -227,11 +227,11 @@ function Timeline () {
             highlightText.currentUpdate = currentUpdate;
             /* end of creating the highlightTool */
 
-            var highlightMarker = document.createElement("timeline-marker");
-            highlightMarker.className = "highlight";
+            var highlightMarker = document.createElement('timeline-marker');
+            highlightMarker.className = 'highlight';
             toolArea.appendChild(highlightMarker);
             $(plusButton).empty();
-            $(plusButton).removeClass("tall");
+            $(plusButton).removeClass('tall');
 
             function closeHighlightText(command) {
                 var highlightText = document.getElementById(command.commandId);
@@ -243,7 +243,7 @@ function Timeline () {
                 if (highlightMarker !== null) {
                     highlightMarker.parentNode.removeChild(highlightMarker);
                 }
-                $(".highlightedText").contents().unwrap();
+                $('.highlightedText').contents().unwrap();
                 document.normalize();
             }
 
@@ -276,16 +276,16 @@ function Timeline () {
      * This will create a simple sketch surface to draw on.  Currently this isn't called because it isn't finished
      */
     function addSketchSurfaceButton(plusButton, toolArea, localScope) {
-        var sketchSurfaceButton = document.createElement("div");
-        sketchSurfaceButton.title = "Sketch Surface";
-        sketchSurfaceButton.className = "sketchsurfacebutton";
+        var sketchSurfaceButton = document.createElement('div');
+        sketchSurfaceButton.title = 'Sketch Surface';
+        sketchSurfaceButton.className = 'sketchsurfacebutton';
         plusButton.appendChild(sketchSurfaceButton);
         sketchSurfaceButton.onclick = function(event) {
             event.stopPropagation();
             var sketchSurface = document.createElement('sketch-surface');
             document.body.appendChild(sketchSurface);
             $(plusButton).empty();
-            $(plusButton).removeClass("tall");
+            $(plusButton).removeClass('tall');
         };
     }
     /**
@@ -320,7 +320,7 @@ function Timeline () {
                     document.body.removeChild(elementToDelete);
                 }
             }
-            $(".highlightedText").contents().unwrap();
+            $('.highlightedText').contents().unwrap();
             document.normalize();
             /* Normalize joins adjacent text nodes. The wrap/unwrap ends up with 3 adjacent text nodes.
                Visually no different, but needed for future highlighting */

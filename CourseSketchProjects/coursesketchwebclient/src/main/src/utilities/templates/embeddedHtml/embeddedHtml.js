@@ -29,7 +29,7 @@ function EmbeddedHtml() {
         embeddedHtmlProto.embeddedHtml = this.shadowRoot.innerHTML;
 
         // If the image does not have an id, then a command has not been created for the image
-        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === '')) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_EMBEDDED_HTML, true);
         }
         this.command.setCommandData(embeddedHtmlProto.toArrayBuffer()); // Sets commandData for commandlist

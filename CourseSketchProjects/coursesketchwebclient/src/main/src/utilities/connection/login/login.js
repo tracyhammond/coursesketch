@@ -24,7 +24,7 @@ function LoginSystem() {
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
             if (isUndefined(connection)) {
                 // If this became undefined then we should stop trying to connect.
-                throw "this connection object is no longer valid";
+                throw 'this connection object is no longer valid';
             }
             if (evt.code === connection.CONNECTION_LOST) {
                 if (!attemptingToReconnect) {
@@ -37,13 +37,13 @@ function LoginSystem() {
                 }
             } else {
                 if (!attemptingToReconnect) {
-                    alert("SERVER CLOSED CONNECTION");
+                    alert('SERVER CLOSED CONNECTION');
                 }
             }
         });
         connection.setOnOpenListener(function(evt) {
             // Do something on opening?
-            alert("You are now able to log in");
+            alert('You are now able to log in');
             connected = true;
         });
         connection.reconnect();
@@ -81,7 +81,7 @@ function LoginSystem() {
                     var loginInfo = CourseSketch.PROTOBUF_UTIL.getLoginInformationClass().decode(message.otherData);
                     console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
-                        console.log("successfully login!");
+                        console.log('successfully login!');
                         // Successful login here
                         isInstructor = loginInfo.isInstructor;
                         userId = loginInfo.userId;
@@ -90,17 +90,17 @@ function LoginSystem() {
             }
 
             if (!isUndefined(userId) && !isUndefined(isInstructor)) {
-                console.log("Sucessful login!!!");
+                console.log('Sucessful login!!!');
                 // Successful login here
                 makeValueReadOnly(connection, 'isInstructor', isInstructor);
                 makeValueReadOnly(connection, 'userId', userId);
-                makeValueReadOnly(connection, 'userName', shadowRoot.querySelector("#username").value);
+                makeValueReadOnly(connection, 'userName', shadowRoot.querySelector('#username').value);
 
                 // Remove oneself from being able to respond to login attempts
                 connection.setLoginListener(undefined);
                 successLoginCallback(connection);
             } else {
-                alert("not able to login: " + message.responseText);
+                alert('not able to login: ' + message.responseText);
             }
         }
         connection.setLoginListener(onLogin);
@@ -114,18 +114,18 @@ function LoginSystem() {
      * Also the only difference between login.js and register.js
      */
     function formSubmit() {
-        console.log("Submitting something?");
+        console.log('Submitting something?');
         function sendLogin(arg1, arg2) {
             if (!connection.isConnected()) {
-                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using" +
-                        " \n the newest version of chrome. If you are still unable to login please email" +
-                        " \n server@coursesketch.com with your device, and web browser");
+                alert('You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using' +
+                        ' \n the newest version of chrome. If you are still unable to login please email' +
+                        ' \n server@coursesketch.com with your device, and web browser');
                 return;
             }
             var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
 
             loginInfo.username = arg1;
-            loginInfo.password = "" + arg2;
+            loginInfo.password = '' + arg2;
 
             var request = CourseSketch.PROTOBUF_UTIL.Request();
             request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
@@ -133,11 +133,11 @@ function LoginSystem() {
                 request.login = loginInfo;
             }
             request.otherData = loginInfo.toArrayBuffer();
-            console.log("Sending login information");
+            console.log('Sending login information');
             connection.sendRequest(request);
-            console.log("login information sent successfully");
+            console.log('login information sent successfully');
         }
-        sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(shadowRoot.querySelector("#password").value));
+        sendLogin(shadowRoot.querySelector('#username').value, CryptoJS.SHA3(shadowRoot.querySelector('#password').value));
     }
 
     /**
@@ -146,9 +146,9 @@ function LoginSystem() {
     function setupFormScript() {
         formSubmitFunction = formSubmit;
 
-        var formElement = shadowRoot.querySelector("#submitForm");
+        var formElement = shadowRoot.querySelector('#submitForm');
 
-        formElement.action = "Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()";
+        formElement.action = 'Javascript:(function() { document.querySelector('login-system').getFormSubmitFunction()();})()';
     }
 
     /**
@@ -156,7 +156,7 @@ function LoginSystem() {
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
-        shadowRoot.querySelector("#registerButton").onclick = function() {
+        shadowRoot.querySelector('#registerButton').onclick = function() {
             if (registerCallback) {
                 registerCallback();
             }

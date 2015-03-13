@@ -25,7 +25,7 @@ function RegisterSystem() {
             if (evt.code === connection.CONNECTION_LOST) {
                 if (isUndefined(connection)) {
                     // if this became undefined then we should stop trying to connect.
-                    throw "this connection object is no longer valid";
+                    throw 'this connection object is no longer valid';
                 }
                 if (!attemptingToReconnect) {
                     alert('can not connect to the server');
@@ -37,13 +37,13 @@ function RegisterSystem() {
                 }
             } else {
                 if (!attemptingToReconnect) {
-                    alert("SERVER CLOSED CONNECTION");
+                    alert('SERVER CLOSED CONNECTION');
                 }
             }
         });
         connection.setOnOpenListener(function(evt) {
             // do something on opening?
-            alert("You are now able to log in");
+            alert('You are now able to log in');
             connected = true;
         });
         connection.reconnect();
@@ -85,7 +85,7 @@ function RegisterSystem() {
                     var loginInfo = CourseSketch.PROTOBUF_UTIL.getLoginInformationClass().decode(message.otherData);
                     console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
-                        console.log("successfully login!");
+                        console.log('successfully login!');
                         // successful login here
                         isInstructor = loginInfo.isInstructor;
                         userId = loginInfo.userId;
@@ -94,7 +94,7 @@ function RegisterSystem() {
             }
 
             if (!isUndefined(userId) && !isUndefined(isInstructor)) {
-                console.log("Sucessful login!!!");
+                console.log('Sucessful login!!!');
                 // successful login here
                 makeValueReadOnly(connection, 'isInstructor', isInstructor);
                 makeValueReadOnly(connection, 'userId', userId);
@@ -103,7 +103,7 @@ function RegisterSystem() {
                 connection.setLoginListener(undefined);
                 successLoginCallback(connection);
             } else {
-                alert("not able to login: " + message.responseText);
+                alert('not able to login: ' + message.responseText);
             }
         }
         connection.setLoginListener(onLogin);
@@ -119,15 +119,15 @@ function RegisterSystem() {
     function formSubmit() {
         function sendLogin(arg1, arg2, email, isInstructor) {
             if (!connection.isConnected()) {
-                alert("You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using" +
-                        " \n the newest version of chrome. If you are still unable to login please email" +
-                        " \n server@coursesketch.com with your device, and web browser");
+                alert('You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using' +
+                        ' \n the newest version of chrome. If you are still unable to login please email' +
+                        ' \n server@coursesketch.com with your device, and web browser');
                 return;
             }
             var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
 
             loginInfo.username = arg1;
-            loginInfo.password = "" + arg2;
+            loginInfo.password = '' + arg2;
             loginInfo.email = email;
             loginInfo.isRegistering = true;
             loginInfo.isInstructor = isInstructor;
@@ -139,17 +139,17 @@ function RegisterSystem() {
 
             request.otherData = loginInfo.toArrayBuffer();
             connection.sendRequest(request);
-            console.log("Sending register information");
+            console.log('Sending register information');
         }
 
-        var p1 = shadowRoot.querySelector("#password1").value;
-        var p2 = shadowRoot.querySelector("#password2").value;
+        var p1 = shadowRoot.querySelector('#password1').value;
+        var p2 = shadowRoot.querySelector('#password2').value;
         if (p1 !== p2) {
-            alert("The passwords must match");
+            alert('The passwords must match');
             return;
         }
-        sendLogin(shadowRoot.querySelector("#username").value, CryptoJS.SHA3(p1),
-                shadowRoot.querySelector("#email").value, shadowRoot.querySelector("#myonoffswitch").checked);
+        sendLogin(shadowRoot.querySelector('#username').value, CryptoJS.SHA3(p1),
+                shadowRoot.querySelector('#email').value, shadowRoot.querySelector('#myonoffswitch').checked);
     }
 
     /**
@@ -158,9 +158,9 @@ function RegisterSystem() {
     function setupFormScript() {
         formSubmitFunction = formSubmit;
 
-        var formElement = shadowRoot.querySelector("#submitForm");
+        var formElement = shadowRoot.querySelector('#submitForm');
 
-        formElement.action = "Javascript:(function() { document.querySelector('register-system').getFormSubmitFunction()();})()";
+        formElement.action = 'Javascript:(function() { document.querySelector('register-system').getFormSubmitFunction()();})()';
     }
 
     /**
@@ -168,7 +168,7 @@ function RegisterSystem() {
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
-        shadowRoot.querySelector("#cancel").onclick = function() {
+        shadowRoot.querySelector('#cancel').onclick = function() {
             if (cancelCallback) {
                 cancelCallback();
             }

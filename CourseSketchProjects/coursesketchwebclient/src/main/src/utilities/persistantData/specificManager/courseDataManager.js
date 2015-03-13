@@ -1,5 +1,5 @@
 function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
-    var COURSE_LIST = "COURSE_LIST";
+    var COURSE_LIST = 'COURSE_LIST';
     var userCourseId = new Array();
     var userHasCourses = true;
     var dataListener = advanceDataListener;
@@ -65,16 +65,16 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     function getCourseLocal(courseId, courseCallback) {
         if (isUndefined(courseId) || courseId == null) {
-            courseCallback(new DatabaseException("The given id is not assigned", "getting Course: " + courseId));
+            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
         }
         // quick and dirty failed fallback to local db
         database.getFromCourses(courseId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                courseCallback(new DatabaseException("The result is undefined", "getting Course: " + courseId));
+                courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
             } else if (result.data == nonExistantValue) {
                 // the server holds this special value then it means the server
                 // does not have the value
-                courseCallback(new DatabaseException("The database does not hold this value", "getting Course: " + courseId));
+                courseCallback(new DatabaseException('The database does not hold this value', 'getting Course: ' + courseId));
             } else {
                 // gets the data from the database and calls the callback
                 try {
@@ -82,7 +82,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
                 } catch (exception) {
                     console.error(exception);
-                    courseCallback(new DatabaseException("The result is undefined", "getting Course: " + courseId));
+                    courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
                 }
             }
         });
@@ -105,7 +105,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     function getCourse(courseId, courseCallback) {
         if (isUndefined(courseId) || courseId == null) {
-            courseCallback(new DatabaseException("The given id is not assigned", "getting Course: " + courseId));
+            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
         }
 
         getCourseLocal(courseId, function(course) {
@@ -115,7 +115,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
                     var course = school.courses[0];
                     if (isUndefined(course)) {
-                        courseCallback(new DatabaseException("Course does not exist in the remote database."));
+                        courseCallback(new DatabaseException('Course does not exist in the remote database.'));
                         return;
                     }
                     setCourse(course, function() {
@@ -214,10 +214,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
             // there was an error getting the user classes.
-            if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText != "null" && item.returnText != null) {
+            if (!isUndefined(item.returnText) && item.returnText != '' && item.returnText != 'null' && item.returnText != null) {
                 userHasCourses = false;
                 console.log(item.returnText);
-                courseCallback(new DatabaseException(item.returnText, "Getting all courses for user " + parent.getCurrentId()));
+                courseCallback(new DatabaseException(item.returnText, 'Getting all courses for user ' + parent.getCurrentId()));
                 return;
             }
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
@@ -232,26 +232,26 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
         });
         if (userCourseId.length == 0 && userHasCourses && !onlyLocal) {
-            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
-            // console.log("course list from server polled!");
+            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+            // console.log('course list from server polled!');
         } else {
             // This calls the server for updates then creates a list from the
             // local data to appear fast
             // then updates list after server polling and comparing the two
             // list.
-            // console.log("course list from local place polled!");
+            // console.log('course list from local place polled!');
             var courseList = [];
 
             // ask server for course list
             if (!onlyLocal && false) { // TODO: this should maybe only ask after a certain amount of time since last updated?
-                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
+                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
             }
 
             var localCourseCallback = createBarrier(userCourseId.length, function() {
                 if (courseList.length > 0) {
                     courseCallback(courseList);
                 } else {
-                    courseCallback(new DatabaseException("No Valid Courses exist locally for this user"));
+                    courseCallback(new DatabaseException('No Valid Courses exist locally for this user'));
                 }
             });
             // create local course list so everything appears really fast!
@@ -265,7 +265,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
 
             if (userCourseId.length == 0 && onlyLocal) {
-                courseCallback(new DatabaseException("No Courses exist locally for this user"));
+                courseCallback(new DatabaseException('No Courses exist locally for this user'));
             }
         }
     }
@@ -298,7 +298,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
             advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
-                var resultArray = item.getReturnText().split(":");
+                var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
                 // we want to get the current course in the local database in case

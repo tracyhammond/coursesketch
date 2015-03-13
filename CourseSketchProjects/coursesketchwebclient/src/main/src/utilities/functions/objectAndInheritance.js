@@ -27,13 +27,13 @@ Function.prototype.Inherits = function(Parent) {
         localConstructor = localScope.prototype.superConstructor = function() {
             // special setting
             this.superConstructor = parentConstructor;
-            // console.log("Setting parent constructor" + parent);
+            // console.log('Setting parent constructor' + parent);
             if (arguments.length >= 1) {
                 Parent.apply(this, Array.prototype.slice.call(arguments, 0));
             } else {
                 Parent.apply(this);
             }
-            // console.log("Setting back to current constructor" +
+            // console.log('Setting back to current constructor' +
             // localConstructor);
             this.superConstructor = localConstructor;
         };
@@ -59,8 +59,8 @@ Function.prototype.Inherits = function(Parent) {
  */
 if (isUndefined(makeValueReadOnly)) {
     function makeValueReadOnly(obj, property, value) {
-        if (typeof property !== "string") {
-            throw new Error("property argument must be a string");
+        if (typeof property !== 'string') {
+            throw new Error('property argument must be a string');
         }
         Object.defineProperty(obj, property, {
             value:      value,

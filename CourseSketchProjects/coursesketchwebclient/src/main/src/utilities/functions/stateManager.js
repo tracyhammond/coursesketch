@@ -28,8 +28,8 @@
 function Redirector(scope, affectedWindow) {
     var scope = scope;
     var activeState = false;
-    var STARTING_URL = "src";
-    var FILE_ENDINGS = "html";
+    var STARTING_URL = 'src';
+    var FILE_ENDINGS = 'html';
     /**
      * Sets the hash url to the file location.
      *

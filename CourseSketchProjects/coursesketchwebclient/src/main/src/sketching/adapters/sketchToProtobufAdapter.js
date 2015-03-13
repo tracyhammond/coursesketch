@@ -7,7 +7,7 @@
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
         proto.id = this.getId();
         var n = this.getTime();
-        proto.setTime("" + n);
+        proto.setTime('' + n);
         proto.name = this.getName();
         proto.x = this.getX();
         proto.y = this.getY();
@@ -48,7 +48,7 @@
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
         proto.id = this.getId();
         var n = this.getTime();
-        proto.setTime("" + n);
+        proto.setTime('' + n);
         proto.name = this.getName();
         var array = [];
         var points = this.getPoints();
@@ -101,7 +101,7 @@
 
         proto.id = this.getId();
         var n = this.getTime();
-        proto.setTime("" + n);
+        proto.setTime('' + n);
         proto.name = this.getName();
         return proto;
     };

@@ -23,7 +23,7 @@ function SchoolItem() {
 
         var nodes = descriptionContent.getDistributedNodes();
         if (!nodes || nodes === null || nodes.length === 0) {
-            descriptionContent.dataset.overflow = "false";
+            descriptionContent.dataset.overflow = 'false';
             return false;
         }
         var element = nodes[0];
@@ -34,9 +34,9 @@ function SchoolItem() {
         var usedWidth = $(window).width();
         for (var i = 0; i < widths.length; i++) {
             var width = widths[i];
-            if (typeof width === "string") {
-                if (width.endsWith && width.endsWith("px")) {
-                    width = width.substring(0, width.indexOf("px"));
+            if (typeof width === 'string') {
+                if (width.endsWith && width.endsWith('px')) {
+                    width = width.substring(0, width.indexOf('px'));
                     width = parseInt(width);
                 } else {
                     break;
@@ -48,7 +48,7 @@ function SchoolItem() {
         }
         var padding = 20; // left right padding is 10
         var isOverflow = checkTextOverflow(usedWidth - padding, text, $(element).css('font'));
-        descriptionContent.dataset.overflow = "" + isOverflow;
+        descriptionContent.dataset.overflow = '' + isOverflow;
         return isOverflow;
     };
 
@@ -75,7 +75,7 @@ function SchoolItem() {
         }
 
         var paragraph = this.shadowRoot.querySelector('.description p');
-        $(paragraph).addClass("overflow");
+        $(paragraph).addClass('overflow');
 
         var descriptionContent = this.shadowRoot.querySelector('.description content');
         var nodes = descriptionContent.getDistributedNodes();
@@ -139,7 +139,7 @@ function SchoolItem() {
                     }
                 };
                 // do something else for the advance button.
-                if ($(element).hasClass("advanceButton")) {
+                if ($(element).hasClass('advanceButton')) {
                     if (localScope.createAdvanceEditPanel) {
                         localScope.createAdvanceEditPanel(element, localScope, parentNode);
                     }
@@ -154,7 +154,7 @@ function SchoolItem() {
                         $(parentNode).addClass(editingClass);
 
                         if (isUndefined(contentElement)) {
-                            contentElement = document.createElement("div");
+                            contentElement = document.createElement('div');
                             $(contentElement).addClass(element.dataset.type);
                             localScope.appendChild(contentElement);
                         }

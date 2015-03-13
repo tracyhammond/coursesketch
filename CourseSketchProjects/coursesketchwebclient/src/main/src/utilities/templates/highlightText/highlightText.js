@@ -13,8 +13,8 @@ function HighlightText() {
      * It also ignores click and drag from textareas and buttons within the dialog
      */
     function enableDragging() {
-        interact(shadowRoot.querySelector("#highlightTextDialog"))
-            .ignoreFrom("button")
+        interact(shadowRoot.querySelector('#highlightTextDialog'))
+            .ignoreFrom('button')
             .draggable({
                 onmove: function(event) {
                     var target = event.target;
@@ -32,7 +32,7 @@ function HighlightText() {
             })
             .inertia(false)
             .restrict({
-                drag: "parent",
+                drag: 'parent',
                 endOnly: true,
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         });
@@ -46,7 +46,7 @@ function HighlightText() {
      */
     function checkChildrenNodes(children) {
         for (i = 0; i < children.length; i++) {
-            if (children[i].nodeName !== "#text" && children[i].nodeName !== "SPAN") {
+            if (children[i].nodeName !== '#text' && children[i].nodeName !== 'SPAN') {
                 return false;
             }
         }
@@ -59,7 +59,7 @@ function HighlightText() {
      * The selection must also contain characters (no alert for this)
      */
     function highlightText() {
-        if (window.getSelection().type !== "None") {
+        if (window.getSelection().type !== 'None') {
             var myText = window.getSelection();
             var range = myText.getRangeAt();
             children = range.cloneContents().childNodes;
@@ -79,7 +79,7 @@ function HighlightText() {
                     range.insertNode(newNode); // Inserts the new node to where the old range was
                     this.saveData();
                 } else {
-                    alert("Please make a valid selection."); // Message for invalid selections
+                    alert('Please make a valid selection.'); // Message for invalid selections
                 }
             }
         }
@@ -120,10 +120,10 @@ function HighlightText() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         if (isUndefined(this.backgroundColor)) {
-            this.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+            this.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
         }
         if (isUndefined(this.textColor)) {
-            this.textColor = shadowRoot.querySelector("#textColor").value;
+            this.textColor = shadowRoot.querySelector('#textColor').value;
         }
         this.startPath = undefined;
         this.startOffset = undefined;
@@ -132,30 +132,30 @@ function HighlightText() {
         this.highlightProto = undefined;
 
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
-        shadowRoot.querySelector("#highlightMode").onchange = function() {
-            if (shadowRoot.querySelector("#highlightMode").checked) {
-                $(document).on("mouseup", highlightText.bind(this));
+        shadowRoot.querySelector('#highlightMode').onchange = function() {
+            if (shadowRoot.querySelector('#highlightMode').checked) {
+                $(document).on('mouseup', highlightText.bind(this));
             } else {
-                $(document).off("mouseup", highlightText.bind(this));
+                $(document).off('mouseup', highlightText.bind(this));
             }
         }.bind(this); // Binds this so the highlightText function can write to variables (this is to define the correct scope)
 
-        // Click action for the "X" that closes the dialog
-        shadowRoot.querySelector("#closeButton").onclick = function() {
-            if (confirm("You are about to permanently remove the highlighting from this step.")) {
-                $(document).off("mouseup", highlightText); // Removes the bound mouseup event
+        // Click action for the 'X' that closes the dialog
+        shadowRoot.querySelector('#closeButton').onclick = function() {
+            if (confirm('You are about to permanently remove the highlighting from this step.')) {
+                $(document).off('mouseup', highlightText); // Removes the bound mouseup event
                 localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate); // Gets and calls finishedCallback
             }
         };
 
         // Updates value of backgroundColor when the color selector value is changed by the user
-        shadowRoot.querySelector("#backgroundColor").onchange = function() {
-            localScope.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+        shadowRoot.querySelector('#backgroundColor').onchange = function() {
+            localScope.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
         };
 
         // Updates value of textColor when the color selecor value is changed by the user
-        shadowRoot.querySelector("#textColor").onchange = function() {
-            localScope.textColor = shadowRoot.querySelector("#textColor").value;
+        shadowRoot.querySelector('#textColor').onchange = function() {
+            localScope.textColor = shadowRoot.querySelector('#textColor').value;
         };
 
         enableDragging();
@@ -188,7 +188,7 @@ function HighlightText() {
         }
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
-        if ((isUndefined(this.id) || this.id === null || this.id === "")) {
+        if ((isUndefined(this.id) || this.id === null || this.id === '')) {
             this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist

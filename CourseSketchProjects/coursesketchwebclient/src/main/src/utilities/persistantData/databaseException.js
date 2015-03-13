@@ -7,9 +7,9 @@ function DatabaseException(message, request) {
     }
 }
 
-DatabaseException.prototype.message = "Generic database message";
-DatabaseException.prototype.request = "Generic request";
-DatabaseException.prototype.name = "DatabaseException";
+DatabaseException.prototype.message = 'Generic database message';
+DatabaseException.prototype.request = 'Generic request';
+DatabaseException.prototype.name = 'DatabaseException';
 DatabaseException.prototype.toString = function() {
-    return this.name + ": [" + this.message  + "] for request [" + this.request + "]";
+    return this.name + ': [' + this.message  + '] for request [' + this.request + ']';
 };

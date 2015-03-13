@@ -62,10 +62,10 @@ validateFirstRun(document.currentScript);
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
             var completionHandler = function() {
-                $(".slide-thumb").each(function() {
-                    $(this).removeClass("selected");
+                $('.slide-thumb').each(function() {
+                    $(this).removeClass('selected');
                 });
-                $("#" + slideIndex + ".slide-thumb").addClass("selected");
+                $('#' + slideIndex + '.slide-thumb').addClass('selected');
                 CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
                 CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
                     .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
@@ -77,7 +77,7 @@ validateFirstRun(document.currentScript);
 
                 // Need to do small delay here so the wait overlay actually shows up
                 setTimeout(function() {
-                    var elements = document.getElementById("slide-content").children;
+                    var elements = document.getElementById('slide-content').children;
 
                     // Need to remove all the old elements; they will be replaced by the new ones
                     CourseSketch.lecturePage.currentSlide.elements = [];
@@ -119,14 +119,14 @@ validateFirstRun(document.currentScript);
 
         // Do setup
         if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
-            CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
+            CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
             CourseSketch.dataManager.clearStates();
             CourseSketch.lecturePage.displaySlides();
         } else {
             var intervalVar = setInterval(function() {
                 if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
                     clearInterval(intervalVar);
-                    CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
+                    CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
                     CourseSketch.dataManager.clearStates();
                     CourseSketch.lecturePage.displaySlides();
                 }

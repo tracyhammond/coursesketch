@@ -90,7 +90,7 @@ validateFirstGlobalRun(document.currentScript);
                 return '' + type;
             }
         }
-        throw new CourseSketch.PROTOBUF_UTIL.ProtobufException("The assigned type (" + commandType + ") is not a value for enum CommandType");
+        throw new CourseSketch.PROTOBUF_UTIL.ProtobufException('The assigned type (' + commandType + ') is not a value for enum CommandType');
     };
 
     ProtoSrlCommand.decodedData = false;
@@ -103,9 +103,9 @@ validateFirstGlobalRun(document.currentScript);
      * @returns {Boolean} true if redoing the command requires a redraw of the screen.
      */
     ProtoSrlCommand.redo = function() {
-        var redoFunc = this["redo" + this.getCommandType()];
+        var redoFunc = this['redo' + this.getCommandType()];
         if (isUndefined(redoFunc)) {
-            throw (this.getCommandTypeName() + " is not defined as a redo function");
+            throw (this.getCommandTypeName() + ' is not defined as a redo function');
         }
         return redoFunc.bind(this)();
     };
@@ -118,9 +118,9 @@ validateFirstGlobalRun(document.currentScript);
      * @returns {Boolean} true if undoing the command requires a redraw of the screen.
      */
     ProtoSrlCommand.undo = function() {
-        var undoFunc = this["undo" + this.getCommandType()];
+        var undoFunc = this['undo' + this.getCommandType()];
         if (isUndefined(undoFunc)) {
-            throw (this.getCommandTypeName() + " is not defined as an undo function");
+            throw (this.getCommandTypeName() + ' is not defined as an undo function');
         }
         return undoFunc.bind(this)();
     };
@@ -133,12 +133,12 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
-            throw new CommandException("The input commandType can not be undefined");
+            throw new CommandException('The input commandType can not be undefined');
         }
-        if (!isUndefined(ProtoSrlCommand["redo" + commandType])) {
-            throw new CommandException("Method is already defined");
+        if (!isUndefined(ProtoSrlCommand['redo' + commandType])) {
+            throw new CommandException('Method is already defined');
         }
-        ProtoSrlCommand["redo" + commandType] = func;
+        ProtoSrlCommand['redo' + commandType] = func;
     };
 
     /**
@@ -149,12 +149,12 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod = function(commandType) {
         if (isUndefined(commandType)) {
-            throw new CommandException("The input commandType can not be undefined");
+            throw new CommandException('The input commandType can not be undefined');
         }
-        if (isUndefined(ProtoSrlCommand["redo" + commandType])) {
-            throw new CommandException("Method does not exist");
+        if (isUndefined(ProtoSrlCommand['redo' + commandType])) {
+            throw new CommandException('Method does not exist');
         }
-        ProtoSrlCommand["redo" + commandType] = undefined;
+        ProtoSrlCommand['redo' + commandType] = undefined;
     };
 
     /**
@@ -165,12 +165,12 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
-            throw new CommandException("The input commandType can not be undefined");
+            throw new CommandException('The input commandType can not be undefined');
         }
-        if (!isUndefined(ProtoSrlCommand["undo" + commandType])) {
-            throw new CommandException("Method is already defined");
+        if (!isUndefined(ProtoSrlCommand['undo' + commandType])) {
+            throw new CommandException('Method is already defined');
         }
-        ProtoSrlCommand["undo" + commandType] = func;
+        ProtoSrlCommand['undo' + commandType] = func;
     };
 
     /**
@@ -181,11 +181,11 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod = function(commandType) {
         if (isUndefined(commandType)) {
-            throw new CommandException("The input commandType can not be undefined");
+            throw new CommandException('The input commandType can not be undefined');
         }
-        if (isUndefined(ProtoSrlCommand["undo" + commandType])) {
-            throw new CommandException("Method does not exist");
+        if (isUndefined(ProtoSrlCommand['undo' + commandType])) {
+            throw new CommandException('Method does not exist');
         }
-        ProtoSrlCommand["undo" + commandType] = undefined;
+        ProtoSrlCommand['undo' + commandType] = undefined;
     };
 })();

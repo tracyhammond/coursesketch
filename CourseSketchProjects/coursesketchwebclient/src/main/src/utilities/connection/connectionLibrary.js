@@ -5,7 +5,7 @@
  */
 function Connection(uri, encrypted, attemptReconnect) {
 
-    console.log("Creating connection");
+    console.log('Creating connection');
     var connected = false;
     var onOpen = false;
     var onClose = false;
@@ -25,18 +25,18 @@ function Connection(uri, encrypted, attemptReconnect) {
     var totalTimeDifferance = dcodeIO.Long.fromInt(0);
     var timeDifferance = dcodeIO.Long.fromInt(0);
     var latency = dcodeIO.Long.fromInt(0);
-    var SEND_TIME_TO_CLIENT_MSG = "1";
-    var CLIENT_REQUEST_LATENCY_MSG = "2";
-    var SEND_LATENCY_TO_CLIENT_MSG = "3";
+    var SEND_TIME_TO_CLIENT_MSG = '1';
+    var CLIENT_REQUEST_LATENCY_MSG = '2';
+    var SEND_LATENCY_TO_CLIENT_MSG = '3';
 
     /**
      * Creates a websocket and adds typical websocket methods to it.
      */
     function createWebSocket() {
         try {
-            console.log("Creating socket at " + wsUri);
+            console.log('Creating socket at ' + wsUri);
             websocket = new WebSocket(wsUri);
-            websocket.binaryType = "arraybuffer"; // We are talking binary
+            websocket.binaryType = 'arraybuffer'; // We are talking binary
             websocket.onopen = function(evt) {
                 connected = true;
                 if (onOpen) {
@@ -54,12 +54,12 @@ function Connection(uri, encrypted, attemptReconnect) {
                 if (onClose) {
                     onClose(evt, attemptReconnect);
                 } else {
-                    alert("Connection to server closed");
+                    alert('Connection to server closed');
                 }
                 if (attemptReconnect) {
-                    console.log("going to attempt to reconnect in 3s");
+                    console.log('going to attempt to reconnect in 3s');
                     timeoutVariable = setTimeout(function() {
-                        console.log("attempting to reconnect now!");
+                        console.log('attempting to reconnect now!');
                         localScope.reconnect();
                     }, 3000);
                 }
@@ -69,28 +69,28 @@ function Connection(uri, encrypted, attemptReconnect) {
                     var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
                     // Decode the Request
                     var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
-                    // console.log("request decoded succesfully ");
+                    // console.log('request decoded succesfully ');
                     if (msg.requestType === MessageType.TIME) {
-                        console.log("getting from time");
+                        console.log('getting from time');
                         var rsp = onTime(evt, msg);
                         if (rsp !== null) {
                             localScope.sendRequest(rsp);
                         }
                     } else if (msg.requestType === MessageType.LOGIN && onLogin) {
-                        console.log("getting from login");
+                        console.log('getting from login');
                         onLogin(evt, msg);
                     } else if (msg.requestType === MessageType.RECOGNITION && onRecognition) {
-                        console.log("getting from recognition");
+                        console.log('getting from recognition');
                         onRecognition(evt, msg);
                     } else if (msg.requestType === MessageType.SUBMISSION && onSubmission) {
-                        console.log("getting from submission");
+                        console.log('getting from submission');
                         onSubmission(evt, msg);
                     } else if (msg.requestType === MessageType.FEEDBACK && onAnswerChecker) {
-                        console.log("getting from answer checker");
+                        console.log('getting from answer checker');
                         onAnswerChecker(evt, msg);
                     } else if ((msg.requestType === MessageType.DATA_REQUEST || msg.requestType === MessageType.DATA_INSERT ||
                             msg.requestType === MessageType.DATA_UPDATE || msg.requestType === MessageType.DATA_REMOVE) && onSchoolData) {
-                        console.log("getting from school data");
+                        console.log('getting from school data');
                         console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType === MessageType.ERROR) {
@@ -98,7 +98,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                         if (onError) {
                             onError(evt, msg.getResponseText());
                         }
-                        alert("ERROR: " + msg.getResponseText());
+                        alert('ERROR: ' + msg.getResponseText());
                     } else if (onRequest) {
                         onRequest(evt, msg);
                     }
@@ -235,7 +235,7 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Gets the current time that is the same as the time the server sees.
      */
     this.getCurrentTime = function() {
-        var longVersion = dcodeIO.Long.fromString("" + (createTimeStamp() + totalTimeDifferance));
+        var longVersion = dcodeIO.Long.fromString('' + (createTimeStamp() + totalTimeDifferance));
         return longVersion;
     };
 
@@ -252,21 +252,21 @@ function Connection(uri, encrypted, attemptReconnect) {
 
     function clientReciveTimeDiff(req) {
         var startCounter = localScope.getCurrentTime();
-        timeDifferance = dcodeIO.Long.fromString("" + req.getMessageTime()).subtract(localScope.getCurrentTime());
+        timeDifferance = dcodeIO.Long.fromString('' + req.getMessageTime()).subtract(localScope.getCurrentTime());
         var rsp = CourseSketch.PROTOBUF_UTIL.Request();
         rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
-        rsp.setMessageTime(dcodeIO.Long.fromString("" + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
+        rsp.setMessageTime(dcodeIO.Long.fromString('' + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
         return rsp;
     }
 
     function clientReciveLatency(req) {
-        latency = dcodeIO.Long.fromString("" + req.getMessageTime());
+        latency = dcodeIO.Long.fromString('' + req.getMessageTime());
         totalTimeDifferance = timeDifferance.add(latency);
         return null;
     }
 }
 
-makeValueReadOnly(Connection.prototype, "CONNECTION_LOST", 1006);
-makeValueReadOnly(Connection.prototype, "INCORRECT_LOGIN", 4002);
-makeValueReadOnly(Connection.prototype, "SERVER_FULL", 4001);
+makeValueReadOnly(Connection.prototype, 'CONNECTION_LOST', 1006);
+makeValueReadOnly(Connection.prototype, 'INCORRECT_LOGIN', 4002);
+makeValueReadOnly(Connection.prototype, 'SERVER_FULL', 4001);

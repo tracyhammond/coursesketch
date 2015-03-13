@@ -1,10 +1,10 @@
 /* Depends on the protobuf library, base.js, objectAndInheritance.js */
 
 function ProtobufException(message) {
-    this.name = "ProtobufException";
+    this.name = 'ProtobufException';
     this.setMessage(message);
-    this.message = "";
-    this.htmlMessage = "";
+    this.message = '';
+    this.htmlMessage = '';
 }
 ProtobufException.prototype = BaseException;
 
@@ -34,7 +34,7 @@ function ProtobufSetup() {
 
     var localScope = this;
     var PROTOBUF_PACKAGE = 'protobuf';
-    var protobufDirectory = "/other/protobuf/";
+    var protobufDirectory = '/other/protobuf/';
 
     var objectList = [];
     var enumList = [];
@@ -55,49 +55,49 @@ function ProtobufSetup() {
     };
 
     function buildMessage() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "message.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'message.proto');
         var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
         assignValues(requestPackage);
     }
 
     function buildDataQuery() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "data.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'data.proto');
         var QueryBuilder = builder.build(PROTOBUF_PACKAGE).srl.query;
         assignValues(QueryBuilder);
     }
 
     function buildSchool() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "school.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'school.proto');
         var SchoolBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
         assignValues(SchoolBuilder);
     }
 
     function buildSketch() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "sketch.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'sketch.proto');
         var sketchBuilder = builder.build(PROTOBUF_PACKAGE).srl.sketch;
         assignValues(sketchBuilder, 'Proto');
     }
 
     function buildUpdateList() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "commands.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'commands.proto');
         var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
         assignValues(ProtoUpdateCommandBuilder);
     }
 
     function buildTutorial() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "tutorial.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'tutorial.proto');
         var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
         assignValues(ProtoTutorialBuilder);
     }
 
     function buildSubmissions() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "submission.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'submission.proto');
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
         assignValues(ProtoSubmissionBuilder);
     }
 
     function buildLectures() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + "lecturedata.proto");
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'lecturedata.proto');
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
         assignValues(ProtoSubmissionBuilder);
     }
@@ -149,14 +149,14 @@ function ProtobufSetup() {
             Object.defineProperty(localScope, objectName, {
                 value: function() {
                     if (arguments.length > 0) {
-                        throw new ProtobufException("you can not create this object with arguments.");
+                        throw new ProtobufException('you can not create this object with arguments.');
                     }
                     return new ClassType();
                 },
                 writable: false
             });
 
-            Object.defineProperty(localScope, "get" + objectName + "Class", {
+            Object.defineProperty(localScope, 'get' + objectName + 'Class', {
                 value: function() {
                     // somehow change it to make this read only?
                     return ClassType;
@@ -228,7 +228,7 @@ function ProtobufSetup() {
         var update = this.SrlUpdate();
         update.setCommands(commands);
         var n = createTimeStamp();
-        update.setTime("" + n);
+        update.setTime('' + n);
         update.setUpdateId(generateUUID());
         return update;
     };
@@ -245,7 +245,7 @@ function ProtobufSetup() {
         var update = this.SrlUpdate();
         var n = createTimeStamp();
         update.commands = [];
-        update.setTime("" + n);
+        update.setTime('' + n);
         update.setUpdateId(generateUUID());
         return update;
     };
@@ -300,10 +300,10 @@ function ProtobufSetup() {
         if (inputDateTime instanceof Date) {
             preConvertedDate = inputDateTime.getTime();
         }
-        var longVersion = localDcodeIo.Long.fromString("" + preConvertedDate);
+        var longVersion = localDcodeIo.Long.fromString('' + preConvertedDate);
         var dateTime = this.DateTime();
         // Long object does not play nice with iframes so parsing as string instead.
-        dateTime.setMillisecond("" + longVersion);
+        dateTime.setMillisecond('' + longVersion);
         var date = new Date(preConvertedDate);
         dateTime.setYear(date.getFullYear());
         dateTime.setMonth(date.getMonth());
@@ -383,7 +383,7 @@ function ProtobufSetup() {
             }
         }
         if (isUndefined(data) || data === null || typeof data !== 'object') {
-            throw new ProtobufException("Data type is not supported:" + typeof data);
+            throw new ProtobufException('Data type is not supported:' + typeof data);
         }
         var decoded = proto.decode(data);
         try {
@@ -403,16 +403,16 @@ function ProtobufSetup() {
         }
     }
     // making ProtobufException read only
-    makeValueReadOnly(localScope, "ProtobufException", ProtobufException);
+    makeValueReadOnly(localScope, 'ProtobufException', ProtobufException);
 }
 
 (function(scope) {
     if (isUndefined(scope.CourseSketch)) {
-        makeValueReadOnly(scope, "CourseSketch", {});
+        makeValueReadOnly(scope, 'CourseSketch', {});
     }
     if (!isUndefined(scope.CourseSketch.PROTOBUF_UTIL)) {
         return;
     }
-    makeValueReadOnly(scope, "dcodeIO", dcodeIO);
-    makeValueReadOnly(scope.CourseSketch, "PROTOBUF_UTIL", new ProtobufSetup().initializeBuf());
+    makeValueReadOnly(scope, 'dcodeIO', dcodeIO);
+    makeValueReadOnly(scope.CourseSketch, 'PROTOBUF_UTIL', new ProtobufSetup().initializeBuf());
 })(window);
