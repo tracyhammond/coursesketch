@@ -71,7 +71,25 @@
     "disallowKeywordsOnNewLine": [ "else", "catch" ],
     "requireLineFeedAtFileEnd": true,
     "disallowSpaceAfterObjectKeys": true,
-    "validateLineBreaks": "LF"
+    "validateLineBreaks": "LF",
+
+    "plugins": ["jscs-jsdoc"],
+    "jsDoc": {
+        "checkAnnotations": {
+            "preset": "jsdoc3",
+            "extra": {
+                "attribute": true,
+                "callbackParam": true
+            }
+        },
+        "checkParamNames": true,
+        "requireParamTypes": true,
+        "checkRedundantParams": true,
+        "checkReturnTypes": true,
+        "checkRedundantReturns": true,
+        "requireReturnTypes": true,
+        "checkTypes": "capitalizedNativeCase"
+    }
 
 
     /*
@@ -82,5 +100,8 @@
         "disallowMultipleLineBreaks": true,
         "requireAlignedObjectValues": "skipWithFunction",
         "disallowKeywordsInComments": true
+
+        inside jsdoc
+        "enforceExistence": true,
     */
 }

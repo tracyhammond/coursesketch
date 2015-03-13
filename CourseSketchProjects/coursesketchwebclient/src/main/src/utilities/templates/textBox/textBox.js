@@ -208,7 +208,7 @@ function TextBox() {
     };
 
     /**
-     * @return finishedCallback {function} is the callback set at implementation.
+     * @return {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

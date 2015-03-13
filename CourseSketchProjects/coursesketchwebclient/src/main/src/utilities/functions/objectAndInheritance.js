@@ -11,7 +11,8 @@
  */
 
 /**
- * @Method sets up inheritance for functions
+ * @function Inherits
+ * sets up inheritance for functions
  *
  * this.Inherits(SuperClass); // super call inside object AND
  * SubClass.Inherits(SuperClass);

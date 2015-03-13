@@ -1,5 +1,6 @@
 /**
- * @Class Handles the window state.
+ * @class Redirector
+ * Handles the window state.
  *
  * Right now this is missing a couple of items but ill describe them here.
  * <ol>

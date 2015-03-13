@@ -30,11 +30,11 @@ validateFirstRun(document.currentScript);
          *            protobuf object of the lecture that was selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-            CourseSketch.dataManager.addState("currentLecture", lecture);
+            CourseSketch.dataManager.addState('currentLecture', lecture);
             if (CourseSketch.connection.isInstructor) {
-                CourseSketch.redirectContent("/src/instructor/lecture/lecturePage.html", "Edit Lecture");
+                CourseSketch.redirectContent('/src/instructor/lecture/lecturePage.html', 'Edit Lecture');
             } else {
-                CourseSketch.redirectContent("/src/student/lecture/lecturePage.html", "View Lecture");
+                CourseSketch.redirectContent('/src/student/lecture/lecturePage.html', 'View Lecture');
             }
         };
 
@@ -48,18 +48,18 @@ validateFirstRun(document.currentScript);
             if (lectureList[0] instanceof CourseSketch.DatabaseException) {
                 throw lectureList[0];
             }
-            var add = $("#add").clone();
+            var add = $('#add').clone();
             var schoolItemBuilder = new SchoolItemBuilder();
             schoolItemBuilder.setList(lectureList)
                 .setShowDate(false)
                 .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
                 .setInstructorCard(CourseSketch.connection.isInstructor)
                 .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
-                .build(document.querySelector("#col2>.content"));
+                .build(document.querySelector('#col2>.content'));
             if (CourseSketch.connection.isInstructor) {
-                $("#col2>.content").prepend(add);
-                $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
-                $("#add").addClass("show");
+                $('#col2>.content').prepend(add);
+                $('#add').bind('click', CourseSketch.lectureSelection.addLecture);
+                $('#add').addClass('show');
             }
         };
 
@@ -67,7 +67,7 @@ validateFirstRun(document.currentScript);
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
          *
-         * @param {object} course
+         * @param {Object} course
          *                course object of the selected element
          */
         CourseSketch.lectureSelection.courseSelected = function(course) {
@@ -95,16 +95,16 @@ validateFirstRun(document.currentScript);
         CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
             var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture.courseId = currentCourse;
-            lecture.name = "Untitled Lecture";
+            lecture.name = 'Untitled Lecture';
             lecture.id = generateUUID();
-            lecture.description = "N/A";
+            lecture.description = 'N/A';
             var insertCallback = function() {
                 CourseSketch.dataManager.getCourse(currentCourse,
                     function(course) {
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,
                             CourseSketch.lectureSelection.displayLectures);
-                        console.log("finished adding to course " + currentCourse);
+                        console.log('finished adding to course ' + currentCourse);
                         if (!isUndefined(addLectureCallback)) {
                             addLectureCallback(course);
                         }
@@ -124,7 +124,7 @@ validateFirstRun(document.currentScript);
                 .setList(courseList)
                 .setShowDate(false)
                 .setBoxClickFunction(this.courseSelected)
-                .build(document.querySelector("#col1>.content"));
+                .build(document.querySelector('#col1>.content'));
         };
 
         var loadCourses = function(courseList) {

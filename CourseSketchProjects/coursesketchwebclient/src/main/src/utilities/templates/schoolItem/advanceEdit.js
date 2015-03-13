@@ -25,7 +25,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
-     * @return the name or undefined.
+     * @return {Undefined|String} the name or undefined.
      */
     loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
         var name = "";
@@ -53,7 +53,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
-     * @return undefined or the description
+     * @return {Undefined|String} undefined or the description.
      */
     loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
         var description = "";
@@ -81,7 +81,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
-     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     * @return {Null} This returns null to differentiate it from other possible values as this is not saveable.
      */
     loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
         var id = "";
@@ -104,7 +104,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a functiontype object from the schoolItem.
-     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
@@ -130,7 +130,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a time frame object from the schoolItem.
-     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
@@ -156,7 +156,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a subtraction object from the schoolItem.
-     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
@@ -182,7 +182,7 @@
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads an Assignment type object from the schoolItem.
-     * @return null. This returns null to differentiate it from other possible values as this is not saveable.
+     * @return {Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;

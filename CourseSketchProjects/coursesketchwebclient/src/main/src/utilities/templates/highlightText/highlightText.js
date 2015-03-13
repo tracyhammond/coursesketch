@@ -40,7 +40,7 @@ function HighlightText() {
 
     /**
      * @param {Array} children represents the childNodes in the selected text.
-     * @return {boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
+     * @return {Boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
      * If false then the text selected will not be highlighted
      * It will not be highlighted because it contains node types such as H2 and adding span tags will ruin the formatting of the text
      */

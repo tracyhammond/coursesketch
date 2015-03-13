@@ -21,7 +21,7 @@
  * should resize itself every time the window changes size.</li>
  * </ul>
  *
- * @Class
+ * @class
  */
 function SketchSurface() {
     this.bindUpdateListCalled = false;
@@ -70,7 +70,7 @@ function SketchSurface() {
 
     /**
      * binds the sketch surface to an update manager.
-     * @param {UpdateManager instance | UpdateManager class} UpdateManagerClass this takes an either an instance of an update manager.
+     * @param {UpdateManager_Instance|UpdateManager_Class} UpdateManagerClass this takes an either an instance of an update manager.
      * Or a update manager class that is then constructed.
      * You can only bind an update list to a sketch once.
      */
@@ -187,7 +187,7 @@ function SketchSurface() {
     };
 
     /**
-     * @return SrlUpdateList proto object.
+     * @return {SrlUpdateList} proto object.
      * This is a cleaned version of the list and modifying this list will not affect the update manager list.
      */
     this.getSrlUpdateListProto = function() {

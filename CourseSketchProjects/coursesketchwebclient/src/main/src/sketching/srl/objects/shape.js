@@ -23,7 +23,7 @@ function SRL_Shape() {
      * recursively to get all of the strokes of this object. If it does not have
      * any strokes, the list will be empty.
      *
-     * @return
+     * @return {List<Stroke>} a list of all strokes contains in the shape
      */
     this.getRecursiveStrokes = function() {
         var completeList = [];

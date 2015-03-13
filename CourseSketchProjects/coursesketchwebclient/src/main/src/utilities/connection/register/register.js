@@ -2,6 +2,8 @@
 
 /**
  * A class that allows a user to register.
+ * @class LoginSystem
+ * @namespace LoginSystem
  */
 function RegisterSystem() {
     var connection = undefined;
@@ -11,7 +13,7 @@ function RegisterSystem() {
     var cancelCallback = undefined;
 
     /**
-     * @returns the connection that was created by this login system.
+     * @returns {Connection} the connection that was created by this login system.
      */
     this.getConnection = function() {
         return connection;
@@ -108,7 +110,10 @@ function RegisterSystem() {
     }
 
     /**
-     * @Method the function used for submitting register information.
+     * @access private
+     * @memberof LoginSystem
+     * @function formSubmit
+     * the function used for submitting register information.
      * Also the only difference between login.js and register.js
      */
     function formSubmit() {
@@ -159,7 +164,7 @@ function RegisterSystem() {
     }
 
     /**
-     * @Method
+     * @function setupCallbacks
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
@@ -170,7 +175,8 @@ function RegisterSystem() {
         };
     }
     /**
-     * @Method The callback is called with one parameter.
+     * @function setOnSuccessLogin
+     * The callback is called with one parameter.
      * @callbackParam {Connection} An instance of the connection object object.
      */
     this.setOnSuccessLogin = function(callback) {
@@ -182,7 +188,7 @@ function RegisterSystem() {
     };
 
     /**
-     * @Method
+     * @function setCancelCallback
      * The callback is called when the register button is pressed.
      */
     this.setCancelCallback = function(callback) {

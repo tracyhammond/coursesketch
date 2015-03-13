@@ -19,9 +19,12 @@ ProtobufException.prototype = BaseException;
  */
 
 /**
- * @Class Has utilities for protobufs and is a convient accessor to create new
+ * @class
+ * @classdesc
+ * Has utilities for protobufs and is a convient accessor to create new
  *        instances of protobuf files (and prevents the modification of a
  *        protobuf object creator before it is created)
+ *
  */
 function ProtobufSetup() {
     // Sets it locally and only uses the local version from now on.
@@ -100,7 +103,7 @@ function ProtobufSetup() {
     }
 
     /**
-     * @Method
+     * @function assignValues
      * @param {String} protoPackage
      *            the package that the protofiles live in (this should basically
      *            hold a list of protoObjects)
@@ -248,7 +251,8 @@ function ProtobufSetup() {
     };
 
     /**
-     * @Method Given an SrlUpdate a Request is created.
+     * @function
+     * Given an SrlUpdate a Request is created.
      * @param {SrlUpdate} update
      *            a valid and complete object.
      * @param {MessageType} requestType
@@ -337,7 +341,7 @@ function ProtobufSetup() {
         return command;
     };
     /**
-     * @Method
+     * @function getSupportedObjects
      * @returns {Array} A cloned version of the array that contains all of the
      *          current protobuf objects.
      */
@@ -347,11 +351,11 @@ function ProtobufSetup() {
     };
 
     /**
-     * @Method
+     * @function getSupportedEnums
      * @returns {Array} A cloned version of the array that contains all of the
      *          current protobuf enums.
      */
-    this.getSupportedEnums = function getSupportedObjects() {
+    this.getSupportedEnums = function getSupportedEnums() {
         // The quickest way to clone.
         return JSON.parse(JSON.stringify(enumList));
     };
