@@ -106,6 +106,6 @@ module.exports = function(grunt) {
             'jshint'
         ]);
     });
-    // 'jsdoc'  wait till 3.3.0
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'test' ]);
+    // 'test'  wait till browsers are better supported
+    grunt.registerTask('default', [ 'checkstyle', 'jsdoc' ]);
 };
