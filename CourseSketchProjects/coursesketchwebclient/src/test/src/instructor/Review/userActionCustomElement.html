@@ -2,24 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <link rel="import" href="/src/instructor/review/userActionReviewInclude.html">
-    <link rel="import"
-          href="/src/test/src/testUtilities/fakePage/fakePageInclude.html">
-    <link rel="import"
-          href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
-
-    <!-- includes files needed for testing -->
-
-    <!-- d3 library, for the graphs -->
-    <link rel="import" href="/src/utilities/libraries/d3/d3include.html">
-
-    <script src="/src/sketching/storage/updateManager.js" data-cover></script>
 </head>
 <body style="background:#FFFFFF;">
 
 <user-action-graph id="hello" style="height:1005; width:100%;"></user-action-graph>
-
-
-<div id="textbox"></div>
 
 <script>
     var updateList = new UpdateManager(undefined, function(error) {
@@ -57,16 +43,6 @@
 
     var userGraph = document.body.querySelector("user-action-graph");
     userGraph.loadData(updateData);
-
-    var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
-
-    var real = document.createElement('user-action-graph');
-    console.log(real.loadData);
-    document.getElementById('textbox').appendChild(real);
-    console.log('Test');
-    real.loadData(updateData);
-
-
 </script>
 </body>
 </html>
