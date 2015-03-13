@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sketching/storage/commandMethods.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sketching/storage/commandMethods.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>validateFirstGlobalRun(document.currentScript);
+
+/**
+ * Adds a couple of really useful methods to the commands. depends on
+ * /src/utilities/connection/protobufInclude.html
+ */
+(function() {
+    /**
+     * @class CommandException
+     * @extends BaseException
+     */
+    function CommandException(message) {
+        this.name = 'CommandException';
+        this.setMessage(message);
+        this.message = '';
+        this.htmlMessage = '';
+    }
+    CommandException.prototype = BaseException;
+
+    var ProtoSrlUpdate = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlUpdate());
+    var ProtoSrlCommand = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlCommand());
+
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().prototype.sketchId = undefined;
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.sketchId = undefined;
+
+    // these functions should not be created more than once in the entirety of the program.
+    if (!isUndefined(ProtoSrlCommand.getLocalSketchSurface)) {
+        return;
+    }
+
+    /**
+     * Calls redo on an {@link SrlCommand} list in the order they are added to the list.
+     *
+     * @returns {Boolean} true if the sketch needs to be redrawn, false
+     *          otherwise.
+     *
+     * @memberof SrlUpdate
+     * @function redo
+     * @instance
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.redo = function() {
+        var redraw = false;
+        var commandList = this.getCommands();
+        var commandLength = commandList.length;
+        var getLocalSketchSurface = function() {
+            return this.sketchManager.getCurrentSketch();
+        }.bind(this);
+        for (var i = 0; i &lt; commandLength; i++) {
+            var command = commandList[i];
+            // the command needs to know what sketch object to act upon.
+            command.getLocalSketchSurface = getLocalSketchSurface;
+            if (command.redo() === true) {
+                redraw = true;
+            }
+        }
+        return redraw;
+    };
+
+    /**
+     *
+     * Calls undo on an {@link SrlCommand} list in the reverse of the order they are added to the list
+     *
+     * &lt;b>Note&lt;/b> that we do not add the methods we added in redo.
+     * This is because we assert that you can not undo something until it has been redone first.  So the methods already exist.
+     * @returns {Boolean} true if the sketch needs to be redrawn, false otherwise.
+     *
+     * @memberof SrlUpdate
+     * @function undo
+     * @instance
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass().prototype.undo = function() {
+        var commandList = this.getCommands();
+        var commandLength = commandList.length;
+        var redraw = false;
+        for (var i = commandLength - 1; i >= 0; i--) {
+            commandList[i].sketchId = this.sketchId;
+            if (commandList[i].undo() === true) {
+                redraw = true;
+            }
+        }
+        return redraw;
+    };
+
+    /**
+     * @memberof SrlCommand
+     * @function getCommandTypeName
+     * @instance
+     * @returns {String} The human readable name of the given command type.
+     */
+    ProtoSrlCommand.getCommandTypeName = function() {
+        var commandType = this.getCommandType();
+        for (var type in CourseSketch.PROTOBUF_UTIL.CommandType) {
+            if (CourseSketch.PROTOBUF_UTIL.CommandType[type] === commandType) {
+                return '' + type;
+            }
+        }
+        throw new CourseSketch.PROTOBUF_UTIL.ProtobufException('The assigned type (' + commandType + ') is not a value for enum CommandType');
+    };
+
+    ProtoSrlCommand.decodedData = false;
+
+    /**
+     * Redoes the specific command.  How the command is redone depends on the command type.
+     * @memberof SrlCommand
+     * @function redo
+     * @instance
+     * @returns {Boolean} true if redoing the command requires a redraw of the screen.
+     */
+    ProtoSrlCommand.redo = function() {
+        var redoFunc = this['redo' + this.getCommandType()];
+        if (isUndefined(redoFunc)) {
+            throw (this.getCommandTypeName() + ' is not defined as a redo function');
+        }
+        return redoFunc.bind(this)();
+    };
+
+    /**
+     * Undoes the specific command.  How the command is undone depends on the command type.
+     * @memberof SrlCommand
+     * @function undo
+     * @instance
+     * @returns {Boolean} true if undoing the command requires a redraw of the screen.
+     */
+    ProtoSrlCommand.undo = function() {
+        var undoFunc = this['undo' + this.getCommandType()];
+        if (isUndefined(undoFunc)) {
+            throw (this.getCommandTypeName() + ' is not defined as an undo function');
+        }
+        return undoFunc.bind(this)();
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function addRedoMethod
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod = function(commandType, func) {
+        if (isUndefined(commandType)) {
+            throw new CommandException('The input commandType can not be undefined');
+        }
+        if (!isUndefined(ProtoSrlCommand['redo' + commandType])) {
+            throw new CommandException('Method is already defined');
+        }
+        ProtoSrlCommand['redo' + commandType] = func;
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function removeRedoMethod
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeRedoMethod = function(commandType) {
+        if (isUndefined(commandType)) {
+            throw new CommandException('The input commandType can not be undefined');
+        }
+        if (isUndefined(ProtoSrlCommand['redo' + commandType])) {
+            throw new CommandException('Method does not exist');
+        }
+        ProtoSrlCommand['redo' + commandType] = undefined;
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function addUndoMethod
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod = function(commandType, func) {
+        if (isUndefined(commandType)) {
+            throw new CommandException('The input commandType can not be undefined');
+        }
+        if (!isUndefined(ProtoSrlCommand['undo' + commandType])) {
+            throw new CommandException('Method is already defined');
+        }
+        ProtoSrlCommand['undo' + commandType] = func;
+    };
+
+    /**
+     * Allows one to dynamically add and remove methods to the command type.
+     * @memberof SrlCommand
+     * @static
+     * @function removeUndoMethod
+     */
+    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().removeUndoMethod = function(commandType) {
+        if (isUndefined(commandType)) {
+            throw new CommandException('The input commandType can not be undefined');
+        }
+        if (isUndefined(ProtoSrlCommand['undo' + commandType])) {
+            throw new CommandException('Method does not exist');
+        }
+        ProtoSrlCommand['undo' + commandType] = undefined;
+    };
+})();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BaseException.html">BaseException</a></li><li><a href="CommandException.html">CommandException</a></li><li><a href="DatabaseException.html">DatabaseException</a></li><li><a href="Graphics.html">Graphics</a></li><li><a href="LoginSystem.html">LoginSystem</a></li><li><a href="NavigationPanel.html">NavigationPanel</a></li><li><a href="ProblemNavigator.html">ProblemNavigator</a></li><li><a href="ProtobufSetup.html">ProtobufSetup</a></li><li><a href="ProtoDatabase.html">ProtoDatabase</a></li><li><a href="Redirector.html">Redirector</a></li><li><a href="RegisterSystem.html">RegisterSystem</a></li><li><a href="SchoolDataManager.html">SchoolDataManager</a></li><li><a href="SchoolItem.html">SchoolItem</a></li><li><a href="SketchSurface.html">SketchSurface</a></li><li><a href="UndoRedoException.html">UndoRedoException</a></li><li><a href="UpdateException.html">UpdateException</a></li><li><a href="UpdateManager.html">UpdateManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#addAnswerContent">addAnswerContent</a></li><li><a href="global.html#addCallback">addCallback</a></li><li><a href="global.html#addClickFunction">addClickFunction</a></li><li><a href="global.html#addEventMapping">addEventMapping</a></li><li><a href="global.html#addSynchronousUpdate">addSynchronousUpdate</a></li><li><a href="global.html#addToolArea">addToolArea</a></li><li><a href="global.html#addUpdate">addUpdate</a></li><li><a href="global.html#AdvanceDataListener">AdvanceDataListener</a></li><li><a href="global.html#ArrayException">ArrayException</a></li><li><a href="global.html#assignValues">assignValues</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#buildExpandEvent">buildExpandEvent</a></li><li><a href="global.html#buildOverlay">buildOverlay</a></li><li><a href="global.html#buildPercent">buildPercent</a></li><li><a href="global.html#buildWaitIcon">buildWaitIcon</a></li><li><a href="global.html#CallbackBarrier">CallbackBarrier</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#clearCallbacks">clearCallbacks</a></li><li><a href="global.html#clearUpdates">clearUpdates</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#Connection">Connection</a></li><li><a href="global.html#continueButton">continueButton</a></li><li><a href="global.html#correctSize">correctSize</a></li><li><a href="global.html#CourseSketch">CourseSketch</a></li><li><a href="global.html#createBarrier">createBarrier</a></li><li><a href="global.html#createButton">createButton</a></li><li><a href="global.html#createFancySchoolItem">createFancySchoolItem</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#createNewPath">createNewPath</a></li><li><a href="global.html#createSchoolList">createSchoolList</a></li><li><a href="global.html#createSketch">createSketch</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#deleteSketch">deleteSketch</a></li><li><a href="global.html#detachedCallback">detachedCallback</a></li><li><a href="global.html#EmbeddedHtml">EmbeddedHtml</a></li><li><a href="global.html#emptyQueue">emptyQueue</a></li><li><a href="global.html#endPath">endPath</a></li><li><a href="global.html#executeEvent">executeEvent</a></li><li><a href="global.html#fillCanvas">fillCanvas</a></li><li><a href="global.html#finalize">finalize</a></li><li><a href="global.html#getCleanUpdateList">getCleanUpdateList</a></li><li><a href="global.html#getConnection">getConnection</a></li><li><a href="global.html#getCurrentAssignment">getCurrentAssignment</a></li><li><a href="global.html#getCurrentNumber">getCurrentNumber</a></li><li><a href="global.html#getCurrentProblemId">getCurrentProblemId</a></li><li><a href="global.html#getCurrentSketch">getCurrentSketch</a></li><li><a href="global.html#getCurrentTime">getCurrentTime</a></li><li><a href="global.html#getCurrentUpdate">getCurrentUpdate</a></li><li><a href="global.html#getFinishedCallback">getFinishedCallback</a></li><li><a href="global.html#getHostElement">getHostElement</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getListLength">getListLength</a></li><li><a href="global.html#getPaper">getPaper</a></li><li><a href="global.html#getProblemText">getProblemText</a></li><li><a href="global.html#getProblemType">getProblemType</a></li><li><a href="global.html#getSketch">getSketch</a></li><li><a href="global.html#getSupportedEnums">getSupportedEnums</a></li><li><a href="global.html#getSupportedObjects">getSupportedObjects</a></li><li><a href="global.html#getUpdateList">getUpdateList</a></li><li><a href="global.html#GivenanSrlUpdateaRequestiscreated.">Given an SrlUpdate a Request is created.</a></li><li><a href="global.html#gotoNext">gotoNext</a></li><li><a href="global.html#goToNextSlide">goToNextSlide</a></li><li><a href="global.html#gotoPrevious">gotoPrevious</a></li><li><a href="global.html#goToProblem">goToProblem</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#hasPrevious">hasPrevious</a></li><li><a href="global.html#HighlightText">HighlightText</a></li><li><a href="global.html#ImageBox">ImageBox</a></li><li><a href="global.html#IndexManager">IndexManager</a></li><li><a href="global.html#Inheritssetsupinheritanceforfunctionsthis.Inherits(SuperClass);//supercallinsideobjectANDSubClass.Inherits(SuperClass);">Inherits
+sets up inheritance for functions
+
+this.Inherits(SuperClass); // super call inside object AND
+SubClass.Inherits(SuperClass);</a></li><li><a href="global.html#initializeCanvas">initializeCanvas</a></li><li><a href="global.html#initializeElement">initializeElement</a></li><li><a href="global.html#InputListener">InputListener</a></li><li><a href="global.html#isConnected">isConnected</a></li><li><a href="global.html#isDataLoaded">isDataLoaded</a></li><li><a href="global.html#isDescriptionOverflow">isDescriptionOverflow</a></li><li><a href="global.html#isLastUpdateSave">isLastUpdateSave</a></li><li><a href="global.html#isLastUpdateSubmission">isLastUpdateSubmission</a></li><li><a href="global.html#isValidForSaving">isValidForSaving</a></li><li><a href="global.html#isValidForSubmission">isValidForSubmission</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#loadLectures">loadLectures</a></li><li><a href="global.html#loadSketch">loadSketch</a></li><li><a href="global.html#loadSlides">loadSlides</a></li><li><a href="global.html#MultiChoice">MultiChoice</a></li><li><a href="global.html#Playback">Playback</a></li><li><a href="global.html#ProblemToolBar">ProblemToolBar</a></li><li><a href="global.html#Question">Question</a></li><li><a href="global.html#reconnect">reconnect</a></li><li><a href="global.html#redoAction">redoAction</a></li><li><a href="global.html#refresh">refresh</a></li><li><a href="global.html#reloadAssignment">reloadAssignment</a></li><li><a href="global.html#reloadProblems">reloadProblems</a></li><li><a href="global.html#removeAnswer">removeAnswer</a></li><li><a href="global.html#removeCallback">removeCallback</a></li><li><a href="global.html#removeEventMapping">removeEventMapping</a></li><li><a href="global.html#removeItem">removeItem</a></li><li><a href="global.html#removeListener">removeListener</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html">runCommand
+Runs a specific command given its lastUpdateType.</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#SchoolItemBuilder">SchoolItemBuilder</a></li><li><a href="global.html#sendlocalScope">sendlocalScope</a></li><li><a href="global.html#sendRequest">sendRequest</a></li><li><a href="global.html#setAssignmentId">setAssignmentId</a></li><li><a href="global.html#setBoxState">setBoxState</a></li><li><a href="global.html#setCancelCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setCancelCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setCorrectAnswer">setCorrectAnswer</a></li><li><a href="global.html#setCurrentSketch">setCurrentSketch</a></li><li><a href="global.html#setDrawUpdate">setDrawUpdate</a></li><li><a href="global.html#setEditCallback">setEditCallback</a></li><li><a href="global.html#setLastSaveTime">setLastSaveTime</a></li><li><a href="global.html#setListener">setListener</a></li><li><a href="global.html#setListeners">setListeners</a></li><li><a href="global.html#setOnSuccessLoginThecallbackiscalledwithoneparameter.">setOnSuccessLogin
+The callback is called with one parameter.</a></li><li><a href="global.html#setParentSketch">setParentSketch</a></li><li><a href="global.html#setParentSketchId">setParentSketchId</a></li><li><a href="global.html#setPreferredIndex">setPreferredIndex</a></li><li><a href="global.html#setPreviewText">setPreviewText</a></li><li><a href="global.html#setRedoCallback">setRedoCallback</a></li><li><a href="global.html#setRegisterCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setRegisterCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setRemoveFunction">setRemoveFunction</a></li><li><a href="global.html#setSaveCallback">setSaveCallback</a></li><li><a href="global.html#setSketch">setSketch</a></li><li><a href="global.html#setSketchClickedFunction">setSketchClickedFunction</a></li><li><a href="global.html#setSketchManager">setSketchManager</a></li><li><a href="global.html#setSubmissionInformation">setSubmissionInformation</a></li><li><a href="global.html#setSubmitCallback">setSubmitCallback</a></li><li><a href="global.html#setUiLoaded">setUiLoaded</a></li><li><a href="global.html#setUndoCallback">setUndoCallback</a></li><li><a href="global.html#setupAttributes">setupAttributes</a></li><li><a href="global.html#setupCallbacksSetupsupthecallbackfortheregisterbuttonandthelostpasswordbutton.">setupCallbacks
+Setups up the callback for the register button and the lost password button.</a></li><li><a href="global.html#setUpdateList">setUpdateList</a></li><li><a href="global.html#setUpdateTime">setUpdateTime</a></li><li><a href="global.html#setUpEditButtons">setUpEditButtons</a></li><li><a href="global.html#setWrapperFunction">setWrapperFunction</a></li><li><a href="global.html#showFormattedDate">showFormattedDate</a></li><li><a href="global.html#SketchSurfaceManager">SketchSurfaceManager</a></li><li><a href="global.html#speakText">speakText</a></li><li><a href="global.html#SubmissionPanel">SubmissionPanel</a></li><li><a href="global.html#TextBox">TextBox</a></li><li><a href="global.html#TimelineMarker">TimelineMarker</a></li><li><a href="global.html#toggleSelection">toggleSelection</a></li><li><a href="global.html#undoAction">undoAction</a></li><li><a href="global.html#updatePath">updatePath</a></li><li><a href="global.html#writeTextData">writeTextData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a> on Fri Mar 13 2015 04:13:07 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

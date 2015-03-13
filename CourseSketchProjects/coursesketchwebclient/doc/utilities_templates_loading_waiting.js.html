@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utilities/templates/loading/waiting.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utilities/templates/loading/waiting.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>function WaitScreenManager() {
+    /**
+     * resets the values in the school builder so that the same build object can be used again.
+     *
+     * NOTE: ONLY DATA SHOULD GO HERE.
+     */
+    this.resetValues = function resetValues() {
+        this.waitType = 0; // possible type TYPE_PERCENT, TYPE_WIOD
+        this.customIcon = false; // if a custom icon is chosen (this should be a url)
+        this.parentElement = false; // if added we will use javascript to place our items
+        this.total = false; // creates a step function
+        this.exitAtTotal = false; // when the percent bar reaches 100% then it will close itself (this is a boolean value)
+        this.exitAtTotalCallback = false; // if exitAtTotal
+        this.waitIconText = false; // sets text for the waiting icon
+        this.haveOverlay = false; // if overlay is true then the overlay element must be set upon building
+        this.overlayElement = false;
+    };
+
+    this.resetValues();
+
+    /****************
+     * NOTHING ELSE GOES ABOVE THIS!!!!!
+     * SETTER METHODS
+     *
+     * Creates a set method for every variable in the current object.
+     * EX: setWidth, setImageClicked ...
+     ***************/
+    for (var obj in this) {
+        if (obj !== this.resetValues &amp;&amp; ('' + obj) !== 'resetValues') {
+            var objectName = '' + obj;
+            // scopes the loop so that the memory of the object stays
+            (function(objectName, scope) {
+                // capitalizes only the first letter.
+                var capitalName = objectName.charAt(0).toUpperCase() + objectName.slice(1);
+                var setName = 'set' + capitalName;
+                scope[setName] = function(value) {
+                    scope[objectName] = value;
+                    return scope;
+                };
+            })(objectName, this);
+        }
+    }
+
+    makeValueReadOnly(this, 'TYPE_PERCENT', 0);
+    makeValueReadOnly(this, 'TYPE_WIOD', 1); // waiting icon of death
+    makeValueReadOnly(this, 'TYPE_WAITING_ICON_OF_DEATH', 1); // waiting circle of death
+    makeValueReadOnly(this, 'TYPE_WAITING_ICON', 1); // waiting icon
+
+    /**
+     * Returns an element with some added functions:
+     * startWaiting: pops up the bar on the screen. (must already be added to the parent)
+     * finishWaiting: removes the bar from the screen. (must already be added to the parent)
+     */
+    this.build = function build() {
+        var running = false;
+        var element = document.createElement('div');
+        element.setAttribute('class', 'waiting_box');
+        if (this.waitType === this.TYPE_PERCENT) {
+            this.buildPercent(element);
+        } else if (this.waitType === this.TYPE_WIOD) {
+            this.buildWaitIcon(element);
+        }
+
+        element.startWaiting = function() {
+            running = true;
+            if (element.parentNode) {
+                element.style.display = 'initial'; // default
+            } else {
+                throw new Error('Element must be added before it can start waiting');
+            }
+        };
+
+        element.finishWaiting = function(delay) {
+            if (!running) {
+                throw new Error('You can only call this while running');
+            }
+            running = false;
+            function remove() {
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+            }
+            if (delay) {
+                setTimeout(remove, delay);
+            } else {
+                remove();
+            }
+        };
+
+        element.isRunning = function() {
+            return running;
+        };
+        return element;
+    };
+
+    /**
+     * Builds a percent element that changes over time as data is loaded.
+     */
+    this.buildPercent = function buildPercent(element) {
+        var outer = document.createElement('div');
+        outer.setAttribute('class', 'outer_percent');
+        var bar = document.createElement('div');
+        bar.setAttribute('class', 'inner_percent');
+        bar.style.height = '100%';
+        bar.style.minHeight = '10px';
+        bar.style.width = '0%';
+        outer.appendChild(bar);
+        outer.style.height = '100%';
+
+        element.appendChild(outer);
+        element.updatePercentBar = function(current, total) {
+            var percent = current / total * 100;
+            bar.style.width = percent + '%';
+        };
+        if (this.total) {
+            (function(total) {
+                var elementStepCounter = 0;
+                element.step = function() {
+                    elementStepCounter++;
+                    element.updatePercentBar(elementStepCounter, total);
+                };
+            })(this.total);
+        }
+    };
+
+    /**
+     * Adds a semi-transparent overlay to the specified element, preventing user interaction.
+     *
+     * @param {Element} element element to which the overlay will be added
+     */
+    this.buildOverlay = function(element) {
+        var overlay = document.createElement('dialog');
+        overlay.style.background = '#000';
+        overlay.style.opacity = 0.5;
+        overlay.style.position = 'fixed';
+        overlay.style.left = 0;
+        overlay.style.top = 0;
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.zIndex = 2147483647;
+        overlay.open = true;
+        overlay.id = 'overlay';
+        element.appendChild(overlay);
+    };
+
+    /**
+     * Adds a wait icon to the specified element.
+     *
+     * @param {Element} element element to which the wait icon will be added
+     */
+    this.buildWaitIcon = function buildWaitIcon(element) {
+        var outer = document.createElement('div');
+        outer.setAttribute('class', 'outerWaitingIcon');
+
+        var img = document.createElement('img');
+        img.setAttribute('class', 'waitingIcon');
+        if (this.customIcon) {
+            img.src = customIcon;
+        } else {
+            img.src = '/images/loading/000000_large_loader.gif';
+        }
+        outer.appendChild(img);
+        if (this.waitIconText) {
+            var text = document.createElement('h1');
+            text.textContent = this.waitIconText;
+            text.setAttribute('class', 'waitingIconText');
+            outer.appendChild(text);
+        }
+        element.appendChild(outer);
+    };
+}
+
+makeValueReadOnly(WaitScreenManager, 'TYPE_PERCENT', 0);
+makeValueReadOnly(WaitScreenManager, 'TYPE_WIOD', 1); // waiting icon of death
+makeValueReadOnly(WaitScreenManager, 'TYPE_WAITING_ICON_OF_DEATH', 1); // waiting circle of death
+makeValueReadOnly(WaitScreenManager, 'TYPE_WAITING_ICON', 1); // waiting icon
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BaseException.html">BaseException</a></li><li><a href="CommandException.html">CommandException</a></li><li><a href="DatabaseException.html">DatabaseException</a></li><li><a href="Graphics.html">Graphics</a></li><li><a href="LoginSystem.html">LoginSystem</a></li><li><a href="NavigationPanel.html">NavigationPanel</a></li><li><a href="ProblemNavigator.html">ProblemNavigator</a></li><li><a href="ProtobufSetup.html">ProtobufSetup</a></li><li><a href="ProtoDatabase.html">ProtoDatabase</a></li><li><a href="Redirector.html">Redirector</a></li><li><a href="RegisterSystem.html">RegisterSystem</a></li><li><a href="SchoolDataManager.html">SchoolDataManager</a></li><li><a href="SchoolItem.html">SchoolItem</a></li><li><a href="SketchSurface.html">SketchSurface</a></li><li><a href="UndoRedoException.html">UndoRedoException</a></li><li><a href="UpdateException.html">UpdateException</a></li><li><a href="UpdateManager.html">UpdateManager</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAnswer">addAnswer</a></li><li><a href="global.html#addAnswerContent">addAnswerContent</a></li><li><a href="global.html#addCallback">addCallback</a></li><li><a href="global.html#addClickFunction">addClickFunction</a></li><li><a href="global.html#addEventMapping">addEventMapping</a></li><li><a href="global.html#addSynchronousUpdate">addSynchronousUpdate</a></li><li><a href="global.html#addToolArea">addToolArea</a></li><li><a href="global.html#addUpdate">addUpdate</a></li><li><a href="global.html#AdvanceDataListener">AdvanceDataListener</a></li><li><a href="global.html#ArrayException">ArrayException</a></li><li><a href="global.html#assignValues">assignValues</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#buildExpandEvent">buildExpandEvent</a></li><li><a href="global.html#buildOverlay">buildOverlay</a></li><li><a href="global.html#buildPercent">buildPercent</a></li><li><a href="global.html#buildWaitIcon">buildWaitIcon</a></li><li><a href="global.html#CallbackBarrier">CallbackBarrier</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#clearCallbacks">clearCallbacks</a></li><li><a href="global.html#clearUpdates">clearUpdates</a></li><li><a href="global.html#close">close</a></li><li><a href="global.html#Connection">Connection</a></li><li><a href="global.html#continueButton">continueButton</a></li><li><a href="global.html#correctSize">correctSize</a></li><li><a href="global.html#CourseSketch">CourseSketch</a></li><li><a href="global.html#createBarrier">createBarrier</a></li><li><a href="global.html#createButton">createButton</a></li><li><a href="global.html#createFancySchoolItem">createFancySchoolItem</a></li><li><a href="global.html#createMarker">createMarker</a></li><li><a href="global.html#createNewPath">createNewPath</a></li><li><a href="global.html#createSchoolList">createSchoolList</a></li><li><a href="global.html#createSketch">createSketch</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#deleteSketch">deleteSketch</a></li><li><a href="global.html#detachedCallback">detachedCallback</a></li><li><a href="global.html#EmbeddedHtml">EmbeddedHtml</a></li><li><a href="global.html#emptyQueue">emptyQueue</a></li><li><a href="global.html#endPath">endPath</a></li><li><a href="global.html#executeEvent">executeEvent</a></li><li><a href="global.html#fillCanvas">fillCanvas</a></li><li><a href="global.html#finalize">finalize</a></li><li><a href="global.html#getCleanUpdateList">getCleanUpdateList</a></li><li><a href="global.html#getConnection">getConnection</a></li><li><a href="global.html#getCurrentAssignment">getCurrentAssignment</a></li><li><a href="global.html#getCurrentNumber">getCurrentNumber</a></li><li><a href="global.html#getCurrentProblemId">getCurrentProblemId</a></li><li><a href="global.html#getCurrentSketch">getCurrentSketch</a></li><li><a href="global.html#getCurrentTime">getCurrentTime</a></li><li><a href="global.html#getCurrentUpdate">getCurrentUpdate</a></li><li><a href="global.html#getFinishedCallback">getFinishedCallback</a></li><li><a href="global.html#getHostElement">getHostElement</a></li><li><a href="global.html#getLength">getLength</a></li><li><a href="global.html#getListLength">getListLength</a></li><li><a href="global.html#getPaper">getPaper</a></li><li><a href="global.html#getProblemText">getProblemText</a></li><li><a href="global.html#getProblemType">getProblemType</a></li><li><a href="global.html#getSketch">getSketch</a></li><li><a href="global.html#getSupportedEnums">getSupportedEnums</a></li><li><a href="global.html#getSupportedObjects">getSupportedObjects</a></li><li><a href="global.html#getUpdateList">getUpdateList</a></li><li><a href="global.html#GivenanSrlUpdateaRequestiscreated.">Given an SrlUpdate a Request is created.</a></li><li><a href="global.html#gotoNext">gotoNext</a></li><li><a href="global.html#goToNextSlide">goToNextSlide</a></li><li><a href="global.html#gotoPrevious">gotoPrevious</a></li><li><a href="global.html#goToProblem">goToProblem</a></li><li><a href="global.html#hasNext">hasNext</a></li><li><a href="global.html#hasPrevious">hasPrevious</a></li><li><a href="global.html#HighlightText">HighlightText</a></li><li><a href="global.html#ImageBox">ImageBox</a></li><li><a href="global.html#IndexManager">IndexManager</a></li><li><a href="global.html#Inheritssetsupinheritanceforfunctionsthis.Inherits(SuperClass);//supercallinsideobjectANDSubClass.Inherits(SuperClass);">Inherits
+sets up inheritance for functions
+
+this.Inherits(SuperClass); // super call inside object AND
+SubClass.Inherits(SuperClass);</a></li><li><a href="global.html#initializeCanvas">initializeCanvas</a></li><li><a href="global.html#initializeElement">initializeElement</a></li><li><a href="global.html#InputListener">InputListener</a></li><li><a href="global.html#isConnected">isConnected</a></li><li><a href="global.html#isDataLoaded">isDataLoaded</a></li><li><a href="global.html#isDescriptionOverflow">isDescriptionOverflow</a></li><li><a href="global.html#isLastUpdateSave">isLastUpdateSave</a></li><li><a href="global.html#isLastUpdateSubmission">isLastUpdateSubmission</a></li><li><a href="global.html#isValidForSaving">isValidForSaving</a></li><li><a href="global.html#isValidForSubmission">isValidForSubmission</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#loadLectures">loadLectures</a></li><li><a href="global.html#loadSketch">loadSketch</a></li><li><a href="global.html#loadSlides">loadSlides</a></li><li><a href="global.html#MultiChoice">MultiChoice</a></li><li><a href="global.html#Playback">Playback</a></li><li><a href="global.html#ProblemToolBar">ProblemToolBar</a></li><li><a href="global.html#Question">Question</a></li><li><a href="global.html#reconnect">reconnect</a></li><li><a href="global.html#redoAction">redoAction</a></li><li><a href="global.html#refresh">refresh</a></li><li><a href="global.html#reloadAssignment">reloadAssignment</a></li><li><a href="global.html#reloadProblems">reloadProblems</a></li><li><a href="global.html#removeAnswer">removeAnswer</a></li><li><a href="global.html#removeCallback">removeCallback</a></li><li><a href="global.html#removeEventMapping">removeEventMapping</a></li><li><a href="global.html#removeItem">removeItem</a></li><li><a href="global.html#removeListener">removeListener</a></li><li><a href="global.html#resetValues">resetValues</a></li><li><a href="global.html">runCommand
+Runs a specific command given its lastUpdateType.</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#SchoolItemBuilder">SchoolItemBuilder</a></li><li><a href="global.html#sendlocalScope">sendlocalScope</a></li><li><a href="global.html#sendRequest">sendRequest</a></li><li><a href="global.html#setAssignmentId">setAssignmentId</a></li><li><a href="global.html#setBoxState">setBoxState</a></li><li><a href="global.html#setCancelCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setCancelCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setCorrectAnswer">setCorrectAnswer</a></li><li><a href="global.html#setCurrentSketch">setCurrentSketch</a></li><li><a href="global.html#setDrawUpdate">setDrawUpdate</a></li><li><a href="global.html#setEditCallback">setEditCallback</a></li><li><a href="global.html#setLastSaveTime">setLastSaveTime</a></li><li><a href="global.html#setListener">setListener</a></li><li><a href="global.html#setListeners">setListeners</a></li><li><a href="global.html#setOnSuccessLoginThecallbackiscalledwithoneparameter.">setOnSuccessLogin
+The callback is called with one parameter.</a></li><li><a href="global.html#setParentSketch">setParentSketch</a></li><li><a href="global.html#setParentSketchId">setParentSketchId</a></li><li><a href="global.html#setPreferredIndex">setPreferredIndex</a></li><li><a href="global.html#setPreviewText">setPreviewText</a></li><li><a href="global.html#setRedoCallback">setRedoCallback</a></li><li><a href="global.html#setRegisterCallbackThecallbackiscalledwhentheregisterbuttonispressed.">setRegisterCallback
+The callback is called when the register button is pressed.</a></li><li><a href="global.html#setRemoveFunction">setRemoveFunction</a></li><li><a href="global.html#setSaveCallback">setSaveCallback</a></li><li><a href="global.html#setSketch">setSketch</a></li><li><a href="global.html#setSketchClickedFunction">setSketchClickedFunction</a></li><li><a href="global.html#setSketchManager">setSketchManager</a></li><li><a href="global.html#setSubmissionInformation">setSubmissionInformation</a></li><li><a href="global.html#setSubmitCallback">setSubmitCallback</a></li><li><a href="global.html#setUiLoaded">setUiLoaded</a></li><li><a href="global.html#setUndoCallback">setUndoCallback</a></li><li><a href="global.html#setupAttributes">setupAttributes</a></li><li><a href="global.html#setupCallbacksSetupsupthecallbackfortheregisterbuttonandthelostpasswordbutton.">setupCallbacks
+Setups up the callback for the register button and the lost password button.</a></li><li><a href="global.html#setUpdateList">setUpdateList</a></li><li><a href="global.html#setUpdateTime">setUpdateTime</a></li><li><a href="global.html#setUpEditButtons">setUpEditButtons</a></li><li><a href="global.html#setWrapperFunction">setWrapperFunction</a></li><li><a href="global.html#showFormattedDate">showFormattedDate</a></li><li><a href="global.html#SketchSurfaceManager">SketchSurfaceManager</a></li><li><a href="global.html#speakText">speakText</a></li><li><a href="global.html#SubmissionPanel">SubmissionPanel</a></li><li><a href="global.html#TextBox">TextBox</a></li><li><a href="global.html#TimelineMarker">TimelineMarker</a></li><li><a href="global.html#toggleSelection">toggleSelection</a></li><li><a href="global.html#undoAction">undoAction</a></li><li><a href="global.html#updatePath">updatePath</a></li><li><a href="global.html#writeTextData">writeTextData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta2</a> on Fri Mar 13 2015 04:13:07 GMT-0500 (CDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
