@@ -1,5 +1,8 @@
 /* depends on base.js */
+// jshint undef:false
+// jshint latedef:false
 
+// jshint bitwise:false
 /*******************************************************************************
  *
  * Color Functions
@@ -31,3 +34,4 @@ if (isUndefined(convertHexToRgb)) {
         } : null;
     }
 }
+// jshint bitwise:true

@@ -10,6 +10,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * not exist.
      */
     function stateCallback(assignment, assignmentCallback) {
+        /*jshint maxcomplexity:13 */
         var state = assignment.getState();
         var updateAssignment = false;
         if (isUndefined(state) || state === null) {

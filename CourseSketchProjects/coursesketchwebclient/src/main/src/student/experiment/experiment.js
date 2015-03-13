@@ -12,7 +12,7 @@ validateFirstRun(document.currentScript);
             }
             var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
             if (!isUndefined(problemIndex)) {
-                navigator.setPreferredIndex(parseInt(problemIndex));
+                navigator.setPreferredIndex(parseInt(problemIndex, 10));
             }
             CourseSketch.dataManager.clearStates();
 

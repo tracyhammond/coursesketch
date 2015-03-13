@@ -119,6 +119,7 @@ function TextBox() {
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
     this.saveData = function(event) {
+        /*jshint maxcomplexity:13 */
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
         textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
@@ -142,19 +143,19 @@ function TextBox() {
         }
 
         // x and y are strings but need to save as Ints
-        x = parseInt(x);
-        y = parseInt(y);
+        x = parseInt(x, 10);
+        y = parseInt(y, 10);
 
         // Saves X and Y to proto message. Adds the 'data-x' and 'data-y' from dragging if it exists (if the box was dragged)
         if (dialog.getAttribute('data-x') === null || dialog.getAttribute('data-y') === null) {
             textBoxProto.setX(x);
             textBoxProto.setY(y);
         } else {
-            textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x')));
-            textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y')));
+            textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x'), 10));
+            textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y'), 10));
         }
-        textBoxProto.setHeight(parseInt($(dialog).height())); // Sets height for proto message
-        textBoxProto.setWidth(parseInt($(dialog).width())); // Sets width for proto message
+        textBoxProto.setHeight(parseInt($(dialog).height(), 10)); // Sets height for proto message
+        textBoxProto.setWidth(parseInt($(dialog).width(), 10)); // Sets width for proto message
 
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {

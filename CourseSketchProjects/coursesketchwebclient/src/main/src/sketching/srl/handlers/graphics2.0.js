@@ -1,8 +1,11 @@
 /* jshint camelcase: false */
 /**
- * Installs PaperScope globally, and attaches it to the DomObject canvasElement
+ * Installs PaperScope globally, and attaches it to the DomObject canvasElement.
+ * @class Graphics
+ * @param {Element} canvas the canvas element that is being drawn to.
+ * @param {SketchManager} sketchManager - the manager that handles which sketch is currently active.
  */
-function Graphics(canvasElement, sketchManager) {
+function Graphics(canvas, sketchManager) {
     paper.install(window);
 
     /**
@@ -12,7 +15,7 @@ function Graphics(canvasElement, sketchManager) {
      */
     var ps = undefined;
     var livePath = undefined;
-    var canvasElement = $(canvasElement)[0];
+    var canvasElement = $(canvas)[0];
     var drawUpdate = true;
 
     ps = new paper.PaperScope(canvasElement);
@@ -135,6 +138,14 @@ function Graphics(canvasElement, sketchManager) {
 
     /**
      * Adds ability to draw the command as it is added to the update list.
+     * @function addUpdate
+     *
+     * @memberof Graphics
+     * @param {SrlUpdate} update the given update that is about to be executed.
+     * @param {Boolean} redraw true if the given update should force a redraw of the canvas.
+     * @param {Number} updateIndex the number index that this update occurs in the list of updates.
+     * @param {Number} lastUpdateType the type of the last update which can either be 1, 0, -1. with 1 = redo, 0 = normal and -1 = undo.
+     * @instance
      */
     this.addUpdate = function addUpdate(update, redraw, updateIndex, lastUpdateType) {
         ps.activate();
@@ -144,25 +155,36 @@ function Graphics(canvasElement, sketchManager) {
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
-                var stroke = command.decodedData;
-                if (lastUpdateType === 0 || lastUpdateType === 1) {
-                    loadStroke(stroke);
-                } else if (lastUpdateType === -1) {
-                    removeItem(stroke.getId());
-                }
-            } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
-                if (lastUpdateType === 0 || lastUpdateType === 1) {
-                    ps.project.activeLayer.removeChildren();
-                } else {
-                    loadSketch();
-                }
-            }
+            runCommand(command, lastUpdateType);
         }
         if (redraw) {
             ps.view.update();
         }
     };
+
+    /**
+     * @function runCommand
+     * Runs a specific command given its lastUpdateType.
+     * @param {SrlCommand} command the given command that is about to be executed.
+     * @param {Number} lastUpdateType the type of the last update which can either be 1, 0, -1. with 1 = redo, 0 = normal and -1 = undo.
+     * @instance
+     */
+    function runCommand(command, lastUpdateType) {
+        if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
+            var stroke = command.decodedData;
+            if (lastUpdateType === 0 || lastUpdateType === 1) {
+                loadStroke(stroke);
+            } else if (lastUpdateType === -1) {
+                removeItem(stroke.getId());
+            }
+        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
+            if (lastUpdateType === 0 || lastUpdateType === 1) {
+                ps.project.activeLayer.removeChildren();
+            } else {
+                loadSketch();
+            }
+        }
+    }
 
     /**
      * @param {Boolean} drawInstant If false this will tell the graphics to not draw anytime it receives an update.

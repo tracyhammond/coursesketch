@@ -55,31 +55,27 @@ validateFirstRun(document.currentScript);
                     if (CourseSketch.lecturePage.selectedSlideIndex > 0) {
                         CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex - 1);
                     }
-                    break;
                 }
+                break;
 
-                case 38: { // up
-                    break;
-                }
+                case 38: // up
+                break;
 
-                case 39: {// right
+                case 39: { // right
                     if (CourseSketch.lecturePage.selectedSlideIndex < CourseSketch.lecturePage.lecture.idList.length - 1) {
                         CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex + 1);
                     }
-
-                    break;
                 }
+                break;
 
-                case 40: { // down
-                    break;
-                }
+                case 40: // down
+                break;
 
-                case 27: {// escape!
-                    break;
-                }
-                default: {
+                case 27: // escape!
+                break;
+
+                default:
                     return; // exit this handler for other keys
-                }
             }
             e.preventDefault(); // prevent the default action (scroll / move caret)
         });

@@ -31,7 +31,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
                         CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
-                    if (isUndefined(item.data) || item.data == null) {
+                    if (isUndefined(item.data) || item.data === null) {
                         submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
                         return;
                     }
@@ -45,7 +45,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 });
                 // creates a request that is then sent to the server
                 sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ]);
-            } else if (result.data == nonExistantValue) {
+            } else if (result.data === nonExistantValue) {
                 // the server holds this special value then it means the server does not have the value
                 submissionCallback(nonExistantValue);
             } else {
@@ -55,7 +55,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 bytes = null;
             }
         });
-    };
+    }
     parent.getSubmission = getSubmission;
 
     function getAllExperiments(problemId, submissionCallback) {
@@ -63,7 +63,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
             console.log('SERVER RESPONDED WITH EXPERIMENT');
             console.log(item.data);
-            if (isUndefined(item.data) || item.data == null) {
+            if (isUndefined(item.data) || item.data === null) {
                 submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
                 return;
             }
@@ -99,7 +99,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 submissionCallback(e, request);
             }
         });
-    };
+    }
     parent.setSubmission = setSubmission;
 
     function deleteSubmission(problemId, couresCallback) {
@@ -108,6 +108,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 courseCallback(e, request);
             }
         });
-    };
+    }
     parent.deleteSubmission = deleteSubmission;
 }

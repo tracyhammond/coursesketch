@@ -1,6 +1,5 @@
 function HeaderHandler() {
     var open;
-    var localScope = this;
     this.animateHeader = function(value) {
         var height = $('.ui-header').height();
         if (value) { // Close header

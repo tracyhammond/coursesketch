@@ -14,8 +14,8 @@ validateFirstRun(document.currentScript);
     });
 
     var localDoc = document;
-    var courseList1 = new Array();
-    var courseList2 = new Array();
+    var courseList1 = [];
+    var courseList2 = [];
     var courseRightSide = {};
     var courseProtoMap = {};
 
@@ -31,7 +31,7 @@ validateFirstRun(document.currentScript);
         var idList = [];
         for (var i = 0; i < courseList.length; i++) {
             courseProtoMap[courseList[i].id] = courseList[i];
-            if (i % 2 == 0) {
+            if (i % 2 === 0) {
                 courseList1.push(courseList[i]);
                 courseRightSide[courseList[i].id] = false;
             } else {
@@ -75,7 +75,7 @@ validateFirstRun(document.currentScript);
         var width = element.offsetWidth / 2;
         var moveAmount = width + 'px';
         //console.log('style '  + element.style.marginLeft);
-        if (element.style.marginLeft == '' || element.style.marginLeft == '0px') {
+        if (element.style.marginLeft === '' || element.style.marginLeft === '0px') {
             if (courseRightSide[id]) {
                 moveAmount = '' + moveAmount;
             } else {
@@ -86,9 +86,9 @@ validateFirstRun(document.currentScript);
             button.onclick = function() {
                 CourseSketch.classSearch.registerClass(id);
                 setTimeVar = setTimeout(function() {
-                    alert('Your have successfully registered')
+                    alert('Your have successfully registered');
                 }, 3000);
-            }
+            };
             button.textContent = 'Register';
             button.style.position = 'absolute';
             if (courseRightSide[id]) {
@@ -110,7 +110,7 @@ validateFirstRun(document.currentScript);
                     localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
                 });
         }
-    }
+    };
 
     /**
      * Allows a user to register for a class.

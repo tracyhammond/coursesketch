@@ -1,3 +1,6 @@
+// jshint undef:false
+// jshint latedef:false
+
 /*
  * Ironically check to see if a function that checks to see if objects are
  * undefined is undefined
@@ -18,7 +21,9 @@ if (typeof isUndefined === 'undefined') {
  * *************************************************************
  */
 
+// jshint bitwise:false
 /**
+ *
  * Generates an rfc4122 version 4 compliant solution.
  *
  * found at http://stackoverflow.com/a/2117523/2187510 and further improved at
@@ -36,6 +41,7 @@ if (isUndefined(generateUUID)) {
     }
 }
 
+// jshint bitwise:true
 /**
  * Creates a number that represents the current time in milliseconds since jan
  * 1st 1970.
@@ -180,7 +186,8 @@ if (isUndefined(getTypeName)) {
         var t = typeof value;
         switch (t) {
             case 'function':
-            case 'object': {
+                /* falls through */
+            case 'object':
                 if (value.constructor) {
                     if (value.constructor.name) {
                         return value.constructor.name;
@@ -196,10 +203,9 @@ if (isUndefined(getTypeName)) {
                 }
                 // fallback, for nameless constructors etc.
                 return Object.prototype.toString.call(value).match(/^\[object (.+)\]$/)[1];
-            }
-            default: {
+
+            default:
                 return t;
-            }
         }
     }
 }

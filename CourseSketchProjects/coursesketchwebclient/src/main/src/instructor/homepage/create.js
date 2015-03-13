@@ -85,7 +85,7 @@ validateFirstRun(document.currentScript);
                     waitingIcon.finishWaiting();
                 }
                 var oldElement = courseColumn.querySelector(cssEscapeId(oldId));
-                oldElement.id = updatedCourse.id
+                oldElement.id = updatedCourse.id;
                 oldElement.schoolItemData = updatedCourse;
             });
         }); // end getAllCourses

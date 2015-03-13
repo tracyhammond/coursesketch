@@ -1,9 +1,10 @@
 // requires protobuf and connection library
+/*jshint scripturl:true*/
+/*jshint quotmark:false*/
 
 /**
  * A class that allows a user to register.
- * @class LoginSystem
- * @namespace LoginSystem
+ * @class RegisterSystem
  */
 function RegisterSystem() {
     var connection = undefined;

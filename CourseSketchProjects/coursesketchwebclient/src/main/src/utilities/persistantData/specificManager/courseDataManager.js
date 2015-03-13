@@ -1,6 +1,6 @@
 function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var COURSE_LIST = 'COURSE_LIST';
-    var userCourseId = new Array();
+    var userCourseId = [];
     var userHasCourses = true;
     var dataListener = advanceDataListener;
     var database = parentDatabase;
@@ -11,9 +11,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * exist.
      */
     function stateCallback(course, courseCallback) {
+        /*jshint maxcomplexity:13 */
         var state = course.getState();
         var updateCourse = false;
-        if (isUndefined(state) || state == null) {
+        if (isUndefined(state) || state === null) {
             state = CourseSketch.PROTOBUF_UTIL.State();
             updateCourse = true;
         }
@@ -22,7 +23,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             var access = course.getAccessDate().getMillisecond();
             var close = course.getCloseDate().getMillisecond();
             var current = CourseSketch.getCurrentTime();
-            if (isUndefined(state.accessible) || state.accessible == null) {
+            if (isUndefined(state.accessible) || state.accessible === null) {
                 if (current.lessThan(access) || current.greaterThan(close)) {
                     state.accessible = false;
                 } else {
@@ -31,7 +32,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 updateCourse = true;
             }
 
-            if (isUndefined(state.pastDue) || state.pastDue == null) {
+            if (isUndefined(state.pastDue) || state.pastDue === null) {
                 if (current.greaterThan(close)) {
                     state.pastDue = true;
                 } else {
@@ -64,14 +65,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *                is the course object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getCourseLocal(courseId, courseCallback) {
-        if (isUndefined(courseId) || courseId == null) {
+        if (isUndefined(courseId) || courseId === null) {
             courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
         }
         // quick and dirty failed fallback to local db
         database.getFromCourses(courseId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
-            } else if (result.data == nonExistantValue) {
+            } else if (result.data === nonExistantValue) {
                 // the server holds this special value then it means the server
                 // does not have the value
                 courseCallback(new DatabaseException('The database does not hold this value', 'getting Course: ' + courseId));
@@ -104,7 +105,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *            asynchronous)
      */
     function getCourse(courseId, courseCallback) {
-        if (isUndefined(courseId) || courseId == null) {
+        if (isUndefined(courseId) || courseId === null) {
             courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
         }
 
@@ -143,7 +144,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     function setCourse(course, courseCallback) {
         database.putInCourses(course.id, course.toBase64(), function(e, request) {
-            if (userCourseId.indexOf(course.id) == -1) {
+            if (userCourseId.indexOf(course.id) === -1) {
                 userCourseId.push(course.id);
                 setCourseIdList(userCourseId);
             }
@@ -214,7 +215,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
             // there was an error getting the user classes.
-            if (!isUndefined(item.returnText) && item.returnText != '' && item.returnText != 'null' && item.returnText != null) {
+            if (!isUndefined(item.returnText) && item.returnText !== '' && item.returnText !== 'null' && item.returnText !== null) {
                 userHasCourses = false;
                 console.log(item.returnText);
                 courseCallback(new DatabaseException(item.returnText, 'Getting all courses for user ' + parent.getCurrentId()));
@@ -231,7 +232,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 setCourse(course, setCourseCallback); // no callback is needed
             }
         });
-        if (userCourseId.length == 0 && userHasCourses && !onlyLocal) {
+        if (userCourseId.length === 0 && userHasCourses && !onlyLocal) {
             sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
             // console.log('course list from server polled!');
         } else {
@@ -264,7 +265,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 });
             }
 
-            if (userCourseId.length == 0 && onlyLocal) {
+            if (userCourseId.length === 0 && onlyLocal) {
                 courseCallback(new DatabaseException('No Courses exist locally for this user'));
             }
         }
@@ -286,7 +287,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *            courseId
      */
     function insertCourse(course, courseCallback, serverCallback) {
-        if (isUndefined(course.id) || course.id == null) {
+        if (isUndefined(course.id) || course.id === null) {
             var courseId = generateUUID();
             course.id = courseId;
         }
@@ -338,7 +339,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));
-    }
+    };
 
     /**
      * Attempts to clear the database of courses.
@@ -354,8 +355,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 }
             });
         }
-        if (list.length == 0) {
+        if (list.length === 0) {
             clearCallback();
         }
-    }
+    };
 }

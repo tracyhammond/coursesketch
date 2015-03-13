@@ -1,3 +1,22 @@
+/**
+ * This method traverses up the parent chain until it reaches a null node. It then returns the host.
+ * This is used to find the parent of a shadow root which contains the given node.
+ *
+ * @param {Node} parent the parent of a node contained within a school item shadow dom.
+ * @return {Node} the host element that contains this node.
+ */
+var getHostElement = function(parent) {
+    var grandParent = parent.parentNode;
+    while (grandParent !== null) {
+        parent = grandParent;
+        grandParent = grandParent.parentNode;
+    }
+    return parent.host;
+};
+
+/**
+ * @class SchoolItem
+ */
 function SchoolItem() {
 
     /**
@@ -37,7 +56,7 @@ function SchoolItem() {
             if (typeof width === 'string') {
                 if (width.endsWith && width.endsWith('px')) {
                     width = width.substring(0, width.indexOf('px'));
-                    width = parseInt(width);
+                    width = parseInt(width, 10);
                 } else {
                     break;
                 }
@@ -198,21 +217,6 @@ function SchoolItem() {
         this.editFunction = func;
     };
 }
-
-/**
- * {@link} parent {Node} the parent of a node contained within a school item shadow dom.
- * This method traverses up the parent chain until it reaches a null node. It then returns the host.
- * This is used to find the parent of a shadow root which contains the given node.
- * @return {Node} the host element that contains this node.
- */
-var getHostElement = function(parent) {
-    var grandParent = parent.parentNode;
-    while (grandParent !== null) {
-        parent = grandParent;
-        grandParent = grandParent.parentNode;
-    }
-    return parent.host;
-};
 
 SchoolItem.prototype.schoolItemData = undefined;
 

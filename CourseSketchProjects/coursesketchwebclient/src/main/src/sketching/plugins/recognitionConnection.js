@@ -4,7 +4,7 @@ function recognitionConnection(serverConnection) {
      *
      * This list should almost always be near empty.
      */
-    var queuedServerUpdates = new Array();
+    var queuedServerUpdates = [];
 
     this.addUpdate = function(update, toRemote) {
         if (!isUndefined(toRemote) && toRemote) {

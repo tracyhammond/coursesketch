@@ -1,4 +1,5 @@
 /**
+ * @class SchoolDataManager
  * Attempts to use data as a database, pulls data from the server if it does not
  * exist
  *

@@ -39,7 +39,7 @@ function MultiChoice() {
         if (isUndefined(lastAnswer) || lastAnswer.className !== 'answer-choice') {
             answer.id = '1';
         } else {
-            answer.id = parseInt(lastAnswer.id) + 1;
+            answer.id = parseInt(lastAnswer.id, 10) + 1;
         }
 
         // Radio button

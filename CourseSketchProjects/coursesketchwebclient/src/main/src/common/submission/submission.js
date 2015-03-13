@@ -78,12 +78,12 @@ function SubmissionPanel() {
         switch (this.problemType) {
             case QuestionType.SKETCH: {
                 submission = createSketchSubmission(subPanel, isSubmitting);
-                break;
             }
+            break;
             case QuestionType.FREE_RESP: {
                 submission = createTextSubmission(subPanel, isSubmitting);
-                break;
             }
+            break;
         }
         if (isUndefined(submission)) {
             throw new SubmissionException('submission type not supported, aborting');

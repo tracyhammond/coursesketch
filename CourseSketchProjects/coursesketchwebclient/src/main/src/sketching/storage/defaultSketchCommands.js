@@ -139,7 +139,7 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
-            this.decodedData = new Array();
+            this.decodedData = [];
             var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass());
             this.decodedData[0] = idChain;
         }
@@ -156,7 +156,7 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
-            this.decodedData = new Array();
+            this.decodedData = [];
             var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass());
             this.decodedData[0] = idChain;
         }
@@ -204,21 +204,16 @@ validateFirstGlobalRun(document.currentScript);
      */
     CourseSketch.PROTOBUF_UTIL.getMarkerClass().prototype.getCommandTypeName = function() {
         switch (this.getType()) {
-            case this.MarkerType.SUBMISSION: {
+            case this.MarkerType.SUBMISSION:
                 return 'SUBMISSION';
-            }
-            case CourseSketch.PROTOBUF_UTIL.CommandType.FEEDBACK: {
+            case CourseSketch.PROTOBUF_UTIL.CommandType.FEEDBACK:
                 return 'FEEDBACK';
-            }
-            case CourseSketch.PROTOBUF_UTIL.CommandType.SAVE: {
+            case CourseSketch.PROTOBUF_UTIL.CommandType.SAVE:
                 return 'SAVE';
-            }
-            case CourseSketch.PROTOBUF_UTIL.CommandType.SPLIT: {
+            case CourseSketch.PROTOBUF_UTIL.CommandType.SPLIT:
                 return 'SPLIT';
-            }
-            case CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR: {
+            case CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR:
                 return 'CLEAR';
-            }
         }
         return 'NO_NAME # is: ' + this.getCommandType();
     };
@@ -238,7 +233,7 @@ validateFirstGlobalRun(document.currentScript);
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
         var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 
-        if (oldContainingObject == newContainingObject) {
+        if (oldContainingObject === newContainingObject) {
             // done moving to same place.
             return;
         }
@@ -262,17 +257,19 @@ validateFirstGlobalRun(document.currentScript);
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 
-        if (oldContainingObject == newContainingObject) {
+        if (oldContainingObject === newContainingObject) {
             // done moving to same place.
             return;
         }
 
-        for (shapeId in this.shapesToBeContained) {
-            var object = oldContainingObject.removeSubObjectById(shapeId);
-            if (newContainerId) {
-                newContainingObject.addSubObject(object);
-            } else {
-                newContainingObject.addObject(object);
+        for (var shapeId in this.shapesToBeContained) {
+            if (this.shapesToBeContained.hasOwnProperty(shapeId)) {
+                var object = oldContainingObject.removeSubObjectById(shapeId);
+                if (newContainerId) {
+                    newContainingObject.addSubObject(object);
+                } else {
+                    newContainingObject.addObject(object);
+                }
             }
         }
     };
