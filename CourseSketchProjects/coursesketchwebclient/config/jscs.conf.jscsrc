@@ -71,7 +71,6 @@
     "disallowKeywordsOnNewLine": [ "else", "catch" ],
     "requireLineFeedAtFileEnd": true,
     "disallowSpaceAfterObjectKeys": true,
-    "validateLineBreaks": "LF",
 
     "plugins": ["jscs-jsdoc"],
     "jsDoc": {
@@ -95,6 +94,7 @@
     /*
         THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER
 
+        "validateLineBreaks": "LF",
         "requireCapitalizedComments": true,
         "requireCamelCaseOrUpperCaseIdentifiers": true,
         "disallowMultipleLineBreaks": true,
