@@ -4,8 +4,8 @@
  */
 function TextBox() {
     /**
-     * @param textToRead {string} contains the text to be read
-     * @param callback {function} is the callback to be run after the text has been spoken
+     * @param {String} textToRead contains the text to be read
+     * @param {Function} callback is the callback to be run after the text has been spoken
      * This function speaks the text using the meSpeak library
      */
     this.speakText = function(textToRead, callback) {
@@ -20,13 +20,13 @@ function TextBox() {
      * NOTE: This code comes from the interact library examples page
      */
     function enableDragging(localScope) {
-        interact(localScope.shadowRoot.querySelector(".draggable"))
-            .ignoreFrom("textarea, button")
+        interact(localScope.shadowRoot.querySelector('.draggable'))
+            .ignoreFrom('textarea, button')
             .draggable({
-                onmove: function (event) {
-                    var target = event.target,
-                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                onmove: function(event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
                     target.style.transform =
@@ -46,7 +46,7 @@ function TextBox() {
     }
 
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -62,9 +62,9 @@ function TextBox() {
          * The save must happen before being removed from the DOM and not in the detached callback
          * If the element is removed from the DOM, it does not have height and width values and the values will not save correctly
          */
-        localScope.shadowRoot.querySelector("#closeButton").onclick = function(event) {
-            if (localScope.shadowRoot.querySelector('#creatorText') != null) {
-                if (confirm("You are about to permanently remove this element.")) {
+        localScope.shadowRoot.querySelector('#closeButton').onclick = function(event) {
+            if (localScope.shadowRoot.querySelector('#creatorText') !== null) {
+                if (confirm('You are about to permanently remove this element.')) {
                     localScope.saveData(event);
                     shadowRoot = undefined;
                 }
@@ -75,15 +75,15 @@ function TextBox() {
         };
 
         // Saves data on blur of the element
-        if (localScope.shadowRoot.querySelector('textarea') != null) {
+        if (localScope.shadowRoot.querySelector('textarea') !== null) {
             localScope.shadowRoot.querySelector('textarea').onblur = function() {
                 localScope.saveData();
             };
         }
 
         // Makes save button save data on creation mode
-        saveButton = localScope.shadowRoot.querySelector("#saveButton");
-        if (saveButton != null) {
+        saveButton = localScope.shadowRoot.querySelector('#saveButton');
+        if (saveButton !== null) {
             saveButton.onclick = function() {
                 localScope.saveData();
                 saveButton.textContent = 'Data saved';
@@ -95,7 +95,7 @@ function TextBox() {
         }
 
         // Makes continue button close box on viewing mode
-        if (localScope.shadowRoot.querySelector("#continueButton") != null) {
+        if (localScope.shadowRoot.querySelector('#continueButton') !== null) {
             localScope.shadowRoot.querySelector('#continueButton').onclick = localScope.shadowRoot.querySelector('#closeButton').onclick;
         }
 
@@ -103,9 +103,9 @@ function TextBox() {
          * Makes the speak text button speak the text in the creatorText textarea
          * This textarea only exists in creation mode, and the speak text button only exists in creator mode
          */
-        if (localScope.shadowRoot.querySelector("#speakText") != null) {
-            localScope.shadowRoot.querySelector("#speakText").onclick = function() {
-                localScope.speakText(shadowRoot.querySelector("#creatorText").value);
+        if (localScope.shadowRoot.querySelector('#speakText') !== null) {
+            localScope.shadowRoot.querySelector('#speakText').onclick = function() {
+                localScope.speakText(shadowRoot.querySelector('#creatorText').value);
             };
         }
         enableDragging(localScope);
@@ -119,46 +119,47 @@ function TextBox() {
 
     // Saves Data for the proto message based on the position, height, width, and value of the text box
     this.saveData = function(event) {
+        /*jshint maxcomplexity:13 */
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
         textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
-        var x = "" + dialog.style.left; // Makes sure x is a string for following check function
-        var y = "" + dialog.style.top; // Makes sure y is a string for following check function
+        var x = '' + dialog.style.left; // Makes sure x is a string for following check function
+        var y = '' + dialog.style.top; // Makes sure y is a string for following check function
 
-        // Checks if x or y values has "px" on the end of the string. If so removes the "px" from the string
-        if (x.indexOf("px") > 0) {
+        // Checks if x or y values has 'px' on the end of the string. If so removes the 'px' from the string
+        if (x.indexOf('px') > 0) {
             x = x.substring(0, x.length - 2);
         }
-        if (y.indexOf("px") > 0) {
-            y= y.substring(0, y.length - 2);
+        if (y.indexOf('px') > 0) {
+            y = y.substring(0, y.length - 2);
         }
 
         // Checks if x or y values are blank strings. This occurs when the values are 0px, so it sets the variables to 0.
-        if (x == "" || x == " ") {
+        if (x === '' || x === ' ') {
             x = 0;
         }
-        if (y == "" || y == " ") {
-            y= 0;
+        if (y === '' || y === ' ') {
+            y = 0;
         }
 
         // x and y are strings but need to save as Ints
-        x = parseInt(x);
-        y = parseInt(y);
+        x = parseInt(x, 10);
+        y = parseInt(y, 10);
 
         // Saves X and Y to proto message. Adds the 'data-x' and 'data-y' from dragging if it exists (if the box was dragged)
-        if (dialog.getAttribute('data-x') == null || dialog.getAttribute('data-y') == null) {
+        if (dialog.getAttribute('data-x') === null || dialog.getAttribute('data-y') === null) {
             textBoxProto.setX(x);
             textBoxProto.setY(y);
         } else {
-            textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x')));
-            textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y')));
+            textBoxProto.setX(x + parseInt(dialog.getAttribute('data-x'), 10));
+            textBoxProto.setY(y + parseInt(dialog.getAttribute('data-y'), 10));
         }
-        textBoxProto.setHeight(parseInt($(dialog).height())); // Sets height for proto message
-        textBoxProto.setWidth(parseInt($(dialog).width())); // Sets width for proto message
+        textBoxProto.setHeight(parseInt($(dialog).height(), 10)); // Sets height for proto message
+        textBoxProto.setWidth(parseInt($(dialog).width(), 10)); // Sets width for proto message
 
         // If the textbox does not have an id, then a command has not been created for the textbox
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
-            if (this.shadowRoot.querySelector("#speakText") == null) {
+        if ((isUndefined(this.id) || this.id === null || this.id === '')) {
+            if (this.shadowRoot.querySelector('#speakText') === null) {
                 this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, true);
             } else {
                 this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
@@ -171,12 +172,12 @@ function TextBox() {
     };
 
     /**
-     * @param textBoxProto {protoCommand} is the data to be loaded from the proto
+     * @param {ProtoCommand} textBoxProto is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
     this.loadData = function(textBoxProto) {
-        if (isUndefined(this.shadowRoot) || this.shadowRoot == null) {
+        if (isUndefined(this.shadowRoot) || this.shadowRoot === null) {
             this.loadedData = textBoxProto;
             return;
         }
@@ -187,7 +188,7 @@ function TextBox() {
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
 
         // If creatorText element does not exist, make the selected node the viewText element
-        if (node == null) {
+        if (node === null) {
             node = this.shadowRoot.querySelector('#viewText');
         }
         $(dialog).height(textBoxProto.getHeight()); // Sets dialog height
@@ -198,7 +199,7 @@ function TextBox() {
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
-        if (dialog.style.display == "none") {
+        if (dialog.style.display === 'none') {
             var textToRead = textBoxProto.getText();
             this.parentNode.removeChild(this);
 
@@ -208,7 +209,7 @@ function TextBox() {
     };
 
     /**
-     * @return finishedCallback {function} is the callback set at implementation.
+     * @return {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

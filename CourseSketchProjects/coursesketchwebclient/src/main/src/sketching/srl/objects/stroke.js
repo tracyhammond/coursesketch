@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
 
 /**
@@ -19,7 +20,7 @@ function SRL_Stroke(startPoint) {
     /**
      * List of points in the stroke.
      */
-    var points = new Array();
+    var points = [];
 
     var intersector = new SRL_IntersectionHandler(this);
     /**
@@ -79,8 +80,8 @@ function SRL_Stroke(startPoint) {
      * @return the object if it exist, returns false otherwise.
      */
     this.getSubObjectById = function(objectId) {
-        for (object in points) {
-            if (object.getId == objectId) {
+        for (var object in points) {
+            if (object.getId === objectId) {
                 return object;
             }
         }
@@ -95,7 +96,7 @@ function SRL_Stroke(startPoint) {
     this.removeSubObjectById = function(objectId) {
         for (var i = 0; i < points.length; i++) {
             var object = points[i];
-            if (object.getId() == objectId) {
+            if (object.getId() === objectId) {
                 return removeObjectByIndex(points, i);
             }
         }
@@ -133,7 +134,7 @@ function SRL_Stroke(startPoint) {
      * @return first point in the stroke
      */
     this.getFirstPoint = function() {
-        if (points.length == 0) {
+        if (points.length === 0) {
             return null;
         }
         return points[0];
@@ -146,7 +147,7 @@ function SRL_Stroke(startPoint) {
      * @return last point in the stroke.
      */
     this.getLastPoint = function() {
-        if (points.length == 0) {
+        if (points.length === 0) {
             return null;
         }
         return points[points.length - 1];
@@ -230,7 +231,7 @@ function SRL_Stroke(startPoint) {
             xEnd = this.getPoint(secondPoint).getX();
             yEnd = this.getPoint(secondPoint).getY();
 
-            if (xStart == xEnd && yStart == yEnd) {
+            if (xStart === xEnd && yStart === yEnd) {
                 return Number.NaN;
             }
 
@@ -267,7 +268,7 @@ function SRL_Stroke(startPoint) {
             xEnd = this.getPoint(secondPoint).getX();
             yEnd = this.getPoint(secondPoint).getY();
 
-            if (xStart == xEnd && yStart == yEnd) {
+            if (xStart === xEnd && yStart === yEnd) {
                 return Number.NaN;
             }
 
@@ -286,7 +287,7 @@ function SRL_Stroke(startPoint) {
      */
     this.getEuclideanDistance = function() {
         var x0, xn, y0, yn;
-        if (this.getPoints().length == 0) return 0;
+        if (this.getPoints().length === 0) return 0;
         x0 = this.getFirstPoint().getX();
         y0 = this.getFirstPoint().getY();
         xn = this.getLastPoint().getX();
@@ -301,7 +302,7 @@ function SRL_Stroke(startPoint) {
      */
     this.getEndAngleCosine = function() {
         if (this.getNumPoints() <= 1) return Number.NaN;
-        if (this.getEuclideanDistance() == 0) return Number.NaN;
+        if (this.getEuclideanDistance() === 0) return Number.NaN;
         var xDistance = this.getLastPoint().getX() - this.getFirstPoint().getX();
         return xDistance / this.getEuclideanDistance();
     };
@@ -313,7 +314,7 @@ function SRL_Stroke(startPoint) {
      */
     this.getEndAngleSine = function() {
         if (this.getNumPoints() <= 1) return Number.NaN;
-        if (this.getEuclideanDistance() == 0) return Number.NaN;
+        if (this.getEuclideanDistance() === 0) return Number.NaN;
         var yDistance = this.getLastPoint().getY() - this.getFirstPoint().getY();
         return yDistance / this.getEuclideanDistance();
     };
@@ -342,7 +343,7 @@ function SRL_Stroke(startPoint) {
     this.getTotalTime = function() {
         console.log("TODO - need to implement a .getTime()");
         throw 'unspoorted function call: "getTotalTime"';
-        if (this.getPoints().length == 0) return Number.NaN;
+        // if (this.getPoints().length === 0) return Number.NaN;
         // return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
     };
 
@@ -355,17 +356,17 @@ function SRL_Stroke(startPoint) {
     this.removeTimeDuplicates = function() {
         console.log("TODO - need to implement a .getTime()");
         throw 'unspoorted function call: "removeTimeDuplicates"';
-        var points = new Array();
+        /*
+        var points = [];
         for (var i = 0; i < points.length; i++) {
             if (points.length > 0) {
-                /*
-                 * if(points[points.size()-1].getTime() == p.getTime()){
-                 * continue; } //
-                 */
+                if(points[points.size()-1].getTime() === p.getTime()){
+                continue; } //
             }
             points.push(points[i]);
         }
         return points;
+        */
     };
 
     /**
@@ -375,7 +376,7 @@ function SRL_Stroke(startPoint) {
      * @return list of points with duplicates (based on coordinates) removed
      */
     this.removeCoordinateDuplicates = function() {
-        var p = new Array();
+        var p = [];
         var x1, x2, y1, y2;
         p.push(this.getPoint(0));
         for (var i = 0; i < this.getPoints().length - 1; i++) {
@@ -383,7 +384,7 @@ function SRL_Stroke(startPoint) {
             y1 = this.getPoint(i).getY();
             x2 = this.getPoint(i + 1).getX();
             y2 = this.getPoint(i + 1).getY();
-            if (x1 != x2 || y1 != y2) p.push(this.getPoint(i + 1));
+            if (x1 !== x2 || y1 !== y2) p.push(this.getPoint(i + 1));
         }
         return p;
     };
@@ -396,7 +397,8 @@ function SRL_Stroke(startPoint) {
     this.getMaximumSpeed = function() {
         console.log("TODO - need to implement a .getTime()");
         throw 'unspoorted function call: "getMaximumSpeed"';
-        if (this.getPoints().length == 0) return Number.NaN;
+        /*
+        if (this.getPoints().length === 0) return Number.NaN;
         var max = 0;
         var deltaX, deltaY;
         var deltaT;
@@ -409,6 +411,7 @@ function SRL_Stroke(startPoint) {
             if (speed > max) max = speed;
         }
         return max;
+        */
     };
 
     /**
@@ -443,7 +446,7 @@ function SRL_Stroke(startPoint) {
         var lastrot = Number.NaN;
         for (var i = 1; i < p.length - 2; i++) {
             var rot = this.rotationAtAPoint(p, i);
-            if (lastrot == Number.NaN) lastrot = rot;
+            if (lastrot === Number.NaN) lastrot = rot;
             while ((i > 0) && (rot - lastrot > Math.PI)) {
                 rot = rot - 2 * Math.PI;
             }
@@ -466,7 +469,7 @@ function SRL_Stroke(startPoint) {
         var lastrot = Number.NaN;
         for (var i = 1; i < p.length - 2; i++) {
             var rot = this.rotationAtAPoint(p, i);
-            if (lastrot == Number.NaN) lastrot = rot;
+            if (lastrot === Number.NaN) lastrot = rot;
             while ((i > 0) && (rot - lastrot > Math.PI)) {
                 rot = rot - 2 * Math.PI;
             }
@@ -489,7 +492,7 @@ function SRL_Stroke(startPoint) {
         var lastrot = Number.NaN;
         for (var i = 1; i < p.length - 2; i++) {
             var rot = this.rotationAtAPoint(p, i);
-            if (lastrot == Number.NaN) lastrot = rot;
+            if (lastrot === Number.NaN) lastrot = rot;
             while ((i > 0) && (rot - lastrot > Math.PI)) {
                 rot = rot - 2 * Math.PI;
             }
@@ -506,6 +509,6 @@ function SRL_Stroke(startPoint) {
             points[i].temp_print();
         }
     };
-};
+}
 
 SRL_Stroke.Inherits(SRL_Shape);
