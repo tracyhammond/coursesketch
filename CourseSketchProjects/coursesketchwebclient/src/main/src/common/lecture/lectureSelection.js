@@ -2,66 +2,64 @@ validateFirstRun(document.currentScript);
 
 (function() {
     $(document).ready(function() {
-        CourseSketch.lectureSelection.courseSelectionManager = new clickSelectionManager();
+        CourseSketch.lectureSelection.courseSelectionManager = new ClickSelectionManager();
         CourseSketch.lectureSelection.currentCourse = undefined;
 
         /**
          * Function to be called when a lecture has finished editing.
          *
-         * @param attributeChanged
+         * @param {protoObjectAttribute} attributeChanged
          *            the name of the protobuf attribute that changed
-         * @param oldValue
+         * @param {protoObjectAttributeValue} oldValue
          *            the attribute's old value
-         * @param newValue
+         * @param {protoObjectAttribute} newValue
          *            the attribute's new value
-         * @param element
+         * @param {protoObject} lectureObject
          *            protobuf element that has been edited
          */
-        CourseSketch.lectureSelection.lectureEndEdit = function(
-            attributeChanged, oldValue, newValue, lectureObject) {
-                element[attributeChanged] = newValue;
-                CourseSketch.dataManager.updateLecture(lectureObject);
+        CourseSketch.lectureSelection.lectureEndEdit = function(attributeChanged, oldValue, newValue, lectureObject) {
+            element[attributeChanged] = newValue;
+            CourseSketch.dataManager.updateLecture(lectureObject);
         };
 
         /**
          * Function that is called when a lecture is selected
          * (clicked on)
          *
-         * @param lecture
-         *            protobuf object of the lecture that was
-         *            selected
+         * @param {protoObject} lecture
+         *            protobuf object of the lecture that was selected
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
-            CourseSketch.dataManager.addState("currentLecture",lecture);
+            CourseSketch.dataManager.addState('currentLecture', lecture);
             if (CourseSketch.connection.isInstructor) {
-                CourseSketch.redirectContent("/src/instructor/lecture/lecturePage.html", "Edit Lecture");
+                CourseSketch.redirectContent('/src/instructor/lecture/lecturePage.html', 'Edit Lecture');
             } else {
-                CourseSketch.redirectContent("/src/student/lecture/lecturePage.html", "View Lecture");
+                CourseSketch.redirectContent('/src/student/lecture/lecturePage.html', 'View Lecture');
             }
-        }
+        };
 
         /**
          * Renders a list of lectures to the screen.
          *
-         * @param lectureList
+         * @param {list} lectureList
          *                list of lectures to display
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
-            if(lectureList[0] instanceof CourseSketch.DatabaseException) {
+            if (lectureList[0] instanceof CourseSketch.DatabaseException) {
                 throw lectureList[0];
             }
-            var add = $("#add").clone();
+            var add = $('#add').clone();
             var schoolItemBuilder = new SchoolItemBuilder();
             schoolItemBuilder.setList(lectureList)
                 .setShowDate(false)
                 .setEditCallback(CourseSketch.lectureSelection.lectureEndEdit)
                 .setInstructorCard(CourseSketch.connection.isInstructor)
                 .setBoxClickFunction(CourseSketch.lectureSelection.lectureSelected)
-                .build(document.querySelector("#col2>.content"));
+                .build(document.querySelector('#col2>.content'));
             if (CourseSketch.connection.isInstructor) {
-                $("#col2>.content").prepend(add);
-                $("#add").bind("click", CourseSketch.lectureSelection.addLecture);
-                $("#add").addClass("show");
+                $('#col2>.content').prepend(add);
+                $('#add').bind('click', CourseSketch.lectureSelection.addLecture);
+                $('#add').addClass('show');
             }
         };
 
@@ -69,7 +67,7 @@ validateFirstRun(document.currentScript);
          * Called when a course is selected. Updates selection
          * and gets lectures for the course.
          *
-         * @param course
+         * @param {Object} course
          *                course object of the selected element
          */
         CourseSketch.lectureSelection.courseSelected = function(course) {
@@ -91,26 +89,25 @@ validateFirstRun(document.currentScript);
         /**
          * Adds a new lecture to the currently selected course.
          *
-         * @param evt
+         * @param {event} evt
          *                event from click (or other) action
          */
         CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
             var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
             lecture.courseId = currentCourse;
-            lecture.name = "Untitled Lecture";
+            lecture.name = 'Untitled Lecture';
             lecture.id = generateUUID();
-            lecture.description = "N/A";
+            lecture.description = 'N/A';
             var insertCallback = function() {
                 CourseSketch.dataManager.getCourse(currentCourse,
                     function(course) {
                         CourseSketch.dataManager.getCourseLectures(
                             course.lectureList,
                             CourseSketch.lectureSelection.displayLectures);
-                            console.log("finished adding to course "
-                                + currentCourse);
-                            if(!isUndefined(addLectureCallback)) {
-                                addLectureCallback(course);
-                            }
+                        console.log('finished adding to course ' + currentCourse);
+                        if (!isUndefined(addLectureCallback)) {
+                            addLectureCallback(course);
+                        }
                     });
             };
             CourseSketch.dataManager.insertLecture(lecture, insertCallback, insertCallback);
@@ -119,7 +116,7 @@ validateFirstRun(document.currentScript);
         /**
          * Renders a list of courses to the screen.
          *
-         * @param courseList list of courses to display
+         * @param {list} courseList list of courses to display
          */
         CourseSketch.lectureSelection.showCourses = function(courseList) {
             CourseSketch.lectureSelection.schoolItemBuilder = new SchoolItemBuilder();
@@ -127,7 +124,7 @@ validateFirstRun(document.currentScript);
                 .setList(courseList)
                 .setShowDate(false)
                 .setBoxClickFunction(this.courseSelected)
-                .build(document.querySelector("#col1>.content"));
+                .build(document.querySelector('#col1>.content'));
         };
 
         var loadCourses = function(courseList) {
@@ -146,7 +143,7 @@ validateFirstRun(document.currentScript);
                     clearInterval(intervalVar);
                     CourseSketch.dataManager.pollUpdates(function() {
                         CourseSketch.dataManager.getAllCourses(loadCourses);
-                    }); // pollupdates
+                    }); // Pollupdates
                 }
             }, 100);
         }
