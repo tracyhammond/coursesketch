@@ -148,7 +148,7 @@
             simulate(this.schoolElement.childNodes[0], 'click');
         });
 
-        test("edit call back", function(assert) {
+        test("edit call back with no value change", function(assert) {
             expect(6);
             var s = new SchoolItemBuilder();
             var oldValue = "old";
@@ -157,10 +157,14 @@
             schoolItem.name = oldValue;
 
             s.setEditCallback(function(type, oldV, newV, item) {
+                console.log(type);
+                console.log(oldV);
+                console.log(newV);
+                console.log(item);
                 assert.ok(true, "edit callbock called");
                 assert.equal(type, 'name', "function is called with correct type");
-                assert.equal(oldV, oldValue, "function is called with the old value");
-                assert.equal(newV, oldValue, "called with the new value (which happens to be equal to the old value)");
+                assert.equal(oldV.get(type), oldValue, "function is called with the old value");
+                assert.equal(newV.get(type), oldValue, "called with the new value (which happens to be equal to the old value)");
                 assert.equal(item, schoolItem, "Callback is called with correct school item");
             });
             s.setList([ schoolItem ]);
