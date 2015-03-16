@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-babel');
     grunt.initConfig({
         jshint: {
             options: {
@@ -79,6 +80,20 @@ module.exports = function(grunt) {
                     destination: 'doc'
                 }
             }
+        },
+        babel: {
+            options: {
+                sourceMap: true
+            },
+            all: {
+                files: [
+                    {
+                        expand: true,
+                        src: [ 'src/main/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js' ],
+                        dest: 'target'
+                    }
+                ]
+            }
         }
     });
     // target is a parameter to all registration functions, it is not used.
@@ -107,5 +122,5 @@ module.exports = function(grunt) {
         ]);
     });
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc' ]);
+    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'babel' ]);
 };
