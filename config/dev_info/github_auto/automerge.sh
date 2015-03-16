@@ -1,3 +1,4 @@
+#!/bin/sh
 git stash clear
 git stash
 oldbranch=$(git rev-parse --abbrev-ref HEAD)
