@@ -4,14 +4,14 @@
  */
 function TimelineMarker() {
     /**
-     * @param templateClone {node} is a clone of the custom HTML Element for the text box
+     * @param {node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        addCross(shadowRoot.querySelector("#picture"), this);
+        addCross(shadowRoot.querySelector('#picture'), this);
 
     };
 	/**
@@ -21,7 +21,7 @@ function TimelineMarker() {
         element.onclick = function() {
             $(element).addClass('cross');
             var oldClickFunction = element.onclick;
-            var tim = setTimeout(function () {
+            var tim = setTimeout(function() {
                 $(element).removeClass('cross');
                 element.onclick = oldClickFunction;
             }, 5000);
@@ -34,16 +34,17 @@ function TimelineMarker() {
     }
 
     /**
-     * @param remove {function} the element is removed and calls this function during the process
+     * @param {Function} remove The element is removed and calls this function during the process
      */
     this.setRemoveFunction = function(remove) {
         this.removeFunction = remove;
     };
     /**
+     * @param {String} text
      * For the user to see what text they have typed inside of the textboxes
      */
-    this.setPreviewText = function (text) {
-        this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10) + (text.length > 10 ? "..." : "");
+    this.setPreviewText = function(text) {
+        this.shadowRoot.querySelector('#preview').textContent = text.substring(0, 10) + (text.length > 10 ? '...' : '');
     };
 }
 TimelineMarker.prototype = Object.create(HTMLElement.prototype);
