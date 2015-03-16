@@ -8,6 +8,7 @@
 	<name>CourseSketch-parent</name>
 
 	<modules>
+		<module>CourseSketchProjects/coursesketchwebclient</module>
 		<module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
@@ -17,7 +18,6 @@
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
-
 	</modules>
 
 	<issueManagement>

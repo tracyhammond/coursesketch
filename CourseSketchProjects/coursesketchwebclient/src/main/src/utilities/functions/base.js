@@ -1,10 +1,13 @@
+// jshint undef:false
+// jshint latedef:false
+
 /*
  * Ironically check to see if a function that checks to see if objects are
  * undefined is undefined
  */
 if (typeof isUndefined === 'undefined') {
     function isUndefined(object) {
-        return typeof object === "undefined";
+        return typeof object === 'undefined';
     }
 }
 
@@ -18,7 +21,9 @@ if (typeof isUndefined === 'undefined') {
  * *************************************************************
  */
 
+// jshint bitwise:false
 /**
+ *
  * Generates an rfc4122 version 4 compliant solution.
  *
  * found at http://stackoverflow.com/a/2117523/2187510 and further improved at
@@ -30,13 +35,13 @@ if (isUndefined(generateUUID)) {
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+            return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
         });
         return uuid;
     }
-    ;
 }
 
+// jshint bitwise:true
 /**
  * Creates a number that represents the current time in milliseconds since jan
  * 1st 1970.
@@ -66,7 +71,7 @@ if (isUndefined(createTimeStamp)) {
 if (isUndefined(addScopedLoadEvent)) {
     function addScopedLoadEvent(scope, func) {
         var oldonload = scope.onload;
-        if (typeof scope.onload != 'function') {
+        if (typeof scope.onload !== 'function') {
             scope.onload = func;
         } else {
             scope.onload = function() {
@@ -115,14 +120,14 @@ if (isUndefined(isFunction)) {
  */
 if (isUndefined(make2Digits)) {
     function make2Digits(num) {
-        return ("0" + Number(num)).slice(-2);
+        return ('0' + Number(num)).slice(-2);
     }
 }
 
 if (isUndefined(getMillitaryFormattedDateTime)) {
     function getMillitaryFormattedDateTime(dateTime) {
-        var date = make2Digits(dateTime.getMonth() + 1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();
-        var time = make2Digits(dateTime.getHours()) + ":" + make2Digits(dateTime.getMinutes());
+        var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
+        var time = make2Digits(dateTime.getHours()) + ':' + make2Digits(dateTime.getMinutes());
         return date + ' ' + time;
     }
 }
@@ -132,42 +137,42 @@ if (isUndefined(getMillitaryFormattedDateTime)) {
  */
 if (isUndefined(getFormattedDateTime)) {
     function getFormattedDateTime(dateTime) {
-        var date = make2Digits(dateTime.getMonth() + 1) + "-" + make2Digits(dateTime.getDate()) + "-" + dateTime.getFullYear();
+        var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
         var hours = dateTime.getHours();
-        var timeType = "AM";
+        var timeType = 'AM';
         if (dateTime.getHours() > 12) {
             hours -= 12;
         }
         if (dateTime.getHours() >= 12) {
-            timeType = "PM";
+            timeType = 'PM';
         }
-        if (dateTime.getHours() == 0) {
+        if (dateTime.getHours() === 0) {
             hours = 12;
         }
-        var time = make2Digits(hours) + ":" + make2Digits(dateTime.getMinutes()) + timeType;
+        var time = make2Digits(hours) + ':' + make2Digits(dateTime.getMinutes()) + timeType;
         return date + ' ' + time;
     }
 }
 
 if (isUndefined(BaseException)) {
     /**
-     * @Class Defines the base exception class that can be extended by all other
-     *        exceptions.
+     * @class BaseException
+     * Defines the base exception class that can be extended by all other exceptions.
      */
     var BaseException = {
-        name : "BaseException",
+        name:           'BaseException',
         /**
          * The level defines how bad it is. level 5 is the okayest exception
          * (with 6+ typically being ignored completely) and level 0 is the worst
          * exception (with <0 being treated as 0).
          */
-        level : 5,
-        message : "BaseException Thrown.\n Please subclass this to create a better exception.",
-        htmlMessage : "BaseException Thrown<br> Please subclass this to create a better exception.",
-        toString : function() {
-            return this.name + ": " + this.message + (this.specificMessage ? "\n" + this.specificMessage : "");
+        level:          5,
+        message:        'BaseException Thrown.\n Please subclass this to create a better exception.',
+        htmlMessage:    'BaseException Thrown<br> Please subclass this to create a better exception.',
+        toString: function() {
+            return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '');
         },
-        setMessage : function(messageValue) {
+        setMessage: function(messageValue) {
             this.specificMessage = messageValue;
         }
     };
@@ -176,12 +181,13 @@ if (isUndefined(BaseException)) {
 if (isUndefined(getTypeName)) {
     function getTypeName(value) {
         if (value === null) {
-            return "null";
+            return 'null';
         }
         var t = typeof value;
         switch (t) {
-            case "function":
-            case "object":
+            case 'function':
+                /* falls through */
+            case 'object':
                 if (value.constructor) {
                     if (value.constructor.name) {
                         return value.constructor.name;
@@ -197,6 +203,7 @@ if (isUndefined(getTypeName)) {
                 }
                 // fallback, for nameless constructors etc.
                 return Object.prototype.toString.call(value).match(/^\[object (.+)\]$/)[1];
+
             default:
                 return t;
         }
@@ -205,10 +212,10 @@ if (isUndefined(getTypeName)) {
 
 if (isUndefined(loadJs)) {
     function loadJs(src) {
-        var head= document.getElementsByTagName('head')[0];
-        var script= document.createElement('script');
-        script.type= 'text/javascript';
-        script.src= src;
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = src;
         head.appendChild(script);
     }
 }
@@ -222,20 +229,18 @@ if (isUndefined(validateFirstRun)) {
         // no var on purpose.
         try {
             scriptBay = scriptBay || {};
-        } catch(exception) {
+        } catch (exception) {
             scriptBay = {};
         }
         if (!isUndefined(scriptBay[scriptObject.src])) {
-            var errorEvent = {src: scriptObject.src};
+            var errorEvent = { src: scriptObject.src };
             var listener = function(event) {
-                if (typeof event.error === "object"
-                    && !isUndefined(event.error.src)
-                    && event.error.src === scriptObject.src) {
+                if (typeof event.error === 'object' && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
-                    window.removeEventListener("error", listener, true);
+                    window.removeEventListener('error', listener, true);
                 }
-            }
-            window.addEventListener("error", listener, true);
+            };
+            window.addEventListener('error', listener, true);
             throw errorEvent;
         }
         scriptBay[scriptObject.src] = {};
@@ -252,20 +257,18 @@ if (isUndefined(validateFirstGlobalRun)) {
         // no var on purpose.
         try {
             CourseSketch.scriptBay = CourseSketch.scriptBay || {};
-        } catch(exception) {
+        } catch (exception) {
             CourseSketch.scriptBay = {};
         }
         if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
-            var errorEvent = {src: scriptObject.src};
+            var errorEvent = { src: scriptObject.src };
             var listener = function(event) {
-                if (typeof event.error === "object"
-                    && !isUndefined(event.error.src)
-                    && event.error.src === scriptObject.src) {
+                if (typeof event.error === 'object' && !isUndefined(event.error.src) && event.error.src === scriptObject.src) {
                     event.preventDefault();event.stopPropagation();
-                    window.removeEventListener("error", listener, true);
+                    window.removeEventListener('error', listener, true);
                 }
-            }
-            window.addEventListener("error", listener, true);
+            };
+            window.addEventListener('error', listener, true);
             throw errorEvent;
         }
         CourseSketch.scriptBay[scriptObject.src] = {};
