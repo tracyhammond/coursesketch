@@ -33,3 +33,9 @@ target/
 *.iml
 
 *Log.out*
+node/
+npm-debug.log
+node_modules/
+node_temp
+node_tmp
+doc

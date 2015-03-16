@@ -34,7 +34,7 @@ function SketchSurfaceManager(sketchSurface) {
     this.setSketch = function(sketch) {
         if (isUndefined(sketch.id)) {
             // TODO: change to exception object
-            throw "id must be defined to add it.";
+            throw 'id must be defined to add it.';
         }
         sketchMap.set(sketch.id, sketch);
     };
