@@ -12,10 +12,10 @@ function CallbackBarrier() {
  */
 CallbackBarrier.prototype.getCallback = function() {
     if (this.finalized) {
-        throw "You can't add a callback after finalizing";
+        throw 'You can not add a callback after finalizing';
     }
     this.asyncCount++;
-    return function(){
+    return function() {
         this.asyncCount--;
         if (this.asyncCount === 0 && this.finalized) {
             this.callbackHandle();
@@ -25,14 +25,14 @@ CallbackBarrier.prototype.getCallback = function() {
 
 /**
  * Creates a function that is called to decrement the barrier but is only called once.
- * @param amount {Number} the number of times the result is called before the callback is called.
+ * @param {Number} amount The number of times the result is called before the callback is called.
  */
 CallbackBarrier.prototype.getCallbackAmount = function(amount) {
     if (this.finalized) {
-        throw "You can't add a callback after finalizing";
+        throw 'You can not add a callback after finalizing';
     }
     this.asyncCount = amount;
-    return function(){
+    return function() {
         this.asyncCount--;
         if (this.asyncCount === 0 && this.finalized) {
             this.callbackHandle();
@@ -48,7 +48,7 @@ CallbackBarrier.prototype.finalize = function(callback) {
     if (this.asyncCount === 0) {
         this.callbackHandle();
     }
-}
+};
 
 /**
  * Creates a barrier with the specific amount and a callback.
