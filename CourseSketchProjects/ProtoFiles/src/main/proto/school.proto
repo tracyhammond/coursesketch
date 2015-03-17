@@ -141,6 +141,23 @@ message SrlGrade {
 
 }
 
+message GradingPolicy {
+    required string courseId = 1;
+    repeated Category gradeCategories = 2;
+
+    message Category {
+        optional string name = 1;
+        optional float weight = 2;
+        optional PolicyType policyType = 3 [default=PERCENT];
+        optional LatePolicy latePolicy = 4; // This serves as a default late policy for all assignments in a category
+
+        enum PolicyType {
+            PERCENT = 1; // Percent based grading policy
+            POINT = 2;   // Point based grading policy
+        }
+    }
+}
+
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
     optional int32 year = 1;
     optional int32 month = 2;
