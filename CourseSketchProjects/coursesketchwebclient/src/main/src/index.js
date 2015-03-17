@@ -4,14 +4,27 @@ if (isUndefined(CourseSketch)) {
 CourseSketch.connection = false;
 CourseSketch.redirector = {};
 
+/**
+ * @namespace Index
+ */
 $(document).ready(
 function() {
 
+    /**
+     * refreshes the page without adding a browser event.
+     * @memberof CourseSketch
+     */
     CourseSketch.reloadContent = function() {
         var value = CourseSketch.redirector.getRedirect();
         CourseSketch.redirector.changeSourceNoEvent(value);
     };
 
+    /**
+     * changes the page to point at a different location.
+     * @param {URL} url - a url that points to a different page
+     * @param {String} title - the title that appears on the top of course sketch.
+     * @memberof CourseSketch
+     */
     CourseSketch.redirectContent = function(url, title) {
         CourseSketch.redirector.changeSourceNoEvent(url);
 
@@ -32,7 +45,11 @@ function() {
 
     var element = document.querySelector('#loginLocation');
 
-    // Creates the scuccess funciton.
+    /**
+     * Called when the user logs in correctly.
+     * @param {ConnectionLibrary} loggedInConnection - a valid connection of the user being logged in.
+     * @memberof Index
+     */
     var successLogin = function(loggedInConnection) {
         CourseSketch.connection = loggedInConnection;
         $('#loginLocation').empty();
@@ -53,7 +70,13 @@ function() {
         element.style.display = 'none';
     };
 
-    // This section creates a cross so that the login links to the register and register links to login.
+    /**
+     * Creates a login element and a function so that when the register button is clinked the register is created.
+     * This is called on the Register element when cancel is pressed.
+     * @param {Function} register - the createRegister function
+     * @see {@link Index.createRegister}
+     * @memberof Index
+     */
     function createLogin(register) {
         $('#loginLocation').empty();
         var login = document.createElement('login-system');
@@ -64,6 +87,13 @@ function() {
         element.appendChild(login);
     }
 
+    /**
+     * Creates a register element and a function so that when the cancel button is clinked the login is created.
+     * This is called on the Login element when register is pressed.
+     * @param {Function} login - the createLogin function
+     * @see {@link Index.createLogin}
+     * @memberof Index
+     */
     function createRegister(login) {
         console.log('creating new register element');
         $('#loginLocation').empty();
@@ -78,7 +108,10 @@ function() {
     createLogin(createRegister);
     element.style.display = 'flex';
 
-    // create the load menu function.
+    /**
+     * Creates and loads the menu.
+     * @memberof Index
+     */
     function loadMenu(importDoc) {
         var content = importDoc.querySelector('#menubarTemplate').import;
         var template = undefined;
@@ -92,6 +125,11 @@ function() {
         startMenuSliding();
     }
 
+    /**
+     * Sets up the sliding for the menu.
+     * TODO look up the Header.js and see what is happening there.
+     * @memberof Index
+     */
     function startMenuSliding() {
         var menuStatus = false;
 
@@ -137,6 +175,10 @@ function() {
         // Menu behaviour
     }
 
+    /**
+     * loads the homepage.  This loads a different page depending on if the user is currently an instructor or a user.
+     * @memberof Index
+     */
     function loadHomePage() {
         console.log('LOADING HOMEPAGE');
         if (CourseSketch.connection.isInstructor) {
@@ -156,10 +198,17 @@ function() {
 });
 
 CourseSketch.isMenuSwipeable = true;
+/**
+ * turns on menu swiping.
+ * @memberof CourseSketch
+ */
 CourseSketch.enableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = true;
 };
-
+/**
+ * turns off menu swiping.
+ * @memberof CourseSketch
+ */
 CourseSketch.disableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = false;
 };

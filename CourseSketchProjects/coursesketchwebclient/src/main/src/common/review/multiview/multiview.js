@@ -1,10 +1,11 @@
-/*
+/**
  * The MvSketch function handles all the action that can take place
  * in the multiview units.
  * Attributes:
  * data-binary: if set then the button will be disabled.
  * data-max_points: if set then this is the max number of points that can be input
  * data-max_percent: if set then this is the max percent of score that can be used
+ * @class MvSketch
  */
 function MvSketch() {
     this.maxValue = 100;
@@ -13,7 +14,9 @@ function MvSketch() {
     /**
      * Sets the update list.
      * after the update list is done loading
-     * @param {SrlUpdateList} updateList  a list that contains all the changes made in sketch.
+     * @param {SrlUpdateList} updateList - a list that contains all the changes made in sketch.
+     * @instance
+     * @memberof MvSketch
      */
     this.setUpdateList = function(updateList)  {
         this.shadowRoot.querySelector('sketch-surface').loadUpdateList(updateList, undefined, function() {
@@ -22,8 +25,10 @@ function MvSketch() {
         }.bind(this));
     };
 
-    /*
+    /**
      * This creates the shadow root and attaches it to the object in question.
+     * @instance
+     * @memberof MvSketch
      */
     this.initializeElement = function(templateClone) {
         this.createShadowRoot();
@@ -40,6 +45,8 @@ function MvSketch() {
 
     /**
      * Looks at the data attributes of this element and configures the element appropriately.
+     * @instance
+     * @memberof MvSketch
      */
     this.setupAttributes = function() {
         if (!isUndefined(this.dataset) && this.dataset.binary === 'true' || this.dataset.binary === '') {
@@ -56,8 +63,11 @@ function MvSketch() {
         }
     };
 
-    /*
+    /**
      * Marks the sketch at correct and changes the background to outercorrect.
+     * @instance
+     * @memberof MvSketch
+     * @access private
      */
     function correct(event) {
         event.stopPropagation();
@@ -66,8 +76,11 @@ function MvSketch() {
         this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
 
-    /*
+    /**
      * Marks the sketch as wrong and changes the background to outerwrong.
+     * @instance
+     * @memberof MvSketch
+     * @access private
      */
     function wrong(event) {
         event.stopPropagation();
@@ -78,6 +91,8 @@ function MvSketch() {
 
     /**
      * Sets the callback that is called when the sketch is clicked.
+     * @instance
+     * @memberof MvSketch
      */
     this.setSketchClickedFunction = function(sketchClickedFunction) {
         this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;

@@ -1,3 +1,8 @@
+/**
+ * An exception that is thrown for the uses of submissions.
+ * @extends BaseException
+ * @class SubmissionException
+ */
 function SubmissionException(message) {
     this.name = 'SubmissionException';
     this.setMessage(message);
@@ -20,6 +25,8 @@ SubmissionException.prototype = BaseException;
  *
  * you can set the problem object with the class "sub-panel"
  *
+ * @class SubmissionPanel
+ * @property {QuestionType}
  */
 function SubmissionPanel() {
 
@@ -28,6 +35,8 @@ function SubmissionPanel() {
      *            An element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
+     * @instance
+     * @memberof SubmissionPanel
      */
     this.initializeElement = function(templateClone) {
         this.createShadowRoot();
@@ -35,6 +44,12 @@ function SubmissionPanel() {
         this.setCallbacks();
     };
 
+    /**
+     * Sets the callback for the toolbar buttons.  (If the toolbar exist)
+     * @see Toolbar
+     * @instance
+     * @memberof SubmissionPanel
+     */
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector('#toolbar').getDistributedNodes()[0];
         if (toolbar === null) {
@@ -54,6 +69,14 @@ function SubmissionPanel() {
         }.bind(this), 50);
     };
 
+    /**
+     * This sends data to the server but catches any exception.  This method should only be used for testing purposes.
+     * @instance
+     * @memberof SubmissionPanel
+     * @param {Boolean} isSubmitting - true if the data is being submitted.
+     * @param {Boolean} suppressAlert - true if the alert is being suppressed (used for testing purposes)
+     * @see SubmissionPanel#sendDataToServer
+     */
     this.sendDataToServerExceptionWrapped = function(isSubmitting, suppressAlert) {
         try {
             this.sendDataToServer(isSubmitting);
@@ -65,6 +88,13 @@ function SubmissionPanel() {
         }
     };
 
+    /**
+     * Sends the submission to the server.
+     * @param {Boolean} isSubmitting - true if the data is a submission as opposed to just a normal save.
+     * @throws {SubmissionException} - thrown if there is a problem
+     * @instance
+     * @memberof SubmissionPanel
+     */
     this.sendDataToServer = function(isSubmitting) {
         var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
         if (isUndefined(subPanel)) {
@@ -101,7 +131,6 @@ function SubmissionPanel() {
         CourseSketch.connection.setSubmissionListener(function(event, request) {
             console.log(request);
             CourseSketch.connection.setSubmissionListener(undefined);
-            alert(request.getMessageTime());
             alert(request.responseText);
             if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
                 var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
@@ -125,6 +154,8 @@ function SubmissionPanel() {
      *
      * @param {Element} textArea The element that contains the text answer
      * @param {Boolean} isSubmitting value Currently ignored but in the future it may be used.
+     * @instance
+     * @memberof SubmissionPanel
      */
     function createTextSubmission(textArea, isSubmitting) {
         var submission = createBaseSubmission();
@@ -134,7 +165,11 @@ function SubmissionPanel() {
 
     /**
      * Creates the submission object for the sketch surface.  This also adds the submit or save marker to the update list.
+     * @param {SketchSurface} sketchSurface - the sketch surface that is being submitted.
+     * @param {Boolean} isSubmitting - true if this is a submission instead of a save.
      * @return {SrlSubmission} object that is ready to be sent to the server.
+     * @instance
+     * @memberof SubmissionPanel
      */
     function createSketchSubmission(sketchSurface, isSubmitting) {
         var updateManager = sketchSurface.getUpdateManager();
@@ -165,19 +200,28 @@ function SubmissionPanel() {
     /**
      * Sets the wrapperFunction, This function takes in a submission and wraps it as either the experiment or solution.
      * This wrapped value is returned from the function and then it is sent to the server internally.
-     * @param  {Function} wrapperFunction used to wrap the submission in its required data.
+     * @param  {Function} wrapperFunction - used to wrap the submission in its required data.
+     * @instance
+     * @memberof SubmissionPanel
      */
     this.setWrapperFunction = function(wrapperFunction) {
         this.wrapperFunction = wrapperFunction;
     };
 
     /**
-     * called when the panel is removed from the DOM.
+     * Called when the panel is removed from the DOM.
+     * @instance
+     * @memberof SubmissionPanel
      */
     this.detachedCallback = function() {
         this.setWrapperFunction(undefined);
     };
 
+    /**
+     * This clears the toolbar and remakes the callbacks for the toolbar.
+     * @instance
+     * @memberof SubmissionPanel
+     */
     this.refreshPanel = function() {
         var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
         var toolbar = this.shadowRoot.querySelector('#toolbar').getDistributedNodes()[0];
@@ -187,6 +231,14 @@ function SubmissionPanel() {
         this.setSpecificCallbacks(this.problemType, subPanel, toolbar);
     };
 
+    /**
+     * Makes callbacks for the toolbar that depend on the type of problem.
+     * @param {QuestionType} problemType - the type of problem that is currently being submitted.
+     * @param {Element} element - the element contained inside the submission panel.
+     * @param {Toolbar} toolbar - the custom toolbar element that is contained inside the submission panel.
+     * @instance
+     * @memberof SubmissionPanel
+     */
     this.setSpecificCallbacks = function(problemType, element, toolbar) {
         var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
         if (problemType === QuestionType.SKETCH) {
@@ -230,7 +282,9 @@ function SubmissionPanel() {
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param {SrlProblem} problemType sets the problem element
+ * @param {QuestionType} problemType sets the problem element.
+ * @instance
+ * @memberof SubmissionPanel
  */
 SubmissionPanel.prototype.setProblemType = function(problemType) {
     this.problemType = problemType;
