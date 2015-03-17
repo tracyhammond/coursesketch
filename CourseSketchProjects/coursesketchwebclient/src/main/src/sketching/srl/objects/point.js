@@ -1,15 +1,15 @@
-/* depends on objectAndInheritance.js */
+/* Depends on objectAndInheritance.js */
 
 /**
  * ******************************
- * 
- * 
+ *
+ *
  * Point data class
- * 
+ *
  * @author hammond; Daniel Tan
  * @copyright Tracy Hammond, Sketch Recognition Lab, Texas A&M University
- * 
- * 
+ *
+ *
  * ******************************
  */
 
@@ -32,7 +32,7 @@ function SRL_Point(x, y) {
     var speed = 0;
     /**
      * Computes the thickness for the stroke based off of a number of factors.
-     * 
+     *
      * Used to create more natural lines that vary in thickness.
      */
     var thickness = 0;
@@ -53,7 +53,7 @@ function SRL_Point(x, y) {
 
     /**
      * Points can have pressure depending on the input device
-     * 
+     *
      * @return the pressure of the point
      */
     this.getPressure = function() {
@@ -62,7 +62,7 @@ function SRL_Point(x, y) {
 
     /**
      * Points can have pressure depending on the input device
-     * 
+     *
      * @param pressure
      */
     this.setPressure = function(pointPressure) {
@@ -75,7 +75,7 @@ function SRL_Point(x, y) {
 
     /**
      * Points can have pressure depending on the input device
-     * 
+     *
      * @param pressure
      */
     this.setSize = function(pointSize) {
@@ -93,7 +93,7 @@ function SRL_Point(x, y) {
     /**
      * Updates the location of the point Also add this point to the history of
      * the points so this can be undone.
-     * 
+     *
      * @param x
      *            the new x location for the point
      * @param y
@@ -111,7 +111,7 @@ function SRL_Point(x, y) {
 
     /**
      * Creates a point with the initial points at x,y
-     * 
+     *
      * @param x
      *            the initial x point
      * @param y
@@ -126,7 +126,7 @@ function SRL_Point(x, y) {
 
     /**
      * Get the current x value of the point
-     * 
+     *
      * @return current x value of the point
      */
     this.getX = function() {
@@ -135,7 +135,7 @@ function SRL_Point(x, y) {
 
     /**
      * Get the current y value of the point
-     * 
+     *
      * @return current y value of the point
      */
     this.getY = function() {
@@ -161,7 +161,7 @@ function SRL_Point(x, y) {
     this.distance.SRL_Point = function(arg1, arg2, arg3, arg4) {
         /**
          * Return the distance from point rp to this point.
-         * 
+         *
          * @param rp
          *            the other point
          * @return the distance
@@ -172,7 +172,7 @@ function SRL_Point(x, y) {
             /**
              * Return the distance from the point specified by (x,y) to this
              * point
-             * 
+             *
              * @param x
              *            the x value of the other point
              * @param y
@@ -187,7 +187,7 @@ function SRL_Point(x, y) {
             /**
              * Return the distance from the point specified by (x,y) to this
              * point
-             * 
+             *
              * @param x
              *            the x value of the other point
              * @param y
@@ -206,7 +206,7 @@ function SRL_Point(x, y) {
     /**
      * Delete the entire point history and use these values as the starting
      * point
-     * 
+     *
      * @param x
      *            new initial x location
      * @param y
@@ -241,7 +241,7 @@ function SRL_Point(x, y) {
 
     /**
      * Get the original value of the point
-     * 
+     *
      * @return a point where getx and gety return the first values that were
      *         added to the history
      */
@@ -254,8 +254,8 @@ function SRL_Point(x, y) {
 
     /**
      * Get the x value for the first point in the history
-     * 
-     * @return
+     *
+     * @return {Number} the first x point.
      */
     this.getInitialX = function() {
         if (m_xList.length === 0) {
@@ -266,8 +266,8 @@ function SRL_Point(x, y) {
 
     /**
      * Get the y value for the first point in the history
-     * 
-     * @return
+     *
+     * @return {Number} the first y point.
      */
     this.getInitialY = function() {
         if (m_yList.length === 0) {

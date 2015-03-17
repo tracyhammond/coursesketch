@@ -1,4 +1,6 @@
 /* depends on base.js */
+// jshint undef:false
+// jshint latedef:false
 
 /**
  * *************************************************************
@@ -14,10 +16,10 @@
  * Creates an ArrayException object that returns exception values.
  */
 function ArrayException(message) {
-    this.name = "ArrayException";
+    this.name = 'ArrayException';
     this.specificMessage = message;
-    this.message = "";
-    this.htmlMessage = "";
+    this.message = '';
+    this.htmlMessage = '';
 }
 ArrayException.prototype = BaseException;
 
@@ -29,12 +31,12 @@ ArrayException.prototype = BaseException;
 if (isUndefined(removeObjectFromArray)) {
     function removeObjectFromArray(array, object) {
         var index = array.indexOf(object);
-        if (index != -1) {
+        if (index !== -1) {
             var result = array[index];
             array.splice(index, 1);
             return result;
         }
-        throw new ArrayException("attempt to remove invalid object");
+        throw new ArrayException('attempt to remove invalid object');
     }
 }
 
@@ -45,12 +47,12 @@ if (isUndefined(removeObjectFromArray)) {
  */
 if (isUndefined(removeObjectByIndex)) {
     function removeObjectByIndex(array, index) {
-        if (index != -1) {
+        if (index !== -1) {
             var result = array[index];
             array.splice(index, 1);
             return result;
         }
-        throw new ArrayException("attempt to remove at invalid index");
+        throw new ArrayException('attempt to remove at invalid index');
     }
 }
 
@@ -62,7 +64,7 @@ if (isUndefined(removeObjectByIndex)) {
 if (isUndefined(isArray)) {
     function isArray(object) {
         return object instanceof Array || (Array.isArray && Array.isArray(object));
-    };
+    }
 }
 
 /**
@@ -73,9 +75,9 @@ if (isUndefined(isArray)) {
  */
 if (isUndefined(getMapAsList)) {
     function getMapAsList(map) {
-        var list = new Array();
-        for (key in map) {
-            if (key != 'Inherits') {
+        var list = [];
+        for (var key in map) {
+            if (key !== 'Inherits') {
                 list.push(map[key]);
             }
         }
