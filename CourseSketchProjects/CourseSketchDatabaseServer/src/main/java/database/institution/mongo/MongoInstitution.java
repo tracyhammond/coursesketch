@@ -488,4 +488,9 @@ public final class MongoInstitution implements Institution {
             throws DatabaseAccessException, AuthenticationException {
         return CourseManager.mongoGetCourseRoster(getInstance().auth, getInstance().database, userId, courseId);
     }
+
+    @Override
+    public String setGradingPolicy(final String userId, final GradingPolicy policy) throws DatabaseAccessException {
+        throw new UnsupportedOperationException("This method is not supported in mongo. Only in SQL");
+    }
 }
