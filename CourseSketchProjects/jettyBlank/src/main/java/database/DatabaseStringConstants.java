@@ -66,6 +66,11 @@ public final class DatabaseStringConstants {
     public static final String GRADE = "Grade";
     public static final String COMMENTS = "Comments";
 
+    // grading policy
+    public static final String CATEGORY_WEIGHT = "CategoryWeight";
+    public static final String CATEGORY_NAME = "CategoryName";
+    public static final String GRADE_POLICY_TYPE = "GradePolicyType";
+
     // course specific
     public static final String COURSE_SEMESTER = "Semester";
     public static final String COURSE_ACCESS = "Access";
