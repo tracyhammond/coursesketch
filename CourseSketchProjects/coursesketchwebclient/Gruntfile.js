@@ -1,3 +1,5 @@
+//jscs:disable jsDoc
+
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jscs');
@@ -107,5 +109,5 @@ module.exports = function(grunt) {
         ]);
     });
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc' ]);
+    grunt.registerTask('default', [ 'jsdoc', 'checkstyle' ]);
 };
