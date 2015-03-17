@@ -11,6 +11,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.School.GradingPolicy;
 
 import java.util.List;
 
@@ -504,4 +505,18 @@ public interface Institution {
      */
     List<String> getCourseRoster(final String userId, final String courseId)
             throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * This method will set or insert the gradingPolicy in SQL based on the proto object passed in.
+     * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) beforoe calling this method
+     *
+     * @param userId
+     *         the id of the user asking for the state
+     * @param policy
+     *         proto object containing the gradingPolicy to be set or updated
+     * @return result of set: "SET", "INSERT", "ERROR"
+     * @throws DatabaseAccessException
+     *         thrown if connecting to sql database cause an error
+     */
+    String setGradingPolicy(final String userId, final GradingPolicy policy) throws DatabaseAccessException;
 }
