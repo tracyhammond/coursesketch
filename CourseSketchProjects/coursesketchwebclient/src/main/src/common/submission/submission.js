@@ -192,6 +192,11 @@ function SubmissionPanel() {
         return submission;
     }
 
+    /**
+     * @returns {SrlSubmission} a blank protobuf submission object.
+     * @access private
+     * @memberof SubmissionPanel
+     */
     function createBaseSubmission() {
         var submission = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
         return submission;

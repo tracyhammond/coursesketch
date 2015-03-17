@@ -1,8 +1,15 @@
 validateFirstRun(document.currentScript);
 
+/**
+ * @namespace "lecturePage/instructor"
+ */
 (function() {
     $(document).ready(function() {
 
+        /**
+         * Saves the textbox for viewing use later.
+         * @memberof "lecturePage/instructor"
+         */
         CourseSketch.lecturePage.saveTextBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
                 CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
@@ -12,6 +19,10 @@ validateFirstRun(document.currentScript);
             CourseSketch.lecturePage.currentSlide.elements.push(element);
         };
 
+        /**
+         * Saves the question for viewing use later.
+         * @memberof "lecturePage/instructor"
+         */
         CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
                 CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
@@ -21,6 +32,10 @@ validateFirstRun(document.currentScript);
             CourseSketch.lecturePage.currentSlide.elements.push(element);
         };
 
+        /**
+         * Saves the image for viewing use later.
+         * @memberof "lecturePage/instructor"
+         */
         CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
                 CourseSketch.PROTOBUF_UTIL.getImageClass());
@@ -30,6 +45,10 @@ validateFirstRun(document.currentScript);
             CourseSketch.lecturePage.currentSlide.elements.push(element);
         };
 
+        /**
+         * Saves the embedded html for viewing use later.
+         * @memberof "lecturePage/instructor"
+         */
         CourseSketch.lecturePage.saveEmbeddedHtml = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
                 CourseSketch.PROTOBUF_UTIL.getEmbeddedHtmlClass());
@@ -45,8 +64,13 @@ validateFirstRun(document.currentScript);
          * @param {Integer} slideIndex
          *            index of the slide in the current lecture's protobuf
          *            object.
+         * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
+            /**
+             * Called when the specific slide is completely loaded.
+             * @memberof "lecturePage/instructor"
+             */
             var completionHandler = function() {
                 $('.slide-thumb').each(function() {
                     $(this).removeClass('selected');
@@ -81,6 +105,7 @@ validateFirstRun(document.currentScript);
 
         /**
          * Adds a new slide to the current lecture.
+         * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.newSlide = function() {
             CourseSketch.lecturePage.addWaitOverlay();
@@ -88,7 +113,12 @@ validateFirstRun(document.currentScript);
             slide.id = generateUUID();
             slide.lectureId = CourseSketch.lecturePage.lecture.id;
             slide.unlocked = true;
-            var finishGetCourse = function(lecture) {
+
+            /**
+             * Called after the course lecture is grabbed.
+             * @memberof "lecturePage/instructor"
+             */
+            var finishGetCourseLecture = function(lecture) {
                 var id = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
                 id.id = slide.id;
                 id.isSlide = true;
@@ -97,8 +127,13 @@ validateFirstRun(document.currentScript);
                 CourseSketch.lecturePage.displaySlides();
                 CourseSketch.lecturePage.removeWaitOverlay();
             };
+
+            /**
+             * Called when the slide is sucesfully inserted into the database.
+             * @memberof "lecturePage/instructor"
+             */
             var finishInsert = function(slide) {
-                CourseSketch.dataManager.getCourseLecture(slide.lectureId, finishGetCourse, finishGetCourse);
+                CourseSketch.dataManager.getCourseLecture(slide.lectureId, finishGetCourseLecture, finishGetCourseLecture);
             };
             CourseSketch.dataManager.insertSlide(slide, finishInsert, finishInsert);
         };

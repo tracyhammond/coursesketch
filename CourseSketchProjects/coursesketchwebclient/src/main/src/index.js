@@ -56,6 +56,10 @@ function() {
         var importPage = document.createElement('link');
         importPage.rel = 'import';
         importPage.href = '/src/main.html';
+        /**
+         * Imports main.html.
+         * @memberof Index
+         */
         importPage.onload = function() {
             var content = importPage.import;
             document.querySelector('#mainPageContent').appendChild(content.querySelector('#mainPage'));
