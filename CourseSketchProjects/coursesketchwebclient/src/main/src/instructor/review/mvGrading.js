@@ -1,15 +1,17 @@
 validateFirstRun(document.currentScript);
 
-/*
+/**
+ * @namespace multiViewPage
  * This Multiview page goes off a single problem at a time and laods all student experiments of that
  * problem id.
  */
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
-    /*
+    /**
      * A list of experiments to laod into the sketching pannels
      * gets all experiments that hold the current problem id and places them is
      * sketchList
+     * @memberof multiViewPage
      */
     function getSketches(callback, navigator) {
         CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
@@ -25,17 +27,19 @@ validateFirstRun(document.currentScript);
         });
     }
 
-    /*
+    /**
      * Used to get list of experiments and then calls createMvSketch to create
      * all sketches on to the grade screen.
+     * @memberof multiViewPage
      */
     function createMvList(navigator) {
         getSketches(createMvSketch, navigator);
     }
 
-    /*
+    /**
      * Creates a multiview sketch panel and attaches it to the grading area
      * this can be done dynamically
+     * @memberof multiViewPage
      */
     function createMvSketch(array, navigator) {
         for (var i = 0; i < array.length; i++) {
@@ -49,27 +53,28 @@ validateFirstRun(document.currentScript);
         }
     }
 
-    /*
+    /**
      * Gets a specific set of sketch data to be used in the multiview sketch panel
      *
-     *@param array
-     *       {array<experiments>}
-     *@param index
-     *         {int}
+     * @param {Arrau<SrlExperiment>} array
+     * @param {Integer} index
+     * @memberof multiViewPage
      */
     function getUpdateList(array, index) {
         return array[index].getSubmission().getUpdateList();
     }
 
-    /*
+    /**
      * Returns the navigation panel element to be used by other pages.
+     * @memberof multiViewPage
      */
     function getNav() {
         return document.querySelector('navigation-panel').getNavigator();
     }
 
-    /*
+    /**
      * Deletes the sketch data in the sketch-area element
+     * @memberof multiViewPage
      */
     function multiviewSketchDelete() {
         var parent = document.getElementById('sketch-area');
@@ -105,6 +110,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Loads the problem, called every time a user navigates to a different problem.
+     * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.loadProblem = function(navigator, submissionData) {
         document.getElementById('dialogPanel').show();
@@ -142,6 +148,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
+     * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.loadSketch = function(updateList) {
         var sketchSurface = document.createElement('sketch-surface');
@@ -174,6 +181,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
+     * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.addWaitOverlay = function() {
         CourseSketch.multiViewPage.waitScreenManager.buildOverlay(document.querySelector('body'));
@@ -183,6 +191,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Removes the wait overlay from the DOM if it exists.
+     * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.removeWaitOverlay = function() {
         if (!isUndefined(document.getElementById('overlay')) && document.getElementById('overlay') !== null) {

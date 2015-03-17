@@ -1,14 +1,19 @@
 validateFirstRun(document.currentScript);
 
+/**
+ * @namespace "lecturePage/student"
+ */
+
 (function() {
     $(document).ready(function() {
 
         /**
          * Selects a specific lecture slide.
          *
-         * @param { int } slideIndex
+         * @param {Integer} slideIndex
          *            index of the slide in the current lecture's protobuf
          *            object.
+         * @memberof "lecturePage/student"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
             var completionHandler = function() {
