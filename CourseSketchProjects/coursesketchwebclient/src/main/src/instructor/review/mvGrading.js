@@ -41,6 +41,7 @@ validateFirstRun(document.currentScript);
         for (var i = 0; i < array.length; i++) {
             var mvSketch = document.createElement('mv-sketch');
             document.querySelector('.sketches').appendChild(mvSketch);
+            mvSketch.setUserId(array[i].userId);
             mvSketch.setUpdateList(getUpdateList(array, i).getList());
             mvSketch.setSketchClickedFunction(function() {
                 console.log(navigator);
