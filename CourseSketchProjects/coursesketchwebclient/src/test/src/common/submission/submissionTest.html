@@ -262,7 +262,7 @@
             submission.isGrader = true;
 
             CourseSketch.connection.sendRequest = function(request) {
-                assert.equal(request.responseText, "moderator");
+                assert.equal(request.responseText, "grader");
             }
             // actual test
             submission.sendDataToServer(undefined, true);

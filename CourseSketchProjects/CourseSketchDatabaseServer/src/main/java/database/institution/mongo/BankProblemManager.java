@@ -1,5 +1,21 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import database.DatabaseAccessException;
+import database.UserUpdateHandler;
+import database.auth.AuthenticationException;
+import database.auth.Authenticator;
+import org.bson.types.ObjectId;
+import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.School.SrlPermission;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
@@ -13,24 +29,6 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
-
-import java.util.ArrayList;
-
-import org.bson.types.ObjectId;
-
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -104,7 +102,6 @@ public final class BankProblemManager {
         exactProblem.setQuestionType(SrlBankProblem.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
         exactProblem.addAllOtherKeywords((ArrayList) corsor.get(KEYWORDS)); // change
                                                                             // arraylist
-
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
@@ -138,6 +135,7 @@ public final class BankProblemManager {
 
         boolean isAdmin;
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
+        final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!isAdmin) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -145,6 +143,7 @@ public final class BankProblemManager {
 
         final BasicDBObject updated = new BasicDBObject();
         if (problem.hasQuestionText()) {
+            problemCollection.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
             update = true;
         }
@@ -194,9 +193,10 @@ public final class BankProblemManager {
         }
 
         if (update) {
-            final String[] users = (String[]) corsor.get(USERS);
-            for (int i = 0; i < users.length; i++) {
-                UserUpdateHandler.insertUpdate(dbs, users[i], problemBankId, "PROBLEM");
+            problemCollection.update(corsor, updated);
+            final List<String> users = (List) corsor.get(USERS);
+            for (int i = 0; i < users.size(); i++) {
+                UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
             }
         }
 
