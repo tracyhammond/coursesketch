@@ -38,8 +38,6 @@ validateFirstRun(document.currentScript);
      * this can be done dynamically
      */
     function createMvSketch(array, navigator) {
-        console.log("USER EXPERIMENTS!");
-        console.log(array);
         for (var i = 0; i < array.length; i++) {
             var mvSketch = document.createElement('mv-sketch');
             document.querySelector('.sketches').appendChild(mvSketch);
