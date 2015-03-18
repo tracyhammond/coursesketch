@@ -22,6 +22,10 @@ function MvSketch() {
         }.bind(this));
     };
 
+    /**
+     * Sets the user id for display purposes.
+     * @param {String} userId - the name that shows up for instructors to find the user name of.
+     */
     this.setUserId = function(userId) {
         this.shadowRoot.querySelector('#userName').textContent = userId.substring(0, 7);
     };
