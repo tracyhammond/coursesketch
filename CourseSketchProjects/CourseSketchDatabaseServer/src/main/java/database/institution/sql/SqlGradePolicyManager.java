@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by Matt on 3/16/2015.
@@ -15,14 +16,14 @@ import java.sql.SQLException;
 public final class SqlGradePolicyManager {
 
     /**
-     * Private constructor
+     * Private constructor.
      */
     private SqlGradePolicyManager() {
     }
 
     /**
      * This method will set or insert the gradingPolicy in SQL based on the proto object passed in.
-     * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) beforoe calling this method
+     * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method
      *
      * @param conn
      *         the database that contains the state. Must point to proper database
@@ -34,11 +35,12 @@ public final class SqlGradePolicyManager {
      * @throws DatabaseAccessException
      *         thrown if connecting to sql database cause an error
      */
+    @SuppressWarnings("checkstyle:magicnumber")
     public static String setGradingPolicy(final Connection conn, final String userId, final GradingPolicy policy) throws DatabaseAccessException {
-        String result;
+        String result = "";
         final String courseId = policy.getCourseId();
-        final int policyType = policy.getPolicyType();
-        final List<PolicyCategory> categories = policy.getGradeCategories();
+        final int policyType = policy.getPolicyType().getNumber();
+        final List<GradingPolicy.PolicyCategory> categories = policy.getGradeCategoriesList();
 
         // Select all where CourseId = courseId and CategoryName = categoryName
         final String query = "SELECT * FROM GradePolicies WHERE ?=? AND ?=?";
@@ -47,7 +49,7 @@ public final class SqlGradePolicyManager {
             stmt.setString(2, courseId);
             stmt.setString(3, DatabaseStringConstants.CATEGORY_NAME);
             for (int i = 0; i < categories.size(); i++) {
-                final PolicyCategory currentCategory = categories.get(i);
+                final GradingPolicy.PolicyCategory currentCategory = categories.get(i);
                 stmt.setString(4, currentCategory.getName());
                 try (final ResultSet rst = stmt.executeQuery()) {
                     if (rst.next()) {
