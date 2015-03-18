@@ -38,9 +38,12 @@ validateFirstRun(document.currentScript);
      * this can be done dynamically
      */
     function createMvSketch(array, navigator) {
+        console.log("USER EXPERIMENTS!");
+        console.log(array);
         for (var i = 0; i < array.length; i++) {
             var mvSketch = document.createElement('mv-sketch');
             document.querySelector('.sketches').appendChild(mvSketch);
+            mvSketch.setUserId(array[i].userId);
             mvSketch.setUpdateList(getUpdateList(array, i).getList());
             mvSketch.setSketchClickedFunction(function() {
                 console.log(navigator);
@@ -116,6 +119,7 @@ validateFirstRun(document.currentScript);
         if (oldElement instanceof Node) {
             parentPanel.removeChild(oldElement);
         }
+        console.log(submissionData);
         if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             CourseSketch.multiViewPage.loadSketch(submissionData);
