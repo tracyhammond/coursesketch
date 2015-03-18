@@ -79,9 +79,9 @@ message SrlQuestion {
     repeated LectureNavigator navs = 4;
 
     oneof QuestionOption {
-    MultipleChoice multipleChoice = 5;
-    SketchQuestion sketchQuestion = 6;
-}
+        MultipleChoice multipleChoice = 5;
+        SketchQuestion sketchQuestion = 6;
+    }
 }
 
 message MultipleChoice {

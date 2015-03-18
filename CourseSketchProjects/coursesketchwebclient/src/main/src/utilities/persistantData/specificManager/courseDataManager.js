@@ -1,7 +1,6 @@
 function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
-    const
-    COURSE_LIST = "COURSE_LIST";
-    var userCourseId = new Array();
+    var COURSE_LIST = 'COURSE_LIST';
+    var userCourseId = [];
     var userHasCourses = true;
     var dataListener = advanceDataListener;
     var database = parentDatabase;
@@ -12,9 +11,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * exist.
      */
     function stateCallback(course, courseCallback) {
+        /*jshint maxcomplexity:13 */
         var state = course.getState();
         var updateCourse = false;
-        if (isUndefined(state) || state == null) {
+        if (isUndefined(state) || state === null) {
             state = CourseSketch.PROTOBUF_UTIL.State();
             updateCourse = true;
         }
@@ -23,7 +23,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             var access = course.getAccessDate().getMillisecond();
             var close = course.getCloseDate().getMillisecond();
             var current = CourseSketch.getCurrentTime();
-            if (isUndefined(state.accessible) || state.accessible == null) {
+            if (isUndefined(state.accessible) || state.accessible === null) {
                 if (current.lessThan(access) || current.greaterThan(close)) {
                     state.accessible = false;
                 } else {
@@ -32,7 +32,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 updateCourse = true;
             }
 
-            if (isUndefined(state.pastDue) || state.pastDue == null) {
+            if (isUndefined(state.pastDue) || state.pastDue === null) {
                 if (current.greaterThan(close)) {
                     state.pastDue = true;
                 } else {
@@ -58,24 +58,20 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Gets an Course from the local database.
      *
-     * @param courseId
+     * @param {String} courseId
      *                ID of the course to get
-     * @param courseCallback
+     * @param {Function} courseCallback
      *                function to be called after getting is complete, parameter
      *                is the course object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getCourseLocal(courseId, courseCallback) {
-        if (isUndefined(courseId) || courseId == null) {
-            courseCallback(new DatabaseException("The given id is not assigned", "getting Course: " + courseId));
+        if (isUndefined(courseId) || courseId === null) {
+            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
         }
         // quick and dirty failed fallback to local db
         database.getFromCourses(courseId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                courseCallback(new DatabaseException("The result is undefined", "getting Course: " + courseId));
-            } else if (result.data == nonExistantValue) {
-                // the server holds this special value then it means the server
-                // does not have the value
-                courseCallback(new DatabaseException("The database does not hold this value", "getting Course: " + courseId));
+                courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
             } else {
                 // gets the data from the database and calls the callback
                 try {
@@ -83,7 +79,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
                 } catch (exception) {
                     console.error(exception);
-                    courseCallback(new DatabaseException("The result is undefined", "getting Course: " + courseId));
+                    courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
                 }
             }
         });
@@ -94,19 +90,16 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Returns a course with the given couresId will ask the server if it does
      * not exist locally.
      *
-     * If the server is pulled and the course still does not exist the Id is set
-     * with nonExistantValue and the database is never polled for this item for
-     * the life of the program again.
      *
-     * @param courseId
+     * @param {String} courseId
      *            The id of the course we want to find.
-     * @param courseCallback
+     * @param {Function} courseCallback
      *            The method to call when the course has been found. (this is
      *            asynchronous)
      */
     function getCourse(courseId, courseCallback) {
-        if (isUndefined(courseId) || courseId == null) {
-            courseCallback(new DatabaseException("The given id is not assigned", "getting Course: " + courseId));
+        if (isUndefined(courseId) || courseId === null) {
+            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
         }
 
         getCourseLocal(courseId, function(course) {
@@ -116,7 +109,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
                     var course = school.courses[0];
                     if (isUndefined(course)) {
-                        courseCallback(new DatabaseException("Course does not exist in the remote database."));
+                        courseCallback(new DatabaseException('Course does not exist in the remote database.'));
                         return;
                     }
                     setCourse(course, function() {
@@ -137,14 +130,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Sets a course in local database.
      *
-     * @param course
+     * @param {SrlCourse} course
      *                course object to set
-     * @param courseCallback
+     * @param {Function} courseCallback
      *                function to be called after the course setting is done
      */
     function setCourse(course, courseCallback) {
         database.putInCourses(course.id, course.toBase64(), function(e, request) {
-            if (userCourseId.indexOf(course.id) == -1) {
+            if (userCourseId.indexOf(course.id) === -1) {
                 userCourseId.push(course.id);
                 setCourseIdList(userCourseId);
             }
@@ -160,11 +153,11 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Updates an existing course into the database. This course must already
      * exist.
      *
-     * @param course
+     * @param {SrlCourse} course
      *                course object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local course setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server course setting is done
      */
     function updateCourse(course, localCallback, serverCallback) {
@@ -207,18 +200,18 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Returns a list of all of the courses in database.
      *
      * This does attempt to pull courses from the server!
-     * @param courseCallback called when the courses are loaded (this may be called more than once)
-     * @param onlyLocal {Boolean} true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
+     * @param {Function} courseCallback called when the courses are loaded (this may be called more than once)
+     * @param {Boolean} onlyLocal true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
      */
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
             // there was an error getting the user classes.
-            if (!isUndefined(item.returnText) && item.returnText != "" && item.returnText != "null" && item.returnText != null) {
+            if (!isUndefined(item.returnText) && item.returnText !== '' && item.returnText !== 'null' && item.returnText !== null) {
                 userHasCourses = false;
                 console.log(item.returnText);
-                courseCallback(new DatabaseException(item.returnText, "Getting all courses for user " + parent.getCurrentId()));
+                courseCallback(new DatabaseException(item.returnText, 'Getting all courses for user ' + parent.getCurrentId()));
                 return;
             }
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
@@ -232,27 +225,27 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 setCourse(course, setCourseCallback); // no callback is needed
             }
         });
-        if (userCourseId.length == 0 && userHasCourses && !onlyLocal) {
-            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
-            // console.log("course list from server polled!");
+        if (userCourseId.length === 0 && userHasCourses && !onlyLocal) {
+            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+            // console.log('course list from server polled!');
         } else {
             // This calls the server for updates then creates a list from the
             // local data to appear fast
             // then updates list after server polling and comparing the two
             // list.
-            // console.log("course list from local place polled!");
+            // console.log('course list from local place polled!');
             var courseList = [];
 
             // ask server for course list
             if (!onlyLocal && false) { // TODO: this should maybe only ask after a certain amount of time since last updated?
-                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ "" ]);
+                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
             }
 
             var localCourseCallback = createBarrier(userCourseId.length, function() {
                 if (courseList.length > 0) {
                     courseCallback(courseList);
                 } else {
-                    courseCallback(new DatabaseException("No Valid Courses exist locally for this user"));
+                    courseCallback(new DatabaseException('No Valid Courses exist locally for this user'));
                 }
             });
             // create local course list so everything appears really fast!
@@ -265,8 +258,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 });
             }
 
-            if (userCourseId.length == 0 && onlyLocal) {
-                courseCallback(new DatabaseException("No Courses exist locally for this user"));
+            if (userCourseId.length === 0 && onlyLocal) {
+                courseCallback(new DatabaseException('No Courses exist locally for this user'));
             }
         }
     }
@@ -277,17 +270,17 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *
      * If there is a problem courseCallback is called with an exception.
      *
-     * @param course
-     * @param courseCallback
+     * @param {SrlCourse} course
+     * @param {Function} courseCallback
      *            is called after the insertion of course into the local
      *            database. (this can be used for instant refresh)
-     * @param serverCallback
+     * @param {Function} serverCallback
      *            serverCallback is called after the insertion of course into
      *            the server and the return of the server with the correct
      *            courseId
      */
     function insertCourse(course, courseCallback, serverCallback) {
-        if (isUndefined(course.id) || course.id == null) {
+        if (isUndefined(course.id) || course.id === null) {
             var courseId = generateUUID();
             course.id = courseId;
         }
@@ -299,7 +292,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
             advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
-                var resultArray = item.getReturnText().split(":");
+                var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
                 // we want to get the current course in the local database in case
@@ -339,7 +332,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));
-    }
+    };
 
     /**
      * Attempts to clear the database of courses.
@@ -355,8 +348,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 }
             });
         }
-        if (list.length == 0) {
+        if (list.length === 0) {
             clearCallback();
         }
-    }
+    };
 }

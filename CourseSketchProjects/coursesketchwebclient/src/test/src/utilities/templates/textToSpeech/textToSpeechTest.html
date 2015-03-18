@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Text Box Test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link id="textToSpeechTemplateImport" rel="import" href="/src/utilities/templates/textToSpeech/textToSpeechInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/utilities/templates/textBox/textBox.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="textbox"></div>
+
+	<script>
+        window.confirm = function() {return true}; // This is needed so the pop-up alert when closing does not affect the testing
+        var template = (function() { // This is the creation template
+            var link1 = document.querySelector('#textToSpeechTemplateImport');
+            var link = link1.import.querySelector('#textToSpeechTemplateImport');
+            var template = link.import.querySelector('#ttsCreation');
+            var clone = document.importNode(template.content, true);
+            return clone;
+        })();
+
+        var template2 = (function() { // This is the viewing template
+            var link2 = document.querySelector('#textToSpeechTemplateImport');
+            var link = link2.import.querySelector('#textToSpeechTemplateImport');
+            var template2 = link.import.querySelector('#ttsViewing');
+            var clone = document.importNode(template2.content, true);
+            return clone;
+        })();
+
+        QUnit.module("creation", {
+            setupOnce : function() {
+                try {
+                    var newElement = new TextBox();
+                    var newElement2 = new TextBox();
+                    // test is not a typo
+                    document.registerElement('test-tts-creation', {
+                        prototype : newElement
+                    });
+                    document.registerElement('test-tts-viewing', {
+                        prototype: newElement2
+                    });
+                } catch (exception) {
+                }
+
+            },
+            teardown : function() {
+                document.getElementById('textbox').innerHTML = "";
+            }
+        });
+
+        test("Speak Text button calls speakText()", function(assert) {
+            expect(1);
+            var real = document.createElement('test-tts-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.speakText = function() {
+                assert.ok(true, "Speak text was called");
+            }
+            var save = real.shadowRoot.querySelector('#speakText');
+            simulate(save, 'click');
+        });
+
+        asyncTest("meSpeak speakText calls callback when it is done", function(assert) {
+            expect(1);
+            var real = document.createElement('test-tts-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            var callback = function() {
+                assert.ok(true, "Callback was called");
+                QUnit.start();
+            }
+            real.speakText("Hello", callback);
+        });
+
+        test("Save data creates correct protobuf object type", function(assert) {
+            expect(2);
+            var real = document.createElement('test-tts-creation');
+            document.getElementById('textbox').appendChild(real);
+            real.initializeElement(template.cloneNode(true));
+            real.setFinishedListener(function(command) {
+                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX,
+                        'Expecting command type CREATE_TTSBOX from commands.proto');
+                assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
+            });
+            real.saveData();
+        });
+
+        asyncTest("Tts viewing mode test", function(assert) {
+            expect(2);
+            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            textBoxProto.setText("Goodbye");
+            var real = document.createElement('test-tts-viewing');
+            document.getElementById('textbox').appendChild(real);
+            real.setFinishedListener(function() {
+                assert.ok(true, "Listener called");
+                assert.equal(document.getElementById('textbox').children.length, 0, "Hidden tts box removed itself from the DOM");
+                QUnit.start();
+            });
+            real.loadData(textBoxProto);
+            real.initializeElement(template2.cloneNode(true));
+
+        });
+    </script>
+</body>

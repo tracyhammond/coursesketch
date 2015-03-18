@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
 
 /*******************************************************************************
@@ -15,7 +16,7 @@
 function SRL_Sketch() {
     this.superConstructor();// (Overloads); // super call
 
-    var objectList = new Array();
+    var objectList = [];
     var objectIdMap = new Map();
     var boundingBox = new SRL_BoundingBox();
 
@@ -32,7 +33,7 @@ function SRL_Sketch() {
         for (var i = 0; i < array.length; i++) {
             this.addObject(array[i]);
         }
-    }
+    };
 
     /**
      * Given an object, remove this instance of the object.
@@ -108,7 +109,7 @@ function SRL_Sketch() {
             throw "input list is empty";
         }
         // there is only 1 item in the list so remove from top level
-        if (idList.length == 1) {
+        if (idList.length === 1) {
             return this.removeSubObjectById(idList[0]);
         }
 
@@ -127,7 +128,7 @@ function SRL_Sketch() {
      */
     this.resetSketch = function() {
         var oldList = objectList;
-        objectList = new Array();
+        objectList = [];
         objectIdMap = new Map();
         boundingBox = new SRL_BoundingBox();
         return oldList;
