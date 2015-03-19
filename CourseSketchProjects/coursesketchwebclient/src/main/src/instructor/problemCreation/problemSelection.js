@@ -6,7 +6,7 @@ function ProblemSelectionPanel() {
      * Holds the list of ids of the selected bank problems.
      */
     var selectedBankProblems = new Array();
-    var clickSelector = new clickSelectionManager();
+    var clickSelector = new ClickSelectionManager();
 
     /**
      * Loads the problems from the server.
