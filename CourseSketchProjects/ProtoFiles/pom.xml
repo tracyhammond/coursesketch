@@ -34,6 +34,7 @@
 
 	<properties>
 	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+		<clientProtoDir>coursesketchwebclient/src/main/resources/other/protobuf</clientProtoDir>
 	</properties>
 	<build>
 		<plugins>
@@ -66,6 +67,28 @@
                                 <goal>compile</goal>
                                 <goal>testCompile</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${resourcePluginVersion}</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/../${clientProtoDir}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/proto</directory>
+								</resource>
+							</resources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
