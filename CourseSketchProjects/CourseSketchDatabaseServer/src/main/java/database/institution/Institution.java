@@ -417,4 +417,12 @@ public interface Institution {
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
+    /**
+     * Gets all bank problems in the database by a page.
+     * @param userId the user who is requesting all bank problems
+     * @param courseId must be admin of the course.
+     * @param page The page number.
+     * @return A list of all bank problems.
+     */
+    List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException;
 }
