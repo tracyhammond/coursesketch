@@ -230,11 +230,31 @@ validateFirstRun(document.currentScript);
     };
 
     /**
+     * Lets the instructor choose an existing problem.
+     */
+    courseManagement.chooseExistingProblem = function() {
+        var problemSelection = document.createElement('problem-selection');
+
+        problemSelection.setAcceptedCallback(function(selectedProblems) {
+            for (var i = 0; i < selectedProblems.length; i++) {
+                courseManagement.addNewCourseProblem(selectedProblems[i]);
+            }
+        });
+
+        problemSelection.setCanceledCallback(function() {
+            document.body.removeChild(problemSelection);
+        });
+
+        document.body.appendChild(problemSelection);
+    };
+
+    /**
      * Creates a new bank problem and course problem with default values and adds it to the database.
      *
      * Displays the problem after it is added.
+     * @param {SrlBankProblem|Undefined} existingBankProblem - if loading an existing bank problem this is used.  Otherwise it is undefined.
      */
-    courseManagement.addNewCourseProblem = function addNewCourseProblem() {
+    courseManagement.addNewCourseProblem = function addNewCourseProblem(existingBankProblem) {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
         var assignmentId = document.querySelector('#assignment_list_column .selectedBox').id;
         var problemColumn = document.getElementById('problem_list_column');
@@ -244,8 +264,16 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         // by instructors
-        var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-        bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
+        var bankProblem = undefined;
+        if (isUndefined(existingBankProblem)) {
+            bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
+            var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
+            permissions.userPermission = [ courseId ];
+            bankProblem.accessPermission = permissions;
+        } else {
+            bankProblem = existingBankProblem;
+        }
         var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
         permissions.userPermission = [ courseId ];
         bankProblem.accessPermission = permissions;

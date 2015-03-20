@@ -81,6 +81,6 @@ ProblemSelectionPanel.prototype.setCanceledCallback = function(callback) {
     this.canceledCallback = callback;
 };
 
-ProblemSelectionPanel.prototype.setAcceptCallback = function(callback) {
+ProblemSelectionPanel.prototype.setAcceptedCallback = function(callback) {
     this.acceptCallback = callback;
 };
