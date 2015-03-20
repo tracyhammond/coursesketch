@@ -233,6 +233,8 @@ validateFirstRun(document.currentScript);
      * Lets the instructor choose an existing problem.
      */
     courseManagement.chooseExistingProblem = function() {
+        var courseId = document.querySelector('#class_list_column .selectedBox').id;
+        var assignmentId = document.querySelector('#assignment_list_column .selectedBox').id;
         var problemSelection = document.createElement('problem-selection');
 
         problemSelection.setAcceptedCallback(function(selectedProblems) {
@@ -246,6 +248,7 @@ validateFirstRun(document.currentScript);
         });
 
         document.body.appendChild(problemSelection);
+        problemSelection.loadProblems(courseId, assignmentId, 0);
     };
 
     /**
