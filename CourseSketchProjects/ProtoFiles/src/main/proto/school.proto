@@ -1,3 +1,5 @@
+import "util.proto";
+
 package protobuf.srl.school;
 
 // holds all data that is sent from server. (grades, roster, classes, assignments, problems
@@ -141,16 +143,6 @@ message SrlGrade {
 
 }
 
-message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
-    optional int32 year = 1;
-    optional int32 month = 2;
-    optional int32 day = 3;
-    optional int32 hour = 4;
-    optional int32 minute = 5;
-    optional int32 second = 6;
-    optional uint64 millisecond = 7; // To ensure capabilities to communicate with systems with diverse date-time handling methods
-}
-
 message DomainInformation { // Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
     optional string stuff = 1;
 }
@@ -188,13 +180,4 @@ message SrlGroup {
     optional string groupName = 3;
     repeated string admin = 4; // this is the only group of people who are allowed to use this group.
     //(and see it outside the database)
-}
-
-/**
- * Also can be called SrlUserGroup
- */
-message SrlPermission {
-    repeated string adminPermission = 1;
-    repeated string moderatorPermission = 2;
-    repeated string userPermission = 3;
 }
