@@ -40,10 +40,12 @@
 			</properties>
 			<build>
 				<plugins>
+					<!--
 					<plugin>
 						<artifactId>maven-site-plugin</artifactId>
 						<version>${sitepluginVersion}</version>
 					</plugin>
+					-->
 				</plugins>
 			</build>
 		</profile>
@@ -54,6 +56,9 @@
 					<name>makeSites</name>
 				</property>
 			</activation>
+			<properties>
+				<sitepluginVersion>3.4</sitepluginVersion>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -232,7 +237,7 @@
 					<version>${checkstyleVersion}</version>
 					<executions>
 						<execution>
-							<id>checkstyle</id>
+							<id>checkstyle-report</id>
 							<phase>validate</phase>
 							<configuration>
 								<configLocation>${absoluteCheckstyleLocation}</configLocation>
@@ -249,6 +254,25 @@
 							</configuration>
 							<goals>
 								<goal>checkstyle</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>checkstyle-check</id>
+							<phase>validate</phase>
+							<configuration>
+								<configLocation>${absoluteCheckstyleLocation}</configLocation>
+								<suppressionsLocation>${checkstyleSuppressionLocation}</suppressionsLocation>
+								<suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+								<encoding>UTF-8</encoding>
+								<consoleOutput>true</consoleOutput>
+								<checkstyle>
+									<failsOnError>false</failsOnError>
+								</checkstyle>
+								<check>
+									<failsOnError>true</failsOnError>
+								</check>
+							</configuration>
+							<goals>
 								<goal>check</goal>
 							</goals>
 						</execution>
@@ -308,7 +332,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.17</version>
+					<version>${surefireVersion}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -373,6 +397,47 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.github.joelittlejohn.embedmongo</groupId>
+					<artifactId>embedmongo-maven-plugin</artifactId>
+					<version>${embeddedMongoVersion}</version>
+					<executions>
+						<execution>
+							<id>start</id>
+							<goals>
+								<goal>start</goal>
+							</goals>
+							<configuration>
+								<!-- https://github.com/joelittlejohn/embedmongo-maven-plugin -->
+
+								<logging>file</logging>
+								<!-- optional (file|console|none), default console -->
+
+								<logFile>${basedir}/target/embedmongo.log</logFile>
+								<!-- optional, can be used when logging=file, default is ./embedmongo.log -->
+							</configuration>
+						</execution>
+						<execution>
+							<id>stop</id>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${failSafeVersion}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -397,6 +462,9 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+		<embeddedMongoVersion>0.1.12</embeddedMongoVersion>
+		<failSafeVersion>2.18.1</failSafeVersion>
+		<surefireVersion>2.17</surefireVersion>
 
         <!-- testing -->
 		<testLevel>85</testLevel>
