@@ -141,7 +141,7 @@ public final class CourseProblemManager {
         // assignment is open and the user is in the assignment
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
         // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
         if (isUsers && !isAdmin && !isMod && !authenticator
                 .isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {

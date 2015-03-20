@@ -131,7 +131,7 @@ public final class Authenticator {
         /**
          * @param iUser the user to set
          */
-        public void setUser(final boolean iUser) {
+        public void setCheckUser(final boolean iUser) {
             this.user = iUser;
         }
 
@@ -145,7 +145,7 @@ public final class Authenticator {
         /**
          * @param iMod the mod to set
          */
-        public void setMod(final boolean iMod) {
+        public void setCheckMod(final boolean iMod) {
             this.mod = iMod;
         }
 
@@ -159,7 +159,7 @@ public final class Authenticator {
         /**
          * @param iAdmin the admin to set
          */
-        public void setAdmin(final boolean iAdmin) {
+        public void setCheckAdmin(final boolean iAdmin) {
             this.admin = iAdmin;
         }
 
