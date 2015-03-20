@@ -8,6 +8,8 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.lecturedata.Lecturedata.SrlLectureDataHolder;
@@ -21,13 +23,10 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Handles all request for data.
@@ -120,7 +119,14 @@ public final class DataRequestHandler {
                         }
                         break;
                         case BANK_PROBLEM: {
-                            final List<SrlBankProblem> bankProblemLoop = instance.getProblem(itrequest.getItemIdList(), userId);
+                            List<SrlBankProblem> bankProblemLoop = null;
+                            if (!itrequest.hasPage()) {
+                                bankProblemLoop = instance.getProblem(itrequest.getItemIdList(), userId);
+                            } else {
+                                int page = itrequest.getPage();
+                                // The first id in the item is the course id.
+                                bankProblemLoop = instance.getAllBankProblems(userId, itrequest.getItemId(0), page);
+                            }
                             final SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
                             bankproblemSchool.addAllBankProblems(bankProblemLoop);
                             results.add(ResultBuilder.buildResult(bankproblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
