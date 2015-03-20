@@ -397,6 +397,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+		<resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
 		<testLevel>85</testLevel>
