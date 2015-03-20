@@ -8,8 +8,8 @@
 	<name>CourseSketch-parent</name>
 
 	<modules>
-		<module>CourseSketchProjects/coursesketchwebclient</module>
 		<module>CourseSketchProjects/ProtoFiles</module>
+		<module>CourseSketchProjects/coursesketchwebclient</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/nettyBlank</module>
