@@ -255,7 +255,7 @@ validateFirstRun(document.currentScript);
      * Creates a new bank problem and course problem with default values and adds it to the database.
      *
      * Displays the problem after it is added.
-     * @param {SrlBankProblem|Undefined} existingBankProblem - if loading an existing bank problem this is used.  Otherwise it is undefined.
+     * @param {String|Undefined} existingBankProblem - if loading an existing bank problem then the value is the Id. Otherwise it is undefined.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem(existingBankProblem) {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
@@ -266,17 +266,6 @@ validateFirstRun(document.currentScript);
         problemColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
-        // by instructors
-        var bankProblem = undefined;
-        if (isUndefined(existingBankProblem)) {
-            bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-            var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
-            permissions.userPermission = [ courseId ];
-            bankProblem.accessPermission = permissions;
-        } else {
-            bankProblem = existingBankProblem;
-        }
         var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
         permissions.userPermission = [ courseId ];
         bankProblem.accessPermission = permissions;
@@ -286,7 +275,19 @@ validateFirstRun(document.currentScript);
         courseProblem.name = 'Insert Problem Name';
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
-        courseProblem.setProblemInfo(bankProblem);
+
+
+        if (isUndefined(existingBankProblem)) {
+            var bankProblem = undefined;
+            bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
+            var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
+            permissions.userPermission = [ courseId ];
+            bankProblem.accessPermission = permissions;
+            courseProblem.setProblemInfo(bankProblem);
+        } else {
+            courseProblem.setProblemBankId(existingBankProblem);
+        }
         var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
