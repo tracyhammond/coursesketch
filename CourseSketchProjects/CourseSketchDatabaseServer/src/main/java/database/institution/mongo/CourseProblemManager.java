@@ -13,7 +13,7 @@ import database.auth.Authenticator.AuthType;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.State;
 
