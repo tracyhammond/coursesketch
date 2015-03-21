@@ -123,7 +123,7 @@ public final class DataRequestHandler {
                             if (!itrequest.hasPage()) {
                                 bankProblemLoop = instance.getProblem(itrequest.getItemIdList(), userId);
                             } else {
-                                int page = itrequest.getPage();
+                                final int page = itrequest.getPage();
                                 // The first id in the item is the course id.
                                 bankProblemLoop = instance.getAllBankProblems(userId, itrequest.getItemId(0), page);
                             }
