@@ -2,6 +2,7 @@ import "commands.proto";
 
 import "sketch.proto";
 import "school.proto";
+import "util.proto";
 
 package protobuf.srl.submission;
 
