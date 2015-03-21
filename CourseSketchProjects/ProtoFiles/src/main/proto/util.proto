@@ -1,3 +1,5 @@
+package protobuf.srl.utils;
+
 message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
     optional int32 year = 1;
     optional int32 month = 2;
@@ -15,4 +17,32 @@ message SrlPermission {
     repeated string adminPermission = 1;
     repeated string moderatorPermission = 2;
     repeated string userPermission = 3;
+}
+
+/**
+ * A sub message that contains a list of Ids.
+ * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
+ * This can also be used when wanting to return a list of ids.
+ */
+message IdChain {
+    repeated string idChain = 1;
+}
+
+/**
+ * The checksum contains 4 sets of longs
+ */
+message SrlChecksum {
+    required int64 firstBits = 1; // size and id of each command
+    required int64 secondBits = 2; // summation of times
+}
+
+/**
+ * Contains the type of questions that course sketch supports.
+ * (This should only be what is currently supported)
+ */
+enum QuestionType {
+    SKETCH = 1; // sketching
+    MULT_CHOICE = 2;
+    FREE_RESP = 3; // typing
+    CHECK_BOX = 4;
 }
