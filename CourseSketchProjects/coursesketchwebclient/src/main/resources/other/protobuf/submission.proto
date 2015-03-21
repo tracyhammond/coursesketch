@@ -2,6 +2,7 @@ import "commands.proto";
 
 import "sketch.proto";
 import "school.proto";
+import "util.proto";
 
 package protobuf.srl.submission;
 
@@ -11,7 +12,7 @@ package protobuf.srl.submission;
 message SrlSubmission {
     optional string id = 1;
     optional int64 submissionTime = 2;
-    optional SrlChecksum checksum = 3;
+    optional protobuf.srl.utils.SrlChecksum checksum = 3;
     oneof submissionType {
         protobuf.srl.commands.SrlUpdateList updateList = 4; // if this is a collection of updates
         protobuf.srl.sketch.SrlSketch sketch = 5; // if this is a sketch.
@@ -34,13 +35,7 @@ message SrlExperiment {
     optional string problemId = 3;
     optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
     optional SrlSubmission submission = 6;
-    optional protobuf.srl.school.SrlPermission accessPermission = 7;
-}
-
-// the checksum contains 4 sets of longs
-message SrlChecksum {
-    required int64 firstBits = 1; // size and id of each command
-    required int64 secondBits = 2; // summation of times
+    optional protobuf.srl.utils.SrlPermission accessPermission = 7;
 }
 
 message SrlExperimentList {
