@@ -266,16 +266,12 @@ validateFirstRun(document.currentScript);
         problemColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
-        var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
-        permissions.userPermission = [ courseId ];
-        bankProblem.accessPermission = permissions;
 
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
         courseProblem.courseId = courseId;
         courseProblem.name = 'Insert Problem Name';
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
-
 
         if (isUndefined(existingBankProblem)) {
             var bankProblem = undefined;
