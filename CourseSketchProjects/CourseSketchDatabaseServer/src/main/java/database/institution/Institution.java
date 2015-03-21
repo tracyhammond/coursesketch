@@ -423,6 +423,7 @@ public interface Institution {
      * @param courseId must be admin of the course.
      * @param page The page number.
      * @return A list of all bank problems.
+     * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
     List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException;
 }

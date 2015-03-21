@@ -234,6 +234,7 @@ public final class BankProblemManager {
      * @param userId the user asking for the bank problems.
      * @param courseId The course the user is wanting to possibly be associated with the bank problem.
      * @param page the bank problems are limited to ensure that the database is not overwhelmed.
+     * @throws AuthenticationException Thrown if the user does not have permission to retrieve any bank problems.
      * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
@@ -245,7 +246,7 @@ public final class BankProblemManager {
         }
         final DBCollection problemCollection = database.getCollection(PROBLEM_BANK_COLLECTION);
         final DBCursor dbCursor = problemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
-        List<SrlBankProblem> results = new ArrayList<>();
+        final List<SrlBankProblem> results = new ArrayList<>();
         while (dbCursor.hasNext()) {
             final DBObject dbObject = dbCursor.next();
             // no one is an admin when getting problems in this way.
@@ -262,6 +263,8 @@ public final class BankProblemManager {
      *            The database where the assignment is being stored.
      * @param userId the user asking for the bank problems.
      * @param problem the problem that is being registered as a user of the bank problem.
+     *
+     * @throws DatabaseAccessException Thrown if there are fields missing that make the problem inaccessible.
      *
      * package-private
      */
