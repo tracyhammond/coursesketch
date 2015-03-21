@@ -13,7 +13,7 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.State;
 
 import java.util.ArrayList;
