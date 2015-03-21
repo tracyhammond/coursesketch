@@ -117,10 +117,10 @@ validateFirstRun(document.currentScript);
         if (oldElement instanceof Node) {
             parentPanel.removeChild(oldElement);
         }
-        if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             CourseSketch.multiViewPage.loadSketch(submissionData);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(submissionData);
         }

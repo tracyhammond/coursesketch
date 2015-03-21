@@ -1,6 +1,6 @@
 package database.auth;
 
-import protobuf.srl.school.School.DateTime;
+import protobuf.srl.utils.Util.DateTime;
 
 import java.util.List;
 
