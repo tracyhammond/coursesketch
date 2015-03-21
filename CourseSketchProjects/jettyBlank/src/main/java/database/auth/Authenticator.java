@@ -118,13 +118,13 @@ public final class Authenticator {
          * @return True if one of the values in AuthType is true.
          */
         public boolean validRequest() {
-            return isUser() || isMod() || isAdmin() || isCheckDate() || isCheckAdminOrMod();
+            return isCheckingUser() || isCheckingMod() || isCheckingAdmin() || isCheckDate() || isCheckAdminOrMod();
         }
 
         /**
          * @return the user
          */
-        public boolean isUser() {
+        public boolean isCheckingUser() {
             return user;
         }
 
@@ -138,7 +138,7 @@ public final class Authenticator {
         /**
          * @return the mod
          */
-        public boolean isMod() {
+        public boolean isCheckingMod() {
             return mod;
         }
 
@@ -152,7 +152,7 @@ public final class Authenticator {
         /**
          * @return the admin
          */
-        public boolean isAdmin() {
+        public boolean isCheckingAdmin() {
             return admin;
         }
 
@@ -318,18 +318,20 @@ public final class Authenticator {
         final boolean validUser = authenticateUser(userId, result, checkType);
 
         boolean validModOrAdmin = authenticateModerator(userId, result, checkType);
-        final boolean validMod = checkType.isMod() && validModOrAdmin;
+        final boolean validMod = checkType.isCheckingMod() && validModOrAdmin;
 
         boolean validAdmin = authenticateAdmin(userId, result, checkType);
         validModOrAdmin = validAdmin || validModOrAdmin;
-        validAdmin = validAdmin && checkType.isAdmin();
+        validAdmin = validAdmin && checkType.isCheckingAdmin();
+
+        validModOrAdmin = validModOrAdmin && checkType.isCheckAdminOrMod();
 
         boolean validDate = false;
         if (checkType.isCheckDate()) {
             validDate = Authenticator.isTimeValid(checkTime, result.getAccessDate(), result.getCloseDate());
         }
 
-        return validUser == checkType.isUser() && validMod == checkType.isMod() && validAdmin == checkType.isAdmin()
+        return validUser == checkType.isCheckingUser() && validMod == checkType.isCheckingMod() && validAdmin == checkType.isCheckingAdmin()
                 && validDate == checkType.isCheckDate() && validModOrAdmin == checkType.isCheckAdminOrMod();
     }
 
@@ -342,7 +344,7 @@ public final class Authenticator {
      */
     private boolean authenticateUser(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
         boolean validUser = false;
-        if (checkType.isUser()) {
+        if (checkType.isCheckingUser()) {
             final List usersList = result.getUserList();
             validUser = this.checkAuthentication(userId, usersList);
         }
@@ -358,7 +360,7 @@ public final class Authenticator {
      */
     private boolean authenticateModerator(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
         boolean validMod = false;
-        if (checkType.isMod() || checkType.isCheckAdminOrMod()) {
+        if (checkType.isCheckingMod() || checkType.isCheckAdminOrMod()) {
             final List modList = result.getModeratorList();
             validMod = this.checkAuthentication(userId, modList);
         }
@@ -374,7 +376,7 @@ public final class Authenticator {
      */
     private boolean authenticateAdmin(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
         boolean validAdmin = false;
-        if (checkType.isAdmin() || checkType.isCheckAdminOrMod()) {
+        if (checkType.isCheckingAdmin() || checkType.isCheckAdminOrMod()) {
             final List adminList = result.getAdminList();
             validAdmin = this.checkAuthentication(userId, adminList);
         }
