@@ -15,7 +15,7 @@ import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.LatePolicy;
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.State;
 
 import java.util.ArrayList;

@@ -12,7 +12,8 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
+import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +115,7 @@ public final class BankProblemManager {
         exactProblem.setQuestionText((String) dbObject.get(QUESTION_TEXT));
         exactProblem.setImage((String) dbObject.get(IMAGE));
         if (isAdmin) {
+<<<<<<< HEAD
             exactProblem.setSolutionId((String) dbObject.get(SOLUTION_ID));
         }
         exactProblem.setCourseTopic((String) dbObject.get(COURSE_TOPIC));
@@ -122,6 +124,16 @@ public final class BankProblemManager {
         exactProblem.setQuestionType(SrlBankProblem.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
         // arraylist
+=======
+            exactProblem.setSolutionId((String) corsor.get(SOLUTION_ID));
+        }
+        exactProblem.setCourseTopic((String) corsor.get(COURSE_TOPIC));
+        exactProblem.setSubTopic((String) corsor.get(SUB_TOPIC));
+        exactProblem.setSource((String) corsor.get(SOURCE));
+        exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
+        exactProblem.addAllOtherKeywords((ArrayList) corsor.get(KEYWORDS)); // change
+                                                                            // arraylist
+>>>>>>> master
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) dbObject.get(ADMIN)); // admin

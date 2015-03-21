@@ -12,9 +12,12 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.school.School;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +40,6 @@ import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDES;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages lectures for mongo.
@@ -240,7 +240,7 @@ public final class LectureManager {
 
         exactLecture.setState(stateBuilder);
 
-        final School.SrlPermission.Builder permissions = School.SrlPermission.newBuilder();
+        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
@@ -349,7 +349,7 @@ public final class LectureManager {
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (lecture.hasAccessPermission()) {
-                final School.SrlPermission permissions = lecture.getAccessPermission();
+                final SrlPermission permissions = lecture.getAccessPermission();
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
