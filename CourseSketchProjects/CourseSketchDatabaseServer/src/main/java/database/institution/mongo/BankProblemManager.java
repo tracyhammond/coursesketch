@@ -11,9 +11,10 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.utils.Util;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
+
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -115,25 +118,14 @@ public final class BankProblemManager {
         exactProblem.setQuestionText((String) dbObject.get(QUESTION_TEXT));
         exactProblem.setImage((String) dbObject.get(IMAGE));
         if (isAdmin) {
-<<<<<<< HEAD
             exactProblem.setSolutionId((String) dbObject.get(SOLUTION_ID));
         }
         exactProblem.setCourseTopic((String) dbObject.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) dbObject.get(SUB_TOPIC));
         exactProblem.setSource((String) dbObject.get(SOURCE));
-        exactProblem.setQuestionType(SrlBankProblem.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
+        exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
         // arraylist
-=======
-            exactProblem.setSolutionId((String) corsor.get(SOLUTION_ID));
-        }
-        exactProblem.setCourseTopic((String) corsor.get(COURSE_TOPIC));
-        exactProblem.setSubTopic((String) corsor.get(SUB_TOPIC));
-        exactProblem.setSource((String) corsor.get(SOURCE));
-        exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
-        exactProblem.addAllOtherKeywords((ArrayList) corsor.get(KEYWORDS)); // change
-                                                                            // arraylist
->>>>>>> master
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) dbObject.get(ADMIN)); // admin
@@ -260,5 +252,32 @@ public final class BankProblemManager {
             results.add(extractBankProblem(dbObject, dbObject.get(SELF_ID).toString(), false));
         }
         return results;
+    }
+
+    /**
+     * Registers a course problem with a bank problem.
+     * @param authenticator
+     *            the object that is performing authentication.
+     * @param dbs
+     *            The database where the assignment is being stored.
+     * @param userId the user asking for the bank problems.
+     * @param problem the problem that is being registered as a user of the bank problem.
+     *
+     * package-private
+     */
+    static void mongoRegisterCourseProblem(final Authenticator authenticator, final DB dbs, final String userId,
+            final School.SrlProblem problem) throws DatabaseAccessException {
+        if (!problem.hasProblemBankId()) {
+            throw new DatabaseAccessException("Unable to register the course problem: missing bank problem id [" + problem.getId() + "]");
+        }
+        if (!problem.hasCourseId()) {
+            throw new DatabaseAccessException("Unable to register the course problem: missing course id [" + problem.getId() + "]");
+        }
+
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problem.getProblemBankId()));
+        final DBObject dbObject = myDbRef.fetch();
+
+        dbs.getCollection(PROBLEM_BANK_COLLECTION).update(dbObject, new BasicDBObject(ADD_SET_COMMAND,
+                new BasicDBObject(USERS, problem.getCourseId())));
     }
 }
