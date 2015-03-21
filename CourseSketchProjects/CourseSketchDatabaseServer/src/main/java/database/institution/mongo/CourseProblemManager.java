@@ -12,10 +12,12 @@ import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +36,6 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages course problems for the mongo database.
@@ -95,6 +94,10 @@ public final class CourseProblemManager {
 
         // inserts the id into the previous the course
         AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), corsor.get(SELF_ID).toString());
+
+        if (problem.hasProblemBankId()) {
+            BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
+        }
 
         return corsor.get(SELF_ID).toString();
     }
@@ -241,6 +244,10 @@ public final class CourseProblemManager {
             if (problem.hasProblemBankId()) {
                 updateObj = new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId());
                 problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+
+                // updates the bank problem associated with this course problem
+                LOG.warn("Changing the bank problem id. This feature may be removed in the future");
+                BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
                 update = true;
             }
 
