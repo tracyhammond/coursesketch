@@ -41,6 +41,7 @@ validateFirstRun(document.currentScript);
         for (var i = 0; i < array.length; i++) {
             var mvSketch = document.createElement('mv-sketch');
             document.querySelector('.sketches').appendChild(mvSketch);
+            mvSketch.setUserId(array[i].userId);
             mvSketch.setUpdateList(getUpdateList(array, i).getList());
             mvSketch.setSketchClickedFunction(function() {
                 console.log(navigator);
@@ -116,10 +117,10 @@ validateFirstRun(document.currentScript);
         if (oldElement instanceof Node) {
             parentPanel.removeChild(oldElement);
         }
-        if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             CourseSketch.multiViewPage.loadSketch(submissionData);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(submissionData);
         }

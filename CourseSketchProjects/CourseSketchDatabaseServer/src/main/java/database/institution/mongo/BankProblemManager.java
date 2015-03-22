@@ -11,7 +11,8 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
+import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +100,7 @@ public final class BankProblemManager {
         exactProblem.setCourseTopic((String) corsor.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) corsor.get(SUB_TOPIC));
         exactProblem.setSource((String) corsor.get(SOURCE));
-        exactProblem.setQuestionType(SrlBankProblem.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
+        exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
         exactProblem.addAllOtherKeywords((ArrayList) corsor.get(KEYWORDS)); // change
                                                                             // arraylist
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();

@@ -8,8 +8,8 @@
 	<name>CourseSketch-parent</name>
 
 	<modules>
-		<module>CourseSketchProjects/coursesketchwebclient</module>
 		<module>CourseSketchProjects/ProtoFiles</module>
+		<module>CourseSketchProjects/coursesketchwebclient</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/nettyBlank</module>
@@ -398,6 +398,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+		<resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
 		<testLevel>85</testLevel>
