@@ -1,0 +1,51 @@
+import "util.proto";
+
+package protobuf.srl.grading;
+
+message GradingPolicy {
+    required string courseId = 1;
+    optional PolicyType policyType = 2 [default=PERCENT];
+    repeated PolicyCategory gradeCategories = 3;
+
+    message PolicyCategory {
+        optional string name = 1;
+        optional float weight = 2;
+        optional LatePolicy latePolicy = 3; // This serves as a default late policy for all assignments in a category
+    }
+
+    enum PolicyType {
+        PERCENT = 1; // Percent based grading policy
+        POINT = 2;   // Point based grading policy
+    }
+}
+
+message LatePolicy {
+    required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
+    optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
+    optional float rate = 3;
+    optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
+    optional bool applyOnlyToLateProblems = 5;
+
+    enum FunctionType {
+        STEPPING_FUNCTION = 0;
+        LINE = 1;
+        EXPONENTIAL = 2;
+    }
+
+    /**
+     * The numbers are reversed because of how the client loads and saves data for options.
+     *
+     * Specifically this is used in the advance edit panel.
+     */
+    enum TimeFrame {
+        DAY = 3;
+        HOUR = 2;
+        MINUTE = 1;
+        CONSTANT = 0;
+    }
+
+    enum SubtractionType {
+        CAP = 0;
+        PERCENT = 1;
+    }
+}

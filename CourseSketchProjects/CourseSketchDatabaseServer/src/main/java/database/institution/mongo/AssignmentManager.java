@@ -13,10 +13,10 @@ import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
-import protobuf.srl.school.School.LatePolicy;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.State;
+import protobuf.srl.grading.Grading.LatePolicy;
 
 import java.util.ArrayList;
 import java.util.List;
