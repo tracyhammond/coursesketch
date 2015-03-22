@@ -2,7 +2,7 @@ import "util.proto";
 
 package protobuf.srl.grading;
 
-message GradingPolicy {
+message ProtoGradingPolicy {
     required string courseId = 1;
     optional PolicyType policyType = 2 [default=PERCENT];
     repeated PolicyCategory gradeCategories = 3;
