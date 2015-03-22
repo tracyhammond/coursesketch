@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
-import protobuf.srl.submission.Submission.SrlChecksum;
+import protobuf.srl.utils.Util.SrlChecksum;
 
 import java.io.File;
 import java.io.FileInputStream;

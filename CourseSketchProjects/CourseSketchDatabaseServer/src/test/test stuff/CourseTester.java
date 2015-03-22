@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import com.mongodb.DB;
 
@@ -78,5 +78,5 @@ public class CourseTester {
 		*/
 		return courseId;
 	}
-	
+
 }

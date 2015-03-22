@@ -33,9 +33,13 @@ target/
 *.iml
 
 *Log.out*
+*.log
+
 node/
 npm-debug.log
 node_modules/
 node_temp
 node_tmp
 doc
+
+CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
