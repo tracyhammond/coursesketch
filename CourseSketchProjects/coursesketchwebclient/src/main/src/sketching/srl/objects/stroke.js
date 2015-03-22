@@ -22,7 +22,6 @@ function SRL_Stroke(startPoint) {
      */
     var points = [];
 
-    var intersector = new SRL_IntersectionHandler(this);
     /**
      * Adding another point to the stroke
      *
@@ -32,7 +31,6 @@ function SRL_Stroke(startPoint) {
         if (point instanceof SRL_Point) {
             points.push(point);
             this.getBoundingBox().addPoint(point);
-            intersector.addPoint(point, points.length - 1);
         }
     };
 
@@ -55,7 +53,6 @@ function SRL_Stroke(startPoint) {
     };
 
     this.finish = function() {
-        intersector.finish();
     };
 
     /**
@@ -151,10 +148,6 @@ function SRL_Stroke(startPoint) {
             return null;
         }
         return points[points.length - 1];
-    };
-
-    this.getStrokeIntersector = function() {
-        return intersector;
     };
 
     /**

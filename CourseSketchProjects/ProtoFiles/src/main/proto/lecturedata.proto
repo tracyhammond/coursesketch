@@ -1,5 +1,6 @@
 import "school.proto";
 import "tutorial.proto";
+import "util.proto";
 package protobuf.srl.lecturedata;
 
 message SrlLectureDataHolder {
@@ -15,9 +16,9 @@ message Lecture {
     optional string name = 3;
     optional string description = 4;
     repeated IdsInLecture idList = 5;
-    optional protobuf.srl.school.SrlPermission accessPermission = 6;
-    optional protobuf.srl.school.DateTime accessDate = 7;
-    optional protobuf.srl.school.DateTime closeDate = 8;
+    optional protobuf.srl.utils.SrlPermission accessPermission = 6;
+    optional protobuf.srl.utils.DateTime accessDate = 7;
+    optional protobuf.srl.utils.DateTime closeDate = 8;
     optional protobuf.srl.school.State state = 9;
 }
 
@@ -75,7 +76,7 @@ message LectureNavigator {
 message SrlQuestion {
     required string id = 1;
     optional string questionText = 2;
-    optional QuestionType questionType = 3 [default=SKETCH];
+    optional protobuf.srl.utils.QuestionType questionType = 3 [default=SKETCH];
     repeated LectureNavigator navs = 4;
 
     oneof QuestionOption {
@@ -96,11 +97,4 @@ message SketchQuestion {
 message AnswerChoice {
     required string id = 1;
     optional string text = 2;
-}
-
-enum QuestionType {
-    SKETCH = 1;
-    MULT_CHOICE = 2;
-    FREE_RESP = 3;
-    CHECK_BOX = 4;
 }
