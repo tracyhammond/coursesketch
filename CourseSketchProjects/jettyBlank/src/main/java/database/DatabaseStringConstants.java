@@ -27,6 +27,7 @@ public final class DatabaseStringConstants {
     public static final String COURSE_PROBLEM_COLLECTION = "Problems";
     public static final String LECTURE_COLLECTION = "Lectures";
     public static final String SLIDE_COLLECTION = "Slides";
+    public static final String GRADING_POLICY_COLLECTION = "GradingPolicies";
     // also contains groups for admins and mods
     public static final String USER_GROUP_COLLECTION = "UserGroups";
     public static final String USER_COLLECTION = "Users";
@@ -67,8 +68,9 @@ public final class DatabaseStringConstants {
     public static final String COMMENTS = "Comments";
 
     // grading policy
-    public static final String CATEGORY_WEIGHT = "CategoryWeight";
-    public static final String CATEGORY_NAME = "CategoryName";
+    public static final String GRADE_CATEGORIES = "GradeCategories";
+    public static final String GRADE_CATEGORY_WEIGHT = "CategoryWeight";
+    public static final String GRADE_CATEGORY_NAME = "CategoryName";
     public static final String GRADE_POLICY_TYPE = "GradePolicyType";
 
     // course specific
@@ -81,10 +83,12 @@ public final class DatabaseStringConstants {
     public static final String ASSIGNMENT_TYPE = "AssignmentType";
     public static final String ASSIGNMENT_OTHER_TYPE = "OtherType";
     public static final String ASSIGNMENT_RESOURCES = "Resources";
+    public static final String LATE_POLICY = "LatePolicy";
     public static final String LATE_POLICY_FUNCTION_TYPE = "LatePolicyFunctionType";
     public static final String LATE_POLICY_TIME_FRAME_TYPE = "LatePolicyTimeFrameType";
     public static final String LATE_POLICY_SUBTRACTION_TYPE = "LatePolicySubtractionType";
     public static final String LATE_POLICY_RATE = "LatePolicyRate";
+    public static final String APPLY_ONLY_TO_LATE_PROBLEMS = "ApplyOnlyToLateProblems";
     public static final String PROBLEM_LIST = "ProblemList";
 
     // course problem specific
