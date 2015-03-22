@@ -43,6 +43,7 @@ function ProtobufSetup() {
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
+        buildUtil();
         buildMessage();
         buildSchool();
         buildSketch();
@@ -53,6 +54,12 @@ function ProtobufSetup() {
         buildLectures();
         return localScope;
     };
+
+    function buildUtil() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'util.proto');
+        var utilBuilder = builder.build(PROTOBUF_PACKAGE).srl.utils;
+        assignValues(utilBuilder);
+    }
 
     function buildMessage() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'message.proto');
