@@ -19,6 +19,7 @@ import protobuf.srl.utils.Util.SrlPermission;
 import java.util.ArrayList;
 import java.util.List;
 
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
@@ -33,15 +34,13 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
-import static database.DatabaseStringConstants.ADD_SET_COMMAND;
-
 
 /**
  * Interfaces with the mongo database to manage bank problems.
- * @author gigemjt
  *
+ * @author gigemjt
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
 public final class BankProblemManager {
 
     /**
@@ -51,7 +50,6 @@ public final class BankProblemManager {
 
     /**
      * Private constructor.
-     *
      */
     private BankProblemManager() {
     }
@@ -59,10 +57,13 @@ public final class BankProblemManager {
     /**
      * Inserts a problem bank into the mongo database.
      *
-     * @param dbs the database into which the bank is being inserted.
-     * @param problem the problem data that is being inserted.
+     * @param dbs
+     *         the database into which the bank is being inserted.
+     * @param problem
+     *         the problem data that is being inserted.
      * @return The mongo id of the problem bank.
-     * @throws AuthenticationException Not currently thrown but may be thrown in the future.
+     * @throws AuthenticationException
+     *         Not currently thrown but may be thrown in the future.
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
         final DBCollection problemBankCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
@@ -79,12 +80,18 @@ public final class BankProblemManager {
 
     /**
      * gets a mongo bank problem (this is usually grabbed through a course id instead of a specific user unless the user is the admin).
-     * @param authenticator The object that is authenticating the user.
-     * @param dbs the database where the problem is stored.
-     * @param problemBankId the id of the problem that is being grabbed.
-     * @param userId the id of the user (typically a course unless they are an admin)
+     *
+     * @param authenticator
+     *         The object that is authenticating the user.
+     * @param dbs
+     *         the database where the problem is stored.
+     * @param problemBankId
+     *         the id of the problem that is being grabbed.
+     * @param userId
+     *         the id of the user (typically a course unless they are an admin)
      * @return the SrlBank problem data if it past all tests.
-     * @throws AuthenticationException thrown if the user does not have access to the permissions.
+     * @throws AuthenticationException
+     *         thrown if the user does not have access to the permissions.
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
             throws AuthenticationException {
@@ -105,9 +112,13 @@ public final class BankProblemManager {
 
     /**
      * Creates an SrlBankProblem out of the database object.
-     * @param dbObject a pointer to an object in the mongo database.
-     * @param problemBankId The id of problem bank
-     * @param isAdmin true if the user is an admin
+     *
+     * @param dbObject
+     *         a pointer to an object in the mongo database.
+     * @param problemBankId
+     *         The id of problem bank
+     * @param isAdmin
+     *         true if the user is an admin
      * @return {@link protobuf.srl.school.School.SrlBankProblem}.
      */
     private static SrlBankProblem extractBankProblem(final DBObject dbObject, final String problemBankId, final boolean isAdmin) {
@@ -137,19 +148,25 @@ public final class BankProblemManager {
 
     /**
      * Updates a bank problem.
+     *
      * @param authenticator
-     *            the object that is performing authentication.
+     *         the object that is performing authentication.
      * @param dbs
-     *            The database where the assignment is being stored.
-     * @param problemBankId the id of the problem getting updated.
-     * @param userId the user updating the bank problem.
-     * @param problem the bank problem data that is being updated.
+     *         The database where the assignment is being stored.
+     * @param problemBankId
+     *         the id of the problem getting updated.
+     * @param userId
+     *         the user updating the bank problem.
+     * @param problem
+     *         the bank problem data that is being updated.
      * @return true if the update is successful
-     * @throws AuthenticationException Thrown if the user does not have permission to update the bank problem.
-     * @throws DatabaseAccessException Thrown if there is an issue updating the problem.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the bank problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is an issue updating the problem.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-        "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+            "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -227,15 +244,20 @@ public final class BankProblemManager {
 
     /**
      * Returns all bank problems.  The user must be an instructor of a course.
+     *
      * @param authenticator
-     *            the object that is performing authentication.
+     *         the object that is performing authentication.
      * @param database
-     *            The database where the assignment is being stored.
-     * @param userId the user asking for the bank problems.
-     * @param courseId The course the user is wanting to possibly be associated with the bank problem.
-     * @param page the bank problems are limited to ensure that the database is not overwhelmed.
-     * @throws AuthenticationException Thrown if the user does not have permission to retrieve any bank problems.
+     *         The database where the assignment is being stored.
+     * @param userId
+     *         the user asking for the bank problems.
+     * @param courseId
+     *         The course the user is wanting to possibly be associated with the bank problem.
+     * @param page
+     *         the bank problems are limited to ensure that the database is not overwhelmed.
      * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to retrieve any bank problems.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
             final String courseId, final int page) throws AuthenticationException {
@@ -257,16 +279,19 @@ public final class BankProblemManager {
 
     /**
      * Registers a course problem with a bank problem.
+     *
      * @param authenticator
-     *            the object that is performing authentication.
+     *         the object that is performing authentication.
      * @param dbs
-     *            The database where the assignment is being stored.
-     * @param userId the user asking for the bank problems.
-     * @param problem the problem that is being registered as a user of the bank problem.
+     *         The database where the assignment is being stored.
+     * @param userId
+     *         the user asking for the bank problems.
+     * @param problem
+     *         the problem that is being registered as a user of the bank problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there are fields missing that make the problem inaccessible.
      *
-     * @throws DatabaseAccessException Thrown if there are fields missing that make the problem inaccessible.
-     *
-     * package-private
+     *         package-private
      */
     static void mongoRegisterCourseProblem(final Authenticator authenticator, final DB dbs, final String userId,
             final School.SrlProblem problem) throws DatabaseAccessException {
