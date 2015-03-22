@@ -10,6 +10,10 @@ function ProblemSelectionPanel() {
 
     /**
      * Loads the problems from the server.
+     * @param {String} courseId - the id of the course the problem is being requested for.
+     * @param {String} assignmentId - the id of the assignment the problem is being requested for.
+     * @param {Integer} page - to make it easier we do not grab every single bank problem instead we grab them in batches
+     *              (this process is called pagination)
      */
     this.loadProblems = function(courseId, assignmentId, page) {
         var request = this.createRequest(courseId, assignmentId, page);
@@ -22,9 +26,7 @@ function ProblemSelectionPanel() {
             }
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
             var bankProblems = school.bankProblems;
-            var builder = new SchoolItemBuilder().setList(bankProblems)
-                .setBoxClickFunction(function(schoolItem) {
-                    console.log(this.id);
+            var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
                     clickSelector.toggleSelection(this);
                     if ($(this).hasClass(clickSelector.selectionClassName)) {
                         removeObjectFromArray(selectedBankProblems, this.id);
@@ -38,8 +40,9 @@ function ProblemSelectionPanel() {
     };
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
-     * Makes the exit button close the box and enables dragging
+     * Makes the exit button close the box and enables dragging.
+     *
+     * @param {Node} templateClone is a clone of the custom HTML Element for the text box.
      */
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
@@ -64,6 +67,7 @@ ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);
  * @param {String} assignmentId - the id of the assignment the problem is being requested for.
  * @param {Integer} page - to make it easier we do not grab every single bank problem instead we grab them in batches
  *              (this process is called pagination)
+ * @returns {SrlRequest} the request that is ready to be sent to the server.
  */
 ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId, page) {
     var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
@@ -76,7 +80,7 @@ ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId,
     var dataRequest = CourseSketch.PROTOBUF_UTIL.DataRequest();
     dataRequest.items = [ itemRequest ];
     var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataRequest,
-        CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST);
+            CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST);
     return request;
 };
 

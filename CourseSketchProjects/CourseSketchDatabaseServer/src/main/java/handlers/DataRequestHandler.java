@@ -93,26 +93,26 @@ public final class DataRequestHandler {
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
             final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
-                final ItemRequest itrequest = request.getItemsList().get(p);
+                final ItemRequest itemRequest = request.getItemsList().get(p);
                 try {
-                    LOG.info("looking at query {}", itrequest.getQuery().name());
-                    switch (itrequest.getQuery()) {
+                    LOG.info("looking at query {}", itemRequest.getQuery().name());
+                    switch (itemRequest.getQuery()) {
                         case COURSE: {
-                            final List<SrlCourse> courseLoop = instance.getCourses(itrequest.getItemIdList(), userId);
+                            final List<SrlCourse> courseLoop = instance.getCourses(itemRequest.getItemIdList(), userId);
                             final SrlSchool.Builder courseSchool = SrlSchool.newBuilder();
                             courseSchool.addAllCourses(courseLoop);
                             results.add(ResultBuilder.buildResult(courseSchool.build().toByteString(), ItemQuery.COURSE));
                         }
                         break;
                         case ASSIGNMENT: {
-                            final List<SrlAssignment> assignmentLoop = instance.getAssignment(itrequest.getItemIdList(), userId);
+                            final List<SrlAssignment> assignmentLoop = instance.getAssignment(itemRequest.getItemIdList(), userId);
                             final SrlSchool.Builder assignmentSchool = SrlSchool.newBuilder();
                             assignmentSchool.addAllAssignments(assignmentLoop);
                             results.add(ResultBuilder.buildResult(assignmentSchool.build().toByteString(), ItemQuery.ASSIGNMENT));
                         }
                         break;
                         case COURSE_PROBLEM: {
-                            final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(itrequest.getItemIdList(), userId);
+                            final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(itemRequest.getItemIdList(), userId);
                             final SrlSchool.Builder problemSchool = SrlSchool.newBuilder();
                             problemSchool.addAllProblems(courseProblemLoop);
                             results.add(ResultBuilder.buildResult(problemSchool.build().toByteString(), ItemQuery.COURSE_PROBLEM));
@@ -120,16 +120,16 @@ public final class DataRequestHandler {
                         break;
                         case BANK_PROBLEM: {
                             List<SrlBankProblem> bankProblemLoop = null;
-                            if (!itrequest.hasPage()) {
-                                bankProblemLoop = instance.getProblem(itrequest.getItemIdList(), userId);
+                            if (!itemRequest.hasPage()) {
+                                bankProblemLoop = instance.getProblem(itemRequest.getItemIdList(), userId);
                             } else {
-                                final int page = itrequest.getPage();
+                                final int page = itemRequest.getPage();
                                 // The first id in the item is the course id.
-                                bankProblemLoop = instance.getAllBankProblems(userId, itrequest.getItemId(0), page);
+                                bankProblemLoop = instance.getAllBankProblems(userId, itemRequest.getItemId(0), page);
                             }
-                            final SrlSchool.Builder bankproblemSchool = SrlSchool.newBuilder();
-                            bankproblemSchool.addAllBankProblems(bankProblemLoop);
-                            results.add(ResultBuilder.buildResult(bankproblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
+                            final SrlSchool.Builder bankProblemSchool = SrlSchool.newBuilder();
+                            bankProblemSchool.addAllBankProblems(bankProblemLoop);
+                            results.add(ResultBuilder.buildResult(bankProblemSchool.build().toByteString(), ItemQuery.BANK_PROBLEM));
                         }
                         break;
                         case COURSE_SEARCH: {
@@ -155,8 +155,8 @@ public final class DataRequestHandler {
                             // need to get the submission ID?
                             // we send it the CourseProblemId and the userId and we get the submission Id
                             // MongoInstitution.mongoGetExperiment(assignementID, userId)
-                            if (!itrequest.hasAdvanceQuery()) {
-                                for (String itemId : itrequest.getItemIdList()) {
+                            if (!itemRequest.hasAdvanceQuery()) {
+                                for (String itemId : itemRequest.getItemIdList()) {
                                     LOG.info("Trying to retrieve an experiment from a user!");
                                     try {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
@@ -168,9 +168,9 @@ public final class DataRequestHandler {
                                     }
                                 }
                             } else {
-                                for (String itemId : itrequest.getItemIdList()) {
+                                for (String itemId : itemRequest.getItemIdList()) {
                                     instance.getExperimentAsInstructor(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections,
-                                            itrequest.getAdvanceQuery());
+                                            itemRequest.getAdvanceQuery());
                                 }
                                 results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
                             }
@@ -178,8 +178,8 @@ public final class DataRequestHandler {
                         break;
                         case UPDATE: {
                             long lastRequestTime = 0;
-                            if (itrequest.getItemIdCount() > 0) {
-                                lastRequestTime = Long.parseLong(itrequest.getItemId(0));
+                            if (itemRequest.getItemIdCount() > 0) {
+                                lastRequestTime = Long.parseLong(itemRequest.getItemId(0));
                             }
                             LOG.info("Last request time! {}", lastRequestTime);
                             // for now get all updates!
@@ -188,14 +188,14 @@ public final class DataRequestHandler {
                         }
                         break;
                         case LECTURE: {
-                            final List<Lecture> lectureLoop = instance.getLecture(itrequest.getItemIdList(), userId);
+                            final List<Lecture> lectureLoop = instance.getLecture(itemRequest.getItemIdList(), userId);
                             final SrlLectureDataHolder.Builder lectureBuilder = SrlLectureDataHolder.newBuilder();
                             lectureBuilder.addAllLectures(lectureLoop);
                             results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURE));
                         }
                         break;
                         case LECTURESLIDE: {
-                            final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(itrequest.getItemIdList(), userId);
+                            final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(itemRequest.getItemIdList(), userId);
                             final SrlLectureDataHolder.Builder lectureBuilder = SrlLectureDataHolder.newBuilder();
                             lectureBuilder.addAllSlides(lectureSlideLoop);
                             results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURESLIDE));
@@ -207,7 +207,7 @@ public final class DataRequestHandler {
                 } catch (AuthenticationException e) {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
-                        build.setQuery(itrequest.getQuery());
+                        build.setQuery(itemRequest.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -216,8 +216,8 @@ public final class DataRequestHandler {
                 } catch (Exception e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
-                    build.setQuery(itrequest.getQuery());
-                    build.setData(itrequest.toByteString());
+                    build.setQuery(itemRequest.getQuery());
+                    build.setData(itemRequest.toByteString());
                     results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                 }
             }
