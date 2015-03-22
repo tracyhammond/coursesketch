@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.utils.Util;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;
@@ -300,7 +301,7 @@ public final class SubmissionMerger {
             final Commands.SrlCommand command = updates.get(i).getCommands(0);
             if (command.getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
                 try {
-                    final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
+                    final Util.IdChain sketchId = Util.IdChain.parseFrom(command.getCommandData());
                     return sketchId.getIdChain(0);
                 } catch (InvalidProtocolBufferException e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -333,7 +334,7 @@ public final class SubmissionMerger {
             final Commands.SrlCommand command = updates.get(i).getCommands(0);
             if (command.getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
                 try {
-                    final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
+                    final Util.IdChain sketchId = Util.IdChain.parseFrom(command.getCommandData());
                     if (sketchId.getIdChain(0).equals(matchingSketchId)) {
                         return i;
                     }
