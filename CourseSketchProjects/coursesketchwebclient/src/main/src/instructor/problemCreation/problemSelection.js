@@ -10,6 +10,7 @@ function ProblemSelectionPanel() {
 
     /**
      * Loads the problems from the server.
+     *
      * @param {String} courseId - the id of the course the problem is being requested for.
      * @param {String} assignmentId - the id of the assignment the problem is being requested for.
      * @param {Integer} page - to make it easier we do not grab every single bank problem instead we grab them in batches
