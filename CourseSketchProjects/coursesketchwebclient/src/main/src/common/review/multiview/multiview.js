@@ -26,6 +26,17 @@ function MvSketch() {
     };
 
     /**
+     * Sets the user id for display purposes.
+     *
+     * @param {String} userId - the name that shows up for instructors to find the user name of.
+     */
+    this.setUserId = function(userId) {
+        // Uses only the first 7 characters to ensure that they are easy to read by a human and do not take up much space on the screen.
+        // But is long enough to ensure that there is high probability of uniqueness between all students in the class.
+        this.shadowRoot.querySelector('#userName').textContent = userId.substring(0, 7);
+    };
+
+    /*
      * This creates the shadow root and attaches it to the object in question.
      * @instance
      * @memberof MvSketch
