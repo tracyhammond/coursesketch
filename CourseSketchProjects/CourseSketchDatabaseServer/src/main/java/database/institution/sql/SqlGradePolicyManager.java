@@ -2,7 +2,7 @@ package database.institution.sql;
 
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import protobuf.srl.school.School.GradingPolicy;
+import protobuf.srl.grading.Grading.GradingPolicy;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

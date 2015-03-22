@@ -26,7 +26,7 @@ import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlGrade;
-import protobuf.srl.school.School.GradingPolicy;
+import protobuf.srl.grading.Grading.GradingPolicy;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

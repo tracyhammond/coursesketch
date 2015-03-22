@@ -11,8 +11,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.school.School.GradingPolicy;
-
+import protobuf.srl.grading.Grading.GradingPolicy;
 import java.util.List;
 
 /**
