@@ -1,15 +1,18 @@
 school-item {
     width: 48%;
     margin-left: 1%;
+    cursor: pointer;
 }
 
 #selectionContent {
     padding: 5px;
+    scroll-y: auto;
 
 }
 
 .inner-dialog {
     border: 2px solid black;
+    outline: 5px solid rgba(0, 0, 0, 0); /* invisible border */
     background: #FFFFFF;
     padding: 5px;
 }

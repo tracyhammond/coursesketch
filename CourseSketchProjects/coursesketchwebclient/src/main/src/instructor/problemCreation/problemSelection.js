@@ -1,5 +1,6 @@
 /**
  * Only one of these can be on a page at a time.
+ * [We assume only one of these elements can exist at a time]
  */
 function ProblemSelectionPanel() {
     /**
@@ -7,6 +8,9 @@ function ProblemSelectionPanel() {
      */
     var selectedBankProblems = [];
     var clickSelector = new ClickSelectionManager();
+    var currentPage = 0;
+    var currentCourse = "";
+    var currentAssignment = "";
 
     /**
      * Loads the problems from the server.
@@ -17,6 +21,9 @@ function ProblemSelectionPanel() {
      *              (this process is called pagination)
      */
     this.loadProblems = function(courseId, assignmentId, page) {
+        currentPage = page;
+        currentCourse = courseId;
+        currentAssignment = assignmentId;
         var request = this.createRequest(courseId, assignmentId, page);
         CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
                 CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
@@ -25,6 +32,7 @@ function ProblemSelectionPanel() {
             if (isUndefined(item.data) || item.data === null) {
                 throw new Error('The data is null!');
             }
+            clickSelector.clearAllSelectedItems();
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
             var bankProblems = school.bankProblems;
             var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
@@ -34,10 +42,17 @@ function ProblemSelectionPanel() {
                     } else {
                         selectedBankProblems.push(this.id);
                     }
-                })
-                .build(this.shadowRoot.querySelector('#selectionContent'));
+                }).build(this.shadowRoot.querySelector('#selectionContent'));
+
+                clickSelector.applySelections(this.getListOfSelectedElements());
         }.bind(this));
+        // end data request listener
         CourseSketch.connection.sendRequest(request);
+
+        var pageList = this.shadowRoot.querySelectorAll('.currentPage');
+        for (var i = 0; i < pageList.length; i++) {
+            pageList[i].textContent = currentPage;
+        }
     };
 
     /**
@@ -54,10 +69,63 @@ function ProblemSelectionPanel() {
             localScope.acceptCallback(selectedBankProblems);
         };
 
+        // cancel options
         shadowRoot.querySelector('#cancel').onclick = function() {
             localScope.canceledCallback(selectedBankProblems);
         };
+
+        shadowRoot.querySelector('.outer-dialog').onclick = function() {
+           // localScope.canceledCallback(selectedBankProblems);
+        };
+
+        shadowRoot.querySelector('.inner-dialog').onclick = function(event) {
+            event.stopPropagation();
+        };
+
+        this.onclick = function(event) {
+            localScope.canceledCallback(selectedBankProblems);
+        };
+
+        var nextList = shadowRoot.querySelectorAll('.next');
+        applyOnClick(nextList, function() {
+            currentPage += 1;
+            localScope.loadProblems(currentCourse, currentAssignment, currentPage);
+        });
+
+        var previousList = shadowRoot.querySelectorAll('.previous');
+        applyOnClick(previousList, function() {
+        currentPage -= 1;
+            if (currentPage < 0) {
+                currentPage = 0;
+                return;
+            }
+            localScope.loadProblems(currentCourse, currentAssignment, currentPage);
+        });
     };
+
+    /**
+     * @param {Array<Element>} listOfElements - the list of elements that have the function
+     * @param {Function} func.
+     */
+    function applyOnClick(listOfElements, func) {
+        for (var i =0; i < listOfElements.length; i++) {
+            listOfElements[i].onclick = func;
+        }
+    }
+
+    /**
+     * Returns the list of selected elements that are currently on the screen.
+     */
+    this.getListOfSelectedElements = function() {
+        var result = [];
+        for (var i = 0; i < selectedBankProblems.length; i++) {
+            var element = this.shadowRoot.querySelector(cssEscapeId(selectedBankProblems[i]));
+            if (element !== null) {
+                result.push(element);
+            }
+        }
+        return result;
+    }
 }
 
 ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);
