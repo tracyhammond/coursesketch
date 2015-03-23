@@ -4,7 +4,7 @@ import java.util.Date;
 
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlBankProblem.QuestionType;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import com.mongodb.DB;
 

@@ -2,15 +2,23 @@ package internalconnections;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
+import utilities.LoggingConstants;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
 public final class ProxyConnectionManager extends MultiConnectionManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ProxyConnectionManager.class);
 
     /**
      * Port for the login server.
@@ -51,29 +59,29 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         // System.out.println("Open Recognition...");
-        System.out.println("Open Login...");
-        System.out.println(isConnectionLocal());
-        System.out.println(isSecure());
+        LOG.info("Open Login...");
+        LOG.info("Is Connection Local? {}", isConnectionLocal());
+        LOG.info("Is Secure? {}", isSecure());
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
-        System.out.println("Open Data...");
+        LOG.info("Open Data...");
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
-        System.out.println("Open Answer...");
+        LOG.info("Open Answer...");
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         // System.out.println("Open Answer Checker Server...");
         // createAndAddConnection(serv, true, 8884, AnswerConnection.class);
