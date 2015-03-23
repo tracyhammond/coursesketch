@@ -6,17 +6,24 @@ message ProtoGradingPolicy {
     required string courseId = 1;
     optional PolicyType policyType = 2 [default=PERCENT];
     repeated PolicyCategory gradeCategories = 3;
-
-    message PolicyCategory {
-        optional string name = 1;
-        optional float weight = 2;
-        optional LatePolicy latePolicy = 3; // This serves as a default late policy for all assignments in a category
-    }
+    repeated DroppedProblems droppedProblems = 4;
+    repeated string droppedAssignments = 5;
 
     enum PolicyType {
         PERCENT = 1; // Percent based grading policy
         POINT = 2;   // Point based grading policy
     }
+}
+
+message DroppedProblems {
+    required string assignmentId = 1;
+    repeated string droppedProblems = 2;
+}
+
+message PolicyCategory {
+    optional string name = 1;
+    optional float weight = 2;
+    optional LatePolicy latePolicy = 3; // This serves as a default late policy for all assignments in a category
 }
 
 message LatePolicy {
