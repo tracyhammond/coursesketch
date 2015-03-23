@@ -238,6 +238,7 @@ validateFirstRun(document.currentScript);
         var problemSelection = document.createElement('problem-selection');
 
         problemSelection.setAcceptedCallback(function(selectedProblems) {
+            document.body.removeChild(problemSelection);
             for (var i = 0; i < selectedProblems.length; i++) {
                 courseManagement.addNewCourseProblem(selectedProblems[i]);
             }

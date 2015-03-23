@@ -37,4 +37,10 @@ function ClickSelectionManager() {
     this.isItemSelected = function(element) {
         return this.selectedItems.indexOf(element) > -1;
     };
+
+    this.applySelections = function(listOfElements) {
+        for (var i = 0; i < listOfElements.length; i++) {
+            this.addSelectedItem(listOfElements[i]);
+        }
+    };
 }
