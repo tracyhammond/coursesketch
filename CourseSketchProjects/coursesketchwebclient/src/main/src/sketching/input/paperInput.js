@@ -26,9 +26,9 @@ function InputListener() {
             var oldZoom = totalZoom;
             totalZoom += delta;
             if (totalZoom < 0 && totalZoom > -1) {
-                ps.view.zoom = -1/(totalZoom - 1);
+                ps.view.zoom = -1 / (totalZoom - 1);
             } else if (totalZoom <= -1) {
-                 ps.view.zoom = -1/(totalZoom - 1);
+                ps.view.zoom = -1 / (totalZoom - 1);
             } else {
                 //console.log(totalZoom);
                 ps.view.zoom = totalZoom + 1;
@@ -38,10 +38,10 @@ function InputListener() {
         //if shift is held, pans
         //if shift is not held, it starts a new path from the mouse point
         tool.onMouseDown = function(event) {
-            if (Key.isDown('shift') || event.event.button == 1) {
+            if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 startingPoint = ps.project.activeLayer.localToGlobal(event.point);
-                startingCenter= ps.project.activeLayer.localToGlobal(ps.view.center);
+                startingCenter = ps.project.activeLayer.localToGlobal(ps.view.center);
 
             } else {
                 currentPoint = createPointFromEvent(event);
@@ -55,7 +55,7 @@ function InputListener() {
         //if shift is held, pans the view to follow the mouse
         //if shift is not held, it adds more points to the path created on MouseDown
         tool.onMouseDrag = function(event) {
-            if (Key.isDown('shift') || event.event.button == 1) {
+            if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 currentStroke = undefined;
                 ps.view.center =
@@ -82,7 +82,7 @@ function InputListener() {
                 if (strokeCreationCallback) {
                     strokeCreationCallback(currentStroke); // Sends back the current stroke.
                 }
-            } catch(err) {
+            } catch (err) {
                 currentStroke = false;
                 currentPoint = false;
                 console.log(err);
@@ -92,13 +92,13 @@ function InputListener() {
         };
 
         //zooms the view with the mousewheel
-        sketchCanvas.addEventListener("mousewheel", function(event) {
+        sketchCanvas.addEventListener('mousewheel', function(event) {
             //event.stopPropagation();
             //event.preventDefault();
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(delta/3);
+            zoom(delta / 3);
         });
 
         $(sketchCanvas).bind('touchy-pinch', function(event, $target, data) {
@@ -111,12 +111,12 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             //var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(data.scale-data.previousScale);
+            zoom(data.scale - data.previousScale);
         });
 
         // makes zoom public.
         this.zoom = zoom;
-    }
+    };
 
     /**
      * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point
@@ -138,5 +138,5 @@ function InputListener() {
     // Creates a time stamp for every point.
     function createTimeStamp() {
         return new Date().getTime();
-    };
+    }
 }

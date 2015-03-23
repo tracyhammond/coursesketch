@@ -205,5 +205,29 @@
         simulate(shadow.querySelector('button.save'), "click");
 
     });
+
+    test("advance edit assignment type loads", function(assert) {
+        var schoolItem = document.createElement("school-item");
+        schoolItem.dataset.instructor="";
+        // set up data
+        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+        schoolItemProto.assignmentType = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.LAB;
+        schoolItem.schoolItemData = schoolItemProto;
+
+        // append data
+        var testLocation = document.getElementById("testLocation");
+        testLocation.appendChild(schoolItem);
+        var advanceButton = schoolItem.shadowRoot.querySelector(".advanceButton");
+        simulate(advanceButton, "click");
+
+        //now test!
+        var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
+        var selectElement = shadow.querySelector('#elementAssignmentType');
+        var result = selectElement.value;
+        var text = selectElement.options[selectElement.selectedIndex].innerHTML;
+        assert.equal(text, "Lab", 'the function type should be loaded correctly');
+        assert.equal(result, schoolItemProto.assignmentType,
+            'we can get the number from the value using protobuf');
+    });
 </script>
 </body>
