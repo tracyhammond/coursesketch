@@ -17,6 +17,7 @@ import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
+import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
@@ -26,7 +27,6 @@ import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlGrade;
-import protobuf.srl.grading.Grading.GradingPolicy;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -491,7 +491,7 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public String setGradingPolicy(final String userId, final GradingPolicy policy) throws DatabaseAccessException {
-        throw new UnsupportedOperationException("This method is not supported in mongo. Only in SQL");
+    public void setGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
+        GradingPolicyManager.setGradingPolicy(getInstance().auth, getInstance().database, userId, policy);
     }
 }
