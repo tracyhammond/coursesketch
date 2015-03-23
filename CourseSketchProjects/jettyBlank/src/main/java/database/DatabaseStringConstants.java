@@ -6,7 +6,7 @@ package database;
  * @author gigemjt
  *
  */
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({ "PMD.CommentRequired", "checkstyle:javadocvariable" })
 public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";
@@ -72,6 +72,8 @@ public final class DatabaseStringConstants {
     public static final String GRADE_CATEGORY_WEIGHT = "CategoryWeight";
     public static final String GRADE_CATEGORY_NAME = "CategoryName";
     public static final String GRADE_POLICY_TYPE = "GradePolicyType";
+    public static final String DROPPED_PROBLEMS = "DroppedProblems";
+    public static final String DROPPED_ASSIGNMENTS = "DroppedAssignments";
 
     // course specific
     public static final String COURSE_SEMESTER = "Semester";

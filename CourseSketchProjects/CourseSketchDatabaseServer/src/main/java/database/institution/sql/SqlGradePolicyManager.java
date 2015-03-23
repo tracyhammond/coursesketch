@@ -3,6 +3,7 @@ package database.institution.sql;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
+import protobuf.srl.grading.Grading.PolicyCategory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,12 +36,12 @@ public final class SqlGradePolicyManager {
      * @throws DatabaseAccessException
      *         thrown if connecting to sql database cause an error
      */
-    @SuppressWarnings("checkstyle:magicnumber")
-    public static String setProtoGradingPolicy(final Connection conn, final String userId, final ProtoGradingPolicy policy) throws DatabaseAccessException {
+    @SuppressWarnings("checkstyle:magicnumber") public static String setProtoGradingPolicy(final Connection conn, final String userId,
+            final ProtoGradingPolicy policy) throws DatabaseAccessException {
         String result = "";
         final String courseId = policy.getCourseId();
         final int policyType = policy.getPolicyType().getNumber();
-        final List<ProtoGradingPolicy.PolicyCategory> categories = policy.getGradeCategoriesList();
+        final List<PolicyCategory> categories = policy.getGradeCategoriesList();
 
         // Select all where CourseId = courseId and CategoryName = categoryName
         final String query = "SELECT * FROM GradePolicies WHERE ?=? AND ?=?";
@@ -49,7 +50,7 @@ public final class SqlGradePolicyManager {
             stmt.setString(2, courseId);
             stmt.setString(3, DatabaseStringConstants.GRADE_CATEGORY_NAME);
             for (int i = 0; i < categories.size(); i++) {
-                final ProtoGradingPolicy.PolicyCategory currentCategory = categories.get(i);
+                final PolicyCategory currentCategory = categories.get(i);
                 stmt.setString(4, currentCategory.getName());
                 try (final ResultSet rst = stmt.executeQuery()) {
                     if (rst.next()) {

@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
+import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlGrade;
@@ -11,7 +12,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.grading.Grading.GradingPolicy;
+
 import java.util.List;
 
 /**
@@ -502,8 +503,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    List<String> getCourseRoster(final String userId, final String courseId)
-            throws DatabaseAccessException, AuthenticationException;
+    List<String> getCourseRoster(final String userId, final String courseId) throws DatabaseAccessException, AuthenticationException;
 
     /**
      * This method will set or insert the gradingPolicy in SQL based on the proto object passed in.
@@ -513,9 +513,10 @@ public interface Institution {
      *         the id of the user asking for the state
      * @param policy
      *         proto object containing the gradingPolicy to be set or updated
-     * @return result of set: "SET", "INSERT", "ERROR"
      * @throws DatabaseAccessException
      *         thrown if connecting to sql database cause an error
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the course.
      */
-    String setGradingPolicy(final String userId, final GradingPolicy policy) throws DatabaseAccessException;
+    void setGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
 }
