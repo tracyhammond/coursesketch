@@ -224,7 +224,7 @@ public class BankProblemManagerTest {
     }
 
     @Test
-    public void registerCourse() throws Exception {
+    public void registerCourseInBankProblem() throws Exception {
 
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
