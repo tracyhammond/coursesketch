@@ -67,19 +67,25 @@ public final class BankProblemManager {
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
         final DBCollection problemBankCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
+        final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
                 .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
                 .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
-                .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
-                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(KEYWORDS, problem.getOtherKeywordsList());
+                .append(KEYWORDS, problem.getOtherKeywordsList());
 
-        problemBankCollection.insert(query);
-        final DBObject corsor = problemBankCollection.findOne(query);
-        return corsor.get(SELF_ID).toString();
+        if (!problem.hasAccessPermission()) {
+            insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
+        } else {
+            insertObject.append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
+                    .append(USERS, problem.getAccessPermission().getUserPermissionList());
+        }
+
+        problemBankCollection.insert(insertObject);
+        final DBObject cursor = problemBankCollection.findOne(insertObject);
+        return cursor.get(SELF_ID).toString();
     }
 
     /**
-     * gets a mongo bank problem (this is usually grabbed through a course id instead of a specific user unless the user is the admin).
+     * Gets a mongo bank problem (this is usually grabbed through a course id instead of a specific user unless the user is the admin).
      *
      * @param authenticator
      *         The object that is authenticating the user.
@@ -96,17 +102,17 @@ public final class BankProblemManager {
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
             throws AuthenticationException {
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject mongoBankProblem = myDbRef.fetch();
 
         boolean isAdmin, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
-        isUsers = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(USERS));
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(ADMIN));
+        isUsers = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(USERS));
 
         if (!isAdmin && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        return extractBankProblem(corsor, problemBankId, isAdmin);
+        return extractBankProblem(mongoBankProblem, problemBankId, isAdmin);
 
     }
 
