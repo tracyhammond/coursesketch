@@ -2,9 +2,13 @@
 <body>
     <template id="selectionPanel">
         <style>@import '/src/instructor/problemCreation/problemSelection.css';</style>
-        <div id="selectionContent"></div>
-        <button id="accept">Accept selections</button>
-        <button id="cancel">Cancel</button>
+        <div class="outer-dialog">
+            <div class="inner-dialog">
+                <div id="selectionContent"></div>
+                <button id="accept">Accept selections</button>
+                <button id="cancel">Cancel</button>
+            </div>
+        </div>
     </template>
 </body>
 </html>

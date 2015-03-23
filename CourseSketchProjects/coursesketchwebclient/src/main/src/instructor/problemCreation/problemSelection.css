@@ -1,12 +1,35 @@
-dialog: {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 10%;
-    right: 10%;
-}
-
 school-item {
     width: 48%;
     margin-left: 1%;
+}
+
+#selectionContent {
+    padding: 5px;
+
+}
+
+.inner-dialog {
+    border: 2px solid black;
+    background: #FFFFFF;
+    padding: 5px;
+}
+
+.outer-dialog {
+    position: absolute;
+    margin: auto;
+    left: 5%;
+    right: 5%;
+    top: 5%;
+    bottom: 5%;
+}
+
+:host {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    background-color: rgba(125, 125, 125, 0.5);
 }
