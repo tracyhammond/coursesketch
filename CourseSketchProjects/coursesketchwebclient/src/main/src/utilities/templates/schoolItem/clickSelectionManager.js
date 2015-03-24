@@ -38,6 +38,10 @@ function ClickSelectionManager() {
         return this.selectedItems.indexOf(element) > -1;
     };
 
+    /**
+     * Adds the list of selected items to this manager.
+     * @param {Array<Element>} listOfElements.
+     */
     this.applySelections = function(listOfElements) {
         for (var i = 0; i < listOfElements.length; i++) {
             this.addSelectedItem(listOfElements[i]);
