@@ -1,3 +1,5 @@
+import "util.proto";
+
 package protobuf.srl.school;
 
 // holds all data that is sent from server. (grades, roster, classes, assignments, problems
@@ -14,14 +16,14 @@ message SrlSchool {
 message SrlCourse {
     required string id = 1; // This must be globally unique.
     optional string name = 2;
-    optional SrlPermission accessPermission= 3;
+    optional protobuf.srl.utils.SrlPermission accessPermission= 3;
     optional Accessibility access = 4 [default=PROTECTED];
     optional string description = 5;
     optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
     optional string imageUrl = 7;
     optional float grade = 8; //Calculated grade for all Assignments in this course
-    optional DateTime accessDate = 9; //Date course can be accessed
-    optional DateTime closeDate = 10; //Date course can no longer be accessed
+    optional protobuf.srl.utils.DateTime accessDate = 9; //Date course can be accessed
+    optional protobuf.srl.utils.DateTime closeDate = 10; //Date course can no longer be accessed
     optional State state = 11;
     repeated string assignmentList = 12;
     repeated string lectureList = 13;
@@ -46,13 +48,13 @@ message SrlAssignment {
     optional LatePolicy latePolicy = 8;
     optional string gradeWeight = 9; // Percentage of Assignment Category's total grade
     optional float grade = 10; // Calculated grade for whole Assignment
-    optional DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
-    optional DateTime dueDate = 12; // Date that the late policy goes into affect
-    optional DateTime closeDate = 13; // Date that the assignment closes and can no longer be accessed
+    optional protobuf.srl.utils.DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
+    optional protobuf.srl.utils.DateTime dueDate = 12; // Date that the late policy goes into affect
+    optional protobuf.srl.utils.DateTime closeDate = 13; // Date that the assignment closes and can no longer be accessed
     optional State state = 14;
     optional string imageUrl = 15;
     repeated string problemList = 16;
-    optional SrlPermission accessPermission = 17;
+    optional protobuf.srl.utils.SrlPermission accessPermission = 17;
 
     enum AssignmentType {
         HOMEWORK = 0;
@@ -105,21 +107,21 @@ message SrlProblem {
     optional string gradeWeight = 7; // Percentage of assignment grade
     optional float grade = 8; // Calculated grade of all subproblems for this problem
     optional State state = 9;
-    optional SrlPermission accessPermission = 10;
+    optional protobuf.srl.utils.SrlPermission accessPermission = 10;
     optional int32 problemNumber = 11; // the order in which the problem appears in the assignment.
 }
 
 message SrlBankProblem {
     required string id = 1;
     optional string questionText = 2;
-    optional QuestionType questionType = 3 [default=SKETCH];
+    optional protobuf.srl.utils.QuestionType questionType = 3 [default=SKETCH];
     optional string image = 4;
     optional string solutionId = 5;
     optional string courseTopic = 6;
     optional string subTopic = 7;
     optional string source = 8;
     repeated string otherKeywords = 9;
-    optional SrlPermission accessPermission= 10;
+    optional protobuf.srl.utils.SrlPermission accessPermission= 10;
     optional string script = 11;
 
     enum QuestionType {
@@ -140,20 +142,6 @@ message SrlGrade {
     //optional string source = 8;
     //repeated string otherKeywords = 9;
 
-}
-
-message DateTime { // Needs to be implemented with enums. Probably already exists elsewhere.
-    optional int32 year = 1;
-    optional int32 month = 2;
-    optional int32 day = 3;
-    optional int32 hour = 4;
-    optional int32 minute = 5;
-    optional int32 second = 6;
-    optional uint64 millisecond = 7; // To ensure capabilities to communicate with systems with diverse date-time handling methods
-}
-
-message DomainInformation { // Needs to be defined in its entirety. Josh has no idea what this is, but David said it belongs here.
-    optional string stuff = 1;
 }
 
 message State {
@@ -189,13 +177,4 @@ message SrlGroup {
     optional string groupName = 3;
     repeated string admin = 4; // this is the only group of people who are allowed to use this group.
     //(and see it outside the database)
-}
-
-/**
- * Also can be called SrlUserGroup
- */
-message SrlPermission {
-    repeated string adminPermission = 1;
-    repeated string moderatorPermission = 2;
-    repeated string userPermission = 3;
 }
