@@ -121,16 +121,8 @@ message SrlBankProblem {
     optional string subTopic = 7;
     optional string source = 8;
     repeated string otherKeywords = 9;
-    optional protobuf.srl.utils.SrlPermission accessPermission= 10;
-  //optional SrlPermission accessPermission= 10;
+    optional protobuf.srl.utils.SrlPermission accessPermission = 10;
     optional string script = 11;
-
-    enum QuestionType {
-        SKETCH = 1; // sketching
-        MULT_CHOICE = 2;
-        FREE_RESP = 3; // typing
-        CHECK_BOX = 4;
-    }
 }
 
 message SrlGrade {
