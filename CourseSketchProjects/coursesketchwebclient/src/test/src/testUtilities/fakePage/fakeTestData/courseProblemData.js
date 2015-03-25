@@ -66,7 +66,7 @@
     problem2.problemInfo = bankProblem2;
     bankProblem2.id = problem2.id;
     bankProblem2.questionText = "Please type your name";
-    bankProblem2.questionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+    bankProblem2.questionType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
     CourseSketch.fakeProblems.push(problem2);
     CourseSketch.fakeBankProblems.push(bankProblem2);
 
@@ -83,7 +83,7 @@
     problem3.problemInfo = bankProblem3;
     bankProblem3.id = problem3.id;
     bankProblem3.questionText = "Please select the correct answer";
-    bankProblem3.questionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.MULT_CHOICE;
+    bankProblem3.questionType = CourseSketch.PROTOBUF_UTIL.QuestionType.MULT_CHOICE;
     CourseSketch.fakeProblems.push(problem3);
     CourseSketch.fakeBankProblems.push(bankProblem3);
 
@@ -100,7 +100,7 @@
     problem4.problemInfo = bankProblem4;
     bankProblem4.id = problem4.id;
     bankProblem4.questionText = "Please select the correct answer (all or some!)";
-    bankProblem4.questionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.CHECK_BOX;
+    bankProblem4.questionType = CourseSketch.PROTOBUF_UTIL.QuestionType.CHECK_BOX;
     CourseSketch.fakeProblems.push(problem4);
     CourseSketch.fakeBankProblems.push(bankProblem4);
 

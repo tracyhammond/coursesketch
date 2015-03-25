@@ -1,4 +1,4 @@
-function clickSelectionManager() {
+function ClickSelectionManager() {
     this.selectedItems = [];
     this.selectionClassName = ' selectedBox';
     this.localDoc = document;

@@ -1,13 +1,14 @@
+/* jshint camelcase: false */
 /**
  * *************************************************************
- * 
- * 
+ *
+ *
  * SRL_BoundingBox SRL_Library
- * 
+ *
  * @author Daniel Tan
- * 
- * 
- * 
+ *
+ *
+ *
  * *************************************************************
  */
 function SRL_BoundingBox() {
@@ -21,7 +22,7 @@ function SRL_BoundingBox() {
      */
     this.addPoint = function(point) {
         this.addCoordinate(point.getX(), point.getY());
-    }
+    };
 
     /**
      * expands the box if the given coordinate is outside of the current bounds;
@@ -55,7 +56,7 @@ function SRL_BoundingBox() {
     /**
      * Returns true if the bounding box contains the given point, false
      * otherwise.
-     * 
+     *
      * containment is determined by being in or on the border of the bounding
      * box.
      */
@@ -108,7 +109,7 @@ function SRL_BoundingBox() {
 
     /**
      * Returns the extreme values that make up this {@code SRL_BoundingBox}.
-     * 
+     *
      * returns left, right, top, and bottom from this instance.
      */
     this.getExtremeValues = function() {
@@ -122,7 +123,7 @@ function SRL_BoundingBox() {
 
     /**
      * Returns the extreme values that make up this {@code SRL_BoundingBox}.
-     * 
+     *
      * returns left, right, top, and bottom from this instance.
      */
     this.getRectangle = function() {
