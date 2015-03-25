@@ -390,6 +390,7 @@
 		<fongoVersion>1.5.9</fongoVersion>
 		<slf4jVersion>1.7.9</slf4jVersion>
 		<log4jVersion>2.1</log4jVersion>
+		<logbackVersion>1.1.1</logbackVersion>
 		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
         <powermock.version>1.5.6</powermock.version>
@@ -475,10 +476,17 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4jVersion}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logbackVersion}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logbackVersion}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
@@ -529,18 +537,12 @@
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.1</version>
-			<scope>test</scope>
-		</dependency>
     </dependencies>
 </project>
