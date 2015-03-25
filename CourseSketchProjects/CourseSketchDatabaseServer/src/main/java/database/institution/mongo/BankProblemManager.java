@@ -14,6 +14,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.utils.Util;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.SCRIPT;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -60,7 +62,8 @@ public final class BankProblemManager {
                 .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
                 .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
-                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(KEYWORDS, problem.getOtherKeywordsList());
+                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(KEYWORDS, problem.getOtherKeywordsList())
+                .append(SCRIPT, problem.getScript());
 
         problemBankCollection.insert(query);
         final DBObject corsor = problemBankCollection.findOne(query);
@@ -109,6 +112,7 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
+        exactProblem.setScript((String) corsor.get(SCRIPT));
         return exactProblem.build();
 
     }
@@ -176,6 +180,10 @@ public final class BankProblemManager {
         }
         if (problem.getOtherKeywordsCount() > 0) {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+            update = true;
+        }
+        if (problem.hasScript()) {
+            updated.append(SCRIPT, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
         // Optimization: have something to do with pulling values of an
