@@ -21,7 +21,7 @@
  * should resize itself every time the window changes size.</li>
  * </ul>
  *
- * @Class
+ * @class
  */
 function SketchSurface() {
     this.bindUpdateListCalled = false;
@@ -70,7 +70,7 @@ function SketchSurface() {
 
     /**
      * binds the sketch surface to an update manager.
-     * @param UpdateManagerClass {UpdateManager instance | UpdateManager class} this takes an either an instance of an update manager.
+     * @param {UpdateManager_Instance|UpdateManager_Class} UpdateManagerClass this takes an either an instance of an update manager.
      * Or a update manager class that is then constructed.
      * You can only bind an update list to a sketch once.
      */
@@ -89,7 +89,7 @@ function SketchSurface() {
             // sets up the plugin that draws the strokes as they are added to the update list.
             this.updateManager.addPlugin(this.graphics);
         } else {
-            throw new Error("Update list is already defined");
+            throw new Error('Update list is already defined');
         }
     };
 
@@ -97,8 +97,7 @@ function SketchSurface() {
      * Draws the stroke then creates an update that is added to the update
      * manager, given a stroke.
      *
-     * @param stroke
-     *            {SRL_Stroke} a stroke that is added to the sketch.
+     * @param {SRL_Stroke} stroke a stroke that is added to the sketch.
      */
     function addStrokeCallback(stroke) {
 
@@ -111,12 +110,9 @@ function SketchSurface() {
     }
 
     /**
-     * @param InputListener
-     *            {InputListenerClass} a class that represents an input listener
-     * @param SketchEventConverter
-     *            {SketchEventConverterClass} a class that represents
+     * @param {InputListenerClass} InputListener a class that represents an input listener.
      */
-    this.initializeInput = function(InputListener, SketchEventConverter) {
+    this.initializeInput = function(InputListener) {
         this.localInputListener = new InputListener();
 
         this.localInputListener.initializeCanvas(this, addStrokeCallback.bind(this), this.graphics);
@@ -127,7 +123,7 @@ function SketchSurface() {
     };
 
     /**
-     * resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
+     * Resize the canvas so that its dimensions are the same as the css dimensions.  (this makes it a 1-1 ratio).
      */
     this.resizeSurface = function() {
         this.sketchCanvas.height = $(this.sketchCanvas).height();
@@ -191,7 +187,7 @@ function SketchSurface() {
     };
 
     /**
-     * @return SrlUpdateList proto object.
+     * @return {SrlUpdateList} proto object.
      * This is a cleaned version of the list and modifying this list will not affect the update manager list.
      */
     this.getSrlUpdateListProto = function() {
@@ -214,24 +210,24 @@ function SketchSurface() {
         var update = updateList[0];
         if (!isUndefined(update)) {
             var firstCommand = update.commands[0];
-            if (firstCommand.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
+            if (firstCommand.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
                 var sketch = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(firstCommand.commandData,
                     CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
                 this.id = sketch.sketchId.idChain[0];
                 this.sketchManager.setParentSketchId(this.id);
             }
         }
-    }
+    };
 
     /**
      * Loads all of the updates into the sketch.
      * This should only be done after the sketch surface is inserted into the dom.
-     * @param updateList {Array<SrlUpdate>}
+     * @param {Array<SrlUpdate>} updateList
      */
     this.loadUpdateList = function(updateList, percentBar, finishedCallback) {
         try {
             this.extractIdFromList(updateList);
-        } catch(exception) {
+        } catch (exception) {
             console.error(exception);
             throw exception;
         }
@@ -244,7 +240,7 @@ function SketchSurface() {
      */
     this.fillCanvas = function() {
         if (isUndefined(this.dataset) || isUndefined(this.dataset.readonly)) {
-            throw new BaseException("This can only be performed on read only sketch surfaces");
+            throw new BaseException('This can only be performed on read only sketch surfaces');
         }
     };
 }
@@ -252,10 +248,7 @@ function SketchSurface() {
 SketchSurface.prototype = Object.create(HTMLElement.prototype);
 
 /**
- * @param document
- *            {document} The document in which the node is being imported to.
- * @param templateClone
- *            {Element} an element representing the data inside tag, its content
+ * @param {Element} templateClone an element representing the data inside tag, its content
  *            has already been imported and then added to this element.
  */
 SketchSurface.prototype.initializeElement = function(templateClone) {
@@ -263,11 +256,12 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
     root.appendChild(templateClone);
     this.shadowRoot = this;
     document.body.appendChild(templateClone);
-    this.sketchCanvas = this.shadowRoot.querySelector("#drawingCanvas");
+    this.sketchCanvas = this.shadowRoot.querySelector('#drawingCanvas');
 };
 
 
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
+    /*jshint maxcomplexity:13 */
     this.initializeSketch();
     this.initializeGraphics();
 
@@ -275,7 +269,7 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
         this.initializeInput(InputListenerClass);
     }
 
-    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id == null || this.id == "") {
+    if (isUndefined(this.dataset) || isUndefined(this.dataset.customid) || isUndefined(this.id) || this.id === null || this.id === '') {
         this.id = generateUUID();
     }
 

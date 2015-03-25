@@ -15,7 +15,7 @@ import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School.LatePolicy;
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.State;
 
 import java.util.ArrayList;
@@ -47,6 +47,9 @@ import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Manages assignments for mongo.
  *
@@ -55,6 +58,11 @@ import static database.DatabaseStringConstants.USERS;
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.UselessParentheses" })
 public final class AssignmentManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AssignmentManager.class);
 
     /**
      * Private constructor.
@@ -87,14 +95,22 @@ public final class AssignmentManager {
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
+
         final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId()).append(NAME, assignment.getName())
                 .append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber()).append(ASSIGNMENT_OTHER_TYPE, assignment.getOther())
                 .append(DESCRIPTION, assignment.getDescription()).append(ASSIGNMENT_RESOURCES, assignment.getLinksList())
                 .append(GRADE_WEIGHT, assignment.getGradeWeight()).append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
-                .append(DUE_DATE, assignment.getDueDate().getMillisecond()).append(CLOSE_DATE, assignment.getCloseDate().getMillisecond())
+                .append(DUE_DATE, assignment.getDueDate().getMillisecond())
                 .append(IMAGE, assignment.getImageUrl()).append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
                 .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+
+        // Sets a default date in the instance that a date was not given.
+        if (!assignment.hasCloseDate()) {
+            query.append(CLOSE_DATE, RequestConverter.getMaxTime());
+        } else {
+            query.append(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
+        }
         if (assignment.hasLatePolicy()) {
             query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
                     .append(LATE_POLICY_RATE, assignment.getLatePolicy().getRate())
@@ -205,9 +221,9 @@ public final class AssignmentManager {
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
             stateBuilder.setAccessible(false);
-            System.err.println("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            System.err.println(exactAssignment.getAccessDate().getMillisecond() + " < " + checkTime + " < "
-                    + exactAssignment.getCloseDate().getMillisecond());
+            LOG.info("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
+                    exactAssignment.getCloseDate().getMillisecond());
             stateBuilder.setAccessible(false);
         }
 
@@ -497,7 +513,7 @@ public final class AssignmentManager {
 
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
-        System.out.println(updateQuery);
+        LOG.info("Updated Query: ", updateQuery);
         assignments.update(corsor, updateQuery);
     }
 
