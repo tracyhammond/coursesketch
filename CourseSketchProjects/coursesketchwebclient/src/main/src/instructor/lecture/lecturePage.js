@@ -6,11 +6,11 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.doResize = function(event) {
             var target = event.target;
 
-            // add the change in coords to the previous width of the target element
+            // Add the change in coords to the previous width of the target element
             var newWidth  = parseFloat($(target).width()) + event.dx;
             var newHeight = parseFloat($(target).height()) + event.dy;
 
-            // update the element's style
+            // Update the element's style
             target.style.width  = newWidth + 'px';
             target.style.height = newHeight + 'px';
 
@@ -24,7 +24,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.textBox = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
@@ -33,7 +33,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.question = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
@@ -42,7 +42,7 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.image = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         CourseSketch.lecturePage.saveEmbeddedHtml = function(command, event, currentUpdate) {
             var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
@@ -51,38 +51,38 @@ validateFirstRun(document.currentScript);
             element.id = generateUUID();
             element.embeddedHtml = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
-        }
+        };
 
         /**
          * Selects a specific lecture slide.
          *
-         * @param slideIndex
+         * @param {Integer} slideIndex
          *            index of the slide in the current lecture's protobuf
          *            object.
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
             var completionHandler = function() {
-                $(".slide-thumb").each(function() {
-                    $(this).removeClass("selected");
-                })
-                $("#" + slideIndex + ".slide-thumb").addClass("selected");
+                $('.slide-thumb').each(function() {
+                    $(this).removeClass('selected');
+                });
+                $('#' + slideIndex + '.slide-thumb').addClass('selected');
                 CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
                 CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
                     .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
                     CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
-            }
-            if(!isUndefined(CourseSketch.lecturePage.currentSlide)) {
+            };
+            if (!isUndefined(CourseSketch.lecturePage.currentSlide)) {
                 CourseSketch.lecturePage.addWaitOverlay();
 
                 // Need to do small delay here so the wait overlay actually shows up
                 setTimeout(function() {
-                    var elements = document.getElementById("slide-content").children;
+                    var elements = document.getElementById('slide-content').children;
 
                     // Need to remove all the old elements; they will be replaced by the new ones
                     CourseSketch.lecturePage.currentSlide.elements = [];
 
-                    for(var i = 0; i < elements.length; ++i) {
+                    for (var i = 0; i < elements.length; ++i) {
                         elements[i].saveData();
                     }
                     CourseSketch.dataManager.updateSlide(CourseSketch.lecturePage.currentSlide, completionHandler);
@@ -91,7 +91,7 @@ validateFirstRun(document.currentScript);
             } else {
                 completionHandler();
             }
-        }
+        };
 
         /**
          * Adds a new slide to the current lecture.
@@ -110,23 +110,23 @@ validateFirstRun(document.currentScript);
                 CourseSketch.lecturePage.lecture = lecture;
                 CourseSketch.lecturePage.displaySlides();
                 CourseSketch.lecturePage.removeWaitOverlay();
-            }
+            };
             var finishInsert = function(slide) {
                 CourseSketch.dataManager.getCourseLecture(slide.lectureId, finishGetCourse, finishGetCourse);
-            }
+            };
             CourseSketch.dataManager.insertSlide(slide, finishInsert, finishInsert);
-        }
+        };
 
         // Do setup
         if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
-            CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
+            CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
             CourseSketch.dataManager.clearStates();
             CourseSketch.lecturePage.displaySlides();
         } else {
             var intervalVar = setInterval(function() {
                 if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
                     clearInterval(intervalVar);
-                    CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState("currentLecture");
+                    CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
                     CourseSketch.dataManager.clearStates();
                     CourseSketch.lecturePage.displaySlides();
                 }
