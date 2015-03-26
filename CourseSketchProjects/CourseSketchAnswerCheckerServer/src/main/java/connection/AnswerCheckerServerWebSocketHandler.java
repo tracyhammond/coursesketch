@@ -12,7 +12,11 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 import utilities.TimeManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A simple WebSocketServer implementation.
@@ -21,6 +25,11 @@ import utilities.TimeManager;
  */
 @WebSocket()
 public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AnswerCheckerServerWebSocketHandler.class);
 
     /**
      * A constructor that accepts a servlet.
@@ -48,26 +57,26 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
             // then we submit!
             if (req.getResponseText().equals("student")) {
                 final MultiConnectionState state = getConnectionToId().get(conn);
-                System.out.println("Parsing as an experiment");
+                LOG.info("Parsing as an experiment");
                 SrlExperiment student = null;
                 try {
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
                     conn.send(createExceptionRequest(e1, req));
-                    e1.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }
 
                 ((AnswerConnectionState) state).addPendingExperiment(
                         req.getSessionInfo(), student);
-                System.out.println("Student exp " + student);
+                LOG.info("Student experiment {}", student);
                 try {
                     getConnectionManager().send(req,
                             req.getSessionInfo() + "+" + state.getKey(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     conn.send(createExceptionRequest(e1, req));
-                    e1.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
@@ -88,7 +97,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
                     conn.send(createExceptionRequest(e, req));
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }
