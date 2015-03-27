@@ -1,55 +1,80 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Command Methods test</title>
+<title>Problem Selection test</title>
 <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
+
     <link rel="import"
-          href="/test/testUtilities/mockedObjects/mockedObjectsInclude.html">
+          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+    <link rel="import"
+          href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
 <!-- files needed for testing -->
 <link id="problemSelectionImport" rel="import" href="/src/instructor/problemCreation/problemSelectionInclude.html">
 
 <!-- file being tested. -->
-<script src="/src/file being tested" data-cover></script>
+<script src="/src/instructor/problemCreation/problemSelection.js" data-cover></script>
 </head>
 <body>
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
+    <div id="testDiv"></div>
 
 	<script>
+        $(document).ready(function() {
+            var template = (function() {
+                var link1 = document.querySelector('#problemSelectionImport');
+                var link = link1.import.querySelector('#selectionTemplateImport');
+                var template = link.import.querySelector('#selectionPanel');
+                var clone = document.importNode(template.content, true);
+                return clone;
+            })();
 
-        QUnit.module("creation", {
-            setupOnce : function() {
-                try {
-                    var newElement = new ProblemSelectionPanel();
-                    // test is not a typo
-                    document.registerElement('problem-test', {
-                        prototype : newElement
-                    });
-                } catch (exception) {
+            QUnit.module("creation", {
+                setupOnce : function() {
+                    try {
+                        var newElement = new ProblemSelectionPanel();
+
+                        newElement.attachedCallback = function() {
+                            this.initializeElement(template.cloneNode(true));
+                        };
+
+                        // test is not a typo
+                        document.registerElement('problem-test', {
+                            prototype : newElement
+                        });
+                    } catch (exception) {
+                    }
+
+                },
+                teardown : function() {
+                    document.getElementById('testDiv').innerHTML = "";
                 }
+            });
 
-            },
-            teardown : function() {
-                document.getElementById('textbox').innerHTML = "";
-            }
-        });
+            QUnit.test("creation", function(assert) {
+                expect(0);
+                var problem = document.createElement('problem-test');
+                document.querySelector("#testDiv").appendChild(problem);
+            });
 
-        QUnit.test("", function(assert) {
-            var problem = document.createElement('problem-test');
-            var courseId = "course";
-            var assignmentId = "assignment";
-            var page = 2;
-            var oldFunction = problem.createRequest;
-            problem.createRequest = function(insertCourseId, insertAssignmentId, insertPage) {
-                assert.equal(courseId, insertCourseId);
-                assert.equal(assignmentId, insertAssignmentId);
-                assert.equal(page, insertPage);
-                return oldFunction(insertCourseId, insertAssignmentId, insertPage);
-            };
-            console.log(problem.createRequest);
-            problem.loadProblems(courseId, assignmentId, page);
+            QUnit.test("request creation", function(assert) {
+                var problem = document.createElement('problem-test');
+                document.querySelector("#testDiv").appendChild(problem);
+                var courseId = "course";
+                var assignmentId = "assignment";
+                var page = 2;
+                var oldFunction = problem.createRequest;
+                problem.createRequest = function(insertCourseId, insertAssignmentId, insertPage) {
+                    assert.equal(courseId, insertCourseId);
+                    assert.equal(assignmentId, insertAssignmentId);
+                    assert.equal(page, insertPage);
+                    return oldFunction(insertCourseId, insertAssignmentId, insertPage);
+                };
+                problem.loadProblems(courseId, assignmentId, page);
+            });
         });
     </script>
 </body>
