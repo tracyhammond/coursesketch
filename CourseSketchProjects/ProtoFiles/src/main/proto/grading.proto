@@ -4,10 +4,10 @@ package protobuf.srl.grading;
 
 message ProtoGradingPolicy {
     required string courseId = 1;
-    optional PolicyType policyType = 2 [default=PERCENT];
+    optional PolicyType policyType = 2 [default = PERCENT];
     repeated PolicyCategory gradeCategories = 3;
     repeated DroppedProblems droppedProblems = 4;
-    repeated string droppedAssignments = 5;
+    repeated DroppedAssignment droppedAssignments = 5;
 
     enum PolicyType {
         PERCENT = 1; // Percent based grading policy
@@ -15,9 +15,24 @@ message ProtoGradingPolicy {
     }
 }
 
+message DroppedAssignment {
+    required string assignmentId = 1;
+    optional DropType dropType = 2 [default = NO_COUNT];
+}
+
 message DroppedProblems {
     required string assignmentId = 1;
-    repeated string droppedProblems = 2;
+    repeated SingleProblem problems = 2;
+
+    message SingleProblem {
+        required string problemId = 1;
+        optional DropType dropType = 2 [default = NO_COUNT];
+    }
+}
+
+enum DropType {
+    CORRECT = 1;    // Counts as full credit
+    NO_COUNT = 2;   // Worth 0 points or 0 weight
 }
 
 message PolicyCategory {
