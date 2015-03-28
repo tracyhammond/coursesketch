@@ -9,8 +9,8 @@ function ProblemSelectionPanel() {
     var selectedBankProblems = [];
     var clickSelector = new ClickSelectionManager();
     var currentPage = 0;
-    var currentCourse = "";
-    var currentAssignment = "";
+    var currentCourse = '';
+    var currentAssignment = '';
 
     /**
      * Loads the problems from the server.
@@ -44,7 +44,7 @@ function ProblemSelectionPanel() {
                     }
                 }).build(this.shadowRoot.querySelector('#selectionContent'));
 
-                clickSelector.applySelections(this.getListOfSelectedElements());
+            clickSelector.applySelections(this.getListOfSelectedElements());
         }.bind(this));
         // end data request listener
         CourseSketch.connection.sendRequest(request);
@@ -94,7 +94,7 @@ function ProblemSelectionPanel() {
 
         var previousList = shadowRoot.querySelectorAll('.previous');
         applyOnClick(previousList, function() {
-        currentPage -= 1;
+            currentPage -= 1;
             if (currentPage < 0) {
                 currentPage = 0;
                 return;
@@ -105,10 +105,10 @@ function ProblemSelectionPanel() {
 
     /**
      * @param {Array<Element>} listOfElements - the list of elements that have the function
-     * @param {Function} func.
+     * @param {Function} func - the function that is being applied to
      */
     function applyOnClick(listOfElements, func) {
-        for (var i =0; i < listOfElements.length; i++) {
+        for (var i = 0; i < listOfElements.length; i++) {
             listOfElements[i].onclick = func;
         }
     }
@@ -125,7 +125,7 @@ function ProblemSelectionPanel() {
             }
         }
         return result;
-    }
+    };
 }
 
 ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);

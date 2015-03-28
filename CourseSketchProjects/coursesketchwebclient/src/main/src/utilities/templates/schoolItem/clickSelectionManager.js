@@ -40,7 +40,7 @@ function ClickSelectionManager() {
 
     /**
      * Adds the list of selected items to this manager.
-     * @param {Array<Element>} listOfElements.
+     * @param {Array<Element>} listOfElements the elements that the selection is being applied to.
      */
     this.applySelections = function(listOfElements) {
         for (var i = 0; i < listOfElements.length; i++) {
