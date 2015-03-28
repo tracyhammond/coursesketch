@@ -56,8 +56,8 @@ public final class GradingPolicyManager {
     }
 
     /**
-     * This method will set or insert the gradingPolicy in SQL based on the proto object passed in.
-     * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) beforoe calling this method
+     * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.
+     * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
      * @param authenticator
      *         The object that is performing authentication.
@@ -109,7 +109,7 @@ public final class GradingPolicyManager {
     }
 
     /**
-     * Gets the grading policy for.
+     * Gets the grading policy for a course from the mongoDb.
      *
      * @param authenticator
      *         The object that is performing authentication.
