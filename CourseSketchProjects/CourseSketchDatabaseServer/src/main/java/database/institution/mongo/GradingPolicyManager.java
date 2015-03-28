@@ -1,27 +1,48 @@
 package database.institution.mongo;
 
-import com.mongodb.*;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import database.DatabaseAccessException;
-import database.DatabaseStringConstants;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 import org.bson.types.ObjectId;
-import protobuf.srl.grading.Grading;
-import protobuf.srl.grading.Grading.LatePolicy;
-import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.grading.Grading.PolicyCategory;
+import protobuf.srl.grading.Grading.DropType;
 import protobuf.srl.grading.Grading.DroppedAssignment;
 import protobuf.srl.grading.Grading.DroppedProblems;
-import protobuf.srl.grading.Grading.DropType;
+import protobuf.srl.grading.Grading.LatePolicy;
+import protobuf.srl.grading.Grading.PolicyCategory;
+import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static database.DatabaseStringConstants.*;
+import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.APPLY_ONLY_TO_LATE_PROBLEMS;
+import static database.DatabaseStringConstants.ASSIGNMENT_ID;
+import static database.DatabaseStringConstants.COURSE_COLLECTION;
+import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
+import static database.DatabaseStringConstants.DROPPED_ASSIGNMENTS;
+import static database.DatabaseStringConstants.DROPPED_PROBLEMS;
+import static database.DatabaseStringConstants.DROP_TYPE;
+import static database.DatabaseStringConstants.GRADE_CATEGORIES;
+import static database.DatabaseStringConstants.GRADE_CATEGORY_NAME;
+import static database.DatabaseStringConstants.GRADE_CATEGORY_WEIGHT;
+import static database.DatabaseStringConstants.GRADE_POLICY_TYPE;
+import static database.DatabaseStringConstants.GRADING_POLICY_COLLECTION;
+import static database.DatabaseStringConstants.LATE_POLICY;
+import static database.DatabaseStringConstants.LATE_POLICY_FUNCTION_TYPE;
+import static database.DatabaseStringConstants.LATE_POLICY_RATE;
+import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
+import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
+import static database.DatabaseStringConstants.MOD;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.USERS;
 
 /**
  * Created by matt on 3/21/15.
@@ -47,7 +68,7 @@ public final class GradingPolicyManager {
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to sql database cause an error.
+     *         Thrown if connecting to sql database causes an error.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
@@ -87,6 +108,23 @@ public final class GradingPolicyManager {
         policyCollection.insert(policyObject);
     }
 
+    /**
+     * Gets the grading policy for.
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database that the gradingPolicy is being added to.
+     * @param courseId
+     *         The gradingPolicy we will get is from this course.
+     * @param userId
+     *         The id of the user asking for the state.
+     * @return The protoObject representing the gradingPolicy.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the course.
+     * @throws DatabaseAccessException
+     *         Thrown if connecting to sql database causes an error.
+     */
     public static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, GRADING_POLICY_COLLECTION, new ObjectId(courseId));
@@ -106,24 +144,24 @@ public final class GradingPolicyManager {
 
         final ProtoGradingPolicy.Builder policy = ProtoGradingPolicy.newBuilder();
         policy.setCourseId(courseId);
-        List<DBObject> categories = (List<DBObject>) policyObject.get(GRADE_CATEGORIES);
+        final List<DBObject> categories = (List<DBObject>) policyObject.get(GRADE_CATEGORIES);
         for (int i = 0; i < categories.size(); i++) {
             policy.addGradeCategories(buildProtoCategory(categories.get(i)));
         }
         policy.setPolicyType(ProtoGradingPolicy.PolicyType.valueOf((int) policyObject.get(GRADE_POLICY_TYPE)));
 
         // Builds and adds droppedProblems to the protoGradingPolicy
-        final Map<String, List<BasicDBObject>> droppedProblems = (Map) policyObject.get(DROPPED_PROBLEMS);
-        for (String assignmentId : droppedProblems.keySet()) {
+        final Map<String, List<DBObject>> droppedProblems = (Map<String, List<DBObject>>) policyObject.get(DROPPED_PROBLEMS);
+        for (Map.Entry<String, List<DBObject>> assignmentId : droppedProblems.entrySet()) {
             final DroppedProblems.Builder problemList = DroppedProblems.newBuilder();
-            final List<BasicDBObject> singleProblemList = droppedProblems.get(assignmentId);
+            final List<DBObject> singleProblemList = assignmentId.getValue();
             for (int i = 0; i < singleProblemList.size(); i++) {
                 final DroppedProblems.SingleProblem.Builder singleProblem = DroppedProblems.SingleProblem.newBuilder();
                 singleProblem.setProblemId(singleProblemList.get(i).get(COURSE_PROBLEM_ID).toString());
                 singleProblem.setDropType(DropType.valueOf((int) singleProblemList.get(i).get(DROP_TYPE)));
                 problemList.addProblems(singleProblem);
             }
-            problemList.setAssignmentId(assignmentId);
+            problemList.setAssignmentId(assignmentId.getKey());
             policy.addDroppedProblems(problemList);
         }
 
@@ -140,7 +178,7 @@ public final class GradingPolicyManager {
     }
 
     /**
-     * Builds a BasicDBObject for a grading policy category.
+     * Converts a grading policy category from proto to mongo DBObject. The gradeCategory mongo structure is below.
      * <pre><code>
      * gradeCategory: {
      *      name: String,
@@ -154,6 +192,7 @@ public final class GradingPolicyManager {
      *      }
      *  }
      * </code></pre>
+     *
      * @param category
      *         The category to build the BasicDBObject for.
      * @return The BasicDBObject representing the category.
@@ -169,14 +208,13 @@ public final class GradingPolicyManager {
         return temp;
     }
 
-    private static BasicDBObject buildMongoLatePolicy(final LatePolicy latePolicy) {
-        final BasicDBObject late = new BasicDBObject(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
-                .append(LATE_POLICY_TIME_FRAME_TYPE, latePolicy.getTimeFrameType().getNumber()).append(LATE_POLICY_RATE, latePolicy.getRate())
-                .append(LATE_POLICY_SUBTRACTION_TYPE, latePolicy.getSubtractionType().getNumber())
-                .append(APPLY_ONLY_TO_LATE_PROBLEMS, latePolicy.getApplyOnlyToLateProblems());
-        return late;
-    }
-
+    /**
+     * Converts a grading policy category from mongo DBObject to proto.
+     *
+     * @param dbCategory
+     *         The DBObject representing the grading policy category we want to convert.
+     * @return The protoObject for the grading policy category.
+     */
     private static PolicyCategory buildProtoCategory(final DBObject dbCategory) {
         final PolicyCategory.Builder protoCategory = PolicyCategory.newBuilder();
         protoCategory.setName(dbCategory.get(GRADE_CATEGORY_NAME).toString());
@@ -185,6 +223,28 @@ public final class GradingPolicyManager {
         return protoCategory.build();
     }
 
+    /**
+     * Converts a latePolicy from proto to mongo BasicDBObject.
+     *
+     * @param latePolicy
+     *         The proto latePolicy we wish to build the mongo BasicDBObject for.
+     * @return The BasicDBObject representing the proto latePolicy we passed in.
+     */
+    private static BasicDBObject buildMongoLatePolicy(final LatePolicy latePolicy) {
+        final BasicDBObject late = new BasicDBObject(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
+                .append(LATE_POLICY_TIME_FRAME_TYPE, latePolicy.getTimeFrameType().getNumber()).append(LATE_POLICY_RATE, latePolicy.getRate())
+                .append(LATE_POLICY_SUBTRACTION_TYPE, latePolicy.getSubtractionType().getNumber())
+                .append(APPLY_ONLY_TO_LATE_PROBLEMS, latePolicy.getApplyOnlyToLateProblems());
+        return late;
+    }
+
+    /**
+     * Converts a latePolicy from mongo BasicDBObject to proto.
+     *
+     * @param dbPolicy
+     *         The mongo latePolicy we want to build a protoObject for.
+     * @return The protoObject representing the mongo latePolicy we passed in.
+     */
     private static LatePolicy buildProtoLatePolicy(final DBObject dbPolicy) {
         final LatePolicy.Builder protoPolicy = LatePolicy.newBuilder();
         protoPolicy.setFunctionType(LatePolicy.FunctionType.valueOf((int) dbPolicy.get(LATE_POLICY_FUNCTION_TYPE)));
