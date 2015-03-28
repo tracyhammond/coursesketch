@@ -74,6 +74,7 @@ public final class DatabaseStringConstants {
     public static final String GRADE_POLICY_TYPE = "GradePolicyType";
     public static final String DROPPED_PROBLEMS = "DroppedProblems";
     public static final String DROPPED_ASSIGNMENTS = "DroppedAssignments";
+    public static final String DROP_TYPE = "DropType";
 
     // course specific
     public static final String COURSE_SEMESTER = "Semester";
