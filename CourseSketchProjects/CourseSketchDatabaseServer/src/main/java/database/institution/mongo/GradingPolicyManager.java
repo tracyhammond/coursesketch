@@ -1,37 +1,27 @@
 package database.institution.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.mongodb.*;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 import org.bson.types.ObjectId;
+import protobuf.srl.grading.Grading;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.grading.Grading.PolicyCategory;
-
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
-import static database.DatabaseStringConstants.GRADING_POLICY_COLLECTION;
-import static database.DatabaseStringConstants.GRADE_POLICY_TYPE;
-import static database.DatabaseStringConstants.GRADE_CATEGORY_NAME;
-import static database.DatabaseStringConstants.GRADE_CATEGORY_WEIGHT;
-import static database.DatabaseStringConstants.LATE_POLICY_FUNCTION_TYPE;
-import static database.DatabaseStringConstants.LATE_POLICY_RATE;
-import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
-import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
-import static database.DatabaseStringConstants.APPLY_ONLY_TO_LATE_PROBLEMS;
-import static database.DatabaseStringConstants.LATE_POLICY;
-import static database.DatabaseStringConstants.GRADE_CATEGORIES;
-import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.DROPPED_ASSIGNMENTS;
-import static database.DatabaseStringConstants.DROPPED_PROBLEMS;
+import protobuf.srl.grading.Grading.DroppedAssignment;
+import protobuf.srl.grading.Grading.DroppedProblems;
+import protobuf.srl.grading.Grading.DropType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static database.DatabaseStringConstants.*;
 
 /**
  * Created by matt on 3/21/15.
@@ -73,12 +63,21 @@ public final class GradingPolicyManager {
         final ArrayList<BasicDBObject> categories = new ArrayList<>();
         for (int i = 0; i < policy.getGradeCategoriesCount(); i++) {
             final PolicyCategory category = policy.getGradeCategories(i);
-            categories.add(buildCategory(category));
+            categories.add(buildMongoCategory(category));
         }
 
-        final Map<String, List<String>> droppedProblems = new HashMap<>();
+        // Goes through all droppedProblems and creates a map with assignmentId key and a BasicDBObject value.
+        // The BasicDBObject has keys problemId and dropType.
+        final Map<String, List<BasicDBObject>> droppedProblems = new HashMap<>();
         for (int i = 0; i < policy.getDroppedProblemsCount(); i++) {
-            droppedProblems.put(policy.getDroppedProblems(i).getAssignmentId(), policy.getDroppedProblems(i).getDroppedProblemsList());
+            final List<DroppedProblems.SingleProblem> singleProblemList = policy.getDroppedProblems(i).getProblemsList();
+            final List<BasicDBObject> mongoProblemList = new ArrayList<>();
+            for (int j = 0; j < singleProblemList.size(); j++) {
+                final BasicDBObject singleProblem = new BasicDBObject(COURSE_PROBLEM_ID, singleProblemList.get(j).getProblemId())
+                        .append(DROP_TYPE, singleProblemList.get(j).getDropType().getNumber());
+                mongoProblemList.add(singleProblem);
+            }
+            droppedProblems.put(policy.getDroppedProblems(i).getAssignmentId(), mongoProblemList);
         }
 
         final BasicDBObject policyObject = new BasicDBObject(SELF_ID, new ObjectId(policy.getCourseId()))
@@ -86,6 +85,58 @@ public final class GradingPolicyManager {
                 .append(DROPPED_PROBLEMS, droppedProblems).append(DROPPED_ASSIGNMENTS, policy.getDroppedAssignmentsList());
 
         policyCollection.insert(policyObject);
+    }
+
+    public static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBRef myDbRef = new DBRef(dbs, GRADING_POLICY_COLLECTION, new ObjectId(courseId));
+        final DBObject policyObject = myDbRef.fetch();
+        if (policyObject == null) {
+            throw new DatabaseAccessException("Grading policy was not found for course with ID " + courseId);
+        }
+
+        boolean isAdmin, isMod, isUsers;
+        isAdmin = authenticator.checkAuthentication(userId, (List<String>) policyObject.get(ADMIN));
+        isMod = authenticator.checkAuthentication(userId, (List<String>) policyObject.get(MOD));
+        isUsers = authenticator.checkAuthentication(userId, (List<String>) policyObject.get(USERS));
+
+        if (!isAdmin && !isMod && !isUsers) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final ProtoGradingPolicy.Builder policy = ProtoGradingPolicy.newBuilder();
+        policy.setCourseId(courseId);
+        List<DBObject> categories = (List<DBObject>) policyObject.get(GRADE_CATEGORIES);
+        for (int i = 0; i < categories.size(); i++) {
+            policy.addGradeCategories(buildProtoCategory(categories.get(i)));
+        }
+        policy.setPolicyType(ProtoGradingPolicy.PolicyType.valueOf((int) policyObject.get(GRADE_POLICY_TYPE)));
+
+        // Builds and adds droppedProblems to the protoGradingPolicy
+        final Map<String, List<BasicDBObject>> droppedProblems = (Map) policyObject.get(DROPPED_PROBLEMS);
+        for (String assignmentId : droppedProblems.keySet()) {
+            final DroppedProblems.Builder problemList = DroppedProblems.newBuilder();
+            final List<BasicDBObject> singleProblemList = droppedProblems.get(assignmentId);
+            for (int i = 0; i < singleProblemList.size(); i++) {
+                final DroppedProblems.SingleProblem.Builder singleProblem = DroppedProblems.SingleProblem.newBuilder();
+                singleProblem.setProblemId(singleProblemList.get(i).get(COURSE_PROBLEM_ID).toString());
+                singleProblem.setDropType(DropType.valueOf((int) singleProblemList.get(i).get(DROP_TYPE)));
+                problemList.addProblems(singleProblem);
+            }
+            problemList.setAssignmentId(assignmentId);
+            policy.addDroppedProblems(problemList);
+        }
+
+        // Builds and adds droppedAssignments to the protoGradingPolicy
+        final List<BasicDBObject> droppedAssignments = (List<BasicDBObject>) policyObject.get(DROPPED_ASSIGNMENTS);
+        for (int i = 0; i < droppedAssignments.size(); i++) {
+            final DroppedAssignment.Builder assignment = DroppedAssignment.newBuilder();
+            assignment.setAssignmentId(droppedAssignments.get(i).get(ASSIGNMENT_ID).toString());
+            assignment.setDropType(DropType.valueOf((int) droppedAssignments.get(i).get(DROP_TYPE)));
+            policy.addDroppedAssignments(assignment);
+        }
+
+        return policy.build();
     }
 
     /**
@@ -107,18 +158,40 @@ public final class GradingPolicyManager {
      *         The category to build the BasicDBObject for.
      * @return The BasicDBObject representing the category.
      */
-    private static BasicDBObject buildCategory(final PolicyCategory category) {
+    private static BasicDBObject buildMongoCategory(final PolicyCategory category) {
         // Building late policy DBObject first.
         final LatePolicy latePolicy = category.getLatePolicy();
-        final BasicDBObject late = new BasicDBObject(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
-                .append(LATE_POLICY_TIME_FRAME_TYPE, latePolicy.getTimeFrameType().getNumber()).append(LATE_POLICY_RATE, latePolicy.getRate())
-                .append(LATE_POLICY_SUBTRACTION_TYPE, latePolicy.getSubtractionType().getNumber())
-                .append(APPLY_ONLY_TO_LATE_PROBLEMS, latePolicy.getApplyOnlyToLateProblems());
+        final BasicDBObject late = buildMongoLatePolicy(latePolicy);
 
         // Building single DBObject to add to list of categories
         final BasicDBObject temp = new BasicDBObject(GRADE_CATEGORY_NAME, category.getName()).append(GRADE_CATEGORY_WEIGHT, category.getWeight())
                 .append(LATE_POLICY, late);
-
         return temp;
+    }
+
+    private static BasicDBObject buildMongoLatePolicy(final LatePolicy latePolicy) {
+        final BasicDBObject late = new BasicDBObject(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
+                .append(LATE_POLICY_TIME_FRAME_TYPE, latePolicy.getTimeFrameType().getNumber()).append(LATE_POLICY_RATE, latePolicy.getRate())
+                .append(LATE_POLICY_SUBTRACTION_TYPE, latePolicy.getSubtractionType().getNumber())
+                .append(APPLY_ONLY_TO_LATE_PROBLEMS, latePolicy.getApplyOnlyToLateProblems());
+        return late;
+    }
+
+    private static PolicyCategory buildProtoCategory(final DBObject dbCategory) {
+        final PolicyCategory.Builder protoCategory = PolicyCategory.newBuilder();
+        protoCategory.setName(dbCategory.get(GRADE_CATEGORY_NAME).toString());
+        protoCategory.setWeight((float) dbCategory.get(GRADE_CATEGORY_WEIGHT));
+        protoCategory.setLatePolicy(buildProtoLatePolicy((DBObject) dbCategory.get(LATE_POLICY)));
+        return protoCategory.build();
+    }
+
+    private static LatePolicy buildProtoLatePolicy(final DBObject dbPolicy) {
+        final LatePolicy.Builder protoPolicy = LatePolicy.newBuilder();
+        protoPolicy.setFunctionType(LatePolicy.FunctionType.valueOf((int) dbPolicy.get(LATE_POLICY_FUNCTION_TYPE)));
+        protoPolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((int) dbPolicy.get(LATE_POLICY_TIME_FRAME_TYPE)));
+        protoPolicy.setRate((float) dbPolicy.get(LATE_POLICY_RATE));
+        protoPolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((int) dbPolicy.get(LATE_POLICY_SUBTRACTION_TYPE)));
+        protoPolicy.setApplyOnlyToLateProblems((boolean) dbPolicy.get(APPLY_ONLY_TO_LATE_PROBLEMS));
+        return protoPolicy.build();
     }
 }
