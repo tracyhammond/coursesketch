@@ -494,4 +494,9 @@ public final class MongoInstitution implements Institution {
     public void setGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
         GradingPolicyManager.setGradingPolicy(getInstance().auth, getInstance().database, userId, policy);
     }
+
+    @Override
+    public ProtoGradingPolicy getGradingPolicy(final String courseId, final String userId) throws AuthenticationException, DatabaseAccessException {
+        return GradingPolicyManager.getGradingPolicy(getInstance().auth, getInstance().database, courseId, userId);
+    }
 }
