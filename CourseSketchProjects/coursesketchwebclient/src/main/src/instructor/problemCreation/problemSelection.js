@@ -75,7 +75,7 @@ function ProblemSelectionPanel() {
         };
 
         shadowRoot.querySelector('.outer-dialog').onclick = function() {
-           localScope.canceledCallback(selectedBankProblems);
+            localScope.canceledCallback(selectedBankProblems);
         };
 
         shadowRoot.querySelector('.inner-dialog').onclick = function(event) {
