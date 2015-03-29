@@ -17,7 +17,12 @@ import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
+
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
@@ -26,15 +31,15 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+
 import protobuf.srl.school.School.SrlGrade;
+
+import utilities.LoggingConstants;
+
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.GROUP_PREFIX;
@@ -498,5 +503,10 @@ public final class MongoInstitution implements Institution {
     @Override
     public ProtoGradingPolicy getGradingPolicy(final String courseId, final String userId) throws AuthenticationException, DatabaseAccessException {
         return GradingPolicyManager.getGradingPolicy(getInstance().auth, getInstance().database, courseId, userId);
+    }
+
+    @Override
+    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page) throws AuthenticationException {
+        return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }
 }

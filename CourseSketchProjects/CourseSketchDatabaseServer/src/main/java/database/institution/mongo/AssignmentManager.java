@@ -174,7 +174,7 @@ public final class AssignmentManager {
         // FUTURE: maybe not make this necessarry if the insertion of assignments prevents this.
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
 
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
         if (isUsers && !isAdmin && !isMod && !authenticator
