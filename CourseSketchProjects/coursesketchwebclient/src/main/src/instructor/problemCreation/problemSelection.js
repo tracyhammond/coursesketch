@@ -94,7 +94,7 @@ function ProblemSelectionPanel() {
 
         var previousList = shadowRoot.querySelectorAll('.previous');
         applyOnClick(previousList, function() {
-            currentPage -= 1;
+currentPage -= 1;
             if (currentPage < 0) {
                 currentPage = 0;
                 return;
