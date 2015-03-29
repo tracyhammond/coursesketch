@@ -35,6 +35,17 @@ function InputListener() {
             }
         }
 
+        $(sketchCanvas).bind('touchy-drag', function(event, phase, $target, data) {
+            if (phase === 'start') {
+                startingPoint = data.startPoint;
+                startingCenter = ps.project.activeLayer.localToGlobal(ps.view.center);
+            } else {
+                 ps.view.center = startingCenter.subtract(ps.project.activeLayer.
+                        localToGlobal(data.movePoint).subtract(startingPoint));
+            }
+        };
+        $(sketchCanvas).data('touchy-drag').settings.requiredTouches = 2;
+
         //if shift is held, pans
         //if shift is not held, it starts a new path from the mouse point
         tool.onMouseDown = function(event) {
