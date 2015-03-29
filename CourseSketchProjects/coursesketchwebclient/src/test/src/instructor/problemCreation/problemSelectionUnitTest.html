@@ -53,6 +53,10 @@
                 }
             });
 
+            /**
+             * Ensures that the custom element can be created and added without throwing an exception.
+             * This <b>does not</b> ensure that everything is set up correctly.
+             */
             QUnit.test("creation", function(assert) {
                 expect(0);
                 var problem = document.createElement('problem-test');
@@ -60,6 +64,7 @@
             });
 
             QUnit.test("request creation", function(assert) {
+                expect(3);
                 var problem = document.createElement('problem-test');
                 document.querySelector("#testDiv").appendChild(problem);
                 var courseId = "course";
