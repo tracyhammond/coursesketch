@@ -187,7 +187,7 @@ public final class LectureManager {
         // FUTURE: maybe not make this necessarry if the insertion of lecture prevents this.
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
         if (isUsers && !authenticator.isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
