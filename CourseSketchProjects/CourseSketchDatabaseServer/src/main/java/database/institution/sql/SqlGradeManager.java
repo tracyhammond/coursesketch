@@ -98,7 +98,7 @@ public final class SqlGradeManager {
                 } else {
                     rst.moveToInsertRow();
                     rst.updateString(DatabaseStringConstants.USER_ID, userId);
-                    rst.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+                    rst.updateString(DatabaseStringConstants.SCHOOL_ITEM_TYPE, classification);
                     rst.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
                     rst.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
                     rst.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());

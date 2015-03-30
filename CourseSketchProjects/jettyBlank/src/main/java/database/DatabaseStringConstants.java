@@ -27,6 +27,7 @@ public final class DatabaseStringConstants {
     public static final String COURSE_PROBLEM_COLLECTION = "Problems";
     public static final String LECTURE_COLLECTION = "Lectures";
     public static final String SLIDE_COLLECTION = "Slides";
+    public static final String GRADE_COLLECTION = "Grades";
     public static final String GRADING_POLICY_COLLECTION = "GradingPolicies";
     // also contains groups for admins and mods
     public static final String USER_GROUP_COLLECTION = "UserGroups";
@@ -34,7 +35,6 @@ public final class DatabaseStringConstants {
     public static final String SOLUTION_COLLECTION = "Solutions";
     public static final String EXPERIMENT_COLLECTION = "Experiments";
     public static final String STATE_COLLECTION = "UserStates";
-    public static final String GRADE_COLLECTION = "problem_submissions";
     public static final String UPDATE_COLLECTION = "User_Updates";
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
     public static final String DATABASE = "institution";
@@ -148,12 +148,12 @@ public final class DatabaseStringConstants {
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
 
-    // mongo comands
+    // mongo commands
     public static final String SET_COMMAND = "$set";
     public static final String ADD_SET_COMMAND = "$addToSet";
 
     // state and grade specific
-    public static final String SCHOOLITEMTYPE = "SchoolItemType";
+    public static final String SCHOOL_ITEM_TYPE = "SchoolItemType";
 
     // lecture specific
     public static final String SLIDES = "Slides";
