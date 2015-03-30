@@ -380,7 +380,7 @@
 					<executions>
 						<execution>
 							<id>Replace</id>
-							<phase>prepare-package</phase>
+							<phase>validate</phase>
 							<goals>
 								<goal>replace</goal>
 							</goals>
@@ -396,7 +396,7 @@
 						</execution>
 						<execution>
 							<id>Reverse</id>
-							<phase>pre-integration-test</phase>
+							<phase>install</phase>
 							<goals>
 								<goal>replace</goal>
 							</goals>
@@ -411,7 +411,6 @@
 							</configuration>
 						</execution>
 					</executions>
-
 				</plugin>
 			</plugins>
 		</pluginManagement>
