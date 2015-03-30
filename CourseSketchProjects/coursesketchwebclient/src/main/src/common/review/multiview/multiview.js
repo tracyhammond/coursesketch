@@ -36,7 +36,7 @@ function MvSketch() {
         this.shadowRoot.querySelector('#userName').textContent = userId.substring(0, 7);
     };
 
-    /*
+    /**
      * This creates the shadow root and attaches it to the object in question.
      * @instance
      * @memberof MvSketch
