@@ -376,7 +376,7 @@
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
-					<version>1.5.3</version>
+					<version>${replacerVersion}</version>
 					<executions>
 						<execution>
 							<id>Replace</id>
@@ -438,6 +438,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+		<replacerVersion>1.5.3</replacerVersion>
 		<resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
