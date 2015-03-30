@@ -54,9 +54,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     public static void main(final String... args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
-        final Properties p = new Properties();
-        p.setProperty("org.eclipse.jetty.LEVEL", "INFO");
-        org.eclipse.jetty.util.log.StdErrLog.setProperties(p);
+        final Properties properties = new Properties();
+        properties.setProperty("org.eclipse.jetty.LEVEL", "INFO");
+        org.eclipse.jetty.util.log.StdErrLog.setProperties(properties);
         runner.start();
     }
 
