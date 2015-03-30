@@ -24,6 +24,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     public static void main(final String... args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
+        final Properties p = new Properties();
+        p.setProperty("org.eclipse.jetty.LEVEL", "INFO");
+        org.eclipse.jetty.util.log.StdErrLog.setProperties(p);
         runner.start();
     }
 
