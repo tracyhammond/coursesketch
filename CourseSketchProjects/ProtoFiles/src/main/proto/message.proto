@@ -34,3 +34,9 @@ message LoginInformation {
     optional string email = 6;
     optional string userId = 7;
 }
+
+message ProtoException {
+    required string mssg = 1;
+    repeated string stackTrace = 2;
+    optional ProtoException cause = 3;
+}
