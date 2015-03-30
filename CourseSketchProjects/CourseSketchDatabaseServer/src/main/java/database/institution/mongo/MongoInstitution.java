@@ -17,14 +17,17 @@ import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -46,6 +49,12 @@ import static database.DatabaseStringConstants.USER_LIST;
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.TooManyMethods" })
 public final class MongoInstitution implements Institution {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(MongoInstitution.class);
+
     /**
      * A single instance of the mongo institution.
      */
@@ -73,7 +82,7 @@ public final class MongoInstitution implements Institution {
         try {
             mongoClient = new MongoClient(url);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (mongoClient == null) {
             return;
@@ -109,7 +118,7 @@ public final class MongoInstitution implements Institution {
             try {
                 mongoClient = new MongoClient("localhost");
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             if (mongoClient == null) {
                 return;
@@ -147,7 +156,7 @@ public final class MongoInstitution implements Institution {
 
     @Override
     public void setUpIndexes() {
-        System.out.println("Setting up the indexes");
+        LOG.info("Setting up the indexes");
         database.getCollection(USER_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
         database.getCollection(UPDATE_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
     }
@@ -160,7 +169,7 @@ public final class MongoInstitution implements Institution {
             try {
                 allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
             } catch (DatabaseAccessException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
         return allCourses;
@@ -176,7 +185,7 @@ public final class MongoInstitution implements Institution {
                 allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().auth, getInstance().database, problemID.get(index), userId,
                         currentTime));
             } catch (DatabaseAccessException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
@@ -199,7 +208,7 @@ public final class MongoInstitution implements Institution {
                 allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().auth, getInstance().database, assignmentID.get(assignments),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
@@ -222,12 +231,12 @@ public final class MongoInstitution implements Institution {
                 allLectures.add(LectureManager.mongoGetLecture(getInstance().auth, getInstance().database, lectureId.get(lectures),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace(System.err);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (e.getType() != AuthenticationException.INVALID_DATE) {
                     throw e;
                 }
@@ -246,12 +255,12 @@ public final class MongoInstitution implements Institution {
                 allSlides.add(SlideManager.mongoGetLectureSlide(getInstance().auth, getInstance().database, slideId.get(slides),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
-                e.printStackTrace();
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
                     throw e;
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace(System.err);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (e.getType() != AuthenticationException.INVALID_DATE) {
                     throw e;
                 }
@@ -449,7 +458,8 @@ public final class MongoInstitution implements Institution {
     @Override
     public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        System.out.println("Getting experiment for user: " + userId + " problem: " + problemId);
+        LOG.debug("Getting experiment for user: {}", userId);
+        LOG.info("Problem: {}", problemId);
         SubmissionManager.mongoGetExperiment(getInstance().database, userId, problemId, sessionInfo, internalConnections);
     }
 
@@ -458,5 +468,10 @@ public final class MongoInstitution implements Institution {
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
+    }
+
+    @Override
+    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page) throws AuthenticationException {
+        return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }
 }

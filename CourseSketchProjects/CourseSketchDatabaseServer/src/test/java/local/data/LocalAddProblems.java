@@ -5,8 +5,8 @@ import database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlBankProblem.QuestionType;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.QuestionType;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
 public class LocalAddProblems {

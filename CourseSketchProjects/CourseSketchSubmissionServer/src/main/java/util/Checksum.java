@@ -1,7 +1,7 @@
 package util;
 
 import protobuf.srl.commands.Commands.SrlUpdate;
-import protobuf.srl.submission.Submission.SrlChecksum;
+import protobuf.srl.utils.Util.SrlChecksum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public final class Checksum {
      *
      * @param list
      *         The list of {@link protobuf.srl.commands.Commands.SrlUpdate}.
-     * @return {@link protobuf.srl.submission.Submission.SrlChecksum} the final value.
+     * @return {@link protobuf.srl.utils.Util.SrlChecksum} the final value.
      */
     public static SrlChecksum computeChecksum(final List<SrlUpdate> list) {
         final int size = list.size() % MAX_LIST_SIZE;
@@ -85,7 +85,7 @@ public final class Checksum {
     }
 
     /**
-     * Computes the {@link protobuf.srl.submission.Submission.SrlChecksum} given the holder and the size.
+     * Computes the {@link protobuf.srl.utils.Util.SrlChecksum} given the holder and the size.
      *
      * @param holder
      *         The holder of the partially computed checksum values.

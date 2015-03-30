@@ -4,7 +4,7 @@ import java.util.Date;
 
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlAssignment.LatePolicy;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.AuthenticationException;
@@ -33,7 +33,7 @@ public class ManyTestAssignments {
 
 			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
-	
+
 			// testing inserting course
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
