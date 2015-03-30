@@ -373,6 +373,46 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>replacer</artifactId>
+					<version>${replacerVersion}</version>
+					<executions>
+						<execution>
+							<id>Replace</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+							<configuration>
+								<file>${basedir}/src/main/resources/logback.xml</file>
+								<replacements>
+									<replacement>
+										<token>DEBUG</token>
+										<value>INFO</value>
+									</replacement>
+								</replacements>
+							</configuration>
+						</execution>
+						<execution>
+							<id>Reverse</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+							<configuration>
+								<file>${basedir}/src/main/resources/logback.xml</file>
+								<replacements>
+									<replacement>
+										<token>INFO</token>
+										<value>DEBUG</value>
+									</replacement>
+								</replacements>
+							</configuration>
+						</execution>
+					</executions>
+
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -398,6 +438,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+		<replacerVersion>1.5.3</replacerVersion>
 		<resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
