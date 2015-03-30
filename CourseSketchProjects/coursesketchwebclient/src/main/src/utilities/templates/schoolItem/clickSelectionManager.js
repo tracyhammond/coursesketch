@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @class ClickSelectionManager
  */
 function ClickSelectionManager() {
@@ -19,10 +19,19 @@ function ClickSelectionManager() {
         $(element).toggleClass(this.selectionClassName);
     };
 
+    /**
+     * Adds the selections class to this specific element.
+     * This makes it known that it should be highlighted.
+     * @param {Element} element - the element that the class is being added to.
+     */
     this.selectItem = function(element) {
         element.className += this.selectionClassName;
     };
 
+    /**
+     * clears a specific item of its selected class.
+     * @param {Element} element - the HTML element that the class is being added to.
+     */
     this.clearItem = function(element) {
         if (!element) {
             return;
@@ -30,6 +39,9 @@ function ClickSelectionManager() {
         $(element).removeClass(this.selectionClassName);
     };
 
+    /**
+     * Removes any selected elements from being selected.
+     */
     this.clearAllSelectedItems = function() {
         for (var i = 0; i < this.selectedItems.length; i++) {
             this.clearItem(this.selectedItems[i]);
@@ -38,6 +50,10 @@ function ClickSelectionManager() {
         this.selectedItems = [];
     };
 
+    /**
+     * @param {Element} element - the item that we are checking if it is selected.
+     * @returns true if the given element is in fact currently selected by this specific manager.
+     */
     this.isItemSelected = function(element) {
         return this.selectedItems.indexOf(element) > -1;
     };
