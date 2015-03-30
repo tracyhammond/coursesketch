@@ -167,7 +167,10 @@ function InputListener() {
         return currentPoint;
     }
 
-    // Creates a time stamp for every point.
+    /**
+     * Creates and returns a time stamp every time this function is called.
+     * @returns {Number} - The time stamp.
+     */
     function createTimeStamp() {
         return new Date().getTime();
     }

@@ -1,3 +1,7 @@
+/**
+ * 
+ * @class ClickSelectionManager
+ */
 function ClickSelectionManager() {
     this.selectedItems = [];
     this.selectionClassName = ' selectedBox';

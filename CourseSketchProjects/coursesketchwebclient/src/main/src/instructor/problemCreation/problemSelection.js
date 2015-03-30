@@ -1,6 +1,7 @@
 /**
  * Only one of these can be on a page at a time.
  * [We assume only one of these elements can exist at a time]
+ * @class ProblemSelectionPanel
  */
 function ProblemSelectionPanel() {
     /**
@@ -19,6 +20,7 @@ function ProblemSelectionPanel() {
      * @param {String} assignmentId - the id of the assignment the problem is being requested for.
      * @param {Integer} page - to make it easier we do not grab every single bank problem instead we grab them in batches
      *              (this process is called pagination)
+     * @memberof ProblemSelectionPanel
      */
     this.loadProblems = function(courseId, assignmentId, page) {
         currentPage = page;
@@ -59,6 +61,7 @@ function ProblemSelectionPanel() {
      * Makes the exit button close the box and enables dragging.
      *
      * @param {Node} templateClone is a clone of the custom HTML Element for the text box.
+     * @memberof ProblemSelectionPanel
      */
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
@@ -105,7 +108,8 @@ function ProblemSelectionPanel() {
 
     /**
      * @param {Array<Element>} listOfElements - the list of elements that have the function
-     * @param {Function} func - the function that is being applied to
+     * @param {Function} func - the function that is being applied to.
+     * @memberof ProblemSelectionPanel
      */
     function applyOnClick(listOfElements, func) {
         for (var i = 0; i < listOfElements.length; i++) {
@@ -114,7 +118,8 @@ function ProblemSelectionPanel() {
     }
 
     /**
-     * Returns the list of selected elements that are currently on the screen.
+     * @returns the list of selected elements that are currently on the screen.
+     * @memberof ProblemSelectionPanel
      */
     this.getListOfSelectedElements = function() {
         var result = [];
@@ -137,6 +142,7 @@ ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);
  * @param {Integer} page - to make it easier we do not grab every single bank problem instead we grab them in batches
  *              (this process is called pagination)
  * @returns {SrlRequest} the request that is ready to be sent to the server.
+ * @memberof ProblemSelectionPanel
  */
 ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId, page) {
     var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
@@ -153,10 +159,20 @@ ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId,
     return request;
 };
 
+/**
+ * Sets the canceled callback.
+ * @param {Function} callback - the function that is called when an a canceled action is performed.
+ * @memberof ProblemSelectionPanel
+ */
 ProblemSelectionPanel.prototype.setCanceledCallback = function(callback) {
     this.canceledCallback = callback;
 };
 
+/**
+ * Sets the canceled callback.
+ * @param {Function} callback - the function that is called when an a canceled action is performed.
+ * @memberof ProblemSelectionPanel
+ */
 ProblemSelectionPanel.prototype.setAcceptedCallback = function(callback) {
     this.acceptCallback = callback;
 };
