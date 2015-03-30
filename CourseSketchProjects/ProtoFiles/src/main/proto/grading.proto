@@ -71,3 +71,22 @@ message LatePolicy {
         PERCENT = 1;
     }
 }
+
+message ProtoGrade {
+    required string courseId = 1;
+    required string userId = 2;         // Id of the user the grade belongs to.
+    optional string assignmentId = 3;
+    optional string problemId = 4;
+    required float currentGrade = 5;
+    optional string comment = 6;
+    repeated GradeHistory gradeHistory = 7;
+    optional bool externalGrade = 8;
+
+    message GradeHistory {
+        required float gradeValue = 1;
+        optional string comment = 2;
+        required protobuf.srl.utils.DateTime dateCreated = 3;
+        optional string whoChanged = 4;
+        optional int32 submissionNumber = 5;
+    }
+}
