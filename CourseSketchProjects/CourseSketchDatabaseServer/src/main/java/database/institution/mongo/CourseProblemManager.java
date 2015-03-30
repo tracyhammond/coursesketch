@@ -12,10 +12,12 @@ import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,11 @@ import static database.DatabaseStringConstants.USERS;
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
         "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
 public final class CourseProblemManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(CourseProblemManager.class);
 
     /**
      * Private constructor.
@@ -87,6 +94,10 @@ public final class CourseProblemManager {
 
         // inserts the id into the previous the course
         AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), corsor.get(SELF_ID).toString());
+
+        if (problem.hasProblemBankId()) {
+            BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
+        }
 
         return corsor.get(SELF_ID).toString();
     }
@@ -133,7 +144,7 @@ public final class CourseProblemManager {
         // assignment is open and the user is in the assignment
         final AuthType auth = new AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
         // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
         if (isUsers && !isAdmin && !isMod && !authenticator
                 .isAuthenticated(ASSIGNMENT_COLLECTION, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, auth)) {
@@ -233,6 +244,10 @@ public final class CourseProblemManager {
             if (problem.hasProblemBankId()) {
                 updateObj = new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId());
                 problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+
+                // updates the bank problem associated with this course problem
+                LOG.warn("Changing the bank problem id. This feature may be removed in the future");
+                BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
                 update = true;
             }
 
@@ -284,7 +299,7 @@ public final class CourseProblemManager {
 
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
-        System.out.println(updateQuery);
+        LOG.info("Updated Query: ", updateQuery);
         problems.update(corsor, updateQuery);
     }
 }

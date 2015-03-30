@@ -190,7 +190,7 @@
             textArea.className = "sub-panel";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
-            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
 
             // actual test
 
@@ -208,7 +208,7 @@
             textArea.className = "sub-panel";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
-            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
 
             submission.wrapperFunction = function(submission) {
                 assert.equal(submission.textAnswer, textArea.value, "Text area value is set in submission");
@@ -227,7 +227,7 @@
             textArea.className = "sub-panel";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
-            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
 
             submission.wrapperFunction = function(submission) {
                 return submission;
@@ -252,7 +252,7 @@
             textArea.className = "sub-panel";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
-            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
 
             submission.wrapperFunction = function(submission) {
                 return submission;
@@ -262,7 +262,7 @@
             submission.isGrader = true;
 
             CourseSketch.connection.sendRequest = function(request) {
-                assert.equal(request.responseText, "moderator");
+                assert.equal(request.responseText, "grader");
             }
             // actual test
             submission.sendDataToServer(undefined, true);
@@ -277,7 +277,7 @@
             textArea.className = "sub-panel";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
-            submission.problemType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.FREE_RESP;
+            submission.problemType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
 
             submission.wrapperFunction = function(submission) {
                 return submission;
