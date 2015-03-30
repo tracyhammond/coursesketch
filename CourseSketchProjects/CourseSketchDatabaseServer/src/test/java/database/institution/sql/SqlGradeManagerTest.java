@@ -1,15 +1,10 @@
 package database.institution.sql;
 
 import database.DatabaseStringConstants;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.dbunit.*;
-import static org.junit.Assert.*;
 import database.DatabaseAccessException;
-import org.bson.types.ObjectId;
 import protobuf.srl.school.School.SrlGrade;
-import database.institution.sql.SqlStateManager;
+
 import java.sql.*;
 
 import   static org.easymock.EasyMock.createControl;
@@ -53,7 +48,7 @@ public class SqlGradeManagerTest{
 
         rs.moveToInsertRow();
         rs.updateString(DatabaseStringConstants.USER_ID, userId);
-        rs.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+        rs.updateString(DatabaseStringConstants.SCHOOL_ITEM_TYPE, classification);
         rs.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
         rs.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
         rs.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
