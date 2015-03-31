@@ -84,7 +84,6 @@ public final class BankProblemManager {
         final DBObject corsor = myDbRef.fetch();
 
         boolean isAdmin, isUsers;
-        assert authenticator!=null;
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
         isUsers = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(USERS));
 

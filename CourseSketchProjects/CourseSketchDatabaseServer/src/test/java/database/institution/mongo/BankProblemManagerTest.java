@@ -20,15 +20,21 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.school.School.SrlBankProblem;
 
+import java.util.ArrayList;
+
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.SCRIPT;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
+import static org.easymock.EasyMock.expect;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isNotNull;
 import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -74,13 +80,13 @@ public class BankProblemManagerTest {
         Authenticator auth = PowerMock.createMock(Authenticator.class);
         Assert.assertFalse(auth == null);
         Assert.assertFalse(db == null);
-        expectPrivate(auth.checkAuthentication(anyString(), anyListOf(String.class))).andReturn(true);
-        PowerMock.replayAll();
+        expect(auth.checkAuthentication(anyString(), anyListOf(String.class))).andReturn(true);
+        replay(Authenticator.class);
 
         SrlBankProblem getProblem = mongoGetBankProblem(auth, db, id, new String("User1"));
         String testString = getProblem.getScript().toString();
 
-        PowerMock.verifyAll();
+        verify(Authenticator.class);
         Assert.assertEquals("this is a script", testString);
     }
 
