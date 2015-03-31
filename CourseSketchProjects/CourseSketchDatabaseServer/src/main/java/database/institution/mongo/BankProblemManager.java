@@ -3,6 +3,7 @@ package database.institution.mongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
@@ -10,15 +11,18 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.utils.Util;
+import protobuf.srl.utils.Util.SrlPermission;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
@@ -35,15 +39,19 @@ import static database.DatabaseStringConstants.SCRIPT;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
- * @author gigemjt
  *
+ * @author gigemjt
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
 public final class BankProblemManager {
 
     /**
+     * The amount of problems that are allowed to show at the same time.
+     */
+    private static final int PAGE_LENGTH = 20;
+
+    /**
      * Private constructor.
-     *
      */
     private BankProblemManager() {
     }
@@ -51,87 +59,125 @@ public final class BankProblemManager {
     /**
      * Inserts a problem bank into the mongo database.
      *
-     * @param dbs the database into which the bank is being inserted.
-     * @param problem the problem data that is being inserted.
+     * @param dbs
+     *         the database into which the bank is being inserted.
+     * @param problem
+     *         the problem data that is being inserted.
      * @return The mongo id of the problem bank.
-     * @throws AuthenticationException Not currently thrown but may be thrown in the future.
+     * @throws AuthenticationException
+     *         Not currently thrown but may be thrown in the future.
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
         final DBCollection problemBankCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
+        final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
                 .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
                 .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
-                .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
-                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(KEYWORDS, problem.getOtherKeywordsList())
                 .append(SCRIPT, problem.getScript());
+                .append(KEYWORDS, problem.getOtherKeywordsList());
 
-        problemBankCollection.insert(query);
-        final DBObject corsor = problemBankCollection.findOne(query);
-        return corsor.get(SELF_ID).toString();
+
+        if (!problem.hasAccessPermission()) {
+            insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
+        } else {
+            insertObject.append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
+                    .append(USERS, problem.getAccessPermission().getUserPermissionList());
+        }
+
+        problemBankCollection.insert(insertObject);
+        final DBObject cursor = problemBankCollection.findOne(insertObject);
+        return cursor.get(SELF_ID).toString();
     }
 
     /**
-     * gets a mongo bank problem (this is usually grabbed through a course id instead of a specific user unless the user is the admin).
-     * @param authenticator The object that is authenticating the user.
-     * @param dbs the database where the problem is stored.
-     * @param problemBankID the id of the problem that is being grabbed.
-     * @param userId the id of the user (typically a course unless they are an admin)
+     * Gets a mongo bank problem (this is usually grabbed through a course id instead of a specific user unless the user is the admin).
+     *
+     * @param authenticator
+     *         The object that is authenticating the user.
+     * @param dbs
+     *         the database where the problem is stored.
+     * @param problemBankId
+     *         the id of the problem that is being grabbed.
+     * @param userId
+     *         the id of the user (typically a course unless they are an admin)
      * @return the SrlBank problem data if it past all tests.
-     * @throws AuthenticationException thrown if the user does not have access to the permissions.
+     * @throws AuthenticationException
+     *         thrown if the user does not have access to the permissions.
      */
-    public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankID, final String userId)
+    public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
             throws AuthenticationException {
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankID));
-        final DBObject corsor = myDbRef.fetch();
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
+        final DBObject mongoBankProblem = myDbRef.fetch();
 
         boolean isAdmin, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
-        isUsers = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(USERS));
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(ADMIN));
+        isUsers = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(USERS));
 
         if (!isAdmin && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final SrlBankProblem.Builder exactProblem = SrlBankProblem.newBuilder();
-
-        exactProblem.setId(problemBankID);
-        exactProblem.setQuestionText((String) corsor.get(QUESTION_TEXT));
-        exactProblem.setImage((String) corsor.get(IMAGE));
-        if (isAdmin) {
-            exactProblem.setSolutionId((String) corsor.get(SOLUTION_ID));
-        }
-        exactProblem.setCourseTopic((String) corsor.get(COURSE_TOPIC));
-        exactProblem.setSubTopic((String) corsor.get(SUB_TOPIC));
-        exactProblem.setSource((String) corsor.get(SOURCE));
-        exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) corsor.get(QUESTION_TYPE)));
-        exactProblem.addAllOtherKeywords((ArrayList) corsor.get(KEYWORDS)); // change
-                                                                            // arraylist
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (isAdmin) {
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // admin
-            exactProblem.setAccessPermission(permissions.build());
-        }
-        exactProblem.setScript((String) corsor.get(SCRIPT));
-        return exactProblem.build();
+        return extractBankProblem(mongoBankProblem, problemBankId, isAdmin);
 
     }
 
     /**
-     * Updates a bank problem.
-     * @param authenticator
-     *            the object that is performing authentication.
-     * @param dbs
-     *            The database where the assignment is being stored.
-     * @param problemBankId the id of the problem getting updated.
-     * @param userId the user updating the course problem.
-     * @param problem the bank problem data that is being updated.
-     * @return true if the update is successful
-     * @throws AuthenticationException Thrown if the user does not have permission to update the bank problem.
-     * @throws DatabaseAccessException Thrown if there is an issue updating the problem.
+     * Creates an SrlBankProblem out of the database object.
+     *
+     * @param dbObject
+     *         a pointer to an object in the mongo database.
+     * @param problemBankId
+     *         The id of problem bank
+     * @param isAdmin
+     *         true if the user is an admin
+     * @return {@link protobuf.srl.school.School.SrlBankProblem}.
      */
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-        "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
+    private static SrlBankProblem extractBankProblem(final DBObject dbObject, final String problemBankId, final boolean isAdmin) {
+
+        final SrlBankProblem.Builder exactProblem = SrlBankProblem.newBuilder();
+
+        exactProblem.setId(problemBankId);
+        exactProblem.setQuestionText((String) dbObject.get(QUESTION_TEXT));
+        exactProblem.setImage((String) dbObject.get(IMAGE));
+        if (isAdmin) {
+            exactProblem.setSolutionId((String) dbObject.get(SOLUTION_ID));
+        }
+        exactProblem.setCourseTopic((String) dbObject.get(COURSE_TOPIC));
+        exactProblem.setSubTopic((String) dbObject.get(SUB_TOPIC));
+        exactProblem.setSource((String) dbObject.get(SOURCE));
+        exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
+        exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
+        // arraylist
+        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
+        if (isAdmin) {
+            permissions.addAllAdminPermission((ArrayList) dbObject.get(ADMIN)); // admin
+            permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
+            exactProblem.setAccessPermission(permissions.build());
+        }
+        exactProblem.setScript((String) corsor.get(SCRIPT));
+        return exactProblem.build();
+    }
+
+    /**
+     * Updates a bank problem.
+     *
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param problemBankId
+     *         the id of the problem getting updated.
+     * @param userId
+     *         the user updating the bank problem.
+     * @param problem
+     *         the bank problem data that is being updated.
+     * @return true if the update is successful
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the bank problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is an issue updating the problem.
+     */
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+            "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
@@ -208,8 +254,73 @@ public final class BankProblemManager {
                 UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
             }
         }
-
         return true;
+    }
 
+    /**
+     * Returns all bank problems.  The user must be an instructor of a course.
+     *
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param database
+     *         The database where the assignment is being stored.
+     * @param userId
+     *         the user asking for the bank problems.
+     * @param courseId
+     *         The course the user is wanting to possibly be associated with the bank problem.
+     * @param page
+     *         the bank problems are limited to ensure that the database is not overwhelmed.
+     * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to retrieve any bank problems.
+     */
+    public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
+            final String courseId, final int page) throws AuthenticationException {
+        final Authenticator.AuthType auth = new Authenticator.AuthType();
+        auth.setCheckAdmin(true);
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+        final DBCollection problemCollection = database.getCollection(PROBLEM_BANK_COLLECTION);
+        final DBCursor dbCursor = problemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
+        final List<SrlBankProblem> results = new ArrayList<>();
+        while (dbCursor.hasNext()) {
+            final DBObject dbObject = dbCursor.next();
+            // no one is an admin when getting problems in this way.
+            results.add(extractBankProblem(dbObject, dbObject.get(SELF_ID).toString(), false));
+        }
+        return results;
+    }
+
+    /**
+     * Registers a course problem with a bank problem.
+     *
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param userId
+     *         the user asking for the bank problems.
+     * @param problem
+     *         the problem that is being registered as a user of the bank problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there are fields missing that make the problem inaccessible.
+     *
+     *         package-private
+     */
+    static void mongoRegisterCourseProblem(final Authenticator authenticator, final DB dbs, final String userId,
+            final School.SrlProblem problem) throws DatabaseAccessException {
+        if (!problem.hasProblemBankId()) {
+            throw new DatabaseAccessException("Unable to register the course problem: missing bank problem id [" + problem.getId() + "]");
+        }
+        if (!problem.hasCourseId()) {
+            throw new DatabaseAccessException("Unable to register the course problem: missing course id [" + problem.getId() + "]");
+        }
+
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problem.getProblemBankId()));
+        final DBObject dbObject = myDbRef.fetch();
+
+        dbs.getCollection(PROBLEM_BANK_COLLECTION).update(dbObject, new BasicDBObject(ADD_SET_COMMAND,
+                new BasicDBObject(USERS, problem.getCourseId())));
     }
 }
