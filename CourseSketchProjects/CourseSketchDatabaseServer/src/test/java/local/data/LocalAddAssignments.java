@@ -6,7 +6,7 @@ import database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.Date;
 
