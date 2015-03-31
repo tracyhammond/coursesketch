@@ -230,11 +230,35 @@ validateFirstRun(document.currentScript);
     };
 
     /**
+     * Lets the instructor choose an existing problem.
+     */
+    courseManagement.chooseExistingProblem = function() {
+        var courseId = document.querySelector('#class_list_column .selectedBox').id;
+        var assignmentId = document.querySelector('#assignment_list_column .selectedBox').id;
+        var problemSelection = document.createElement('problem-selection');
+
+        problemSelection.setAcceptedCallback(function(selectedProblems) {
+            document.body.removeChild(problemSelection);
+            for (var i = 0; i < selectedProblems.length; i++) {
+                courseManagement.addNewCourseProblem(selectedProblems[i]);
+            }
+        });
+
+        problemSelection.setCanceledCallback(function() {
+            document.body.removeChild(problemSelection);
+        });
+
+        document.body.appendChild(problemSelection);
+        problemSelection.loadProblems(courseId, assignmentId, 0);
+    };
+
+    /**
      * Creates a new bank problem and course problem with default values and adds it to the database.
      *
      * Displays the problem after it is added.
+     * @param {String|Undefined} existingBankProblem - if loading an existing bank problem then the value is the Id. Otherwise it is undefined.
      */
-    courseManagement.addNewCourseProblem = function addNewCourseProblem() {
+    courseManagement.addNewCourseProblem = function addNewCourseProblem(existingBankProblem) {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
         var assignmentId = document.querySelector('#assignment_list_column .selectedBox').id;
         var problemColumn = document.getElementById('problem_list_column');
@@ -243,19 +267,23 @@ validateFirstRun(document.currentScript);
         problemColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
-        // by instructors
-        var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-        bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-        var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
-        permissions.userPermission = [ courseId ];
-        bankProblem.accessPermission = permissions;
 
         var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
         courseProblem.courseId = courseId;
         courseProblem.name = 'Insert Problem Name';
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
-        courseProblem.setProblemInfo(bankProblem);
+
+        if (isUndefined(existingBankProblem)) {
+            var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
+            var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
+            permissions.userPermission = [ courseId ];
+            bankProblem.accessPermission = permissions;
+            courseProblem.setProblemInfo(bankProblem);
+        } else {
+            courseProblem.setProblemBankId(existingBankProblem);
+        }
         var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.

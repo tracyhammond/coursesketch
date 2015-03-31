@@ -10,7 +10,10 @@
 
     <!-- files needed for testing -->
     <link rel="import" href="/src/instructor/problemCreation/problemSelectionInclude.html">
-    <script>
+</head>
+<body>
+<problem-selection></problem-selection>
+<script>
     $(document).ready(function() {
         CourseSketch.connection.sendRequest = function(req) {
             CourseSketch.connection.sendSelf(CourseSketch.serverResponseForBankProblems(req));
@@ -21,7 +24,4 @@
         });
     });
 </script>
-</head>
-<body>
-<problem-selection></problem-selection>
 </body>
