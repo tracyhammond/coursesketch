@@ -2,10 +2,12 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import protobuf.srl.request.Message;
 import utilities.ConnectionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 /**
@@ -47,6 +49,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
             createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
                     PORT, this.isSecure(), SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
