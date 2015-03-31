@@ -1,3 +1,16 @@
+
+#edit files#
+
+*.js~
+*.xml~
+*.cpp~
+*.html~
+*.css~
+*.java~
+
+#end edit files
+
+
 *.class
 .DS_Store
 # Package Files #
@@ -31,3 +44,15 @@ target/
 .idea
 
 *.iml
+
+*Log.out*
+*.log
+
+node/
+npm-debug.log
+node_modules/
+node_temp
+node_tmp
+doc
+
+CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*

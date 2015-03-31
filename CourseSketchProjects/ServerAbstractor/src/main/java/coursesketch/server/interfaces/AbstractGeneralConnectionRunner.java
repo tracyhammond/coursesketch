@@ -8,6 +8,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
+
 /**
  * Sets up the server and manages calling the methods needed to start the server.
  * Right now it also handles keyboard input and loading of the configurations (these will probably be moved to separate classes later on)
@@ -20,6 +24,11 @@ import java.util.Arrays;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public abstract class AbstractGeneralConnectionRunner {
+
+    /**
+     * Declaration/Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractGeneralConnectionRunner.class);
 
     /**
      * Max buffer size for the output in bytes.
@@ -219,6 +228,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * @throws InterruptedException the thread is interrupted.
      */
     public final boolean parseCommand(final String command, final BufferedReader sysin) throws IOException, InterruptedException {
+        LOG.info("input command received: {}", command);
         if (command == null) {
             return true;
         }
@@ -250,11 +260,11 @@ public abstract class AbstractGeneralConnectionRunner {
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
      */
     private void exitCommand(final BufferedReader sysin) throws IOException {
-        System.out.println("Are you sure you want to exit? [y/n]");
+        LOG.info("Are you sure you want to exit? [y/n]");
         if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
             this.stop();
             acceptInput = false;
-            System.out.println("Stopped accepting input");
+            LOG.info("Stopped accepting input");
         }
     }
 
@@ -266,10 +276,10 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     private void restartCommand(final BufferedReader sysin) throws IOException, InterruptedException {
         final int waitDelay = 1000;
-        System.out.println("Are you sure you want to restart? [y/n]");
+        LOG.info("Are you sure you want to restart? [y/n]");
         if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
             this.stop();
-            System.out.println("sleeping for 1s");
+            LOG.info("sleeping for 1s");
             Thread.sleep(waitDelay);
             this.start();
         }
@@ -281,7 +291,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
      */
     private void stopCommand(final BufferedReader sysin) throws IOException {
-        System.out.println("Are you sure you want to stop? [y/n]");
+        LOG.info("Are you sure you want to stop? [y/n]");
         if (StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
             this.stop();
         }
@@ -295,7 +305,7 @@ public abstract class AbstractGeneralConnectionRunner {
         if (this.notServerStarted()) {
             this.start();
         } else {
-            System.out.println("you can not start the because it is already running.");
+            LOG.info("you can not start the because it is already running.");
         }
     }
 
@@ -306,9 +316,9 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     private void toggleLoggingCommand(final BufferedReader sysin) throws IOException {
         if (logging) {
-            System.out.println("Are you sure you want to turn loggin off? [y/n]");
+            LOG.info("Are you sure you want to turn loggin off? [y/n]");
             if (!StringUtils.defaultString(sysin.readLine()).equalsIgnoreCase("y")) {
-                System.out.println("action canceled");
+                LOG.info("action canceled");
                 return;
             }
         }
@@ -316,7 +326,7 @@ public abstract class AbstractGeneralConnectionRunner {
         if (logging) {
             isLoggingStr = "On";
         }
-        System.out.println("Turning loggin " + isLoggingStr);
+        LOG.info("Turning loggin {}", isLoggingStr);
         logging = !logging;
     }
 
@@ -341,7 +351,7 @@ public abstract class AbstractGeneralConnectionRunner {
                         final String command = sysin.readLine();
                         localInstance.parseCommand(command, sysin);
                     } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         break;
                     }
                 }
