@@ -139,10 +139,10 @@ public final class DatabaseStringConstants {
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
+    public static final String ADD_SET_COMMAND = "$addToSet";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";
-    public static final String ADD_SET_COMMAND = "$addToSet";
 
     // lecture specific
     public static final String SLIDES = "Slides";
