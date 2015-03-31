@@ -31,8 +31,8 @@ function VoicePlayback() {
             var playBack = new Playback(copyList, updateManager, graphics);
             updateManager.addPlugin(playBack);
             playBack.playNext();
-            localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
-            localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
+            //localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
+            //localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
         }
     }
 
