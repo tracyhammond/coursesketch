@@ -112,6 +112,7 @@ public final class BankProblemManager {
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(ADMIN));
         isUsers = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(USERS));
 
+
         if (!isAdmin && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
