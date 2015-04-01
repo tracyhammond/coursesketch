@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.school.School;
@@ -32,11 +31,7 @@ import static database.DatabaseStringConstants.SCRIPT;
 import static database.DatabaseStringConstants.USERS;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
-import static org.easymock.EasyMock.expect;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
+import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
 
 /**
  * Created by gigemjt on 3/22/15.
@@ -320,14 +315,8 @@ public class BankProblemManagerTest {
         bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
-        Authenticator auth = PowerMock.createMock(Authenticator.class);
-        expect(auth.checkAuthentication(anyString(), anyListOf(String.class))).andReturn(true);
-        replay(Authenticator.class);
-
         SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
-
-        verify(Authenticator.class);
         Assert.assertEquals("Fake Script", testString);
     }
 
@@ -337,22 +326,24 @@ public class BankProblemManagerTest {
      */
     @Test
     public void testUpdateScript () throws Exception {
-        /*DB db = fongoRule.getDB();
-        final SrlBankProblem problem = SrlBankProblem.newBuilder()
-                .setId("666")
-                .setScript("old script")
-                .build();
-        mongoInsertBankProblem(db, problem);
-        final SrlBankProblem updatedProblem = SrlBankProblem.newBuilder()
-                .setId("667")
-                .setScript("updated script")
-                .build();
-        final Authenticator auth = PowerMock.createMock(Authenticator.class);
-        when(auth.checkAuthentication(anyString(), anyListOf(String.class))).thenReturn(true);
-        mongoUpdateBankProblem(auth, db, "666", "User1", updatedProblem);
-        final SrlBankProblem getProblem = mongoGetBankProblem(auth ,db, "667", "User1");
-        String testString = getProblem.getScript().toString();
-        Assert.assertEquals("updated", testString);*/
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setScript("Fake Script");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
+        permissionBuilder.addAdminPermission(ADMIN_USER);
+        permissionBuilder.addUserPermission(USER_USER);
+        bankProblem.setAccessPermission(permissionBuilder);
+        String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
 
+        School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
+        updateBankProblem.setId(FAKE_ID);
+        updateBankProblem.setScript("Faker Script");
+
+        boolean isUpdated = mongoUpdateBankProblem(fauth, db, problemBankId, ADMIN_USER, updateBankProblem.build());
+        Assert.assertEquals(true, isUpdated);
+        final SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        String testString = getProblem.getScript().toString();
+        Assert.assertEquals("Faker Script", testString);
     }
 }
