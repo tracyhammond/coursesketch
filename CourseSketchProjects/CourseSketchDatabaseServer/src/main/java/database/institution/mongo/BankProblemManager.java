@@ -178,7 +178,7 @@ public final class BankProblemManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
-                                                 final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
+            final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject corsor = myDbRef.fetch();
@@ -274,7 +274,7 @@ public final class BankProblemManager {
      *         Thrown if the user does not have permission to retrieve any bank problems.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
-                                                               final String courseId, final int page) throws AuthenticationException {
+            final String courseId, final int page) throws AuthenticationException {
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdmin(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
@@ -308,7 +308,7 @@ public final class BankProblemManager {
      *         package-private
      */
     static void mongoRegisterCourseProblem(final Authenticator authenticator, final DB dbs, final String userId,
-                                           final School.SrlProblem problem) throws DatabaseAccessException {
+            final School.SrlProblem problem) throws DatabaseAccessException {
         if (!problem.hasProblemBankId()) {
             throw new DatabaseAccessException("Unable to register the course problem: missing bank problem id [" + problem.getId() + "]");
         }
