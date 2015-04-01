@@ -43,7 +43,7 @@ function InputListener() {
                  ps.view.center = startingCenter.subtract(ps.project.activeLayer.
                         localToGlobal(data.movePoint).subtract(startingPoint));
             }
-        };
+        });
         $(sketchCanvas).data('touchy-drag').settings.requiredTouches = 2;
 
         //if shift is held, pans
