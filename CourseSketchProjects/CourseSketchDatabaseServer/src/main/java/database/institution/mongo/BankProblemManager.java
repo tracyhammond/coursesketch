@@ -223,12 +223,12 @@ public final class BankProblemManager {
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
             update = true;
         }
-        if (problem.getOtherKeywordsCount() > 0) {
-            updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+        if (problem.hasScript()) {
+            updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
-        if (problem.hasScript()) {
-            updated.append(SCRIPT, new BasicDBObject(SCRIPT, problem.getScript()));
+        if (problem.getOtherKeywordsCount() > 0) {
+            updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
             update = true;
         }
         // Optimization: have something to do with pulling values of an
