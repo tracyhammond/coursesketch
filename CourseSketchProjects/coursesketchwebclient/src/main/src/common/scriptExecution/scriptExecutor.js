@@ -1,14 +1,13 @@
 validateFirstRun(document.currentScript);
 
 /**
- * This function parses and executes the script that is passed in.
- * @param script
+ *This function adds the ability to call console.log() to the api
+ * @param text
  *        {string}
  */
 
-function executeScript(script) {
-
-    var scriptWorker = new jailed.DynamicPlugin(script, api);
+function debugLog(text) {
+    console.log(text);
 }
 
 /**
@@ -18,14 +17,18 @@ function executeScript(script) {
 
 var api = {
     debugLog: debugLog
-}
+};
+
 
 /**
- *This function adds the ability to call console.log() to the api
- * @param text
+ * This function parses and executes the script that is passed in.
+ * @param script
  *        {string}
  */
 
-function debugLog(text) {
-    console.log(text);
+function executeScript(script) {
+    console.log('executing script: ' + script);
+    var scriptWorker = new jailed.DynamicPlugin(script, api);
 }
+
+
