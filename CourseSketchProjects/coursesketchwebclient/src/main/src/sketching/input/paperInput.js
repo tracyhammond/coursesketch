@@ -40,7 +40,7 @@ function InputListener() {
                 startingPoint = data.startPoint;
                 startingCenter = ps.project.activeLayer.localToGlobal(ps.view.center);
             } else {
-                 ps.view.center = startingCenter.subtract(ps.project.activeLayer.
+                ps.view.center = startingCenter.subtract(ps.project.activeLayer.
                         localToGlobal(data.movePoint).subtract(startingPoint));
             }
         });
