@@ -44,11 +44,6 @@ validateFirstRun(document.currentScript);
             loadTyping(navigator);
         }
 
-        var problemScript = navigator.getProblemScript();
-        if (problemScript !== '') {
-            executeScript(problemScript);
-        }
-
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();
