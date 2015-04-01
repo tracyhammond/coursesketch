@@ -125,11 +125,6 @@ validateFirstRun(document.currentScript);
             loadTyping(submissionData);
         }
 
-        var problemScript = navigator.getProblemScript();
-        if (problemScript !== '') {
-            executeScript(problemScript);
-        }
-
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();

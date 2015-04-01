@@ -33,13 +33,6 @@ import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
 
-/**
- * Created by gigemjt on 3/22/15.
- */
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Authenticator.class)
-
 public class BankProblemManagerTest {
 
     @Rule
@@ -49,6 +42,7 @@ public class BankProblemManagerTest {
     public Authenticator fauth;
     public static final String FAKE_ID = "507f1f77bcf86cd799439011";
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
+    public static final String FAKE_SCRIPT = "fake script";
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
     public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
@@ -288,16 +282,15 @@ public class BankProblemManagerTest {
 
     @Test
     public void testSetScript() throws Exception {
-        final SrlBankProblem problem = SrlBankProblem.newBuilder()
-                .setId("4554")
-                .setScript("this is a script")
-                .build();
-        mongoInsertBankProblem(db, problem);
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setScript(FAKE_SCRIPT);
+        mongoInsertBankProblem(db, bankProblem.build());
         DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
         System.out.println(curse);
         DBObject obj = curse.next();
         String testString = obj.get(SCRIPT).toString();
-        Assert.assertEquals("this is a script", testString);
+        Assert.assertEquals(FAKE_SCRIPT, testString);
     }
 
     /*
@@ -307,7 +300,7 @@ public class BankProblemManagerTest {
     public void testGetScript() throws Exception {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
-        bankProblem.setScript("Fake Script");
+        bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
         permissionBuilder.addAdminPermission(ADMIN_USER);
@@ -317,7 +310,7 @@ public class BankProblemManagerTest {
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
         SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
-        Assert.assertEquals("Fake Script", testString);
+        Assert.assertEquals(FAKE_SCRIPT, testString);
     }
 
     /*
@@ -328,7 +321,7 @@ public class BankProblemManagerTest {
     public void testUpdateScript () throws Exception {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
-        bankProblem.setScript("Fake Script");
+        bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
         permissionBuilder.addAdminPermission(ADMIN_USER);
@@ -336,14 +329,15 @@ public class BankProblemManagerTest {
         bankProblem.setAccessPermission(permissionBuilder);
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
 
+        String newFakeScript = "Faker Script";
         School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
         updateBankProblem.setId(FAKE_ID);
-        updateBankProblem.setScript("Faker Script");
+        updateBankProblem.setScript(newFakeScript);
 
         boolean isUpdated = mongoUpdateBankProblem(fauth, db, problemBankId, ADMIN_USER, updateBankProblem.build());
         Assert.assertEquals(true, isUpdated);
         final SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
-        Assert.assertEquals("Faker Script", testString);
+        Assert.assertEquals(newFakeScript, testString);
     }
 }
