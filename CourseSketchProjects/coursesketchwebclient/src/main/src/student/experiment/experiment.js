@@ -44,11 +44,6 @@ validateFirstRun(document.currentScript);
             loadTyping(navigator);
         }
 
-        var problemScript = navigator.getProblemScript();
-        if (problemScript !== '') {
-            executeScript(problemScript);
-        }
-
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();
@@ -134,11 +129,15 @@ validateFirstRun(document.currentScript);
         document.getElementById('problemPanel').appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
+            var problemScript = navigator.getProblemScript();
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
-                if (element.isRunning()) {
-                    element.finishWaiting();
-                    CourseSketch.studentExperiment.removeWaitOverlay();
-                }
+                executeScript(problemScript, document.getElementById('problemPanel'), function(){
+                    console.log("script executed - worker disconnect");
+                    if (element.isRunning()) {
+                        element.finishWaiting();
+                        CourseSketch.studentExperiment.removeWaitOverlay();
+                    }
+                });
                 return;
             }
 
@@ -148,13 +147,19 @@ validateFirstRun(document.currentScript);
             // add after attributes are set.
 
             sketchSurface.refreshSketch();
-            console.log(submission);
-            var updateList = submission.getUpdateList();
-            //console.log(updateList);
-            sketchSurface.loadUpdateList(updateList.getList(), element);
-            updateList = null;
-            element = null;
-            //console.log(submission);
+
+            //loads and runs the script
+            executeScript(problemScript, document.getElementById('problemPanel'), function(){
+                console.log("script executed - worker disconnect");
+                console.log(submission);
+                var updateList = submission.getUpdateList();
+                //console.log(updateList);
+                sketchSurface.loadUpdateList(updateList.getList(), element);
+                updateList = null;
+                element = null;
+                //console.log(submission);
+            });
         });
+        //end of getSubmission
     }
 })();
