@@ -72,9 +72,8 @@ public final class BankProblemManager {
         final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
                 .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
                 .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
-                .append(SCRIPT, problem.getScript());
+                .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList());
-
 
         if (!problem.hasAccessPermission()) {
             insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
@@ -153,7 +152,7 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
-        exactProblem.setScript((String) corsor.get(SCRIPT));
+        exactProblem.setScript((String) dbObject.get(SCRIPT));
         return exactProblem.build();
     }
 
@@ -179,7 +178,7 @@ public final class BankProblemManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
-            final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
+                                                 final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject corsor = myDbRef.fetch();
@@ -224,12 +223,12 @@ public final class BankProblemManager {
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
             update = true;
         }
-        if (problem.getOtherKeywordsCount() > 0) {
-            updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+        if (problem.hasScript()) {
+            updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
-        if (problem.hasScript()) {
-            updated.append(SCRIPT, new BasicDBObject(SCRIPT, problem.getScript()));
+        if (problem.getOtherKeywordsCount() > 0) {
+            updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
             update = true;
         }
         // Optimization: have something to do with pulling values of an
@@ -275,7 +274,7 @@ public final class BankProblemManager {
      *         Thrown if the user does not have permission to retrieve any bank problems.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
-            final String courseId, final int page) throws AuthenticationException {
+                                                               final String courseId, final int page) throws AuthenticationException {
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdmin(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
@@ -309,7 +308,7 @@ public final class BankProblemManager {
      *         package-private
      */
     static void mongoRegisterCourseProblem(final Authenticator authenticator, final DB dbs, final String userId,
-            final School.SrlProblem problem) throws DatabaseAccessException {
+                                           final School.SrlProblem problem) throws DatabaseAccessException {
         if (!problem.hasProblemBankId()) {
             throw new DatabaseAccessException("Unable to register the course problem: missing bank problem id [" + problem.getId() + "]");
         }

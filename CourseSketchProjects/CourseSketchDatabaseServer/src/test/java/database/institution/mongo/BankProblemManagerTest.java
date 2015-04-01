@@ -1,7 +1,7 @@
 package database.institution.mongo;
-
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
@@ -13,7 +13,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.school.School;
+import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util;
 
 import java.util.List;
@@ -23,11 +27,19 @@ import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
+import static database.DatabaseStringConstants.SCRIPT;
 import static database.DatabaseStringConstants.USERS;
+import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
+import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
+import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
 
 /**
  * Created by gigemjt on 3/22/15.
  */
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Authenticator.class)
+
 public class BankProblemManagerTest {
 
     @Rule
@@ -35,7 +47,7 @@ public class BankProblemManagerTest {
 
     public DB db;
     public Authenticator fauth;
-
+    public static final String FAKE_ID = "507f1f77bcf86cd799439011";
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
@@ -272,5 +284,66 @@ public class BankProblemManagerTest {
 
         BankProblemManager.mongoRegisterCourseProblem(fauth, db, USER_USER, problem.build());
 
+    }
+
+    @Test
+    public void testSetScript() throws Exception {
+        final SrlBankProblem problem = SrlBankProblem.newBuilder()
+                .setId("4554")
+                .setScript("this is a script")
+                .build();
+        mongoInsertBankProblem(db, problem);
+        DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
+        System.out.println(curse);
+        DBObject obj = curse.next();
+        String testString = obj.get(SCRIPT).toString();
+        Assert.assertEquals("this is a script", testString);
+    }
+
+    /*
+     * testGetScript tests getScript member function by inserting and then getting the value that was inserted.
+     */
+    @Test
+    public void testGetScript() throws Exception {
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setScript("Fake Script");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
+        permissionBuilder.addAdminPermission(ADMIN_USER);
+        permissionBuilder.addUserPermission(USER_USER);
+        bankProblem.setAccessPermission(permissionBuilder);
+
+        String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
+        SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        String testString = getProblem.getScript().toString();
+        Assert.assertEquals("Fake Script", testString);
+    }
+
+    /*
+     * testUpdateScript tests updateScript member function by inserting, updating,
+     * and then getting the value that was inserted.
+     */
+    @Test
+    public void testUpdateScript () throws Exception {
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setScript("Fake Script");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
+        permissionBuilder.addAdminPermission(ADMIN_USER);
+        permissionBuilder.addUserPermission(USER_USER);
+        bankProblem.setAccessPermission(permissionBuilder);
+        String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
+
+        School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
+        updateBankProblem.setId(FAKE_ID);
+        updateBankProblem.setScript("Faker Script");
+
+        boolean isUpdated = mongoUpdateBankProblem(fauth, db, problemBankId, ADMIN_USER, updateBankProblem.build());
+        Assert.assertEquals(true, isUpdated);
+        final SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        String testString = getProblem.getScript().toString();
+        Assert.assertEquals("Faker Script", testString);
     }
 }
