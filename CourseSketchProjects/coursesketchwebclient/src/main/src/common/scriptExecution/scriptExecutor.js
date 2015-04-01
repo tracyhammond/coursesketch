@@ -26,9 +26,16 @@ var api = {
  *        {string}
  */
 
-function executeScript(script) {
+function executeScript(script, panel, callback) {
     console.log('executing script: ' + script);
     var scriptWorker = new jailed.DynamicPlugin(script, api);
+    var timer = setTimeout(function(){
+        scriptWorker.disconnect()
+    }, 2000)
+    scriptWorker.whenDisconnected(function() {
+        clearTimeout(timer);
+        callback();
+    });
 }
 
 
