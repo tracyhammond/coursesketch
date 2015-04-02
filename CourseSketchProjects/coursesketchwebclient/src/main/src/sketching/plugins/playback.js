@@ -23,7 +23,7 @@ function Playback(updateList, updateManager, graphics) {
         // runs through all of the commands in the update.
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) { //Trey
+            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) { //Trey
                 (function() {
                     var stroke = command.decodedData;
                     var pointList = stroke.getPoints();
