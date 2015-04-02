@@ -4,7 +4,9 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import utilities.ConnectionException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 import coursesketch.server.base.ClientWebSocket;
@@ -76,7 +78,11 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             try {
                 login = LoginInformation.parseFrom(request.getOtherData());
             } catch (InvalidProtocolBufferException e) {
+                final Message.ProtoException p = ExceptionUtilities.createProtoException(e);
+                this.getParentServer().send(getConnectionFromState(getStateFromId(request.getSessionInfo())),
+                        ExceptionUtilities.createExceptionRequest(p, request));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+
             }
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             state.addTry();
