@@ -5,27 +5,26 @@ function VoiceRecording() {
         shadowRoot.appendChild(templateClone);
 
         this.shadowRoot.querySelector("#recordBtn").onclick = function() {
-            if (this.isRecording == true) {
-                this.stopRecording();
-                clearInterval(this.voiceBtnTimer);
-                this.isRecording = false;
-                $(this.shadowRoot.querySelector("#recordBtn")).val(null);
-            }
-            else {
-                this.blink($(this.shadowRoot.querySelector("#recordBtn")));
-                this.startRecording();
-                this.isRecording = true;
-            }
-        }.bind(this);
+        if (this.isBlinking) {
+                        clearInterval(this.voiceBtnTimer);
+                        this.isBlinking = false;
+                        this.shadowRoot.querySelector('#recordBtn').value = " ";
+                    }
+                    else {
+                        this.blinking($(this.shadowRoot.querySelector("#recordBtn")));
+                        this.isBlinking = true;
+                    }
+                }.bind(this);
 
-        this.blink = function(elm) {
-            this.voiceBtnTimer = setInterval(function() {
-                elm.fadeOut(400, function() {
-                    elm.fadeIn(400);
-                });
-            }, 800);
-            elm.val("REC");
-        }.bind(this);
+                this.blinking = function(elm) {
+                    this.blink = function() {
+                        this.shadowRoot.querySelector('#recordBtn').value = "REC";
+                        elm.fadeOut(400, function() { console.log(this.voiceBtnTimer);
+                            elm.fadeIn(400);
+                        });
+                    }.bind(this);
+                    this.voiceBtnTimer = setInterval(this.blink, 800);
+                }.bind(this);
 
         this.startRecording = function() {
             this.recorder.record();
