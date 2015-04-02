@@ -9,9 +9,11 @@ import database.DatabaseClient;
 import database.LoginException;
 import database.RegistrationException;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -107,6 +109,8 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 loginUser(conn, req, login);
             }
         } catch (final InvalidProtocolBufferException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, false, null));
         }
@@ -132,9 +136,13 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             // login user after registering user.
             loginUser(conn, req, login);
         } catch (GeneralSecurityException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         } catch (RegistrationException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
@@ -165,6 +173,8 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
