@@ -93,11 +93,10 @@
 
             // next test
 
-            asyncTest("get courses from course local callback", function(assert) {
-                expect(2);
+            asyncTest("insert course into remote database", function(assert) {
+                expect(4);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse(); // sets up server response.
                 var req = CourseSketch.PROTOBUF_UTIL.Request();
                 req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
@@ -105,45 +104,39 @@
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                course.id = generateUUID();
                 var course1 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course1.id = "firstcourse";
                 course2.id = "secondcourse";
                 course1.name = "I am a test!";
                 course2.name = "I am also a test!";
-                course1.courseId = course.id
-                course2.courseId = course.id;
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
-                    dataManager.setCourse(course, function() {
-                        itemResult.returnText = "1Two" + ":" + course1.id;
+                    itemResult.returnText = "1Two" + ":" + course1.id;
+                    CourseSketch.connection.sendRequest = function(message) {
+                        req.otherData = dataResult.toArrayBuffer();
+                        CourseSketch.connection.sendSelf(req);
+                    }; //send request
+                    dataManager.insertCourse(course1, undefined, function() {
+                        itemResult.returnText = "2Two" + ":" + course2.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
-                        dataManager.insertCourse(course1, undefined, function() {
-                            itemResult.returnText = "2Two" + ":" + course2.id;
-                            CourseSketch.connection.sendRequest = function(message) {
-                                req.otherData = dataResult.toArrayBuffer();
-                                CourseSketch.connection.sendSelf(req);
-                            }; //send request
-                                dataManager.insertCourse(course2, undefined, function() {
+                        dataManager.insertCourse(course2, undefined, function() {
 
-                                    // Used to prevent issues with server stuff.
-                                    CourseSketch.connection.sendRequest = function(){};
-                                    dataManager.getAllCourses(function(courseList) {
-                                        assert.ok(true, "Courses can be fetched from the database.");
-                                        assert.equal(courseList.length, 2, "Two courses were inserted and two courses were returned.");
-                                        for (var i = 0; i < courseList.length; ++i) {
-                                            console.log(courseList[i]);
-                                        }
-                                        QUnit.start();
-                                    }); // getCoursecourse loop
-                                }); // insertcourse course2
-                        }); // insertcourse course1
-                    });
+                            // Used to prevent issues with server stuff.
+                            CourseSketch.connection.sendRequest = function(){};
+                            dataManager.getAllCourses(function(courseList) {
+                                assert.ok(true, "Courses can be fetched from the database.");
+                                assert.equal(courseList.length, 2, "Two courses were inserted and two courses were returned.");
+                                assert.equal(courseList[0].id, "1Two", "The id has been replaced.");
+                                assert.equal(courseList[1].id, "2Two", "The id has been replaced.");
+                                QUnit.start();
+                            }, true); // get all courses.
+                        }); // insertcourse course2
+                    }); // insertcourse course1
                 }); // end waitForDatabase
             });
 

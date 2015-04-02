@@ -12,8 +12,13 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.School;
 
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 /**
  * Handles data being added or edited.
@@ -26,6 +31,12 @@ import java.util.ArrayList;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
 public final class DataUpdateHandler {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DataUpdateHandler.class);
+
     /**
      * A message returned when the insert was successful.
      */
@@ -52,7 +63,7 @@ public final class DataUpdateHandler {
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
     public static void handleData(final Request req, final SocketSession conn) {
         try {
-            System.out.println("Receiving DATA UPDATE Request...");
+            LOG.info("Receiving DATA UPDATE Request...");
 
             final String userId = req.getServersideId();
             final DataSend request = DataSend.parseFrom(req.getOtherData());
@@ -79,7 +90,35 @@ public final class DataUpdateHandler {
                             results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
                         }
                         break;
+                        case COURSE: {
+                            final School.SrlCourse course = School.SrlCourse.parseFrom(itemSet.getData());
+                            instance.updateCourse(userId, course);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case ASSIGNMENT: {
+                            final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
+                            instance.updateAssignment(userId, assignment);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case COURSE_PROBLEM: {
+                            final School.SrlProblem srlProblem = School.SrlProblem.parseFrom(itemSet.getData());
+                            instance.updateCourseProblem(userId, srlProblem);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
+                        case BANK_PROBLEM: {
+                            final School.SrlBankProblem srlBankProblem = School.SrlBankProblem.parseFrom(itemSet.getData());
+                            instance.updateBankProblem(userId, srlBankProblem);
+                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                        }
+                        break;
                         default:
+                            final ItemResult.Builder build = ItemResult.newBuilder();
+                            build.setQuery(itemSet.getQuery());
+                            results.add(ResultBuilder.buildResult(build.build().toByteString(), "Update is not supported for this type",
+                                    ItemQuery.ERROR));
                             break;
                     }
                 } catch (AuthenticationException e) {
@@ -88,7 +127,7 @@ public final class DataUpdateHandler {
                         build.setQuery(itemSet.getQuery());
                         results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
                     } else {
-                        e.printStackTrace();
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
                 } catch (Exception e) {
@@ -96,17 +135,17 @@ public final class DataUpdateHandler {
                     build.setQuery(itemSet.getQuery());
                     build.setData(itemSet.toByteString());
                     results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
             if (!results.isEmpty()) {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
         } catch (AuthenticationException e) {
-            e.printStackTrace();
-            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to update data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            e.printStackTrace();
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }

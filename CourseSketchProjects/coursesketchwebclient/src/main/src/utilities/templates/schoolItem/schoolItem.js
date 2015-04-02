@@ -1,8 +1,27 @@
+/**
+ * This method traverses up the parent chain until it reaches a null node. It then returns the host.
+ * This is used to find the parent of a shadow root which contains the given node.
+ *
+ * @param {Node} parent the parent of a node contained within a school item shadow dom.
+ * @return {Node} the host element that contains this node.
+ */
+var getHostElement = function(parent) {
+    var grandParent = parent.parentNode;
+    while (grandParent !== null) {
+        parent = grandParent;
+        grandParent = grandParent.parentNode;
+    }
+    return parent.host;
+};
+
+/**
+ * @class SchoolItem
+ */
 function SchoolItem() {
 
     /**
-     * @param templateClone
-     *            {Element} an element representing the data inside tag, its
+     * @param {Element} templateClone
+     *            an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -22,8 +41,8 @@ function SchoolItem() {
         var descriptionContent = this.shadowRoot.querySelector('.description content');
 
         var nodes = descriptionContent.getDistributedNodes();
-        if (!nodes || nodes == null || nodes.length == 0) {
-            descriptionContent.dataset.overflow = "false";
+        if (!nodes || nodes === null || nodes.length === 0) {
+            descriptionContent.dataset.overflow = 'false';
             return false;
         }
         var element = nodes[0];
@@ -34,10 +53,10 @@ function SchoolItem() {
         var usedWidth = $(window).width();
         for (var i = 0; i < widths.length; i++) {
             var width = widths[i];
-            if (typeof width == "string") {
-                if (width.endsWith && width.endsWith("px")) {
-                    width = width.substring(0, width.indexOf("px"));
-                    width = parseInt(width);
+            if (typeof width === 'string') {
+                if (width.endsWith && width.endsWith('px')) {
+                    width = width.substring(0, width.indexOf('px'));
+                    width = parseInt(width, 10);
                 } else {
                     break;
                 }
@@ -48,7 +67,7 @@ function SchoolItem() {
         }
         var padding = 20; // left right padding is 10
         var isOverflow = checkTextOverflow(usedWidth - padding, text, $(element).css('font'));
-        descriptionContent.dataset.overflow = ""+isOverflow;
+        descriptionContent.dataset.overflow = '' + isOverflow;
         return isOverflow;
     };
 
@@ -75,7 +94,7 @@ function SchoolItem() {
         }
 
         var paragraph = this.shadowRoot.querySelector('.description p');
-        $(paragraph).addClass("overflow");
+        $(paragraph).addClass('overflow');
 
         var descriptionContent = this.shadowRoot.querySelector('.description content');
         var nodes = descriptionContent.getDistributedNodes();
@@ -110,7 +129,7 @@ function SchoolItem() {
         var editingClass = 'currentlyEditing';
         // calls the function for ever instance of the editButton
         var list = localScope.shadowRoot.querySelectorAll('.editButton');
-        for(var i = 0; i < list.length; ++i) {
+        for (var i = 0; i < list.length; ++i) {
             (function(element) {
                 var parentNode = element.parentNode;
                 var content = parentNode.querySelector('content');
@@ -132,11 +151,14 @@ function SchoolItem() {
                         oldData.set(element.dataset.type, oldContent);
                         var newData = new Map();
                         newData.set(element.dataset.type, contentElement.textContent);
+                        // Note: this only calls it with the element (but it contains a field schoolItemData
+                        // if it was built using the school item builder
+                        // this value can be used to get the protobuf object.
                         localScope.editFunction(element.dataset.type, oldData, newData, realParent);
                     }
                 };
                 // do something else for the advance button.
-                if ($(element).hasClass("advanceButton")) {
+                if ($(element).hasClass('advanceButton')) {
                     if (localScope.createAdvanceEditPanel) {
                         localScope.createAdvanceEditPanel(element, localScope, parentNode);
                     }
@@ -151,7 +173,7 @@ function SchoolItem() {
                         $(parentNode).addClass(editingClass);
 
                         if (isUndefined(contentElement)) {
-                            contentElement = document.createElement("div");
+                            contentElement = document.createElement('div');
                             $(contentElement).addClass(element.dataset.type);
                             localScope.appendChild(contentElement);
                         }
@@ -174,42 +196,27 @@ function SchoolItem() {
     }
 
     /**
-     * @returns True if the description has larger text size than is allowed.
+     * @returns {Boolean} True if the description has larger text size than is allowed.
      */
     this.isDescriptionOverflow = function() {
         return this.shadowRoot.querySelector('.description content').dataset.overflow ===  'true';
     };
 
     /**
-     * @Method
-     * @param func
+     * @function
+     * @param {Function} func
      *            A function that is called at the end of an edit.
-     * @callbackParam type {string} this is the class of the item that was
+     * @callbackParam {String} type this is the class of the item that was
      *                edited (description, name, accessDate, dueDate,
      *                closedDate)
-     * @callbackParam oldValue {string} the old value.
-     * @callbackParam newValue {string} the value that the element was changed
+     * @callbackParam {String} oldValue the old value.
+     * @callbackParam {String} newValue the value that the element was changed
      *                to.
      */
     this.setEditCallback = function(func) {
         this.editFunction = func;
     };
 }
-
-/**
- * {@link} parent {Node} the parent of a node contained within a school item shadow dom.
- * This method traverses up the parent chain until it reaches a null node. It then returns the host.
- * This is used to find the parent of a shadow root which contains the given node.
- * @return {Node} the host element that contains this node.
- */
-var getHostElement = function(parent) {
-    var grandParent = parent.parentNode;
-    while (grandParent != null) {
-        parent = grandParent;
-        grandParent = grandParent.parentNode;
-    }
-    return parent.host;
-};
 
 SchoolItem.prototype.schoolItemData = undefined;
 

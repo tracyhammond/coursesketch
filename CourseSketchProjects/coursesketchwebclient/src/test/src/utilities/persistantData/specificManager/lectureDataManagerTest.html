@@ -122,7 +122,7 @@
                                                 QUnit.start();
                                             }, undefined); // getCourselecture loop
                                     }); // getCourse
-                                }); // insertlecture lecture2 
+                                }); // insertlecture lecture2
                         }); // insertlecture lecture1
                     });
                 });
@@ -206,14 +206,14 @@
                                         CourseSketch.connection.sendRequest = function(){};
                                         //setTimeout(function(){
                                             dataManager.getCourseLectures(newCourse.lectureList,  function(lectureList) {
-                                                 
+
                                                 assert.equal(lectureList[0].id, '1Two', "lecture 1 was correct");
                                                  assert.equal(lectureList[1].id, '2Two', "lecture 2 was correct");
                                                 QUnit.start();
                                             }, undefined); // getCourselecture loop
-                                        //}, 100);// to prevent race condiction of getting before updating  
+                                        //}, 100);// to prevent race condiction of getting before updating
                                     }); // getCourse
-                                }); // insertlecture lecture2 
+                                }); // insertlecture lecture2
                         }); // insertlecture lecture1
                     });
                 });
@@ -230,7 +230,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
                 waitForDatabase(dataManager, function() {
                     dataManager.getCourseLecture(fakeID);
-                    
+
                 });
             });
 
@@ -244,37 +244,27 @@
                 var fakeID = generateUUID();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = generateUUID();
-                var SrlLecturedata =  CourseSketch.PROTOBUF_UTIL.SrlLectureDataHolder();
                 var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
                 lecture.id = fakeID;
                 lecture.courseId = course.id;
-                lecture.name = "Preupdated"
-                SrlLecturedata.lectures = [ lecture];
+                lecture.name = "Preupdated";
                 var waitfor = 0;
-                var interval = setInterval(function() {
-                        if (dataManager.isDatabaseReady()) {
-                            clearInterval(interval);
-                            dataManager.setLecture(lecture,  function() {
-                                dataManager.deleteLecture(lecture.id, function() {
-                                    setTimeout(function(){
-                                        dataManager.getCourse(course.id, function(newCourse) {
-                                        CourseSketch.connection.sendRequest = function(){};
-                                        //setTimeout(function(){
-                                            dataManager.getCourseLectures(newCourse.lectureList,  function(lectureList) {
-                                                assert.ok(true, "Lectures can be fetched from the database.");
-                                                assert.equal(lectureList.length, 0, "Two lectures were inserted and two lectures were returned.");
-                                                for (var i = 0; i < lectureList.length; ++i) {
-                                                    console.log(lectureList[i]);
-                                                }
-                                                QUnit.start();
-                                            }, undefined); // getCourselecture loop
-                                        }); // getCourse
-                                    },100);
-                                });
-                            });
-                      }; // endif
-                }, 100);
-             });
+                waitForDatabase(dataManager, function() {
+                    dataManager.setLecture(lecture, function() {
+                        dataManager.deleteLecture(lecture.id, function() {
+                            setTimeout(function() {
+                                dataManager.getLectureLocal(lecture.id,  function(lecture) {
+                                    assert.ok(lecture instanceof CourseSketch.DatabaseException, "Lectures can be fetched from the database.");
+                                    QUnit.start();
+                                }); // getLecture
+                            }, 100);
+                        });
+                    }); // end set lecture
+                });
+            });
+
+            // new test
+
             asyncTest("update lecture server callback", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
@@ -304,7 +294,7 @@
                             req.otherData = dataResult.toArrayBuffer();
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
-                
+
                 waitForDatabase(dataManager, function() {
                    dataManager.setLecture(lecture, function() {
                        dataManager.updateLecture(lecture2, undefined, function() {
@@ -343,7 +333,7 @@
                                 lecture2.id = result1.id;
                                 assert.equal(lecture2.name, result1.name,"Sent a lecture to local and updated it");
                                 QUnit.start();
-                            }); //get courselecture 
+                            }); //get courselecture
                         });
                     });
                 });

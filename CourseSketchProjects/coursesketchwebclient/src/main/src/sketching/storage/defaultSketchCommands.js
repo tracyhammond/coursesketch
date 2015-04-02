@@ -1,13 +1,17 @@
+validateFirstGlobalRun(document.currentScript);
+
 /*******************************************************************************
  * METHODS FOR THE REDO AND UNDO ARE BELOW.
  *
  * Each method is a prototype of the command or the update
+ *
+ * @overview This file holds the redo and undo methods for the default sketch command.
  ******************************************************************************/
 (function() {
 
     /**
      * Removes all elements of the sketch.
-     * @returns {boolean} true. This will always ask for the sketch to be
+     * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, function() {
@@ -20,7 +24,7 @@
     /**
      * Adds all of the sketch data back.
      *
-     * @returns {boolean} true. This will always ask for the sketch to be
+     * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, function() {
@@ -33,7 +37,7 @@
     /**
      * Do nothing
      *
-     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, function() {
         return true;
@@ -42,7 +46,7 @@
     /**
      * Do nothing
      *
-     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, function() {
         return true;
@@ -51,7 +55,7 @@
     /**
      * Do nothing
      *
-     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, function() {
         return true;
@@ -60,7 +64,7 @@
     /**
      * Do nothing
      *
-     * @returns {boolean} true.  because if we switch sketch we should probably do something about it.
+     * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.SWITCH_SKETCH, function() {
         return true;
@@ -69,7 +73,7 @@
     /**
      * Adds a stroke to this local sketch object.
      *
-     * @returns {boolean} true. This will always ask for the sketch to be
+     * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
@@ -84,7 +88,7 @@
     /**
      * The undo method associated with adding a stroke to the sketch
      *
-     * @returns {boolean} true. This will always ask for the sketch to be
+     * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, function() {
@@ -99,7 +103,7 @@
     /**
      * Adds a shape to this local sketch object.
      *
-     * @returns {boolean} false. This will never ask for the sketch to be
+     * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
@@ -114,7 +118,7 @@
     /**
      * Undoes adding a shape command which basically means it removes the shape
      *
-     * @returns {boolean} false. This will never ask for the sketch to be
+     * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_SHAPE, function() {
@@ -130,12 +134,12 @@
     /**
      * Removes an object from the this.getLocalSketchSurface().
      *
-     * @returns {boolean} true. This will always ask for the sketch to be
+     * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
-            this.decodedData = new Array();
+            this.decodedData = [];
             var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass());
             this.decodedData[0] = idChain;
         }
@@ -147,12 +151,12 @@
      * Undoes removing an object from the sketch Removes an object from the
      * this.getLocalSketchSurface().
      *
-     * @returns {boolean} true. This will always ask for the sketch to be
+     * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.REMOVE_OBJECT, function() {
         if (!this.decodedData || !isArray(this.decodedData)) {
-            this.decodedData = new Array();
+            this.decodedData = [];
             var idChain = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData, CourseSketch.PROTOBUF_UTIL.getIdChainClass());
             this.decodedData[0] = idChain;
         }
@@ -164,7 +168,7 @@
     /**
      * Moves shapes from one shape to another shape.
      *
-     * @returns {boolean} false. This will never ask for the sketch to be
+     * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn. TODO: change it so that it knows what sketch it is
      *          associated with.
      */
@@ -180,7 +184,7 @@
      * Moves shapes from one shape to another shape. But does the opposite as
      * the redo package shape
      *
-     * @returns {boolean} false. This will never ask for the sketch to be
+     * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.
      */
     CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.PACKAGE_SHAPE, function() {
@@ -196,9 +200,8 @@
      **************************************************************************/
 
     /**
-     * @returns the human readable name of the given marker type
+     * @returns {String} the human readable name of the given marker type.
      */
-
     CourseSketch.PROTOBUF_UTIL.getMarkerClass().prototype.getCommandTypeName = function() {
         switch (this.getType()) {
             case this.MarkerType.SUBMISSION:
@@ -212,7 +215,7 @@
             case CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR:
                 return 'CLEAR';
         }
-        return "NO_NAME # is: " + this.getCommandType();
+        return 'NO_NAME # is: ' + this.getCommandType();
     };
 
     /***************************************************************************
@@ -222,17 +225,18 @@
     /**
      * Moves the shapes from the old container to the new container.
      *
-     * @param sketch
-     *            {SrlSketch} the sketch object that is being affected by these
+     * @param {SrlSketch} sketch
+     *            the sketch object that is being affected by these
      *            changes.
      */
     CourseSketch.PROTOBUF_UTIL.getActionPackageShapeClass().prototype.redo = function(sketch) {
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
         var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 
-        if (oldContainingObject == newContainingObject)
-        // done moving to same place.
-        return;
+        if (oldContainingObject === newContainingObject) {
+            // done moving to same place.
+            return;
+        }
         for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
             var shapeId = this.shapesToBeContained[shapeIndex];
             var object = oldContainingObject.removeSubObjectById(shapeId);
@@ -245,26 +249,29 @@
      *
      * This is a reverse of the process used in redo.
      *
-     * @param sketch
-     *            {SrlSketch} the sketch object that is being affected by these
+     * @param {SrlSketch} sketch
+     *            the sketch object that is being affected by these
      *            changes.
      */
     CourseSketch.PROTOBUF_UTIL.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 
-        if (oldContainingObject == newContainingObject)
-        // done moving to same place.
-        return;
+        if (oldContainingObject === newContainingObject) {
+            // done moving to same place.
+            return;
+        }
 
-        for (shapeId in this.shapesToBeContained) {
-            var object = oldContainingObject.removeSubObjectById(shapeId);
-            if (newContainerId) {
-                newContainingObject.addSubObject(object);
-            } else {
-                newContainingObject.addObject(object);
+        for (var shapeId in this.shapesToBeContained) {
+            if (this.shapesToBeContained.hasOwnProperty(shapeId)) {
+                var object = oldContainingObject.removeSubObjectById(shapeId);
+                if (newContainerId) {
+                    newContainingObject.addSubObject(object);
+                } else {
+                    newContainingObject.addObject(object);
+                }
             }
         }
     };
 
-})();// (CourseSketch.PROTOBUF_UTIL.SrlUpdate, CourseSketch.PROTOBUF_UTIL.SrlCommand, CourseSketch.PROTOBUF_UTIL);
+})();
