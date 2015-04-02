@@ -6,8 +6,10 @@ import coursesketch.server.interfaces.MultiConnectionState;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import utilities.ConnectionException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -62,7 +64,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
                 }
             }
         } else {
-            final MultiConnectionState state = getStateFromId(AbstractServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
+            final MultiConnectionState state = getStateFromId(req.getSessionInfo());
 
             final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
             // Strips away identification.
