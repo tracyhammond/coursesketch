@@ -1,73 +1,73 @@
 package protobuf.srl.sketch;
 
 message SrlSketch {
-	optional string domainId = 4; // used to find the domain for recognition
-	repeated SrlObject sketch = 5;
+    optional string domainId = 4; // used to find the domain for recognition
+    repeated SrlObject sketch = 5;
 }
 
 /**
  * Wraps all of the sketch objects so we can fake inheritance.
  */
 message SrlObject {
-	required ObjectType type = 1;
-	enum ObjectType {
-		SHAPE = 0;
-		STROKE = 1;
-		POINT = 2;
-		LINE = 3; // not supported at this time.
-	}
-	required bytes object = 2;
-	// TODO: add attributes field (named protoAttributes)
-	// it was put in the object and not the shape and stroke because both use it and this saves on code space.
+    required ObjectType type = 1;
+    enum ObjectType {
+        SHAPE = 0;
+        STROKE = 1;
+        POINT = 2;
+        LINE = 3; // not supported at this time.
+    }
+    required bytes object = 2;
+    // TODO: add attributes field (named protoAttributes)
+    // it was put in the object and not the shape and stroke because both use it and this saves on code space.
 }
 
 message SrlShape {
-	required string id = 1;
-	required uint64 time = 2;
-	optional string name = 3;
-	optional bool isUserCreated = 4;
-	repeated SrlInterpretation interpretations = 5;
-	repeated SrlObject subComponents = 6;
-	optional SrlBoundingBox boundingbox = 7;
+    required string id = 1;
+    required uint64 time = 2;
+    optional string name = 3;
+    optional bool isUserCreated = 4;
+    repeated SrlInterpretation interpretations = 5;
+    repeated SrlObject subComponents = 6;
+    optional SrlBoundingBox boundingbox = 7;
 }
 
 message SrlStroke {
-	required string id = 1;
-	required uint64 time = 2; // the time is equal to when the stroke is finished.
-	optional string name = 3;
-	repeated SrlPoint points = 4;
-	optional SrlBoundingBox boundingbox = 5;
+    required string id = 1;
+    required uint64 time = 2; // the time is equal to when the stroke is finished.
+    optional string name = 3;
+    repeated SrlPoint points = 4;
+    optional SrlBoundingBox boundingbox = 5;
 }
 
 // If a point is added directly on the sketch surface then it is in a SrlStroke
 // in a SrlObject all with the same id and time and name.
 message SrlPoint {
-	required string id = 1;
-	required uint64 time = 2;
-	optional string name = 3;
-	required double x = 4;
-	required double y = 5;
-	optional double pressure = 6;
-	optional double size = 7;
-	optional double speed = 8;
+    required string id = 1;
+    required uint64 time = 2;
+    optional string name = 3;
+    required double x = 4;
+    required double y = 5;
+    optional double pressure = 6;
+    optional double size = 7;
+    optional double speed = 8;
 }
 
 // TODO: change to SrlInterpretation
 // TODO: change name to label
 message SrlInterpretation {
-	required string label = 1;
-	required double confidence = 2;
-	optional double complexity = 3;
+    required string label = 1;
+    required double confidence = 2;
+    optional double complexity = 3;
 }
 
 message SrlBoundingBox {
-	required double x = 1;
-	required double y = 2;
-	required double width = 3;
-	required double height = 4;
+    required double x = 1;
+    required double y = 2;
+    required double width = 3;
+    required double height = 4;
 }
 
 message SrlAttributes {
-	repeated string keys = 1;
-	repeated string values = 2;
+    repeated string keys = 1;
+    repeated string values = 2;
 }

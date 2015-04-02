@@ -1,6 +1,6 @@
 package database;
 
-import protobuf.srl.school.School.DateTime;
+import protobuf.srl.utils.Util.DateTime;
 
 /**
  * Converts a request from different values to the protobuf version.

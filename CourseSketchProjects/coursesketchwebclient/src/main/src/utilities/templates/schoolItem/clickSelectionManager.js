@@ -1,4 +1,4 @@
-function clickSelectionManager() {
+function ClickSelectionManager() {
     this.selectedItems = [];
     this.selectionClassName = ' selectedBox';
     this.localDoc = document;
@@ -6,6 +6,13 @@ function clickSelectionManager() {
     this.addSelectedItem = function(element) {
         this.selectedItems.push(element);
         this.selectItem(element);
+    };
+
+    /**
+     * Toggles the selection of the given element.
+     */
+    this.toggleSelection = function(element) {
+        $(element).toggleClass(this.selectionClassName);
     };
 
     this.selectItem = function(element) {
@@ -29,5 +36,15 @@ function clickSelectionManager() {
 
     this.isItemSelected = function(element) {
         return this.selectedItems.indexOf(element) > -1;
+    };
+
+    /**
+     * Adds the list of selected items to this manager.
+     * @param {Array<Element>} listOfElements the elements that the selection is being applied to.
+     */
+    this.applySelections = function(listOfElements) {
+        for (var i = 0; i < listOfElements.length; i++) {
+            this.addSelectedItem(listOfElements[i]);
+        }
     };
 }
