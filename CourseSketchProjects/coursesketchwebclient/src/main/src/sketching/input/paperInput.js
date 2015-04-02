@@ -35,6 +35,18 @@ function InputListener() {
             }
         }
 
+        /**
+         * A listener that attempts to listen for 2 finger scroll events so that tablets can scroll the sketch surface.
+         * @param {Event} event - the event that contains normal event data.
+         * @param {String} phase - The phases of the event.  ("start", "move", "end")
+         * @param {Element} target - the element the event is based off of.
+         * @param {Object} data - Contains:<ul>
+         *                  <li>movePoint</li>
+         *                  <li>lastMovePoint</li>
+         *                  <li>startPoint</li>
+         *                  <li>velocity</li>
+         *                  </ul>
+         */
         $(sketchCanvas).bind('touchy-drag', function(event, phase, $target, data) {
             if (phase === 'start') {
                 startingPoint = data.startPoint;
