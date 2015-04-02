@@ -20,7 +20,7 @@ var dateFormat = function () {
 			val = String(val);
 			len = len || 2;
 			while (val.length < len) val = "0" + val;
-			retcd wo	urn val;
+			return val;
 		};
 
 	// Regexes and supporting functions are cached through closure
