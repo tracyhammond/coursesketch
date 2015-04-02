@@ -20,7 +20,7 @@
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
         <projectBranchLevel>5</projectBranchLevel>
-        <projectLineLevel>11</projectLineLevel>
+        <projectLineLevel>10</projectLineLevel>
 	</properties>
 
 	<build>
@@ -52,6 +52,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
 			</plugin>
 		</plugins>
 	</build>

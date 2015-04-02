@@ -1,3 +1,16 @@
+
+#edit files#
+
+*.js~
+*.xml~
+*.cpp~
+*.html~
+*.css~
+*.java~
+
+#end edit files
+
+
 *.class
 .DS_Store
 # Package Files #
