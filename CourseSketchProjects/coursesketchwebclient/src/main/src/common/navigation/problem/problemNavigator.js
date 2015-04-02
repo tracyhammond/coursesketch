@@ -192,6 +192,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
+     * @return {String} the problem script of the current problem.
+     */
+    this.getProblemScript = function() {
+        return getProblemInfo().script;
+    };
+
+    /**
      * sets the information about a specific submission.
      * @param {SrlExperiment | SrlSolution} submissionWrapper this is either an experiment or solution this is NOT a submission object.
      * @instance
