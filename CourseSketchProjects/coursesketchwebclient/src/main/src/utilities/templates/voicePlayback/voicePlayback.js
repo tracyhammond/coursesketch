@@ -8,10 +8,12 @@ function VoicePlayback() {
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "block";
             localScope.shadowRoot.querySelector("#play-btn").style.display = "none";
             playMe();
+            playVoice();
         }
         this.shadowRoot.querySelector("#pause-btn").onclick = function(){
             localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
+            pauseVoice();
         }
 
         var surface = document.body.querySelector("sketch-surface");
@@ -33,6 +35,19 @@ function VoicePlayback() {
             playBack.playNext();
             //localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             //localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
+        }
+
+        function playVoice() {
+            localScope.audio.play();
+        }
+
+        function pauseVoice() {
+            localScope.audio.pause();
+        }
+
+        function init() {
+            localScope.audio = document.createElement('audio');
+            localScope.audio.src = '/src/utilities/templates/voicePlayback/TestRecording/mp3test.mp3';
         }
     }
 
