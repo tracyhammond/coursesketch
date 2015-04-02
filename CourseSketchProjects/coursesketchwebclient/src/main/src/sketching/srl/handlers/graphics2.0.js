@@ -1,7 +1,11 @@
+/* jshint camelcase: false */
 /**
- * Installs PaperScope globally, and attaches it to the DomObject canvasElement
+ * Installs PaperScope globally, and attaches it to the DomObject canvasElement.
+ * @class Graphics
+ * @param {Element} canvas the canvas element that is being drawn to.
+ * @param {SketchManager} sketchManager - the manager that handles which sketch is currently active.
  */
-function Graphics(canvasElement, sketchManager) {
+function Graphics(canvas, sketchManager) {
     paper.install(window);
 
     /**
@@ -11,7 +15,7 @@ function Graphics(canvasElement, sketchManager) {
      */
     var ps = undefined;
     var livePath = undefined;
-    var canvasElement = $(canvasElement)[0];
+    var canvasElement = $(canvas)[0];
     var drawUpdate = true;
 
     ps = new paper.PaperScope(canvasElement);
@@ -25,7 +29,7 @@ function Graphics(canvasElement, sketchManager) {
         var oldWidth = canvasElement.width;
         canvasElement.height = $(canvasElement).parent().height();
         canvasElement.width = $(canvasElement).parent().width();
-        if (oldHeight != canvasElement.height || oldWidth != canvasElement.width) {
+        if (oldHeight !== canvasElement.height || oldWidth !== canvasElement.width) {
             ps.view.viewSize.setHeight(canvasElement.height);
             ps.view.viewSize.setWidth(canvasElement.width);
         }
@@ -42,7 +46,7 @@ function Graphics(canvasElement, sketchManager) {
         var boundary = new ps.Rectangle(ps.view.bounds);
         ps.project.activeLayer.fitBounds(boundary);
         ps.view.update();
-    }
+    };
 
     /**
      * Updates the view at 60fps
@@ -58,7 +62,7 @@ function Graphics(canvasElement, sketchManager) {
      * Starts a new path in the view at the given point
      */
     this.createNewPath = function(point) {
-        livePath = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        livePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
         livePath.add(point);
     };
 
@@ -79,7 +83,7 @@ function Graphics(canvasElement, sketchManager) {
     };
 
     /**
-     * @return the PaperScope (will return scope of a specific element via a parameter)
+     * @return {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
      */
     this.getPaper = function() {
         return ps;
@@ -107,7 +111,7 @@ function Graphics(canvasElement, sketchManager) {
      * Removes an item from the view.
      */
     this.removeItem = function(itemId) {
-        var object = ps.project.getItem({data: {id : itemId} });
+        var object = ps.project.getItem({ data: { id: itemId } });
         object.remove();
         ps.view.update();
     };
@@ -115,15 +119,15 @@ function Graphics(canvasElement, sketchManager) {
 
     /**
      * Draws a single stroke onto the screen.
-     * @param stroke {Srl_Stroke} the stroke to be drawn.
+     * @param {Srl_Stroke} stroke the stroke to be drawn.
      */
     function loadStroke(stroke) {
         ps.activate();
-        var object = ps.project.getItem({data: {id : stroke.getId()} });
-        if (!isUndefined(object) && object != null) {
+        var object = ps.project.getItem({ data: { id: stroke.getId() } });
+        if (!isUndefined(object) && object !== null) {
             return; // already added to the sketch.
         }
-        var path = new ps.Path({strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black'});
+        var path = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
         path.data.id = stroke.getId();
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
@@ -134,6 +138,14 @@ function Graphics(canvasElement, sketchManager) {
 
     /**
      * Adds ability to draw the command as it is added to the update list.
+     * @function addUpdate
+     *
+     * @memberof Graphics
+     * @param {SrlUpdate} update the given update that is about to be executed.
+     * @param {Boolean} redraw true if the given update should force a redraw of the canvas.
+     * @param {Number} updateIndex the number index that this update occurs in the list of updates.
+     * @param {Number} lastUpdateType the type of the last update which can either be 1, 0, -1. with 1 = redo, 0 = normal and -1 = undo.
+     * @instance
      */
     this.addUpdate = function addUpdate(update, redraw, updateIndex, lastUpdateType) {
         ps.activate();
@@ -143,28 +155,39 @@ function Graphics(canvasElement, sketchManager) {
         var commandList = update.commands;
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
-                var stroke = command.decodedData;
-                if (lastUpdateType == 0 || lastUpdateType == 1) {
-                    loadStroke(stroke);
-                } else if (lastUpdateType == -1) {
-                    removeItem(stroke.getId());
-                }
-            } else if (command.commandType == CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
-                if (lastUpdateType == 0 || lastUpdateType == 1) {
-                    ps.project.activeLayer.removeChildren();
-                } else {
-                    loadSketch();
-                }
-            }
+            runCommand(command, lastUpdateType);
         }
         if (redraw) {
             ps.view.update();
         }
+    };
+
+    /**
+     * @function runCommand
+     * Runs a specific command given its lastUpdateType.
+     * @param {SrlCommand} command the given command that is about to be executed.
+     * @param {Number} lastUpdateType the type of the last update which can either be 1, 0, -1. with 1 = redo, 0 = normal and -1 = undo.
+     * @instance
+     */
+    function runCommand(command, lastUpdateType) {
+        if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
+            var stroke = command.decodedData;
+            if (lastUpdateType === 0 || lastUpdateType === 1) {
+                loadStroke(stroke);
+            } else if (lastUpdateType === -1) {
+                removeItem(stroke.getId());
+            }
+        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
+            if (lastUpdateType === 0 || lastUpdateType === 1) {
+                ps.project.activeLayer.removeChildren();
+            } else {
+                loadSketch();
+            }
+        }
     }
 
     /**
-     * @param drawInstant {boolean} If false this will tell the graphics to not draw anytime it receives an update.
+     * @param {Boolean} drawInstant If false this will tell the graphics to not draw anytime it receives an update.
      */
     this.setDrawUpdate = function(drawInstant) {
         drawUpdate = drawInstant;

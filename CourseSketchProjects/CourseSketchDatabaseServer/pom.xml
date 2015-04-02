@@ -19,8 +19,8 @@
 		<mainClass>connection.DatabaseRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>2</projectBranchLevel>
-        <projectLineLevel>4</projectLineLevel>
+        <projectBranchLevel>5</projectBranchLevel>
+        <projectLineLevel>10</projectLineLevel>
 	</properties>
 
 	<build>
@@ -52,6 +52,10 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
 			</plugin>
 		</plugins>
 	</build>

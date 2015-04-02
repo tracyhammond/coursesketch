@@ -5,7 +5,7 @@ import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import javax.swing.JOptionPane;
 
