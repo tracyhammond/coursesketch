@@ -16,11 +16,13 @@ import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 /**
@@ -87,6 +89,8 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                     }
                 }
             } catch (InvalidProtocolBufferException e) {
+                final Message.ProtoException p = ExceptionUtilities.createProtoException(e);
+                this.getParentServer().send(getConnectionFromState(state), ExceptionUtilities.createExceptionRequest(p, req));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             final Request.Builder builder = Request.newBuilder(req);

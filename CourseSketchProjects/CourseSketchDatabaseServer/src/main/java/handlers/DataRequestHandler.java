@@ -17,12 +17,14 @@ import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;
@@ -163,6 +165,8 @@ public final class DataRequestHandler {
 
                                         results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
                                     } catch (DatabaseAccessException e) {
+                                        final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+                                        conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
                                         results.add(ResultBuilder.buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
                                         break;
                                     }
@@ -205,6 +209,8 @@ public final class DataRequestHandler {
                             break;
                     }
                 } catch (AuthenticationException e) {
+                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemRequest.getQuery());
@@ -214,6 +220,8 @@ public final class DataRequestHandler {
                         throw e;
                     }
                 } catch (Exception e) {
+                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemRequest.getQuery());
@@ -223,9 +231,13 @@ public final class DataRequestHandler {
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
