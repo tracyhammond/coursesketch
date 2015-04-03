@@ -74,12 +74,13 @@ public final class GradingPolicyManager {
      */
     public static void setGradingPolicy(final Authenticator authenticator, final DB dbs, final String userId, final ProtoGradingPolicy policy)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection policyCollection = dbs.getCollection(GRADING_POLICY_COLLECTION);
         final AuthType auth = new AuthType();
         auth.setCheckAdminOrMod(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, policy.getCourseId(), userId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
+
+        final DBCollection policyCollection = dbs.getCollection(GRADING_POLICY_COLLECTION);
 
         final ArrayList<BasicDBObject> categories = new ArrayList<>();
         for (int i = 0; i < policy.getGradeCategoriesCount(); i++) {
