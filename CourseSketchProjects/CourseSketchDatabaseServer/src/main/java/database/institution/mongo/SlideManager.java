@@ -172,7 +172,7 @@ public final class SlideManager {
         // FUTURE: maybe not make this necessary if the insertion of lecture prevents this.
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
         if (isUsers && !authenticator.isAuthenticated(LECTURE_COLLECTION, (String) corsor.get(LECTURE_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
