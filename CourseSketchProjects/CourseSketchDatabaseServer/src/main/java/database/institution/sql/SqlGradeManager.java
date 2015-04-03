@@ -53,7 +53,7 @@ public final class SqlGradeManager {
                 grade.setId("");
                 grade.setProblemId("");
                 grade.setGrade(rst.getFloat(DatabaseStringConstants.GRADE));
-                grade.setComment(rst.getString(DatabaseStringConstants.COMMENTS));
+                grade.setComment(rst.getString(DatabaseStringConstants.COMMENT));
             } catch (SQLException e) {
                 throw new DatabaseAccessException(e, false);
             }
@@ -92,7 +92,7 @@ public final class SqlGradeManager {
             try (final ResultSet rst = stmt.executeQuery()) {
                 if (rst.next()) {
                     rst.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
-                    rst.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
+                    rst.updateString(DatabaseStringConstants.COMMENT, grade.getComment());
                     rst.updateRow();
                     result = "SET";
                 } else {
@@ -101,7 +101,7 @@ public final class SqlGradeManager {
                     rst.updateString(DatabaseStringConstants.SCHOOL_ITEM_TYPE, classification);
                     rst.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
                     rst.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
-                    rst.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
+                    rst.updateString(DatabaseStringConstants.COMMENT, grade.getComment());
                     rst.insertRow();
                     rst.moveToCurrentRow();
                     result = "INSERT";
