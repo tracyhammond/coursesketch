@@ -103,7 +103,11 @@ public final class GradingPolicyManager {
 
         final BasicDBObject policyObject = new BasicDBObject(SELF_ID, new ObjectId(policy.getCourseId()))
                 .append(GRADE_POLICY_TYPE, policy.getPolicyType().getNumber()).append(GRADE_CATEGORIES, categories)
-                .append(DROPPED_PROBLEMS, droppedProblems).append(DROPPED_ASSIGNMENTS, policy.getDroppedAssignmentsList());
+                .append(DROPPED_PROBLEMS, droppedProblems);
+
+        if (policy.getDroppedAssignmentsCount() != 0) {
+            policyObject.append(DROPPED_ASSIGNMENTS, policy.getDroppedAssignmentsList());
+        }
 
         policyCollection.insert(policyObject);
     }
@@ -198,13 +202,20 @@ public final class GradingPolicyManager {
      * @return The BasicDBObject representing the category.
      */
     private static BasicDBObject buildMongoCategory(final PolicyCategory category) {
-        // Building late policy DBObject first.
-        final LatePolicy latePolicy = category.getLatePolicy();
-        final BasicDBObject late = buildMongoLatePolicy(latePolicy);
-
         // Building single DBObject to add to list of categories
-        final BasicDBObject temp = new BasicDBObject(GRADE_CATEGORY_NAME, category.getName()).append(GRADE_CATEGORY_WEIGHT, category.getWeight())
-                .append(LATE_POLICY, late);
+        final BasicDBObject temp = new BasicDBObject(GRADE_CATEGORY_NAME, category.getName());
+
+        if (category.hasWeight()) {
+            temp.append(GRADE_CATEGORY_WEIGHT, category.getWeight());
+        }
+
+        // Building late policy DBObject.
+        if (category.hasLatePolicy()) {
+            final LatePolicy latePolicy = category.getLatePolicy();
+            final BasicDBObject late = buildMongoLatePolicy(latePolicy);
+            temp.append(LATE_POLICY, late);
+        }
+
         return temp;
     }
 
@@ -218,8 +229,15 @@ public final class GradingPolicyManager {
     private static PolicyCategory buildProtoCategory(final DBObject dbCategory) {
         final PolicyCategory.Builder protoCategory = PolicyCategory.newBuilder();
         protoCategory.setName(dbCategory.get(GRADE_CATEGORY_NAME).toString());
-        protoCategory.setWeight((float) dbCategory.get(GRADE_CATEGORY_WEIGHT));
-        protoCategory.setLatePolicy(buildProtoLatePolicy((DBObject) dbCategory.get(LATE_POLICY)));
+
+        if (dbCategory.containsField(GRADE_CATEGORY_WEIGHT)) {
+            protoCategory.setWeight((float) dbCategory.get(GRADE_CATEGORY_WEIGHT));
+        }
+
+        if (dbCategory.containsField(LATE_POLICY)) {
+            protoCategory.setLatePolicy(buildProtoLatePolicy((DBObject) dbCategory.get(LATE_POLICY)));
+        }
+
         return protoCategory.build();
     }
 
