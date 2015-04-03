@@ -90,7 +90,7 @@ module.exports = function(grunt) {
                         src: [ 'src/**', '!src/test/**',
                             // these are ignored as they are legacy.
                             '!src/html/**', '!src/js/**' ],
-                        dest: 'target/website/src'
+                        dest: 'target/website/'
                     },
                     {
                         // copies other html files that appear in the top level directory
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
                         dest: 'target/website/',
                         options: {
                             process: function(content, srcpath) {
-                                return content.replace(/dev-coursesketch/g, 'prod-coursesketch');
+                                return content.replace('dev-coursesketch', 'prod-coursesketch');
                             }
                         }
                     },
