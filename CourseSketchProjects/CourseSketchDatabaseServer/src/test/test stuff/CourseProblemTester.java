@@ -1,6 +1,6 @@
 package test;
 
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
 import com.mongodb.DB;
@@ -33,7 +33,7 @@ public class CourseProblemTester {
 		permissions.addUserPermission("saby");
 		permissions.addUserPermission("stephanie");
 		*/
-		
+
 		testBuilder.setAccessPermission(permissions.build());
 		System.out.println(testBuilder.toString());
 		// testing insertion
@@ -44,7 +44,7 @@ public class CourseProblemTester {
 		testBuilder.setDescription("Added by moderator");
 		System.out.println("Mod");
 		problemId = Institution.mongoInsertCourseProblem("raniero",testBuilder.buildPartial());
-		
+
 		try
 		{
 			System.out.println("User");

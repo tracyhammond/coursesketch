@@ -8,8 +8,8 @@
 	<name>CourseSketch-parent</name>
 
 	<modules>
-		<module>CourseSketchProjects/coursesketchwebclient</module>
 		<module>CourseSketchProjects/ProtoFiles</module>
+		<module>CourseSketchProjects/coursesketchwebclient</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/nettyBlank</module>
@@ -373,6 +373,45 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>replacer</artifactId>
+					<version>${replacerVersion}</version>
+					<executions>
+						<execution>
+							<id>Replace</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+							<configuration>
+								<file>${basedir}/src/main/resources/logback.xml</file>
+								<replacements>
+									<replacement>
+										<token>DEBUG</token>
+										<value>INFO</value>
+									</replacement>
+								</replacements>
+							</configuration>
+						</execution>
+						<execution>
+							<id>Reverse</id>
+							<phase>install</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+							<configuration>
+								<file>${basedir}/src/main/resources/logback.xml</file>
+								<replacements>
+									<replacement>
+										<token>INFO</token>
+										<value>DEBUG</value>
+									</replacement>
+								</replacements>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -390,6 +429,7 @@
 		<fongoVersion>1.5.9</fongoVersion>
 		<slf4jVersion>1.7.9</slf4jVersion>
 		<log4jVersion>2.1</log4jVersion>
+		<logbackVersion>1.1.1</logbackVersion>
 		<checkstyleVersion>2.13</checkstyleVersion>
 		<findbugVersion>3.0.0</findbugVersion>
         <powermock.version>1.5.6</powermock.version>
@@ -397,6 +437,8 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+		<replacerVersion>1.5.3</replacerVersion>
+		<resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
 		<testLevel>85</testLevel>
@@ -474,10 +516,17 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4jVersion}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logbackVersion}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logbackVersion}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
@@ -528,18 +577,12 @@
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.1</version>
-			<scope>test</scope>
-		</dependency>
     </dependencies>
 </project>
