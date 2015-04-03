@@ -103,6 +103,7 @@ public final class DatabaseStringConstants {
     public static final String SOURCE = "Source";
     public static final String QUESTION_TYPE = "QuestionType";
     public static final String KEYWORDS = "OtherKeywords";
+    public static final String SCRIPT = "Script";
 
     // state specific
     public static final String STATE_PUBLISHED = "Published"; // Instructor has finished construction of school item
@@ -138,10 +139,10 @@ public final class DatabaseStringConstants {
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
+    public static final String ADD_SET_COMMAND = "$addToSet";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";
-    public static final String ADD_SET_COMMAND = "$addToSet";
 
     // lecture specific
     public static final String SLIDES = "Slides";
