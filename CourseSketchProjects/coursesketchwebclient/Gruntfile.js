@@ -11,7 +11,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         jshint: {
             options: {
-                jshintrc: 'config/jshint.conf.js',
+                jshintrc: 'config/.jshintrc',
                 ignores: [ 'src/main/src/utilities/libraries/**/*.js', 'src/test/src/testUtilities/**/*.js' ],
                 globals: {
                     module: true
