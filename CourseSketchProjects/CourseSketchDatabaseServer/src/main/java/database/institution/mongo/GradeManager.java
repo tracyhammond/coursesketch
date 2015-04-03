@@ -21,6 +21,7 @@ import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.CURRENT_GRADE;
+import static database.DatabaseStringConstants.EXISTS;
 import static database.DatabaseStringConstants.EXTERNAL_GRADE;
 import static database.DatabaseStringConstants.GRADED_DATE;
 import static database.DatabaseStringConstants.GRADE_COLLECTION;
@@ -38,6 +39,99 @@ public final class GradeManager {
      * Private constructor.
      */
     private GradeManager() {
+    }
+
+    /**
+     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the database.
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database that the grade is being added to.
+     * @param adderId
+     *         The Id of the person trying to add the grade.
+     * @param grade
+     *         The ProtoObject representing the grade to be added.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to add the grade.
+     * @throws DatabaseAccessException
+     *         Thrown if grades are not found in the database.
+     */
+    public static void addGrade(final Authenticator authenticator, final DB dbs, final String adderId, final ProtoGrade grade)
+            throws AuthenticationException, DatabaseAccessException {
+        // Check authentication so only teachers of the course can add grades
+        final Authenticator.AuthType auth = new Authenticator.AuthType();
+        auth.setCheckAdminOrMod(true);
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), adderId, 0, auth)) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
+
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, grade.getUserId());
+        final BasicDBObject setOnInsertFields = new BasicDBObject(query); // Initially setOnInsertFields and query are the same.
+
+        // If the protoGrade has an assignmentId, add it to the query and setOnInsertFields.
+        // Else we are looking for a course grade probably which doesn't have an assignmentId.
+        if (grade.hasAssignmentId()) {
+            query.append(ASSIGNMENT_ID, grade.getAssignmentId());
+            setOnInsertFields.append(ASSIGNMENT_ID, grade.getAssignmentId());
+        } else {
+            query.append(ASSIGNMENT_ID, new BasicDBObject(EXISTS, false));
+        }
+
+        // If the protoGrade has a problemId, add it to the query and setOnInsertFields.
+        // Else we are looking for something that isn't a problem grade so it does not have a problemId.
+        if (grade.hasProblemId()) {
+            query.append(COURSE_PROBLEM_ID, grade.getProblemId());
+            setOnInsertFields.append(COURSE_PROBLEM_ID, grade.getProblemId());
+        } else {
+            query.append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
+        }
+
+        if (grade.hasExternalGrade()) {
+            setOnInsertFields.append(EXTERNAL_GRADE, grade.getExternalGrade());
+        }
+        final BasicDBObject gradeHistoryObject = buildMongoGradeHistory(grade.getGradeHistory(0));
+        final BasicDBObject updateObject = new BasicDBObject("$push", new BasicDBObject(GRADE_HISTORY, new BasicDBObject("$each", gradeHistoryObject)
+                .append("$sort", new BasicDBObject(GRADED_DATE, -1))));
+        if (grade.hasCurrentGrade()) {
+            updateObject.append("$set", new BasicDBObject(CURRENT_GRADE, grade.getCurrentGrade()));
+        }
+        updateObject.append("$setOnInsert", setOnInsertFields);
+
+        // Query, update, upsert (true), multi-document-update (false).
+        gradeCollection.update(query, updateObject, true, false);
+
+    }
+
+    /**
+     * Builds a mongo BasicDBObject for a single grade history value.
+     *
+     * @param gradeHistory
+     *         ProtoObject that grade history is being set from.
+     * @return BasicDBObject representing the single grade history value in mongo.
+     */
+    private static BasicDBObject buildMongoGradeHistory(final GradeHistory gradeHistory) {
+        final BasicDBObject temp = new BasicDBObject();
+
+        if (gradeHistory.hasGradeValue()) {
+            temp.append(GRADE_VALUE, gradeHistory.getGradeValue());
+        }
+
+        if (gradeHistory.hasComment()) {
+            temp.append(COMMENT, gradeHistory.getComment());
+        }
+
+        if (gradeHistory.hasGradedDate()) {
+            temp.append(GRADED_DATE, gradeHistory.getGradedDate());
+        }
+
+        if (gradeHistory.hasWhoChanged()) {
+            temp.append(WHO_CHANGED, gradeHistory.getWhoChanged());
+        }
+
+        return temp;
     }
 
     /**
@@ -70,7 +164,7 @@ public final class GradeManager {
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
-                .append(COURSE_PROBLEM_ID, new BasicDBObject("$exists", false));
+                .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1).append(USER_ID, 1); // Sort by assignmentId then userId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
         if (!cursor.hasNext()) {
@@ -116,7 +210,7 @@ public final class GradeManager {
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
                 .append(USER_ID, userId)
-                .append(COURSE_PROBLEM_ID, new BasicDBObject("$exists", false));
+                .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1).append(USER_ID, 1); // Sort by assignmentId then userId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
         if (!cursor.hasNext()) {

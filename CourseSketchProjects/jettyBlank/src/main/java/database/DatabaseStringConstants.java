@@ -159,6 +159,7 @@ public final class DatabaseStringConstants {
     // mongo commands
     public static final String SET_COMMAND = "$set";
     public static final String ADD_SET_COMMAND = "$addToSet";
+    public static final String EXISTS = "$exists";
 
     // state and grade specific
     public static final String SCHOOL_ITEM_TYPE = "SchoolItemType";
