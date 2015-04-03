@@ -51,7 +51,7 @@ public class SqlGradeManagerTest{
         rs.updateString(DatabaseStringConstants.SCHOOL_ITEM_TYPE, classification);
         rs.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
         rs.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
-        rs.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
+        rs.updateString(DatabaseStringConstants.COMMENT, grade.getComment());
         rs.insertRow();
         rs.moveToCurrentRow();
 
@@ -110,7 +110,7 @@ public class SqlGradeManagerTest{
         expect(rs.next()).andReturn(true);
 
         rs.updateFloat(DatabaseStringConstants.GRADE, grade.getGrade());
-        rs.updateString(DatabaseStringConstants.COMMENTS, grade.getComment());
+        rs.updateString(DatabaseStringConstants.COMMENT, grade.getComment());
         rs.updateRow();
 
         rs.close();
@@ -164,7 +164,7 @@ public class SqlGradeManagerTest{
         expect(st.executeQuery()).andReturn(rs);
 
         expect(rs.getFloat(DatabaseStringConstants.GRADE)).andReturn(0.0f);
-        expect(rs.getString(DatabaseStringConstants.COMMENTS)).andReturn("test");
+        expect(rs.getString(DatabaseStringConstants.COMMENT)).andReturn("test");
 
         rs.close();
         st.close();
