@@ -547,19 +547,38 @@ public interface Institution {
     List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException;
 
     /**
-     * Gets all grades for a certain course.
+     * Gets all grades for a certain course. Sorted in ascending order by assignmentId and then userId.
+     * This does not mean the list will be in chronological or alphabetical order.
      *
      * @param courseId
      *         The course that the grades are being retrieved for.
      * @param userId
      *         The user that is requesting the grades. Only users with admin access can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
-     *         Sorting should be done by whoever implements this method.
+     *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
     List<ProtoGrade> getAllCourseGradesInstructor(final String courseId, final String userId)
+            throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Gets all grades for a certain student in a certain course. Sorted in ascending order by assignmentId and then userId.
+     * This does not mean the list will be in chronological or alphabetical order.
+     *
+     * @param courseId
+     *         The course that the grades are being retrieved for.
+     * @param userId
+     *         The user that is requesting the grades.
+     * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
+     *         More sorting should be done by whoever implements this method.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the grades.
+     * @throws DatabaseAccessException
+     *         Thrown if grades are not found in the database.
+     */
+    List<ProtoGrade> getAllCourseGradesStudent(final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException;
 }
