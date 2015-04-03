@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.initConfig({
         jshint: {
             options: {
@@ -79,6 +80,49 @@ module.exports = function(grunt) {
                     destination: 'doc'
                 }
             }
+        },
+        copy: {
+            main: {
+                files: [
+                    {
+                        // copies the files used in production for prod use
+                        expand: true,
+                        src: [ 'src/**', '!src/test/**',
+                            // these are ignored as they are legacy.
+                            '!src/html/**', '!src/js/**' ],
+                        dest: 'target/website/src'
+                    },
+                    {
+                        // copies other html files that appear in the top level directory
+                        expand: true,
+                        src: [ 'index.html', 'favicon.ico' ],
+                        dest: 'target/website/'
+                    },
+                    {
+                        // copies the bower components to target
+                        expand: true,
+                        src: 'bower_components/**',
+                        dest: 'target/website/bower_components/'
+                    },
+                    {
+                        // copies the google app engine directory file
+                        expand: true,
+                        src: 'app.yaml',
+                        dest: 'target/website/',
+                        options: {
+                            process: function(content, srcpath) {
+                                return content.replace(/dev-coursesketch/g, 'prod-coursesketch');
+                            }
+                        }
+                    },
+                    {
+                        // copies the rest of the google app engine files
+                        expand: true,
+                        src: [ 'testFiles.py', 'main.py' ],
+                        dest: 'target/website/'
+                    }
+                ]
+            }
         }
     });
     // target is a parameter to all registration functions, it is not used.
@@ -106,6 +150,14 @@ module.exports = function(grunt) {
             'jshint'
         ]);
     });
+
+    // sets up tasks related to building the production website
+    grunt.registerTask('build', function() {
+        grunt.task.run([
+            'copy'
+        ]);
+    });
+
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc' ]);
+    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'build' ]);
 };
