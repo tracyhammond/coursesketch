@@ -68,7 +68,7 @@ public final class GradingPolicyManager {
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to sql database causes an error.
+     *         Thrown if connecting to the database causes an error.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
@@ -123,7 +123,7 @@ public final class GradingPolicyManager {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to sql database causes an error.
+     *         Thrown if a grading policy is not found for the course.
      */
     public static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
