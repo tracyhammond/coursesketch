@@ -36,7 +36,7 @@ enum DropType {
 }
 
 message PolicyCategory {
-    optional string name = 1;
+    required string name = 1;
     optional float weight = 2;
     optional LatePolicy latePolicy = 3; // This serves as a default late policy for all assignments in a category
 }
