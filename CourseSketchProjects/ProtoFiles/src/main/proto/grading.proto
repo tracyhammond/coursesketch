@@ -77,16 +77,14 @@ message ProtoGrade {
     required string userId = 2;         // Id of the user the grade belongs to.
     optional string assignmentId = 3;
     optional string problemId = 4;
-    required float currentGrade = 5;
-    optional string comment = 6;
-    repeated GradeHistory gradeHistory = 7;
-    optional bool externalGrade = 8;
+    optional float currentGrade = 5;
+    repeated GradeHistory gradeHistory = 6;
+    optional bool externalGrade = 7;
 }
 
 message GradeHistory {
-    required float gradeValue = 1;
+    optional float gradeValue = 1;
     optional string comment = 2;
-    required protobuf.srl.utils.DateTime dateCreated = 3;   // If this is the original submission, it is the date the user submitted
+    optional protobuf.srl.utils.DateTime gradedDate = 3;   // If this is the original submission, it is the date the user submitted
     optional string whoChanged = 4;                         // UserId of the person who changed the grade
-    optional int32 submissionNumber = 5;                    // Only exists for auto grading. Increments for each submission attempt
 }

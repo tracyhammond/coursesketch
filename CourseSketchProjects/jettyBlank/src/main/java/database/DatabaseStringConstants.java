@@ -52,6 +52,7 @@ public final class DatabaseStringConstants {
     public static final String ACCESS_DATE = "AccessDate";
     public static final String DUE_DATE = "DueDate";
     public static final String CLOSE_DATE = "CloseDate";
+    public static final String GRADED_DATE = "GradedDate";
 
     // permissions
     public static final String ADMIN = "Admin";
@@ -65,9 +66,13 @@ public final class DatabaseStringConstants {
     // grades
     public static final String GRADE_WEIGHT = "GradeWeight";
     public static final String GRADE = "Grade";
-    public static final String COMMENTS = "Comments";
+    public static final String COMMENT = "Comment";
     public static final String CURRENT_GRADE = "CurrentGrade";
     public static final String GRADE_HISTORY = "GradeHistory";
+    public static final String GRADE_VALUE = "GradeValue";
+    public static final String WHO_CHANGED = "WhoChanged";
+    public static final String EXTERNAL_GRADE = "ExternalGrade";
+    public static final String SUBMISSION_NUMBER = "SubmissionNumber";
 
     // grading policy
     public static final String GRADE_CATEGORIES = "GradeCategories";
