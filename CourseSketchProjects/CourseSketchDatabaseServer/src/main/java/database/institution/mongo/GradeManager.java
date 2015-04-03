@@ -41,7 +41,8 @@ public final class GradeManager {
     }
 
     /**
-     * Gets all grades for a certain course.
+     * Gets all grades for a certain course. Sorted in ascending order by assignmentId and then userId.
+     * This does not mean the list will be in chronological or alphabetical order.
      *
      * @param authenticator
      *         The object that is performing authentication.
@@ -52,7 +53,7 @@ public final class GradeManager {
      * @param userId
      *         The user that is requesting the grades. Only users with admin access can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
-     *         Sorting should be done by whoever implements this method.
+     *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
@@ -60,19 +61,66 @@ public final class GradeManager {
      */
     public static List<ProtoGrade> getAllCourseGradesInstructor(final Authenticator authenticator, final DB dbs, final String courseId,
             final String userId) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
-                .append(COURSE_PROBLEM_ID, new BasicDBObject("$exists", false));
-        final DBCursor cursor = gradeCollection.find(query);
-        if (!cursor.hasNext()) {
-            throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
-        }
-
         // Check authentication so only teachers of the course can retrieve all grades
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdminOrMod(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
+                .append(COURSE_PROBLEM_ID, new BasicDBObject("$exists", false));
+        final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1).append(USER_ID, 1); // Sort by assignmentId then userId
+        final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
+        if (!cursor.hasNext()) {
+            throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
+        }
+
+        final List<ProtoGrade> grades = new ArrayList<>();
+        while (cursor.hasNext()) {
+            grades.add(buildProtoGrade(cursor.next()));
+        }
+
+        return grades;
+    }
+
+    /**
+     * Gets all grades for a certain student in a certain course. Sorted in ascending order by assignmentId and then userId.
+     * This does not mean the list will be in chronological or alphabetical order.
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database that the grades are being retrieved from.
+     * @param courseId
+     *         The course that the grades are being retrieved for.
+     * @param userId
+     *         The user that is requesting the grades.
+     * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
+     *         More sorting should be done by whoever implements this method.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the grades.
+     * @throws DatabaseAccessException
+     *         Thrown if grades are not found in the database.
+     */
+    public static List<ProtoGrade> getAllCourseGradesStudent(final Authenticator authenticator, final DB dbs, final String courseId,
+            final String userId) throws AuthenticationException, DatabaseAccessException {
+        // Check authentication to make sure the user is in the course
+        final Authenticator.AuthType auth = new Authenticator.AuthType();
+        auth.setCheckUser(true);
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
+                .append(USER_ID, userId)
+                .append(COURSE_PROBLEM_ID, new BasicDBObject("$exists", false));
+        final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1).append(USER_ID, 1); // Sort by assignmentId then userId
+        final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
+        if (!cursor.hasNext()) {
+            throw new DatabaseAccessException("Grades were not found for specific user in course " + courseId);
         }
 
         final List<ProtoGrade> grades = new ArrayList<>();
