@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
+import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
@@ -544,4 +545,21 @@ public interface Institution {
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
     List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException;
+
+    /**
+     * Gets all grades for a certain course.
+     *
+     * @param courseId
+     *         The course that the grades are being retrieved for.
+     * @param userId
+     *         The user that is requesting the grades. Only users with admin access can get all grades.
+     * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
+     *         Sorting should be done by whoever implements this method.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the grades.
+     * @throws DatabaseAccessException
+     *         Thrown if grades are not found in the database.
+     */
+    List<ProtoGrade> getAllCourseGradesInstructor(final String courseId, final String userId)
+            throws AuthenticationException, DatabaseAccessException;
 }
