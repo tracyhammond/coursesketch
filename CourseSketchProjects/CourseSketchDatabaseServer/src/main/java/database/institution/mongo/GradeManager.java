@@ -145,6 +145,72 @@ public final class GradeManager {
     }
 
     /**
+     * Finds a single grade for a student in a course. If fields are not required in the search, pass in null.
+     * For example, if looking for a particular assignment grade, pass in null for the problemId parameter.
+     * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database that the grades are being retrieved from.
+     * @param requesterId
+     *         The id of the user requesting the grade. This is required.
+     * @param userId
+     *         The id of the user that the grade is for. This is required.
+     * @param courseId
+     *         The id of the course that the grade is for. This is required.
+     * @param assignmentId
+     *         The id of the assignment that the grade is for. This is optional.
+     * @param problemId
+     *         The id of the problem that the grade is for. This is optional.
+     * @return ProtoGrade object representing the grade requested.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the grades.
+     * @throws DatabaseAccessException
+     *         Thrown if a grade is not found in the database matching the requested parameters.
+     */
+    public static ProtoGrade getGrade(final Authenticator authenticator, final DB dbs, final String requesterId, final String userId,
+            final String courseId, final String assignmentId, final String problemId) throws AuthenticationException, DatabaseAccessException {
+        final Authenticator.AuthType auth = new Authenticator.AuthType();
+
+        // If requester is the user for the grade, check if they are in the course.
+        // If requester is not the user for the grade, check if they are an admin for the course.
+        if (requesterId.equals(userId)) {
+            auth.setCheckUser(true);
+        } else {
+            auth.setCheckAdminOrMod(true);
+        }
+
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId).append(USER_ID, userId);
+
+        // Adds to query to look for documents without assignmentId field if assignmentId is not given.
+        if (assignmentId == null) {
+            query.append(ASSIGNMENT_ID, new BasicDBObject(EXISTS, false));
+        } else {
+            query.append(ASSIGNMENT_ID, assignmentId);
+        }
+
+        // Adds to query to look for documents without problemId field if problemId is not given.
+        if (problemId == null) {
+            query.append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
+        } else {
+            query.append(COURSE_PROBLEM_ID, problemId);
+        }
+
+        final DBCursor cursor = gradeCollection.find(query);
+        if (!cursor.hasNext()) {
+            throw new DatabaseAccessException("Did not find a grade matching those parameters for that student in course " + courseId);
+        }
+
+        return buildProtoGrade(cursor.next());
+    }
+
+    /**
      * Gets all grades for a certain course. Sorted in ascending order by assignmentId and then userId.
      * This does not mean the list will be in chronological or alphabetical order.
      *

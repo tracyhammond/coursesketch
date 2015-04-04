@@ -605,4 +605,28 @@ public interface Institution {
      *         Thrown if grades are not found in the database.
      */
     void addGrade(final String adderId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Finds a single grade for a student in a course. If fields are not required in the search, pass in null.
+     * For example, if looking for a particular assignment grade, pass in null for the problemId parameter.
+     * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
+     *
+     * @param requesterId
+     *         The id of the user requesting the grade. This is required.
+     * @param userId
+     *         The id of the user that the grade is for. This is required.
+     * @param courseId
+     *         The id of the course that the grade is for. This is required.
+     * @param assignmentId
+     *         The id of the assignment that the grade is for. This is optional.
+     * @param problemId
+     *         The id of the problem that the grade is for. This is optional.
+     * @return ProtoGrade object representing the grade requested.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the grades.
+     * @throws DatabaseAccessException
+     *         Thrown if a grade is not found in the database matching the requested parameters.
+     */
+    ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId, final String problemId)
+            throws AuthenticationException, DatabaseAccessException;
 }

@@ -527,4 +527,10 @@ public final class MongoInstitution implements Institution {
     public void addGrade(final String adderId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException {
         GradeManager.addGrade(getInstance().auth, getInstance().database, adderId, grade);
     }
+
+    @Override
+    public ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId,
+            final String problemId) throws AuthenticationException, DatabaseAccessException {
+        return GradeManager.getGrade(getInstance().auth, getInstance().database, requesterId, userId, courseId, assignmentId, problemId);
+    }
 }
