@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
@@ -99,6 +100,20 @@ module.exports = function(grunt) {
                 }
             }
         },
+        babel: {
+            options: {
+                sourceMap: true
+            },
+            all: {
+                files: [
+                    {
+                        expand: true,
+                        src: [ 'target/website/src/main/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
+                        dest: 'target/website'
+                    }
+                ]
+            }
+        },
         copy: {
             main: {
                 files: [
@@ -138,7 +153,7 @@ module.exports = function(grunt) {
             }
         },
         replace: {
-            main: {
+            bowerLoad: {
                 src: '<%= fileConfigOptions.prodHtml %>',
                 overwrite: true,
                 replacements: [
@@ -185,10 +200,10 @@ module.exports = function(grunt) {
                     {
                         // addes bower comment
                         from: /isUndefined\((\w+\b)\)/g,
-                        to: 'typeof $1 === \'undefined\''
+                        to: '(typeof $1 === \'undefined\')'
                     },
                     {
-                        from: 'function typeof object === \'undefined\'',
+                        from: 'function (typeof object === \'undefined\')',
                         to: 'function isUndefined(object)'
                     }
                 ]
@@ -254,12 +269,40 @@ module.exports = function(grunt) {
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
+            'setupProd',
+            'bower',
+            'polyfill'
+        ]);
+    });
+
+    // sets up tasks related to settuping the website up the production website
+    grunt.registerTask('setupProd', function() {
+        grunt.task.run([
             'copy',
-            'replace',
+            'replace:appEngine'
+        ]);
+    });
+
+    // sets up tasks related to loading up bower
+    grunt.registerTask('bower', function() {
+        grunt.task.run([
+            'replace:bowerLoad',
             'wiredep',
             'replace:bowerSlash'
         ]);
     });
+
+    // sets up tasks related to supporting older version of borwsers
+    grunt.registerTask('polyfill', function() {
+        grunt.task.run([
+            'replace:isUndefined',
+            'babel'
+        ]);
+    });
+
+    /******************************************
+     * TASK WORKFLOW RUNNING
+     ******************************************/
 
     // 'test'  wait till browsers are better supported
     grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'build' ]);
