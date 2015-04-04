@@ -109,7 +109,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         src: [ 'target/website/src/main/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
-                        dest: 'target/website',
+                        dest: '.'
                     }
                 ]
             }
@@ -158,6 +158,12 @@ module.exports = function(grunt) {
                         expand: false,
                         src: [ 'node_modules/babel-core/browser-polyfill.js' ],
                         dest: 'bower_components/babel-polyfill/browser-polyfill.js',
+                        filter: 'isFile'
+                    },
+                    {
+                        expand: false,
+                        src: [ 'bower_components/babel-polyfill/.bower.json' ],
+                        dest: 'bower_components/babel-polyfill/bower.json',
                         filter: 'isFile'
                     }
                 ]
@@ -220,7 +226,7 @@ module.exports = function(grunt) {
                 ]
             },
             babel: {
-                src: [ 'bower_components/babel-polyfill/.bower.json' ],
+                src: [ 'bower_components/babel-polyfill/bower.json' ],
                 overwrite: true,
                 replacements: [
                     {
@@ -229,7 +235,7 @@ module.exports = function(grunt) {
                         to: '"name": "babel-polyfill",\n"main": "browser-polyfill.js",'
                     }
                 ]
-            },
+            }
         },
         wiredep: {
             task: {
