@@ -43,7 +43,17 @@ public final class GradeManager {
 
     /**
      * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the database.
-     *
+     * The code block is an example of what happens when a new problem grade is added.
+     * <pre><code>
+     * coll.update(
+     *  { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId },
+     *  {   $push: { gradeHistory: { $each: [gradeToInsertDBObject], $sort: { GRADED_DATE: -1 }}}
+     *      $set: { CURRENT_GRADE: currentGrade }
+     *      $setOnInsert: { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId }
+     *  },
+     *  { upsert: true }
+     * )
+     * </code></pre>
      * @param authenticator
      *         The object that is performing authentication.
      * @param dbs
