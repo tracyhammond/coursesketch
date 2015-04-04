@@ -137,7 +137,10 @@ module.exports = function(grunt) {
             }
         }
     });
-    // target is a parameter to all registration functions, it is not used.
+
+    /******************************************
+     * TASK WORKFLOW SETUP
+     ******************************************/
 
     // sets up tasks relating to starting the server
     grunt.registerTask('server', function() {
