@@ -581,4 +581,28 @@ public interface Institution {
      */
     List<ProtoGrade> getAllCourseGradesStudent(final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * Adds the specified grade if it does not exist. If it does exist, updates the grade value in the database.
+     * The code block is an example of what happens when a new problem grade is added.
+     * <pre><code>
+     * coll.update(
+     *  { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId },
+     *  {   $push: { gradeHistory: { $each: [gradeToInsertDBObject], $sort: { GRADED_DATE: -1 }}}
+     *      $set: { CURRENT_GRADE: currentGrade }
+     *      $setOnInsert: { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId }
+     *  },
+     *  { upsert: true }
+     * )
+     * </code></pre>
+     * @param adderId
+     *         The Id of the person trying to add the grade.
+     * @param grade
+     *         The ProtoObject representing the grade to be added.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to add the grade.
+     * @throws DatabaseAccessException
+     *         Thrown if grades are not found in the database.
+     */
+    void addGrade(final String adderId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException;
 }
