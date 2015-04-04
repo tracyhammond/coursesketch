@@ -200,10 +200,10 @@ module.exports = function(grunt) {
                     {
                         // addes bower comment
                         from: /isUndefined\((\w+\b)\)/g,
-                        to: 'typeof $1 === \'undefined\''
+                        to: '(typeof $1 === \'undefined\')'
                     },
                     {
-                        from: 'function typeof object === \'undefined\'',
+                        from: 'function (typeof object === \'undefined\')',
                         to: 'function isUndefined(object)'
                     }
                 ]
@@ -299,6 +299,10 @@ module.exports = function(grunt) {
             'babel'
         ]);
     });
+
+    /******************************************
+     * TASK WORKFLOW RUNNING
+     ******************************************/
 
     // 'test'  wait till browsers are better supported
     grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'build' ]);
