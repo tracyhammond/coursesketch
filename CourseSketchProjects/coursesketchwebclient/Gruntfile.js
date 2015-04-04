@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-regex-replace');
+    grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
     grunt.initConfig({
         jshint: {
@@ -126,27 +126,27 @@ module.exports = function(grunt) {
                 ]
             }
         },
-        'regex-replace': {
-            src: [ 'target/website/index.html', 'target/website/src/**/*.html' ],
-            actions: [
-                /*
-                {
-                    name: 'console-supress',
-                    search: '(^|\\s)console.log',
-                    replace: '//console.log',
-                    flags: 'g'
-                },
-                */
-                {
-                    name: 'bowerCommentInclude',
-                    search: '(^|\\s)<head>($|\\s)',
-                    replace: '<head><!-- bower:js -->\n<!-- endbower -->',
-                    flags: 'g'
-                }
-            ]
+        replace: {
+            main: {
+                src: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**' ],
+                overwrite: true,
+                replacements: [
+                    /*
+                     {
+                     // supresses console
+                     from: /(^|\\s)console.log/g,
+                     to: '//console.log',
+                     },
+                     */
+                    {
+                        // addes bower comment
+                        from: /(^|\s)<head>($|\s)/g,
+                        to: '\n<head>\n<!-- bower:js -->\n<!-- endbower -->\n'
+                    }
+                ]
+            }
         },
         wiredep: {
-
             task: {
 
                 // Point to the files that should be updated when
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
                 src: [
                     'index.html',   // index file
                     'src/**/*.html',   // main file
-                    '!src/main/src/utilities/libraries'
+                    '!src/main/src/utilities/libraries/**'
                 ],
 
                 options: {
@@ -209,7 +209,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', function() {
         grunt.task.run([
             'copy',
-            'regex-replace'
+            'replace'
         ]);
     });
 
