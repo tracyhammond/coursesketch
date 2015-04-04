@@ -135,7 +135,7 @@ module.exports = function(grunt) {
                         // copies the bower components to target
                         expand: true,
                         src: [ 'bower_components/**', '!bower_components/**/test/**', '!bower_components/**/tests/**',
-                            '!bower_components/**/examples/**', '!bower_components/**/src/**'],
+                            '!bower_components/**/examples/**', '!bower_components/**/src/**' ],
                         dest: 'target/website/'
                     },
                     {
