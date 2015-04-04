@@ -1,6 +1,7 @@
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jscs');
+    grunt.loadNpmTasks('grunt-regex-check');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-connect-rewrite');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -33,6 +34,17 @@ module.exports = function(grunt) {
             options: {
                 config: 'config/jscs.conf.jscsrc',
                 reporterOutput: 'target/jscsReport.txt'
+            }
+        },
+        'regex-check': {
+            head: {
+                files: {
+                    src: [ 'src/main/src/**/*.html', 'src/test/src/**/*.html', '!src/main/src/utilities/libraries/mespeak/**/*.html' ]
+                },
+                options: {
+                    pattern: /<head(\s|(.*lang=.*))*>/g,
+                    failIfMissing: true
+                }
             }
         },
         connect: {
@@ -209,7 +221,10 @@ module.exports = function(grunt) {
         }
 
     });
-    // target is a parameter to all registration functions, it is not used.
+
+    /******************************************
+     * TASK WORKFLOW SETUP
+     ******************************************/
 
     // sets up tasks relating to starting the server
     grunt.registerTask('server', function() {
@@ -231,7 +246,8 @@ module.exports = function(grunt) {
     grunt.registerTask('checkstyle', function() {
         grunt.task.run([
             'jscs',
-            'jshint'
+            'jshint',
+            'regex-check'
         ]);
     });
 
