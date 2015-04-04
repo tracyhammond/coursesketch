@@ -90,8 +90,8 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,
-                        src: [ 'src/main/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js' ],
-                        dest: 'target'
+                        src: [ 'target/website/src/main/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
+                        dest: 'target/website'
                     }
                 ]
             }
