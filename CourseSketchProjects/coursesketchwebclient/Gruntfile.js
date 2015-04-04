@@ -95,16 +95,16 @@ module.exports = function(grunt) {
                         dest: 'target/website/'
                     },
                     {
-                        // copies other html files that appear in the top level directory
+                        // copies other important files that appear in the top level directory
                         expand: true,
-                        src: [ 'index.html', 'favicon.ico' ],
+                        src: [ 'index.html', 'favicon.ico', 'bower.json' ],
                         dest: 'target/website/'
                     },
                     {
                         // copies the bower components to target
                         expand: true,
                         src: 'bower_components/**',
-                        dest: 'target/website/bower_components/'
+                        dest: 'target/website/'
                     },
                     {
                         // copies the google app engine directory file
@@ -152,17 +152,15 @@ module.exports = function(grunt) {
                 // Point to the files that should be updated when
                 // you run `grunt wiredep`
                 src: [
-                    'index.html',   // index file
-                    'src/**/*.html',   // main file
-                    '!src/main/src/utilities/libraries/**'
+                    'target/website/index.html',   // index file
+                    'target/website/src/**/*.html',   // main file
+                    '!target/website/src/main/src/utilities/libraries/**/*.html'
                 ],
 
                 options: {
-                    cwd: 'target/website',
-                    // See wiredep's configuration documentation for the options
-                    // you may pass:
-
                     // https://github.com/taptapship/wiredep#configuration
+                    directory: 'target/website/bower_components',
+
                     html: {
                         block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
                         detect: {
@@ -209,7 +207,8 @@ module.exports = function(grunt) {
     grunt.registerTask('build', function() {
         grunt.task.run([
             'copy',
-            'replace'
+            'replace',
+            'wiredep'
         ]);
     });
 
