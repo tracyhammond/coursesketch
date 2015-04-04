@@ -109,7 +109,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         src: [ 'target/website/src/main/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
-                        dest: 'target/website'
+                        dest: '.'
                     }
                 ]
             }
