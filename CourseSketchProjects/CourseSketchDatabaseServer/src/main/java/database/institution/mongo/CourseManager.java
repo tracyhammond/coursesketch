@@ -312,7 +312,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * With that being said this allows a course to be updated adding the
      * assignmentId to its list of items.
      *
@@ -336,7 +336,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * With that being said this allows a course to be updated adding the
      * lectureId to its list of items.
      *
@@ -361,7 +361,7 @@ public final class CourseManager {
     /**
      * @param dbs The database where the course is being stored.
      * @return a list of all public courses.
-     * <p/>
+     *
      * FUTURE: this should probably be paginated so it does not crush
      * the database.
      */
@@ -401,7 +401,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public.
-     * <p/>
+     *
      * With that being said this allows the default ids to be inserted.
      *
      * @param dbs          The database where the course is being stored.
@@ -423,9 +423,9 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * Returns a list of Id for the default group for an assignment.
-     * <p/>
+     *
      * The list are ordered as so: AdminGroup, ModGro        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
 up, UserGroup
      *
@@ -445,9 +445,9 @@ up, UserGroup
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * Returns a list of Ids for the default group for a course.
-     * <p/>
+     *
      * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup
      *
      * @param dbs      The database where the course is being stored.
