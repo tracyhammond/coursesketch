@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-regex-replace');
     grunt.initConfig({
         jshint: {
             options: {
@@ -85,7 +86,7 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {
-                        // copies the files used in production for prod use
+                        // copies the website files used in production for prod use
                         expand: true,
                         src: [ 'src/**', '!src/test/**',
                             // these are ignored as they are legacy.
@@ -123,7 +124,27 @@ module.exports = function(grunt) {
                     }
                 ]
             }
+        },
+        'regex-replace': {
+            src: [ 'target/website/index.html', 'target/website/src/**/*.html' ],
+            actions: [
+                /*
+                {
+                    name: 'console-supress',
+                    search: '(^|\\s)console.log',
+                    replace: '//console.log',
+                    flags: 'g'
+                },
+                */
+                {
+                    name: 'bowerCommentInclude',
+                    search: '(^|\\s)<head>($|\\s)',
+                    replace: '<head><!-- bower:js -->\n<!-- endbower -->',
+                    flags: 'g'
+                }
+            ]
         }
+
     });
     // target is a parameter to all registration functions, it is not used.
 
@@ -154,7 +175,8 @@ module.exports = function(grunt) {
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
-            'copy'
+            'copy',
+            'regex-replace'
         ]);
     });
 
