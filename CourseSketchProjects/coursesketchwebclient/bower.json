@@ -2,6 +2,7 @@
   "name": "coursesketchwebclient",
   "version": "0.0.1",
   "dependencies": {
+    "babel-polyfill" : "babel/babel#5.0.0"
   },
   "private": true
 }
