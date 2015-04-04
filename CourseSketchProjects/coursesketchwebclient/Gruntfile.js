@@ -11,7 +11,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-wiredep');
     grunt.initConfig({
         fileConfigOptions: {
-            prodHtml: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**' ]
+            prodHtml: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**/*.html' ],
+            prodFiles: [ 'target/website/index.html', 'target/website/src/**/*.html', 'target/website/src/**/*.js',
+                '!target/website/src/main/src/utilities/libraries/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.html' ]
         },
         jshint: {
             options: {
@@ -160,7 +162,22 @@ module.exports = function(grunt) {
                     {
                         // addes bower comment
                         from: /=['"].*bower_components/g,
-                        to: '"/bower_components'
+                        to: '="/bower_components'
+                    }
+                ]
+            },
+            isUndefined: {
+                src: '<%= fileConfigOptions.prodFiles %>',
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: /isUndefined\((\w+\b)\)/g,
+                        to: 'typeof $1 === \'undefined\''
+                    },
+                    {
+                        from: 'function typeof object === \'undefined\'',
+                        to: 'function isUndefined(object)'
                     }
                 ]
             }
@@ -170,11 +187,7 @@ module.exports = function(grunt) {
 
                 // Point to the files that should be updated when
                 // you run `grunt wiredep`
-                src: [
-                    'target/website/index.html',   // index file
-                    'target/website/src/**/*.html',   // main file
-                    '!target/website/src/main/src/utilities/libraries/**/*.html'
-                ],
+                src: '<%= fileConfigOptions.prodHtml %>',
 
                 options: {
                     // https://github.com/taptapship/wiredep#configuration
