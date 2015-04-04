@@ -296,8 +296,8 @@ module.exports = function(grunt) {
     // sets up tasks related to supporting older version of borwsers
     grunt.registerTask('polyfill', function() {
         grunt.task.run([
-            'replace:isUndefined',
-            'babel'
+            'replace:isUndefined'
+            //'babel'
         ]);
     });
 
