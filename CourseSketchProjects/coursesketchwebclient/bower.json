@@ -2,6 +2,9 @@
   "name": "coursesketchwebclient",
   "version": "0.0.1",
   "dependencies": {
+    "webcomponentsjs": "0.6.0",
+    "jquery": "2.1.3",
+    "IndexedDBShim": ""
   },
   "private": true
 }
