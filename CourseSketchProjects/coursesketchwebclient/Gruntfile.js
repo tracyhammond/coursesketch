@@ -8,6 +8,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-regex-replace');
+    grunt.loadNpmTasks('grunt-wiredep');
     grunt.initConfig({
         jshint: {
             options: {
@@ -143,6 +144,38 @@ module.exports = function(grunt) {
                     flags: 'g'
                 }
             ]
+        },
+        wiredep: {
+
+            task: {
+
+                // Point to the files that should be updated when
+                // you run `grunt wiredep`
+                src: [
+                    'index.html',   // index file
+                    'src/**/*.html',   // main file
+                    '!src/main/src/utilities/libraries'
+                ],
+
+                options: {
+                    cwd: 'target/website',
+                    // See wiredep's configuration documentation for the options
+                    // you may pass:
+
+                    // https://github.com/taptapship/wiredep#configuration
+                    html: {
+                        block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
+                        detect: {
+                            js: /<script.*src=['"]([^'"]+)/gi,
+                            css: /<link.*href=['"]([^'"]+)/gi
+                        },
+                        replace: {
+                            js: '<script src="{{filePath}}"></script>',
+                            css: '<link rel="stylesheet" href="{{filePath}}" />'
+                        }
+                    }
+                }
+            }
         }
 
     });
