@@ -159,7 +159,7 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         // addes bower comment
-                        from: /['"]bower_components/g,
+                        from: /=['"].*bower_components/g,
                         to: '"/bower_components'
                     }
                 ]
