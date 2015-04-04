@@ -110,12 +110,7 @@ module.exports = function(grunt) {
                         // copies the google app engine directory file
                         expand: true,
                         src: 'app.yaml',
-                        dest: 'target/website/',
-                        options: {
-                            process: function(content, srcpath) {
-                                return content.replace('dev-coursesketch', 'prod-coursesketch');
-                            }
-                        }
+                        dest: 'target/website/'
                     },
                     {
                         // copies the rest of the google app engine files
@@ -142,6 +137,17 @@ module.exports = function(grunt) {
                         // addes bower comment
                         from: /(^|\s)<head>($|\s)/g,
                         to: '\n<head>\n<!-- bower:js -->\n<!-- endbower -->\n'
+                    }
+                ]
+            },
+            appEngine: {
+                src: [ 'target/website/app.yaml' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: 'dev-coursesketch',
+                        to: 'prod-coursesketch'
                     }
                 ]
             }
