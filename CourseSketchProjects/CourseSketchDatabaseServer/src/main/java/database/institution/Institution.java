@@ -114,7 +114,7 @@ public interface Institution {
 
     /**
      * Inserts a {@link SrlCourse} into the the database.
-     * <p/>
+     *
      * Upon insertion 3 steps happen:
      * <ol>
      * <li>a default usergroup is created for this course for users, mods, and
@@ -136,7 +136,7 @@ public interface Institution {
 
     /**
      * Inserts the assignment into the the database.
-     * <p/>
+     *
      * Upon insertion 3 steps happen:
      * <ol>
      * <li>the assignment is created in an assignment collection</li>
@@ -159,7 +159,7 @@ public interface Institution {
 
     /**
      * Inserts the lecture into the the database.
-     * <p/>
+     *
      * Upon insertion 3 steps happen:
      * <ol>
      * <li>the lecture is created in a lecture collection</li>
@@ -182,7 +182,7 @@ public interface Institution {
 
     /**
      * Inserts the lecture slide into the the database.
-     * <p/>
+     *
      * Upon insertion 3 steps happen:
      * <ol>
      * <li>the lecture slide is created in a lecture slide collection</li>
@@ -204,7 +204,7 @@ public interface Institution {
 
     /**
      * Inserts the assignment into the the database.
-     * <p/>
+     *
      * Upon insertion 3 steps happen:
      * <ol>
      * <li>the assignment is created in a problem collection</li>
@@ -228,7 +228,7 @@ public interface Institution {
 
     /**
      * Inserts the {@link SrlBankProblem} into the the database.
-     * <p/>
+     *
      * Upon insertion a bank problem is created within the problem bank.
      *
      * @param userId
@@ -243,7 +243,7 @@ public interface Institution {
 
     /**
      * Updates an existing lecture in the database.
-     * <p/>
+     *
      * Upon updating 1 step happen:
      * <ol>
      * <li>the lecture is updated in a lecture collection</li>
@@ -263,7 +263,7 @@ public interface Institution {
 
     /**
      * Updates an existing course in the database.
-     * <p/>
+     *
      * Upon updating 1 step happen:
      * <ol>
      * <li>The course is updated in a course collection</li>
@@ -284,7 +284,7 @@ public interface Institution {
 
     /**
      * Updates an existing assignment in the database.
-     * <p/>
+     *
      * Upon updating 1 step happen:
      * <ol>
      * <li>the assignment is updated in a assignment collection</li>
@@ -305,7 +305,7 @@ public interface Institution {
 
     /**
      * Updates an existing courseProblem in the database.
-     * <p/>
+     *
      * Upon updating 1 step happen:
      * <ol>
      * <li>the courseProblem is updated in a courseProblem collection</li>
@@ -326,7 +326,7 @@ public interface Institution {
 
     /**
      * Updates an existing bankProblem in the database.
-     * <p/>
+     *
      * Upon updating 1 step happen:
      * <ol>
      * <li>the bankProblem is updated in a bankProblem collection</li>
@@ -347,7 +347,7 @@ public interface Institution {
 
     /**
      * Inserts the lecture into the the database.
-     * <p/>
+     *
      * Upon insertion 1 step happen:
      * <ol>
      * <li>the lecture slide is updated in a slide collection</li>
@@ -368,7 +368,7 @@ public interface Institution {
 
     /**
      * Registers a user for a course
-     * <p/>
+     *
      * Upon registration 3 steps happen:
      * <ol>
      * <li>The user is checked to make sure that they already are not enrolled
@@ -515,7 +515,7 @@ public interface Institution {
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to sql database causes an error.
+     *         Thrown if connecting to database causes an error.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
@@ -532,7 +532,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException
-     *         Thrown if connecting to sql database causes an error.
+     *         Thrown if connecting to database causes an error.
      */
     ProtoGradingPolicy getGradingPolicy(final String courseId, final String userId) throws AuthenticationException, DatabaseAccessException;
 
