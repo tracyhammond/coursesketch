@@ -478,18 +478,7 @@ public final class MongoInstitution implements Institution {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
     }
-
-    @Override
-    public SrlGrade getGrade(final String userId, final String classification, final String itemId) throws DatabaseAccessException {
-        throw new UnsupportedOperationException("This method is not supported in mongo. Only in SQL");
-    }
-
-    @Override
-    public String setGrade(final String userId, final String classification, final String itemId, final SrlGrade grade)
-            throws DatabaseAccessException {
-        throw new UnsupportedOperationException("This method is not supported in mongo. Only in SQL");
-    }
-
+    
     @Override
     public List<String> getCourseRoster(final String userId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
