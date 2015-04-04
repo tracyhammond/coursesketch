@@ -48,5 +48,5 @@ handlers:
 - url: /*
   script: testFiles.app
 
-- url: /libraries
+- url: /bower_components
   static_dir: bower_components
