@@ -1,6 +1,7 @@
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jscs');
+    grunt.loadNpmTasks('grunt-regex-check');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-connect-rewrite');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -8,7 +9,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-text-replace');
+    grunt.loadNpmTasks('grunt-wiredep');
     grunt.initConfig({
+        fileConfigOptions: {
+            prodHtml: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**/*.html' ],
+            prodFiles: [ 'target/website/index.html', 'target/website/src/**/*.html', 'target/website/src/**/*.js',
+                '!target/website/src/main/src/utilities/libraries/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.html' ]
+        },
         jshint: {
             options: {
                 jshintrc: 'config/.jshintrc',
@@ -27,6 +35,17 @@ module.exports = function(grunt) {
             options: {
                 config: 'config/jscs.conf.jscsrc',
                 reporterOutput: 'target/jscsReport.txt'
+            }
+        },
+        'regex-check': {
+            head: {
+                files: {
+                    src: [ 'src/main/src/**/*.html', 'src/test/src/**/*.html', '!src/main/src/utilities/libraries/mespeak/**/*.html' ]
+                },
+                options: {
+                    pattern: /<head(\s|(.*lang=.*))*>/g,
+                    failIfMissing: true
+                }
             }
         },
         connect: {
@@ -75,8 +94,7 @@ module.exports = function(grunt) {
         },
         jsdoc: {
             dist: {
-                src: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                        '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ],
+                src: '<%= jshint.files %>',
                 options: {
                     destination: 'doc'
                 }
@@ -100,7 +118,7 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {
-                        // copies the files used in production for prod use
+                        // copies the website files used in production for prod use
                         expand: true,
                         src: [ 'src/**', '!src/test/**',
                             // these are ignored as they are legacy.
@@ -108,27 +126,22 @@ module.exports = function(grunt) {
                         dest: 'target/website/'
                     },
                     {
-                        // copies other html files that appear in the top level directory
+                        // copies other important files that appear in the top level directory
                         expand: true,
-                        src: [ 'index.html', 'favicon.ico' ],
+                        src: [ 'index.html', 'favicon.ico', 'bower.json' ],
                         dest: 'target/website/'
                     },
                     {
                         // copies the bower components to target
                         expand: true,
                         src: 'bower_components/**',
-                        dest: 'target/website/bower_components/'
+                        dest: 'target/website/'
                     },
                     {
                         // copies the google app engine directory file
                         expand: true,
                         src: 'app.yaml',
-                        dest: 'target/website/',
-                        options: {
-                            process: function(content, srcpath) {
-                                return content.replace('dev-coursesketch', 'prod-coursesketch');
-                            }
-                        }
+                        dest: 'target/website/'
                     },
                     {
                         // copies the rest of the google app engine files
@@ -138,9 +151,95 @@ module.exports = function(grunt) {
                     }
                 ]
             }
+        },
+        replace: {
+            bowerLoad: {
+                src: '<%= fileConfigOptions.prodHtml %>',
+                overwrite: true,
+                replacements: [
+                    /*
+                     {
+                     // supresses console
+                     from: /(^|\s)console.log/g,
+                     to: '//console.log',
+                     },
+                     */
+                    {
+                        // addes bower comment
+                        from: /(^|\s)<head>($|\s)/g,
+                        to: '\n<head>\n<!-- bower:js -->\n<!-- endbower -->\n'
+                    }
+                ]
+            },
+            appEngine: {
+                src: [ 'target/website/app.yaml' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: 'dev-coursesketch',
+                        to: 'prod-coursesketch'
+                    }
+                ]
+            },
+            bowerSlash: {
+                src: '<%= fileConfigOptions.prodHtml %>',
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: /=['"].*bower_components/g,
+                        to: '="/bower_components'
+                    }
+                ]
+            },
+            isUndefined: {
+                src: '<%= fileConfigOptions.prodFiles %>',
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: /isUndefined\((\w+\b)\)/g,
+                        to: 'typeof $1 === \'undefined\''
+                    },
+                    {
+                        from: 'function typeof object === \'undefined\'',
+                        to: 'function isUndefined(object)'
+                    }
+                ]
+            }
+        },
+        wiredep: {
+            task: {
+
+                // Point to the files that should be updated when
+                // you run `grunt wiredep`
+                src: '<%= fileConfigOptions.prodHtml %>',
+
+                options: {
+                    // https://github.com/taptapship/wiredep#configuration
+                    directory: 'target/website/bower_components',
+
+                    html: {
+                        block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
+                        detect: {
+                            js: /<script.*src=['"]([^'"]+)/gi,
+                            css: /<link.*href=['"]([^'"]+)/gi
+                        },
+                        replace: {
+                            js: '<script src="{{filePath}}"></script>',
+                            css: '<link rel="stylesheet" href="{{filePath}}" />'
+                        }
+                    }
+                }
+            }
         }
+
     });
-    // target is a parameter to all registration functions, it is not used.
+
+    /******************************************
+     * TASK WORKFLOW SETUP
+     ******************************************/
 
     // sets up tasks relating to starting the server
     grunt.registerTask('server', function() {
@@ -162,14 +261,41 @@ module.exports = function(grunt) {
     grunt.registerTask('checkstyle', function() {
         grunt.task.run([
             'jscs',
-            'jshint'
+            'jshint',
+            'regex-check'
         ]);
     });
 
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
+            'setupProd',
+            'bower',
+            'polyfill'
+        ]);
+    });
+
+    // sets up tasks related to settuping the website up the production website
+    grunt.registerTask('setupProd', function() {
+        grunt.task.run([
             'copy',
+            'replace:appEngine'
+        ]);
+    });
+
+    // sets up tasks related to loading up bower
+    grunt.registerTask('bower', function() {
+        grunt.task.run([
+            'replace:bowerLoad',
+            'wiredep',
+            'replace:bowerSlash'
+        ]);
+    });
+
+    // sets up tasks related to supporting older version of borwsers
+    grunt.registerTask('polyfill', function() {
+        grunt.task.run([
+            'replace:isUndefined',
             'babel'
         ]);
     });
