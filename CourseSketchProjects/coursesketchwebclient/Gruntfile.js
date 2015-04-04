@@ -11,6 +11,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
+
+    /******************************************
+     * GRUNT INIT
+     ******************************************/
+
     grunt.initConfig({
         fileConfigOptions: {
             prodHtml: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**/*.html' ],
