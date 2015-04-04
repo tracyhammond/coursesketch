@@ -109,7 +109,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         src: [ 'target/website/src/main/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
-                        dest: 'target/website'
+                        dest: 'target/website',
                     }
                 ]
             }
@@ -149,6 +149,16 @@ module.exports = function(grunt) {
                         expand: true,
                         src: [ 'testFiles.py', 'main.py' ],
                         dest: 'target/website/'
+                    }
+                ]
+            },
+            babel: {
+                files: [
+                    {
+                        expand: false,
+                        src: [ 'node_modules/babel-core/browser-polyfill.js' ],
+                        dest: 'bower_components/babel-polyfill/browser-polyfill.js',
+                        filter: 'isFile'
                     }
                 ]
             }
@@ -208,7 +218,18 @@ module.exports = function(grunt) {
                         to: 'function isUndefined(object)'
                     }
                 ]
-            }
+            },
+            babel: {
+                src: [ 'bower_components/babel-polyfill/.bower.json' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: '"name": "babel-polyfill",',
+                        to: '"name": "babel-polyfill",\n"main": "browser-polyfill.js",'
+                    }
+                ]
+            },
         },
         wiredep: {
             task: {
@@ -270,16 +291,26 @@ module.exports = function(grunt) {
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
+            'preBuild',
             'setupProd',
             'bower',
             'polyfill'
         ]);
     });
 
+    // sets up tasks needed before building.
+    // specifically this loads node_modules to bower compontents
+    grunt.registerTask('preBuild', function() {
+        grunt.task.run([
+            'copy:babel',
+            'replace:babel'
+        ]);
+    });
+
     // sets up tasks related to settuping the website up the production website
     grunt.registerTask('setupProd', function() {
         grunt.task.run([
-            'copy',
+            'copy:main',
             'replace:appEngine'
         ]);
     });
