@@ -10,6 +10,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
     grunt.initConfig({
+        fileConfigOptions: {
+            prodHtml: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**' ]
+        },
         jshint: {
             options: {
                 jshintrc: 'config/.jshintrc',
@@ -76,8 +79,7 @@ module.exports = function(grunt) {
         },
         jsdoc: {
             dist: {
-                src: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                        '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ],
+                src: '<%= jshint.files %>',
                 options: {
                     destination: 'doc'
                 }
@@ -123,13 +125,13 @@ module.exports = function(grunt) {
         },
         replace: {
             main: {
-                src: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**' ],
+                src: '<%= fileConfigOptions.prodHtml %>',
                 overwrite: true,
                 replacements: [
                     /*
                      {
                      // supresses console
-                     from: /(^|\\s)console.log/g,
+                     from: /(^|\s)console.log/g,
                      to: '//console.log',
                      },
                      */
@@ -148,6 +150,17 @@ module.exports = function(grunt) {
                         // addes bower comment
                         from: 'dev-coursesketch',
                         to: 'prod-coursesketch'
+                    }
+                ]
+            },
+            bowerSlash: {
+                src: '<%= fileConfigOptions.prodHtml %>',
+                overwrite: true,
+                replacements: [
+                    {
+                        // addes bower comment
+                        from: /['"]bower_components/g,
+                        to: '"/bower_components'
                     }
                 ]
             }
@@ -214,7 +227,8 @@ module.exports = function(grunt) {
         grunt.task.run([
             'copy',
             'replace',
-            'wiredep'
+            'wiredep',
+            'replace:bowerSlash'
         ]);
     });
 
