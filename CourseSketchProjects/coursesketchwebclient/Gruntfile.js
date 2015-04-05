@@ -11,6 +11,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
+
+    /******************************************
+     * GRUNT INIT
+     ******************************************/
+
     grunt.initConfig({
         fileConfigOptions: {
             prodHtml: [ 'target/website/index.html', 'target/website/src/**/*.html', '!target/website/src/main/src/utilities/libraries/**/*.html' ],
@@ -135,7 +140,7 @@ module.exports = function(grunt) {
                         // copies the bower components to target
                         expand: true,
                         src: [ 'bower_components/**', '!bower_components/**/test/**', '!bower_components/**/tests/**',
-                            '!bower_components/**/examples/**', '!bower_components/**/src/**' ],
+                            '!bower_components/**/examples/**' ],
                         dest: 'target/website/'
                     },
                     {
@@ -333,8 +338,8 @@ module.exports = function(grunt) {
     // sets up tasks related to supporting older version of borwsers
     grunt.registerTask('polyfill', function() {
         grunt.task.run([
-            'replace:isUndefined',
-            'babel'
+            'replace:isUndefined'
+            //'babel'
         ]);
     });
 
