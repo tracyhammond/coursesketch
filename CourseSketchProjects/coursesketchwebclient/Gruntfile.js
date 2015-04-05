@@ -156,6 +156,22 @@ module.exports = function(grunt) {
                         dest: 'target/website/'
                     }
                 ]
+            },
+            babel: {
+                files: [
+                    {
+                        expand: false,
+                        src: [ 'node_modules/babel-core/browser-polyfill.js' ],
+                        dest: 'bower_components/babel-polyfill/browser-polyfill.js',
+                        filter: 'isFile'
+                    },
+                    {
+                        expand: false,
+                        src: [ 'bower_components/babel-polyfill/.bower.json' ],
+                        dest: 'bower_components/babel-polyfill/bower.json',
+                        filter: 'isFile'
+                    }
+                ]
             }
         },
         replace: {
@@ -211,6 +227,16 @@ module.exports = function(grunt) {
                     {
                         from: 'function (typeof object === \'undefined\')',
                         to: 'function isUndefined(object)'
+                    }
+                ]
+            },
+            babel: {
+                src: [ 'bower_components/babel-polyfill/bower.json' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        from: '"name": "babel-polyfill",',
+                        to: '"name": "babel-polyfill",\n"main": "browser-polyfill.js",'
                     }
                 ]
             }
@@ -275,16 +301,26 @@ module.exports = function(grunt) {
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
+            'preBuild',
             'setupProd',
             'bower',
             'polyfill'
         ]);
     });
 
+    // sets up tasks needed before building.
+    // specifically this loads node_modules to bower compontents
+    grunt.registerTask('preBuild', function() {
+        grunt.task.run([
+            'copy:babel',
+            'replace:babel'
+        ]);
+    });
+
     // sets up tasks related to settuping the website up the production website
     grunt.registerTask('setupProd', function() {
         grunt.task.run([
-            'copy',
+            'copy:main',
             'replace:appEngine'
         ]);
     });
