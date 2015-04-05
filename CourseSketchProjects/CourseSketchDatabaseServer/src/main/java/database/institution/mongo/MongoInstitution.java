@@ -33,8 +33,6 @@ import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
-import protobuf.srl.school.School.SrlGrade;
-
 import utilities.LoggingConstants;
 
 
@@ -478,7 +476,7 @@ public final class MongoInstitution implements Institution {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
     }
-    
+
     @Override
     public List<String> getCourseRoster(final String userId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
