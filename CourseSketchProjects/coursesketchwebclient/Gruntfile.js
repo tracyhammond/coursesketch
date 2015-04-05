@@ -254,9 +254,8 @@ module.exports = function(grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'target/website',
-                        src: [ 'src/**/*.js', '!src/main/src/utilities/libraries/**/*.js' ],
-                        dest: ''
+                        src: [ 'target/website/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
+                        dest: '.'
                     }
                 ]
             }
