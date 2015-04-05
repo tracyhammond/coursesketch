@@ -248,7 +248,8 @@ module.exports = function(grunt) {
                         'DEBUG': false
                     },
                     dead_code: true
-                }
+                },
+                mangle: true
             },
             main: {
                 files: [
