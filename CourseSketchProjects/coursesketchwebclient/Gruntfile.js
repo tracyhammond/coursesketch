@@ -240,6 +240,26 @@ module.exports = function(grunt) {
                     }
                 }
             }
+        },
+        uglify: {
+            options: {
+                compress: {
+                    global_defs: {
+                        'DEBUG': false
+                    },
+                    dead_code: true
+                }
+            },
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'target/website',
+                        src: [ 'src/**/*.js', '!src/main/src/utilities/libraries/**/*.js' ],
+                        dest: ''
+                    }
+                ]
+            }
         }
 
     });
@@ -278,7 +298,8 @@ module.exports = function(grunt) {
         grunt.task.run([
             'setupProd',
             'bower',
-            'polyfill'
+            'polyfill',
+            'obfuscate'
         ]);
     });
 
@@ -304,6 +325,13 @@ module.exports = function(grunt) {
         grunt.task.run([
             'replace:isUndefined'
             //'babel'
+        ]);
+    });
+
+    // sets up tasks related to minifying the code
+    grunt.registerTask('obfuscate', function() {
+        grunt.task.run([
+            'uglify'
         ]);
     });
 
