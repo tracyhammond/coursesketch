@@ -235,7 +235,6 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
                         from: '"name": "babel-polyfill",',
                         to: '"name": "babel-polyfill",\n"main": "browser-polyfill.js",'
                     }
