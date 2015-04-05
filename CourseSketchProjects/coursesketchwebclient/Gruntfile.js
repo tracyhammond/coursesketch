@@ -11,6 +11,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     /******************************************
      * GRUNT INIT
@@ -265,6 +266,26 @@ module.exports = function(grunt) {
                     }
                 }
             }
+        },
+        uglify: {
+            options: {
+                compress: {
+                    global_defs: {
+                        'DEBUG': false
+                    },
+                    dead_code: true
+                },
+                mangle: true
+            },
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        src: [ 'target/website/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
+                        dest: '.'
+                    }
+                ]
+            }
         }
 
     });
@@ -304,7 +325,8 @@ module.exports = function(grunt) {
             'preBuild',
             'setupProd',
             'bower',
-            'polyfill'
+            'polyfill',
+            'obfuscate'
         ]);
     });
 
@@ -339,6 +361,13 @@ module.exports = function(grunt) {
         grunt.task.run([
             'replace:isUndefined'
             //'babel'
+        ]);
+    });
+
+    // sets up tasks related to minifying the code
+    grunt.registerTask('obfuscate', function() {
+        grunt.task.run([
+            'uglify'
         ]);
     });
 
