@@ -45,6 +45,38 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.USERS;
 
 /**
+ * Interfaces with mongo database to manage grading policies.
+ *
+ * In the mongo database, a grading policy has the following structure.
+ *
+ * GradingPolicy
+ * {
+ *     _id: courseId,
+ *     policyType: ENUM // Percent or point based system
+ *     gradeCategories: [
+ *     {
+ *         name: String,
+ *         weight: Number,
+ *         latePolicy: {
+ *             functionType: ENUM,
+ *             timeFrameType: ENUM,
+ *             rate: Number,
+ *             subtractionType: ENUM,
+ *             applyOnlyToLateProblems: boolean
+ *         }
+ *     }, repeated gradeCategories
+ *     ],
+ *     droppedProblems: {
+ *         assignmentId1: [ { problemId: problemId1, dropType: type }, ... ],
+ *         assignmentId2: [...],
+ *         ...
+ *     },
+ *     droppedAssignments: [
+ *         { assignmentId: Id, dropType: type },
+ *         {...}
+ *     ]
+ * }
+ *
  * Created by matt on 3/21/15.
  */
 public final class GradingPolicyManager {
@@ -56,7 +88,7 @@ public final class GradingPolicyManager {
     }
 
     /**
-     * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.
+     * This method will insert the gradingPolicy in Mongo based on the proto object passed in.
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
      * @param authenticator
@@ -72,7 +104,7 @@ public final class GradingPolicyManager {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    public static void setGradingPolicy(final Authenticator authenticator, final DB dbs, final String userId, final ProtoGradingPolicy policy)
+    public static void insertGradingPolicy(final Authenticator authenticator, final DB dbs, final String userId, final ProtoGradingPolicy policy)
             throws AuthenticationException, DatabaseAccessException {
         final AuthType auth = new AuthType();
         auth.setCheckAdminOrMod(true);
@@ -259,6 +291,7 @@ public final class GradingPolicyManager {
 
     /**
      * Converts a latePolicy from mongo BasicDBObject to proto.
+     * @see #buildMongoCategory
      *
      * @param dbPolicy
      *         The mongo latePolicy we want to build a protoObject for.
