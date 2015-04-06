@@ -1,18 +1,6 @@
-.fullScreenColumn {
-	height:calc(100vh - 3.75em - 5px);
-}
-
-h2 {
-	margin-top:0.5em;
-	margin-bottom:0.5em;
-	font-size:1.5em;
-	line-height: 0.5em;
-}
-
-.wide_centre > div {
-	height:100vh;
-}
-
-.columnContainer {
-	display:flex;
+school-item {
+margin-left:1%;
+width: 30%;
+margin-bottom: 20px;
+height: 50%;
 }
