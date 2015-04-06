@@ -147,6 +147,10 @@ public final class GradingPolicyManager {
 
     /**
      * Gets the grading policy for a course from the mongoDb.
+     * <pre><code>
+     *     // The first object is the query. The second is the projection which tells to return everything except the _id field.
+     *     coll.find( { _id: ObjectId(courseId) }, { _id: false } )
+     * </code></pre>
      *
      * @param authenticator
      *         The object that is performing authentication.
@@ -276,6 +280,7 @@ public final class GradingPolicyManager {
 
     /**
      * Converts a latePolicy from proto to mongo BasicDBObject.
+     * @see #buildMongoCategory
      *
      * @param latePolicy
      *         The proto latePolicy we wish to build the mongo BasicDBObject for.
@@ -291,7 +296,6 @@ public final class GradingPolicyManager {
 
     /**
      * Converts a latePolicy from mongo BasicDBObject to proto.
-     * @see #buildMongoCategory
      *
      * @param dbPolicy
      *         The mongo latePolicy we want to build a protoObject for.
