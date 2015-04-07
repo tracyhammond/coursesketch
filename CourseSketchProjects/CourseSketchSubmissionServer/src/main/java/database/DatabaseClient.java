@@ -455,7 +455,7 @@ public class DatabaseClient {
      * @param updateList The updateList in a submission.
      * @return the time for the last stroke recorded.
      */
-    private static long getLastStrokeTime(final SrlUpdateList updateList) {
+    static long getLastStrokeTime(final SrlUpdateList updateList) {
         long submissionMarkerTime = 0;
         boolean isFoundSubmissionMarker = false;
         for (int i = 0; i < updateList.getListList().size() && !isFoundSubmissionMarker; i++) {
@@ -493,7 +493,7 @@ public class DatabaseClient {
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    private static BasicDBObject createUpdateList(final SrlSubmission submission, final DBObject cursor,
+    static BasicDBObject createUpdateList(final SrlSubmission submission, final DBObject cursor,
             final boolean isMod, final long submissionTime)
             throws SubmissionException {
         if (cursor != null) {
