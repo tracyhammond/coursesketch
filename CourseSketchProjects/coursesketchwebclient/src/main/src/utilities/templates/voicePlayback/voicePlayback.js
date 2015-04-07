@@ -4,23 +4,23 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        this.shadowRoot.querySelector("#play-btn").onclick = function(){
-            localScope.shadowRoot.querySelector("#pause-btn").style.display = "block";
-            localScope.shadowRoot.querySelector("#play-btn").style.display = "none";
+        this.shadowRoot.querySelector('#play-btn').onclick = function() {
+            localScope.shadowRoot.querySelector('#pause-btn').style.display = 'block';
+            localScope.shadowRoot.querySelector('#play-btn').style.display = 'none';
             playMe();
             playVoice();
-        }
-        this.shadowRoot.querySelector("#pause-btn").onclick = function(){
-            localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
-            localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
+        };
+        this.shadowRoot.querySelector('#pause-btn').onclick = function() {
+            localScope.shadowRoot.querySelector('#play-btn').style.display = 'block';
+            localScope.shadowRoot.querySelector('#pause-btn').style.display = 'none';
             pauseVoice();
-        }
+        };
 
-        var surface = document.body.querySelector("sketch-surface");
+        var surface = document.body.querySelector('sketch-surface');
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
 
-        localScope.shadowRoot.querySelector("#slider").slider({
+        localScope.shadowRoot.querySelector('#slider').slider({
             value: 100,
             min: 0,
             max: 500,
@@ -56,7 +56,7 @@ function VoicePlayback() {
             localScope.audio = document.createElement('audio');
             localScope.audio.src = '/src/utilities/templates/voicePlayback/TestRecording/mp3test.mp3';
         }
-    }
+    };
 
 }
 
