@@ -13,10 +13,14 @@ validateFirstRun(document.currentScript);
 function mergeApi(originalApi, objectApi){
     var result = {};
     for (var key in originalApi) {
-        result[key] = originalApi[key];
+        if (originalApi.hasOwnProperty(key)) {
+            result[key] = originalApi[key];
+        }
     }
     for (var key in objectApi) {
-        result[key] = objectApi[key];
+        if (objectApi.hasOwnProperty(key)) {
+            result[key] = originalApi[key];
+        }
     }
     return result;
 }
@@ -37,7 +41,7 @@ function debugLog(text) {
  *        {Object}  The problem panel from the student experiment
  */
 
-function panelEditApi(panel){
+function PanelEditApi(panel){
 
     /**
      * This function allows scripts to create a text area object to the right of the sketch surface in an experiment
@@ -56,8 +60,7 @@ function panelEditApi(panel){
             textArea.style.width = 'calc(100% - 110px)';
             textArea.style.height = 'calc(' + (textAreaObj.height) + '% - 110px)';
 
-        }
-        else {
+        } else {
             sketchSurface.style.width = '' + (100 - textAreaObj.width - 1) + '%';
             textArea.style.width = '' + (textAreaObj.width - 1) + '%';
             textArea.style.height = 'calc(100% - 110px)';
@@ -66,12 +69,11 @@ function panelEditApi(panel){
         textArea.disabled = true;
         if (textAreaObj.location === 'top' || textAreaObj.location === 'left') {
             panel.insertBefore(textArea, sketchSurface);
-        }
-        else{
+        } else {
             panel.appendChild(textArea);
         }
-            sketchSurface.resizeSurface();
-        }
+        sketchSurface.resizeSurface();
+    };
 
     /**
      * This function allows scripts to change the background of the sketch surface to any supported type
@@ -79,10 +81,10 @@ function panelEditApi(panel){
      *        {string} A string containing the className that corresponds to the background type
      */
 
-     this.setSketchSurfaceBG = function(className) {
+    this.setSketchSurfaceBG = function(className) {
         //sets the className of the sketch surface and adds sub-panel
         panel.childNodes[1].className = className + ' sub-panel' + ' submittable';
-     }
+    };
 
 }
 
@@ -103,13 +105,13 @@ var api = {
 
 function executeScript(script, panel, callback) {
     console.log('executing script: ' + script);
-    var panelApi = new panelEditApi(panel);
+    var panelApi = new PanelEditApi(panel);
     var totalApi = mergeApi(api, panelApi);
     console.log(totalApi);
     var scriptWorker = new jailed.DynamicPlugin(script, totalApi);
-    var timer = setTimeout(function(){
-        scriptWorker.disconnect()
-    }, 2000)
+    var timer = setTimeout(function() {
+        scriptWorker.disconnect();
+    }, 2000);
     scriptWorker.whenDisconnected(function() {
         clearTimeout(timer);
         callback();

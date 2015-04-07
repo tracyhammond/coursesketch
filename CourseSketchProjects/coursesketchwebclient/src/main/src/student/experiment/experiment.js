@@ -131,8 +131,8 @@ validateFirstRun(document.currentScript);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             var problemScript = navigator.getProblemScript();
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
-                executeScript(problemScript, document.getElementById('problemPanel'), function(){
-                    console.log("script executed - worker disconnect");
+                executeScript(problemScript, document.getElementById('problemPanel'), function() {
+                    console.log('script executed - worker disconnect');
                     if (element.isRunning()) {
                         element.finishWaiting();
                         CourseSketch.studentExperiment.removeWaitOverlay();
@@ -149,8 +149,8 @@ validateFirstRun(document.currentScript);
             sketchSurface.refreshSketch();
 
             //loads and runs the script
-            executeScript(problemScript, document.getElementById('problemPanel'), function(){
-                console.log("script executed - worker disconnect");
+            executeScript(problemScript, document.getElementById('problemPanel'), function() {
+                console.log('script executed - worker disconnect');
                 console.log(submission);
                 var updateList = submission.getUpdateList();
                 //console.log(updateList);
