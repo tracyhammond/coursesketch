@@ -49,7 +49,6 @@ public class AnswerConnectionManager extends MultiConnectionManager {
             createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
                     PORT, this.isSecure(), SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
