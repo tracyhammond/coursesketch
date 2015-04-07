@@ -51,7 +51,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      */
     courseManagement.showCourses = function showCourses(courseList) {
         var builder = new SchoolItemBuilder();
-        if (CourseSketch.connection.isInstructor === true) {
+        if (CourseSketch.connection.isInstructor === true && !courseManagement.gradebookMode) {
             builder.setInstructorCard(true);
         }
         builder.showImage = false;
