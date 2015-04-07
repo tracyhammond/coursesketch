@@ -49,16 +49,29 @@ function panelEditApi(panel){
         //builds a text area from a passed in object
         var textArea = document.createElement('TEXTAREA');
         // gets the sketch surface object
-        var sketchSurface = panel.childNodes[1];
+        var sketchSurface = panel.getElementsByTagName('sketch-surface')[0];
         textArea.className = textAreaObj.className + ' sub-panel';
-        // reduces the width of the sketch surface
-        sketchSurface.style.width = '' + (100 - textAreaObj.width - 1) + '%';
-        textArea.style.width = '' + (textAreaObj.width - 1) + '%';
-        textArea.style.height = 'calc(100% - 110px)';
+        if (textAreaObj.location === 'top' || textAreaObj.location === 'bottom') {
+            sketchSurface.style.height = 'calc(' + (100 - textAreaObj.height - 1) + '% - 110px)';
+            textArea.style.width = 'calc(100% - 110px)';
+            textArea.style.height = 'calc(' + (textAreaObj.height) + '% - 110px)';
+
+        }
+        else {
+            sketchSurface.style.width = '' + (100 - textAreaObj.width - 1) + '%';
+            textArea.style.width = '' + (textAreaObj.width - 1) + '%';
+            textArea.style.height = 'calc(100% - 110px)';
+        }
         textArea.value = textAreaObj.textContent;
         textArea.disabled = true;
-        panel.appendChild(textArea);
-    }
+        //if (textAreaObj.location === 'top' || textAreaObj.location === 'left') {
+        //    panel.insertBefore(textArea, sketchSurface);
+        //}
+        //else{
+            panel.appendChild(textArea);
+        //}
+            sketchSurface.resizeSurface();
+        }
 
     /**
      * This function allows scripts to change the background of the sketch surface to any supported type
@@ -68,7 +81,7 @@ function panelEditApi(panel){
 
      this.setSketchSurfaceBG = function(className) {
         //sets the className of the sketch surface and adds sub-panel
-        panel.childNodes[1].className = className + ' sub-panel';
+        panel.childNodes[1].className = className + ' sub-panel' + ' submittable';
      }
 
 }
