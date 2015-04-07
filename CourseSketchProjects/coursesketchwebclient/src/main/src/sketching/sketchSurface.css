@@ -2,7 +2,7 @@
     position:relative;
     padding: 1px 1px 1px 1px;
     margin: -1px -1px -1px -1px;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
 }
 
