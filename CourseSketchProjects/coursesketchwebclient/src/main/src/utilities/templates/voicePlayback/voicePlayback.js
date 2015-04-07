@@ -20,17 +20,15 @@ function VoicePlayback() {
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
 
-        this.shadowRoot.querySelector("#slider").slider(
-        {
-             value:100,
-             min: 0,
-             max: 500,
-             step: 1,
-             slide: function( event, ui ) {
-                  this.shadowRoot.querySelector( "#slider-value" ).html( ui.value );
-             }
+        localScope.shadowRoot.querySelector("#slider").slider({
+            value: 100,
+            min: 0,
+            max: 500,
+            step: 50,
+            slide: function (event, ui) {
+                localScope.shadowRoot.querySelector("#slider-value").html(ui.value);
+            }
         });
-        this.shadowRoot.querySelector( "#slider-value" ).html(  this.shadowRoot.querySelector('#slider').slider('value') );
 
         function playMe() {
             var graphics = surface.graphics;
