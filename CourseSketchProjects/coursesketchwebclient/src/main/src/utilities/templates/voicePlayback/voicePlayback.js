@@ -25,9 +25,6 @@ function VoicePlayback() {
             min: 0,
             max: 500,
             step: 50,
-            slide: function (event, ui) {
-                localScope.shadowRoot.querySelector("#slider-value").html(ui.value);
-            }
         });
 
         function playMe() {
