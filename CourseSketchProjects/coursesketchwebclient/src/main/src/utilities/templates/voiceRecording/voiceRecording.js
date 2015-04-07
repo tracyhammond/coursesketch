@@ -4,14 +4,14 @@ function VoiceRecording() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        this.shadowRoot.querySelector("#recordBtn").onclick = function() {
-            if (this.isRecording == true) {
+        this.shadowRoot.querySelector('#recordBtn').onclick = function() {
+            if (this.isRecording === true) {
                 this.stopRecording();
                 clearInterval(this.voiceBtnTimer);
                 this.isRecording = false;
-                $(this.shadowRoot.querySelector("#recordBtn")).val(null);
+                $(this.shadowRoot.querySelector('#recordBtn')).val(null);
             } else {
-                this.blink($(this.shadowRoot.querySelector("#recordBtn")));
+                this.blink($(this.shadowRoot.querySelector('#recordBtn')));
                 this.startRecording();
                 this.isRecording = true;
             }
@@ -23,7 +23,7 @@ function VoiceRecording() {
                     elm.fadeIn(400);
                 });
             }, 800);
-            elm.val("REC");
+            elm.val('REC');
         }.bind(this);
 
         this.startRecording = function() {
@@ -71,7 +71,7 @@ function VoiceRecording() {
                 console.log('No live audio input: ' + e);
             });
         }.bind(localScope);
-    }
+    };
 }
 
 VoiceRecording.prototype = Object.create(HTMLElement.prototype);
