@@ -10,10 +10,12 @@ import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlExperimentList;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 /**
@@ -59,11 +61,13 @@ public final class DataRequestHandler {
                     }
                 }
             } catch (Exception e) {
+                final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 final Request.Builder build = Request.newBuilder();
                 build.setRequestType(Request.MessageType.ERROR);
                 build.setResponseText(e.getMessage());
                 build.setSessionInfo(req.getSessionInfo());
+                build.setOtherData(p1.toByteString());
                 return build.build();
             }
             resultReq.setOtherData(builder.build().toByteString());
@@ -71,10 +75,12 @@ public final class DataRequestHandler {
             return resultReq.build();
         } catch (InvalidProtocolBufferException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
             final Request.Builder build = Request.newBuilder();
             build.setRequestType(Request.MessageType.ERROR);
             build.setResponseText(e.getMessage());
             build.setSessionInfo(req.getSessionInfo());
+            build.setOtherData(p1.toByteString());
             return build.build();
         }
     }
@@ -132,7 +138,6 @@ public final class DataRequestHandler {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
-
         final ItemResult.Builder send = ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
         send.setData(experiments.build().toByteString());

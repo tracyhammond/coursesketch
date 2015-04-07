@@ -78,8 +78,6 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             req.getSessionInfo() + "+" + state.getKey(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                 } // pass submission on
 
@@ -100,8 +98,6 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     getConnectionManager().send(req, req.getSessionInfo(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    final Message.ProtoException p = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }

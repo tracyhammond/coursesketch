@@ -46,7 +46,6 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
             createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(),
                     SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
-            final Message.ProtoException p = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
