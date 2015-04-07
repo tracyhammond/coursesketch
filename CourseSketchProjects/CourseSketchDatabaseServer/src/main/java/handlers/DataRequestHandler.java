@@ -82,7 +82,8 @@ public final class DataRequestHandler {
      *         Connections to other servers that can be used to grab data from them.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-            "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
+            "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount",
+            "checkstyle:methodlength" })
     public static void handleRequest(final Request req, final SocketSession conn, final String sessionId,
             final MultiConnectionManager internalConnections) {
         try {
@@ -164,8 +165,8 @@ public final class DataRequestHandler {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
                                         results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
                                     } catch (DatabaseAccessException e) {
-                                        final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-                                        conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                                        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                                        conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                                         results.add(ResultBuilder.buildResult(null, e.getLocalizedMessage(), ItemQuery.EXPERIMENT));
                                         break;
                                     }
@@ -230,8 +231,8 @@ public final class DataRequestHandler {
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException | InvalidProtocolBufferException | RuntimeException e) {
-            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }

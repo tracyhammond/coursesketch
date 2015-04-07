@@ -98,8 +98,8 @@ public final class DataInsertHandler {
                                 results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + course.getId(), itemSet.getQuery()));
                             } catch (DatabaseAccessException e) {
                                 // unable to register user for course
-                                final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-                                conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                                conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                                 final ItemResult.Builder build = ItemResult.newBuilder();
                                 build.setQuery(itemSet.getQuery());
                                 results.add(ResultBuilder.buildResult(build.build().toByteString(),
@@ -169,8 +169,8 @@ public final class DataInsertHandler {
                             throw new Exception("Insert type not supported.");
                     }
                 } catch (AuthenticationException e) {
-                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemSet.getQuery());
@@ -181,8 +181,8 @@ public final class DataInsertHandler {
                     }
 
                 } catch (Exception e) {
-                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemSet.getQuery());
@@ -194,13 +194,13 @@ public final class DataInsertHandler {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
         } catch (AuthenticationException e) {
-            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
-            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
