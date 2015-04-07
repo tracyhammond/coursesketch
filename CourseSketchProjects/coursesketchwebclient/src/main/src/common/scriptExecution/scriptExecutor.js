@@ -42,7 +42,7 @@ function panelEditApi(panel){
     /**
      * This function allows scripts to create a text area object to the right of the sketch surface in an experiment
      * @param textAreaObj
-     *        {Object} The object that defines the text area parameters (width, className, textContent)
+     *        {Object} The object that defines the text area parameters (width, height, location, className, textContent)
      */
 
     this.addTextArea = function(textAreaObj) {
@@ -64,12 +64,12 @@ function panelEditApi(panel){
         }
         textArea.value = textAreaObj.textContent;
         textArea.disabled = true;
-        //if (textAreaObj.location === 'top' || textAreaObj.location === 'left') {
-        //    panel.insertBefore(textArea, sketchSurface);
-        //}
-        //else{
+        if (textAreaObj.location === 'top' || textAreaObj.location === 'left') {
+            panel.insertBefore(textArea, sketchSurface);
+        }
+        else{
             panel.appendChild(textArea);
-        //}
+        }
             sketchSurface.resizeSurface();
         }
 
