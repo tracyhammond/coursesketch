@@ -12,9 +12,12 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.school.School;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,11 @@ import static database.DatabaseStringConstants.USERS;
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
         "PMD.UselessParentheses" })
 public final class LectureManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(LectureManager.class);
 
     /**
      * Private constructor.
@@ -131,7 +139,7 @@ public final class LectureManager {
 
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
-        System.out.println(updateQuery);
+        LOG.info("Updated Query: {}", updateQuery);
         lectures.update(cursor, updateQuery);
     }
 
@@ -179,7 +187,7 @@ public final class LectureManager {
         // FUTURE: maybe not make this necessarry if the insertion of lecture prevents this.
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
         if (isUsers && !authenticator.isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
@@ -225,14 +233,14 @@ public final class LectureManager {
             stateBuilder.setAccessible(true);
         } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate())) {
             stateBuilder.setAccessible(false);
-            System.err.println("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
-            System.err.println(exactLecture.getAccessDate().getMillisecond() + " < " + checkTime + " < "
-                    + exactLecture.getCloseDate().getMillisecond());
+            LOG.info("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
+            LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactLecture.getAccessDate().getMillisecond(),
+                    checkTime, exactLecture.getCloseDate().getMillisecond());
         }
 
         exactLecture.setState(stateBuilder);
 
-        final School.SrlPermission.Builder permissions = School.SrlPermission.newBuilder();
+        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
@@ -341,7 +349,7 @@ public final class LectureManager {
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (lecture.hasAccessPermission()) {
-                final School.SrlPermission permissions = lecture.getAccessPermission();
+                final SrlPermission permissions = lecture.getAccessPermission();
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {

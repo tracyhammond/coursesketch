@@ -3,8 +3,8 @@ function LectureNavigator(lectureId, preferredIndex) {
     var currentLecture;
     var currentLectureId = lectureId;
     var currentSlideIndex = preferredIndex;
-    var lectureIdStack = new Array();
-    var indicesStack = new Array();
+    var lectureIdStack = [];
+    var indicesStack = [];
     var currentSlide;
     var isDone = false;
 
@@ -18,12 +18,12 @@ function LectureNavigator(lectureId, preferredIndex) {
     function popUp() {
         var nextSlideIndex = indicesStack.pop();
         var nextLectureId = lectureIdStack.pop();
-        while (nextSlideIndex == -1 && indicesStack.length > 0) {
+        while (nextSlideIndex === -1 && indicesStack.length > 0) {
             nextSlideIndex = indicesStack.pop();
             nextLectureId = lectureIdStack.pop();
         }
         function hasLecture(lecture) {
-            if (nextSlideIndex == -1) {
+            if (nextSlideIndex === -1) {
                 isDone = true;
                 callCallback();
                 return;
@@ -32,7 +32,7 @@ function LectureNavigator(lectureId, preferredIndex) {
             currentLectureId = lecture.id;
             var idMessage = currentLecture.idList[nextSlideIndex];
 
-            if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
+            if (idMessage.nav.nextLectureId !== null && !isUndefined(idMessage.nav.nextLectureId)) {
                 loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
             } else {
                 loadSlide(idMessage.id, nextSlideIndex);
@@ -47,15 +47,15 @@ function LectureNavigator(lectureId, preferredIndex) {
      * then you are at the end of the lecture
      * If the next slide equals -1 and the stack is not empty
      * then you are at the end of a lecture within another lecture
-     * If the next slide is not equal to -1 and the nav's nextLecture != null
+     * If the next slide is not equal to -1 and the nav's nextLecture !== null
      * then you are moving into a lecture
-     * If the next slide is not equal to -1 and the nav's nextLecture == null
+     * If the next slide is not equal to -1 and the nav's nextLecture === null
      * then you are moving to a slide within the same lecture
      */
     this.goToNextSlide = function goToNextSlide() {
         var idMessage = currentLecture.idList[currentSlideIndex];
-        if (idMessage.nav.nextSlide === -1 && (idMessage.nav.nextLectureId == null || isUndefined(idMessage.nav.nextLectureId))) {
-            if (indicesStack.length == 0) {
+        if (idMessage.nav.nextSlide === -1 && (idMessage.nav.nextLectureId === null || isUndefined(idMessage.nav.nextLectureId))) {
+            if (indicesStack.length === 0) {
                 isDone = true;
                 callCallback();
                 return;
@@ -63,13 +63,13 @@ function LectureNavigator(lectureId, preferredIndex) {
                 popUp();
             }
         } else {
-            if (idMessage.nav.nextLectureId != null && !isUndefined(idMessage.nav.nextLectureId)) {
+            if (idMessage.nav.nextLectureId !== null && !isUndefined(idMessage.nav.nextLectureId)) {
                 loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
             } else {
                 loadSlide(currentLecture.idList[idMessage.nav.nextSlide].id, idMessage.nav.nextSlide);
             }
         }
-    }
+    };
 
     /**
      * asynchronously calls the callbacks
@@ -85,8 +85,10 @@ function LectureNavigator(lectureId, preferredIndex) {
      * this way the browser is not locked up by callbacks.
      */
     function callBacker(scopedIndex) {
-        var navScope = this;
-        setTimeout(function() {callbackList[scopedIndex](navScope);},20);
+        var localScope = this;
+        setTimeout(function() {
+            callbackList[scopedIndex](localScope);
+        }, 20);
     }
 
     function changeSlide(index) {
@@ -95,13 +97,13 @@ function LectureNavigator(lectureId, preferredIndex) {
         }
         currentSlideIndex = index;
         currentSlide = currentLecture.idList[index];
-        callCallback()
+        callCallback();
     }
 
     /**
      * Loads a slide with an id and the index at which this slide exist.
-     * @param index The new index that will become the current index.
-     * @param nextSlideId the id of the next slide that will become the current slide.
+     * @param {String} nextSlideId the id of the next slide that will become the current slide.
+     * @param {Integer} index The new index that will become the current index.
      */
     function loadSlide(nextSlideId, index) {
         function hasSlide(slide) {
@@ -114,9 +116,9 @@ function LectureNavigator(lectureId, preferredIndex) {
 
     /**
      * loads a lecture from the given lecture id
-     * @param nextLectureId
+     * @param {String} nextLectureId
      *         id of next lecture
-     * @param index
+     * @param {Integer} index
      *         the index of the slide in the lecture we want
      */
     function loadLecture(nextLectureId, index) {
@@ -150,38 +152,38 @@ function LectureNavigator(lectureId, preferredIndex) {
      */
     this.hasNext = function() {
         return currentSlideIndex < currentLecture.idList.length;
-    }
+    };
 
     this.getCurrentNumber = function() {
         return currentSlideIndex + 1;
-    }
+    };
 
     this.getLength = function() {
         return currentLecture.idList.length;
-    }
+    };
 
     this.getCurrentSlideId = function() {
         return currentSlide.id;
-    }
+    };
 
     this.getCurrentSlide = function() {
         return currentSlide;
-    }
+    };
 
     this.getCurrentLectureId = function() {
         return currentLectureId;
-    }
+    };
 
     this.getIsDone = function() {
         return isDone;
-    }
+    };
 
     /**
      * removes a callback from the callback list
      */
     this.removeCallback = function(callback) {
         var index = callbackList.indexOf(callback);
-        if (index >= 0 ) {
+        if (index >= 0) {
             callbackList.splice(index, 1);
         }
     };
@@ -196,5 +198,5 @@ function LectureNavigator(lectureId, preferredIndex) {
             loadSlide(id, currentSlideIndex);
         }
         CourseSketch.dataManager.getCourseLecture(currentLectureId, hasLecture, hasLecture);
-    }
+    };
 }

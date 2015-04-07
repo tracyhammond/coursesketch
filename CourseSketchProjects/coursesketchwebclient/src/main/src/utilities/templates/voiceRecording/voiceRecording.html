@@ -2,9 +2,10 @@
 <head>
 
     <template id="voice-recording-template">
-        <style>
+        <style onload="init()">
             @import "/src/utilities/templates/voiceRecording/voiceRecording.css";
         </style>
+        <script src="/src/utilities/templates/voiceRecording/cdn/recordmp3.js"></script>
         <input type="button" value=" " id="recordBtn" />
         <sketch-surface id="sketchCanvas" style="height:1005; width:100%; border: 5px solid red;"></sketch-surface>
     </template>

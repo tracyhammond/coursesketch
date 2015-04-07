@@ -1,7 +1,11 @@
 package util;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.utils.Util;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,12 @@ import java.util.List;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.NPathComplexity" })
 public final class SubmissionMerger {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionMerger.class);
+
     /**
      * The lists that are being merged together.
      */
@@ -291,17 +301,17 @@ public final class SubmissionMerger {
             final Commands.SrlCommand command = updates.get(i).getCommands(0);
             if (command.getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
                 try {
-                    final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
+                    final Util.IdChain sketchId = Util.IdChain.parseFrom(command.getCommandData());
                     return sketchId.getIdChain(0);
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             } else if (command.getCommandType() == Commands.CommandType.CREATE_SKETCH) {
                 try {
                     final Commands.ActionCreateSketch createSketch = Commands.ActionCreateSketch.parseFrom(command.getCommandData());
                     return createSketch.getSketchId().getIdChain(0);
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }
@@ -324,12 +334,12 @@ public final class SubmissionMerger {
             final Commands.SrlCommand command = updates.get(i).getCommands(0);
             if (command.getCommandType() == Commands.CommandType.SWITCH_SKETCH) {
                 try {
-                    final Commands.IdChain sketchId = Commands.IdChain.parseFrom(command.getCommandData());
+                    final Util.IdChain sketchId = Util.IdChain.parseFrom(command.getCommandData());
                     if (sketchId.getIdChain(0).equals(matchingSketchId)) {
                         return i;
                     }
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             } else if (command.getCommandType() == Commands.CommandType.CREATE_SKETCH) {
                 try {
@@ -338,7 +348,7 @@ public final class SubmissionMerger {
                         return i;
                     }
                 } catch (InvalidProtocolBufferException e) {
-                    e.printStackTrace();
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }
         }
