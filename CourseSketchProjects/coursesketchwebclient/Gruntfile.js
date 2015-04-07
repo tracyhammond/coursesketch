@@ -18,8 +18,7 @@ module.exports = function(grunt) {
                 reporterOutput: 'target/jshint.xml'
             },
             files: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                    '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js',
-                    '!src/main/src/utilities/templates/voiceRecording/**/*.js' ]
+                    '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
         },
         jscs: {
             src: '<%= jshint.files %>',
