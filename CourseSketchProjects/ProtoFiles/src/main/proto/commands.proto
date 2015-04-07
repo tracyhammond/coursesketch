@@ -140,8 +140,8 @@ message ActionCreateSketch {
  * Adds a voice recording
  */
 message ActionStartSpeech {
-    required bytes recording = 1;
-    optional string text = 2;
+    optional string text = 1;
+    required bytes recording = 2;
 }
 
 enum SketchType {
