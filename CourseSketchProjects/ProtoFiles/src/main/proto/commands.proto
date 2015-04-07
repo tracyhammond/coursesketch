@@ -136,6 +136,14 @@ message ActionCreateSketch {
     optional string domainId = 7;
 }
 
+/**
+ * Adds a voice recording
+ */
+message ActionStartSpeech {
+    required bytes recording = 1;
+    optional string text = 2;
+}
+
 enum SketchType {
     DEFAULT = 0; // the default
     RESPONSE = 1;
