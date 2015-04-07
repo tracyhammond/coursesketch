@@ -5,15 +5,18 @@
         <style onload="init()">
             @import "/src/utilities/templates/voicePlayback/voicePlayback.css";
         </style>
+        <div id="slider"></div>
+        Your slider has a value of <span id="slider-value"></span>
+
         <table id = "button-bar">
             <tr><td style="width:5%"><button type="submit" id = "play-btn" ></button>
                                      <button type="submit" id = "pause-btn" ></button></td>
                 <td style="width:5%"><button type="submit" id = "speedup-btn" ></button></td>
                 <td style="width:5%"><button type="submit" id = "slowdown-btn" ></button></td>
-                <td><div id="slider"></div></td>
+                <td></td>
                 <td style="width:5%"><button type="submit" id = "setting-btn" ></button></td></tr>
         </table>
-        <p>Your slider has a value of <span id="slider-value"></span></p>
+
         <!--button type="submit" id = "redo-btn" ></button>
         <button type="submit" id = "undo-btn" ></button>
         <button type="submit" id = "play-btn" ></button>
