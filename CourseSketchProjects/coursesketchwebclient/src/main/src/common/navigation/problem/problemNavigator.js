@@ -268,8 +268,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
             CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
                 currentAssignment = assignment;
-                // get assignment type
-
             });
         }
     };
