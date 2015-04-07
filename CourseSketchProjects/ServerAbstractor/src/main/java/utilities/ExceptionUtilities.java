@@ -39,11 +39,11 @@ public final class ExceptionUtilities {
      */
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     public static Message.Request createExceptionRequest(final Message.ProtoException exception, final Message.Request inputRequest) {
-        final Message.Request.Builder builder = Message.Request.newBuilder(inputRequest);
+        final Message.Request.Builder builder = Message.Request.newBuilder();
         builder.setRequestType(Message.Request.MessageType.ERROR);
-        builder.clearOtherData();
-        builder.clearMessageTime();
         builder.setOtherData(exception.toByteString());
+        builder.setSessionInfo(inputRequest.getSessionInfo());
+        builder.setResponseText(exception.getMssg());
         return builder.build();
     }
 }
