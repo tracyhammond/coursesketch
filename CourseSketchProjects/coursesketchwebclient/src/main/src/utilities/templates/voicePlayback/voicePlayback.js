@@ -4,13 +4,13 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        this.shadowRoot.querySelector("#play-btn").onclick = function(){
+        this.shadowRoot.querySelector("#play-btn").onclick = function() {
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "block";
             localScope.shadowRoot.querySelector("#play-btn").style.display = "none";
             playMe();
             playVoice();
         }
-        this.shadowRoot.querySelector("#pause-btn").onclick = function(){
+        this.shadowRoot.querySelector("#pause-btn").onclick = function() {
             localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
             pauseVoice();
@@ -25,7 +25,7 @@ function VoicePlayback() {
             min: 0,
             max: 500,
             step: 50,
-            slide: function (event, ui) {
+            slide: function(event, ui) {
                 localScope.shadowRoot.querySelector("#slider-value").html(ui.value);
             }
         });
