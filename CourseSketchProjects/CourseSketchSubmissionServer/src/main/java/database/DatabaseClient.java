@@ -29,7 +29,9 @@ import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
+import static database.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static database.DatabaseStringConstants.IS_PRACTICE_PROBLEM;
+import static database.DatabaseStringConstants.LAST_STROKE_TIME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
@@ -189,9 +191,11 @@ public class DatabaseClient {
      * @return A string representing the id if it exists or is a new submission.
      * @throws DatabaseAccessException
      *         thrown if there are problems saving the experiment.
+     * @throws InvalidProtocolBufferException
+     *         thrown when the protocol buffer is invalid.
      */
     public static String saveExperiment(final DatabaseClient client, final SrlExperiment experiment, final long submissionTime)
-            throws DatabaseAccessException {
+            throws DatabaseAccessException, InvalidProtocolBufferException {
         LOG.info("saving the experiment!");
         verifyInput(experiment);
 
@@ -373,9 +377,11 @@ public class DatabaseClient {
      * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
+     * @throws InvalidProtocolBufferException
+     *         thrown when the protocol buffer is invalid.
      */
     private static BasicDBObject createSubmission(final SrlSubmission submission, final DBObject cursor,
-            final boolean isMod, final long submissionTime) throws SubmissionException {
+            final boolean isMod, final long submissionTime) throws SubmissionException, InvalidProtocolBufferException {
         if (submission.hasUpdateList()) {
             return createUpdateList(submission, cursor, isMod, submissionTime);
         } else if (submission.hasTextAnswer()) {
@@ -426,6 +432,54 @@ public class DatabaseClient {
     }
 
     /**
+     *  Gets the time for the first stroke in a submission.
+     * @param updateList The updateList in a submission.
+     * @return the time for the first stroke recorded.
+     *
+     */
+    private static long getFirstStrokeTime(final SrlUpdateList updateList) {
+        long firstStrokeTime = 0;
+        boolean isFoundFirstStroke = false;
+        for (int i = 0; i < updateList.getListList().size() && !isFoundFirstStroke; i++) {
+            final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
+            for (int j = 0; j < tmpUpdate.getCommandsCount() && !isFoundFirstStroke; j++) {
+                final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
+                if (tmpCommand.getCommandType() == Commands.CommandType.ADD_STROKE) {
+                    firstStrokeTime = tmpUpdate.getTime();
+                    isFoundFirstStroke = true;
+                }
+            }
+        }
+        return firstStrokeTime;
+    }
+
+    /**
+     *
+     *  Gets the time for the last stroke in a submission.
+     * @param updateList The updateList in a submission.
+     * @return the time for the last stroke recorded.
+     * @throws InvalidProtocolBufferException
+     *          If the protocol buffer is invalid.
+     */
+    private static long getLastStrokeTime(final SrlUpdateList updateList) throws InvalidProtocolBufferException {
+        long submissionMarkerTime = 0;
+        boolean isFoundSubmissionMarker = false;
+        for (int i = 0; i < updateList.getListList().size() && !isFoundSubmissionMarker; i++) {
+            final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
+            for (int j = 0; j < tmpUpdate.getCommandsCount() && !isFoundSubmissionMarker; j++) {
+                final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
+                if (tmpCommand.getCommandType() == Commands.CommandType.MARKER) {
+                    final Commands.Marker tmpMarker = Commands.Marker.parseFrom(tmpCommand.getCommandData());
+                    if (tmpMarker.getType() == Commands.Marker.MarkerType.SUBMISSION) {
+                        submissionMarkerTime = tmpUpdate.getTime();
+                        isFoundSubmissionMarker = true;
+                    }
+                }
+            }
+        }
+        return submissionMarkerTime;
+    }
+    /**
      * Creates a database object for the update list, merges the list if there is already a list in the database.
      *
      * @param submission
@@ -439,10 +493,12 @@ public class DatabaseClient {
      * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
+     * @throws InvalidProtocolBufferException
+     *         throws if the protocol buffer is invalid.
      */
     private static BasicDBObject createUpdateList(final SrlSubmission submission, final DBObject cursor,
             final boolean isMod, final long submissionTime)
-            throws SubmissionException {
+            throws SubmissionException, InvalidProtocolBufferException {
         if (cursor != null) {
             SrlUpdateList result = null;
             try {
@@ -464,10 +520,16 @@ public class DatabaseClient {
             } catch (MergeException e) {
                 throw new SubmissionException("exception while merging the two lists.  Update rejected", e);
             }
+            final long firstStrokeTime = getFirstStrokeTime(result);
+            final long lastStrokeTime = getLastStrokeTime(result);
             result = setTime(result, submissionTime);
-            return new BasicDBObject(UPDATELIST, result.toByteArray());
+            return new BasicDBObject(UPDATELIST, result.toByteArray()).append(FIRST_STROKE_TIME, firstStrokeTime)
+                    .append(LAST_STROKE_TIME, lastStrokeTime);
         } else {
-            return new BasicDBObject(UPDATELIST, setTime(submission.getUpdateList(), submissionTime).toByteArray());
+            final long firstStrokeTime = getFirstStrokeTime(submission.getUpdateList());
+            final long lastStrokeTime = getLastStrokeTime(submission.getUpdateList());
+            return new BasicDBObject(UPDATELIST, setTime(submission.getUpdateList(), submissionTime).toByteArray())
+                    .append(FIRST_STROKE_TIME, firstStrokeTime).append(LAST_STROKE_TIME, lastStrokeTime);
         }
     }
 
