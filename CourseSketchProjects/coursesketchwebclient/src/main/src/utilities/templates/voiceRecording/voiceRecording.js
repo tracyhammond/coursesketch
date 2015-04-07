@@ -53,9 +53,9 @@ function VoiceRecording() {
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 navigator.getUserMedia = (navigator.getUserMedia ||
-                                           navigator.webkitGetUserMedia ||
-                                           navigator.mozgetUserMedia ||
-                                           navigator.msGetUserMedia);
+                                          navigator.webkitGetUserMedia ||
+                                          navigator.mozgetUserMedia ||
+                                          navigator.msGetUserMedia);
                 window.URL = window.URL || window.webkitURL;
 
                 console.log('Audio context set up');
