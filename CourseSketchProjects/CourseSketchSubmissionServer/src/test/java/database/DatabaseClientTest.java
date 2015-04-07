@@ -2,6 +2,7 @@ package database;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.bson.types.ObjectId;
@@ -14,6 +15,9 @@ import util.SubmissionMergerTest;
 
 import java.util.Random;
 
+import static database.DatabaseClient.createUpdateList;
+import static database.DatabaseStringConstants.FIRST_STROKE_TIME;
+import static database.DatabaseStringConstants.LAST_STROKE_TIME;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +29,11 @@ public class DatabaseClientTest {
     public static Commands.SrlUpdateList createSimpleDatabaseListWithSaveMarker(long submissionTime) {
         Commands.SrlUpdateList fakeList = SubmissionMergerTest.createSimpleDatabaseList(100);
         return addSaveMarker(fakeList, submissionTime);
+    }
+
+    public static Commands.SrlUpdateList createSimpleDatabaseListWithSubmitMarker(long submissionTime) {
+        Commands.SrlUpdateList fakeList = SubmissionMergerTest.createSimpleDatabaseList(100);
+        return addSubmitMarker(fakeList, submissionTime);
     }
 
     /**
@@ -53,6 +62,31 @@ public class DatabaseClientTest {
         return newList.build();
     }
 
+    /**
+     * Adds a submit marker to the end of the list so that it has an update time that is the same as the submission time.
+     *
+     * @param fakeList
+     * @param submissionTime
+     * @return
+     */
+    public static Commands.SrlUpdateList addSubmitMarker(Commands.SrlUpdateList fakeList, long submissionTime) {
+        Commands.SrlUpdateList.Builder newList = Commands.SrlUpdateList.newBuilder(fakeList);
+
+        // create a new marker with the save list item.
+        final Commands.SrlUpdate.Builder submitUpdate = Commands.SrlUpdate.newBuilder();
+        submitUpdate.setUpdateId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
+        submitUpdate.setTime(submissionTime);
+
+        final Commands.Marker submitMarker = Commands.Marker.newBuilder().setType(Commands.Marker.MarkerType.SUBMISSION).build();
+        final Commands.SrlCommand submitCommand = Commands.SrlCommand.newBuilder().setCommandType(Commands.CommandType.MARKER).setCommandId(
+                AbstractServerWebSocketHandler.Encoder.nextID().toString()).setCommandData(submitMarker.toByteString())
+                .setIsUserCreated(false).build();
+
+        submitUpdate.addCommands(submitCommand);
+
+        newList.addList(submitUpdate);
+        return newList.build();
+    }
     @Test
     public void testUpdateListSubmitsCorrectly() throws DatabaseAccessException {
 
@@ -122,6 +156,19 @@ public class DatabaseClientTest {
         Commands.Marker marker = Commands.Marker.parseFrom(commands.getCommandData());
 
         Assert.assertEquals(submissionTime, lastUpdate.getTime());
+    }
+
+    @Test
+    public void testFirstAndLastStroke () throws DatabaseAccessException, SubmissionException {
+        DB db = fongoRule.getDB();
+        DatabaseClient client = getMockedVersion(db);
+
+        Submission.SrlSubmission.Builder usedList = Submission.SrlSubmission.newBuilder();
+        usedList.setUpdateList(createSimpleDatabaseListWithSubmitMarker(200));
+
+        BasicDBObject basicObject = createUpdateList(usedList.build(), null, true, 300);
+        Assert.assertEquals(basicObject.get(FIRST_STROKE_TIME), new Long(110));
+        Assert.assertEquals(basicObject.get(LAST_STROKE_TIME), new Long(200));
     }
 
     @Test
