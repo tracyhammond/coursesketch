@@ -191,11 +191,9 @@ public class DatabaseClient {
      * @return A string representing the id if it exists or is a new submission.
      * @throws DatabaseAccessException
      *         thrown if there are problems saving the experiment.
-     * @throws InvalidProtocolBufferException
-     *         thrown when the protocol buffer is invalid.
      */
     public static String saveExperiment(final DatabaseClient client, final SrlExperiment experiment, final long submissionTime)
-            throws DatabaseAccessException, InvalidProtocolBufferException {
+            throws DatabaseAccessException {
         LOG.info("saving the experiment!");
         verifyInput(experiment);
 
@@ -377,11 +375,9 @@ public class DatabaseClient {
      * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
-     * @throws InvalidProtocolBufferException
-     *         thrown when the protocol buffer is invalid.
      */
     private static BasicDBObject createSubmission(final SrlSubmission submission, final DBObject cursor,
-            final boolean isMod, final long submissionTime) throws SubmissionException, InvalidProtocolBufferException {
+            final boolean isMod, final long submissionTime) throws SubmissionException {
         if (submission.hasUpdateList()) {
             return createUpdateList(submission, cursor, isMod, submissionTime);
         } else if (submission.hasTextAnswer()) {
@@ -458,10 +454,8 @@ public class DatabaseClient {
      *  Gets the time for the last stroke in a submission.
      * @param updateList The updateList in a submission.
      * @return the time for the last stroke recorded.
-     * @throws InvalidProtocolBufferException
-     *          If the protocol buffer is invalid.
      */
-    private static long getLastStrokeTime(final SrlUpdateList updateList) throws InvalidProtocolBufferException {
+    private static long getLastStrokeTime(final SrlUpdateList updateList) {
         long submissionMarkerTime = 0;
         boolean isFoundSubmissionMarker = false;
         for (int i = 0; i < updateList.getListList().size() && !isFoundSubmissionMarker; i++) {
@@ -469,10 +463,15 @@ public class DatabaseClient {
             for (int j = 0; j < tmpUpdate.getCommandsCount() && !isFoundSubmissionMarker; j++) {
                 final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
                 if (tmpCommand.getCommandType() == Commands.CommandType.MARKER) {
-                    final Commands.Marker tmpMarker = Commands.Marker.parseFrom(tmpCommand.getCommandData());
-                    if (tmpMarker.getType() == Commands.Marker.MarkerType.SUBMISSION) {
-                        submissionMarkerTime = tmpUpdate.getTime();
-                        isFoundSubmissionMarker = true;
+                    final Commands.Marker tmpMarker;
+                    try {
+                        tmpMarker = Commands.Marker.parseFrom(tmpCommand.getCommandData());
+                        if (tmpMarker.getType() == Commands.Marker.MarkerType.SUBMISSION) {
+                            submissionMarkerTime = tmpUpdate.getTime();
+                            isFoundSubmissionMarker = true;
+                        }
+                    } catch (InvalidProtocolBufferException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -493,12 +492,10 @@ public class DatabaseClient {
      * @return An object that represents how it would be stored in the database.
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
-     * @throws InvalidProtocolBufferException
-     *         throws if the protocol buffer is invalid.
      */
     private static BasicDBObject createUpdateList(final SrlSubmission submission, final DBObject cursor,
             final boolean isMod, final long submissionTime)
-            throws SubmissionException, InvalidProtocolBufferException {
+            throws SubmissionException {
         if (cursor != null) {
             SrlUpdateList result = null;
             try {

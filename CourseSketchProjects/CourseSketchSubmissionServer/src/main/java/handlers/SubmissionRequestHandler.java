@@ -43,15 +43,13 @@ public final class SubmissionRequestHandler {
      * @param internalConnections
      *         Connections to other servers.
      * @return A Request that is sent back to be sent off to the client.
-     * @throws InvalidProtocolBufferException
-     *         thrown if the protocol buffer is invalid.
      */
-    public static Request handleRequest(final Request req, final MultiConnectionManager internalConnections) throws InvalidProtocolBufferException {
+    public static Request handleRequest(final Request req, final MultiConnectionManager internalConnections) {
         final String sessionInfo = req.getSessionInfo();
         try {
             final ByteString result = handleSubmission(req);
             final Request.Builder build = Request.newBuilder(req);
-            build.setResponseText("Submission Successful!");
+            build.setResponseText("Submission Succesful!");
             build.clearOtherData();
             LOG.info("Session Info: {}", sessionInfo);
             if (result != null) {
@@ -96,11 +94,9 @@ public final class SubmissionRequestHandler {
      * May be null if this is not the first submission.
      * @throws SubmissionException
      *         thrown if there is an error submitting.
-     * @throws InvalidProtocolBufferException
-     *         thrown if the protocol buffer is invalid.
      */
     @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private static ByteString handleSubmission(final Message.Request req) throws SubmissionException, InvalidProtocolBufferException {
+    private static ByteString handleSubmission(final Message.Request req) throws SubmissionException {
         String resultantId = null;
         ByteString data = null;
         if ("student".equals(req.getResponseText()) || "grader".equals(req.getResponseText())) {
