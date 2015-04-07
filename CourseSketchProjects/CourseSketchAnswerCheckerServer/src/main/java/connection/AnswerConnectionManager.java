@@ -2,12 +2,10 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
-import protobuf.srl.request.Message;
 import utilities.ConnectionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 /**

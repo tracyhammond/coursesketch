@@ -9,9 +9,7 @@ import database.institution.mongo.MongoInstitution;
 import database.institution.mongo.UpdateManager;
 import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
-import protobuf.srl.request.Message;
 import protobuf.srl.school.School.SrlSchool;
-import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 

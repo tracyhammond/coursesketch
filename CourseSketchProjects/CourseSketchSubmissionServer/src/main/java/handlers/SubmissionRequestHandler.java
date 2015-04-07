@@ -66,14 +66,14 @@ public final class SubmissionRequestHandler {
             // sends the response back to the answer checker which can then send it back to the client.
             return build.build();
         } catch (SubmissionException e) {
-            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             final Request.Builder build = Request.newBuilder();
             build.setRequestType(Request.MessageType.ERROR);
             if (e.getMessage() != null) {
                 build.setResponseText(e.getMessage());
             }
             build.setSessionInfo(sessionInfo);
-            build.setOtherData(p1.toByteString());
+            build.setOtherData(protoEx.toByteString());
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             return build.build();
         } catch (ConnectionException e) {
