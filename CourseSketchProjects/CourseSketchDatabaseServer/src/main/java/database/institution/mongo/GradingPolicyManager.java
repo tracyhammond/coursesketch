@@ -79,6 +79,7 @@ import static database.DatabaseStringConstants.USERS;
  *
  * Created by matt on 3/21/15.
  */
+@SuppressWarnings("PMD.CommentSize")
 public final class GradingPolicyManager {
 
     /**
@@ -124,7 +125,7 @@ public final class GradingPolicyManager {
         // The BasicDBObject has keys problemId and dropType.
         final Map<String, List<BasicDBObject>> droppedProblems = new HashMap<>();
         for (int i = 0; i < policy.getDroppedProblemsCount(); i++) {
-            final List<DroppedProblems.SingleProblem> singleProblemList = policy.getDroppedProblems(i).getProblemsList();
+            final List<DroppedProblems.SingleProblem> singleProblemList = policy.getDroppedProblems(i).getProblemList();
             final List<BasicDBObject> mongoProblemList = new ArrayList<>();
             for (int j = 0; j < singleProblemList.size(); j++) {
                 final BasicDBObject singleProblem = new BasicDBObject(COURSE_PROBLEM_ID, singleProblemList.get(j).getProblemId())
@@ -200,7 +201,7 @@ public final class GradingPolicyManager {
                 final DroppedProblems.SingleProblem.Builder singleProblem = DroppedProblems.SingleProblem.newBuilder();
                 singleProblem.setProblemId(singleProblemList.get(i).get(COURSE_PROBLEM_ID).toString());
                 singleProblem.setDropType(DropType.valueOf((int) singleProblemList.get(i).get(DROP_TYPE)));
-                problemList.addProblems(singleProblem);
+                problemList.addProblem(singleProblem);
             }
             problemList.setAssignmentId(assignmentId.getKey());
             policy.addDroppedProblems(problemList);
