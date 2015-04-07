@@ -3,7 +3,7 @@
   var WORKER_PATH = '/src/utilities/templates/voiceRecording/cdn/recorderWorker.js';
 
   var Recorder = function(stream){
-    var context, audioInput, processor, gain, gainFunction, processorFunction;
+    var context, audioInput, processor, gain, gainFunction, processorFunction, blob, mp3Name;
     var recording = false, currCallback;
 
     // http://typedarray.org/from-microphone-to-wav-with-getusermedia-and-web-audio/
@@ -49,8 +49,8 @@
     }
 
     worker.onmessage = function(e){
-      var blob = e.data;
-      var mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp3');
+      blob = e.data;
+      mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp3');
       uploadAudio(blob, mp3Name);
       currCallback(blob, mp3Name);
     }

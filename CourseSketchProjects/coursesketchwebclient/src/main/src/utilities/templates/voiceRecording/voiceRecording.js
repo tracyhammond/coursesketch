@@ -4,6 +4,9 @@ function VoiceRecording() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        var surface = document.body.querySelector("sketch-surface");
+        var updateManager = surface.getUpdateManager();
+
         this.shadowRoot.querySelector("#recordBtn").onclick = function() {
             if (this.isRecording == true) {
                 this.stopRecording();
@@ -46,16 +49,21 @@ function VoiceRecording() {
 
         this.saveFile = function() {
             this.recorder.exportMP3(function(blob, mp3name) {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
-                var protoStroke = stroke.sendToProtobuf(parent);
-                command.commandData = protoStroke.toArrayBuffer();
-                command.decodedData = stroke;
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
-                this.updateManager.addUpdate(update);
+                localScope.blob = blob;
+                localScope.mp3name = mp3name;
             });
+
+            console.log('Trying to save to database!');
+            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.START_SPEECH, true);
+            //var protoStroke = stroke.sendToProtobuf(parent);
+            command.commandData = command.toArrayBuffer();
+            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            this.updateManager.addUpdate(update);
         }.bind(this);
 
         init = function() {
+            localScope.blob = null;
+            localScope.mp3name = null;
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 navigator.getUserMedia = ( navigator.getUserMedia ||
