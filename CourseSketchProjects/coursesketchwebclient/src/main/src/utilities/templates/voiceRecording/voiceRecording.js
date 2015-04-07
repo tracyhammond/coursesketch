@@ -46,7 +46,12 @@ function VoiceRecording() {
 
         this.saveFile = function() {
             this.recorder.exportMP3(function(blob, mp3name) {
-
+                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
+                var protoStroke = stroke.sendToProtobuf(parent);
+                command.commandData = protoStroke.toArrayBuffer();
+                command.decodedData = stroke;
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                this.updateManager.addUpdate(update);
             });
         }.bind(this);
 
