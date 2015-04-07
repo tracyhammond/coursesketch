@@ -6,20 +6,25 @@ import protobuf.srl.request.Message;
  * Conversion from an Exception to a ProtoBuf Message that can be used to be sent from server to client.
  * Created by Raunak on 3/31/15.
  */
-public class ExceptionUtilities {
+public final class ExceptionUtilities {
+
     /**
      *
-     * @param e Is a Throwable Exception.
+     */
+    private ExceptionUtilities() { }
+    /**
+     *
+     * @param tException Is a Throwable Exception.
      * @return ProtoException, pException, that inherits the properties of e.
      */
-    public static final Message.ProtoException createProtoException(final Throwable e) {
+    public static Message.ProtoException createProtoException(final Throwable tException) {
         final Message.ProtoException.Builder pException = Message.ProtoException.newBuilder();
-        pException.setMssg(e.getMessage());
-        for (StackTraceElement element : e.getStackTrace()) {
+        pException.setMssg(tException.getMessage());
+        for (StackTraceElement element : tException.getStackTrace()) {
             pException.addStackTrace(element.toString());
         }
-        if (e.getCause() != null) {
-            pException.setCause(createProtoException(e.getCause()));
+        if (tException.getCause() != null) {
+            pException.setCause(createProtoException(tException.getCause()));
         }
         return pException.build();
     }

@@ -64,8 +64,8 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 try {
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
-                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }

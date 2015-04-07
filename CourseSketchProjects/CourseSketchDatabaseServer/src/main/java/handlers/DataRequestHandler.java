@@ -81,8 +81,8 @@ public final class DataRequestHandler {
      * @param internalConnections
      *         Connections to other servers that can be used to grab data from them.
      */
-    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
+            "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount" })
     public static void handleRequest(final Request req, final SocketSession conn, final String sessionId,
             final MultiConnectionManager internalConnections) {
         try {
@@ -162,7 +162,6 @@ public final class DataRequestHandler {
                                     LOG.info("Trying to retrieve an experiment from a user!");
                                     try {
                                         instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
-
                                         results.add(ResultBuilder.buildResult(null, NO_OP_MESSAGE, ItemQuery.NO_OP));
                                     } catch (DatabaseAccessException e) {
                                         final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
@@ -209,8 +208,8 @@ public final class DataRequestHandler {
                             break;
                     }
                 } catch (AuthenticationException e) {
-                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemRequest.getQuery());
@@ -220,8 +219,8 @@ public final class DataRequestHandler {
                         throw e;
                     }
                 } catch (Exception e) {
-                    final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemRequest.getQuery());
@@ -230,16 +229,10 @@ public final class DataRequestHandler {
                 }
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
-        } catch (InvalidProtocolBufferException | RuntimeException e) {
-            final Message.ProtoException p1 = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(p1, req));
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }
     }
 }
