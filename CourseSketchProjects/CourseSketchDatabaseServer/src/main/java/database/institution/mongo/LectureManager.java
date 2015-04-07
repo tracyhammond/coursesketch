@@ -389,8 +389,11 @@ public final class LectureManager {
      * @param unlocked
      *         a boolean that is true if the object is unlocked
      * @return true if the assignment was inserted correctly.
+     * @throws AuthenticationException The user does not have permission to update the lecture.
+     * @throws DatabaseAccessException The lecture does not exist.
      */
-    static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {
+    static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked)
+            throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
         final DBObject cursor = myDbRef.fetch();
         DBObject updateObj = null;
