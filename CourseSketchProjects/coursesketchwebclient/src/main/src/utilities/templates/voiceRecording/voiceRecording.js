@@ -10,8 +10,7 @@ function VoiceRecording() {
                 clearInterval(this.voiceBtnTimer);
                 this.isRecording = false;
                 $(this.shadowRoot.querySelector("#recordBtn")).val(null);
-            }
-            else {
+            } else {
                 this.blink($(this.shadowRoot.querySelector("#recordBtn")));
                 this.startRecording();
                 this.isRecording = true;
@@ -53,19 +52,19 @@ function VoiceRecording() {
         init = function() {
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                navigator.getUserMedia = ( navigator.getUserMedia ||
-                                           navigator.webkitGetUserMedia ||
-                                           navigator.mozgetUserMedia ||
-                                           navigator.msGetUserMedia);
+                navigator.getUserMedia = (navigator.getUserMedia ||
+                                          navigator.webkitGetUserMedia ||
+                                          navigator.mozgetUserMedia ||
+                                          navigator.msGetUserMedia);
                 window.URL = window.URL || window.webkitURL;
 
                 console.log('Audio context set up');
                 console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
-            } catch(e) {
+            } catch (e) {
                 alert('No web audio support in this browser');
             }
 
-            navigator.getUserMedia({audio: true}, function(stream) {
+            navigator.getUserMedia({ audio: true }, function(stream) {
                 localScope.recorder = new Recorder(stream);
                 console.log('Recorder initialized.');
             }, function(e) {
