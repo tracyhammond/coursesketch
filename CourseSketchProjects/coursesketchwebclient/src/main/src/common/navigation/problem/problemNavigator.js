@@ -28,6 +28,10 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         changeProblem(index);
     };
 
+    this.getAssignmentType = function getAssignmentType(){
+        return currentAssignment.assignmentType;
+    };
+
     /**
      * Attempts to change to the next problem.
      */
@@ -72,6 +76,10 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         uiLoaded = value;
     };
 
+    this.getProblemListSize = function getProblemListSize() {
+        return problemList.size();
+    }
+
     /**
      * @returns {SrlProblemBank} the information of the current problem.
      */
@@ -99,16 +107,26 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Order of the callbacks is not guaranteed.
      */
     function changeProblem(index) {
-        if (index < 0 || index >= problemList.length && !loop) {
-            return;
-        } else if (loop) {
-            if (index < 0) {
-                index = problemList.length - 1;
+        // if asignment is random ignore index choose random
+        var type = navigator.getAssignmentType();
+        if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
+            if (index < 0 || index >= problemList.length && !loop) {
+                return;
+            } else if (loop) {
+                if (index < 0) {
+                    index = problemList.length - 1;
+                }
+                if (index >= problemList.length) {
+                    index = 0;
+                }
             }
-            if (index >= problemList.length) {
-                index = 0;
-            }
+        } else {
+            var numberOfQuestions = getProblemListSize();
+            var randomNumber = Math.random();
+
+            index = randomNumber % numberOfQuestions;
         }
+
         if ((index >= 0 && index < problemList.length)) {
             currentIndex = index;
             currentProblem = problemList[index];
@@ -250,6 +268,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
             CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
                 currentAssignment = assignment;
+                // get assignment type
+
             });
         }
     };
