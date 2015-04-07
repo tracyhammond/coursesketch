@@ -25,7 +25,7 @@
         point.setId(proto.id);
 
         if (proto.time) {
-            point.setTime(parseInt(proto.time.toString()));
+            point.setTime(parseInt(proto.time.toString(), 10));
         }
         if (proto.name) {
             point.setName(proto.name);
