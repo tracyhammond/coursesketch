@@ -105,7 +105,7 @@ validateFirstRun(document.currentScript);
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel';
+        sketchSurface.className = 'wide_rule sub-panel submittable';
         sketchSurface.style.width = '100%';
         sketchSurface.style.height = 'calc(100% - 110px)';
         sketchSurface.setErrorListener(function(exception) {
