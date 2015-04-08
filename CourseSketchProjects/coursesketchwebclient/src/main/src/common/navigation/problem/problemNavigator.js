@@ -78,7 +78,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     this.getProblemListSize = function getProblemListSize() {
         return problemList.size();
-    }
+    };
 
     function getProblemInfo() {
         //return currentProblem.problemInfo;
