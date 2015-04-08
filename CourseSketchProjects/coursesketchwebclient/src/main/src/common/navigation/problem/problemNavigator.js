@@ -28,7 +28,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         changeProblem(index);
     };
 
-    this.getAssignmentType = function getAssignmentType(){
+    this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
     };
 
@@ -80,9 +80,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         return problemList.size();
     }
 
-    /**
-     * @returns {SrlProblemBank} the information of the current problem.
-     */
     function getProblemInfo() {
         //return currentProblem.problemInfo;
     }
