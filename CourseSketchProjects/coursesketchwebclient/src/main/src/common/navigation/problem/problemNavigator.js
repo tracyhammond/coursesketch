@@ -84,7 +84,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @returns {SrlProblemBank} the information of the current problem.
      */
     function getProblemInfo() {
-        return currentProblem.problemInfo;
+        //return currentProblem.problemInfo;
     }
 
     /**
@@ -108,7 +108,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     function changeProblem(index) {
         // if asignment is random ignore index choose random
-        var type = navigator.getAssignmentType();
+        //getAssignmentType() is broken, so I did it the cheating way.
+        var type = currentAssignment.assignmentType;
         if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
                 return;
@@ -120,7 +121,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
                     index = 0;
                 }
             }
-        } else {
+        } else { //Pull problems at random for Game
             var numberOfQuestions = getProblemListSize();
             var randomNumber = Math.random();
 
