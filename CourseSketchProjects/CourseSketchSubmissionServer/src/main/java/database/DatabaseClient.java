@@ -428,7 +428,7 @@ public class DatabaseClient {
     }
 
     /**
-     *  Gets the time for the first stroke in a submission.
+     * Gets the time for the first stroke in a submission.
      * @param updateList The updateList in a submission.
      * @return the time for the first stroke recorded.
      *
