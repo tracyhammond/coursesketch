@@ -19,7 +19,7 @@ function mergeApi(originalApi, objectApi){
     }
     for (var key in objectApi) {
         if (objectApi.hasOwnProperty(key)) {
-            result[key] = originalApi[key];
+            result[key] = objectApi[key];
         }
     }
     return result;
@@ -53,7 +53,7 @@ function PanelEditApi(panel){
         //builds a text area from a passed in object
         var textArea = document.createElement('TEXTAREA');
         // gets the sketch surface object
-        var sketchSurface = panel.getElementsByTagName('sketch-surface')[0];
+        var sketchSurface = panel.querySelector('.submittable');
         textArea.className = textAreaObj.className + ' sub-panel';
         if (textAreaObj.location === 'top' || textAreaObj.location === 'bottom') {
             sketchSurface.style.height = 'calc(' + (100 - textAreaObj.height - 1) + '% - 110px)';
@@ -77,13 +77,13 @@ function PanelEditApi(panel){
 
     /**
      * This function allows scripts to change the background of the sketch surface to any supported type
-     * @param className
+     * @param class
      *        {string} A string containing the className that corresponds to the background type
      */
 
-    this.setSketchSurfaceBG = function(className) {
-        //sets the className of the sketch surface and adds sub-panel
-        panel.childNodes[1].className = className + ' sub-panel' + ' submittable';
+    this.setSketchSurfaceBG = function(bgClass) {
+        //sets the className of the sketch surface and adds sub-panel + submittable
+        panel.querySelector('.submittable').className = bgClass + ' sub-panel submittable';
     };
 
 }
