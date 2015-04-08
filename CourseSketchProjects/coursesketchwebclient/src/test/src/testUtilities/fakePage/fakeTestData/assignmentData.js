@@ -11,6 +11,7 @@
     var assignment7 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
     var assignment8 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
     var assignment9 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+    var assignment10 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
 
     assignment1.courseId = "1";
     assignment1.id = "1";
@@ -131,4 +132,11 @@
     + "You have one week.";
     assignment9.problemList = ["13", "14"];
     CourseSketch.fakeAssignments.push(assignment9);
+
+    assignment10.courseId = "5";
+    assignment10.id = "10";
+    assignment10.name = "random problem loading";
+    assignment10.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME;
+    assignment10.problemList = ["1", "2", "3", "4", "5", "6", "7", "8", "14"];
+    CourseSketch.fakeAssignments.push(assignment10);
 })();

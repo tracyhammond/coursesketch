@@ -4,6 +4,10 @@
     <title>problemNavigator methods test</title>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
+        <link rel="import"
+              href="/test/testUtilities/fakePage/fakePageInclude.html">
+        <link rel="import"
+              href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
     <!-- files needed for testing -->
     <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
@@ -15,13 +19,20 @@
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 /**
+
 <script>
-        QUnit.module("testModule1");
-        test("getProblemScript", function(assert) {
-            var nav = new ProblemNavigator("54ef6da250fc2d33077fb431",false,0);
-            //nav.reloadProblems();
-            //nav.currentProblem.problemInfo.script = "testValue";
-            assert.equal("testValue", nav.getProblemScript(), "Testing Return Value");
+    CourseSketch.dataManager.getAssignment = function(assignmentID, callback) {
+        callback(CourseSketch.fakeAssignments[9]);
+    }
+</script>
+<script>
+        QUnit.module("testModule2");
+        test("randomAssignment", function(assert) {
+            var testNavigator = new ProblemNavigator("randomTest1234", false, 0);
+            var index = testNavigator.currentIndex;
+            console.log(testNavigator);
+            testNavigator.gotoNext();
+            assert.notEqual("2", testNavigator.currentIndex, "testing randomness");
         });
 </script>
 </body>
