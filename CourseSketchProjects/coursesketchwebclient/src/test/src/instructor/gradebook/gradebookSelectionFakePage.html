@@ -11,6 +11,10 @@
 <!-- files needed for testing -->
 <link rel="import" href="/src/instructor/gradebook/gradebookSelection.html" data-fake>
 <script>
+	CourseSketch.redirectContent = function(page, title) {
+			var courseid = CourseSketch.dataManager.getState('gradebookCourseid');
+			alert("You went to Gradebook " + courseid + "!");
+	};
     $(document).ready(function() {
         // calls the list with an empty array.
         CourseSketch.dataManager.getAllCourses = function(callback) {
