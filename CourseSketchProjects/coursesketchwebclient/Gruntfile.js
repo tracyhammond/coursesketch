@@ -197,17 +197,6 @@ module.exports = function(grunt) {
                     }
                 ]
             },
-            appEngine: {
-                src: [ 'target/website/app.yaml' ],
-                overwrite: true,
-                replacements: [
-                    {
-                        // starts with the different lettering because app engine gui cuts off some of the lettering.
-                        from: 'dev-coursesketch',
-                        to: 'prod-coursesketch'
-                    }
-                ]
-            },
             bowerSlash: {
                 src: '<%= fileConfigOptions.prodHtml %>',
                 overwrite: true,
@@ -216,6 +205,17 @@ module.exports = function(grunt) {
                         // looks for the bower_components url in scripts and replaces it with a /
                         from: /=['"].*bower_components/g,
                         to: '="/bower_components'
+                    }
+                ]
+            },
+            appEngine: {
+                src: [ 'target/website/app.yaml' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        // starts with the different lettering because app engine gui cuts off some of the lettering.
+                        from: 'dev-coursesketch',
+                        to: 'prod-coursesketch'
                     }
                 ]
             },
