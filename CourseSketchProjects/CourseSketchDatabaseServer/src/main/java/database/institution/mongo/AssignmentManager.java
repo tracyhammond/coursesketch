@@ -478,8 +478,8 @@ public final class AssignmentManager {
      * @param problemId
      *         The id of the course problem that is being added to the assignment.
      * @return True if it is successful.
-     * @throws AuthenticationException The user does not have permission to update the lecture.
-     * @throws DatabaseAccessException The lecture does not exist.
+     * @throws AuthenticationException The user does not have permission to update the assignment.
+     * @throws DatabaseAccessException The assignment does not exist.
      */
     static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
