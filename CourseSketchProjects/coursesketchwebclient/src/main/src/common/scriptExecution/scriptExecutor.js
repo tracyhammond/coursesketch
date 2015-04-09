@@ -85,7 +85,7 @@ function PanelEditApi(panel){
 
 /**
  * This var is passed to the jailed plugin to define what functions from this
- *  script the plugin can call when executing 3rd party code.
+ * script the plugin can call when executing 3rd party code.
  */
 var api = {
     debugLog: debugLog
