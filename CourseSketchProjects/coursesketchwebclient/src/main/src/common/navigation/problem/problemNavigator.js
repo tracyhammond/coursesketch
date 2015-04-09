@@ -182,7 +182,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns the problem script of the current problem.
+     * @return {String} the problem script of the current problem.
      */
     this.getProblemScript = function() {
         return getProblemInfo().script;
