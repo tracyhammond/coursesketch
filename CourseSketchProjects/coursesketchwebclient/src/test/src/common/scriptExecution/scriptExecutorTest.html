@@ -16,7 +16,32 @@
 	<div id="qunit-fixture"></div>
 
 	<script>
-        QUnit.module("testModule1");
+        QUnit.module("Tests", {
+
+            setup: function() {
+                try {
+                    var mockPanelObject = document.createElement('DIV');
+                    mockPanelObject.className = 'removeMe';
+                    var mockSketchSurfaceObject = document.createElement('DIV');
+                    mockSketchSurfaceObject.className = 'sub-panel submittable';
+                    mockPanelObject.appendChild(mockSketchSurfaceObject);
+                    document.body.appendChild(mockPanelObject);
+                    mockSketchSurfaceObject.resizeSurface = function() {};
+                    api = new PanelEditApi(mockPanelObject);
+                    textAreaObj = {
+                        className: 'sub-panel',
+                        location: 'bottom',
+                        width: 10,
+                        height: 5,
+                        textContent: "Test text content"
+                    };
+                } catch (exception) {
+                }
+            },
+            teardown : function() {
+                document.body.removeChild(document.querySelector('.removeMe'));
+            }
+        });
         test("Merge Api", function(assert) {
             var testFunct1 = function() {
                 return 1;
@@ -34,27 +59,14 @@
             assert.equal(mergedApi.testFunct1, testFunct1, "Merged Api1 Successfully!");
             assert.equal(mergedApi.testFunct2, testFunct2, "Merged Api2 Successfully!");
         });
-    </script>
-	<script>
-        QUnit.module("testModule2");
-        test("setSketchSurfaceBG, addTextArea", function(assert) {
-            var mockPanelObject = document.createElement('DIV');
-            var mockSketchSurfaceObject = document.createElement('DIV');
-            mockSketchSurfaceObject.className = 'sub-panel submittable';
-            mockPanelObject.appendChild(mockSketchSurfaceObject);
-            document.body.appendChild(mockPanelObject);
-            mockSketchSurfaceObject.resizeSurface = function() {};
-            var api = new PanelEditApi(mockPanelObject);
-            var textAreaObj = {
-                className: 'sub-panel',
-                location: 'bottom',
-                width: 10,
-                height: 5,
-                textContent: "Test text content"
-            };
+
+        test("addTextArea", function(assert) {
             api.addTextArea(textAreaObj);
             assert.ok(document.getElementsByTagName('textarea').length > 0, "Text Area Exists");
             assert.equal(document.getElementsByTagName('textarea')[0].value, "Test text content", "Text content correct!")
+        });
+
+        test("setSketchSurfaceBG", function(assert) {
             api.setSketchSurfaceBG('grid_paper');
             assert.equal(document.querySelector('.submittable').className, "grid_paper sub-panel submittable",
                 "background changed correctly!")
