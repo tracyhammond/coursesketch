@@ -61,7 +61,6 @@ function VoiceRecording() {
 
         init = function() {
             localScope.blob = null;
-            localScope.mp3name = null;
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 navigator.getUserMedia = ( navigator.getUserMedia ||
