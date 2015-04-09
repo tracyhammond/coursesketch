@@ -87,6 +87,7 @@ public class DatabaseClientTest {
         newList.addList(submitUpdate);
         return newList.build();
     }
+    
     @Test
     public void testUpdateListSubmitsCorrectly() throws DatabaseAccessException {
 
