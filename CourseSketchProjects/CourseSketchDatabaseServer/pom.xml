@@ -20,7 +20,7 @@
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
         <projectBranchLevel>5</projectBranchLevel>
-        <projectLineLevel>11</projectLineLevel>
+        <projectLineLevel>10</projectLineLevel>
 	</properties>
 
 	<build>

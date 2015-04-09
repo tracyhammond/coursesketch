@@ -66,9 +66,7 @@ function SubmissionPanel() {
     };
 
     this.sendDataToServer = function(isSubmitting) {
-        // var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
         var subPanel = this.querySelector('.submittable');
-        console.log(subPanel);
         if (isUndefined(subPanel)) {
             throw new SubmissionException('There is no element that contains submittable data');
         }

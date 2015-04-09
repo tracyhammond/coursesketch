@@ -122,7 +122,7 @@ message SrlBankProblem {
     optional string source = 8;
     repeated string otherKeywords = 9;
     optional protobuf.srl.utils.SrlPermission accessPermission = 10;
-    optional string script = 11;
+    optional string script = 11; // a script string that is used for scripting in experiments
 }
 
 message SrlGrade {
