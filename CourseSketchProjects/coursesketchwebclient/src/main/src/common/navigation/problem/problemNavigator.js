@@ -29,13 +29,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-    * Gets current assignment type to determine whether problems are random or not.
-    */
-    this.getAssignmentType = function getAssignmentType() {
-        return currentAssignment.assignmentType;
-    };
-
-    /**
      * Attempts to change to the next problem.
      */
     this.gotoNext = function() {
@@ -112,7 +105,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     function changeProblem(index) {
         // if asignment is random ignore index choose random
-        var type = getAssignmentType();
+        var type = currentAssignment.assignmentType;
         if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
                 return;
