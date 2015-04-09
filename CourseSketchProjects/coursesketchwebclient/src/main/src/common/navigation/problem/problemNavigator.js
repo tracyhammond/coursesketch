@@ -76,6 +76,10 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         uiLoaded = value;
     };
 
+    /**
+    * @returns {SrlProblemBank} the information of the current problem.
+    */
+
     this.getProblemListSize = function getProblemListSize() {
         return problemList.size();
     };
@@ -118,7 +122,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
                     index = 0;
                 }
             }
-        } else { //Pull problems at random for Game
+        } else {
+            //Pull problems at random for Game
             var numberOfQuestions = getProblemListSize();
             var randomNumber = Math.random();
 
