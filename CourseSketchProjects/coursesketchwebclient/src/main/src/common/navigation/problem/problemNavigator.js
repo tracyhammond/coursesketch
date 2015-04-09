@@ -28,6 +28,9 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         changeProblem(index);
     };
 
+    /**
+    * Gets current assignment type to determine whether problems are random or not.
+    */
     this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
     };
@@ -109,8 +112,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     function changeProblem(index) {
         // if asignment is random ignore index choose random
-        //getAssignmentType() is broken, so I did it the cheating way.
-        var type = currentAssignment.assignmentType;
+        var type = getAssignmentType();
         if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
                 return;
