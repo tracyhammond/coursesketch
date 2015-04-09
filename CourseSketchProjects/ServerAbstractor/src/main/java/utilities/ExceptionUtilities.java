@@ -12,6 +12,7 @@ public final class ExceptionUtilities {
      * Private constructor.
      */
     private ExceptionUtilities() { }
+
     /**
      * Takes in an exception, and creates a ProtoException object which inherit the
      * qualities of the exception such as the stack trace and the message.
@@ -29,6 +30,7 @@ public final class ExceptionUtilities {
         }
         return pException.build();
     }
+
     /**
      * Creates a request that represents the exception that was caused.
      *
