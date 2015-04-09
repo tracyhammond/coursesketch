@@ -49,16 +49,14 @@ function VoiceRecording() {
 
         this.saveFile = function() {
             this.recorder.exportMP3(function(blob, mp3name) {
-                localScope.blob = blob;
-                localScope.mp3name = mp3name;
+                console.log('Trying to save to database!');
+                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.START_SPEECH, true);
+                var object = CourseSketch.PROTOBUF_UTIL.ActionStartSpeech();
+                object.recording = blob;
+                command.commandData = command.toArrayBuffer();
+                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                localScope.updateManager.addUpdate(update);
             });
-
-            console.log('Trying to save to database!');
-            var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.START_SPEECH, true);
-            //var protoStroke = stroke.sendToProtobuf(parent);
-            command.commandData = command.toArrayBuffer();
-            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
-            this.updateManager.addUpdate(update);
         }.bind(this);
 
         init = function() {
