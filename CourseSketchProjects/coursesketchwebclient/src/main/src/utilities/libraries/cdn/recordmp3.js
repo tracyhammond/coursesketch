@@ -1,6 +1,6 @@
 (function(window){
 
-  var WORKER_PATH = '/src/utilities/templates/voiceRecording/cdn/recorderWorker.js';
+  var WORKER_PATH = '/src/utilities/libraries/cdn/recorderWorker.js';
 
   var Recorder = function(stream){
     var context, audioInput, processor, gain, gainFunction, processorFunction;
@@ -51,27 +51,27 @@
     worker.onmessage = function(e){
       var blob = e.data;
       var mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp3');
-      uploadAudio(blob, mp3Name);
+      // uploadAudio(blob, mp3Name);
       currCallback(blob, mp3Name);
     }
 
-    function uploadAudio(mp3Data, mp3Name){
-      var reader = new FileReader();
-      reader.onload = function(event){
-        var fd = new FormData();
-        fd.append('fname', mp3Name);
-        fd.append('data', event.target.result);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/src/utilities/templates/voiceRecording/cdn/upload.php', true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                console.log("MP3 Uploaded.");
-            }
-        };
-        xhr.send(fd);
-      };
-      reader.readAsDataURL(mp3Data);
-    }
+    // function uploadAudio(mp3Data, mp3Name){
+    //   var reader = new FileReader();
+    //   reader.onload = function(event){
+    //     var fd = new FormData();
+    //     fd.append('fname', mp3Name);
+    //     fd.append('data', event.target.result);
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('POST', '/src/utilities/templates/voiceRecording/cdn/upload.php', true);
+    //     xhr.onreadystatechange = function() {
+    //         if (xhr.readyState == 4) {
+    //             console.log("MP3 Uploaded.");
+    //         }
+    //     };
+    //     xhr.send(fd);
+    //   };
+    //   reader.readAsDataURL(mp3Data);
+    // }
 
     gain.connect(processor);
     processor.connect(context.destination);
