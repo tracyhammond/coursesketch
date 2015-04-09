@@ -17,7 +17,7 @@ import java.util.Random;
 
 import static database.DatabaseClient.createUpdateList;
 import static database.DatabaseStringConstants.FIRST_STROKE_TIME;
-import static database.DatabaseStringConstants.LAST_STROKE_TIME;
+import static database.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -168,7 +168,7 @@ public class DatabaseClientTest {
 
         BasicDBObject basicObject = createUpdateList(usedList.build(), null, true, 300);
         Assert.assertEquals(basicObject.get(FIRST_STROKE_TIME), new Long(110));
-        Assert.assertEquals(basicObject.get(LAST_STROKE_TIME), new Long(200));
+        Assert.assertEquals(basicObject.get(FIRST_SUBMISSION_TIME), new Long(200));
     }
 
     @Test
