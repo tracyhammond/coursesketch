@@ -9,11 +9,12 @@ import protobuf.srl.request.Message;
 public final class ExceptionUtilities {
 
     /**
-     *
+     * Private constructor.
      */
     private ExceptionUtilities() { }
     /**
-     *
+     * Takes in an exception, and creates a ProtoException object which inherit the
+     * qualities of the exception such as the stack trace and the message.
      * @param tException Is a Throwable Exception.
      * @return ProtoException, pException, that inherits the properties of e.
      */
