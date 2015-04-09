@@ -30,8 +30,8 @@ import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.FIRST_STROKE_TIME;
+import static database.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
 import static database.DatabaseStringConstants.IS_PRACTICE_PROBLEM;
-import static database.DatabaseStringConstants.LAST_STROKE_TIME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
@@ -428,55 +428,48 @@ public class DatabaseClient {
     }
 
     /**
-     * Gets the time for the first stroke in a submission.
-     * @param updateList The updateList in a submission.
-     * @return the time for the first stroke recorded.
-     *
-     */
+    * Gets the time for the first stroke in a submission.
+    * @param updateList The updateList in a submission.
+    * @return the time for the first stroke recorded.
+    *
+    */
     private static long getFirstStrokeTime(final SrlUpdateList updateList) {
-        long firstStrokeTime = 0;
-        boolean isFoundFirstStroke = false;
-        for (int i = 0; i < updateList.getListList().size() && !isFoundFirstStroke; i++) {
+        for (int i = 0; i < updateList.getListList().size(); i++) {
             final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
-            for (int j = 0; j < tmpUpdate.getCommandsCount() && !isFoundFirstStroke; j++) {
+            for (int j = 0; j < tmpUpdate.getCommandsCount(); j++) {
                 final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
                 if (tmpCommand.getCommandType() == Commands.CommandType.ADD_STROKE) {
-                    firstStrokeTime = tmpUpdate.getTime();
-                    isFoundFirstStroke = true;
+                    return tmpUpdate.getTime();
                 }
             }
         }
-        return firstStrokeTime;
+        return -1;
     }
 
     /**
-     *
-     *  Gets the time for the last stroke in a submission.
-     * @param updateList The updateList in a submission.
-     * @return the time for the last stroke recorded.
-     */
-    static long getLastStrokeTime(final SrlUpdateList updateList) {
-        long submissionMarkerTime = 0;
-        boolean isFoundSubmissionMarker = false;
-        for (int i = 0; i < updateList.getListList().size() && !isFoundSubmissionMarker; i++) {
-            final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
-            for (int j = 0; j < tmpUpdate.getCommandsCount() && !isFoundSubmissionMarker; j++) {
-                final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
-                if (tmpCommand.getCommandType() == Commands.CommandType.MARKER) {
-                    final Commands.Marker tmpMarker;
-                    try {
-                        tmpMarker = Commands.Marker.parseFrom(tmpCommand.getCommandData());
+    *
+    *  Gets the time for the last stroke in a submission.
+    * @param updateList The updateList in a submission.
+    * @return the time for the last stroke recorded.
+    */
+    static long getFirstSubmissionTime(final SrlUpdateList updateList) {
+        try {
+            for (int i = 0; i < updateList.getListList().size(); i++) {
+                final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
+                for (int j = 0; j < tmpUpdate.getCommandsCount(); j++) {
+                    final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
+                    if (tmpCommand.getCommandType() == Commands.CommandType.MARKER) {
+                        final Commands.Marker tmpMarker = Commands.Marker.parseFrom(tmpCommand.getCommandData());
                         if (tmpMarker.getType() == Commands.Marker.MarkerType.SUBMISSION) {
-                            submissionMarkerTime = tmpUpdate.getTime();
-                            isFoundSubmissionMarker = true;
+                            return tmpUpdate.getTime();
                         }
-                    } catch (InvalidProtocolBufferException e) {
-                        e.printStackTrace();
                     }
                 }
             }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
         }
-        return submissionMarkerTime;
+        return -1;
     }
     /**
      * Creates a database object for the update list, merges the list if there is already a list in the database.
@@ -518,15 +511,15 @@ public class DatabaseClient {
                 throw new SubmissionException("exception while merging the two lists.  Update rejected", e);
             }
             final long firstStrokeTime = getFirstStrokeTime(result);
-            final long lastStrokeTime = getLastStrokeTime(result);
+            final long lastStrokeTime = getFirstSubmissionTime(result);
             result = setTime(result, submissionTime);
             return new BasicDBObject(UPDATELIST, result.toByteArray()).append(FIRST_STROKE_TIME, firstStrokeTime)
-                    .append(LAST_STROKE_TIME, lastStrokeTime);
+                    .append(FIRST_SUBMISSION_TIME, lastStrokeTime);
         } else {
             final long firstStrokeTime = getFirstStrokeTime(submission.getUpdateList());
-            final long lastStrokeTime = getLastStrokeTime(submission.getUpdateList());
+            final long lastStrokeTime = getFirstSubmissionTime(submission.getUpdateList());
             return new BasicDBObject(UPDATELIST, setTime(submission.getUpdateList(), submissionTime).toByteArray())
-                    .append(FIRST_STROKE_TIME, firstStrokeTime).append(LAST_STROKE_TIME, lastStrokeTime);
+                    .append(FIRST_STROKE_TIME, firstStrokeTime).append(FIRST_SUBMISSION_TIME, lastStrokeTime);
         }
     }
 
