@@ -20,12 +20,6 @@ function VoicePlayback() {
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
 
-        localScope.shadowRoot.querySelector('#slider').slider({
-            value: 100,
-            min: 0,
-            max: 500,
-            step: 50,
-        });
 
         function playMe() {
             var graphics = surface.graphics;
@@ -55,7 +49,9 @@ function VoicePlayback() {
         function init() {
             localScope.audio = document.createElement('audio');
             localScope.audio.src = '/src/utilities/templates/voicePlayback/TestRecording/mp3test.mp3';
+
         }
+
     };
 
 }
