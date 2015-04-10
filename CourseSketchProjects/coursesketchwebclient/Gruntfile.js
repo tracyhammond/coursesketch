@@ -43,12 +43,16 @@ module.exports = function(grunt) {
                 reporterOutput: 'target/jscsReport.txt'
             }
         },
+        /*
+         * This module is used to check the existence or the lack of existance of a pattern in the given files
+         */
         'regex-check': {
             head: {
                 files: {
                     src: [ 'src/main/src/**/*.html', 'src/test/src/**/*.html', '!src/main/src/utilities/libraries/mespeak/**/*.html' ]
                 },
                 options: {
+                    // This looks for the head tag <head>
                     pattern: /<head(\s|(.*lang=.*))*>/g,
                     failIfMissing: true
                 }
@@ -127,8 +131,9 @@ module.exports = function(grunt) {
                         // copies the website files used in production for prod use
                         expand: true,
                         src: [ 'src/**', '!src/test/**',
-                            // these are ignored as they are legacy.
+                            // we do not want these copied as they are legacy.
                             '!src/html/**', '!src/js/**' ],
+
                         dest: 'target/website/'
                     },
                     {
@@ -158,6 +163,9 @@ module.exports = function(grunt) {
                     }
                 ]
             },
+            /**
+             * copies the babel polyfill into the bower_components folder
+             */
             babel: {
                 files: [
                     {
@@ -180,15 +188,8 @@ module.exports = function(grunt) {
                 src: '<%= fileConfigOptions.prodHtml %>',
                 overwrite: true,
                 replacements: [
-                    /*
-                     {
-                     // supresses console
-                     from: /(^|\s)console.log/g,
-                     to: '//console.log',
-                     },
-                     */
                     {
-                        // addes bower comment
+                        // looks for <head>
                         from: /(^|\s)<head>($|\s)/g,
                         to: '\n<head>\n<!-- bower:js -->\n<!-- endbower -->\n'
                     }
@@ -199,7 +200,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // starts with the different lettering because app engine gui cuts off some of the lettering.
                         from: 'dev-coursesketch',
                         to: 'prod-coursesketch'
                     }
@@ -210,7 +211,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // looks for the bower_components url in scripts and replaces it with a /
                         from: /=['"].*bower_components/g,
                         to: '="/bower_components'
                     }
@@ -230,23 +231,15 @@ module.exports = function(grunt) {
                         to: 'function isUndefined(object)'
                     }
                 ]
-            },
-            babel: {
-                src: [ 'bower_components/babel-polyfill/bower.json' ],
-                overwrite: true,
-                replacements: [
-                    {
-                        from: '"name": "babel-polyfill",',
-                        to: '"name": "babel-polyfill",\n"main": "browser-polyfill.js",'
-                    }
-                ]
             }
         },
+        /**
+         * Inserts scripts loaded via bower into our website.
+         */
         wiredep: {
             task: {
 
-                // Point to the files that should be updated when
-                // you run `grunt wiredep`
+                // Point to the files that should be updated when you run `grunt wiredep`
                 src: '<%= fileConfigOptions.prodHtml %>',
 
                 options: {
@@ -254,6 +247,9 @@ module.exports = function(grunt) {
                     directory: 'target/website/bower_components',
 
                     html: {
+                        // looks for:
+                        // <!-- bower: -->
+                        // <!-- endbower -->
                         block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
                         detect: {
                             js: /<script.*src=['"]([^'"]+)/gi,
@@ -263,10 +259,18 @@ module.exports = function(grunt) {
                             js: '<script src="{{filePath}}"></script>',
                             css: '<link rel="stylesheet" href="{{filePath}}" />'
                         }
+                    },
+                    overrides: {
+                        'babel-polyfill': {
+                            main: 'browser-polyfill.js'
+                        }
                     }
                 }
             }
         },
+        /**
+         * Minifies our code to make it smaller.
+         */
         uglify: {
             options: {
                 compress: {
@@ -331,15 +335,14 @@ module.exports = function(grunt) {
     });
 
     // sets up tasks needed before building.
-    // specifically this loads node_modules to bower compontents
+    // specifically this loads node_modules to bower components
     grunt.registerTask('preBuild', function() {
         grunt.task.run([
-            'copy:babel',
-            'replace:babel'
+            'copy:babel'
         ]);
     });
 
-    // sets up tasks related to settuping the website up the production website
+    // Sets up tasks related to creating the production version of the website.
     grunt.registerTask('setupProd', function() {
         grunt.task.run([
             'copy:main',
@@ -356,7 +359,7 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // sets up tasks related to supporting older version of borwsers
+    // sets up tasks related to supporting older version of browsers
     grunt.registerTask('polyfill', function() {
         grunt.task.run([
             'replace:isUndefined'
