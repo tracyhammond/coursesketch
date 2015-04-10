@@ -222,7 +222,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // looks for isUndefined(word).
                         from: /isUndefined\((\w+\b)\)/g,
                         to: '(typeof $1 === \'undefined\')'
                     },
