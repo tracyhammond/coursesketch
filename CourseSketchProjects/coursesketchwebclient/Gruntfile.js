@@ -323,7 +323,7 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // Sets up tasks related to setting up the production website.
+    // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
             'preBuild',
@@ -342,7 +342,7 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // Sets up tasks related to creating the production version of the website.
+    // Sets up tasks related to setting up the production website.
     grunt.registerTask('setupProd', function() {
         grunt.task.run([
             'copy:main',
