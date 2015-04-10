@@ -323,7 +323,7 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // sets up tasks related to building the production website
+    // Sets up tasks related to setting up the production website.
     grunt.registerTask('build', function() {
         grunt.task.run([
             'preBuild',
@@ -363,6 +363,7 @@ module.exports = function(grunt) {
     grunt.registerTask('polyfill', function() {
         grunt.task.run([
             'replace:isUndefined'
+            // babel is turned off because it is breaking things.
             //'babel'
         ]);
     });

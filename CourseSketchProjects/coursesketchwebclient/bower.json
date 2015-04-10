@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "babel-polyfill" : "babel/babel#5.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#58c870917c838846fb7f4c9ec72941c2358562cc",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#9e5c7b527de95178a149db6f41b94bb4bfcd79db",
     "IndexedDBShim": ""
   },
   "private": true
