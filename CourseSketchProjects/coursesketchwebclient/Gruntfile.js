@@ -208,6 +208,17 @@ module.exports = function(grunt) {
                     }
                 ]
             },
+            bowerRunOnce: {
+                src: '<%= fileConfigOptions.prodHtml %>',
+                overwrite: true,
+                replacements: [
+                    {
+                        // <!-- bower: -->
+                        from: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)/,
+                        to: '<!-- bower: -->\n<script src="bower_components/validate-first-run/validateRunOnce.js"></script>'
+                    }
+                ]
+            },
             // TODO: change this into a plugin
             runOncePlugins: {
                 src: [ 'target/website/bower_components/jquery/dist/jquery.js', 'target/website/bower_components/babel-polyfill/browser-polyfill.js',
@@ -370,6 +381,7 @@ module.exports = function(grunt) {
         grunt.task.run([
             'replace:bowerLoad',
             'wiredep',
+            'replace:bowerRunOnce',
             'replace:bowerSlash',
             'replace:runOncePlugins'
         ]);
