@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.APPLY_ONLY_TO_LATE_PROBLEMS;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
@@ -40,9 +39,7 @@ import static database.DatabaseStringConstants.LATE_POLICY_FUNCTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
-import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.USERS;
 
 /**
  * Interfaces with mongo database to manage grading policies.
@@ -67,12 +64,12 @@ import static database.DatabaseStringConstants.USERS;
  *     }, repeated gradeCategories
  *     ],
  *     droppedProblems: {
- *         assignmentId1: [ { problemId: problemId1, dropType: type }, ... ],
+ *         assignmentId1: [ { id: problemId1, dropType: type }, ... ],
  *         assignmentId2: [...],
  *         ...
  *     },
  *     droppedAssignments: [
- *         { assignmentId: Id, dropType: type },
+ *         { id: Id, dropType: type },
  *         {...}
  *     ]
  * }
@@ -125,14 +122,7 @@ public final class GradingPolicyManager {
         // The BasicDBObject has keys problemId and dropType.
         final Map<String, List<BasicDBObject>> droppedProblems = new HashMap<>();
         for (int i = 0; i < policy.getDroppedProblemsCount(); i++) {
-            final List<DroppedProblems.SingleProblem> singleProblemList = policy.getDroppedProblems(i).getProblemList();
-            final List<BasicDBObject> mongoProblemList = new ArrayList<>();
-            for (int j = 0; j < singleProblemList.size(); j++) {
-                final BasicDBObject singleProblem = new BasicDBObject(COURSE_PROBLEM_ID, singleProblemList.get(j).getProblemId())
-                        .append(DROP_TYPE, singleProblemList.get(j).getDropType().getNumber());
-                mongoProblemList.add(singleProblem);
-            }
-            droppedProblems.put(policy.getDroppedProblems(i).getAssignmentId(), mongoProblemList);
+            droppedProblems.put(policy.getDroppedProblems(i).getAssignmentId(), buildMongoDroppedProblemObject(policy.getDroppedProblems(i)));
         }
 
         final BasicDBObject policyObject = new BasicDBObject(SELF_ID, new ObjectId(policy.getCourseId()))
@@ -140,7 +130,14 @@ public final class GradingPolicyManager {
                 .append(DROPPED_PROBLEMS, droppedProblems);
 
         if (policy.getDroppedAssignmentsCount() != 0) {
-            policyObject.append(DROPPED_ASSIGNMENTS, policy.getDroppedAssignmentsList());
+            final List<BasicDBObject> droppedAssignments = new ArrayList<>();
+            final List<DroppedAssignment> droppedList = policy.getDroppedAssignmentsList();
+            for (int i = 0; i < droppedList.size(); i++) {
+                final BasicDBObject assignment = new BasicDBObject(ASSIGNMENT_ID, droppedList.get(i).getAssignmentId())
+                        .append(DROP_TYPE, droppedList.get(i).getDropType().getNumber());
+                droppedAssignments.add(assignment);
+            }
+            policyObject.append(DROPPED_ASSIGNMENTS, droppedAssignments);
         }
 
         policyCollection.insert(policyObject);
@@ -148,8 +145,9 @@ public final class GradingPolicyManager {
 
     /**
      * Gets the grading policy for a course from the mongoDb.
+     *
+     * The first object is the query. The second is the projection which tells to return everything except the _id field.
      * <pre><code>
-     *     // The first object is the query. The second is the projection which tells to return everything except the _id field.
      *     coll.find( { _id: ObjectId(courseId) }, { _id: false } )
      * </code></pre>
      *
@@ -175,12 +173,9 @@ public final class GradingPolicyManager {
             throw new DatabaseAccessException("Grading policy was not found for course with ID " + courseId);
         }
 
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (List<String>) policyObject.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (List<String>) policyObject.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (List<String>) policyObject.get(USERS));
-
-        if (!isAdmin && !isMod && !isUsers) {
+        final AuthType auth = new AuthType();
+        auth.setCheckAccess(true);
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
@@ -238,23 +233,25 @@ public final class GradingPolicyManager {
      * @param category
      *         The category to build the BasicDBObject for.
      * @return The BasicDBObject representing the category.
+     *
+     * Package-private
      */
-    private static BasicDBObject buildMongoCategory(final PolicyCategory category) {
+    static BasicDBObject buildMongoCategory(final PolicyCategory category) {
         // Building single DBObject to add to list of categories
-        final BasicDBObject temp = new BasicDBObject(GRADE_CATEGORY_NAME, category.getName());
+        final BasicDBObject mongoCategory = new BasicDBObject(GRADE_CATEGORY_NAME, category.getName());
 
         if (category.hasWeight()) {
-            temp.append(GRADE_CATEGORY_WEIGHT, category.getWeight());
+            mongoCategory.append(GRADE_CATEGORY_WEIGHT, category.getWeight());
         }
 
         // Building late policy DBObject.
         if (category.hasLatePolicy()) {
             final LatePolicy latePolicy = category.getLatePolicy();
             final BasicDBObject late = buildMongoLatePolicy(latePolicy);
-            temp.append(LATE_POLICY, late);
+            mongoCategory.append(LATE_POLICY, late);
         }
 
-        return temp;
+        return mongoCategory;
     }
 
     /**
@@ -263,8 +260,10 @@ public final class GradingPolicyManager {
      * @param dbCategory
      *         The DBObject representing the grading policy category we want to convert.
      * @return The protoObject for the grading policy category.
+     *
+     * Package-private
      */
-    private static PolicyCategory buildProtoCategory(final DBObject dbCategory) {
+    static PolicyCategory buildProtoCategory(final DBObject dbCategory) {
         final PolicyCategory.Builder protoCategory = PolicyCategory.newBuilder();
         protoCategory.setName(dbCategory.get(GRADE_CATEGORY_NAME).toString());
 
@@ -286,8 +285,10 @@ public final class GradingPolicyManager {
      * @param latePolicy
      *         The proto latePolicy we wish to build the mongo BasicDBObject for.
      * @return The BasicDBObject representing the proto latePolicy we passed in.
+     *
+     * Package-private
      */
-    private static BasicDBObject buildMongoLatePolicy(final LatePolicy latePolicy) {
+    static BasicDBObject buildMongoLatePolicy(final LatePolicy latePolicy) {
         final BasicDBObject late = new BasicDBObject(LATE_POLICY_FUNCTION_TYPE, latePolicy.getFunctionType().getNumber())
                 .append(LATE_POLICY_TIME_FRAME_TYPE, latePolicy.getTimeFrameType().getNumber()).append(LATE_POLICY_RATE, latePolicy.getRate())
                 .append(LATE_POLICY_SUBTRACTION_TYPE, latePolicy.getSubtractionType().getNumber())
@@ -301,8 +302,10 @@ public final class GradingPolicyManager {
      * @param dbPolicy
      *         The mongo latePolicy we want to build a protoObject for.
      * @return The protoObject representing the mongo latePolicy we passed in.
+     *
+     * Package-private
      */
-    private static LatePolicy buildProtoLatePolicy(final DBObject dbPolicy) {
+    static LatePolicy buildProtoLatePolicy(final DBObject dbPolicy) {
         final LatePolicy.Builder protoPolicy = LatePolicy.newBuilder();
         protoPolicy.setFunctionType(LatePolicy.FunctionType.valueOf((int) dbPolicy.get(LATE_POLICY_FUNCTION_TYPE)));
         protoPolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((int) dbPolicy.get(LATE_POLICY_TIME_FRAME_TYPE)));
@@ -310,5 +313,32 @@ public final class GradingPolicyManager {
         protoPolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((int) dbPolicy.get(LATE_POLICY_SUBTRACTION_TYPE)));
         protoPolicy.setApplyOnlyToLateProblems((boolean) dbPolicy.get(APPLY_ONLY_TO_LATE_PROBLEMS));
         return protoPolicy.build();
+    }
+
+    /**
+     * Creates a mongo dropped problem object.
+     * Returns the list of BasicDBObjects that is in the below mongo document structure.
+     *
+     * <pre><code>
+     * droppedProblems: {
+     *     assignmentId1: [ { problemId: problemId1, dropType: type }, ... ],
+     *     assignmentId2: [...],
+     * }
+     * </code></pre>
+     *
+     * The list is the value corresponding to the assignmentId key in the droppedProblems map.
+     *
+     * @param problems Proto Object representing the dropped problems.
+     * @return List to be used as the value in the droppedProblems key/value pair where the keys are assignmentIds.
+     */
+    static List<BasicDBObject> buildMongoDroppedProblemObject(final DroppedProblems problems) {
+        final List<DroppedProblems.SingleProblem> singleProblemList = problems.getProblemList();
+        final List<BasicDBObject> mongoProblemList = new ArrayList<>();
+        for (int i = 0; i < singleProblemList.size(); i++) {
+            final BasicDBObject singleProblem = new BasicDBObject(COURSE_PROBLEM_ID, singleProblemList.get(i).getProblemId())
+                    .append(DROP_TYPE, singleProblemList.get(i).getDropType().getNumber());
+            mongoProblemList.add(singleProblem);
+        }
+        return mongoProblemList;
     }
 }
