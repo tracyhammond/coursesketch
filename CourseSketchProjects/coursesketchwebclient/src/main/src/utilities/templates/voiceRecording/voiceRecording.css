@@ -15,7 +15,7 @@
                 border-radius: 50px;
                 border: 1px solid #C1CDCD;
                 background: white;
-                background-image: url(/src/utilities/templates/voicePlayback/redo_icon.svg);
+                background-image: url(/src/utilities/templates/voiceRecording/redo_icon.svg);
                 background-size: 40px 40px;
                 background-repeat: no-repeat;
                 background-position: 60% 50%;
@@ -27,7 +27,7 @@
                 border-radius: 50px;
                 border: 1px solid #C1CDCD;
                 background: white;
-                background-image: url(/src/utilities/templates/voicePlayback/undo_icon.svg);
+                background-image: url(/src/utilities/templates/voiceRecording/undo_icon.svg);
                 background-size: 40px 40px;
                 background-repeat: no-repeat;
                 background-position: 60% 50%;
