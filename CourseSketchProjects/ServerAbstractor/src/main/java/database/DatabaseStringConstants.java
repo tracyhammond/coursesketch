@@ -105,6 +105,7 @@ public final class DatabaseStringConstants {
     public static final String SOURCE = "Source";
     public static final String QUESTION_TYPE = "QuestionType";
     public static final String KEYWORDS = "OtherKeywords";
+    public static final String SCRIPT = "Script";
 
     // state specific
     public static final String STATE_PUBLISHED = "Published"; // Instructor has finished construction of school item
