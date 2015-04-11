@@ -11,6 +11,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     /******************************************
      * GRUNT INIT
@@ -42,12 +43,16 @@ module.exports = function(grunt) {
                 reporterOutput: 'target/jscsReport.txt'
             }
         },
+        /*
+         * This module is used to check the existence or the lack of existance of a pattern in the given files
+         */
         'regex-check': {
             head: {
                 files: {
                     src: [ 'src/main/src/**/*.html', 'src/test/src/**/*.html', '!src/main/src/utilities/libraries/mespeak/**/*.html' ]
                 },
                 options: {
+                    // This looks for the head tag <head>
                     pattern: /<head(\s|(.*lang=.*))*>/g,
                     failIfMissing: true
                 }
@@ -126,8 +131,9 @@ module.exports = function(grunt) {
                         // copies the website files used in production for prod use
                         expand: true,
                         src: [ 'src/**', '!src/test/**',
-                            // these are ignored as they are legacy.
+                            // we do not want these copied as they are legacy.
                             '!src/html/**', '!src/js/**' ],
+
                         dest: 'target/website/'
                     },
                     {
@@ -156,6 +162,25 @@ module.exports = function(grunt) {
                         dest: 'target/website/'
                     }
                 ]
+            },
+            /**
+             * copies the babel polyfill into the bower_components folder
+             */
+            babel: {
+                files: [
+                    {
+                        expand: false,
+                        src: [ 'node_modules/babel-core/browser-polyfill.js' ],
+                        dest: 'bower_components/babel-polyfill/browser-polyfill.js',
+                        filter: 'isFile'
+                    },
+                    {
+                        expand: false,
+                        src: [ 'bower_components/babel-polyfill/.bower.json' ],
+                        dest: 'bower_components/babel-polyfill/bower.json',
+                        filter: 'isFile'
+                    }
+                ]
             }
         },
         replace: {
@@ -163,15 +188,8 @@ module.exports = function(grunt) {
                 src: '<%= fileConfigOptions.prodHtml %>',
                 overwrite: true,
                 replacements: [
-                    /*
-                     {
-                     // supresses console
-                     from: /(^|\s)console.log/g,
-                     to: '//console.log',
-                     },
-                     */
                     {
-                        // addes bower comment
+                        // looks for <head>
                         from: /(^|\s)<head>($|\s)/g,
                         to: '\n<head>\n<!-- bower:js -->\n<!-- endbower -->\n'
                     }
@@ -182,7 +200,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // starts with the different lettering because app engine gui cuts off some of the lettering.
                         from: 'dev-coursesketch',
                         to: 'prod-coursesketch'
                     }
@@ -193,7 +211,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // looks for the bower_components url in scripts and replaces it with a /
                         from: /=['"].*bower_components/g,
                         to: '="/bower_components'
                     }
@@ -204,7 +222,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // looks for isUndefined(word).
                         from: /isUndefined\((\w+\b)\)/g,
                         to: '(typeof $1 === \'undefined\')'
                     },
@@ -215,11 +233,13 @@ module.exports = function(grunt) {
                 ]
             }
         },
+        /**
+         * Inserts scripts loaded via bower into our website.
+         */
         wiredep: {
             task: {
 
-                // Point to the files that should be updated when
-                // you run `grunt wiredep`
+                // Point to the files that should be updated when you run `grunt wiredep`
                 src: '<%= fileConfigOptions.prodHtml %>',
 
                 options: {
@@ -227,6 +247,9 @@ module.exports = function(grunt) {
                     directory: 'target/website/bower_components',
 
                     html: {
+                        // looks for:
+                        // <!-- bower: -->
+                        // <!-- endbower -->
                         block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
                         detect: {
                             js: /<script.*src=['"]([^'"]+)/gi,
@@ -236,8 +259,36 @@ module.exports = function(grunt) {
                             js: '<script src="{{filePath}}"></script>',
                             css: '<link rel="stylesheet" href="{{filePath}}" />'
                         }
+                    },
+                    overrides: {
+                        'babel-polyfill': {
+                            main: 'browser-polyfill.js'
+                        }
                     }
                 }
+            }
+        },
+        /**
+         * Minifies our code to make it smaller.
+         */
+        uglify: {
+            options: {
+                compress: {
+                    global_defs: {
+                        'DEBUG': false
+                    },
+                    dead_code: true
+                },
+                mangle: true
+            },
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        src: [ 'target/website/src/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.js' ],
+                        dest: '.'
+                    }
+                ]
             }
         }
 
@@ -275,16 +326,26 @@ module.exports = function(grunt) {
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
         grunt.task.run([
+            'preBuild',
             'setupProd',
             'bower',
-            'polyfill'
+            'polyfill',
+            'obfuscate'
         ]);
     });
 
-    // sets up tasks related to settuping the website up the production website
+    // sets up tasks needed before building.
+    // specifically this loads node_modules to bower components
+    grunt.registerTask('preBuild', function() {
+        grunt.task.run([
+            'copy:babel'
+        ]);
+    });
+
+    // Sets up tasks related to setting up the production website.
     grunt.registerTask('setupProd', function() {
         grunt.task.run([
-            'copy',
+            'copy:main',
             'replace:appEngine'
         ]);
     });
@@ -298,11 +359,19 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // sets up tasks related to supporting older version of borwsers
+    // sets up tasks related to supporting older version of browsers
     grunt.registerTask('polyfill', function() {
         grunt.task.run([
             'replace:isUndefined'
+            // babel is turned off because it is breaking things.
             //'babel'
+        ]);
+    });
+
+    // sets up tasks related to minifying the code
+    grunt.registerTask('obfuscate', function() {
+        grunt.task.run([
+            'uglify'
         ]);
     });
 

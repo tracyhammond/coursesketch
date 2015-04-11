@@ -2,7 +2,8 @@
   "name": "coursesketchwebclient",
   "version": "0.0.1",
   "dependencies": {
-    "webcomponentsjs": "webcomponents/webcomponentsjs#58c870917c838846fb7f4c9ec72941c2358562cc",
+    "babel-polyfill" : "babel/babel#5.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#787ca6cccf4f3b350ddbe17a27a7cb21c0a28d8e",
     "IndexedDBShim": ""
   },
   "private": true
