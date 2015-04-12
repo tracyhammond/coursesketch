@@ -330,6 +330,8 @@ public final class GradingPolicyManager {
      *
      * @param problems Proto Object representing the dropped problems.
      * @return List to be used as the value in the droppedProblems key/value pair where the keys are assignmentIds.
+     *
+     * Package-private
      */
     static List<BasicDBObject> buildMongoDroppedProblemObject(final DroppedProblems problems) {
         final List<DroppedProblems.SingleProblem> singleProblemList = problems.getProblemList();
