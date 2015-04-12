@@ -42,7 +42,8 @@ module.exports = function(grunt) {
             src: '<%= jshint.files %>',
             options: {
                 config: 'config/jscs.conf.jscsrc',
-                reporterOutput: 'target/jscsReport.txt'
+                reporterOutput: 'target/jscsReport.txt',
+                maxErrors: 200
             }
         },
         /*
