@@ -211,6 +211,18 @@ public final class Authenticator {
         public void setCheckAccess(final boolean iCheckAccess) {
             this.checkAccess = iCheckAccess;
         }
+
+        /**
+         * Sets all checks to false to enable reuse of the same object.
+         */
+        public void clear() {
+            setCheckAccess(false);
+            setCheckAdmin(false);
+            setCheckAdminOrMod(false);
+            setCheckDate(false);
+            setCheckMod(false);
+            setCheckUser(false);
+        }
     }
 
     /**
