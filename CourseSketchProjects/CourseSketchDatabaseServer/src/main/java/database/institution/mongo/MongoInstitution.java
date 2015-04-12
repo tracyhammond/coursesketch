@@ -499,15 +499,15 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public List<ProtoGrade> getAllCourseGradesInstructor(final String courseId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllCourseGradesInstructor(getInstance().auth, getInstance().database, courseId, userId);
+        return GradeManager.getAllAssignmentGradesInstructor(getInstance().auth, getInstance().database, courseId, userId);
     }
 
     @Override
-    public List<ProtoGrade> getAllCourseGradesStudent(final String courseId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllCourseGradesStudent(getInstance().auth, getInstance().database, courseId, userId);
+        return GradeManager.getAllAssignmentGradesStudent(getInstance().auth, getInstance().database, courseId, userId);
     }
 
     @Override
