@@ -458,19 +458,6 @@ public interface Institution {
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
-     * @param userId
-     *         The id of the user requesting the courseRoster
-     * @param courseId
-     *         The id of what courseRoster is being grabbed
-     * @return a list of users in the course
-     * @throws DatabaseAccessException
-     *         Thrown if there are problems accessing the database.
-     * @throws AuthenticationException
-     *         Thrown if the user did not have the authentication to get the course.
-     */
-    List<String> getCourseRoster(final String userId, final String courseId) throws DatabaseAccessException, AuthenticationException;
-
-    /**
      * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
