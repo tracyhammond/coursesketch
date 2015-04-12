@@ -525,7 +525,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    List<ProtoGrade> getAllCourseGradesInstructor(final String courseId, final String userId)
+    List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -543,7 +543,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    List<ProtoGrade> getAllCourseGradesStudent(final String courseId, final String userId)
+    List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
