@@ -10,7 +10,7 @@ import java.util.List;
  * Using FakeAuthenticator means the permissions needs to be set once and then both collections will use the same permissions.
  * Example setup is below as well as a test where this is implemented.
  * @see database.institution.mongo.GradeManagerTest
- * 
+ *
  * <pre><code>
  * public Authenticator fauth;
  * public FakeAuthenticator fakeAuthenticator;
