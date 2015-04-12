@@ -44,51 +44,6 @@
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${pmdVersion}</version>
-                <configuration>
-                    <language>javascript</language>
-                    <rulesets>
-                        <ruleset>ecmascript-basic</ruleset>
-                        <ruleset>ecmascript-braces</ruleset>
-                        <ruleset>ecmascript-unnecessary</ruleset>
-                    </rulesets>
-                    <includes>
-                        <include>**/*.js</include>
-                    </includes>
-                </configuration>
-            </plugin>
-            <!--
-            <plugin>
-                <groupId>com.cj.jshintmojo</groupId>
-                <artifactId>jshint-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>jshint</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>lint</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>2.4.1</version>
-                    <configFile>config/.jshintrc</configFile>
-                    <directories>
-                        <directory>src/main/src</directory>
-                    </directories>
-                    <excludes>
-                        <exclude>src/main/src/utilities/libraries</exclude>
-                        <exclude>src/main/src/sketching/srl/legacy</exclude>
-                    </excludes>
-                    <reporter>jslint</reporter>
-                    <reportFile>target/jshint.xml</reportFile>
-                    <failOnError>true</failOnError>
-                </configuration>
-            </plugin>
-            -->
-            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
