@@ -478,12 +478,6 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public List<String> getCourseRoster(final String userId, final String courseId)
-            throws DatabaseAccessException, AuthenticationException {
-        return CourseManager.mongoGetCourseRoster(getInstance().auth, getInstance().database, userId, courseId);
-    }
-
-    @Override
     public void insertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
         GradingPolicyManager.insertGradingPolicy(getInstance().auth, getInstance().database, userId, policy);
     }
