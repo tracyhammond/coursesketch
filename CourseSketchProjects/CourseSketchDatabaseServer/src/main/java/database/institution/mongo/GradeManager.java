@@ -1,24 +1,28 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import database.DatabaseAccessException;
+import database.RequestConverter;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import protobuf.srl.grading.Grading.GradeHistory;
 import protobuf.srl.grading.Grading.ProtoGrade;
-import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
+import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COMMENT;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
+import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.CURRENT_GRADE;
 import static database.DatabaseStringConstants.EXISTS;
@@ -72,7 +76,7 @@ public final class GradeManager {
      * <pre><code>
      * coll.update(
      *  { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId },
-     *  {   $push: { gradeHistory: { $each: [gradeToInsertDBObject], $sort: { GRADED_DATE: -1 }}}
+     *  {   $addToSet: { gradeHistory: { $each: [gradeToInsertDBObject], $sort: { GRADED_DATE: -1 }}}
      *      $set: { CURRENT_GRADE: currentGrade }
      *      $setOnInsert: { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId }
      *  },
@@ -101,6 +105,10 @@ public final class GradeManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
+        auth.clear();
+        auth.setCheckUser(true);
+        checkUserInGradeTypeCollection(authenticator, auth, grade);
+
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, grade.getUserId());
@@ -128,16 +136,27 @@ public final class GradeManager {
             setOnInsertFields.append(EXTERNAL_GRADE, grade.getExternalGrade());
         }
 
-        final BasicDBObject gradeHistoryObject = buildMongoGradeHistory(grade.getGradeHistory(0));
-        final BasicDBObject updateObject = new BasicDBObject("$push", new BasicDBObject(GRADE_HISTORY, new BasicDBObject("$each", gradeHistoryObject)
-                .append("$sort", new BasicDBObject(GRADED_DATE, -1))));
+        if (grade.getGradeHistoryCount() <= 0) {
+            throw new DatabaseAccessException("A grade history is required to insert a grade.");
+        }
+
+        int mostRecentHistoryIndex = -1;
+        long mostRecentHistoryTime = -1;
+        final BasicDBList gradeHistoryList = new BasicDBList();
+        for (int i = 0; i < grade.getGradeHistoryCount(); i++) {
+            final BasicDBObject gradeHistoryObject = buildMongoGradeHistory(grade.getGradeHistory(i));
+            gradeHistoryList.add(gradeHistoryObject);
+
+            if ((long) gradeHistoryObject.get(GRADED_DATE) > mostRecentHistoryTime) {
+                mostRecentHistoryTime = (long) gradeHistoryObject.get(GRADED_DATE);
+                mostRecentHistoryIndex = i;
+            }
+        }
+        final BasicDBObject updateObject = new BasicDBObject(ADD_SET_COMMAND, new BasicDBObject(GRADE_HISTORY,
+                new BasicDBObject("$each", gradeHistoryList).append("$sort", new BasicDBObject(GRADED_DATE, -1))));
 
         // Sets currentGrade if the ProtoGrade has the field. Else sets currentGrade base on gradeHistory if the ProtoGrade has a gradeHistory.
-        if (grade.hasCurrentGrade()) {
-            updateObject.append("$set", new BasicDBObject(CURRENT_GRADE, grade.getCurrentGrade()));
-        } else if (grade.getGradeHistoryCount() > 0) {
-            updateObject.append("$set", new BasicDBObject(CURRENT_GRADE, grade.getGradeHistory(0).getGradeValue()));
-        }
+        updateObject.append("$set", new BasicDBObject(CURRENT_GRADE, grade.getGradeHistory(mostRecentHistoryIndex).getGradeValue()));
 
         updateObject.append("$setOnInsert", setOnInsertFields);
 
@@ -147,13 +166,46 @@ public final class GradeManager {
     }
 
     /**
+     * Checks if the user is in the corresponding collection for the grade type.
+     * If it is a problem grade, checks problem collection. Assignment grade checks assignment collection.
+     * Course grade or external grade checks course collection.
+     *
+     * @param authenticator The object that is performing authentication.
+     * @param auth The authentication being performed.
+     * @param grade The grade object the authentication is being performed on.
+     * @throws DatabaseAccessException if the user is not in the respective collection for the grade type being checked.
+     */
+    private static void checkUserInGradeTypeCollection(final Authenticator authenticator, final Authenticator.AuthType auth, final ProtoGrade grade)
+            throws DatabaseAccessException {
+        if (grade.getExternalGrade()) {
+            if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), grade.getUserId(), 0, auth)) {
+                throw new DatabaseAccessException("The user is not in the course that the grade is being inserted for.");
+            }
+        } else if (grade.hasProblemId()) {
+            if (!authenticator.isAuthenticated(COURSE_PROBLEM_COLLECTION, grade.getProblemId(), grade.getUserId(), 0, auth)) {
+                throw new DatabaseAccessException("The user is not assigned the problem that the grade is being inserted for.");
+            }
+        } else if (grade.hasAssignmentId()) {
+            if (!authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, grade.getAssignmentId(), grade.getUserId(), 0, auth)) {
+                throw new DatabaseAccessException("Th user is not assigned the assignment that the grade is being inserted for.");
+            }
+        } else {
+            if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), grade.getUserId(), 0, auth)) {
+                throw new DatabaseAccessException("The user is not in the course that the grade is being inserted for.");
+            }
+        }
+    }
+
+    /**
      * Builds a mongo BasicDBObject for a single grade history value.
      *
      * @param gradeHistory
      *         ProtoObject that grade history is being set from.
      * @return BasicDBObject representing the single grade history value in mongo.
+     *
+     * Package-private
      */
-    private static BasicDBObject buildMongoGradeHistory(final GradeHistory gradeHistory) {
+    static BasicDBObject buildMongoGradeHistory(final GradeHistory gradeHistory) {
         final BasicDBObject gradeHistoryDBObject = new BasicDBObject();
 
         if (gradeHistory.hasGradeValue()) {
@@ -165,7 +217,7 @@ public final class GradeManager {
         }
 
         if (gradeHistory.hasGradedDate()) {
-            gradeHistoryDBObject.append(GRADED_DATE, gradeHistory.getGradedDate());
+            gradeHistoryDBObject.append(GRADED_DATE, gradeHistory.getGradedDate().getMillisecond());
         }
 
         if (gradeHistory.hasWhoChanged()) {
@@ -258,7 +310,7 @@ public final class GradeManager {
      *         The database that the grades are being retrieved from.
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param userId
+     * @param requesterId
      *         The user that is requesting the grades. Only users with admin access can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
@@ -267,12 +319,12 @@ public final class GradeManager {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    public static List<ProtoGrade> getAllCourseGradesInstructor(final Authenticator authenticator, final DB dbs, final String courseId,
-            final String userId) throws AuthenticationException, DatabaseAccessException {
+    public static List<ProtoGrade> getAllAssignmentGradesInstructor(final Authenticator authenticator, final DB dbs, final String courseId,
+            final String requesterId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can retrieve all grades
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
@@ -310,7 +362,7 @@ public final class GradeManager {
      *         The database that the grades are being retrieved from.
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param userId
+     * @param requesterId
      *         The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
@@ -319,18 +371,18 @@ public final class GradeManager {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    public static List<ProtoGrade> getAllCourseGradesStudent(final Authenticator authenticator, final DB dbs, final String courseId,
-            final String userId) throws AuthenticationException, DatabaseAccessException {
+    public static List<ProtoGrade> getAllAssignmentGradesStudent(final Authenticator authenticator, final DB dbs, final String courseId,
+            final String requesterId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication to make sure the user is in the course
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckUser(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
+        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
-                .append(USER_ID, userId)
+                .append(USER_ID, requesterId)
                 .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1); // Sort by assignmentId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
@@ -354,8 +406,10 @@ public final class GradeManager {
      * @return ProtoObject representing one assignment grade for one student.
      * @throws DatabaseAccessException
      *         Thrown if courseId or userId are not found in the DBObject.
+     *
+     * Package-private
      */
-    private static ProtoGrade buildProtoGrade(final DBObject grade) throws DatabaseAccessException {
+    static ProtoGrade buildProtoGrade(final DBObject grade) throws DatabaseAccessException {
         if (!grade.containsField(COURSE_ID)) {
             throw new DatabaseAccessException("Missing required field: courseId");
         }
@@ -401,8 +455,10 @@ public final class GradeManager {
      * @return ProtoObject representing the grade history for one assignment grade for one user.
      * @throws DatabaseAccessException
      *         Thrown if no grade history fields are found.
+     *
+     * Package-private
      */
-    private static GradeHistory buildProtoGradeHistory(final DBObject history) throws DatabaseAccessException {
+    static GradeHistory buildProtoGradeHistory(final DBObject history) throws DatabaseAccessException {
         final GradeHistory.Builder protoHistory = GradeHistory.newBuilder();
         if (history.containsField(GRADE_VALUE)) {
             protoHistory.setGradeValue((float) history.get(GRADE_VALUE));
@@ -413,7 +469,7 @@ public final class GradeManager {
         }
 
         if (history.containsField(GRADED_DATE)) {
-            protoHistory.setGradedDate((Util.DateTime) history.get(GRADED_DATE));
+            protoHistory.setGradedDate(RequestConverter.getProtoFromMilliseconds(((Number) history.get(GRADED_DATE)).longValue()));
         }
 
         if (history.containsField(WHO_CHANGED)) {
