@@ -5,6 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Used for tests so only one auth list has to be set for multiple collections.
+ * For example, in grades the COURSE_COLLECTION and ASSIGNMENT_COLLECTION are accessed among other collections.
+ * Using FakeAuthenticator means the permissions needs to be set once and then both collections will use the same permissions.
+ * Example setup is below as well as a test where this is implemented.
+ * @see database.institution.mongo.GradeManagerTest
+ * 
+ * <pre><code>
+ * public Authenticator fauth;
+ * public FakeAuthenticator fakeAuthenticator;
+ * fakeAuthenticator = new FakeAuthenticator();
+ * fauth = new Authenticator(fakeAuthenticator);
+ * </code></pre>
+ *
  * Created by matt on 4/12/15.
  */
 public class FakeAuthenticator implements AuthenticationDataCreator {
@@ -48,7 +61,5 @@ public class FakeAuthenticator implements AuthenticationDataCreator {
      *            The group Id
      * @return UserList
      */
-    @Override public List<String> getUserList(String groupId) {
-        return userList;
-    }
+    @Override public List<String> getUserList(String groupId) { return userList; }
 }
