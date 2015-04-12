@@ -10,6 +10,7 @@
 
     <profiles>
         <profile>
+            <id>node for windows</id>
             <activation>
                 <os>
                     <family>Windows</family>
