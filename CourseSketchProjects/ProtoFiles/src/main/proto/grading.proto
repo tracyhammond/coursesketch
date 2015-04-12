@@ -26,7 +26,7 @@ message DroppedAssignment {
 // TODO: Make a map with key assignmentId and list value of problems once protojs supports maps.
 message DroppedProblems {
     required string assignmentId = 1;       // The Id of the assignment that the problem is a part of.
-    repeated SingleProblem problem = 2;    // Represents a single problem that is dropped for the assignment.
+    repeated SingleProblem problem = 2;     // Represents a single problem that is dropped for the assignment.
 
     message SingleProblem {
         required string problemId = 1;                          // The Id of the problem that is being dropped.

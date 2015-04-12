@@ -3,15 +3,12 @@ package database.institution.mongo;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
-import org.hsqldb.Database;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,8 +22,6 @@ import protobuf.srl.grading.Grading.DropType;
 import protobuf.srl.utils.Util;
 import protobuf.srl.school.School.SrlCourse;
 
-import database.DatabaseStringConstants;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +29,6 @@ import java.util.Map;
 
 import static database.DatabaseStringConstants.APPLY_ONLY_TO_LATE_PROBLEMS;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.DROPPED_ASSIGNMENTS;
 import static database.DatabaseStringConstants.DROPPED_PROBLEMS;
@@ -52,6 +46,8 @@ import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
 
 /**
+ * Tests for GradingPolicyManager.
+ *
  * Created by Matt on 4/6/2015.
  */
 public class GradingPolicyManagerTest {
