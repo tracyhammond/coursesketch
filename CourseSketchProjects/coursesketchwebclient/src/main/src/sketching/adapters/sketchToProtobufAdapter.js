@@ -26,9 +26,8 @@
     SRL_Point.createFromProtobuf = function(proto) {
         var point = new SRL_Point(proto.x, proto.y);
         point.setId(proto.id);
-
         if (proto.time) {
-            point.setTime(parseInt(proto.time.toString()));
+            point.setTime(proto.time);
         }
         if (proto.name) {
             point.setName(proto.name);
