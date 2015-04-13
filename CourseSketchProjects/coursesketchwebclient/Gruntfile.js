@@ -50,7 +50,8 @@ module.exports = function(grunt) {
         'regex-check': {
             head: {
                 files: {
-                    src: [ 'src/main/src/**/*.html', 'src/test/src/**/*.html', '!src/main/src/utilities/libraries/mespeak/**/*.html' ]
+                    src: [ 'src/main/src/**/*.html', 'src/test/src/**/*.html', '!src/main/src/utilities/libraries/**/*.html',
+                        'src/main/src/utilities/libraries/**/*Include.html' ]
                 },
                 options: {
                     // This looks for the head tag <head>
