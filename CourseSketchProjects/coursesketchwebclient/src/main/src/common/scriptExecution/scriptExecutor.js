@@ -2,12 +2,9 @@ validateFirstRun(document.currentScript);
 
 /**
  * This function merges two existing api objects into one api object.
- * @param originalApi
- *        {Object}  The base api object.
- * @param objectApi
- *        {Object}  The second api object, usually used for passing objects into an api.
- * @return result
- *        {Object}   An api object that contains the contents of both api objects.
+ * @param {Object} originalApi The base api object.
+ * @param {Object} objectApi The second api object, usually used for passing objects into an api.
+ * @return {Object} result An api object that contains the contents of both api objects.
  */
 function mergeApi(originalApi, objectApi){
     var result = {};
@@ -26,8 +23,7 @@ function mergeApi(originalApi, objectApi){
 
 /**
  * This function adds the ability to call console.log() to the api.
- * @param text
- *        {String} The string that will be printed to console.
+ * @param {String} text The string that will be printed to console.
  */
 function debugLog(text) {
     console.log(text);
@@ -35,15 +31,13 @@ function debugLog(text) {
 
 /**
  * This function builds an object that holds an api for manipulating the problem panel.
- * @param panel
- *        {Object}  The problem panel from the student experiment.
+ * @param {Object} panel The problem panel from the student experiment.
  */
 function PanelEditApi(panel){
 
     /**
      * This function allows scripts to create a text area object to the right of the sketch surface in an experiment.
-     * @param textAreaObj
-     *        {Object} The object that defines the text area parameters (width, height, location, className, textContent).
+     * @param {Object} textAreaObj The object that defines the text area parameters (width, height, location, className, textContent).
      */
     this.addTextArea = function(textAreaObj) {
         // Builds a text area from a passed in object.
@@ -73,8 +67,7 @@ function PanelEditApi(panel){
 
     /**
      * This function allows scripts to change the background of the sketch surface to any supported type.
-     * @param bgClass
-     *        {String} A string containing the className that corresponds to the background type.
+     * @param {String} bgClass A string containing the className that corresponds to the background type.
      */
     this.setSketchSurfaceBG = function(bgClass) {
         // Sets the className of the sketch surface and adds .sub-panel + .submittable
@@ -93,12 +86,9 @@ var api = {
 
 /**
  * This function parses and executes the script that is passed in.
- * @param script
- *        {String} The string containing the problem script to execute.
- * @param panel
- *        {Node} The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
- * @param callback
- *        {Function} A function to call when the script is done executing to finish experiment setup.
+ * @param {String} script The string containing the problem script to execute.
+ * @param {Node} panel The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
+ * @param {Function} callback A function to call when the script is done executing to finish experiment setup.
  */
 function executeScript(script, panel, callback) {
     console.log('executing script: ' + script);
