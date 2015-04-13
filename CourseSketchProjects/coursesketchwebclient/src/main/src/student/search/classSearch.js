@@ -106,9 +106,9 @@ validateFirstRun(document.currentScript);
         } else {
             $('#' + id).animate({
                 marginLeft: '0px',
-                }, 300, function() {
-                    localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
-                });
+            }, 300, function() {
+                localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
+            });
         }
     };
 

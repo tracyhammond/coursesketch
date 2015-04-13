@@ -14,9 +14,9 @@ function TimelineMarker() {
         addCross(shadowRoot.querySelector('#picture'), this);
 
     };
-	/**
-	 * straight through the timeline, the user is able to delete elements that were created
-	 */
+    /**
+     * straight through the timeline, the user is able to delete elements that were created
+     */
     function addCross(element, marker) {
         element.onclick = function() {
             $(element).addClass('cross');
