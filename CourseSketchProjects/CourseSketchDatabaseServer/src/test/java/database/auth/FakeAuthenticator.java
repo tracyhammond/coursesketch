@@ -65,7 +65,6 @@ public class FakeAuthenticator implements AuthenticationDataCreator {
         modList = Arrays.asList(mods);
     }
 
-
     /**
      * A helper function that lets you set the list without requiring a list to be created.
      * @param admins a list of administrators we want to fake authentication for
