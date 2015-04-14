@@ -5,19 +5,12 @@ function VoicePlayback() {
         shadowRoot.appendChild(templateClone);
 
         var vid = this.shadowRoot.querySelector('#myaudio');
+        vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
         vid.ontimeupdate = function() {myFunction()};
-        vid.onplay = function() {playMe();}
-        this.shadowRoot.querySelector('#play-btn').onclick = function() {
-            localScope.shadowRoot.querySelector('#pause-btn').style.display = 'block';
-            localScope.shadowRoot.querySelector('#play-btn').style.display = 'none';
-            playMe();
-            playVoice();
-        };
-        this.shadowRoot.querySelector('#pause-btn').onclick = function() {
-            localScope.shadowRoot.querySelector('#play-btn').style.display = 'block';
-            localScope.shadowRoot.querySelector('#pause-btn').style.display = 'none';
-            pauseVoice();
-        };
+        vid.onplay = function() {
+                                    playMe();
+                                    playVoice();
+                                }
 
         var surface = document.body.querySelector('sketch-surface');
         var graphics = surface.graphics;
@@ -69,11 +62,6 @@ function VoicePlayback() {
 
         function pauseVoice() {
             localScope.audio.pause();
-        }
-
-        init = function() {
-            localScope.audio = document.createElement('audio');
-            localScope.audio.src = '/src/utilities/templates/voicePlayback/test.mp3';
         }
 
     };
