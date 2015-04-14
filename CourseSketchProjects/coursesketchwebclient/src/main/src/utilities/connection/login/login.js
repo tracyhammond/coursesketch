@@ -33,8 +33,7 @@ function LoginSystem() {
                 }
             } else if (evt.code === connection.SERVER_FULL) {
                 if (!attemptingToReconnect) {
-                    alert(evt.reason); // Here we can try to connect to other
-                                       // servers.
+                    alert(evt.reason); // Here we can try to connect to other servers.
                 }
             } else {
                 if (!attemptingToReconnect) {
