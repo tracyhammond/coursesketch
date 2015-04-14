@@ -77,9 +77,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-    * @returns {SrlProblemBank} the information of the current problem.
-    */
-
+     * @returns {SrlProblemBank} the information of the current problem.
+     */
     this.getProblemListSize = function getProblemListSize() {
         return problemList.size();
     };
