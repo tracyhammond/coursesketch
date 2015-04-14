@@ -36,7 +36,7 @@ message LoginInformation {
 }
 
 message ProtoException {
-    required string mssg = 1;
-    repeated string stackTrace = 2;
-    optional ProtoException cause = 3;
+    required string mssg = 1; // the message that the exception has.
+    repeated string stackTrace = 2; // the stacktrace of the exception.
+    optional ProtoException cause = 3; // the stackTrace might have a cause that is another protoException.
 }
