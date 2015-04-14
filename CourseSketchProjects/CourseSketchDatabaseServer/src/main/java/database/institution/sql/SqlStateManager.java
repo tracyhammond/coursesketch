@@ -99,7 +99,7 @@ public final class SqlStateManager {
                 } else {
                     rst.moveToInsertRow();
                     rst.updateString(DatabaseStringConstants.USER_ID, userId);
-                    rst.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+                    rst.updateString(DatabaseStringConstants.SCHOOL_ITEM_TYPE, classification);
                     rst.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
                     rst.updateBoolean(DatabaseStringConstants.STATE_COMPLETED, state.getCompleted());
                     rst.updateBoolean(DatabaseStringConstants.STATE_STARTED, state.getStarted());
