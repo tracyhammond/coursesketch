@@ -214,7 +214,8 @@ public final class DataRequestHandler {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemRequest.getQuery());
-                        results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                        results.add(ResultBuilder.buildResult(build.build().toByteString(), "The date for this item is invalid" + e.getMessage(),
+                                ItemQuery.ERROR));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
