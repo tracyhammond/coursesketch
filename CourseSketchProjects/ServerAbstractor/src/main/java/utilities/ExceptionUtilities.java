@@ -61,7 +61,7 @@ public final class ExceptionUtilities {
      * @return A request that warps around the exception and message you pass in.
      */
     public static Message.Request createExceptionRequest(final Message.ProtoException exception, final String string,
-            final Message.Request inputRequest){
+            final Message.Request inputRequest) {
         final Message.Request.Builder builder = Message.Request.newBuilder();
         builder.setRequestType(inputRequest.getRequestType());
         builder.setSessionInfo(inputRequest.getSessionInfo());
