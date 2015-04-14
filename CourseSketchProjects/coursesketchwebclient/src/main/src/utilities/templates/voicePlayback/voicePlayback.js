@@ -89,6 +89,7 @@ function VoicePlayback() {
 
         this.saveFile = function() {
             this.recorder.exportMP3(function(blob, mp3name) {
+                vid.src = webkitURL.createObjectURL(blob);
             });
         }
         init = function() {
