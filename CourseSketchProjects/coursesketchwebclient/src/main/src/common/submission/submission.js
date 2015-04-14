@@ -66,7 +66,7 @@ function SubmissionPanel() {
     };
 
     this.sendDataToServer = function(isSubmitting) {
-        var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
+        var subPanel = this.querySelector('.submittable');
         if (isUndefined(subPanel)) {
             throw new SubmissionException('There is no element that contains submittable data');
         }
@@ -74,7 +74,7 @@ function SubmissionPanel() {
             throw new SubmissionException('Problem data is not set correctly aborting');
         }
         var submission = undefined;
-        var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
+        var QuestionType = CourseSketch.PROTOBUF_UTIL.QuestionType;
         switch (this.problemType) {
             case QuestionType.SKETCH: {
                 submission = createSketchSubmission(subPanel, isSubmitting);
@@ -103,7 +103,7 @@ function SubmissionPanel() {
             CourseSketch.connection.setSubmissionListener(undefined);
             alert(request.getMessageTime());
             alert(request.responseText);
-            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType.SKETCH) {
+            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
                 var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
                 // Potential conflict if it was save multiple times in quick succession.
                 subPanel.getUpdateManager().setLastSaveTime(request.getMessageTime());
@@ -188,7 +188,7 @@ function SubmissionPanel() {
     };
 
     this.setSpecificCallbacks = function(problemType, element, toolbar) {
-        var QuestionType = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().QuestionType;
+        var QuestionType = CourseSketch.PROTOBUF_UTIL.QuestionType;
         if (problemType === QuestionType.SKETCH) {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton('/images/toolbar/clear_button.svg', function() {
