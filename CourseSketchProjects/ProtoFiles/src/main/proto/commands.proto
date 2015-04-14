@@ -56,6 +56,7 @@ enum CommandType {
     CREATE_EMBEDDED_HTML = 21;    // Creates an image
     CREATE_TTSBOX = 22;           // Creates a ttsbox for use in tutorial or lecture slides
     CREATE_HIGHLIGHT_TEXT = 23;   // Creates highlightText element for use in tutorial or lecture slides
+    START_SPEECH = 24;            // Creates a voice recording
 }
 
 /**
@@ -133,6 +134,14 @@ message ActionCreateSketch {
 
     // used to define a special domain that is different from the main sketch.
     optional string domainId = 7;
+}
+
+/**
+ * Adds a voice recording
+ */
+message ActionStartSpeech {
+    optional string text = 1;
+    required bytes recording = 2;
 }
 
 enum SketchType {
