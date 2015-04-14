@@ -41,6 +41,7 @@ import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
@@ -50,7 +51,8 @@ import utilities.LoggingConstants;
  *
  * @author gigemjt
  */
-@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses" })
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
+        "PMD.TooManyMethods" })
 public final class CourseManager {
 
     /**
@@ -308,7 +310,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * With that being said this allows a course to be updated adding the
      * assignmentId to its list of items.
      *
@@ -332,7 +334,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * With that being said this allows a course to be updated adding the
      * lectureId to its list of items.
      *
@@ -357,7 +359,7 @@ public final class CourseManager {
     /**
      * @param dbs The database where the course is being stored.
      * @return a list of all public courses.
-     * <p/>
+     *
      * FUTURE: this should probably be paginated so it does not crush
      * the database.
      */
@@ -397,7 +399,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public.
-     * <p/>
+     *
      * With that being said this allows the default ids to be inserted.
      *
      * @param dbs          The database where the course is being stored.
@@ -419,10 +421,11 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * Returns a list of Id for the default group for an assignment.
-     * <p/>
-     * The list are ordered as so: AdminGroup, ModGroup, UserGroup
+     *
+     * The list are ordered as so: AdminGroup, ModGro        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
+up, UserGroup
      *
      * @param dbs      The database where the course is being stored.
      * @param courseId the course that the groups are being grabbed from.
@@ -440,9 +443,9 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     * <p/>
+     *
      * Returns a list of Ids for the default group for a course.
-     * <p/>
+     *
      * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup
      *
      * @param dbs      The database where the course is being stored.
