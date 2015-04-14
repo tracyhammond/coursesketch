@@ -95,10 +95,8 @@ function Connection(uri, encrypted, attemptReconnect) {
                         console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType === MessageType.ERROR) {
-                        console.log("Exception in the server", msg);
-                        var object = CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass();
-                        console.log(msg.getOtherData());
-                        var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(), object);
+                        var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(),
+                            CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass);
                         console.log('exception object', exception);
                         console.log(msg.getResponseText());
                         if (onError) {
