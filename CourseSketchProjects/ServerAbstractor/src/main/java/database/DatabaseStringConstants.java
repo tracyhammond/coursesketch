@@ -114,6 +114,8 @@ public final class DatabaseStringConstants {
     public static final String SKETCH = "Sketch";
     public static final String ANSWER_CHOICE = "AnswerChoice";
     public static final String SUBMISSION_TIME = "time";
+    public static final String FIRST_STROKE_TIME = "FirstStrokeTime";
+    public static final String FIRST_SUBMISSION_TIME = "FirstSubmissionTime";
 
     // problem specific
     public static final String QUESTION_TEXT = "QuestionText";
