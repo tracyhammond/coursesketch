@@ -277,6 +277,7 @@ public final class GradingPolicyManager {
 
     /**
      * Converts a latePolicy from proto to mongo BasicDBObject.
+     *
      * @see #buildMongoCategory
      *
      * @param latePolicy
@@ -314,8 +315,8 @@ public final class GradingPolicyManager {
 
     /**
      * Creates a mongo dropped problem object.
-     * Returns the list of BasicDBObjects that is in the below mongo document structure.
      *
+     * Returns the list of BasicDBObjects that is in the below mongo document structure.
      * <pre><code>
      * droppedProblems: {
      *     assignmentId1: [ { problemId: problemId1, dropType: type }, ... ],
