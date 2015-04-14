@@ -1,3 +1,4 @@
+import "util.proto";
 package protobuf.srl.commands;
 /* https://developers.google.com/protocol-buffers/docs/proto#oneof */
 
@@ -33,7 +34,7 @@ enum CommandType {
     REMOVE_OBJECT = 3;    // Removes an object:    This will only contain an IdChain in commandData.
     ASSIGN_ATTRIBUTE = 4;
     REMOVE_ATTRIBUTE = 5;
-    MARKER = 6;           // marker has a number and a MARKERTYPE
+    MARKER = 6;           //marker has a number and a MARKERTYPE
     CLEAR = 7;            // removes all data from the current sketch object
     CREATE_SKETCH = 8;    // This will contain ActionCreateSketch.  This will also switch to the sketch immediately. (Must be first command in update)
     SWITCH_SKETCH = 9;    // This should have an IdChain which contains a single id. (Must be first command in update)
@@ -58,14 +59,6 @@ enum CommandType {
 }
 
 /**
- * A sub message that contains a list of Ids.
- * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
- */
-message IdChain {
-    repeated string idChain = 1;
-}
-
-/**
  * Contains an id and a MarkerType.
  *
  * Marks can have special purposes.  For example quick look through for the progress of the sketch (like when reviewing)
@@ -76,8 +69,8 @@ message Marker {
         SUBMISSION = 0; // notes that the sketch was submitted at this point.
         FEEDBACK = 1;   // notes that the user recieved answer checking feedback at this point.
         SAVE = 2;       // notes that the sketch was saved at this point.
-                        // when an undo / redo branch occurs this is the marker that signifies the split.
-                        // additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
+        // when an undo / redo branch occurs this is the marker that signifies the split.
+        // additionally some special care needs to be done to check when saving the sketch that splits do not corrupt existing sketch data.
         SPLIT = 3;
     }
     optional string otherData = 2;
@@ -91,8 +84,8 @@ message Marker {
  * If the Id chain does not exist then we assume it is talking about the top most level, which is the sketch object itself.
  */
 message ActionPackageShape {
-    optional IdChain oldContainerId = 1;
-    optional IdChain newContainerId = 2;
+    optional protobuf.srl.utils.IdChain oldContainerId = 1;
+    optional protobuf.srl.utils.IdChain newContainerId = 2;
     repeated string shapesToBeContained = 3; // This is a list of shapes ids
 }
 
@@ -101,14 +94,14 @@ message ActionPackageShape {
  */
 message ActionForceInterpretation {
     required bytes interpretation = 1;
-    required IdChain shapeId = 2;
+    required protobuf.srl.utils.IdChain shapeId = 2;
 }
 
 /**
  * Assigns an attribute to a shape.
  */
 message ActionAddAttribtue {
-    required IdChain shapeId = 1;
+    required protobuf.srl.utils.IdChain shapeId = 1;
     required string attributeKey = 2;
     required bytes attributeValue = 3;
 }
@@ -120,7 +113,7 @@ message ActionAddAttribtue {
  * A ReplaceAttribute is a combination of a RemoveAttribtue and then an AddAttribtue
  */
 message ActionRemoveAttribtue {
-    required IdChain shapeId = 1;
+    required protobuf.srl.utils.IdChain shapeId = 1;
     required string attributeKey = 2;
     required bytes attributeValue = 3;
 }
@@ -129,7 +122,7 @@ message ActionRemoveAttribtue {
  * Advance data for creating a sketch.
  */
 message ActionCreateSketch {
-    required IdChain sketchId = 1; // The id of the sketch.  It will only contain a single value.
+    required protobuf.srl.utils.IdChain sketchId = 1; // The id of the sketch.  It will only contain a single value.
     optional SketchType sketchType = 2 [default = DEFAULT];
 
     // if these values are -1 they take the values of the parent sketch.
