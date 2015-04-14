@@ -95,8 +95,9 @@ public final class GradeManager {
      *         Thrown if the user did not have the authentication to add the grade.
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
+     * Package-private
      */
-    public static void addGrade(final Authenticator authenticator, final DB dbs, final String adderId, final ProtoGrade grade)
+    static void addGrade(final Authenticator authenticator, final DB dbs, final String adderId, final ProtoGrade grade)
             throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can add grades
         final Authenticator.AuthType auth = new Authenticator.AuthType();
@@ -107,7 +108,7 @@ public final class GradeManager {
 
         auth.clear();
         auth.setCheckUser(true);
-        checkUserInGradeTypeCollection(authenticator, auth, grade);
+        checkUserExistsForGrade(authenticator, auth, grade);
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
 
@@ -175,7 +176,7 @@ public final class GradeManager {
      * @param grade The grade object the authentication is being performed on.
      * @throws DatabaseAccessException if the user is not in the respective collection for the grade type being checked.
      */
-    private static void checkUserInGradeTypeCollection(final Authenticator authenticator, final Authenticator.AuthType auth, final ProtoGrade grade)
+    private static void checkUserExistsForGrade(final Authenticator authenticator, final Authenticator.AuthType auth, final ProtoGrade grade)
             throws DatabaseAccessException {
         if (grade.getExternalGrade()) {
             if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), grade.getUserId(), 0, auth)) {
@@ -228,7 +229,9 @@ public final class GradeManager {
     }
 
     /**
-     * Finds a single grade for a student in a course. If fields are not required in the search, pass in null.
+     * Finds a single grade for a student in a course.
+     *
+     * If fields are not required in the search, pass in null.
      * For example, if looking for a particular assignment grade, pass in null for the problemId parameter.
      * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
      *
@@ -251,8 +254,9 @@ public final class GradeManager {
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
      *         Thrown if a grade is not found in the database matching the requested parameters.
+     * Package-private
      */
-    public static ProtoGrade getGrade(final Authenticator authenticator, final DB dbs, final String requesterId, final String userId,
+    static ProtoGrade getGrade(final Authenticator authenticator, final DB dbs, final String requesterId, final String userId,
             final String courseId, final String assignmentId, final String problemId) throws AuthenticationException, DatabaseAccessException {
         final Authenticator.AuthType auth = new Authenticator.AuthType();
 
@@ -294,7 +298,9 @@ public final class GradeManager {
     }
 
     /**
-     * Gets all assignment grades for a certain course. It may not contain grades for all assignments for all users.
+     * Gets all assignment grades for a certain course.
+     *
+     * It may not contain grades for all assignments for all users.
      * If an assignment does not have any assignment grades yet, it will not appear in the result.
      * Sorted in ascending order by assignmentId and then userId.
      * This does not mean the list will be in chronological or alphabetical order.
@@ -346,7 +352,9 @@ public final class GradeManager {
     }
 
     /**
-     * Gets all grades for a certain student in a certain course. It may not contain grades for all assignments.
+     * Gets all grades for a certain student in a certain course.
+     *
+     * It may not contain grades for all assignments.
      * If an assignment does not have an assignment grade yet, it will not appear in the result.
      * Sorted in ascending order by assignmentId.
      * This does not mean the list will be in chronological or alphabetical order.
