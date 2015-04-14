@@ -121,7 +121,8 @@ message SrlBankProblem {
     optional string subTopic = 7;
     optional string source = 8;
     repeated string otherKeywords = 9;
-    optional protobuf.srl.utils.SrlPermission accessPermission= 10;
+    optional protobuf.srl.utils.SrlPermission accessPermission = 10;
+    optional string script = 11;
 }
 
 message SrlGrade {
