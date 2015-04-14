@@ -63,12 +63,7 @@ public final class DataRequestHandler {
             } catch (Exception e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                final Request.Builder build = Request.newBuilder();
-                build.setRequestType(Request.MessageType.ERROR);
-                build.setResponseText(e.getMessage());
-                build.setSessionInfo(req.getSessionInfo());
-                build.setOtherData(protoEx.toByteString());
-                return build.build();
+                return ExceptionUtilities.createExceptionRequest(protoEx, req);
             }
             resultReq.setOtherData(builder.build().toByteString());
             resultReq.setRequestType(MessageType.DATA_REQUEST);
@@ -76,12 +71,7 @@ public final class DataRequestHandler {
         } catch (InvalidProtocolBufferException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            build.setResponseText(e.getMessage());
-            build.setSessionInfo(req.getSessionInfo());
-            build.setOtherData(protoEx.toByteString());
-            return build.build();
+            return ExceptionUtilities.createExceptionRequest(protoEx, req);
         }
     }
 
