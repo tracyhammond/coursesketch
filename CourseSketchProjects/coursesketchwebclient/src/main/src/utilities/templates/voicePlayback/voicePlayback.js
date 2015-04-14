@@ -4,6 +4,9 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        var vid = this.shadowRoot.querySelector('#myaudio');
+        vid.ontimeupdate = function() {myFunction()};
+        vid.onplay = function() {playMe();}
         this.shadowRoot.querySelector('#play-btn').onclick = function() {
             localScope.shadowRoot.querySelector('#pause-btn').style.display = 'block';
             localScope.shadowRoot.querySelector('#play-btn').style.display = 'none';
@@ -42,6 +45,12 @@ function VoicePlayback() {
             playBack.playNext();
             //localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             //localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
+
+        }
+
+        function myFunction() {
+            // Display the current position of the video in a p element with id="demo"
+            this.shadowRoot.querySelector('#demo').innerHTML = vid.currentTime;
         }
 
         document.ready(function() {
