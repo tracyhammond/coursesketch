@@ -79,6 +79,8 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
