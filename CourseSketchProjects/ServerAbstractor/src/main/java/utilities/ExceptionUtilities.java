@@ -49,4 +49,24 @@ public final class ExceptionUtilities {
         builder.setResponseText(exception.getMssg());
         return builder.build();
     }
+
+    /**
+     *
+     * @param exception
+     *          sets to the requests' other data.
+     * @param string
+     *          sets the Response Text to the string and not the exception's message.
+     * @param inputRequest
+     *          takes the Request type and session info from the inputRequest.
+     * @return
+     */
+    public static Message.Request createExceptionRequest(final Message.ProtoException exception, final String string,
+            final Message.Request inputRequest){
+        final Message.Request.Builder builder = Message.Request.newBuilder();
+        builder.setRequestType(inputRequest.getRequestType());
+        builder.setSessionInfo(inputRequest.getSessionInfo());
+        builder.setResponseText(string);
+        builder.setOtherData(exception.toByteString());
+        return builder.build();
+    }
 }

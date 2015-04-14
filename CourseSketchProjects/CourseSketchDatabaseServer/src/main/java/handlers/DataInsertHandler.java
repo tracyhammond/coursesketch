@@ -197,7 +197,7 @@ public final class DataInsertHandler {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to insert data " + e.getMessage(), req));
+            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, "user was not authenticated to insert data " + protoEx.getMssg(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
