@@ -17,6 +17,7 @@ import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.tutorial.TutorialOuterClass;
 import utilities.ConnectionException;
 
 import java.util.ArrayList;
@@ -25,13 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
-import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
-import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
-import static database.DatabaseStringConstants.MOD;
-import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
-import static database.DatabaseStringConstants.SOLUTION_ID;
+import static database.DatabaseStringConstants.*;
 
 /**
  * Manages data that has to deal with submissions in the database server.
@@ -195,6 +190,26 @@ public final class SubmissionManager {
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
+    }
+
+    /**
+     * Builds a request to the server for all of the sketches in a single
+     * problem.
+     * @param authenticator The object being used to authenticate the server.
+     * @param dbs The database where the data is stored.
+     * @param userId The user that was requesting this information
+     */
+    public static String mongoInsertTutorial(final Authenticator authenticator, final DB dbs, final String userId,
+            final TutorialOuterClass.Tutorial tutorialObject) throws DatabaseAccessException, AuthenticationException {
+        final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
+
+        final BasicDBObject query = new BasicDBObject(DESCRIPTION, tutorialObject.getDescription()).append(NAME, tutorialObject.getName())
+                .append(URL, tutorialObject.getUrl()).append(URL_HASH, tutorialObject.getUrl().hashCode())
+                .append(UPDATELIST, tutorialObject.getSteps().toByteArray());
+
+        tutorialCollection.insert(query);
+        final DBObject cursor = tutorialCollection.findOne(query);
+        return cursor.get(SELF_ID).toString();
     }
 
     // need to be able to get a single submission
