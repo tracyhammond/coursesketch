@@ -17,6 +17,8 @@ import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
@@ -25,15 +27,15 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+<<<<<<< HEAD
 import protobuf.srl.tutorial.TutorialOuterClass;
+=======
+import utilities.LoggingConstants;
+>>>>>>> master
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.GROUP_PREFIX;
@@ -476,5 +478,10 @@ public final class MongoInstitution implements Institution {
     public String insertTutorial(final String userId, final TutorialOuterClass.Tutorial tutorialObject)
             throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoInsertTutorial(getInstance().auth, getInstance().database, userId, tutorialObject);
+    }
+
+    @Override
+    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page) throws AuthenticationException {
+        return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }
 }
