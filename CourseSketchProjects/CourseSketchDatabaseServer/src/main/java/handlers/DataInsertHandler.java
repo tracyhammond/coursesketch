@@ -20,6 +20,10 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
 import protobuf.srl.submission.Submission;
+import protobuf.srl.tutorial.TutorialOuterClass;
+
+
+
 
 import java.util.ArrayList;
 
@@ -159,6 +163,12 @@ public final class DataInsertHandler {
                             final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
                             LOG.info("Experiment: {}", experiment);
                             instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
+                        }
+                        break;
+                        case TUTORIAL: {
+                            final TutorialOuterClass.Tutorial tutorialObject = TutorialOuterClass.Tutorial.parseFrom(itemSet.getData());
+                            final String resultId = instance.insertTutorial(userId, tutorialObject);
+                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + tutorialObject.getId(), itemSet.getQuery()));
                         }
                         break;
                         default:

@@ -36,6 +36,7 @@ public final class DatabaseStringConstants {
     public static final String GRADE_COLLECTION = "problem_submissions";
     public static final String UPDATE_COLLECTION = "User_Updates";
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
+    public static final String TUTORIAL_COLLECTION = "Tutorials";
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
 
@@ -95,6 +96,11 @@ public final class DatabaseStringConstants {
     public static final String SKETCH = "Sketch";
     public static final String ANSWER_CHOICE = "AnswerChoice";
     public static final String SUBMISSION_TIME = "time";
+
+    // tutorial specific
+    public static final String URL = "url";
+    public static final String URL_HASH = "urlHash";
+    
 
     // problem specific
     public static final String QUESTION_TEXT = "QuestionText";

@@ -10,6 +10,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.tutorial.TutorialOuterClass;
 
 import java.util.List;
 
@@ -417,4 +418,12 @@ public interface Institution {
     void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
+    /**
+     *
+     * @param userId User associated with the tutorial
+     * @param tutorialObject The tutorial being inserted
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data
+     */
+    String insertTutorial(String userId, TutorialOuterClass.Tutorial tutorialObject)
+            throws DatabaseAccessException, AuthenticationException;
 }

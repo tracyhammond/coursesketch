@@ -25,6 +25,7 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.tutorial.TutorialOuterClass;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -469,5 +470,11 @@ public final class MongoInstitution implements Institution {
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
+    }
+
+    @Override
+    public String insertTutorial(final String userId, final TutorialOuterClass.Tutorial tutorialObject)
+            throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoInsertTutorial(getInstance().auth, getInstance().database, userId, tutorialObject);
     }
 }
