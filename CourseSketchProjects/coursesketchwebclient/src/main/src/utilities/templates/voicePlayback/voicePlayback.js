@@ -4,6 +4,27 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+       try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            navigator.getUserMedia = (navigator.getUserMedia ||
+                                      navigator.webkitGetUserMedia ||
+                                      navigator.mozgetUserMedia ||
+                                      navigator.msGetUserMedia);
+            window.URL = window.URL || window.webkitURL;
+
+            console.log('Audio context set up');
+            console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
+        } catch (e) {
+            alert('No web audio support in this browser');
+        }
+
+        navigator.getUserMedia({ audio: true }, function(stream) {
+            this.recorder = new Recorder(stream);
+            console.log('Recorder initialized.');
+        }, function(e) {
+            console.log('No live audio input: ' + e);
+        });
+
         var vid = this.shadowRoot.querySelector('#myaudio');
         vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
         var playBack;
@@ -87,28 +108,7 @@ function VoicePlayback() {
                 vid.src = webkitURL.createObjectURL(blob);
             });
         }
-        init = function() {
-            try {
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                navigator.getUserMedia = (navigator.getUserMedia ||
-                                          navigator.webkitGetUserMedia ||
-                                          navigator.mozgetUserMedia ||
-                                          navigator.msGetUserMedia);
-                window.URL = window.URL || window.webkitURL;
 
-                console.log('Audio context set up');
-                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
-            } catch (e) {
-                alert('No web audio support in this browser');
-            }
-
-            navigator.getUserMedia({ audio: true }, function(stream) {
-                localScope.recorder = new Recorder(stream);
-                console.log('Recorder initialized.');
-            }, function(e) {
-                console.log('No live audio input: ' + e);
-            });
-        }
     };
 
 }
