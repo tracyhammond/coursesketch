@@ -10,7 +10,7 @@ function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
-    var isPlaying = true; //Trey
+    var isPlaying = true;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -44,9 +44,13 @@ function Playback(updateList, updateManager, graphics) {
 
                         (function(index) {
                             setTimeout(function() {
-                                strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
-                                graphics.getPaper().view.update();
-                                pointAdded();
+                                if(isPlaying) {
+                                    strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
+                                    graphics.getPaper().view.update();
+                                    pointAdded();
+                                } else {
+                                    console.log("PAUSE!!!");
+                                }
                             }, pointList[index].getTime() - startingTime);
                         })(i);
                     }
@@ -75,5 +79,12 @@ function Playback(updateList, updateManager, graphics) {
             return;
         }
         updateManager.addUpdate(updateList[currentIndex]);
+        isPlaying = true;
     };
+
+    this.pauseNext = function() {
+        isPlaying = false;
+        currentIndex --;
+        return currentIndex;
+    }
 }

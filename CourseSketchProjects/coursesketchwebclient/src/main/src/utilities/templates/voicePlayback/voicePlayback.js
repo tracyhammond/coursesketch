@@ -6,39 +6,46 @@ function VoicePlayback() {
 
         var vid = this.shadowRoot.querySelector('#myaudio');
         vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
+        var playBack;
+        var isPaused = false;
+        var pauseIndex= 0 ;
         vid.ontimeupdate = function() {myFunction()};
         vid.onplay = function() {
                                     playMe();
-                                    playVoice();
                                 }
+        vid.onpause = function() {
+                                    pauseMe();
+                                 }
 
         var surface = document.body.querySelector('sketch-surface');
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
 
-        /*localScope.shadowRoot.querySelector('#slider').slider({
-            value: 100,
-            min: 0,
-            max: 500,
-            step: 50,
-        });*/
-
         function playMe() {
-            var graphics = surface.graphics;
-            var updateList = surface.getUpdateList();
-            var copyList = [];
-            for (var i = 0; i < updateList.length; i++) {
-                copyList.push(updateList[i]);
-            }
-            var updateManager = surface.getUpdateManager();
-            updateManager.clearUpdates(false);
+            if (!isPaused){
+                var graphics = surface.graphics;
+                var updateList = surface.getUpdateList();
+                var copyList = [];
+                for (var i = 0; i < updateList.length; i++) {
+                    copyList.push(updateList[i]);
+                }
+                var updateManager = surface.getUpdateManager();
+                updateManager.clearUpdates(false);
 
-            var playBack = new Playback(copyList, updateManager, graphics);
-            updateManager.addPlugin(playBack);
-            playBack.playNext();
+                playBack = new Playback(copyList, updateManager, graphics);
+                updateManager.addPlugin(playBack);
+                playBack.playNext();
+            } else {
+                playBack.playNext();
+            }
             //localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
             //localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
 
+        }
+
+        function pauseMe() {
+            pauseIndex = playBack.pauseNext();
+            isPaused = true;
         }
 
         function myFunction() {
@@ -55,14 +62,6 @@ function VoicePlayback() {
                     audioHeight: 70
                 });
             });
-
-        function playVoice() {
-            localScope.audio.play();
-        }
-
-        function pauseVoice() {
-            localScope.audio.pause();
-        }
 
     };
 
