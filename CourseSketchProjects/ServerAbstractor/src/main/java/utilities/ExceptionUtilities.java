@@ -58,7 +58,7 @@ public final class ExceptionUtilities {
      *          sets the Response Text to the string and not the exception's message.
      * @param inputRequest
      *          takes the Request type and session info from the inputRequest.
-     * @return
+     * @return A request that warps around the exception and message you pass in.
      */
     public static Message.Request createExceptionRequest(final Message.ProtoException exception, final String string,
             final Message.Request inputRequest){
