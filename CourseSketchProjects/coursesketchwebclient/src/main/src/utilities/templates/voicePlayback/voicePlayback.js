@@ -12,11 +12,11 @@ function VoicePlayback() {
         vid.ontimeupdate = function() {myFunction()};
         vid.onplay = function() {
                                     playMe();
+                                    this.stopRecording();
                                 }
         vid.onpause = function() {
                                     pauseMe();
                                  }
-
         var surface = document.body.querySelector('sketch-surface');
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
@@ -63,6 +63,52 @@ function VoicePlayback() {
                 });
             });
 
+        this.startRecording = function() {
+            this.recorder.record();
+            console.log('Recording...');
+        }
+
+        this.stopRecording = function() {
+            this.recorder.stop();
+            console.log('Stopped recording.');
+
+            this.saveFile();
+        }
+
+        this.startUserMedia = function(stream) {
+            this.recorder = new Recorder(stream);
+            console.log('Recorder initialized.');
+
+            this.startRecording();
+        }
+
+        this.saveFile = function() {
+            this.recorder.exportMP3(function(blob, mp3name) {
+                vid.src = webkitURL.createObjectURL(blob);
+            });
+        }
+        init = function() {
+            try {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                navigator.getUserMedia = (navigator.getUserMedia ||
+                                          navigator.webkitGetUserMedia ||
+                                          navigator.mozgetUserMedia ||
+                                          navigator.msGetUserMedia);
+                window.URL = window.URL || window.webkitURL;
+
+                console.log('Audio context set up');
+                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
+            } catch (e) {
+                alert('No web audio support in this browser');
+            }
+
+            navigator.getUserMedia({ audio: true }, function(stream) {
+                localScope.recorder = new Recorder(stream);
+                console.log('Recorder initialized.');
+            }, function(e) {
+                console.log('No live audio input: ' + e);
+            });
+        }
     };
 
 }
