@@ -458,7 +458,7 @@ public class DatabaseClient {
                 final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
                 for (int j = 0; j < tmpUpdate.getCommandsCount(); j++) {
                     final Commands.SrlCommand tmpCommand = tmpUpdate.getCommandsList().get(j);
-                    
+
                     if (tmpCommand.getCommandType() == Commands.CommandType.MARKER) {
                         final Commands.Marker tmpMarker = Commands.Marker.parseFrom(tmpCommand.getCommandData());
                         if (tmpMarker.getType() == Commands.Marker.MarkerType.SUBMISSION) {
