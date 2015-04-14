@@ -87,6 +87,7 @@ public final class GradingPolicyManager {
 
     /**
      * This method will insert the gradingPolicy in Mongo based on the proto object passed in.
+     *
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
      * @param authenticator
@@ -164,8 +165,9 @@ public final class GradingPolicyManager {
      *         Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException
      *         Thrown if a grading policy is not found for the course.
+     * Package-private
      */
-    public static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
+    static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, GRADING_POLICY_COLLECTION, new ObjectId(courseId));
         final DBObject policyObject = myDbRef.fetch();
@@ -188,18 +190,11 @@ public final class GradingPolicyManager {
         policy.setPolicyType(ProtoGradingPolicy.PolicyType.valueOf((int) policyObject.get(GRADE_POLICY_TYPE)));
 
         // Builds and adds droppedProblems to the protoGradingPolicy
-        final Map<String, List<DBObject>> droppedProblems = (Map<String, List<DBObject>>) policyObject.get(DROPPED_PROBLEMS);
-        for (Map.Entry<String, List<DBObject>> assignmentId : droppedProblems.entrySet()) {
-            final DroppedProblems.Builder problemList = DroppedProblems.newBuilder();
-            final List<DBObject> singleProblemList = assignmentId.getValue();
-            for (int i = 0; i < singleProblemList.size(); i++) {
-                final DroppedProblems.SingleProblem.Builder singleProblem = DroppedProblems.SingleProblem.newBuilder();
-                singleProblem.setProblemId(singleProblemList.get(i).get(COURSE_PROBLEM_ID).toString());
-                singleProblem.setDropType(DropType.valueOf((int) singleProblemList.get(i).get(DROP_TYPE)));
-                problemList.addProblem(singleProblem);
-            }
-            problemList.setAssignmentId(assignmentId.getKey());
-            policy.addDroppedProblems(problemList);
+        final Map<String, List<BasicDBObject>> droppedProblems = (Map<String, List<BasicDBObject>>) policyObject.get(DROPPED_PROBLEMS);
+        for (Map.Entry<String, List<BasicDBObject>> droppedProblemEntry : droppedProblems.entrySet()) {
+            final DroppedProblems.Builder protoDroppedProblems = buildProtoDroppedProblems(droppedProblemEntry.getValue());
+            protoDroppedProblems.setAssignmentId(droppedProblemEntry.getKey());
+            policy.addDroppedProblems(protoDroppedProblems);
         }
 
         // Builds and adds droppedAssignments to the protoGradingPolicy
@@ -215,7 +210,9 @@ public final class GradingPolicyManager {
     }
 
     /**
-     * Converts a grading policy category from proto to mongo DBObject. The gradeCategory mongo structure is below.
+     * Converts a grading policy category from proto to mongo DBObject.
+     *
+     * The gradeCategory mongo structure is below.
      * <pre><code>
      * gradeCategory: {
      *      name: String,
@@ -342,5 +339,23 @@ public final class GradingPolicyManager {
             mongoProblemList.add(singleProblem);
         }
         return mongoProblemList;
+    }
+
+    /**
+     * Builds a list of proto single problems to use in droppedProblems.
+     *
+     * @param singleProblemList List of the single problems dropped for an assignment.
+     * @return List of proto single problems to be dropped.
+     * Package-private
+     */
+    static DroppedProblems.Builder buildProtoDroppedProblems(final List<BasicDBObject> singleProblemList) {
+        final DroppedProblems.Builder problemList = DroppedProblems.newBuilder();
+        for (int i = 0; i < singleProblemList.size(); i++) {
+            final DroppedProblems.SingleProblem.Builder singleProblem = DroppedProblems.SingleProblem.newBuilder();
+            singleProblem.setProblemId(singleProblemList.get(i).get(COURSE_PROBLEM_ID).toString());
+            singleProblem.setDropType(DropType.valueOf((int) singleProblemList.get(i).get(DROP_TYPE)));
+            problemList.addProblem(singleProblem);
+        }
+        return problemList;
     }
 }

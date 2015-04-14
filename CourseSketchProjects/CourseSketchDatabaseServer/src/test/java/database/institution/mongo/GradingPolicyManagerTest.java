@@ -47,6 +47,7 @@ import static database.DatabaseStringConstants.SELF_ID;
 
 /**
  * Tests for GradingPolicyManager.
+ * @see GradingPolicyManager
  *
  * Created by Matt on 4/6/2015.
  */
@@ -177,6 +178,13 @@ public class GradingPolicyManagerTest {
     public void buildMongoDroppedProblemObjectTest() {
         List<BasicDBObject> testDroppedProblems = GradingPolicyManager.buildMongoDroppedProblemObject(fakeProtoDropProbs1.build());
         Assert.assertEquals(fakeDroppedProblems.get(FAKE_ASGN_ID + "1"), testDroppedProblems);
+    }
+
+    @Test
+    public void buildProtoDroppedProblemsTest() {
+        DroppedProblems.Builder testDroppedProblem = GradingPolicyManager.buildProtoDroppedProblems(fakeDroppedProblems.get(FAKE_ASGN_ID + "1"));
+        testDroppedProblem.setAssignmentId(FAKE_ASGN_ID + "1");
+        Assert.assertEquals(fakeProtoDropProbs1.build(), testDroppedProblem.build());
     }
 
     @Test
