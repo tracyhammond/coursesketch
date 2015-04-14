@@ -96,6 +96,8 @@ public final class DatabaseStringConstants {
     public static final String SKETCH = "Sketch";
     public static final String ANSWER_CHOICE = "AnswerChoice";
     public static final String SUBMISSION_TIME = "time";
+    public static final String FIRST_STROKE_TIME = "FirstStrokeTime";
+    public static final String FIRST_SUBMISSION_TIME = "FirstSubmissionTime";
 
     // tutorial specific
     public static final String URL = "url";
@@ -109,6 +111,7 @@ public final class DatabaseStringConstants {
     public static final String SOURCE = "Source";
     public static final String QUESTION_TYPE = "QuestionType";
     public static final String KEYWORDS = "OtherKeywords";
+    public static final String SCRIPT = "Script";
 
     // state specific
     public static final String STATE_PUBLISHED = "Published"; // Instructor has finished construction of school item
@@ -144,10 +147,10 @@ public final class DatabaseStringConstants {
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
+    public static final String ADD_SET_COMMAND = "$addToSet";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";
-    public static final String ADD_SET_COMMAND = "$addToSet";
 
     // lecture specific
     public static final String SLIDES = "Slides";
