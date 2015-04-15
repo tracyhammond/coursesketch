@@ -1,6 +1,8 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import utilities.TimeManager;
 
@@ -9,9 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 /**
  * Manages a socket on the server side if you want to know about the client side see {@link AbstractClientWebSocket}.
  *

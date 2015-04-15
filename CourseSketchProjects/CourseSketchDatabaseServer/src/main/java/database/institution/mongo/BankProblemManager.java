@@ -16,6 +16,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.SCRIPT;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -70,6 +72,7 @@ public final class BankProblemManager {
         final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
                 .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
                 .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
+                .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList());
 
         if (!problem.hasAccessPermission()) {
@@ -107,6 +110,7 @@ public final class BankProblemManager {
         boolean isAdmin, isUsers;
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(ADMIN));
         isUsers = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(USERS));
+
 
         if (!isAdmin && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -149,6 +153,7 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
+        exactProblem.setScript((String) dbObject.get(SCRIPT));
         return exactProblem.build();
     }
 
@@ -217,6 +222,10 @@ public final class BankProblemManager {
         }
         if (problem.hasQuestionType()) {
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
+            update = true;
+        }
+        if (problem.hasScript()) {
+            updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
         if (problem.getOtherKeywordsCount() > 0) {
