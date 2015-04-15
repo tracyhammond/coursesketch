@@ -21,7 +21,11 @@ public final class ExceptionUtilities {
      */
     public static Message.ProtoException createProtoException(final Throwable tException) {
         final Message.ProtoException.Builder pException = Message.ProtoException.newBuilder();
-        pException.setMssg(tException.getMessage());
+        if (tException.getMessage() != null) {
+            pException.setMssg(tException.getMessage());
+        } else {
+            pException.setMssg("No message was found");
+        }
         for (StackTraceElement element : tException.getStackTrace()) {
             pException.addStackTrace(element.toString());
         }
