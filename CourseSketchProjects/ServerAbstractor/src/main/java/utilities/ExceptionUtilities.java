@@ -28,6 +28,9 @@ public final class ExceptionUtilities {
         if (tException.getCause() != null) {
             pException.setCause(createProtoException(tException.getCause()));
         }
+
+        // gets the class name of the exception.
+        pException.setExceptionType(tException.getClass().getSimpleName());
         return pException.build();
     }
 
