@@ -15,7 +15,7 @@ function notifyMe(protoEx) {
         Notification.requestPermission(function (permission) {
         // If the user is okay, let's create a notification
         if (permission === "granted") {
-            var notification = new Notification(protoEx.getMssg());
+            var notification = new Notification(protoEx.getExceptionType());
         }
         });
     }
