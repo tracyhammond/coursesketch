@@ -38,7 +38,7 @@ public final class BreakDatabase {
      * @return
      *      A random SrlUser object.
      */
-    public School.SrlUser createRandomUser(){
+    public School.SrlUser createRandomUser() {
         Random r = new Random();
         School.SrlUser.Builder testUser = School.SrlUser.newBuilder();
         testUser.setUsername(randomString(r) + randomString(r));
@@ -55,7 +55,6 @@ public final class BreakDatabase {
      *      returns a String[] with the userID & courseID (in this order)
      * @throws DatabaseAccessException
      */
-
     public String[] invalidCourse() throws DatabaseAccessException {
         School.SrlUser user = createRandomUser();
         School.SrlCourse course = createRandomCourse();
@@ -84,7 +83,7 @@ public final class BreakDatabase {
         return returnID;
     }
 
-    public String randomString (Random r){
+    public String randomString(Random r){
         return new BigInteger(32, r).toString(32);
     }
 
