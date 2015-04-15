@@ -3,11 +3,13 @@ package utilities;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import local.data.LocalAddAssignments;
+import org.bson.types.ObjectId;
 import protobuf.srl.school.School;
 import protobuf.srl.utils.Util;
 
@@ -64,7 +66,7 @@ public final class BreakDatabase {
         mongoDatabase.putUserInCourse(courseID, user.getUsername());
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
-        collection.remove(new BasicDBObject(SELF_ID, courseID));
+        collection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
     }
@@ -78,7 +80,8 @@ public final class BreakDatabase {
         mongoDatabase.putUserInCourse(courseID, user.getUsername());
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
-        collection.update(new BasicDBObject(SELF_ID, courseID), new BasicDBObject(SET_COMMAND, new BasicDBObject(ADMIN, new ArrayList<>())));
+        DBObject dbCourse = collection.findOne();
+        collection.update(dbCourse, new BasicDBObject(SET_COMMAND, new BasicDBObject(ADMIN, new ArrayList<>())));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
     }
