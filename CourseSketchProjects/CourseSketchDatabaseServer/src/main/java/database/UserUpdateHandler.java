@@ -128,8 +128,11 @@ public final class UserUpdateHandler {
      * @param users the list of people who are holding this new update.
      * @param objectAffectedId the id of the object that was updated.
      * @param classification if it is a course, assignment, ...
+     * @throws AuthenticationException thrown if the user does not have permission to access the update.
+     * @throws DatabaseAccessException thrown if the update does not exist or if the user does not exist.
      */
-    public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification) {
+    public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification)
+            throws AuthenticationException, DatabaseAccessException {
         if (users == null) {
             LOG.error("There are no users for this school item");
             return;
@@ -142,13 +145,7 @@ public final class UserUpdateHandler {
                 final ArrayList<String> list = (ArrayList<String>) corsor.get(USER_LIST);
                 insertUpdates(database, list, objectAffectedId, classification);
             } else {
-                try {
-                    UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
-                } catch (AuthenticationException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                } catch (DatabaseAccessException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                }
+                UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
             }
         }
     }

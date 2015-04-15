@@ -31,8 +31,9 @@ public interface Institution {
      * @param userId The user requesting these courses.
      * @return A list of courses given a list of Ids for the courses.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the user if the user is trying to access something non-existant.
      */
-    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException;
+    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * @param problemID A list of ids for a specific course problem.
