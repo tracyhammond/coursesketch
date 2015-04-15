@@ -96,13 +96,13 @@ function Connection(uri, encrypted, attemptReconnect) {
                         onSchoolData(evt, msg);
                     } else if (msg.requestType === MessageType.ERROR) {
                         var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(),
-                            CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass);
+                            CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass());
+                        notifyMe(exception);
                         console.log('exception object', exception);
                         console.log(msg.getResponseText());
                         if (onError) {
                             onError(evt, msg.getResponseText());
                         }
-                        alert('ERROR: ' + msg.getResponseText());
                     } else if (onRequest) {
                         onRequest(evt, msg);
                     }

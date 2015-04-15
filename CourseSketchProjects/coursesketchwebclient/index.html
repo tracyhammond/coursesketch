@@ -24,6 +24,10 @@
 <link rel="import"
 	href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
+<!-- For exception notification purposes -->
+<link rel="import"
+	  href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html"
+
 <link rel="icon" type="image/ico" href="images/CSpencil.ico">
 <style>
 html,body,#mainPageContent {
@@ -62,6 +66,7 @@ login-system, register-system {
 <script src="/src/index.js"></script>
 </head>
 <body>
+	<div id="exceptionLocation" style="display: none;"></div>
 	<div id="mainPageContent" style="display: none;"></div>
 	<div id="loginLocation" style="display: none;"></div>
 </body>
