@@ -8,10 +8,12 @@ import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -62,7 +64,8 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 try {
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
-                    conn.send(createExceptionRequest(e1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }
@@ -75,8 +78,9 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             req.getSessionInfo() + "+" + state.getKey(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    conn.send(createExceptionRequest(e1, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
@@ -96,32 +100,13 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     getConnectionManager().send(req, req.getSessionInfo(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    conn.send(createExceptionRequest(e, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                 }
             }
         }
     }
-
-    /**
-     * Creates a request that represents the exception that was caused.
-     *
-     * @param exception
-     *         the exception to be sent back to the client.
-     * @param inputRequest
-     *         The request that was sent to this server.
-     * @return A request that warps around the exception.
-     */
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private Request createExceptionRequest(final Exception exception, final Request inputRequest) {
-        final Request.Builder builder = Request.newBuilder(inputRequest);
-        builder.setRequestType(MessageType.ERROR);
-        builder.clearOtherData();
-        builder.clearMessageTime();
-        builder.setResponseText(exception.getMessage());
-        return builder.build();
-    }
-
     /**
      * @return {@link AnswerConnectionState} that can be used for holding experiments for checking.
      */
