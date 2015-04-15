@@ -67,15 +67,9 @@ public final class SubmissionRequestHandler {
             return build.build();
         } catch (SubmissionException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            if (e.getMessage() != null) {
-                build.setResponseText(e.getMessage());
-            }
-            build.setSessionInfo(sessionInfo);
-            build.setOtherData(protoEx.toByteString());
+            final Request build = ExceptionUtilities.createExceptionRequest(protoEx, req);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            return build.build();
+            return build;
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

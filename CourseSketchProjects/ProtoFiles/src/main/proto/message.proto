@@ -35,6 +35,9 @@ message LoginInformation {
     optional string userId = 7;
 }
 
+/**
+* Creates a protobuf object that inherits the properties of an exception.
+*/
 message ProtoException {
     required string mssg = 1; // the message that the exception has.
     repeated string stackTrace = 2; // the stacktrace of the exception.
