@@ -153,7 +153,10 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
-        exactProblem.setScript((String) dbObject.get(SCRIPT));
+
+        if (dbObject.get(SCRIPT) != null) {
+            exactProblem.setScript((String) dbObject.get(SCRIPT));
+        }
         return exactProblem.build();
     }
 
