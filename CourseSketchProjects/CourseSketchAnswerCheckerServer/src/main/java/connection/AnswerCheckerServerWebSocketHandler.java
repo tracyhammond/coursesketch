@@ -101,6 +101,8 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                 }
             }
         }
