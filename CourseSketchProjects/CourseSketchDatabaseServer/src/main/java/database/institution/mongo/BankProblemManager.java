@@ -111,6 +111,7 @@ public final class BankProblemManager {
         isAdmin = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(ADMIN));
         isUsers = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(USERS));
 
+
         if (!isAdmin && !isUsers) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
@@ -152,7 +153,10 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
-        exactProblem.setScript((String) dbObject.get(SCRIPT));
+
+        if (dbObject.get(SCRIPT) != null) {
+            exactProblem.setScript((String) dbObject.get(SCRIPT));
+        }
         return exactProblem.build();
     }
 

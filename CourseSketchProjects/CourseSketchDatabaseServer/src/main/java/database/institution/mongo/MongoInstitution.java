@@ -169,15 +169,12 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public ArrayList<SrlCourse> getCourses(final List<String> courseIds, final String userId) throws AuthenticationException {
+    public ArrayList<SrlCourse> getCourses(final List<String> courseIds, final String userId) throws AuthenticationException,
+            DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
         for (String courseId : courseIds) {
-            try {
-                allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
-            } catch (DatabaseAccessException e) {
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            }
+            allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
         }
         return allCourses;
     }
