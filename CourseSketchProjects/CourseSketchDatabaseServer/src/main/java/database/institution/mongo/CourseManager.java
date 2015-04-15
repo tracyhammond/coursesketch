@@ -316,8 +316,8 @@ public final class CourseManager {
      * @param courseId     the course into which the assignment is being inserted into
      * @param assignmentId the assignment that is being inserted into the course.
      * @return true if the assignment was inserted correctly.
-     * @throws AuthenticationException The user does not have permission to update the lecture.
-     * @throws DatabaseAccessException The lecture does not exist.
+     * @throws AuthenticationException The user does not have permission to update the assignment.
+     * @throws DatabaseAccessException The assignment does not exist.
      */
     static boolean mongoInsertAssignmentIntoCourse(final DB dbs, final String courseId, final String assignmentId)
             throws AuthenticationException, DatabaseAccessException {

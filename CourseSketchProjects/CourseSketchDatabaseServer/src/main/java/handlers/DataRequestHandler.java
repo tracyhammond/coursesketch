@@ -209,29 +209,34 @@ public final class DataRequestHandler {
                             break;
                     }
                 } catch (AuthenticationException e) {
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
+                        // If
+                        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                        conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemRequest.getQuery());
-                        results.add(ResultBuilder.buildResult(build.build().toByteString(), "The date for this item is invalid" + e.getMessage(),
-                                ItemQuery.ERROR));
+                        results.add(ResultBuilder.buildResult(build.build().toByteString(),
+                                "The item is not valid for access during the specified time range. " + e.getMessage(), ItemQuery.ERROR));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
-                } catch (Exception e) {
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                } catch (DatabaseAccessException e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    final ItemResult.Builder build = ItemResult.newBuilder();
-                    build.setQuery(itemRequest.getQuery());
-                    build.setData(itemRequest.toByteString());
-                    results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                    LOG.error("Exception with item {}", itemRequest);
+                    throw e;
                 }
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
-        } catch (AuthenticationException | InvalidProtocolBufferException | RuntimeException e) {
+        } catch (AuthenticationException e) {
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }  catch (DatabaseAccessException e) {
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
