@@ -42,6 +42,9 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         changeProblem(currentIndex - 1);
     };
 
+    /**
+     * @return {Number} assignment type of the current problem.
+     */
     this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
     }
