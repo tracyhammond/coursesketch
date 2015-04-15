@@ -214,8 +214,8 @@ public final class DataRequestHandler {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemRequest.getQuery());
-                        results.add(ResultBuilder.buildResult(build.build().toByteString(), "The date for this item is invalid" + e.getMessage(),
-                                ItemQuery.ERROR));
+                        results.add(ResultBuilder.buildResult(build.build().toByteString(),
+                                "The item is not valid for access during the specified time range. " + e.getMessage(), ItemQuery.ERROR));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
@@ -231,7 +231,10 @@ public final class DataRequestHandler {
                 }
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
-        } catch (AuthenticationException | InvalidProtocolBufferException | RuntimeException e) {
+        } catch (AuthenticationException e) {
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to access data " + e.getMessage(), req));
+        } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
