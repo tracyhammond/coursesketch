@@ -6,6 +6,7 @@ import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
+import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.submission.Submission;
 import protobuf.srl.tutorial.TutorialOuterClass;
 
 import static database.DatabaseStringConstants.*;
@@ -68,11 +70,15 @@ public class SubmissionManagerTest {
 
     @Test
     public void getTutorial() throws Exception {
+        String tutorialObjectId = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
 
+        TutorialOuterClass.Tutorial tutorial = SubmissionManager.mongoGetTutorial(fauth, db, "userId", tutorialObjectId);
+        tutorialObject.setId(tutorialObjectId);
+        Assert.assertEquals(tutorialObject.build(), tutorial);
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void getTutorialDoesNotExist() {
-
+    public void getTutorialDoesNotExist() throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoGetTutorial(fauth, db, "userId", new ObjectId().toString());
     }
 }
