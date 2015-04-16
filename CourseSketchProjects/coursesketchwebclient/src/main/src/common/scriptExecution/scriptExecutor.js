@@ -46,12 +46,12 @@ function PanelEditApi(panel){
         var sketchSurface = panel.querySelector('.submittable');
         textArea.className = textAreaObj.className + ' sub-panel';
         if (textAreaObj.location === 'top' || textAreaObj.location === 'bottom') {
-            sketchSurface.style.height = 'calc(' + (parseInt(sketchSurface.style.height,10) - textAreaObj.height - 1) + '% - 110px)';
+            sketchSurface.style.height = 'calc(' + (parseInt(sketchSurface.style.height, 10) - textAreaObj.height - 1) + '% - 110px)';
             textArea.style.width = 'calc(100% - 110px)';
             textArea.style.height = 'calc(' + (textAreaObj.height) + '% - 110px)';
 
         } else {
-            sketchSurface.style.width = '' + (parseInt(sketchSurface.style.width,10) - textAreaObj.width - 1) + '%';
+            sketchSurface.style.width = '' + (parseInt(sketchSurface.style.width, 10) - textAreaObj.width - 1) + '%';
             textArea.style.width = '' + (textAreaObj.width - 1) + '%';
             textArea.style.height = 'calc(100% - 110px)';
         }
@@ -78,33 +78,33 @@ function PanelEditApi(panel){
      * This function allows scripts to create an embedded-html object next to the sketch surface in an experiment.
      * @param {Object} htmlObj The object that defines the embedded-html parameters (width, height, location, htmlCode).
      */
-     this.addEmbeddedHtml = function(htmlObj){
-         var sketchSurface = panel.querySelector('.submittable');
-         var embeddedHtml = document.createElement('embedded-html');
-         embeddedHtml.className = "sub-panel";
-         embeddedHtml.style.position = 'relative';
-         if (htmlObj.location === 'top' || htmlObj.location === 'bottom') {
-             sketchSurface.style.height = 'calc(' + (parseInt(sketchSurface.style.height,10) - htmlObj.height - 1) + '% - 110px)';
-             embeddedHtml.style.width = 'calc(100% - 110px)';
-             embeddedHtml.style.height = 'calc(' + (htmlObj.height) + '% - 110px)';
+    this.addEmbeddedHtml = function(htmlObj) {
+        var sketchSurface = panel.querySelector('.submittable');
+        var embeddedHtml = document.createElement('embedded-html');
+        embeddedHtml.className = 'sub-panel';
+        embeddedHtml.style.position = 'relative';
+        if (htmlObj.location === 'top' || htmlObj.location === 'bottom') {
+            sketchSurface.style.height = 'calc(' + (parseInt(sketchSurface.style.height, 10) - htmlObj.height - 1) + '% - 110px)';
+            embeddedHtml.style.width = 'calc(100% - 110px)';
+            embeddedHtml.style.height = 'calc(' + (htmlObj.height) + '% - 110px)';
 
-         } else {
-             sketchSurface.style.width = '' + (parseInt(sketchSurface.style.width,10) - htmlObj.width - 1) + '%';
-             embeddedHtml.style.width = '' + (htmlObj.width - 1) + '%';
-             embeddedHtml.style.height = 'calc(100% - 110px)';
-         }
-         if (htmlObj.location === 'top' || htmlObj.location === 'left') {
-             panel.insertBefore(embeddedHtml, sketchSurface);
-         } else {
-             panel.appendChild(embeddedHtml);
-         }
-         sketchSurface.resizeSurface();
-         console.log(htmlObj);
-         var builtHtml = '<iframe src=\"' + htmlObj.htmlCode + '\" frameborder=\"0\" allowfullscreen=\"\"' +
-                'style= position: absolute; left: 0px; top: 0px; \"width: 100%; height: 100%;\"></iframe>';
-         console.log(builtHtml);
-         embeddedHtml.setHtml(builtHtml);
-     }
+        } else {
+            sketchSurface.style.width = '' + (parseInt(sketchSurface.style.width, 10) - htmlObj.width - 1) + '%';
+            embeddedHtml.style.width = '' + (htmlObj.width - 1) + '%';
+            embeddedHtml.style.height = 'calc(100% - 110px)';
+        }
+        if (htmlObj.location === 'top' || htmlObj.location === 'left') {
+            panel.insertBefore(embeddedHtml, sketchSurface);
+        } else {
+            panel.appendChild(embeddedHtml);
+        }
+        sketchSurface.resizeSurface();
+        console.log(htmlObj);
+        var builtHtml = '<iframe src=\"' + htmlObj.htmlCode + '\" frameborder=\"0\" allowfullscreen=\"\"' +
+               'style= position: absolute; left: 0px; top: 0px; \"width: 100%; height: 100%;\"></iframe>';
+        console.log(builtHtml);
+        embeddedHtml.setHtml(builtHtml);
+    };
 
 }
 

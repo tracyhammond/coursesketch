@@ -167,16 +167,11 @@ validateFirstRun(document.currentScript);
 
         sketchSurface.refreshSketch();
         //console.log(updateList);
-        navigator = getNav();
-        console.log(navigator);
-        var problemScript = navigator.getProblemScript();
-        executeScript(problemScript, document.getElementById('problemPanel'), function() {
-            console.log('script executed - worker disconnect');
-            sketchSurface.loadUpdateList(updateList, element);
-            updateList = null;
-            element = null;
-            //console.log(submission);
-        });
+        console.log('script executed - worker disconnect');
+        sketchSurface.loadUpdateList(updateList, element);
+        updateList = null;
+        element = null;
+        //console.log(submission);
     };
 
     /**
