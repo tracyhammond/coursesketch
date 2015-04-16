@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import database.DatabaseAccessException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
@@ -63,5 +64,15 @@ public class SubmissionManagerTest {
         final DBObject testDBObject = myDbRef.fetch();
 
         Assert.assertEquals(fakeDBObject, testDBObject);
+    }
+
+    @Test
+    public void getTutorial() throws Exception {
+
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void getTutorialDoesNotExist() {
+
     }
 }

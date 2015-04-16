@@ -1,6 +1,7 @@
 package database.submission;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -12,6 +13,7 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
@@ -212,6 +214,32 @@ public final class SubmissionManager {
         return cursor.get(SELF_ID).toString();
     }
 
+    public static TutorialOuterClass.Tutorial mongoGetTutorial(final Authenticator authenticator, final DB dbs, final String userId,
+            final String tutorialId) throws DatabaseAccessException, AuthenticationException {
+        final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
+
+        final DBObject cursor = tutorialCollection.findOne(new BasicDBObject(SELF_ID, new ObjectId(tutorialId)));
+        if (cursor == null) {
+            throw new DatabaseAccessException("Tutorial was not found with the following ID " + tutorialId);
+        }
+
+        return extractTutorial(cursor);
+    }
+
+    private static TutorialOuterClass.Tutorial extractTutorial(DBObject dbTutorial) throws DatabaseAccessException {
+        final TutorialOuterClass.Tutorial.Builder tutorial = TutorialOuterClass.Tutorial.newBuilder();
+        tutorial.setId(dbTutorial.get(SELF_ID).toString());
+        tutorial.setName(dbTutorial.get(NAME).toString());
+        tutorial.setDescription(dbTutorial.get(DESCRIPTION).toString());
+        tutorial.setUrl(dbTutorial.get(URL).toString());
+        try {
+            tutorial.setSteps((Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST))).toByteString());
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("unable to decode steps", e);
+        }
+        return tutorial.build();
+    }
     // need to be able to get a single submission
     // be able to get all of the submissions
     // if you are trying to get your submission you just need your userId
