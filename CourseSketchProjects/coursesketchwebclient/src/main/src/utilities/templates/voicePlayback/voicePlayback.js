@@ -4,27 +4,6 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-       try {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            navigator.getUserMedia = (navigator.getUserMedia ||
-                                      navigator.webkitGetUserMedia ||
-                                      navigator.mozgetUserMedia ||
-                                      navigator.msGetUserMedia);
-            window.URL = window.URL || window.webkitURL;
-
-            console.log('Audio context set up');
-            console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
-        } catch (e) {
-            alert('No web audio support in this browser');
-        }
-
-        navigator.getUserMedia({ audio: true }, function(stream) {
-            this.recorder = new Recorder(stream);
-            console.log('Recorder initialized.');
-        }, function(e) {
-            console.log('No live audio input: ' + e);
-        });
-
         var vid = this.shadowRoot.querySelector('#myaudio');
         vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
         var playBack;
@@ -32,12 +11,12 @@ function VoicePlayback() {
         var pauseIndex= 0 ;
         vid.ontimeupdate = function() {myFunction()};
         vid.onplay = function() {
-                                    playMe();
-                                    this.stopRecording();
-                                }
+            playMe();
+            localScope.stopRecording();
+        }
         vid.onpause = function() {
-                                    pauseMe();
-                                 }
+            pauseMe();
+        }
         var surface = document.body.querySelector('sketch-surface');
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
@@ -75,14 +54,14 @@ function VoicePlayback() {
         }
 
         document.ready(function() {
-                localScope.shadowRoot.querySelector('#audio-player').mediaelementplayer({
-                    alwaysShowControls: true,
-                    features: ['playpause','volume','progress'],
-                    audioVolume: 'horizontal',
-                    audioWidth: 364,
-                    audioHeight: 70
-                });
+            localScope.shadowRoot.querySelector('#audio-player').mediaelementplayer({
+                alwaysShowControls: true,
+                features: ['playpause','volume','progress'],
+                audioVolume: 'horizontal',
+                audioWidth: 364,
+                audioHeight: 70
             });
+        });
 
         this.startRecording = function() {
             this.recorder.record();
@@ -109,6 +88,29 @@ function VoicePlayback() {
             });
         }
 
+        this.initRecorder = function() {
+            try {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                navigator.getUserMedia = (navigator.getUserMedia ||
+                                          navigator.webkitGetUserMedia ||
+                                          navigator.mozgetUserMedia ||
+                                          navigator.msGetUserMedia);
+                window.URL = window.URL || window.webkitURL;
+
+                console.log('Audio context set up');
+                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
+            } catch (e) {
+                alert('No web audio support in this browser');
+            }
+
+            navigator.getUserMedia({ audio: true }, function(stream) {
+                this.recorder = new Recorder(stream);
+                console.log('Recorder initialized.');
+            }, function(e) {
+                console.log('No live audio input: ' + e);
+            });
+        }
+        this.initRecorder();
     };
 
 }
