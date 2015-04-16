@@ -7,7 +7,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
-import database.institution.mongo.BankProblemManager;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,6 +34,7 @@ public class SubmissionManagerTest {
     String url = "http://www.reddit.com";
     String description = "This is a test lol";
     Commands.SrlUpdateList.Builder steps;
+    BasicDBObject fakeDBObject = new BasicDBObject();
 
     @Before
     public void before() {
@@ -47,9 +47,9 @@ public class SubmissionManagerTest {
         tutorialObject.setUrl(url);
         tutorialObject.setDescription(description);
         steps = Commands.SrlUpdateList.newBuilder();
-        tutorialObject.setSteps(steps);
+        tutorialObject.setSteps(steps.build().toByteString());
 
-        final BasicDBObject query = new BasicDBObject(DESCRIPTION, tutorialObject.getDescription()).append(NAME, tutorialObject.getName())
+        fakeDBObject = new BasicDBObject(DESCRIPTION, tutorialObject.getDescription()).append(NAME, tutorialObject.getName())
                 .append(URL, tutorialObject.getUrl()).append(URL_HASH, tutorialObject.getUrl().hashCode())
                 .append(UPDATELIST, tutorialObject.getSteps().toByteArray());
 
@@ -57,13 +57,12 @@ public class SubmissionManagerTest {
 
     @Test
     public void insertTutorial() throws Exception {
+        String tutorialObjectId = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
 
-        // checks it does not exist.
-        String tutorialObjectId = BankProblemManager.mongoInsertBankProblem(db, tutorialObject.build());
-
+        fakeDBObject.append(SELF_ID, new ObjectId(tutorialObjectId));
         final DBRef myDbRef = new DBRef(db, TUTORIAL_COLLECTION, new ObjectId(tutorialObjectId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
+        final DBObject testDBObject = myDbRef.fetch();
 
-        
+        Assert.assertEquals(fakeDBObject, testDBObject);
     }
 }

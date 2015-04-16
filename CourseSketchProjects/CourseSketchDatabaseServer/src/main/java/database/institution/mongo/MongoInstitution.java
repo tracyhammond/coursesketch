@@ -27,11 +27,8 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
-<<<<<<< HEAD
 import protobuf.srl.tutorial.TutorialOuterClass;
-=======
 import utilities.LoggingConstants;
->>>>>>> master
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -474,7 +471,7 @@ public final class MongoInstitution implements Institution {
     @Override
     public String insertTutorial(final String userId, final TutorialOuterClass.Tutorial tutorialObject)
             throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoInsertTutorial(getInstance().auth, getInstance().database, userId, tutorialObject);
+        return SubmissionManager.mongoInsertTutorial(getInstance().auth, getInstance().database, userId, tutorialObject);
     }
 
     @Override
