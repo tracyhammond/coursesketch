@@ -167,8 +167,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
             advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
-                 // we do not need to make server changes we
-                                        // just need to make sure it was successful.
+                 // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }

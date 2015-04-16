@@ -54,7 +54,7 @@ node_modules/
 node_temp
 node_tmp
 doc
-bower_components
+bower_components/
 
 CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
 *.ini

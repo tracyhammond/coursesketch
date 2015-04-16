@@ -6,7 +6,7 @@ package database;
  * @author gigemjt
  *
  */
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({ "PMD.CommentRequired", "checkstyle:javadocvariable" })
 public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";
@@ -27,13 +27,14 @@ public final class DatabaseStringConstants {
     public static final String COURSE_PROBLEM_COLLECTION = "Problems";
     public static final String LECTURE_COLLECTION = "Lectures";
     public static final String SLIDE_COLLECTION = "Slides";
+    public static final String GRADE_COLLECTION = "Grades";
+    public static final String GRADING_POLICY_COLLECTION = "GradingPolicies";
     // also contains groups for admins and mods
     public static final String USER_GROUP_COLLECTION = "UserGroups";
     public static final String USER_COLLECTION = "Users";
     public static final String SOLUTION_COLLECTION = "Solutions";
     public static final String EXPERIMENT_COLLECTION = "Experiments";
     public static final String STATE_COLLECTION = "UserStates";
-    public static final String GRADE_COLLECTION = "problem_submissions";
     public static final String UPDATE_COLLECTION = "User_Updates";
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
     public static final String DATABASE = "institution";
@@ -51,6 +52,7 @@ public final class DatabaseStringConstants {
     public static final String ACCESS_DATE = "AccessDate";
     public static final String DUE_DATE = "DueDate";
     public static final String CLOSE_DATE = "CloseDate";
+    public static final String GRADED_DATE = "GradedDate";
 
     // permissions
     public static final String ADMIN = "Admin";
@@ -64,7 +66,22 @@ public final class DatabaseStringConstants {
     // grades
     public static final String GRADE_WEIGHT = "GradeWeight";
     public static final String GRADE = "Grade";
-    public static final String COMMENTS = "Comments";
+    public static final String COMMENT = "Comment";
+    public static final String CURRENT_GRADE = "CurrentGrade";
+    public static final String GRADE_HISTORY = "GradeHistory";
+    public static final String GRADE_VALUE = "GradeValue";
+    public static final String WHO_CHANGED = "WhoChanged";
+    public static final String EXTERNAL_GRADE = "ExternalGrade";
+    public static final String SUBMISSION_NUMBER = "SubmissionNumber";
+
+    // grading policy
+    public static final String GRADE_CATEGORIES = "GradeCategories";
+    public static final String GRADE_CATEGORY_WEIGHT = "CategoryWeight";
+    public static final String GRADE_CATEGORY_NAME = "CategoryName";
+    public static final String GRADE_POLICY_TYPE = "GradePolicyType";
+    public static final String DROPPED_PROBLEMS = "DroppedProblems";
+    public static final String DROPPED_ASSIGNMENTS = "DroppedAssignments";
+    public static final String DROP_TYPE = "DropType";
 
     // course specific
     public static final String COURSE_SEMESTER = "Semester";
@@ -76,10 +93,12 @@ public final class DatabaseStringConstants {
     public static final String ASSIGNMENT_TYPE = "AssignmentType";
     public static final String ASSIGNMENT_OTHER_TYPE = "OtherType";
     public static final String ASSIGNMENT_RESOURCES = "Resources";
+    public static final String LATE_POLICY = "LatePolicy";
     public static final String LATE_POLICY_FUNCTION_TYPE = "LatePolicyFunctionType";
     public static final String LATE_POLICY_TIME_FRAME_TYPE = "LatePolicyTimeFrameType";
     public static final String LATE_POLICY_SUBTRACTION_TYPE = "LatePolicySubtractionType";
     public static final String LATE_POLICY_RATE = "LatePolicyRate";
+    public static final String APPLY_ONLY_TO_LATE_PROBLEMS = "ApplyOnlyToLateProblems";
     public static final String PROBLEM_LIST = "ProblemList";
 
     // course problem specific
@@ -95,6 +114,8 @@ public final class DatabaseStringConstants {
     public static final String SKETCH = "Sketch";
     public static final String ANSWER_CHOICE = "AnswerChoice";
     public static final String SUBMISSION_TIME = "time";
+    public static final String FIRST_STROKE_TIME = "FirstStrokeTime";
+    public static final String FIRST_SUBMISSION_TIME = "FirstSubmissionTime";
 
     // problem specific
     public static final String QUESTION_TEXT = "QuestionText";
@@ -137,12 +158,13 @@ public final class DatabaseStringConstants {
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
 
-    // mongo comands
+    // mongo commands
     public static final String SET_COMMAND = "$set";
     public static final String ADD_SET_COMMAND = "$addToSet";
+    public static final String EXISTS = "$exists";
 
     // state and grade specific
-    public static final String SCHOOLITEMTYPE = "SchoolItemType";
+    public static final String SCHOOL_ITEM_TYPE = "SchoolItemType";
 
     // lecture specific
     public static final String SLIDES = "Slides";

@@ -115,10 +115,15 @@ public final class Authenticator {
         private boolean checkAdminOrMod = false;
 
         /**
+         * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
+         */
+        private boolean checkAccess = false;
+
+        /**
          * @return True if one of the values in AuthType is true.
          */
         public boolean validRequest() {
-            return isCheckingUser() || isCheckingMod() || isCheckingAdmin() || isCheckDate() || isCheckAdminOrMod();
+            return isCheckingUser() || isCheckingMod() || isCheckingAdmin() || isCheckDate() || isCheckAdminOrMod() || isCheckAccess();
         }
 
         /**
@@ -189,6 +194,34 @@ public final class Authenticator {
          */
         public void setCheckAdminOrMod(final boolean iCheckAdminOrMod) {
             this.checkAdminOrMod = iCheckAdminOrMod;
+        }
+
+        /**
+         * @return the checkAccess
+         */
+        public boolean isCheckAccess() {
+            return checkAccess;
+        }
+
+        /**
+         * Checks for admin, mod, or user.
+         *
+         * @param iCheckAccess the checkAccess to set
+         */
+        public void setCheckAccess(final boolean iCheckAccess) {
+            this.checkAccess = iCheckAccess;
+        }
+
+        /**
+         * Sets all checks to false to enable reuse of the same object.
+         */
+        public void clear() {
+            setCheckAccess(false);
+            setCheckAdmin(false);
+            setCheckAdminOrMod(false);
+            setCheckDate(false);
+            setCheckMod(false);
+            setCheckUser(false);
         }
     }
 
@@ -315,14 +348,19 @@ public final class Authenticator {
 
         final AuthenticationData result = dataGrabber.getAuthGroups(collection, itemId);
 
-        final boolean validUser = authenticateUser(userId, result, checkType);
+
+        boolean validAccess = authenticateUser(userId, result, checkType);
+        final boolean validUser = checkType.isCheckingUser() && validAccess;
 
         boolean validModOrAdmin = authenticateModerator(userId, result, checkType);
         final boolean validMod = checkType.isCheckingMod() && validModOrAdmin;
 
         boolean validAdmin = authenticateAdmin(userId, result, checkType);
         validModOrAdmin = validAdmin || validModOrAdmin;
+        validAccess = validAccess || validModOrAdmin;
+
         validAdmin = validAdmin && checkType.isCheckingAdmin();
+        validAccess = validAccess && checkType.isCheckAccess();
 
         validModOrAdmin = validModOrAdmin && checkType.isCheckAdminOrMod();
 
@@ -332,7 +370,8 @@ public final class Authenticator {
         }
 
         return validUser == checkType.isCheckingUser() && validMod == checkType.isCheckingMod() && validAdmin == checkType.isCheckingAdmin()
-                && validDate == checkType.isCheckDate() && validModOrAdmin == checkType.isCheckAdminOrMod();
+                && validDate == checkType.isCheckDate() && validModOrAdmin == checkType.isCheckAdminOrMod()
+                && validAccess == checkType.isCheckAccess();
     }
 
     /**
@@ -344,7 +383,7 @@ public final class Authenticator {
      */
     private boolean authenticateUser(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
         boolean validUser = false;
-        if (checkType.isCheckingUser()) {
+        if (checkType.isCheckingUser() || checkType.isCheckAccess()) {
             final List usersList = result.getUserList();
             validUser = this.checkAuthentication(userId, usersList);
         }
@@ -360,7 +399,7 @@ public final class Authenticator {
      */
     private boolean authenticateModerator(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
         boolean validMod = false;
-        if (checkType.isCheckingMod() || checkType.isCheckAdminOrMod()) {
+        if (checkType.isCheckingMod() || checkType.isCheckAdminOrMod() || checkType.isCheckAccess()) {
             final List modList = result.getModeratorList();
             validMod = this.checkAuthentication(userId, modList);
         }
@@ -376,7 +415,7 @@ public final class Authenticator {
      */
     private boolean authenticateAdmin(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
         boolean validAdmin = false;
-        if (checkType.isCheckingAdmin() || checkType.isCheckAdminOrMod()) {
+        if (checkType.isCheckingAdmin() || checkType.isCheckAdminOrMod() || checkType.isCheckAccess()) {
             final List adminList = result.getAdminList();
             validAdmin = this.checkAuthentication(userId, adminList);
         }
