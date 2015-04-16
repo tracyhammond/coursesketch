@@ -284,4 +284,7 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
     if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize))) {
         this.makeResizeable();
     }
+    window.addEventListener('load',function(){
+        this.resizeSurface();
+    }.bind(this));
 };
