@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import protobuf.srl.commands.Commands;
-import protobuf.srl.school.School;
 import protobuf.srl.tutorial.TutorialOuterClass;
 
 import static database.DatabaseStringConstants.*;
