@@ -167,7 +167,6 @@ validateFirstRun(document.currentScript);
 
         sketchSurface.refreshSketch();
         //console.log(updateList);
-        console.log('script executed - worker disconnect');
         sketchSurface.loadUpdateList(updateList, element);
         updateList = null;
         element = null;
