@@ -18,6 +18,8 @@ import protobuf.srl.commands.Commands;
 import protobuf.srl.submission.Submission;
 import protobuf.srl.tutorial.TutorialOuterClass;
 
+import java.util.List;
+
 import static database.DatabaseStringConstants.*;
 
 /**
@@ -82,8 +84,13 @@ public class SubmissionManagerTest {
         SubmissionManager.mongoGetTutorial(fauth, db, "userId", new ObjectId().toString());
     }
 
-//    @Test
-//    public void getTutorialList() throws Exception {
-//        String tutorialObjectId = SubmissionManager.mongoInsertTutorial(fauth, db, )
-//    }
+    @Test
+    public void getTutorialList() throws Exception {
+        String tutorialObjectId1 = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
+        tutorialObject.setName("Tutorial 1");
+        String tutorialObjectId2 = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
+
+        List<TutorialOuterClass.Tutorial> tutorialList = SubmissionManager.mongoGetTutorialList(fauth, db, "userId", url);
+        Assert.assertEquals(2, tutorialList.size());
+    }
 }
