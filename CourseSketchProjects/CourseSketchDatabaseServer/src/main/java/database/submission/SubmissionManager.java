@@ -225,13 +225,13 @@ public final class SubmissionManager {
     }
 
     public static List<TutorialOuterClass.Tutorial> mongoGetTutorialList(final Authenticator authenticator, final DB dbs, final String userId,
-                                                                         final String tutorialId) throws DatabaseAccessException, AuthenticationException {
+                                                                         final String tutorialUrl) throws DatabaseAccessException, AuthenticationException {
         final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
 
-        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialId.hashCode()));
+        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()));
         final List<TutorialOuterClass.Tutorial> tutorialList = new ArrayList<>();
         if (cursor == null) {
-            throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialId);
+            throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialUrl);
         }
 
         while(cursor.hasNext()) {
