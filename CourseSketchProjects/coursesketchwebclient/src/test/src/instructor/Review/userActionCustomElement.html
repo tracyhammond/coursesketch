@@ -7,15 +7,16 @@
     <script src="/src/sketching/plugins/playback.js"></script>
 </head>
 <body style="background:#FFFFFF;">
-<sketch-surface id="fakeCanvas" style="height:1005; width:100%; border: 5px solid red;"></sketch-surface>
-
-<user-action-graph id="hello" style="height:1005; width:100%;"></user-action-graph>
-
+<div style="display:flex;">
+    <user-action-graph id="hello" style="height:100%; width:50%; border: 5px solid blue; right"></user-action-graph>
+    <sketch-surface id="fakeCanvas" style="height:100%; width:50%; border: 5px solid red;"></sketch-surface>
+</div>
 <script>
     //fakeCanvas
     var surface = document.body.querySelector("sketch-surface");
     var graphics = surface.graphics;
-    var updateManager = surface.getUpdateManager();
+    var updateManager;
+
     function playMe() {
         var graphics = surface.graphics;
         var updateList = surface.getUpdateList();
@@ -23,7 +24,7 @@
         for (var i = 0; i < updateList.length; i++) {
             copyList.push(updateList[i]);
         }
-        var updateManager = surface.getUpdateManager();
+        updateManager = surface.getUpdateManager();
         updateManager.clearUpdates(false);
 
         var playBack = new Playback(copyList, updateManager, graphics);
@@ -31,43 +32,48 @@
         playBack.playNext();
     }
 
-    //userActionGraph
-    /*var updateList = new UpdateManager(undefined, function(error) {
-        console.log(error);
-    });*/
-    var updateList = updateManager;
+    function graphMe() {
+        //userActionGraph
+        /*var updateList = new UpdateManager(undefined, function(error) {
+            console.log(error);
+        });*/
+        var updateList = updateManager;
 
-    //begin creating test data
-    var stubs = function(){
-        return false;
+        /*
+        //begin creating test data
+        var stubs = function(){
+            return false;
+        }
+
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+
+        var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+        var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+
+        updateList.addUpdate(assignUpdate);
+        updateList.addUpdate(assignUpdate);
+        updateList.addUpdate(assignUpdate);
+        updateList.undoAction(false);
+        updateList.undoAction(false);
+        updateList.redoAction(false);
+        updateList.undoAction(false);
+        updateList.redoAction(false);
+        updateList.addUpdate(assignUpdate);
+        updateList.undoAction(false);
+        updateList.redoAction(false);
+        updateList.addUpdate(assignUpdate);*/
+
+        var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        updateData.list=(updateList.getUpdateList());
+        console.log(updateData);
+        //end creating test data
+
+        var userGraph = document.body.querySelector("user-action-graph");
+        userGraph.loadData(updateData);
     }
 
-    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
-    CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
 
-    var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-    var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
-
-    updateList.addUpdate(assignUpdate);
-    updateList.addUpdate(assignUpdate);
-    updateList.addUpdate(assignUpdate);
-    updateList.undoAction(false);
-    updateList.undoAction(false);
-    updateList.redoAction(false);
-    updateList.undoAction(false);
-    updateList.redoAction(false);
-    updateList.addUpdate(assignUpdate);
-    updateList.undoAction(false);
-    updateList.redoAction(false);
-    updateList.addUpdate(assignUpdate);
-
-    var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-    updateData.list=(updateList.getUpdateList());
-    console.log(updateData);
-    //end creating test data
-
-    var userGraph = document.body.querySelector("user-action-graph");
-    userGraph.loadData(updateData);
 </script>
 </body>
 </html>

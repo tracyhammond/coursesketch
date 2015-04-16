@@ -82,9 +82,11 @@ function UserActionGraph() {
         var base = new Node("User Action History");
         var currentParent = base;
         var markerObject;
+        console.log(updateData.list);
         for(var u = 0; u < updateData.list.length; u++){
             //checks to see if current command corresponds to previous lowest marker
             //CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateData.list[u].time, CourseSketch.PROTOBUF_UTIL.getUpdateClass());
+            //console.log("here");
             if(updateData.list[u].commands[0].getCommandTypeName()=="MARKER") {
                 markerObject = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateData.list[u].commands[0].commandData, CourseSketch.PROTOBUF_UTIL.getMarkerClass());
                 if(markerObject.otherData>0){
@@ -95,11 +97,13 @@ function UserActionGraph() {
                     currentParent = currentParent.parent;
                 }
             } else {
+                console.log("here");
                 currentParent.AddChild(new Node(updateData.list[u].commands[0].getCommandTypeName()
                     + updateData.list[u].time));
             }
         }
 
+            //console.log(base);
         d3.json(base, function(error) {
             base.x0 = 0;
             base.y0 = 0;
