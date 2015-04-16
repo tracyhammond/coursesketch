@@ -14,7 +14,7 @@ function VoicePlayback() {
         }
         vid.onplay = function() {
             playMe();
-            localScope.stopRecording();
+            //localScope.stopRecording();
         }
         vid.onpause = function() {
             pauseMe();
