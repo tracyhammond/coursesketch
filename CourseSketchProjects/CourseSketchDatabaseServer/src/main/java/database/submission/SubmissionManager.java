@@ -2,16 +2,13 @@ package database.submission;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
+import com.mongodb.*;
 import connection.SubmissionClientWebSocket;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import org.apache.commons.lang3.ObjectUtils;
 import org.bson.types.ObjectId;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.query.Data.DataRequest;
@@ -23,6 +20,7 @@ import protobuf.srl.tutorial.TutorialOuterClass;
 import utilities.ConnectionException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,6 +222,23 @@ public final class SubmissionManager {
         }
 
         return extractTutorial(cursor);
+    }
+
+    public static List<TutorialOuterClass.Tutorial> mongoGetTutorialList(final Authenticator authenticator, final DB dbs, final String userId,
+                                                                         final String tutorialId) throws DatabaseAccessException, AuthenticationException {
+        final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
+
+        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialId.hashCode()));
+        final List<TutorialOuterClass.Tutorial> tutorialList = new ArrayList<>();
+        if (cursor == null) {
+            throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialId);
+        }
+
+        while(cursor.hasNext()) {
+            tutorialList.add(extractTutorial(cursor.next()));
+        }
+
+        return tutorialList;
     }
 
     private static TutorialOuterClass.Tutorial extractTutorial(DBObject dbTutorial) throws DatabaseAccessException {

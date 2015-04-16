@@ -81,4 +81,9 @@ public class SubmissionManagerTest {
     public void getTutorialDoesNotExist() throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetTutorial(fauth, db, "userId", new ObjectId().toString());
     }
+
+//    @Test
+//    public void getTutorialList() throws Exception {
+//        String tutorialObjectId = SubmissionManager.mongoInsertTutorial(fauth, db, )
+//    }
 }
