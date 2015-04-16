@@ -1,4 +1,5 @@
 import "util.proto";
+import "grading.proto";
 
 package protobuf.srl.school;
 
@@ -45,7 +46,7 @@ message SrlAssignment {
     optional string other = 5; // Name of an Instructor-defined assignment type
     optional string description = 6;
     repeated string links = 7; // external links/resources. Field needs improvement.
-    optional LatePolicy latePolicy = 8;
+    optional protobuf.srl.grading.LatePolicy latePolicy = 8;
     optional string gradeWeight = 9; // Percentage of Assignment Category's total grade
     optional float grade = 10; // Calculated grade for whole Assignment
     optional protobuf.srl.utils.DateTime accessDate = 11; // Date that a student can access/view/begin an assignment
@@ -64,36 +65,6 @@ message SrlAssignment {
         SURVEY = 4; // not for a grade!
         GAME = 5;
         OTHER = 6; // Allows instructors to create unique assignment types
-    }
-}
-
-message LatePolicy {
-    required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
-    optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.
-    optional float rate = 3;
-    optional SubtractionType subtractionType = 4 [default = CAP];// how we are subtracting the grade
-
-    enum FunctionType {
-        STEPPING_FUNCTION = 0;
-        LINE = 1;
-        EXPONENTIAL = 2;
-    }
-
-    /**
-     * The numbers are reversed because of how the client loads and saves data for options.
-     *
-     * Specifically this is used in the advance edit panel.
-     */
-    enum TimeFrame {
-        DAY = 3;
-        HOUR = 2;
-        MINUTE = 1;
-        CONSTANT = 0;
-    }
-
-    enum SubtractionType {
-        CAP = 0;
-        PERCENT = 1;
     }
 }
 
@@ -122,7 +93,7 @@ message SrlBankProblem {
     optional string source = 8;
     repeated string otherKeywords = 9;
     optional protobuf.srl.utils.SrlPermission accessPermission = 10;
-    optional string script = 11;
+    optional string script = 11; // a script string that is used for custom setups in experiments
 }
 
 message SrlGrade {

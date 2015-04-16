@@ -1,15 +1,13 @@
 package database.auth;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
+import database.RequestConverter;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import database.RequestConverter;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AuthenticatorTest {
 

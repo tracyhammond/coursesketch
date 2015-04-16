@@ -1,4 +1,5 @@
-application: coursesketch-test
+#starts off with dev so that we can differntiate in app engine.  As app engine cuts words off.
+application: dev-coursesketch
 version: 1
 runtime: python27
 api_version: 1
@@ -47,3 +48,6 @@ handlers:
 
 - url: /*
   script: testFiles.app
+
+- url: /bower_components
+  static_dir: bower_components
