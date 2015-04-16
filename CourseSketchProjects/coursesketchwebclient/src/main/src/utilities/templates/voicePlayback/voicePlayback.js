@@ -9,7 +9,9 @@ function VoicePlayback() {
         var playBack;
         var isPaused = false;
         var pauseIndex= 0 ;
-        vid.ontimeupdate = function() {myFunction()};
+        vid.ontimeupdate = function() {
+            myFunction()
+        }
         vid.onplay = function() {
             playMe();
             localScope.stopRecording();
@@ -43,7 +45,6 @@ function VoicePlayback() {
             elm.val('REC');
         }.bind(this);
 
-
         function playMe() {
             if (!isPaused){
                 var graphics = surface.graphics;
@@ -61,9 +62,6 @@ function VoicePlayback() {
             } else {
                 playBack.playNext();
             }
-            //localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
-            //localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
-
         }
 
         function pauseMe() {

@@ -55,9 +55,9 @@ function Playback(updateList, updateManager, graphics) {
                         })(i);
                     }
                 })();
-            }else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.IS_AUDIO) {
+            } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.IS_AUDIO) {
 
-            }else {
+            } else {
                 if (redraw) {
                     graphics.getPaper().view.update();
                 }
