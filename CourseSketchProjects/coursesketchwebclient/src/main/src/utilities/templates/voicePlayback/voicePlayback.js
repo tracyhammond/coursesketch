@@ -4,7 +4,7 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-       try {
+        try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             navigator.getUserMedia = (navigator.getUserMedia ||
                                       navigator.webkitGetUserMedia ||
@@ -41,6 +41,29 @@ function VoicePlayback() {
         var surface = document.body.querySelector('sketch-surface');
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
+
+        this.shadowRoot.querySelector('#recordBtn').onclick = function() {
+            if (this.isRecording === true) {
+                this.stopRecording();
+                clearInterval(this.voiceBtnTimer);
+                this.isRecording = false;
+                $(this.shadowRoot.querySelector('#recordBtn')).val(null);
+            } else {
+                this.blink($(this.shadowRoot.querySelector('#recordBtn')));
+                this.startRecording();
+                this.isRecording = true;
+            }
+        }.bind(this);
+
+        this.blink = function(elm) {
+            this.voiceBtnTimer = setInterval(function() {
+                elm.fadeOut(400, function() {
+                    elm.fadeIn(400);
+                });
+            }, 800);
+            elm.val('REC');
+        }.bind(this);
+
 
         function playMe() {
             if (!isPaused){
