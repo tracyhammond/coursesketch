@@ -127,7 +127,7 @@ public final class CourseManager {
         isUsers = authenticator.checkAuthentication(userId, usersList);
 
         if (!isAdmin && !isMod && !isUsers) {
-            throw new AuthenticationException("For course:" + courseId, AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
         final SrlCourse.Builder exactCourse = SrlCourse.newBuilder();
