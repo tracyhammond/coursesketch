@@ -92,7 +92,7 @@ public final class AssignmentManager {
         final AuthType auth = new AuthType();
         auth.setCheckAdminOrMod(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
-            throw new AuthenticationException("For course:" + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course: " + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
         }
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId()).append(NAME, assignment.getName())
@@ -165,7 +165,7 @@ public final class AssignmentManager {
         isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
-            throw new AuthenticationException("For assignment:" + assignmentId, AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
         // check to make sure the assignment is within the time period that the
@@ -178,7 +178,7 @@ public final class AssignmentManager {
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
         if (isUsers && !isAdmin && !isMod && !authenticator
                 .isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_DATE);
+            throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_DATE);
         }
 
         final State.Builder stateBuilder = State.newBuilder();
@@ -190,7 +190,7 @@ public final class AssignmentManager {
                 stateBuilder.setPublished(true);
             } else {
                 if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific assignment is not published yet:" + assignmentId, true);
+                    throw new DatabaseAccessException("The specific assignment is not published yet: " + assignmentId, true);
                 }
                 stateBuilder.setPublished(false);
             }
@@ -365,7 +365,7 @@ public final class AssignmentManager {
         isMod = authenticator.checkAuthentication(userId, modList);
 
         if (!isAdmin && !isMod) {
-            throw new AuthenticationException("For assignment:" + assignmentId, AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
         if (isAdmin || isMod) {

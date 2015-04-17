@@ -227,7 +227,7 @@ public final class CourseManager {
         isMod = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(MOD));
 
         if (!isAdmin && !isMod) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
         if (isAdmin) {
