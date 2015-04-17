@@ -12,9 +12,12 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.SrlPermission;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +43,6 @@ import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +132,7 @@ public final class CourseManager {
         isUsers = authenticator.checkAuthentication(userId, usersList);
 
         if (!isAdmin && !isMod && !isUsers) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
         final SrlCourse.Builder exactCourse = SrlCourse.newBuilder();
@@ -158,7 +160,7 @@ public final class CourseManager {
                 stateBuilder.setPublished(true);
             } else {
                 if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific course is not published yet", true);
+                    throw new DatabaseAccessException("The specific course is not published yet: " + courseId, true);
                 } else {
                     stateBuilder.setPublished(false);
                 }
@@ -230,7 +232,7 @@ public final class CourseManager {
         isMod = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(MOD));
 
         if (!isAdmin && !isMod) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
         if (isAdmin) {
