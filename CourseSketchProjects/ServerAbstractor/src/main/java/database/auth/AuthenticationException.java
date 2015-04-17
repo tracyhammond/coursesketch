@@ -66,9 +66,8 @@ public class AuthenticationException extends Exception {
             case NO_AUTH_SENT:
                 return "No Authentication Information was received";
             default:
-                break;
+                return null;
         }
-        return null;
     }
 
     /**
