@@ -32,7 +32,7 @@ public class AuthenticationException extends Exception {
      * Accepts an authentication type.
      *
      * @param value
-     *            An authentication exception type.
+     *         An authentication exception type.
      */
     public AuthenticationException(final int value) {
         super(getMessageFromValue(value));
@@ -40,20 +40,33 @@ public class AuthenticationException extends Exception {
     }
 
     /**
+     * Accepts an authentication type and a message.
+     *
+     * @param message
+     *         A custom message to add more details.
      * @param value
-     *            An exception type.
+     *         An authentication exception type.
+     */
+    public AuthenticationException(final String message, final int value) {
+        super(getMessageFromValue(value) + message);
+        exceptionType = value;
+    }
+
+    /**
+     * @param value
+     *         An exception type.
      * @return a message associated with each exception type.
      */
     public static String getMessageFromValue(final int value) {
         switch (value) {
             case INVALID_DATE:
-                return "Can only access during valid times";
+                return "Can only access during valid times:";
             case INVALID_PERMISSION:
                 return "Can only perform task with valid permission";
             case NO_AUTH_SENT:
-                return "No Authentication Information was recieved";
+                return "No Authentication Information was received";
             default:
-            break;
+                break;
         }
         return null;
     }

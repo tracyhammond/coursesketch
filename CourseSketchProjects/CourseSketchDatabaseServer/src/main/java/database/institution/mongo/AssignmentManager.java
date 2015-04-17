@@ -13,10 +13,12 @@ import database.auth.Authenticator;
 import database.auth.Authenticator.AuthType;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School.LatePolicy;
 import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +48,6 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages assignments for mongo.
@@ -93,7 +92,7 @@ public final class AssignmentManager {
         final AuthType auth = new AuthType();
         auth.setCheckAdminOrMod(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course:" + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
         }
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId()).append(NAME, assignment.getName())
@@ -166,7 +165,7 @@ public final class AssignmentManager {
         isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
 
         if (!isAdmin && !isMod && !isUsers) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For assignment:" + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
         // check to make sure the assignment is within the time period that the
@@ -191,7 +190,7 @@ public final class AssignmentManager {
                 stateBuilder.setPublished(true);
             } else {
                 if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific assignment is not published yet", true);
+                    throw new DatabaseAccessException("The specific assignment is not published yet:" + assignmentId, true);
                 }
                 stateBuilder.setPublished(false);
             }
@@ -366,7 +365,7 @@ public final class AssignmentManager {
         isMod = authenticator.checkAuthentication(userId, modList);
 
         if (!isAdmin && !isMod) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For assignment:" + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
         if (isAdmin || isMod) {
