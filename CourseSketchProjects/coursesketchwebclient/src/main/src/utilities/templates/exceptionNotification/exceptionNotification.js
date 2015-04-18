@@ -60,7 +60,7 @@
 })();
 
 /**
- * Creates an element which displays the properties of the ProtoException.
+ * Creates an object called ExceptionNotification() which inherits the properties of the ProtoException.
  */
 function ExceptionNotification() {
     /**
