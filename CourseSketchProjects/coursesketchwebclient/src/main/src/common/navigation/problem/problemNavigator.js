@@ -48,7 +48,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
     }
-    
     // Sets the current index.
     if (!isUndefined(preferredIndex)) {
         try {
