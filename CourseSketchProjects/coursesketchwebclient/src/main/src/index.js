@@ -8,7 +8,7 @@ $(document).ready(
 function() {
 
     /**
-     * @returns the element that encapsulates the exception.
+     * @returns {Element} the element that encapsulates the exception.
      */
     CourseSketch.getExceptionParentElement = function() {
         return document.body;
