@@ -97,7 +97,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                     } else if (msg.requestType === MessageType.ERROR) {
                         var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(),
                             CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass());
-                        notifyMe(exception);
+                        CourseSketch.showShallowException(exception);
                         console.log('exception object', exception);
                         console.log(msg.getResponseText());
                         if (onError) {

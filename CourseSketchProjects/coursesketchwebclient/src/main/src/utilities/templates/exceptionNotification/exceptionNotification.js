@@ -1,32 +1,98 @@
-function notifyMe(protoEx) {
-    // Let's check if the browser supports notifications
-    if (!("Notification" in window)) {
-        alert("This browser does not support desktop notification");
-    }
-
-    // Let's check if the user is okay to get some notification
-    else if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
-        var notification = new Notification("Hi there!");
-    }
-
-    // Otherwise, we need to ask the user for permission
-    else if (Notification.permission !== 'denied') {
-        Notification.requestPermission(function (permission) {
-        // If the user is okay, let's create a notification
-        if (permission === "granted") {
-            var notification = new Notification(protoEx.getExceptionType());
+(function() {
+    /**
+     * Creates a notification from the exception that is passed in.
+     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
+     */
+    CourseSketch.showShallowException = function notifyMe(protoEx) {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
         }
-        });
+
+        // Let's check if the user is okay to get some notification
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            createShallowNotification(protoEx);
+        }
+
+        // Otherwise, we need to ask the user for permission
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+            // If the user is okay, let's create a notification
+            if (permission === "granted") {
+                createShallowNotification(protoEx);
+            }
+            });
+        }
     }
-}
+
+    /**
+     *
+     */
+    function createShallowNotification(protoEx) {
+        var imageUrl = "http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg";
+        var notification = new Notification(protoEx.getExceptionType(), {
+            body: protoEx.getMssg(),
+            icon: imageUrl
+        });
+        notification.onclick = function(event) {
+            console.log(event);
+            createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
+        };
+        setTimeout(function(){
+            notification.close();
+        }, 7001);
+    }
+
+    /**
+     *
+     */
+    function createDeepNotification(protoEx, parentElement) {
+        var detailedNotification = document.createElement('exception-notification');
+        parentElement.appendChild(detailedNotification);
+        detailedNotification.loadProtoException(protoEx);
+    }
+})();
+
 function ExceptionNotification() {
     /**
      * @param {Node} templateClone is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
+        var localScope = this; // This sets the variable to the level of the custom element tag
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
+        this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
+            localScope.parentNode.removeChild(localScope);
+        }
     };
+
+    this.loadProtoException = function(protoEx) {
+        var title = document.createElement('p');
+        title.textContent = protoEx.getExceptionType();
+        title.className = 'title';
+        this.appendChild(title);
+
+        var message = document.createElement('div');
+        message.textContent = protoEx.getMssg();
+        message.className = 'message';
+        this.appendChild(message);
+
+        var stack = document.createElement('div');
+        var exceptionStackTrace = protoEx.getStackTrace();
+        var stackTraceWithNewLine = ""
+        for (var i = 0; i < exceptionStackTrace.length; i++){
+            stackTraceWithNewLine += exceptionStackTrace[i] + " ";
+        }
+        stack.textContent = stackTraceWithNewLine;
+        stack.className = 'stacktrace';
+        this.appendChild(stack);
+
+        var cause = document.createElement('div');
+        cause.textContent = protoEx.getCause();
+        cause.className = 'cause';
+        this.appendChild(cause);
+    }
 }
+ExceptionNotification.prototype = Object.create(HTMLDialogElement.prototype);

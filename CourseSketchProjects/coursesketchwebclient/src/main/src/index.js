@@ -7,6 +7,13 @@ CourseSketch.redirector = {};
 $(document).ready(
 function() {
 
+    /**
+     * @returns the element that encapsulates the exception.
+     */
+    CourseSketch.getExceptionParentElement = function() {
+        return document.body;
+    };
+
     CourseSketch.reloadContent = function() {
         var value = CourseSketch.redirector.getRedirect();
         CourseSketch.redirector.changeSourceNoEvent(value);
