@@ -1,0 +1,23 @@
+#closeButton {
+    padding: 15px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+:host {
+    position: absolute;
+    top: 20%;
+    left: 40%;
+    margin-left: -310px;
+    width: 100px;
+    height: 100px;
+}
+
+::content .stacktrace {
+    height: 300px;
+    overflow-y: scroll;
+}
+::content .message {
+    text-align: center;
+    font-weight: bold;
+}
