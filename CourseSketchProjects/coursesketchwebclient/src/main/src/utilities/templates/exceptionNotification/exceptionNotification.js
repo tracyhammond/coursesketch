@@ -76,7 +76,7 @@ function ExceptionNotification() {
     };
 
     /**
-     * In
+     * Creates a root to which everything else is appended to.
      */
 
     /**
