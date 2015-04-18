@@ -27,7 +27,9 @@
     }
 
     /**
-     *
+     * Creates a small notification displaying the exception that occurred.
+     * User can click on the notification to see the full stack trace or the notification will disappear after 7 seconds.
+     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
      */
     function createShallowNotification(protoEx) {
         var imageUrl = "http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg";
@@ -45,7 +47,10 @@
     }
 
     /**
-     *
+     * Creates the element 'exception-notification' and appends it to the parent element.
+     * Then calls loadProtoException() to load the StackTrace on 'exception-notification'.
+     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
+     * @param {Element} parentElement is the element to which the element we create will be appended to.
      */
     function createDeepNotification(protoEx, parentElement) {
         var detailedNotification = document.createElement('exception-notification');
@@ -54,6 +59,9 @@
     }
 })();
 
+/**
+ * Creates an element which displays the properties of the ProtoException.
+ */
 function ExceptionNotification() {
     /**
      * @param {Node} templateClone is a clone of the custom HTML Element for the text box
@@ -68,6 +76,13 @@ function ExceptionNotification() {
         }
     };
 
+    /**
+     * Loads the type of the ProtoException as the title.
+     * Loads the message of the ProtoException as the content.
+     * Then displays the entire StackTrace of the ProtoException.
+     * Lastly displays the cause if it exists.
+     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
+     */
     this.loadProtoException = function(protoEx) {
         var title = document.createElement('p');
         title.textContent = protoEx.getExceptionType();

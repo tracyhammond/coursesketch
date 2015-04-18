@@ -17,6 +17,7 @@
     height: 300px;
     overflow-y: scroll;
 }
+
 ::content .message {
     text-align: center;
     font-weight: bold;
