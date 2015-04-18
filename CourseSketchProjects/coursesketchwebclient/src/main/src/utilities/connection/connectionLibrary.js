@@ -98,6 +98,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                         var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(),
                             CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass());
                         CourseSketch.showShallowException(exception);
+
                         console.log('exception object', exception);
                         console.log(msg.getResponseText());
                         if (onError) {
