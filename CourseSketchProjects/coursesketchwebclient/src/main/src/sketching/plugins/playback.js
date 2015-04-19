@@ -10,7 +10,11 @@ function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
-    var isPlaying = true; //Trey
+    var isPlaying = true;
+    var pauseDuringStroke = false;
+    var lastPausedIndex = Number.MAX_VALUE;
+    var lastCreatedStroke = undefined;
+    var lastPointAdded = undefined;
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -32,7 +36,14 @@ function Playback(updateList, updateManager, graphics) {
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
 
+                    if(pauseDuringStroke){
+                        pointAdded = lastPointAdded;
+                    }
+
                     var strokePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
+                    if(pauseDuringStroke){
+                        strokePath = lastCreatedStroke;
+                    }
                     strokeBarrier.finalize(function() {
                         strokePath.simplify();
                         commandFinished();
@@ -40,17 +51,43 @@ function Playback(updateList, updateManager, graphics) {
                     console.log(ps);
 
                     var startingTime = pointList[0].getTime();
-                    for (var i = 0; i < pointList.length; i++) {
+                    var t;
+                    var tList = [];
+                    var startingIndex = 0;
+                    if (pauseDuringStroke) {
+                        startingIndex = lastPausedIndex;
+                        pauseDuringStroke = false;
+                        lastPausedIndex = Number.MAX_VALUE;
+                    }
+                    for (var i = startingIndex; i < pointList.length; i++) {
 
                         (function(index) {
-                            setTimeout(function() {
-                                strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
-                                graphics.getPaper().view.update();
-                                pointAdded();
+                            t = setTimeout(function() {
+                                if(isPlaying){
+                                    strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
+                                    graphics.getPaper().view.update();
+                                    pointAdded();
+                                }
+                                else if(!isPlaying) { //pause during the stroke    
+                                    for (var j = 0; j < tList.length; j++) {
+                                        clearTimeout(tList[j]);    
+                                    }
+                                    if(lastPausedIndex > index) {
+                                        lastPausedIndex = index;
+                                    }
+                                    lastCreatedStroke = strokePath;
+                                    lastPointAdded = pointAdded;
+                                    pauseDuringStroke = true;
+                                    console.log("PAUSE!!!");
+
+                                }
                             }, pointList[index].getTime() - startingTime);
+                            tList.push(t); 
                         })(i);
                     }
                 })();
+            } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.IS_AUDIO) {
+
             } else {
                 if (redraw) {
                     graphics.getPaper().view.update();
@@ -62,7 +99,7 @@ function Playback(updateList, updateManager, graphics) {
 
     this.playNext = function() {
         graphics.setDrawUpdate(false);
-        currentIndex++;
+        currentIndex++; 
         if (currentIndex === 0) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
@@ -72,6 +109,16 @@ function Playback(updateList, updateManager, graphics) {
             console.log('Finished');
             return;
         }
-        updateManager.addUpdate(updateList[currentIndex]);
+        isPlaying = true;
+        if (!pauseDuringStroke) {
+            updateManager.addUpdate(updateList[currentIndex]);
+        } else {
+            this.addUpdate(updateList[currentIndex], true, currentIndex);
+        }
     };
+
+    this.pauseNext = function() {
+        currentIndex--;
+        isPlaying = false;
+    }
 }
