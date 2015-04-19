@@ -74,3 +74,14 @@ sketch-surface.college_rule {
     background-size:100% 7.3mm;
     background-repeat: repeat-y;
 }
+
+/**
+ * Class that allows an image to be set as the background.
+ * Must use a script to set the Url dynamically.
+ */
+sketch-surface.image_background {
+    background-color: white;
+    /* Set the default image to a warning sign, in case the url is bad. Feel free to change this image.*/
+    background-image: url('http://www.clipartbest.com/cliparts/yio/LMp/yioLMpBiE.jpeg');
+    background-size:100%;
+}
