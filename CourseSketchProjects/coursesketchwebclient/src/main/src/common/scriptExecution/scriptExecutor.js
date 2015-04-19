@@ -81,6 +81,17 @@ function PanelEditApi(panel){
     };
 
     /**
+     * This function allows scripts to set the image in the image-background class type.
+     *
+     * @param {String} bgUrl A string containing the Url of the desired background image.
+     */
+    this.setSketchBGImage = function(bgUrl) {
+        // Sets the Url of backgroundImage
+        var urlString = 'url(http://' + bgUrl + ')';
+        panel.querySelector('.submittable').style.backgroundImage = urlString;
+    };
+
+    /**
      * This function allows scripts to create an embedded-html object next to the sketch surface in an experiment.
      *
      * @param {Object} htmlObj The object that defines the embedded-html parameters (width, height, location, htmlCode).
@@ -135,7 +146,7 @@ function executeScript(script, panel, callback) {
     var scriptWorker = new jailed.DynamicPlugin(script, totalApi);
     var timer = setTimeout(function() {
         scriptWorker.disconnect();
-    }, 2000); // This time value is arbitrary. It serves as a cutoff time to force script execution to stop.
+    }, 1000); // This time value is arbitrary. It serves as a cutoff time to force script execution to stop.
     scriptWorker.whenDisconnected(function() {
         clearTimeout(timer);
         callback();
