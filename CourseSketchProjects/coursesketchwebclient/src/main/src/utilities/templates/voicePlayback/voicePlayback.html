@@ -1,19 +1,27 @@
 <html>
-<head>
-
+    <head>
+    <meta charset="utf-8">
+    <title>Creating a Custom HTML5 Audio and Video Element UI with
+    MediaElement.js</title>
+    <script src="/src/utilities/libraries/jquery/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <script src="/src/utilities/libraries/cdn/recordmp3.js"></script>
     <template id="voice-playback-template">
-        <style onload="init()">
+        <style>
             @import "/src/utilities/templates/voicePlayback/voicePlayback.css";
         </style>
 
         <table id = "button-bar">
-            <tr><td style="width:5%"><button type="submit" id = "play-btn" ></button>
-                                     <button type="submit" id = "pause-btn" ></button></td>
+            <tr><td style="width:5%"><input type="button" value=" " id="recordBtn" /></td>
                 <td style="width:5%"><button type="submit" id = "speedup-btn" ></button></td>
                 <td style="width:5%"><button type="submit" id = "slowdown-btn" ></button></td>
-                <td></td>
+                <td><div class="audio-player">
+                    <p>TESTTESTTEST</p>
+                    <audio id="myaudio" type='audio/mpeg' controls="controls"></audio>
+                    </div></td>
                 <td style="width:5%"><button type="submit" id = "setting-btn" ></button></td></tr>
         </table>
+        <p>Playback position: <span id="demo"></span></p>
+
 
         <!--button type="submit" id = "redo-btn" ></button>
         <button type="submit" id = "undo-btn" ></button>
