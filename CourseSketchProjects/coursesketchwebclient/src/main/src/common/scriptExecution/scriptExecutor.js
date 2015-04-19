@@ -75,7 +75,7 @@ function PanelEditApi(panel){
      *
      * @param {String} bgClass A string containing the className that corresponds to the background type.
      */
-    this.setSketchSurfaceBG = function(bgClass) {
+    this.setSketchSurfaceBg = function(bgClass) {
         // Sets the className of the sketch surface and adds .sub-panel + .submittable
         panel.querySelector('.submittable').className = bgClass + ' sub-panel submittable';
     };
@@ -83,11 +83,11 @@ function PanelEditApi(panel){
     /**
      * This function allows scripts to set the image in the image-background class type.
      *
-     * @param {String} bgUrl A string containing the Url of the desired background image.
+     * @param {String} backgroundUrl A string containing the Url of the desired background image.
      */
-    this.setSketchBGImage = function(bgUrl) {
+    this.setSketchBgImage = function(backgroundUrl) {
         // Sets the Url of backgroundImage
-        var urlString = 'url(http://' + bgUrl + ')';
+        var urlString = 'url(http://' + backgroundUrl + ')';
         panel.querySelector('.submittable').style.backgroundImage = urlString;
     };
 

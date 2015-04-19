@@ -81,7 +81,7 @@ sketch-surface.college_rule {
  */
 sketch-surface.image_background {
     background-color: white;
-    /*set the default image to a warning sign, in case the url is bad. Feel free to change this image.*/
+    /* Set the default image to a warning sign, in case the url is bad. Feel free to change this image.*/
     background-image: url('http://www.clipartbest.com/cliparts/yio/LMp/yioLMpBiE.jpeg');
     background-size:100%;
 }
