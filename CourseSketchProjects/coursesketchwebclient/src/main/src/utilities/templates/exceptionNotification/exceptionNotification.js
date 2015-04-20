@@ -23,6 +23,7 @@
 
     /**
      * Creates a small notification displaying the exception that occurred.
+     *
      * User can click on the notification to see the full stack trace or the notification will disappear after 7 seconds.
      *
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
@@ -44,6 +45,7 @@
 
     /**
      * Creates the element 'exception-notification' and appends it to the parent element.
+     *
      * Then calls loadProtoException() to load the StackTrace on 'exception-notification'.
      *
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
