@@ -66,7 +66,34 @@ public final class UserManager {
         final BasicDBObject query = new BasicDBObject(SELF_ID, userId);
         final DBObject cursor = users.findOne(query);
         if (cursor == null) {
-            throw new DatabaseAccessException("Can not find a user with that id", false);
+
+            // creates a user on the fly in the case that it does not exist.
+            SrlUser.Builder newUser = SrlUser.newBuilder();
+            newUser.setUsername(userId).setEmail("INVALID@INVALID.com");
+
+            // TEMP FIX UNTIL USER DATA IS COPIED OVER!
+            DBCursor courseList = dbs.getCollection(COURSE_COLLECTION).find();
+            while (courseList.hasNext()) {
+                DBObject mongoCourse = courseList.next();
+                List<String> idList = new ArrayList<>();
+                idList.add(mongoCourse.get(SELF_ID).toString());
+                try {
+                    List<School.SrlCourse> courses = MongoInstitution.getInstance().getCourses(idList, userId);
+                    if (courses.size() > 0) {
+                        newUser.addCourseList(mongoCourse.get(SELF_ID).toString());
+                    }
+                } catch (AuthenticationException e) {
+                    if (e.getType() == AuthenticationException.INVALID_DATE) {
+                        newUser.addCourseList(mongoCourse.get(SELF_ID).toString());
+                    }
+                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                }
+            }
+            // END TEMP FIX UNTIL USER DATA IS COPIED OVER!
+
+            // creates a user on the fly in the case that it does not exist.
+            createUser(dbs, newUser.build(), userId);
+            throw new DatabaseAccessException("Can not find a user with that id please try again in a couple of seconds", false);
         }
         return (ArrayList) cursor.get(COURSE_LIST);
     }
