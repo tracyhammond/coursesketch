@@ -77,9 +77,7 @@ function ExceptionNotification() {
 
     /**
      * Creates a root to which everything else is appended to.
-     */
-
-    /**
+     *
      * Loads the type of the ProtoException as the title.
      * Loads the message of the ProtoException as the content.
      * Then displays the entire StackTrace of the ProtoException.
