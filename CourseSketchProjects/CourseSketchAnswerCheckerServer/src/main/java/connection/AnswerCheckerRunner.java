@@ -2,7 +2,6 @@ package connection;
 
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
-import utilities.ExceptionUtilities;
 
 /**
  * Runs and sets up the server.
