@@ -23,7 +23,6 @@
 
     /**
      * Creates a small notification displaying the exception that occurred.
-     *
      * User can click on the notification to see the full stack trace or the notification will disappear after 7 seconds.
      *
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
@@ -45,11 +44,9 @@
 
     /**
      * Creates the element 'exception-notification' and appends it to the parent element.
-     *
      * Then calls loadProtoException() to load the StackTrace on 'exception-notification'.
      *
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
-     *
      * @param {Element} parentElement is the element to which the element we create will be appended to.
      */
     function createDeepNotification(protoEx, parentElement) {
@@ -65,9 +62,9 @@
 
 function ExceptionNotification() {
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box.
-     *
      * Makes the exit button close the box and enables dragging.
+     *
+     * @param {Node} templateClone is a clone of the custom HTML Element for the text box.
      */
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
@@ -84,11 +81,8 @@ function ExceptionNotification() {
 
     /**
      * Loads the type of the ProtoException as the title.
-     *
      * Loads the message of the ProtoException as the content.
-     *
      * Then displays the entire StackTrace of the ProtoException.
-     *
      * Lastly displays the cause if it exists.
      *
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
