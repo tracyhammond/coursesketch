@@ -6,20 +6,20 @@
 
     CourseSketch.showShallowException = function notifyMe(protoEx) {
         // Let's check if the browser supports notifications
-        if (!("Notification" in window)) {
-            alert("This browser does not support desktop notification");
-        } else if (Notification.permission === "granted") {
+        if (!('Notification' in window)) {
+            alert('This browser does not support desktop notification');
+        } else if (Notification.permission === 'granted') {
             // If it's okay let's create a notification
             createShallowNotification(protoEx);
         } else if (Notification.permission !== 'denied') {
             Notification.requestPermission(function(permission) {
             // If the user is okay, let's create a notification
-                if (permission === "granted") {
+                if (permission === 'granted') {
                     createShallowNotification(protoEx);
                 }
             });
         }
-    }
+    };
 
     /**
      * Creates a small notification displaying the exception that occurred.
@@ -28,7 +28,7 @@
      */
 
     function createShallowNotification(protoEx) {
-        var imageUrl = "http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg";
+        var imageUrl = 'http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg';
         var notification = new Notification(protoEx.getExceptionType(), {
             body: protoEx.getMssg(),
             icon: imageUrl
@@ -72,7 +72,7 @@ function ExceptionNotification() {
         this.shadowRoot.appendChild(templateClone);
         this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
             localScope.parentNode.removeChild(localScope);
-        }
+        };
     };
 
     /**
@@ -100,9 +100,9 @@ function ExceptionNotification() {
 
         var stack = document.createElement('div');
         var exceptionStackTrace = protoEx.getStackTrace();
-        var stackTraceWithNewLine = ""
+        var stackTraceWithNewLine = '';
         for (var i = 0; i < exceptionStackTrace.length; i++){
-            stackTraceWithNewLine += exceptionStackTrace[i] + " ";
+            stackTraceWithNewLine += exceptionStackTrace[i] + ' ';
         }
         stack.textContent = stackTraceWithNewLine;
         stack.className = 'stacktrace';
@@ -112,6 +112,6 @@ function ExceptionNotification() {
         cause.textContent = protoEx.getCause();
         cause.className = 'cause';
         this.appendChild(cause);
-    }
+    };
 }
 ExceptionNotification.prototype = Object.create(HTMLDialogElement.prototype);
