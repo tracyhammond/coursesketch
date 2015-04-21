@@ -63,6 +63,39 @@ function VoicePlayback() {
         elm.val('REC');
     }
 
+    // Playback the drawn sketch
+    this.playMe = function(isPaused) {
+        if (!isPaused){
+            var surface = this.shadowRoot.querySelector('sketch-surface');
+            var graphics = surface.graphics;
+            var updateList = surface.getUpdateList();
+            var copyList = [];
+            for (var i = 0; i < updateList.length; i++) {
+                copyList.push(updateList[i]);
+            }
+            var updateManager = surface.getUpdateManager();
+            updateManager.clearUpdates(false);
+
+            playBack = new Playback(copyList, updateManager, graphics);
+            updateManager.addPlugin(playBack);
+            playBack.playNext();
+        } else {
+            playBack.playNext();
+        }
+    }
+
+    // Pause the sketch 
+    this.pauseMe = function(playBack) {
+        pauseIndex = playBack.pauseNext();
+        isPaused = true;
+    }
+
+    // TESTING FUNCTION
+    this.myFunction = function(vid) {
+        // Display the current position of the video in a p element with id="demo"
+        this.shadowRoot.querySelector('#demo').innerHTML = vid.currentTime;
+    }
+
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
@@ -75,70 +108,44 @@ function VoicePlayback() {
         var isPaused = false;
         var pauseIndex= 0 ;
         vid.ontimeupdate = function() {
-            myFunction()
+            localScope.myFunction(vid)
         }
         vid.onplay = function() {
-            playMe();
+            localScope.playMe(isPaused);
             //localScope.stopRecording();
         }
         vid.onpause = function() {
-            pauseMe();
+            localScope.pauseMe(playBack);
         }
-        var surface = this.shadowRoot.querySelector('sketch-surface');
-        var graphics = surface.graphics;
-        var updateManager = surface.getUpdateManager();
 
-        this.shadowRoot.querySelector('#recordBtn').onclick = function() {
-            if (this.isRecording === true) {
-                this.stopRecording();
-                clearInterval(this.voiceBtnTimer);
-                this.isRecording = false;
-                $(this.shadowRoot.querySelector('#recordBtn')).val(null);
-            } else {
-                this.blink($(this.shadowRoot.querySelector('#recordBtn')));
-                this.startRecording();
-                this.isRecording = true;
-            }
-        }.bind(this);
+        setTimeout(function() {
+            var surface = this.shadowRoot.querySelector('sketch-surface');
+            var graphics = surface.graphics;
+            var updateManager = surface.getUpdateManager();
 
-        function playMe() {
-            if (!isPaused){
-                var graphics = surface.graphics;
-                var updateList = surface.getUpdateList();
-                var copyList = [];
-                for (var i = 0; i < updateList.length; i++) {
-                    copyList.push(updateList[i]);
+            this.shadowRoot.querySelector('#recordBtn').onclick = function() {
+                if (localScope.isRecording === true) {
+                    localScope.stopRecording();
+                    clearInterval(localScope.voiceBtnTimer);
+                    localScope.isRecording = false;
+                    $(this.shadowRoot.querySelector('#recordBtn')).val(null);
+                } else {
+                    localScope.blink($(this.shadowRoot.querySelector('#recordBtn')));
+                    localScope.startRecording();
+                    localScope.isRecording = true;
                 }
-                var updateManager = surface.getUpdateManager();
-                updateManager.clearUpdates(false);
+            }.bind(this);
 
-                playBack = new Playback(copyList, updateManager, graphics);
-                updateManager.addPlugin(playBack);
-                playBack.playNext();
-            } else {
-                playBack.playNext();
-            }
-        }
-
-        function pauseMe() {
-            pauseIndex = playBack.pauseNext();
-            isPaused = true;
-        }
-
-        function myFunction() {
-            // Display the current position of the video in a p element with id="demo"
-            this.shadowRoot.querySelector('#demo').innerHTML = vid.currentTime;
-        }
-
-        document.ready(function() {
-            localScope.shadowRoot.querySelector('#audio-player').mediaelementplayer({
-                alwaysShowControls: true,
-                features: ['playpause','volume','progress'],
-                audioVolume: 'horizontal',
-                audioWidth: 364,
-                audioHeight: 70
-            });
-        });
+            // document.ready(function() {
+            //     localScope.shadowRoot.querySelector('#myaudio') {
+            //         alwaysShowControls: true,
+            //         features: ['playpause','volume','progress'],
+            //         audioVolume: 'horizontal',
+            //         audioWidth: 364,
+            //         audioHeight: 70
+            //     };
+            // });
+        }, 2000);
     };
 
 }
