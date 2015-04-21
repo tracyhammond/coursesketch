@@ -120,11 +120,6 @@ function Playback(updateList, updateManager, graphics) {
         if (!pauseDuringStroke) {
             var playTime = currentTime - startingTime; //time play button pressed
             var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber() ; 
-            console.log('startTime ', startingTime);
-            console.log('currentTime ', currentTime);
-            console.log('time playing ', playTime);
-            console.log('time since first update ', updateTime);
-            console.log('time till next update ', updateTime - playTime);
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
             } , updateTime - playTime) ;       
