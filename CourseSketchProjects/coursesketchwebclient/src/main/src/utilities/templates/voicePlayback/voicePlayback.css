@@ -8,6 +8,7 @@
                 line-height: 1;
                 text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
                 font-family: Lucida Sans Unicode;
+                z-index: 101;
 }
 #button-bar{
                 width: 79.5%;

@@ -15,6 +15,9 @@ function Playback(updateList, updateManager, graphics) {
     var lastPausedIndex = Number.MAX_VALUE;
     var lastCreatedStroke = undefined;
     var lastPointAdded = undefined;
+    var startTime;
+    var pointList;
+
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -30,7 +33,7 @@ function Playback(updateList, updateManager, graphics) {
             if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) { //Trey
                 (function() {
                     var stroke = command.decodedData;
-                    var pointList = stroke.getPoints();
+                    pointList = stroke.getPoints();
 
                     // set up the barrier...
                     var strokeBarrier = new CallbackBarrier();
@@ -97,7 +100,7 @@ function Playback(updateList, updateManager, graphics) {
         }
     };
 
-    this.playNext = function() {
+    this.playNext = function(sTime) {
         graphics.setDrawUpdate(false);
         currentIndex++; 
         if (currentIndex === 0) {
@@ -111,7 +114,12 @@ function Playback(updateList, updateManager, graphics) {
         }
         isPlaying = true;
         if (!pauseDuringStroke) {
-            updateManager.addUpdate(updateList[currentIndex]);
+            var playTime = (new Date().getTime()) - sTime; //time play button pressed
+            var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber() ; 
+            console.log(playTime - updateTime);
+            setTimeout(function() {
+                updateManager.addUpdate(updateList[currentIndex]);
+            } , Number(playTime - updateTime) ) ;       
         } else {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
