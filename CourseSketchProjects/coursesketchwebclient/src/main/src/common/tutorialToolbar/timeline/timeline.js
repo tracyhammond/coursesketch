@@ -289,13 +289,13 @@ function Timeline () {
     }
 
     function createTutorialTutorial () {
-        var tutorialTutorial = document.body.querySelector.className("tutorialtutorial");
+        var tutorialTutorial = document.body.querySelector.className('tutorialtutorial');
         document.body.appendChild(tutorialTutorial);
         tutorialTutorial.onclick = function(event) {
-            console.log("Hello, from function land!!");
+            console.log('Hello, from function land!!');
             event.stopPropagation();
             this.parentNode.removeChild(this);
-        }
+        };
     }
     /**
      * creates undos

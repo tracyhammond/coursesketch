@@ -7,9 +7,9 @@ CourseSketch.redirector = {};
 $(document).ready(
 function() {
     CourseSketch.loadCreateTutorial = function() {
-        var element = document.createElement("entire-timeline");
-        document.getElementById("tutorial").appendChild(element);
-    }
+        var element = document.createElement('entire-timeline');
+        document.getElementById('tutorial').appendChild(element);
+    };
 
     /**
      * @returns {Element} the element that encapsulates the exception.
