@@ -188,7 +188,7 @@ public final class BankProblemManager {
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
-            throw new DatabaseAccessException("Bank Problem was not found with the following ID " + problemBankId);
+            throw new DatabaseAccessException("Bank Problem was not found with the following ID: " + problemBankId);
         }
 
         boolean isAdmin;

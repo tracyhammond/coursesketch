@@ -357,7 +357,7 @@ public final class AssignmentManager {
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
-            throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
+            throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
 
         DBObject updateObj = null;
