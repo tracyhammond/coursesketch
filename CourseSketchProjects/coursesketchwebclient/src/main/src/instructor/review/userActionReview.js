@@ -66,8 +66,9 @@ function UserActionGraph() {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-        function Node(data){
+        function Node(data, numRef){
             this.name = data;
+            this.order = numRef;
             this.parent = this;
             this.children = [];
         }
@@ -99,7 +100,7 @@ function UserActionGraph() {
             } else {
                 console.log("here");
                 currentParent.AddChild(new Node(updateData.list[u].commands[0].getCommandTypeName()
-                    + updateData.list[u].time));
+                    + updateData.list[u].time,u));
             }
         }
 
@@ -210,12 +211,13 @@ function UserActionGraph() {
         // Toggle children on click.
         function click(d) {
             if (d.children) {
-                d._children = d.children;
-                d.children = null;
+                //d._children = d.children;
+                //d.children = null;
             } else {
-                d.children = d._children;
-                d._children = null;
+                //d.children = d._children;
+                //d._children = null;
             }
+            playMe(d.order);
             update(d);
         }
 

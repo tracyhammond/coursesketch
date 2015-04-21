@@ -4,7 +4,7 @@
     <link rel="import" href="/src/instructor/review/userActionReviewInclude.html">
     <link rel="import" href="/src/sketching/sketchInclude.html">
     <script src="/src/utilities/functions/barrier.js"></script>
-    <script src="/src/sketching/plugins/playback.js"></script>
+    <script src="/src/sketching/plugins/playback_alt.js"></script>
 </head>
 <body style="background:#FFFFFF;">
 <div style="display:flex;">
@@ -15,21 +15,35 @@
     //fakeCanvas
     var surface = document.body.querySelector("sketch-surface");
     var graphics = surface.graphics;
-    var updateManager;
+    var updateManager, safeManager;
+    var updateList = [];
+    var playBack;
+    function primeMe() {
+        graphics = surface.graphics;
+        var tempList = surface.getUpdateList();
+        for (var i = 0; i < tempList.length; i++) {
+            updateList.push(tempList[i]);
+        }
+        updateManager = surface.getUpdateManager();
+        safeManager = updateManager;
+        //updateManager.clearUpdates(false);
+    }
 
-    function playMe() {
-        var graphics = surface.graphics;
-        var updateList = surface.getUpdateList();
+    function playMeSetup() {
+        updateManager = surface.getUpdateManager();
         var copyList = [];
         for (var i = 0; i < updateList.length; i++) {
             copyList.push(updateList[i]);
         }
-        updateManager = surface.getUpdateManager();
-        updateManager.clearUpdates(false);
+        console.log(copyList);
+        updateManager.clearUpdates(false, true);
 
-        var playBack = new Playback(copyList, updateManager, graphics);
+        playBack = new Playback(copyList, updateManager, graphics);
         updateManager.addPlugin(playBack);
-        playBack.playNext();
+    }
+
+    function playMe(target) {
+        playBack.playNext(target+1);
     }
 
     function graphMe() {
@@ -37,7 +51,7 @@
         /*var updateList = new UpdateManager(undefined, function(error) {
             console.log(error);
         });*/
-        var updateList = updateManager;
+        var updates = safeManager;
 
         /*
         //begin creating test data
@@ -65,7 +79,8 @@
         updateList.addUpdate(assignUpdate);*/
 
         var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-        updateData.list=(updateList.getUpdateList());
+        //updateData.list=(updates.getUpdateList());
+        updateData.list= updateList;
         console.log(updateData);
         //end creating test data
 
