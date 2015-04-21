@@ -218,6 +218,11 @@ public final class CourseProblemManager {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
         final DBObject cursor = myDbRef.fetch();
+
+        if (cursor == null) {
+            throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
+        }
+
         DBObject updateObj = null;
         final DBCollection problemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 

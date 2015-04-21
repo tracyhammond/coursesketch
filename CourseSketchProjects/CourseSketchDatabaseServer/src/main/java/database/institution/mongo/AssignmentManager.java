@@ -355,6 +355,11 @@ public final class AssignmentManager {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
+
+        if (corsor == null) {
+            throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
+        }
+
         DBObject updateObj = null;
         final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
