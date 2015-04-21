@@ -53,6 +53,16 @@ function VoicePlayback() {
         });
     }
 
+    // Blink the red record button
+    this.blink = function(elm) {
+        this.voiceBtnTimer = setInterval(function() {
+            elm.fadeOut(400, function() {
+                elm.fadeIn(400);
+            });
+        }, 800);
+        elm.val('REC');
+    }
+
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
@@ -74,7 +84,7 @@ function VoicePlayback() {
         vid.onpause = function() {
             pauseMe();
         }
-        var surface = document.body.querySelector('sketch-surface');
+        var surface = this.shadowRoot.querySelector('sketch-surface');
         var graphics = surface.graphics;
         var updateManager = surface.getUpdateManager();
 
@@ -90,15 +100,6 @@ function VoicePlayback() {
                 this.isRecording = true;
             }
         }.bind(this);
-
-        this.blink = function(elm) {
-            this.voiceBtnTimer = setInterval(function() {
-                elm.fadeOut(400, function() {
-                    elm.fadeIn(400);
-                });
-            }, 800);
-            elm.val('REC');
-        }
 
         function playMe() {
             if (!isPaused){
