@@ -1,6 +1,6 @@
 function VoicePlayback() {
     // Initialize microphone on client
-    this.initRecorder = function() {
+    this.initRecorder = function(recorder) {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             navigator.getUserMedia = (navigator.getUserMedia ||
@@ -16,7 +16,7 @@ function VoicePlayback() {
         }
 
         navigator.getUserMedia({ audio: true }, function(stream) {
-            this.recorder = new Recorder(stream);
+            recorder = new Recorder(stream);
             console.log('Recorder initialized.');
         }, function(e) {
             console.log('No live audio input: ' + e);
@@ -24,31 +24,23 @@ function VoicePlayback() {
     }
 
     // Start recording voice
-    this.startRecording = function() {
-        this.recorder.record();
+    this.startRecording = function(recorder) {
+        recorder.record();
         console.log('Recording...');
     }
 
     // Stop recording voice
-    this.stopRecording = function() {
-        this.recorder.stop();
+    this.stopRecording = function(recorder, vid) {
+        recorder.stop();
         console.log('Stopped recording.');
 
-        this.saveFile();
-    }
-
-    // Initialize recorder stream, call to start voice recording
-    this.startUserMedia = function(stream) {
-        this.recorder = new Recorder(stream);
-        console.log('Recorder initialized.');
-
-        this.startRecording();
+        this.saveFile(recorder, vid);
     }
 
     // Save the file to the database
     // NOTE: CURRENTLY SETS LOCALLY
-    this.saveFile = function() {
-        this.recorder.exportMP3(function(blob, mp3name) {
+    this.saveFile = function(recorder, vid) {
+        recorder.exportMP3(function(blob, mp3name) {
             vid.src = webkitURL.createObjectURL(blob);
         });
     }
@@ -101,7 +93,8 @@ function VoicePlayback() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        this.initRecorder();
+        var recorder;
+        this.initRecorder(recorder);
         var vid = this.shadowRoot.querySelector('#myaudio');
         vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
         var playBack;
@@ -112,7 +105,7 @@ function VoicePlayback() {
         }
         vid.onplay = function() {
             localScope.playMe(isPaused);
-            //localScope.stopRecording();
+            localScope.stopRecording();
         }
         vid.onpause = function() {
             localScope.pauseMe(playBack);
@@ -125,13 +118,13 @@ function VoicePlayback() {
 
             this.shadowRoot.querySelector('#recordBtn').onclick = function() {
                 if (localScope.isRecording === true) {
-                    localScope.stopRecording();
+                    localScope.stopRecording(recorder, vid);
                     clearInterval(localScope.voiceBtnTimer);
                     localScope.isRecording = false;
                     $(this.shadowRoot.querySelector('#recordBtn')).val(null);
                 } else {
                     localScope.blink($(this.shadowRoot.querySelector('#recordBtn')));
-                    localScope.startRecording();
+                    localScope.startRecording(recorder);
                     localScope.isRecording = true;
                 }
             }.bind(this);
