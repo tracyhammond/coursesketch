@@ -207,7 +207,6 @@ public final class DataRequestHandler {
                         }
                         break;
                         case TUTORIAL: {
-                            final List<TutorialOuterClass.Tutorial> tutorialList = instance.
                         }
                         default:
                             break;
