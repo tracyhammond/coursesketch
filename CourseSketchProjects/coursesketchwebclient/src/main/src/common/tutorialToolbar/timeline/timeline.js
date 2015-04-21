@@ -296,7 +296,7 @@ function Timeline () {
             event.stopPropagation();
             this.parentNode.removeChild(this);
         }
-    }  
+    }
     /**
      * creates undos
      */

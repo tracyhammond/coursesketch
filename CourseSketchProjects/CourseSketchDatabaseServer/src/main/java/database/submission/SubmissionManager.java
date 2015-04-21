@@ -225,7 +225,7 @@ public final class SubmissionManager {
     }
 
     public static List<TutorialOuterClass.Tutorial> mongoGetTutorialList(final Authenticator authenticator, final DB dbs, final String userId,
-                                                                         final String tutorialUrl) throws DatabaseAccessException, AuthenticationException {
+            final String tutorialUrl, final int pageNumber) throws DatabaseAccessException, AuthenticationException {
         final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
 
         final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()));
