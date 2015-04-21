@@ -20,6 +20,7 @@ public interface AuthenticationDataCreator {
      * @param itemId
      *            The specific group id where this data is stored.
      * @return an {@link AuthenticationData}
+     * @throws DatabaseAccessException Thrown if the itemId is not found in collection.
      */
     AuthenticationData getAuthGroups(String collection, String itemId) throws DatabaseAccessException;
 
