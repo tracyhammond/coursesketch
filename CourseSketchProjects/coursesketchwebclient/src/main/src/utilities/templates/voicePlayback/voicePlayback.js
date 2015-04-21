@@ -71,9 +71,9 @@ function VoicePlayback() {
 
             localScope.playBack = new Playback(copyList, localScope.updateManager, localScope.graphics);
             localScope.updateManager.addPlugin(localScope.playBack);
-            localScope.playBack.playNext();
+            localScope.playBack.playNext(localScope.startTime);
         } else {
-            localScope.playBack.playNext();
+            localScope.playBack.playNext(localScope.startTime);
         }
     }
 
@@ -102,11 +102,13 @@ function VoicePlayback() {
         localScope.playBack       = undefined;
         localScope.isPaused       = false;
         localScope.pauseIndex     = 0;
+        localScope.startTime      = 0;
 
         localScope.vid.ontimeupdate     = function() {
             localScope.myFunction()
         }
         localScope.vid.onplay           = function() {
+            localScope.startTime = new Date().getTime();
             localScope.playMe();
         }
         localScope.vid.onpause          = function() {
