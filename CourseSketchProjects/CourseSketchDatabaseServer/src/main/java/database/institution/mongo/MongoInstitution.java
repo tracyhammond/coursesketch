@@ -475,6 +475,12 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
+    public TutorialOuterClass.Tutorial getTutorial(final String userId, final String tutorialId)
+            throws DatabaseAccessException, AuthenticationException {
+        return SubmissionManager.mongoGetTutorial(getInstance().auth, getInstance().database, userId, tutorialId);
+    }
+
+    @Override
     public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page) throws AuthenticationException {
         return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }

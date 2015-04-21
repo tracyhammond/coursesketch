@@ -1,9 +1,11 @@
 package database.institution;
 
 import com.google.protobuf.ByteString;
+import com.mongodb.DB;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
+import database.auth.Authenticator;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
@@ -426,6 +428,13 @@ public interface Institution {
      * @throws DatabaseAccessException Thrown if there is an issue accessing data
      */
     String insertTutorial(String userId, TutorialOuterClass.Tutorial tutorialObject)
+            throws DatabaseAccessException, AuthenticationException;
+
+
+    /**
+     *@param tutorialId ID of the tutorial to get
+     */
+     TutorialOuterClass.Tutorial getTutorial(final String userId, final String tutorialId)
             throws DatabaseAccessException, AuthenticationException;
 
     /**
