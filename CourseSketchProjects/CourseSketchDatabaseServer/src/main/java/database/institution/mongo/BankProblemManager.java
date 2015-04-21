@@ -280,9 +280,11 @@ public final class BankProblemManager {
      * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to retrieve any bank problems.
+     * @throws DatabaseAccessException
+     *         Thrown if there are fields missing that make the problem inaccessible.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
-            final String courseId, final int page) throws AuthenticationException {
+            final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdmin(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
