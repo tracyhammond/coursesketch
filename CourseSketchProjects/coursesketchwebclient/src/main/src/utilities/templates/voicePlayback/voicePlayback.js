@@ -71,9 +71,9 @@ function VoicePlayback() {
 
             localScope.playBack = new Playback(copyList, localScope.updateManager, localScope.graphics);
             localScope.updateManager.addPlugin(localScope.playBack);
-            localScope.playBack.playNext(localScope.startTime);
+            localScope.playBack.playNext(new Date().getTime());
         } else {
-            localScope.playBack.playNext(localScope.startTime);
+            localScope.playBack.playNext(new Date().getTime());
         }
     }
 
@@ -99,7 +99,6 @@ function VoicePlayback() {
         localScope.startTime      = 0;
 
         localScope.vid.onplay           = function() {
-            localScope.startTime = new Date().getTime();
             localScope.playMe();
         }
         localScope.vid.onpause          = function() {

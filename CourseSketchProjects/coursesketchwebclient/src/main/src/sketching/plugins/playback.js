@@ -101,6 +101,9 @@ function Playback(updateList, updateManager, graphics) {
     };
 
     this.playNext = function(sTime) {
+        if (!isUndefined(sTime)) {
+            startingTime = sTime;
+        }
         graphics.setDrawUpdate(false);
         currentIndex++; 
         if (currentIndex === 0) {
@@ -112,14 +115,19 @@ function Playback(updateList, updateManager, graphics) {
             console.log('Finished');
             return;
         }
+        var currentTime = (new Date().getTime());
         isPlaying = true;
         if (!pauseDuringStroke) {
-            var playTime = (new Date().getTime()) - sTime; //time play button pressed
+            var playTime = currentTime - startingTime; //time play button pressed
             var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber() ; 
-            console.log(playTime - updateTime);
+            console.log('startTime ', startingTime);
+            console.log('currentTime ', currentTime);
+            console.log('time playing ', playTime);
+            console.log('time since first update ', updateTime);
+            console.log('time till next update ', updateTime - playTime);
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
-            } , Number(playTime - updateTime) ) ;       
+            } , updateTime - playTime) ;       
         } else {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
