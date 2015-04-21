@@ -83,12 +83,6 @@ function VoicePlayback() {
         localScope.isPaused = true;
     }
 
-    // TESTING FUNCTION
-    this.myFunction = function() {
-        // Display the current position of the video in a p element with id="demo"
-        localScope.shadowRoot.querySelector('#demo').innerHTML = localScope.vid.currentTime;
-    }
-
     this.initializeElement = function(templateClone) {
         localScope = this;
         shadowRoot = this.createShadowRoot();
@@ -104,9 +98,6 @@ function VoicePlayback() {
         localScope.pauseIndex     = 0;
         localScope.startTime      = 0;
 
-        localScope.vid.ontimeupdate     = function() {
-            localScope.myFunction()
-        }
         localScope.vid.onplay           = function() {
             localScope.startTime = new Date().getTime();
             localScope.playMe();
