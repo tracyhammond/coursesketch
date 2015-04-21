@@ -298,7 +298,7 @@ public final class SubmissionManager {
         tutorial.setDescription(dbTutorial.get(DESCRIPTION).toString());
         tutorial.setUrl(dbTutorial.get(URL).toString());
         try {
-            tutorial.setSteps((Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST))).toByteString());
+            tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)).toByteString());
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("unable to decode steps", e);

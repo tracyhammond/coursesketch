@@ -78,7 +78,7 @@ public final class DataInsertHandler {
      *         The connection where the result is sent to.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "PMD.NcssMethodCount" })
     public static void handleData(final Request req, final SocketSession conn) {
         try {
             LOG.info("Recieving DATA SEND Request...");
