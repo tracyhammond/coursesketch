@@ -1,9 +1,64 @@
 function VoicePlayback() {
+    // Initialize microphone on client
+    this.initRecorder = function() {
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            navigator.getUserMedia = (navigator.getUserMedia ||
+                                      navigator.webkitGetUserMedia ||
+                                      navigator.mozgetUserMedia ||
+                                      navigator.msGetUserMedia);
+            window.URL = window.URL || window.webkitURL;
+
+            console.log('Audio context set up');
+            console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
+        } catch (e) {
+            alert('No web audio support in this browser');
+        }
+
+        navigator.getUserMedia({ audio: true }, function(stream) {
+            this.recorder = new Recorder(stream);
+            console.log('Recorder initialized.');
+        }, function(e) {
+            console.log('No live audio input: ' + e);
+        });
+    }
+
+    // Start recording voice
+    this.startRecording = function() {
+        this.recorder.record();
+        console.log('Recording...');
+    }
+
+    // Stop recording voice
+    this.stopRecording = function() {
+        this.recorder.stop();
+        console.log('Stopped recording.');
+
+        this.saveFile();
+    }
+
+    // Initialize recorder stream, call to start voice recording
+    this.startUserMedia = function(stream) {
+        this.recorder = new Recorder(stream);
+        console.log('Recorder initialized.');
+
+        this.startRecording();
+    }
+
+    // Save the file to the database
+    // NOTE: CURRENTLY SETS LOCALLY
+    this.saveFile = function() {
+        this.recorder.exportMP3(function(blob, mp3name) {
+            vid.src = webkitURL.createObjectURL(blob);
+        });
+    }
+
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        this.initRecorder();
         var vid = this.shadowRoot.querySelector('#myaudio');
         vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
         var playBack;
@@ -43,7 +98,7 @@ function VoicePlayback() {
                 });
             }, 800);
             elm.val('REC');
-        }.bind(this);
+        }
 
         function playMe() {
             if (!isPaused){
@@ -83,55 +138,6 @@ function VoicePlayback() {
                 audioHeight: 70
             });
         });
-
-        this.startRecording = function() {
-            this.recorder.record();
-            console.log('Recording...');
-        }
-
-        this.stopRecording = function() {
-            this.recorder.stop();
-            console.log('Stopped recording.');
-
-            this.saveFile();
-        }
-
-        this.startUserMedia = function(stream) {
-            this.recorder = new Recorder(stream);
-            console.log('Recorder initialized.');
-
-            this.startRecording();
-        }
-
-        this.saveFile = function() {
-            this.recorder.exportMP3(function(blob, mp3name) {
-                vid.src = webkitURL.createObjectURL(blob);
-            });
-        }
-
-        this.initRecorder = function() {
-            try {
-                window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                navigator.getUserMedia = (navigator.getUserMedia ||
-                                          navigator.webkitGetUserMedia ||
-                                          navigator.mozgetUserMedia ||
-                                          navigator.msGetUserMedia);
-                window.URL = window.URL || window.webkitURL;
-
-                console.log('Audio context set up');
-                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
-            } catch (e) {
-                alert('No web audio support in this browser');
-            }
-
-            navigator.getUserMedia({ audio: true }, function(stream) {
-                this.recorder = new Recorder(stream);
-                console.log('Recorder initialized.');
-            }, function(e) {
-                console.log('No live audio input: ' + e);
-            });
-        }
-        this.initRecorder();
     };
 
 }
