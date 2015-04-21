@@ -102,7 +102,6 @@ public final class DatabaseStringConstants {
     // tutorial specific
     public static final String URL = "url";
     public static final String URL_HASH = "urlHash";
-    
 
     // problem specific
     public static final String QUESTION_TEXT = "QuestionText";
