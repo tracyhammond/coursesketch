@@ -1,6 +1,8 @@
 function VoicePlayback() {
+    var localScope = undefined;
+
     // Initialize microphone on client
-    this.initRecorder = function(recorder) {
+    this.initRecorder = function() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             navigator.getUserMedia = (navigator.getUserMedia ||
@@ -16,7 +18,7 @@ function VoicePlayback() {
         }
 
         navigator.getUserMedia({ audio: true }, function(stream) {
-            recorder = new Recorder(stream);
+            localScope.recorder = new Recorder(stream);
             console.log('Recorder initialized.');
         }, function(e) {
             console.log('No live audio input: ' + e);
@@ -24,30 +26,31 @@ function VoicePlayback() {
     }
 
     // Start recording voice
-    this.startRecording = function(recorder) {
-        recorder.record();
+    this.startRecording = function() {
+        localScope.recorder.record();
         console.log('Recording...');
     }
 
     // Stop recording voice
-    this.stopRecording = function(recorder, vid) {
-        recorder.stop();
+    this.stopRecording = function() {
+        localScope.recorder.stop();
         console.log('Stopped recording.');
 
-        this.saveFile(recorder, vid);
+        localScope.saveFile();
     }
 
     // Save the file to the database
     // NOTE: CURRENTLY SETS LOCALLY
-    this.saveFile = function(recorder, vid) {
-        recorder.exportMP3(function(blob, mp3name) {
-            vid.src = webkitURL.createObjectURL(blob);
+    this.saveFile = function() {
+        localScope.recorder.exportMP3(function(blob, mp3name) {
+            localScope.vid.src = URL.createObjectURL(blob);
+            localScope.vid.type = "audio/mp3";
         });
     }
 
     // Blink the red record button
     this.blink = function(elm) {
-        this.voiceBtnTimer = setInterval(function() {
+        localScope.voiceBtnTimer = setInterval(function() {
             elm.fadeOut(400, function() {
                 elm.fadeIn(400);
             });
@@ -56,75 +59,74 @@ function VoicePlayback() {
     }
 
     // Playback the drawn sketch
-    this.playMe = function(isPaused) {
-        if (!isPaused){
-            var surface = this.shadowRoot.querySelector('sketch-surface');
-            var graphics = surface.graphics;
-            var updateList = surface.getUpdateList();
+    this.playMe = function() {
+        if (!localScope.isPaused){
+            var updateList = localScope.surface.getUpdateList();
             var copyList = [];
             for (var i = 0; i < updateList.length; i++) {
                 copyList.push(updateList[i]);
             }
-            var updateManager = surface.getUpdateManager();
-            updateManager.clearUpdates(false);
+            localScope.updateManager = localScope.surface.getUpdateManager();
+            localScope.updateManager.clearUpdates(false);
 
-            playBack = new Playback(copyList, updateManager, graphics);
-            updateManager.addPlugin(playBack);
-            playBack.playNext();
+            localScope.playBack = new Playback(copyList, localScope.updateManager, localScope.graphics);
+            localScope.updateManager.addPlugin(localScope.playBack);
+            localScope.playBack.playNext();
         } else {
-            playBack.playNext();
+            localScope.playBack.playNext();
         }
     }
 
     // Pause the sketch 
-    this.pauseMe = function(playBack) {
-        pauseIndex = playBack.pauseNext();
-        isPaused = true;
+    this.pauseMe = function() {
+        localScope.pauseIndex = localScope.playBack.pauseNext();
+        localScope.isPaused = true;
     }
 
     // TESTING FUNCTION
-    this.myFunction = function(vid) {
+    this.myFunction = function() {
         // Display the current position of the video in a p element with id="demo"
-        this.shadowRoot.querySelector('#demo').innerHTML = vid.currentTime;
+        localScope.shadowRoot.querySelector('#demo').innerHTML = localScope.vid.currentTime;
     }
 
     this.initializeElement = function(templateClone) {
-        var localScope = this;
+        localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        var recorder;
-        this.initRecorder(recorder);
-        var vid = this.shadowRoot.querySelector('#myaudio');
-        vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
-        var playBack;
-        var isPaused = false;
-        var pauseIndex= 0 ;
-        vid.ontimeupdate = function() {
-            localScope.myFunction(vid)
+        localScope.recorder = undefined;
+        localScope.initRecorder();
+
+        localScope.vid            = this.shadowRoot.querySelector('#myaudio');
+        localScope.vid.src        = '/src/utilities/templates/voicePlayback/test.mp3';
+        localScope.playBack       = undefined;
+        localScope.isPaused       = false;
+        localScope.pauseIndex     = 0;
+
+        localScope.vid.ontimeupdate     = function() {
+            localScope.myFunction()
         }
-        vid.onplay = function() {
-            localScope.playMe(isPaused);
-            localScope.stopRecording();
+        localScope.vid.onplay           = function() {
+            localScope.playMe();
         }
-        vid.onpause = function() {
-            localScope.pauseMe(playBack);
+        localScope.vid.onpause          = function() {
+            localScope.pauseMe();
         }
 
         setTimeout(function() {
-            var surface = this.shadowRoot.querySelector('sketch-surface');
-            var graphics = surface.graphics;
-            var updateManager = surface.getUpdateManager();
+            localScope.surface        = localScope.shadowRoot.querySelector('sketch-surface');
+            localScope.graphics       = localScope.surface.graphics;
+            localScope.updateManager  = localScope.surface.getUpdateManager();
 
             this.shadowRoot.querySelector('#recordBtn').onclick = function() {
                 if (localScope.isRecording === true) {
-                    localScope.stopRecording(recorder, vid);
+                    localScope.stopRecording();
                     clearInterval(localScope.voiceBtnTimer);
                     localScope.isRecording = false;
-                    $(this.shadowRoot.querySelector('#recordBtn')).val(null);
+                    $(localScope.shadowRoot.querySelector('#recordBtn')).val(null);
                 } else {
-                    localScope.blink($(this.shadowRoot.querySelector('#recordBtn')));
-                    localScope.startRecording(recorder);
+                    localScope.blink($(localScope.shadowRoot.querySelector('#recordBtn')));
+                    localScope.startRecording();
                     localScope.isRecording = true;
                 }
             }.bind(this);
