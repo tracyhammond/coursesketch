@@ -220,7 +220,7 @@ public final class CourseProblemManager {
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
-            throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
+            throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
         }
 
         DBObject updateObj = null;
