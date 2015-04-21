@@ -90,7 +90,7 @@ public class SubmissionManagerTest {
         tutorialObject.setName("Tutorial 1");
         String tutorialObjectId2 = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
 
-        List<TutorialOuterClass.Tutorial> tutorialList = SubmissionManager.mongoGetTutorialList(fauth, db, "userId", url);
+        List<TutorialOuterClass.Tutorial> tutorialList = SubmissionManager.mongoGetTutorialList(fauth, db, "userId", url, 0);
         Assert.assertEquals(2, tutorialList.size());
     }
 }
