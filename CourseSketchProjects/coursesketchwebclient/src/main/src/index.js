@@ -11,6 +11,14 @@ function() {
         document.getElementById("tutorial").appendChild(element);
  
     }
+
+    /**
+     * @returns {Element} the element that encapsulates the exception.
+     */
+    CourseSketch.getExceptionParentElement = function() {
+        return document.body;
+    };
+
     CourseSketch.reloadContent = function() {
         var value = CourseSketch.redirector.getRedirect();
         CourseSketch.redirector.changeSourceNoEvent(value);
