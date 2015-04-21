@@ -103,12 +103,16 @@ function PanelEditApi(panel){
         embeddedHtml.style.position = 'relative';
         if (htmlObj.location === 'top' || htmlObj.location === 'bottom') {
             sketchSurface.style.height = 'calc(' + (parseInt(sketchSurface.style.height, 10) - htmlObj.height - 1) + '% - 110px)';
-            embeddedHtml.style.width = 'calc(100% - 110px)';
+            embeddedHtml.style.width = 'calc(100%)';
             embeddedHtml.style.height = 'calc(' + (htmlObj.height) + '% - 110px)';
+            embeddedHtml.width = 'calc(100%)';
+            embeddedHtml.height = 'calc(' + (htmlObj.height) + '% - 110px)';
         } else {
             sketchSurface.style.width = '' + (parseInt(sketchSurface.style.width, 10) - htmlObj.width - 1) + '%';
             embeddedHtml.style.width = '' + (htmlObj.width - 1) + '%';
             embeddedHtml.style.height = 'calc(100% - 110px)';
+            embeddedHtml.width = '' + (htmlObj.width - 1) + '%';
+            embeddedHtml.height = 'calc(100% - 110px)';
         }
         if (htmlObj.location === 'top' || htmlObj.location === 'left') {
             panel.insertBefore(embeddedHtml, sketchSurface);
@@ -116,8 +120,8 @@ function PanelEditApi(panel){
             panel.appendChild(embeddedHtml);
         }
         sketchSurface.resizeSurface();
-        var builtHtml = '<iframe src=\"' + htmlObj.htmlCode + '\" frameborder=\"0\" allowfullscreen=\"\"' +
-               'style= position: absolute; left: 0px; top: 0px; \"width: 100%; height: 100%;\"></iframe>';
+        var builtHtml = '<iframe src=\"' + htmlObj.htmlCode + '\" frameborder=\"0\" allowfullscreen=\"1\"' +
+               'style= "position: inline-flex; left: 0px; top: 0px; width: 100%; height: 100%;"></iframe>';
         embeddedHtml.setHtml(builtHtml);
     };
 
