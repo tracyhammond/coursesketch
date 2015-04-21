@@ -423,7 +423,9 @@ public interface Institution {
      *
      * @param userId User associated with the tutorial
      * @param tutorialObject The tutorial being inserted
+     * @return tutorialId of inserted tutorial
      * @throws DatabaseAccessException Thrown if there is an issue accessing data
+     * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
     String insertTutorial(String userId, TutorialOuterClass.Tutorial tutorialObject)
             throws DatabaseAccessException, AuthenticationException;

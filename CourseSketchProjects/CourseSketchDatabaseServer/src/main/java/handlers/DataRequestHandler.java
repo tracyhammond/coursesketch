@@ -24,7 +24,6 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
-import protobuf.srl.tutorial.TutorialOuterClass;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
