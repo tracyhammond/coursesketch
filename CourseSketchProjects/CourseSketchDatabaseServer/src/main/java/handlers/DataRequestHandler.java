@@ -24,6 +24,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlSchool;
+import protobuf.srl.tutorial.TutorialOuterClass;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
@@ -205,6 +206,9 @@ public final class DataRequestHandler {
                             results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURESLIDE));
                         }
                         break;
+                        case TUTORIAL: {
+                            final List<TutorialOuterClass.Tutorial> tutorialList = instance.
+                        }
                         default:
                             break;
                     }
