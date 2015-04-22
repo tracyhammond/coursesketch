@@ -32,10 +32,7 @@ validateFirstRun(document.currentScript);
         // todo: better way of removing elements
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
-        var oldElement = parentPanel.querySelector('.sub-panel');
-        if (oldElement instanceof Node) {
-            parentPanel.removeChild(oldElement);
-        }
+        parentPanel.emptyPanel();
         if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
