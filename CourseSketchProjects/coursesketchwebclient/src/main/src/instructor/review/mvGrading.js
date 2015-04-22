@@ -2,13 +2,15 @@ validateFirstRun(document.currentScript);
 
 /**
  * @namespace multiViewPage
- * This Multiview page goes off a single problem at a time and laods all student experiments of that
- * problem id.
+ * This Multiview page goes off a single problem at a time and loads all student experiments of that problem id.
+ *
  */
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
-    /**
-     * A list of experiments to laod into the sketching pannels
+
+    /*
+     * A list of experiments to load into the sketching panels.
+     *
      * gets all experiments that hold the current problem id and places them is
      * sketchList
      * @memberof multiViewPage

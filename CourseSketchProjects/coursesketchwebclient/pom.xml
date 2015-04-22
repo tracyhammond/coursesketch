@@ -10,6 +10,17 @@
 
     <profiles>
         <profile>
+            <id>node for windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <nodeVersion>v0.10.28</nodeVersion>
+            </properties>
+        </profile>
+        <profile>
             <id>deepClean</id>
             <activation>
                 <property>

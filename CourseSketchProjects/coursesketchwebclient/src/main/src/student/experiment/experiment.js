@@ -32,10 +32,7 @@ validateFirstRun(document.currentScript);
         // todo: better way of removing elements
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
-        var oldElement = parentPanel.querySelector('.sub-panel');
-        if (oldElement instanceof Node) {
-            parentPanel.removeChild(oldElement);
-        }
+        parentPanel.emptyPanel();
         if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
@@ -105,7 +102,7 @@ validateFirstRun(document.currentScript);
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel';
+        sketchSurface.className = 'wide_rule sub-panel submittable';
         sketchSurface.style.width = '100%';
         sketchSurface.style.height = 'calc(100% - 110px)';
         sketchSurface.setErrorListener(function(exception) {
@@ -129,11 +126,15 @@ validateFirstRun(document.currentScript);
         document.getElementById('problemPanel').appendChild(sketchSurface);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
+            var problemScript = navigator.getProblemScript();
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
-                if (element.isRunning()) {
-                    element.finishWaiting();
-                    CourseSketch.studentExperiment.removeWaitOverlay();
-                }
+                executeScript(problemScript, document.getElementById('problemPanel'), function() {
+                    console.log('script executed - worker disconnect');
+                    if (element.isRunning()) {
+                        element.finishWaiting();
+                        CourseSketch.studentExperiment.removeWaitOverlay();
+                    }
+                });
                 return;
             }
 
@@ -143,13 +144,19 @@ validateFirstRun(document.currentScript);
             // add after attributes are set.
 
             sketchSurface.refreshSketch();
-            console.log(submission);
-            var updateList = submission.getUpdateList();
-            //console.log(updateList);
-            sketchSurface.loadUpdateList(updateList.getList(), element);
-            updateList = null;
-            element = null;
-            //console.log(submission);
+
+            //loads and runs the script
+            executeScript(problemScript, document.getElementById('problemPanel'), function() {
+                console.log('script executed - worker disconnect');
+                console.log(submission);
+                var updateList = submission.getUpdateList();
+                //console.log(updateList);
+                sketchSurface.loadUpdateList(updateList.getList(), element);
+                updateList = null;
+                element = null;
+                //console.log(submission);
+            });
         });
+        //end of getSubmission
     }
 })();

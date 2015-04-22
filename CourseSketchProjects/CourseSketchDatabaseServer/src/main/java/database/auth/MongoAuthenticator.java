@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.auth.Authenticator.AuthenticationData;
 import org.bson.types.ObjectId;
@@ -51,21 +52,25 @@ public final class MongoAuthenticator implements AuthenticationDataCreator {
      * {@inheritDoc}
      */
     @Override
-    public AuthenticationData getAuthGroups(final String collection, final String itemId) {
+    public AuthenticationData getAuthGroups(final String collection, final String itemId) throws DatabaseAccessException {
         final AuthenticationData data = new AuthenticationData();
 
         final DBRef myDbRef = new DBRef(dbs, collection, new ObjectId(itemId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = myDbRef.fetch();
 
-        data.setUserList((List) ((List<Object>) corsor.get(USERS)));
+        if (cursor == null) {
+            throw new DatabaseAccessException("Item: " + itemId + " was not found in collection: " + collection);
+        }
 
-        data.setModeratorList((List) ((List<Object>) corsor.get(MOD)));
+        data.setUserList((List) ((List<Object>) cursor.get(USERS)));
 
-        data.setAdminList((List) ((List<Object>) corsor.get(ADMIN)));
+        data.setModeratorList((List) ((List<Object>) cursor.get(MOD)));
 
-        data.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(ACCESS_DATE)).longValue()));
+        data.setAdminList((List) ((List<Object>) cursor.get(ADMIN)));
 
-        data.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
+        data.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
+
+        data.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
         return data;
     }
 
