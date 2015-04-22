@@ -10,6 +10,14 @@ CourseSketch.redirector = {};
 $(document).ready(
 function() {
 
+    
+    /**
+     * @returns {Element} the element that encapsulates the exception.
+     */
+    CourseSketch.getExceptionParentElement = function() {
+        return document.body;
+    };
+
     /**
      * refreshes the page without adding a browser event.
      * @memberof CourseSketch
