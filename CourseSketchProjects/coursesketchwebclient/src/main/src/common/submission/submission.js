@@ -94,26 +94,25 @@ function SubmissionPanel() {
         }
         var submittingValue = this.wrapperFunction(submission);
         console.log(submittingValue);
-        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
+        var submissionRequest = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
                 CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener(function(event, request) {
             console.log(request);
             CourseSketch.connection.setSubmissionListener(undefined);
-            alert(request.getMessageTime());
             alert(request.responseText);
             if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
-                var subPanel = this.shadowRoot.querySelector('#sub-panel').getDistributedNodes()[0];
+                var sketchSurface = this.querySelector('.submittable');
                 // Potential conflict if it was save multiple times in quick succession.
-                subPanel.getUpdateManager().setLastSaveTime(request.getMessageTime());
+                sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
                 console.log('submission has been updated with the latest time', request.getMessageTime().toString());
             }
             problemType = undefined;
             problemIndex = undefined;
         }.bind(this));
-        request.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
-        CourseSketch.connection.sendRequest(request);
+        submissionRequest.setResponseText(this.isStudent ? 'student' : this.isGrader ? 'grader' : 'instructor');
+        CourseSketch.connection.sendRequest(submissionRequest);
         QuestionType = undefined;
         submission = undefined;
         subPanel = undefined;
@@ -185,6 +184,15 @@ function SubmissionPanel() {
         toolbar.innerHTML = '';
         this.setCallbacks();
         this.setSpecificCallbacks(this.problemType, subPanel, toolbar);
+    };
+
+    /**
+     * Empties all .submittable and all .sub-panel from this submission panel.
+     */
+    this.emptyPanel = function() {
+        [].forEach.call(this.querySelectorAll('.sub-panel'), function(item) {
+            item.parentNode.removeChild(item);
+        });
     };
 
     this.setSpecificCallbacks = function(problemType, element, toolbar) {
