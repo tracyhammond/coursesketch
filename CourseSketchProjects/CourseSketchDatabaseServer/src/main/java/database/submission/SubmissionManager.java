@@ -115,7 +115,6 @@ public final class SubmissionManager {
         if (cursor == null) {
             LOG.warn("The student has not submitted anything for this problem: " + problemId);
             return;
-            // throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
         final Object sketchId = cursor.get(userId);
         if (sketchId == null) {
