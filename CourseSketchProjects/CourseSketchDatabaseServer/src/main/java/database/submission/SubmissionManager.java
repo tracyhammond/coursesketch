@@ -113,15 +113,15 @@ public final class SubmissionManager {
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
-            LOG.info("The student has not submitted anything for this problem: " + problemId);
+            LOG.info("The student has not submitted anything for this problem: {}", problemId);
             return;
         }
         final Object sketchId = cursor.get(userId);
         if (sketchId == null) {
-            LOG.info("The student has not submitted anything for this problem: " + problemId);
+            LOG.info("The student has not submitted anything for this problem: {}", problemId);
             return;
         }
-        LOG.debug("resultant SketchId: ", sketchId);
+        LOG.debug("resultant SketchId: {}", sketchId);
         build.addItemId(sketchId.toString());
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
