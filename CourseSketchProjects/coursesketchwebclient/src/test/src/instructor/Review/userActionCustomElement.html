@@ -1,15 +1,36 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
+
     <link rel="import" href="/src/instructor/review/userActionReviewInclude.html">
     <link rel="import" href="/src/sketching/sketchInclude.html">
     <script src="/src/utilities/functions/barrier.js"></script>
     <script src="/src/sketching/plugins/playback_alt.js"></script>
 </head>
 <body style="background:#FFFFFF;">
-<div style="display:flex;">
-    <user-action-graph id="hello" style="height:100%; width:50%; border: 5px solid blue; right"></user-action-graph>
-    <sketch-surface id="fakeCanvas" style="height:100%; width:50%; border: 5px solid red;"></sketch-surface>
+<div class="row">
+    <div class="col s6 card-panel teal lighten-4">
+        <user-action-graph id="hello" style="height:90%;"></user-action-graph>
+    </div>
+    <div class="col s6 card-panel cyan lighten-5">
+        <sketch-surface id="fakeCanvas" style="height:90%;"></sketch-surface>
+    </div>
+</div>
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red">
+        <i class="large mdi-editor-mode-edit""></i>
+    </a>
+    <ul>
+        <li><a class="btn-floating red" onclick="primeMe();"><i class="large mdi-editor-insert-chart"></i></a></li>
+        <li><a class="btn-floating yellow darken-1" onclick="graphMe();"><i class="large mdi-editor-format-quote"></i></a></li>
+        <li><a class="btn-floating green"><i class="large mdi-editor-publish"></i></a></li>
+        <li><a class="btn-floating blue"><i class="large mdi-editor-attach-file"></i></a></li>
+    </ul>
 </div>
 <script>
     //fakeCanvas
@@ -26,10 +47,7 @@
         }
         updateManager = surface.getUpdateManager();
         safeManager = updateManager;
-        //updateManager.clearUpdates(false);
-    }
 
-    function playMeSetup() {
         updateManager = surface.getUpdateManager();
         var copyList = [];
         for (var i = 0; i < updateList.length; i++) {
