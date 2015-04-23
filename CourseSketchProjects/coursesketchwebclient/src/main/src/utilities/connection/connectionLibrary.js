@@ -97,12 +97,14 @@ function Connection(uri, encrypted, attemptReconnect) {
                     } else if (msg.requestType === MessageType.ERROR) {
                         var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(),
                             CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass());
+
                         console.log('exception object', exception);
                         console.log(msg.getResponseText());
+
+                        CourseSketch.showShallowException(exception);
                         if (onError) {
                             onError(evt, msg.getResponseText());
                         }
-                        alert('ERROR: ' + msg.getResponseText());
                     } else if (onRequest) {
                         onRequest(evt, msg);
                     }
