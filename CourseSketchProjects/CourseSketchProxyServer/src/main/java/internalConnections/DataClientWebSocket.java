@@ -62,7 +62,7 @@ public final class DataClientWebSocket extends ClientWebSocket {
                 }
             }
         } else {
-            final MultiConnectionState state = getStateFromId(AbstractServerWebSocketHandler.Decoder.parseRequest(buffer).getSessionInfo());
+            final MultiConnectionState state = getStateFromId(req.getSessionInfo());
 
             final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
             // Strips away identification.
