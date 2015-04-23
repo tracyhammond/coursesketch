@@ -117,13 +117,13 @@ function Playback(updateList, updateManager, graphics) {
         isPlaying = true;
         if (!pauseDuringStroke) {
             var playTime = currentTime - startingTime; //time play button pressed
-            var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber();
+            var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
             var delayTime = updateTime - playTime;
             if (currentIndex == 1 || currentIndex == 0) { delayTime = 0; }
             console.log(updateTime - playTime);
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
-            } , delayTime);
+            }, delayTime);
         } else {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
