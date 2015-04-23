@@ -30,7 +30,7 @@ function Playback(updateList, updateManager, graphics) {
         // runs through all of the commands in the update.
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) { //Trey
+            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) {
                 (function() {
                     var stroke = command.decodedData;
                     pointList = stroke.getPoints();
@@ -51,7 +51,7 @@ function Playback(updateList, updateManager, graphics) {
                         strokePath.simplify();
                         commandFinished();
                     });
-                    console.log(ps);
+                    //console.log(ps);
 
                     var startingTime = pointList[0].getTime();
                     var t;
@@ -100,7 +100,7 @@ function Playback(updateList, updateManager, graphics) {
         }
     };
 
-    this.playNext = function(sTime) {
+    this.playNext = function(sTime, surface) {
         if (!isUndefined(sTime)) {
             startingTime = sTime;
         }
@@ -116,13 +116,17 @@ function Playback(updateList, updateManager, graphics) {
             return;
         }
         var currentTime = (new Date().getTime());
+
         isPlaying = true;
         if (!pauseDuringStroke) {
             var playTime = currentTime - startingTime; //time play button pressed
-            var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber() ; 
+            var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber();
+            var delayTime = updateTime - playTime;
+            if (currentIndex == 1 || currentIndex == 0) { delayTime = 0; }
+            console.log(updateTime - playTime);
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
-            } , updateTime - playTime) ;       
+            } , delayTime);
         } else {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }

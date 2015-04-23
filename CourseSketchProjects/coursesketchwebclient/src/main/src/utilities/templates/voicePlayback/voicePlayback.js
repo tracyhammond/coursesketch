@@ -60,6 +60,7 @@ function VoicePlayback() {
 
     // Playback the drawn sketch
     this.playMe = function() {
+        localScope.surface.resizeSurface();
         if (!localScope.isPaused){
             var updateList = localScope.surface.getUpdateList();
             var copyList = [];
