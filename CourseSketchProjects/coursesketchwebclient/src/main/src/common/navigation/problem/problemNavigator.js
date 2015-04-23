@@ -99,6 +99,10 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         return problemList.size();
     };
 
+    /**
+     * @returns {BankProblem} The entire set of data that is in the bank problem.
+     * @memberof ProblemNavigator
+     */
     function getProblemInfo() {
         return currentProblem.problemInfo;
     }
