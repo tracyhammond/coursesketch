@@ -23,13 +23,13 @@ function VoicePlayback() {
         }, function(e) {
             console.log('No live audio input: ' + e);
         });
-    }
+    };
 
     // Start recording voice
     this.startRecording = function() {
         localScope.recorder.record();
         console.log('Recording...');
-    }
+    };
 
     // Stop recording voice
     this.stopRecording = function() {
@@ -37,16 +37,16 @@ function VoicePlayback() {
         console.log('Stopped recording.');
 
         localScope.saveFile();
-    }
+    };
 
     // Save the file to the database
     // NOTE: CURRENTLY SETS LOCALLY
     this.saveFile = function() {
         localScope.recorder.exportMP3(function(blob, mp3name) {
             localScope.vid.src = URL.createObjectURL(blob);
-            localScope.vid.type = "audio/mp3";
+            localScope.vid.type = 'audio/mp3';
         });
-    }
+    };
 
     // Blink the red record button
     this.blink = function(elm) {
@@ -56,7 +56,7 @@ function VoicePlayback() {
             });
         }, 800);
         elm.val('REC');
-    }
+    };
 
     // Playback the drawn sketch
     this.playMe = function() {
@@ -75,13 +75,13 @@ function VoicePlayback() {
         } else {
             localScope.playBack.playNext(new Date().getTime());
         }
-    }
+    };
 
-    // Pause the sketch 
+    // Pause the sketch
     this.pauseMe = function() {
         localScope.pauseIndex = localScope.playBack.pauseNext();
         localScope.isPaused = true;
-    }
+    };
 
     this.initializeElement = function(templateClone) {
         localScope = this;
@@ -100,10 +100,10 @@ function VoicePlayback() {
 
         localScope.vid.onplay           = function() {
             localScope.playMe();
-        }
+        };
         localScope.vid.onpause          = function() {
             localScope.pauseMe();
-        }
+        };
 
         setTimeout(function() {
             localScope.surface        = localScope.shadowRoot.querySelector('sketch-surface');

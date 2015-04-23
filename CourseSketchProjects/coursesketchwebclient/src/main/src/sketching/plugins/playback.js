@@ -30,7 +30,7 @@ function Playback(updateList, updateManager, graphics) {
         // runs through all of the commands in the update.
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) { //Trey
+            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) {
                 (function() {
                     var stroke = command.decodedData;
                     pointList = stroke.getPoints();
@@ -39,12 +39,12 @@ function Playback(updateList, updateManager, graphics) {
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
 
-                    if(pauseDuringStroke){
+                    if (pauseDuringStroke) {
                         pointAdded = lastPointAdded;
                     }
 
                     var strokePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
-                    if(pauseDuringStroke){
+                    if (pauseDuringStroke) {
                         strokePath = lastCreatedStroke;
                     }
                     strokeBarrier.finalize(function() {
@@ -66,31 +66,28 @@ function Playback(updateList, updateManager, graphics) {
 
                         (function(index) {
                             t = setTimeout(function() {
-                                if(isPlaying){
+                                if (isPlaying) {
                                     strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
                                     graphics.getPaper().view.update();
                                     pointAdded();
-                                }
-                                else if(!isPlaying) { //pause during the stroke    
+                                } else if (!isPlaying) { //pause during the stroke
                                     for (var j = 0; j < tList.length; j++) {
-                                        clearTimeout(tList[j]);    
+                                        clearTimeout(tList[j]);
                                     }
-                                    if(lastPausedIndex > index) {
+                                    if (lastPausedIndex > index) {
                                         lastPausedIndex = index;
                                     }
                                     lastCreatedStroke = strokePath;
                                     lastPointAdded = pointAdded;
                                     pauseDuringStroke = true;
-                                    console.log("PAUSE!!!");
+                                    console.log('PAUSE!!!');
 
                                 }
                             }, pointList[index].getTime() - startingTime);
-                            tList.push(t); 
+                            tList.push(t);
                         })(i);
                     }
                 })();
-            } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.IS_AUDIO) {
-
             } else {
                 if (redraw) {
                     graphics.getPaper().view.update();
@@ -105,7 +102,7 @@ function Playback(updateList, updateManager, graphics) {
             startingTime = sTime;
         }
         graphics.setDrawUpdate(false);
-        currentIndex++; 
+        currentIndex++;
         if (currentIndex === 0) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
@@ -119,10 +116,10 @@ function Playback(updateList, updateManager, graphics) {
         isPlaying = true;
         if (!pauseDuringStroke) {
             var playTime = currentTime - startingTime; //time play button pressed
-            var updateTime = ( ( updateList[currentIndex].getTime() ).subtract( updateList[0].getTime() ) ).toNumber() ; 
+            var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
-            } , updateTime - playTime) ;       
+            }, updateTime - playTime);
         } else {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
@@ -131,5 +128,5 @@ function Playback(updateList, updateManager, graphics) {
     this.pauseNext = function() {
         currentIndex--;
         isPlaying = false;
-    }
+    };
 }
