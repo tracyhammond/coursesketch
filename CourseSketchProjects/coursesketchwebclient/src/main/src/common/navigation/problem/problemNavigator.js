@@ -42,6 +42,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         changeProblem(currentIndex - 1);
     };
 
+    /**
+     * @return {Number} assignment type of the current problem.
+     */
+    this.getAssignmentType = function getAssignmentType() {
+        return currentAssignment.assignmentType;
+    };
+
     // Sets the current index.
     if (!isUndefined(preferredIndex)) {
         try {
@@ -75,6 +82,10 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     /**
      * @returns {SrlProblemBank} the information of the current problem.
      */
+    this.getProblemListSize = function getProblemListSize() {
+        return problemList.size();
+    };
+
     function getProblemInfo() {
         return currentProblem.problemInfo;
     }
@@ -99,16 +110,27 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Order of the callbacks is not guaranteed.
      */
     function changeProblem(index) {
-        if (index < 0 || index >= problemList.length && !loop) {
-            return;
-        } else if (loop) {
-            if (index < 0) {
-                index = problemList.length - 1;
+        // if asignment is random ignore index choose random
+        var type = currentAssignment.assignmentType;
+        if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
+            if (index < 0 || index >= problemList.length && !loop) {
+                return;
+            } else if (loop) {
+                if (index < 0) {
+                    index = problemList.length - 1;
+                }
+                if (index >= problemList.length) {
+                    index = 0;
+                }
             }
-            if (index >= problemList.length) {
-                index = 0;
-            }
+        } else {
+            //Pull problems at random for Game
+            var numberOfQuestions = getProblemListSize();
+            var randomNumber = Math.random();
+
+            index = randomNumber % numberOfQuestions;
         }
+
         if ((index >= 0 && index < problemList.length)) {
             currentIndex = index;
             currentProblem = problemList[index];

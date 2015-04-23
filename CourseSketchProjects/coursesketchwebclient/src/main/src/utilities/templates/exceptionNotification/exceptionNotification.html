@@ -1,0 +1,17 @@
+<html>
+<head>
+    <template id="exceptionNotification">
+        <style>
+            @import "/src/utilities/templates/exceptionNotification/exceptionNotification.css";
+        </style>
+        <dialog id="notificationInformation" open>
+            <content select=".title"></content>
+            <content select=".message"></content>
+            <br>
+            <content select=".stacktrace"></content>
+            <content select=".cause"></content>
+            <button id="closeButton">X</button>
+        </dialog>
+    </template>
+</head>
+</html>
