@@ -4,7 +4,7 @@
 <body>
 <template id="navigationPanel">
     <style>
-        @import "/src/common/navigation/problem/navigationPanel.css";
+        @import "/src/utilities/libraries/materializecss/css/materialize.min.css";
     </style>
     <!--
     |---------------------------------|
@@ -31,8 +31,9 @@
                     <p>out of <span id="totalNumber">1</span></p>
                 </div>
                 <div class="arrowBox">
-                    <button id="buttonPrev"><--</button>
-                    <button id="buttonNext">--></button>
+                    <content select="#buttonNext"></content>
+                    <a id="buttonPrev" class="waves-effect waves-light btn"><--</a>
+                    <a id="buttonNext" class="waves-effect waves-light btn">--></a>
                 </div>
             </div>
         </div>
