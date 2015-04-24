@@ -8,6 +8,11 @@ message Request {
     optional string sessionInfo = 4; // This may be separated out more.
     optional string serversideId = 5;
     optional int64 messageTime = 6; // this is the time that the message is received by the server
+    /**
+     * This is ued to uniquely identify a request accross a single session.
+     * Request from different sessions are expected to be repeated.
+     */
+    optional string requestId = 7;
 
     enum MessageType {
         LOGIN = 0;
@@ -17,11 +22,11 @@ message Request {
         DATA_REMOVE = 4;
         RECOGNITION = 5;
         LOADING = 6; // this is for when the client is loading.
-        SUBMISSION = 7; // sent to both servers at the same time. (Answer checking and database)
+        SUBMISSION = 7; // sent to just the answer checker server (Answer checking)
         FEEDBACK = 8; // answer checking feedback!
         CLOSE = 9; // sent to tell the server to close the connection rs
         ERROR = 10;
-        TIME = 11;
+        TIME = 11; // used for sycnrhonizing the time between the servers.
     }
 }
 
@@ -36,8 +41,8 @@ message LoginInformation {
 }
 
 /**
-* Creates a protobuf object that inherits the properties of an exception.
-*/
+ * Creates a protobuf object that inherits the properties of an exception.
+ */
 message ProtoException {
     required string mssg = 1; // the message that the exception has.
     repeated string stackTrace = 2; // the stacktrace of the exception.

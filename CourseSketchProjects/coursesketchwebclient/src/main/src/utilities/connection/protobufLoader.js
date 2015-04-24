@@ -376,12 +376,16 @@ function ProtobufSetup() {
      *            The protobuf object that is being decoded.
      *            This can be grabbed by using CourseSketch.PROTOBUF_UTIL.get<objectName>Class();
      * @param {Function} [onError]
-     *            A callback that is called when an error occurs
+     *            A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
      *            and may be called up to two times.
-     * @return {ProyobufObject} decoded protobuf object.
+     * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
+     * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {
+        if (isUndefined(data) || data === null || typeof data !== 'object') {
+            throw new ProtobufException('Data type is not supported:' + typeof data);
+        }
         try {
             data.mark();
         } catch (exception) {
@@ -389,10 +393,15 @@ function ProtobufSetup() {
                 onError(exception);
             }
         }
-        if (isUndefined(data) || data === null || typeof data !== 'object') {
-            throw new ProtobufException('Data type is not supported:' + typeof data);
+        var decoded = undefined;
+        try {
+            decoded = proto.decode(data);
+        } catch (exception) {
+            throw new ProtobufException('data was not decoded successfully');
         }
-        var decoded = proto.decode(data);
+        if (isUndefined(decoded)) {
+            throw new ProtobufException('data was not decoded successfully or input was empty');
+        }
         try {
             data.reset();
         } catch (exception) {

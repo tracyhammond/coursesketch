@@ -22,47 +22,66 @@ function AdvanceDataListener(connection, Request, defListener) {
     /**
      * Sets the listener to listen for database code.
      */
-    this.setListener = function(messageType, queryType, func) {
+    this.setListener = function(messageType, requestId, func) {
         var localMap = requestMap[messageType];
         //console.log('Adding listener');
         //console.log(messageType);
         //console.log(queryType);
-        localMap[queryType] = func;
+        localMap[requestId] = func;
+    };
+
+    /**
+     * Sets the listener to listen for database code.
+     *
+     * And it also unwraps the DataResult type.
+     * @param {MessageType} messageType
+     * @param {String} requestId
+     * @param {Function} func
+     */
+    this.setDataResultListener = function(messageType, requestId, func) {
+        this.setListener(messageType, requestId, queryWrap(func));
     };
 
     /**
      * Removes the function associated with the listener
      */
-    this.removeListener = function(messageType, queryType) {
+    this.removeListener = function(messageType, requestId) {
         var localMap = requestMap[messageType];
         //console.log('Adding listener');
         //console.log(messageType);
         //console.log(queryType);
-        localMap[queryType] = undefined;
+        localMap[requestId] = undefined;
     };
+
     /**
-     * Gets the message type and the query type and finds the correct listener.
-     *
-     * If the correct type does not exist then the defaultListener is called instead.
+     * Returns a function that is wrapped to process data results.
+     * @param {Function} func The function that is wrapper to process data results.
+     * @returns {Function}
      */
-    function decode(evt, msg, messageType) {
-        var localMap = requestMap[messageType];
-        try {
+    function queryWrap(func) {
+        return function(evt, msg) {
+            var result = undefined;
             try {
-                msg.otherData.mark();
+                result = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.otherData, CourseSketch.PROTOBUF_UTIL.getDataResultClass());
             } catch (exception) {
+                // removes listener on error to prevent data leakage.
+                removeListener(msg.requestType, msg.requestId);
                 console.log(exception);
-                console.log(msg);
+                // still call func though.
+                func(evt, undefined);
+                if (errorListener) {
+                    errorListener(msg);
+                }
             }
-            var dataList = CourseSketch.PROTOBUF_UTIL.getDataResultClass().decode(msg.otherData).results;
+            var dataList = result.results;
             for (var i = 0; i < dataList.length; i++) {
                 //console.log('Decoding listener');
                 var item = dataList[i];
-                var func = localMap[item.query];
                 if (!isUndefined(func)) {
                     try {
                         func(evt, item);
                     } catch (exception) {
+                        removeListener(msg.requestType, msg.requestId);
                         console.error(exception);
                         console.error(exception.stack);
                         console.log(msg);
@@ -71,13 +90,31 @@ function AdvanceDataListener(connection, Request, defListener) {
                     defListener(evt, item);
                 }
             }
-        } catch (exception) {
-            console.error(exception);
-            console.error(exception.stack);
-            console.log('decoding data failed: ', msg);
-            if (errorListener) {
-                errorListener(msg);
+        };
+    }
+
+    /**
+     * Gets the message type and the query type and finds the correct listener.
+     *
+     * If the correct type does not exist then the defaultListener is called instead.
+     * @param {Event} evt This is websocket event regarding the receive event of the message.
+     * @param {Request} msg This is the request object that was received.
+     * @param {MessageType} messageType if the message is a DataResult or a DataRequest or others.
+     */
+    function decode(evt, msg, messageType) {
+        var localMap = requestMap[messageType];
+        var func = localMap[msg.requestId];
+        if (!isUndefined(func)) {
+            try {
+                func(evt, item);
+            } catch (exception) {
+                removeListener(msg.requestType, msg.requestId);
+                console.error(exception);
+                console.error(exception.stack);
+                console.log(msg);
             }
+        } else {
+            defListener(evt, msg);
         }
     }
     var localFunction = decode;
