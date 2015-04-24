@@ -280,7 +280,7 @@ if (isUndefined(safeLoad)) {
      * Loads a script but only once.
      *
      * @param {String} url The url that is being loaded.
-     * @param {String} uniqueGlobalObject
+     * @param {Object} uniqueGlobalObject a global object that is unique to the script that will be undefined if the script does not exist.
      */
     function safeLoad(url, uniqueGlobalObject) {
         if (typeof window[uniqueGlobalObject] === 'undefined') {
