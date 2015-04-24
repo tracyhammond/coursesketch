@@ -278,6 +278,7 @@ if (isUndefined(validateFirstGlobalRun)) {
 if (isUndefined(safeLoad)) {
     /**
      * Loads a script but only once.
+     *
      * @param {String} url The url that is being loaded.
      * @param {String} uniqueGlobalObject
      */
