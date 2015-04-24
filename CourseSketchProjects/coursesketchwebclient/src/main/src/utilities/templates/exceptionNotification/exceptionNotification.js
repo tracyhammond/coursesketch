@@ -8,8 +8,7 @@
         // Let's check if the browser supports notifications
         if (!('Notification' in window)) {
             console.log('this browser does not support desktop notificaion');
-        }
-        else if (Notification.permission === 'granted') {
+        } else if (Notification.permission === 'granted') {
             // If it's okay let's create a notification
             createShallowNotification(protoEx);
         } else if (Notification.permission !== 'denied') {
