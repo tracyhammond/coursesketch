@@ -6,10 +6,12 @@
      */
     CourseSketch.showShallowException = function notifyMe(protoEx) {
         // Let's check if the browser supports notifications
+        /*
         if (!('Notification' in window)) {
             // DO NOTHING! IT's REALLY ANNOYING!`
             // alert('This browser does not support desktop notification');
-        } else if (Notification.permission === 'granted') {
+        } else */
+        if (Notification.permission === 'granted') {
             // If it's okay let's create a notification
             createShallowNotification(protoEx);
         } else if (Notification.permission !== 'denied') {
