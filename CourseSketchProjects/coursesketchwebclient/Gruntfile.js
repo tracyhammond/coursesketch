@@ -226,7 +226,7 @@ module.exports = function(grunt) {
                 overwrite: true,
                 replacements: [
                     {
-                        // addes bower comment
+                        // looks for the very first character of the file.
                         from: /^/,
                         to: 'validateFirstRun(document.currentScript);'
                     }
