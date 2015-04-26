@@ -236,7 +236,7 @@ function SubmissionPanel() {
         this.setSpecificCallbacks(this.problemType, subPanel, toolbar);
     };
 
-    /*
+    /**
      * Empties all .submittable and all .sub-panel from this submission panel.
      */
     this.emptyPanel = function() {
