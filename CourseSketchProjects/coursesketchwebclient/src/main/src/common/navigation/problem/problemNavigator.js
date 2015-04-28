@@ -190,6 +190,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
+     * @return {SrlUpdateList} the update list of the basisSketch of the current problem.
+     */
+    this.getBasisSketch = function() {
+        return getProblemInfo().baseSketch;
+    };
+
+    /**
      * sets the information about a specific submission.
      * @param {SrlExperiment | SrlSolution} submissionWrapper this is either an experiment or solution this is NOT a submission object.
      */

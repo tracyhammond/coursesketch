@@ -133,7 +133,7 @@ function PanelEditApi(panel, problemInfo, hasSubmission){
     this.loadBasisSketch(){
         if(!hasSubmission){
             var sketchSurface = panel.querySelector('.submittable');
-            var updateList = problemInfo.getBasisSketch().getUpdateList();
+            var updateList = problemInfo.getBasisSketch();
             sketchSurface.loadUpdateList(updateList.getList(), undefined);
         }
     };
