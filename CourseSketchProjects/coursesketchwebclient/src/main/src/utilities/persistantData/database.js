@@ -126,13 +126,12 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  * Creates a function for adding items to the database.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
-                    if (!databaseSupported || !dbNameSpace.indexedDB || CourseSketch.noCache) {
+                    if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
                         dataMap[objectId] = objectToAdd;
-                        // console.log('ADDING DATA TO: ', localTable.name, objectId, ' with value ', objectToAdd);
                         if (!isUndefined(callback)) {
                             callback({}, {});
                         }
-                        return; // fail silently
+                        return;
                     }
 
                     var db = dbNameSpace.indexedDB.db;
@@ -140,10 +139,6 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var store = trans.objectStore(localTable.name);
                     var request = localTable.add(store, objectId, objectToAdd);
                     trans.oncomplete = function(e) {
-                        // add objectId to some sort of id list so we know what
-                        // data is contained
-                        // this data is only to be used for the local deletion
-                        // of all items in the database
                         if (!isUndefined(callback)) {
                             callback(e, request);
                         }
@@ -161,7 +156,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
                         dataMap[objectId] = undefined;
                         callback(undefined, undefined);
-                        return; // fail silently
+                        return;
                     }
 
                     var db = dbNameSpace.indexedDB.db;
@@ -183,14 +178,13 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  * Creates a function for deleting items from the database.
                  */
                 localScope[ 'getFrom' + localTable.name ] = function(objectId, callback) {
-                    if (!databaseSupported || !dbNameSpace.indexedDB || CourseSketch.noCache) {
+                    if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
                         var request = {
                             result: {
                                 id: objectId,
                                 data: dataMap[objectId]
                             }
                         };
-                        // console.log('RETRIEVING DATA FROM: ', localTable.name, objectId, ' with value ', request.result);
                         callback(undefined, request, request.result);
                         return;
                     }
