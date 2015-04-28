@@ -4,9 +4,10 @@
  * when a problem/assignment/course in assignment view is changed all the parts are notify via a callback at which point they can poll
  * different parts of the system.
  * Callbacks are not guaranteed in any order.
+ *
  * @param {UUID} assignmentId the id that the problem is created with.
  * @param {Boolean} loop true if the problems should loop, false otherwise.
- * @param  {Number}preferredIndex The starting index to start problems at.
+ * @param {Number} preferredIndex The starting index to start problems at.
  * @class ProblemNavigator
  */
 function ProblemNavigator(assignmentId, loop, preferredIndex) {
@@ -103,14 +104,15 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     /**
      * Changes the problem to the given index.
      *
-     * @param {Number} index the index we want to switch to.
      * If looping is set to false then if given an index out of bounds this function returns immediately.
      * Otherwise the index is set to either 0 or the end of the list depending on how it is out of bounds.
      * After changing the index all of the set callbacks are called.
      * Order of the callbacks is not guaranteed.
+     *
+     * @param {Number} index the index we want to switch to.
      */
     function changeProblem(index) {
-        // if asignment is random ignore index choose random
+        // if assignment is random ignore index choose random
         var type = currentAssignment.assignmentType;
         if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
@@ -141,7 +143,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     }
 
     /**
-     * adds a callback that is called when changing problem index.
+     * Adds a callback that is called when changing problem index.
      */
     this.addCallback = function(callback) {
         callbackList.push(callback);
@@ -198,6 +200,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * sets the information about a specific submission.
+     *
      * @param {SrlExperiment | SrlSolution} submissionWrapper this is either an experiment or solution this is NOT a submission object.
      */
     this.setSubmissionInformation = function(submissionWrapper, isExperiment) {
@@ -228,6 +231,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     /**
      * Sets the new Id for the assignment, this does not refresh the navigator.
      * That can be done by calling {@link #reloadProblems}.
+     *
      * @param {String} currentAssignmentId The new assignmentid.
      */
     this.setAssignmentId = function(currentAssignmentId) {
