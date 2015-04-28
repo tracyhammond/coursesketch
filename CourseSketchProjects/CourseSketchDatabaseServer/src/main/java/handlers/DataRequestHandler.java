@@ -205,8 +205,6 @@ public final class DataRequestHandler {
                             results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURESLIDE));
                         }
                         break;
-                        case TUTORIAL: {
-                        }
                         default:
                             break;
                     }

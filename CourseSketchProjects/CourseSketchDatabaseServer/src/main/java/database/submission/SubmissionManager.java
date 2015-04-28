@@ -209,8 +209,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for all of the sketches in a single
-     * problem.
+     * Inserts a tutorial into the database
      * @return ID of the inserted tutorial
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
@@ -233,8 +232,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for all of the sketches in a single
-     * problem.
+     * Builds a request to the server for a tutorial
      * @return ID of the inserted tutorial
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
@@ -256,8 +254,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for all of the sketches in a single
-     * problem.
+     * Builds a request to the server for all tutorials associated with a URL
      * @return list of tutorials
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
@@ -285,8 +282,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for all of the sketches in a single
-     * problem.
+     * Extracts a single tutorial from a URL (used in a while loop for mongoGetTutorialList)
      * @return tutorial object
      * @param dbTutorial tutorial to be extracted from the database
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.

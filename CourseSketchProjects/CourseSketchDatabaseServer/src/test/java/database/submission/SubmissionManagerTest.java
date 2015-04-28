@@ -60,7 +60,7 @@ public class SubmissionManagerTest {
     }
 
     @Test
-    public void insertTutorial() throws Exception {
+    public void testTutorialInsertCorrectly() throws Exception {
         String tutorialObjectId = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
 
         fakeDBObject.append(SELF_ID, new ObjectId(tutorialObjectId));
@@ -71,7 +71,7 @@ public class SubmissionManagerTest {
     }
 
     @Test
-    public void getTutorial() throws Exception {
+    public void testTutorialGetCorrectly() throws Exception {
         String tutorialObjectId = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
 
         TutorialOuterClass.Tutorial tutorial = SubmissionManager.mongoGetTutorial(fauth, db, "userId", tutorialObjectId);
@@ -80,12 +80,12 @@ public class SubmissionManagerTest {
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void getTutorialDoesNotExist() throws DatabaseAccessException, AuthenticationException {
+    public void testTutorialThrowsExceptionWhenItDoesNotExist() throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetTutorial(fauth, db, "userId", new ObjectId().toString());
     }
 
     @Test
-    public void getTutorialList() throws Exception {
+    public void testTutorialListGetCorrectly() throws Exception {
         String tutorialObjectId1 = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());
         tutorialObject.setName("Tutorial 1");
         String tutorialObjectId2 = SubmissionManager.mongoInsertTutorial(fauth, db, "userId", tutorialObject.build());

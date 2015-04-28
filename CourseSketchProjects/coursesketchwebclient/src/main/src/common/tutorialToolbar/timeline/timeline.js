@@ -287,7 +287,9 @@ function Timeline () {
             $(plusButton).removeClass('tall');
         };
     }
-
+    /**
+     * creates textbox that explains the tutorial system
+     */
     function createTutorialTutorial () {
         var tutorialTutorial = document.body.querySelector.className('tutorialtutorial');
         document.body.appendChild(tutorialTutorial);
