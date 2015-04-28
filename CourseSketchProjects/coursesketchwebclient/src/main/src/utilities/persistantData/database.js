@@ -119,11 +119,14 @@ function ProtoDatabase(databaseName, version, openCallback) {
         for (var i = 0; i < upgradeTables.length; i++) {
             table = upgradeTables[i];
             (function(localTable) {
+                var dataMap = {};
                 /**
                  * Creates a function for adding items to the database.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB) {
+                        dataMap[objectId] = objectToAdd;
+                        callback({}, )
                         return; // fail silently
                     }
 
