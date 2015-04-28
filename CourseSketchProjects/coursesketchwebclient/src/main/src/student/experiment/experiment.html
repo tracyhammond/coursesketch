@@ -1,6 +1,5 @@
 <html>
 <head>
-    <link rel="stylesheet" href="/css/courseSketch2.css">
 
     <!-- waiting stuff -->
     <link rel="import" href="/src/utilities/templates/loading/loadingInclude.html">
@@ -20,15 +19,33 @@
     <link rel="import" href="/src/common/submission/submissionInclude.html">
 
     <!-- embedded HTML -->
-    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html" />
+    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html">
     <script type="text/javascript" src="/src/utilities/libraries/jailed/jailed.js"></script>
     <script type="text/javascript" src="/src/common/scriptExecution/scriptExecutor.js"></script>
     <script type="text/javascript" src="/src/student/experiment/experiment.js"></script>
 
-    <script src="/src/utilities/libraries/materializecss/js/materialize.min.js"></script>
 </head>
-<body style = "overflow: hidden;">
-    <navigation-panel><a id="buttonNext" class="waves-effect waves-light btn"></a></navigation-panel>
-    <div id="percentBar" style="height:10px;"></div>
-    <submit-panel id="problemPanel"><problem-tool-bar></problem-tool-bar></submit-panel>
+<body style = "overflow: hidden">
+    <nav>
+        <div class="nav-wrapper z-depth-2">
+            <a href="#" class="brand-logo">CourseSketch</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="components.html">Components</a></li>
+                <li><a href="javascript.html">JavaScript</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col s2 white">
+            <navigation-panel></navigation-panel>
+            <div id="percentBar" style="display:none;"></div>
+            <blockquote>
+                Question Text
+            </blockquote>
+        </div>
+        <div class="col s10 cyan lighten-5">
+            <submit-panel id="problemPanel"><problem-tool-bar></problem-tool-bar></submit-panel>
+        </div>
+    </div>
 </body>

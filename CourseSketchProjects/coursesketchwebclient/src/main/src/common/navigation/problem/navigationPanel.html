@@ -14,35 +14,22 @@
     |<- ->	|------------------------||
     |---------------------------------|
      -->
-    <div id="panelWrapper" class="panelWrapper" style="width:100%;">
+    <div id="panelWrapper" class="panelWrapper">
         <div id="navPanel">
-            <div class="innerShadow">
-                <!--
-                |--------|
-                | prob # |
-                | out of |
-                |--------|
-                 <== ==>
-                 -->
-                <div id="selectionBox">
-                    <!-- TODO: this box should have the problem state showing-->
-                    <h1 id="selectionBoxNumber">1</h1>
-                    <span id="problemState"></span>
+            <div class="innerShadow card blue-grey">
+                <div class="card-content white-text center-align">
+                    <div id="selectionBox">
+                        <i id="buttonPrev" class="small mdi-navigation-arrow-back left"></i>
+                        <span id="selectionBoxNumber" class="card-title">1</span>
+                        <i id="buttonNext" class="small mdi-navigation-arrow-forward right"></i>
+                        <span id="problemState"></span>
+                    </div>
                     <p>out of <span id="totalNumber">1</span></p>
-                </div>
-                <div class="arrowBox">
-                    <content select="#buttonNext"></content>
-                    <a id="buttonPrev" class="waves-effect waves-light btn"><--</a>
-                    <a id="buttonNext" class="waves-effect waves-light btn">--></a>
                 </div>
             </div>
         </div>
-        <p id="problemPanel">
-            Your browser is having some problems or the text has not loaded yet, for the mean time please try viewing this in incognito mode in
-            Chrome.
-        </p>
+
     </div>
-    <div class="bottomShadow" style="height:5px; width:100%;"></div>
 </template>
 </body>
 </html>
