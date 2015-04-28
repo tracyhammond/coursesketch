@@ -130,7 +130,7 @@ function PanelEditApi(panel, problemInfo, hasSubmission){
     /**
      * This function allows scripts to load and draw a sketch onto the sketch surface
      */
-    this.loadBasisSketch() {
+    this.loadBasisSketch = function() {
         if (!hasSubmission) {
             var sketchSurface = panel.querySelector('.submittable');
             var updateList = problemInfo.getBasisSketch();

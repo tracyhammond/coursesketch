@@ -11,17 +11,18 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.BASESKETCH;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
@@ -29,13 +30,13 @@ import static database.DatabaseStringConstants.KEYWORDS;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
+import static database.DatabaseStringConstants.SCRIPT;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
-import static database.DatabaseStringConstants.SCRIPT;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -69,10 +70,15 @@ public final class BankProblemManager {
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
         final DBCollection problemBankCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
-        final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
-                .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
-                .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
+        final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
+                .append(IMAGE, problem.getImage())
+                .append(SOLUTION_ID, problem.getSolutionId())
+                .append(COURSE_TOPIC, problem.getCourseTopic())
+                .append(SUB_TOPIC, problem.getSubTopic())
+                .append(SOURCE, problem.getSource())
+                .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
+                .append(BASESKETCH, problem.getBaseSketch())
                 .append(KEYWORDS, problem.getOtherKeywordsList());
 
         if (!problem.hasAccessPermission()) {
@@ -144,6 +150,7 @@ public final class BankProblemManager {
         exactProblem.setCourseTopic((String) dbObject.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) dbObject.get(SUB_TOPIC));
         exactProblem.setSource((String) dbObject.get(SOURCE));
+        exactProblem.setBaseSketch((Commands.SrlUpdateList) dbObject.get(BASESKETCH));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
         // arraylist
@@ -233,6 +240,10 @@ public final class BankProblemManager {
         }
         if (problem.hasScript()) {
             updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
+            update = true;
+        }
+        if (problem.hasBaseSketch()) {
+            updated.append(SET_COMMAND, new BasicDBObject(BASESKETCH, problem.getBaseSketch()));
             update = true;
         }
         if (problem.getOtherKeywordsCount() > 0) {
