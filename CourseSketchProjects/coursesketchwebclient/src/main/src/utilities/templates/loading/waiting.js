@@ -149,8 +149,35 @@ function WaitScreenManager() {
      * @param {Element} element element to which the wait icon will be added
      */
     this.buildWaitIcon = function buildWaitIcon(element) {
+        var farouter = document.createElement('div');
+        farouter.setAttribute('style', 'display: flex;justify-content: center;align-items: center; height:100%;');
         var outer = document.createElement('div');
-        outer.setAttribute('class', 'outerWaitingIcon');
+        outer.setAttribute('class', 'preloader-wrapper big active valign');
+        var inner1 = document.createElement('div');
+        inner1.setAttribute('class', 'spinner-layer spinner-blue-only');
+        var inner2 = document.createElement('div');
+        inner2.setAttribute('class', 'circle-clipper left');
+        var inner3 = document.createElement('div');
+        inner3.setAttribute('class', 'circle');
+
+        inner2.appendChild(inner3);
+        inner1.appendChild(inner2);
+        outer.appendChild(inner1);
+        farouter.appendChild(outer);
+
+        /*<div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
 
         var img = document.createElement('img');
         img.setAttribute('class', 'waitingIcon');
@@ -159,14 +186,14 @@ function WaitScreenManager() {
         } else {
             img.src = '/images/loading/000000_large_loader.gif';
         }
-        outer.appendChild(img);
+        outer.appendChild(img);*/
         if (this.waitIconText) {
             var text = document.createElement('h1');
             text.textContent = this.waitIconText;
             text.setAttribute('class', 'waitingIconText');
-            outer.appendChild(text);
+            farouter.appendChild(text);
         }
-        element.appendChild(outer);
+        element.appendChild(farouter);
     };
 }
 
