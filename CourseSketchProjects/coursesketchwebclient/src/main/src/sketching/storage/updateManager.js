@@ -6,7 +6,6 @@ function UpdateException(message) {
     this.name = 'UpdateException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
 }
 
 UpdateException.prototype = BaseException;
