@@ -121,4 +121,22 @@ function AdvanceDataListener(connection, Request, defListener) {
     connection.setSchoolDataListener(function(evt, msg) {
         localFunction(evt, msg, msg.requestType);
     });
+
+    /**
+     *
+     * @param request
+     * @param callback
+     */
+    this.sendRequestWithTimeout = function(request, callback) {
+        var callbackCalled = false;
+        var wrappedCallback = function(evt, msg) {
+            if (callbackCalled) {
+                return;
+            }
+            callbackCalled = true;
+            removeListener(msg.requestType, msg.requestId);
+            callback(evt, msg);
+        };
+
+    };
 }
