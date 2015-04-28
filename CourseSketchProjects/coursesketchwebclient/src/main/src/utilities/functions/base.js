@@ -166,15 +166,14 @@ if (isUndefined(BaseException)) {
          * (with 6+ typically being ignored completely) and level 0 is the worst
          * exception (with <0 being treated as 0).
          */
-        level:          5,
         message:        'BaseException Thrown.\n Please subclass this to create a better exception.',
-        htmlMessage:    'BaseException Thrown<br> Please subclass this to create a better exception.',
         toString: function() {
             return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '');
         },
         setMessage: function(messageValue) {
             this.specificMessage = messageValue;
         }
+        setStacktrace: function()
     };
 }
 
