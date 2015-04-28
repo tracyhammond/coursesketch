@@ -110,7 +110,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Order of the callbacks is not guaranteed.
      */
     function changeProblem(index) {
-        // if assignment is random ignore index choose random
+        // If assignment is random ignore index choose random.
         var type = currentAssignment.assignmentType;
         if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
@@ -259,9 +259,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         dataLoaded = false;
         var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
-
             this.reloadAssignment();
-
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
                 problemList = [];
                 for (var i = 0; i < problems.length; i++) {
