@@ -15,7 +15,7 @@
     |-----|
      -->
     <style>
-        @import "/src/common/submission/toolbar/toolBar.css";
+        @import "/src/utilities/libraries/materializecss/css/materialize.min.css";
     </style>
     <div id = "panelWrapper" class = "panelWrapper" style = "width:50px;">
         <div id = "toolPanel">
@@ -29,11 +29,16 @@
                 |   red  |
                 |--------|
                  -->
-                <div id ="constantButtons">
-                    <img id = "submission" src="/images/toolbar/submission_button.svg" title = "Click to submit the problem">
-                    <img id = "save" src="/images/toolbar/save_button.svg" title = "Click to save the problem">
-                    <img id = "undo" src="/images/toolbar/undo_button.svg" title = "Click to undo">
-                    <img id = "redo" src="/images/toolbar/redo_button.svg" title = "Click to redo">
+                <div id="constanButtons" class="fixed-action-btn" style="top: 45px; right: 24px;">
+                    <a class="btn-floating btn-large red">
+                        <i class="large mdi-editor-mode-edit"></i>
+                    </a>
+                    <ul>
+                        <li><a id="submission" class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
+                        <li><a id="save" class="btn-floating yellow darken-1"><i class="large mdi-editor-format-quote"></i></a></li>
+                        <li><a id="undo" class="btn-floating green"><i class="large mdi-editor-publish"></i></a></li>
+                        <li><a id="redo" class="btn-floating blue"><i class="large mdi-editor-attach-file"></i></a></li>
+                    </ul>
                 </div>
                 <!--
                 Shows buttons that are specific to the current content

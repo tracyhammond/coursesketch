@@ -26,8 +26,7 @@ function NavigationPanel() {
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;
             }
-            // TODO: change this to strip out bad HTML code
-            this.shadowRoot.querySelector('#problemPanel').innerHTML = '<p>' + nav.getProblemText() + '</p>';
+
         }.bind(this));
 
         setUpButtons(this.itemNavigator);
