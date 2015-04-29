@@ -11,6 +11,7 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.BASESKETCH;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
@@ -75,6 +77,9 @@ public final class BankProblemManager {
                 .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList());
 
+        if (problem.getBaseSketch() != null) {
+            insertObject.append(BASESKETCH, problem.getBaseSketch());
+        }
         if (!problem.hasAccessPermission()) {
             insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
         } else {
@@ -145,6 +150,7 @@ public final class BankProblemManager {
         exactProblem.setSubTopic((String) dbObject.get(SUB_TOPIC));
         exactProblem.setSource((String) dbObject.get(SOURCE));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
+        exactProblem.setBaseSketch((Commands.SrlUpdateList) dbObject.get(BASESKETCH));
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
         // arraylist
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
@@ -234,6 +240,9 @@ public final class BankProblemManager {
         if (problem.hasScript()) {
             updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
+        }
+        if (problem.hasBaseSketch()) {
+            updated.append(SET_COMMAND, new BasicDBObject(BASESKETCH, problem.getBaseSketch()));
         }
         if (problem.getOtherKeywordsCount() > 0) {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
