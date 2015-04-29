@@ -9,9 +9,10 @@ function UpdateException(message, cause) {
     if (!isUndefined(cause)){
         this.setCause(cause);
     }
+    this.createStackTrace();
 }
 
-UpdateException.prototype = BaseException;
+UpdateException.prototype = new BaseException();
 
 /**
  * @class UndoRedoException

@@ -159,35 +159,38 @@ if (isUndefined(BaseException)) {
      * @class BaseException
      * Defines the base exception class that can be extended by all other exceptions.
      */
-    var BaseException = {
-        name:           'BaseException',
+    function BaseException() {
+        this.name = 'BaseException';
         /**
          * The level defines how bad it is. level 5 is the okayest exception
          * (with 6+ typically being ignored completely) and level 0 is the worst
          * exception (with <0 being treated as 0).
          */
-        message:        'BaseException Thrown.\n Please subclass this to create a better exception.',
-        stackTrace:     printStackTrace(),
-        cause:          undefined,
-        toString: function() {
+        this.message = 'BaseException Thrown.\n Please subclass this to create a better exception.';
+        this.stackTrace = undefined;
+        this.cause = undefined;
+        this.toString = function() {
             return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '\n') + this.stackTrace.join('\n\n');
-        },
-        setMessage: function(messageValue) {
+        };
+        this.setMessage = function(messageValue) {
             this.specificMessage = messageValue;
-        },
-        getStackTrace: function() {
+        };
+        this.getStackTrace = function() {
             return this.stackTrace;
-        },
-        printStackTrace:    function() {
+        };
+        this.printStackTrace = function() {
             console.log(printStackTrace().join('\n\n'));
-        },
-        setCause:   function(causeValue) {
-            this.cause = causeValue;
-        },
-        getCause:   function() {
-            return this.cause;
+        };
+        this.createStackTrace = function() {
+            this.stackTrace = CourseSketch.printStackTrace();
         }
-    };
+        this.setCause = function(causeValue) {
+            this.cause = causeValue;
+        };
+        this.getCause = function() {
+            return this.cause;
+        };
+    }
 }
 
 if (isUndefined(getTypeName)) {

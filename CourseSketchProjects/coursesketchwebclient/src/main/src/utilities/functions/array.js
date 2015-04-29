@@ -22,8 +22,9 @@ function ArrayException(message, cause) {
     if (!isUndefined(cause)){
         this.setCause(cause);
     }
+    this.createStackTrace();
 }
-ArrayException.prototype = BaseException;
+ArrayException.prototype = new BaseException();
 
 /**
  * removes the object from an array.

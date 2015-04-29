@@ -16,8 +16,9 @@ validateFirstGlobalRun(document.currentScript);
         if (!isUndefined(cause)){
             this.setCause(cause);
         }
+        this.createStackTrace();
     }
-    CommandException.prototype = BaseException;
+    CommandException.prototype = new BaseException();
 
     var ProtoSrlUpdate = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlUpdate());
     var ProtoSrlCommand = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlCommand());
