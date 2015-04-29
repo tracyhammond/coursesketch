@@ -156,7 +156,7 @@ var api = {
  * @param {Function} callback A function to call when the script is done executing to finish experiment setup.
  */
 function executeScript(problemNav, panel, hasSubmission, callback) {
-    var script = problemInfo.getProblemScript();
+    var script = problemNav.getProblemScript();
     console.log('executing script: ' + script);
     var panelApi = new PanelEditApi(panel, problemNav, hasSubmission);
     var totalApi = mergeApi(api, panelApi);
