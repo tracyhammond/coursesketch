@@ -31,8 +31,11 @@
                 throw new TestException(word);
             }
             catch (exception) {
+                var sTrace = exception.getStackTrace();
                 if (exception instanceof TestException){
                     assert.equal(exception.specificMessage, word);
+                    assert.equal(exception.stackTrace, sTrace);
+                    console.log(sTrace);
                     console.log(exception);
                 }
             }
