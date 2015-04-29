@@ -254,7 +254,7 @@
             var scriptButton = shadow.querySelector('button.scripting');
             scriptButton.onclick = function() {
                 var data = getInput(shadow);
-                location.href = '\instructor\problemCreation\scriptEditor\scriptEditor.html';
+                location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
                 //CourseSketch.redirectContent('\src\instructor\problemCreation\scriptEditor\scriptEditor.html', 'Script Editor');
             };
 
