@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Command Methods test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <script src="/bower_components/stacktrace-js/stacktrace.js"></script>
+
+    <!-- file being tested. -->
+    <script src="/src/utilities/functions/base.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+        function TestException(message) {
+            this.name = 'TestException';
+            this.setMessage(message);
+            this.message = '';
+        }
+        var word = 'Hola';
+        TestException.prototype = BaseException;
+        QUnit.test("test exceptions", function(assert) {
+            try {
+                throw new TestException(word);
+            }
+            catch (exception) {
+                if (exception instanceof TestException){
+                    assert.equal(exception.specificMessage, word);
+                    console.log(exception);
+                }
+            }
+        });
+    </script>
+</body>
