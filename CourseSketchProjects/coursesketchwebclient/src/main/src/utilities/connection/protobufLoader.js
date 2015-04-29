@@ -1,9 +1,12 @@
 /* Depends on the protobuf library, base.js, objectAndInheritance.js */
 
-function ProtobufException(message) {
+function ProtobufException(message, cause) {
     this.name = 'ProtobufException';
     this.setMessage(message);
     this.message = '';
+    if (!isUndefined(cause)){
+        this.setCause(cause);
+    }
 }
 ProtobufException.prototype = BaseException;
 
@@ -201,9 +204,9 @@ function ProtobufSetup() {
      * Given a protobuf object compile it to other data and return a request.
      *
      * @param {Protobuf} data
-     *            An uncompiled protobuf object.
+     *              An uncompiled protobuf object.
      * @param {MessageType} requestType
-     *            The message type of the request.
+     *              The message type of the request.
      * @return {Request}
      */
     this.createRequestFromData = function(data, requestType) {
@@ -214,19 +217,25 @@ function ProtobufSetup() {
         return request;
     };
 
-    this.createProtoException = function (exception) {
+    /**
+     * Given an custom exception, a ProtoException Object will be created.
+     *
+     * @param {Exception} exception
+     *              An custom exception that extends BaseException.
+     */
+    this.createProtoException = function(exception) {
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
         pException.setMssg(exception.specificMessage);
 
-        for (StackTraceElement element : exception.getStackTrace()) {
-            pException.addStackTrace(element);
+        for (var i = 0; i < exception.getStackTrace().length; i++) {
+            pException.addStackTrace(exception.getStackTrace()[i]);
         }
         if (!isUndefined(exception.getCause())) {
             pException.setCause(this.createProtoException(exception.getCause()));
         }
         pException.setExceptionType(exception.name);
         return pException;
-    }
+    };
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.

@@ -9,11 +9,13 @@ validateFirstGlobalRun(document.currentScript);
      * @class CommandException
      * @extends BaseException
      */
-    function CommandException(message) {
+    function CommandException(message, cause) {
         this.name = 'CommandException';
         this.setMessage(message);
         this.message = '';
-        this.htmlMessage = '';
+        if (!isUndefined(cause)){
+            this.setCause(cause);
+        }
     }
     CommandException.prototype = BaseException;
 

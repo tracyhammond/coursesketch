@@ -179,7 +179,7 @@ if (isUndefined(BaseException)) {
         },
         printStackTrace:    function() {
             console.log(printStackTrace().join('\n\n'));
-        }
+        },
         cause:          undefined,
         setCause:   function(causeValue) {
             this.cause = causeValue;
