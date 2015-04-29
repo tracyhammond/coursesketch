@@ -7,6 +7,8 @@
 
     <!-- files needed for testing -->
     <script src="/bower_components/stacktrace-js/stacktrace.js"></script>
+    <link rel="import" href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html">
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
     <!-- file being tested. -->
     <script src="/src/utilities/functions/base.js" data-cover></script>
@@ -16,6 +18,9 @@
 <div id="qunit-fixture"></div>
 
 <script>
+        CourseSketch.getExceptionParentElement = function() {
+            return document.body;
+        };
         function TestException(message, cause) {
             this.name = 'TestException';
             this.setMessage(message);
@@ -37,6 +42,7 @@
                     assert.equal(exception.stackTrace, sTrace);
                     console.log(sTrace);
                     console.log(exception);
+                    CourseSketch.showShallowException(CourseSketch.PROTOBUF_UTIL.createProtoException(exception));
                 }
             }
         });
