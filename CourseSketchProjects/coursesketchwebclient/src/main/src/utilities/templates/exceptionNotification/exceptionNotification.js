@@ -40,7 +40,7 @@
         };
         setTimeout(function() {
             notification.close();
-        }, 7001);
+        }, 5501);
     }
 
     /**
