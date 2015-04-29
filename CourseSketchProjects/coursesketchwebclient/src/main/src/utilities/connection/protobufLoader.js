@@ -4,7 +4,6 @@ function ProtobufException(message) {
     this.name = 'ProtobufException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
 }
 ProtobufException.prototype = BaseException;
 
@@ -214,6 +213,20 @@ function ProtobufSetup() {
         request.setOtherData(buffer);
         return request;
     };
+
+    this.createProtoException = function (exception) {
+        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        pException.setMssg(exception.specificMessage);
+
+        for (StackTraceElement element : exception.getStackTrace()) {
+            pException.addStackTrace(element);
+        }
+        if (!isUndefined(exception.getCause())) {
+            pException.setCause(this.createProtoException(exception.getCause()));
+        }
+        pException.setExceptionType(exception.name);
+        return pException;
+    }
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
