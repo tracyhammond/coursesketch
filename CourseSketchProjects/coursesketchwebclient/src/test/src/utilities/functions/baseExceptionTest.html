@@ -28,9 +28,10 @@
             if (!isUndefined(cause)){
                 this.setCause(cause);
             }
+            this.createStackTrace();
         }
         var word = 'Hola';
-        TestException.prototype = BaseException;
+        TestException.prototype = new BaseException();
         QUnit.test("test exceptions", function(assert) {
             try {
                 throw new TestException(word);

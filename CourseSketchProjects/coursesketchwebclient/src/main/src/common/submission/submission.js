@@ -5,8 +5,9 @@ function SubmissionException(message, cause) {
     if (!isUndefined(cause)){
         this.setCause(cause);
     }
+    this.createStackTrace();
 }
-SubmissionException.prototype = BaseException;
+SubmissionException.prototype = new BaseException();
 
 /**
  * A class that handles submitting a problem to the database.

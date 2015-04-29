@@ -7,8 +7,9 @@ function ProtobufException(message, cause) {
     if (!isUndefined(cause)){
         this.setCause(cause);
     }
+    this.createStackTrace();
 }
-ProtobufException.prototype = BaseException;
+ProtobufException.prototype = new BaseException();
 
 /**
  * *************************************************************
