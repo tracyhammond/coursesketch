@@ -227,9 +227,8 @@ function ProtobufSetup() {
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
         pException.setMssg(exception.specificMessage);
 
-        for (var i = 0; i < exception.getStackTrace().length; i++) {
-            pException.addStackTrace(exception.getStackTrace()[i]);
-        }
+        pException.stackTrace = exception.getStackTrace();
+
         if (!isUndefined(exception.getCause())) {
             pException.setCause(this.createProtoException(exception.getCause()));
         }

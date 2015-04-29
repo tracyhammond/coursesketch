@@ -100,11 +100,12 @@ function ExceptionNotification() {
 
         var stack = document.createElement('div');
         var exceptionStackTrace = protoEx.getStackTrace();
-        var stackTraceWithNewLine = '';
-        for (var i = 0; i < exceptionStackTrace.length; i++){
-            stackTraceWithNewLine += exceptionStackTrace[i] + ' ';
+        for (var i = 0; i < exceptionStackTrace.length; i++) {
+            var singleTrace = document.createElement('p');
+            console.log(exceptionStackTrace[i]);
+            singleTrace.textContent = exceptionStackTrace[i];
+            stack.appendChild(singleTrace);
         }
-        stack.textContent = stackTraceWithNewLine;
         stack.className = 'stacktrace';
         this.appendChild(stack);
 
