@@ -16,10 +16,13 @@
 <div id="qunit-fixture"></div>
 
 <script>
-        function TestException(message) {
+        function TestException(message, cause) {
             this.name = 'TestException';
             this.setMessage(message);
             this.message = '';
+            if (!isUndefined(cause)){
+                this.setCause(cause);
+            }
         }
         var word = 'Hola';
         TestException.prototype = BaseException;

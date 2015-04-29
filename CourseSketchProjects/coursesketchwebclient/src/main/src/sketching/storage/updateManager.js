@@ -2,10 +2,13 @@
  * @class UpdateException
  * @extends BaseException
  */
-function UpdateException(message) {
+function UpdateException(message, cause) {
     this.name = 'UpdateException';
     this.setMessage(message);
     this.message = '';
+    if (!isUndefined(cause)){
+        this.setCause(cause);
+    }
 }
 
 UpdateException.prototype = BaseException;
@@ -14,9 +17,12 @@ UpdateException.prototype = BaseException;
  * @class UndoRedoException
  * @extends UpdateException
  */
-function UndoRedoException(message) {
+function UndoRedoException(message, cause) {
     this.name = 'UndoRedoException';
     this.setMessage(message);
+    if (!isUndefined(cause)){
+        this.setCause(cause);
+    }
 }
 UndoRedoException.prototype = new UpdateException();
 
