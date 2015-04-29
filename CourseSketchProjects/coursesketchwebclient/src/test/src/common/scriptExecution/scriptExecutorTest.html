@@ -66,10 +66,29 @@
             assert.equal(document.getElementsByTagName('textarea')[0].value, "Test text content", "Text content correct!")
         });
 
-        test("setSketchSurfaceBG", function(assert) {
-            api.setSketchSurfaceBG('grid_paper');
+        test("setSketchSurfaceBg", function(assert) {
+            api.setSketchSurfaceBg('grid_paper');
             assert.equal(document.querySelector('.submittable').className, "grid_paper sub-panel submittable",
                 "background changed correctly!")
+        });
+
+        test("setSketchBgImage", function(assert) {
+            api.setSketchBgImage('www.hdimagewallpaper.com/wp-content/uploads/2015/01/Random-Cool-Images-10-HD-Screensavers.jpg');
+            assert.equal(document.querySelector('.submittable').style.backgroundImage, "url('http://www.hdimagewallpaper.com/wp-content/uploads/2015/01/Random-Cool-Images-10-HD-Screensavers.jpg')",
+                "background image changed correctly!")
+        });
+
+        test("addEmbeddedHtml", function(assert) {
+            htmlObj = {
+                location: 'top',
+                height: 25,
+                width: 25,
+                htmlCode: 'https://www.youtube.com/embed/0fHaTMBWOOY'
+            }
+            api.addEmbeddedHtml(htmlObj);
+            var embeddedNode = document.getElementsByTag('EMBEDDED-HTML')[0];
+            var iframeNode = embeddedNode.getElementsByTag('iframe')[0]
+            // assert.equal(iframeNode.src, 'https://www.youtube.com/embed/0fHaTMBWOOY' , "embedded the Html correctly!")
         });
     </script>
 </body>
