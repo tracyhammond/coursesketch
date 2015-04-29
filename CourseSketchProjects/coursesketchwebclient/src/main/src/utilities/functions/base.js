@@ -183,7 +183,7 @@ if (isUndefined(BaseException)) {
         };
         this.createStackTrace = function() {
             this.stackTrace = CourseSketch.printStackTrace();
-        }
+        };
         this.setCause = function(causeValue) {
             this.cause = causeValue;
         };
