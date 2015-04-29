@@ -127,7 +127,7 @@ validateFirstRun(document.currentScript);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
-                executeScript(navigator.getProblemInfo(), document.getElementById('problemPanel'), false, function() {
+                executeScript(navigator, document.getElementById('problemPanel'), false, function() {
                     console.log('script executed - worker disconnect');
                     if (element.isRunning()) {
                         element.finishWaiting();
@@ -145,7 +145,7 @@ validateFirstRun(document.currentScript);
             sketchSurface.refreshSketch();
 
             //loads and runs the script
-            executeScript(navigator.getProblemInfo(), document.getElementById('problemPanel'), true, function() {
+            executeScript(navigator, document.getElementById('problemPanel'), true, function() {
                 console.log('script executed - worker disconnect');
                 console.log(submission);
                 var updateList = submission.getUpdateList();

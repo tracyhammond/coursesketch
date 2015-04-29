@@ -35,10 +35,10 @@ function debugLog(text) {
  * This function builds an object that holds an api for manipulating the problem panel.
  *
  * @param {Object} panel The problem panel from the student experiment.
- * @param {Object} problemInfo The bank problem info object.
+ * @param {Object} problemNav The bank problem info object.
  * @param {Boolean} hasSubmission Flag that shows if this problem has a submission or not.
  */
-function PanelEditApi(panel, problemInfo, hasSubmission){
+function PanelEditApi(panel, problemNav, hasSubmission){
 
     /**
      * This function allows scripts to create a text area object next to the sketch surface in an experiment.
@@ -133,7 +133,7 @@ function PanelEditApi(panel, problemInfo, hasSubmission){
     this.loadBasisSketch = function() {
         if (!hasSubmission) {
             var sketchSurface = panel.querySelector('.submittable');
-            var updateList = problemInfo.getBasisSketch();
+            var updateList = problemNav.getBasisSketch();
             sketchSurface.loadUpdateList(updateList.getList(), undefined);
         }
     };
@@ -150,15 +150,15 @@ var api = {
 /**
  * This function parses and executes the script that is passed in.
  *
- * @param {Object} problemInfo The object containing the bank problem info.
+ * @param {Object} problemNav The object containing the bank problem data.
  * @param {Node} panel The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
  * @param {Boolean} hasSubmission Flag that shows if this problem has a submission or not.
  * @param {Function} callback A function to call when the script is done executing to finish experiment setup.
  */
-function executeScript(problemInfo, panel, hasSubmission, callback) {
+function executeScript(problemNav, panel, hasSubmission, callback) {
     var script = problemInfo.getProblemScript();
     console.log('executing script: ' + script);
-    var panelApi = new PanelEditApi(panel, problemInfo, hasSubmission);
+    var panelApi = new PanelEditApi(panel, problemNav, hasSubmission);
     var totalApi = mergeApi(api, panelApi);
     console.log(totalApi);
     var scriptWorker = new jailed.DynamicPlugin(script, totalApi);
