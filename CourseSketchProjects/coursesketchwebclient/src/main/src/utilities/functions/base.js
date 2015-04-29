@@ -167,20 +167,20 @@ if (isUndefined(BaseException)) {
          * exception (with <0 being treated as 0).
          */
         message:        'BaseException Thrown.\n Please subclass this to create a better exception.',
+        stackTrace:     printStackTrace().join('\n\n'),
+        cause:          undefined,
         toString: function() {
             return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '\n') + this.stackTrace;
         },
         setMessage: function(messageValue) {
             this.specificMessage = messageValue;
         },
-        stackTrace:     printStackTrace(),
         getStackTrace: function() {
             return this.stackTrace;
         },
         printStackTrace:    function() {
             console.log(printStackTrace().join('\n\n'));
         },
-        cause:          undefined,
         setCause:   function(causeValue) {
             this.cause = causeValue;
         }
