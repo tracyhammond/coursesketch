@@ -7,13 +7,14 @@
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     CourseSketch = CourseSketch || {};
+    // Right now this is permanently set to true.
+    // This is because caching is causing lots of problems with developing
+    // when the website is stable we can start to optimize and turn off caching.
     CourseSketch.noCache = true;
     var databaseSupported = true;
     if (!window.indexedDB || typeof window.indexedDB === 'undefined') {
         databaseSupported = false;
         console.log('Your browser does not support a stable version of IndexedDB. So storing your data will not be possible');
-        // window.alert('Your browser doesn't support a stable version of
-        // IndexedDB. So storing your data will not be possible');
     }
     var localScope = this;
     var dbNameSpace = {};
@@ -124,6 +125,10 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 var dataMap = {};
                 /**
                  * Creates a function for adding items to the database.
+                 *
+                 * @param {String} objectId the Key of the object when added to the database.
+                 * @param {String} objectToAdd A string representing the object in the database.
+                 * @param callback Called when the object is successfully added to the database.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -151,6 +156,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                 /**
                  * Creates a function for deleting items from the database.
+                 *
+                 * @param {String} objectId The id of the object we are trying to delete from the database.
+                 * @param {Function} callback The function that is called after deleting the item.
                  */
                 localScope[ 'deleteFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -176,6 +184,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                 /**
                  * Creates a function for deleting items from the database.
+                 *
+                 * @param {String} objectId The id of the object we are trying to get from the database.
+                 * @param {Function} callback The function that is called after retrieving the item.
                  */
                 localScope[ 'getFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
