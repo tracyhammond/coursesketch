@@ -36,8 +36,9 @@ public interface Institution {
      * @return A list of courses given a list of Ids for the courses.
      * @throws AuthenticationException
      *         Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the user if the user is trying to access something non-existant.
      */
-    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException;
+    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * @param problemID
@@ -493,9 +494,10 @@ public interface Institution {
      * @param courseId must be admin of the course.
      * @param page The page number.
      * @return A list of all bank problems.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
-    List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException;
+    List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets all grades for a certain course. Sorted in ascending order by assignmentId and then userId.
