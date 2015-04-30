@@ -108,6 +108,7 @@ public final class SubmissionManager {
 
     /**
      * Sends a request to the submission server to request an experiment as a user.
+     *
      * @param dbs The database that contains data about the experiment.
      * @param userId The user who has access to the experiment.
      * @param problemId The id of the problem associated with the sketch.
@@ -147,6 +148,7 @@ public final class SubmissionManager {
     /**
      * Builds a request to the server for all of the sketches in a single
      * problem.
+     *
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
      * @param userId The user that was requesting this information.
@@ -210,6 +212,7 @@ public final class SubmissionManager {
 
     /**
      * Inserts a tutorial into the database
+     *
      * @return ID of the inserted tutorial
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
@@ -233,6 +236,7 @@ public final class SubmissionManager {
 
     /**
      * Builds a request to the server for a tutorial
+     *
      * @return ID of the inserted tutorial
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
@@ -255,6 +259,7 @@ public final class SubmissionManager {
 
     /**
      * Builds a request to the server for all tutorials associated with a URL
+     *
      * @return list of tutorials
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
@@ -283,6 +288,7 @@ public final class SubmissionManager {
 
     /**
      * Extracts a single tutorial from a URL (used in a while loop for mongoGetTutorialList)
+     * 
      * @return tutorial object
      * @param dbTutorial tutorial to be extracted from the database
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
