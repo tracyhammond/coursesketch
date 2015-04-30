@@ -12,6 +12,7 @@ function Timeline () {
         this.continueButton(shadowRoot);
         undoCreator();
         redoCreator();
+        createTutorialTutorial();
     };
 
     /**
@@ -284,6 +285,18 @@ function Timeline () {
             document.body.appendChild(sketchSurface);
             $(plusButton).empty();
             $(plusButton).removeClass('tall');
+        };
+    }
+    /**
+     * creates textbox that explains the tutorial system
+     */
+    function createTutorialTutorial () {
+        var tutorialTutorial = document.body.querySelector.className('tutorialtutorial');
+        document.body.appendChild(tutorialTutorial);
+        tutorialTutorial.onclick = function(event) {
+            console.log('Hello, from function land!!');
+            event.stopPropagation();
+            this.parentNode.removeChild(this);
         };
     }
     /**

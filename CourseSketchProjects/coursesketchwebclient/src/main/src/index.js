@@ -6,6 +6,13 @@ CourseSketch.redirector = {};
 
 $(document).ready(
 function() {
+    /**
+     * Gets tutorial and appends it to the document.
+     */
+    CourseSketch.loadCreateTutorial = function() {
+        var element = document.createElement('entire-timeline');
+        document.getElementById('tutorial').appendChild(element);
+    };
 
     /**
      * @returns {Element} the element that encapsulates the exception.
