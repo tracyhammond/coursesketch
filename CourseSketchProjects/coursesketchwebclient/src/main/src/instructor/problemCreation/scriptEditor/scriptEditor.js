@@ -121,7 +121,7 @@ validateFirstRun(document.currentScript);
 
     var exitButton = shadow.querySelector("button.exit");
     exitButton.onClick = function() {
-        
+
     }
 
     /**
