@@ -144,7 +144,7 @@
     background-image: url("../textbox.jpg");
     background-color: #cccccc;
     /*transition: background-image 1s ease-in-out;*/
-    
+
      -webkit-animation: textbox .5s, fadein1 .3s;
     animation: textbox .5s;
 }
@@ -216,6 +216,47 @@ sketch-surface {
 	height: 100px;
 	background-repeat: no-repeat;
 }
+
+
+/* end of tutorial buttons*/
+/* begin viewing list buttons */
+
+.viewarea {
+    flex-direction: row;
+	justify-content: center;
+    top: 80%;
+    width: 219px;
+    height: 100%;
+    border: 2px solid #000; /* Add 2px to width for every px increased here. Subtract 2px if decreased */
+    background: #FFF;
+    -webkit-transition:0.7s all;
+    overflow-y: scroll;
+}
+
+.smallicon {
+    width: 104px;
+    height: 143px;
+    position: relative;
+    margin: auto 0;
+    order: 1;
+    background-image: url("tutorialpic.jpg");
+    overflow: visible;
+    z-index: initial;
+}
+
+
+.newicon {
+    width: 104px;
+    height: 143px;
+    position: relative;
+    margin: auto 0;
+    order: 2;
+    background-image: url("newtutorial.jpg");
+    overflow: visible;
+    z-index: initial;
+}
+
+
 
 /* Animations for plus button */
 @-webkit-keyframes textbox {

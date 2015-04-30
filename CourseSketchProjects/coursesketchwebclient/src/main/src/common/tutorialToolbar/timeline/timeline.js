@@ -8,11 +8,25 @@ function Timeline () {
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         this.index = new IndexManager(this);
-        this.addToolArea(shadowRoot.querySelector('.timeline'));
-        this.continueButton(shadowRoot);
+        this.newTutorial(this);
+        //this.addToolArea(shadowRoot.querySelector('.timeline'));
+        //this.continueButton(shadowRoot);
         undoCreator();
         redoCreator();
         createTutorialTutorial();
+    };
+
+    /**
+     * When the tutorial view pops up, it has a page that lists all current tutorials
+     * as well as a button that will allow the user to create a new tutorial
+     */
+    this.newTutorial = function(parent) {
+        var newTutorial = document.createElement('div');
+        toolArea.className = 'toolarea';
+        parent.appendChild(toolArea);
+        viewTutorial.onclick = function() {
+
+        };
     };
 
     /**
