@@ -4,7 +4,7 @@ message Tutorial {
     required string id = 1;
     optional string name = 2;
     optional string description = 3;
-    optional string url = 4;
+    optional string url = 4; //this is the url for the page associated with the tutorial
     optional bytes steps = 5; // This is a SrlUpdateList
 }
 
