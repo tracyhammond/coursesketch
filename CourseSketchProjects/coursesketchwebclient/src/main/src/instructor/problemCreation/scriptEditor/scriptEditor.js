@@ -101,7 +101,7 @@ validateFirstRun(document.currentScript);
     }
 
     // Save script and sketch to problem navigator
-    var saveScript = shadow.querySelector("button.save");
+    var saveScript = shadow.querySelector('button.save');
     saveScript.onClick = function() {
         //Create bank problem (proto object)
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
@@ -117,12 +117,12 @@ validateFirstRun(document.currentScript);
 
         //Update bank problem
         CourseSketch.dataManager.updateBankProblem(bankProblem);
-    }
+    };
 
-    var exitButton = shadow.querySelector("button.exit");
+    var exitButton = shadow.querySelector('button.exit');
     exitButton.onClick = function() {
 
-    }
+    };
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
