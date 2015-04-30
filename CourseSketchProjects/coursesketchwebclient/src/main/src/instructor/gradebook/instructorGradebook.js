@@ -1,3 +1,7 @@
+    /**
+     * Called when opening instructorGradebook page
+     * This creates a table with # of assignments = # of columns and # of students = # of rows
+     */
 CourseSketch.gradeBook.addCells = function(numberStudents, numberAssignments, table) {
     for (var i = 0; i < numberStudents; i++){
         var row = document.createElement('tr');
