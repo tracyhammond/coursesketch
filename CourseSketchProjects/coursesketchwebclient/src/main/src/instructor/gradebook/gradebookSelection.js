@@ -10,9 +10,7 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.courseClicked = function(course) {
         CourseSketch.dataManager.addState('gradebookCourseid', course.id);
-        // change source to the problem page! and load problem
         if (CourseSketch.connection.isInstructor) {
-        // solution editor page!
             CourseSketch.redirectContent('/src/instructor/review/multiviewGrading.html', 'Loading Gradebook');
         } else {
             CourseSketch.redirectContent('/src/student/experiment/experiment.html', 'Loading Grades');
