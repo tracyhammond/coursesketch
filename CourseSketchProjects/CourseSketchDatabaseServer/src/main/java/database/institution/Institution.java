@@ -424,7 +424,7 @@ public interface Institution {
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
-     * Inserts a tutorial into the database and returns the tutorial ID
+     * Inserts a tutorial into the database and returns the tutorial ID.
      *
      * @param userId User associated with the tutorial
      * @param tutorialObject The tutorial being inserted
@@ -436,7 +436,7 @@ public interface Institution {
             throws DatabaseAccessException, AuthenticationException;
 
     /**
-     * Gets a tutorial from the database
+     * Gets a tutorial from the database.
      *
      * @param tutorialId ID of the tutorial to get
      * @param userId User associated with the tutorial

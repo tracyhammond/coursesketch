@@ -211,7 +211,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Inserts a tutorial into the database
+     * Inserts a tutorial into the database.
      *
      * @return ID of the inserted tutorial
      * @param authenticator The object being used to authenticate the server.
@@ -235,7 +235,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for a tutorial
+     * Builds a request to the server for a tutorial.
      *
      * @return ID of the inserted tutorial
      * @param authenticator The object being used to authenticate the server.
@@ -258,7 +258,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for all tutorials associated with a URL
+     * Builds a request to the server for all tutorials associated with a URL.
      *
      * @return list of tutorials
      * @param authenticator The object being used to authenticate the server.
@@ -287,7 +287,7 @@ public final class SubmissionManager {
     }
 
     /**
-     * Extracts a single tutorial from a URL (used in a while loop for mongoGetTutorialList)
+     * Extracts a single tutorial from a URL (used in a while loop for mongoGetTutorialList).
      *
      * @return tutorial object
      * @param dbTutorial tutorial to be extracted from the database
