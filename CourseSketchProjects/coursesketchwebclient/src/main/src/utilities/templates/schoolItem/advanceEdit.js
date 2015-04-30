@@ -255,7 +255,6 @@
             scriptButton.onclick = function() {
                 var data = getInput(shadow);
                 location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
-                //CourseSketch.redirectContent('\src\instructor\problemCreation\scriptEditor\scriptEditor.html', 'Script Editor');
             };
 
             // save data

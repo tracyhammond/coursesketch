@@ -100,6 +100,16 @@ validateFirstRun(document.currentScript);
         });
     }
 
+    // Save script and sketch to problem navigator
+    var saveScript = shadow.querySelector("button.save");
+    saveScript.onClick = function() {
+        //Create proto object
+        //Get problem ID
+        //Get sketch srl update list
+        //Set script and update list
+        //Call update
+    }
+
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
      */
