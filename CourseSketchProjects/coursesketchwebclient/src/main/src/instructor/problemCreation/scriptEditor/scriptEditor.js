@@ -98,16 +98,18 @@ validateFirstRun(document.currentScript);
             typingSurface = undefined;
             console.log(performance.memory);
         });
-    }
+    };
 
     // Save script and sketch to problem navigator
-    var saveScript = shadow.querySelector('button.save');
-    saveScript.onClick = function() {
+    var saveScript = document.querySelector('button.save');
+    saveScript.onclick = function() {
+        console.log("Entered");
         //Create bank problem (proto object)
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
 
         //Get problem ID
         bankProblem.id = navigator.getCurrentProblemId();
+        console.log(bankProblem.id);
 
         //Get sketch surface
         bankProblem.baseSketch = document.querySelector('.submittable').getUpdateList();
@@ -119,8 +121,8 @@ validateFirstRun(document.currentScript);
         CourseSketch.dataManager.updateBankProblem(bankProblem);
     };
 
-    var exitButton = shadow.querySelector('button.exit');
-    exitButton.onClick = function() {
+    var exitButton = document.querySelector('button.exit');
+    exitButton.onclick = function() {
 
     };
 
