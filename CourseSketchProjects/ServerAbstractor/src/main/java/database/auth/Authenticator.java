@@ -1,5 +1,6 @@
 package database.auth;
 
+import database.DatabaseAccessException;
 import protobuf.srl.utils.Util.DateTime;
 
 import java.util.List;
@@ -338,9 +339,10 @@ public final class Authenticator {
      * @param checkTime The time that the date check is checking against.
      * @param checkType The rules at that give a correct or false response.
      * @return True if all checked values are valid
+     * @throws DatabaseAccessException thrown if there are issues grabbing data for the authenticator.
      */
     public boolean isAuthenticated(final String collection, final String itemId,
-            final String userId, final long checkTime, final Authenticator.AuthType checkType) {
+            final String userId, final long checkTime, final Authenticator.AuthType checkType) throws DatabaseAccessException {
 
         if (!checkType.validRequest()) {
             return false;
