@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util;
@@ -20,6 +21,7 @@ import protobuf.srl.utils.Util;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.BASESKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
@@ -29,6 +31,7 @@ import static database.DatabaseStringConstants.USERS;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
+
 
 public class BankProblemManagerTest {
 
@@ -42,6 +45,7 @@ public class BankProblemManagerTest {
     public static final String FAKE_SCRIPT = "fake script";
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
+    public static final Commands.SrlUpdateList.Builder FAKE_UPDATELIST = Commands.SrlUpdateList.newBuilder();
     public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
 
     @Before
@@ -58,6 +62,7 @@ public class BankProblemManagerTest {
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
         bankProblem.setQuestionType(FAKE_QUESTION_TYPE);
+        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
         // checks it does not exist.
         Assert.assertFalse(bankProblem.hasAccessPermission());
@@ -70,6 +75,8 @@ public class BankProblemManagerTest {
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(COURSE_TOPIC), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TYPE), FAKE_QUESTION_TYPE.getNumber());
+        Assert.assertEquals(Commands.SrlUpdateList.parseFrom((byte[]) mongoBankProblem.get(BASESKETCH)),
+                FAKE_UPDATELIST.build());
     }
 
     @Test
@@ -155,6 +162,7 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
         permissionBuilder.addAdminPermission(ADMIN_USER);
 
@@ -184,6 +192,7 @@ public class BankProblemManagerTest {
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
         permissionBuilder.addAdminPermission(ADMIN_USER);
 
+
         bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
@@ -208,6 +217,7 @@ public class BankProblemManagerTest {
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
         permissionBuilder.addAdminPermission(ADMIN_USER);
+
 
         bankProblem.setAccessPermission(permissionBuilder);
 
@@ -282,6 +292,7 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
+
         mongoInsertBankProblem(db, bankProblem.build());
         DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
         System.out.println(curse);
@@ -290,6 +301,19 @@ public class BankProblemManagerTest {
         Assert.assertEquals(FAKE_SCRIPT, testString);
     }
 
+    @Test
+    public void testSetBaseSketch() throws Exception {
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
+
+        mongoInsertBankProblem(db, bankProblem.build());
+        DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
+        System.out.println(curse);
+        DBObject obj = curse.next();
+        Commands.SrlUpdateList UpdateList = Commands.SrlUpdateList.parseFrom((byte[]) obj.get(BASESKETCH));
+        Assert.assertEquals(FAKE_UPDATELIST.build(), UpdateList);
+    }
     /*
      * testGetScript tests getScript member function by inserting and then getting the value that was inserted.
      */
@@ -308,6 +332,22 @@ public class BankProblemManagerTest {
         SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
         Assert.assertEquals(FAKE_SCRIPT, testString);
+    }
+
+    @Test
+    public void testGetBaseSketch() throws Exception {
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
+        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
+        permissionBuilder.addAdminPermission(ADMIN_USER);
+        permissionBuilder.addUserPermission(USER_USER);
+        bankProblem.setAccessPermission(permissionBuilder);
+
+        String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
+        SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        Commands.SrlUpdateList testUpdateList = getProblem.getBaseSketch();
+        Assert.assertEquals(FAKE_UPDATELIST.build(), testUpdateList);
     }
 
     /*
