@@ -103,11 +103,25 @@ validateFirstRun(document.currentScript);
     // Save script and sketch to problem navigator
     var saveScript = shadow.querySelector("button.save");
     saveScript.onClick = function() {
-        //Create proto object
+        //Create bank problem (proto object)
+        var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+
         //Get problem ID
-        //Get sketch srl update list
+        bankProblem.id = navigator.getCurrentProblemId();
+
+        //Get sketch surface
+        bankProblem.baseSketch = document.querySelector('.submittable').getUpdateList();
+
         //Set script and update list
-        //Call update
+        bankProblem.script = document.getElementById('scriptBox').value;
+
+        //Update bank problem
+        CourseSketch.dataManager.updateBankProblem(bankProblem);
+    }
+
+    var exitButton = shadow.querySelector("button.exit");
+    exitButton.onClick = function() {
+        
     }
 
     /**
