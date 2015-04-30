@@ -5,8 +5,10 @@ validateFirstRun(document.currentScript);
     courseManagement.gradebookMode = true;
 
     /**
-     * Called when a user clicks on a course school item.
      * This loads the assignments from the database then calls 'showCourses' to display them.
+     *
+     * Called when a user clicks on a course school item.
+     * @param {SrlCourse} course the name of the course.
      */
     courseManagement.courseClicked = function(course) {
         CourseSketch.dataManager.addState('gradebookCourseid', course.id);
