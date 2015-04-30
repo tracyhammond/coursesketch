@@ -41,7 +41,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 updateAssignment = true;
             }
         } catch (exception) {
-           // console.error(exception);
+            // console.error(exception);
         }
 
         // so we do not have to perform this again!
@@ -196,8 +196,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             }
             advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
-                 // we do not need to make server changes we
-                                        // just need to make sure it was successful.
+                 // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }

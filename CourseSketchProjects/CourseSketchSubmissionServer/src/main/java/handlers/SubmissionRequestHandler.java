@@ -17,6 +17,7 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import utilities.ConnectionException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 /**
@@ -65,21 +66,11 @@ public final class SubmissionRequestHandler {
             // sends the response back to the answer checker which can then send it back to the client.
             return build.build();
         } catch (SubmissionException e) {
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            if (e.getMessage() != null) {
-                build.setResponseText(e.getMessage());
-            }
-            build.setSessionInfo(sessionInfo);
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            final Request build = ExceptionUtilities.createExceptionRequest(protoEx, req);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            return build.build();
+            return build;
         } catch (ConnectionException e) {
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            if (e.getMessage() != null) {
-                build.setResponseText(e.getMessage());
-            }
-            build.setSessionInfo(sessionInfo);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         return null;
