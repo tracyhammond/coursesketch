@@ -130,7 +130,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                  *
                  * @param {String} objectId the Key of the object when added to the database.
                  * @param {String} objectToAdd A string representing the object in the database.
-                 * @param callback Called when the object is successfully added to the database.
+                 * @param {Function} callback Called when the object is successfully added to the database.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
