@@ -7,9 +7,11 @@
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     CourseSketch = CourseSketch || {};
-    // Right now this is permanently set to true.
-    // This is because caching is causing lots of problems with developing
-    // when the website is stable we can start to optimize and turn off caching.
+    /*
+     Right now this is permanently set to true.
+     This is because caching is causing lots of problems with developing.
+     When the website is stable we can start to optimize and turn on caching.
+     */
     CourseSketch.noCache = true;
     var databaseSupported = true;
     if (!window.indexedDB || typeof window.indexedDB === 'undefined') {
