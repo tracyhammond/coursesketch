@@ -288,7 +288,7 @@ public final class SubmissionManager {
 
     /**
      * Extracts a single tutorial from a URL (used in a while loop for mongoGetTutorialList)
-     * 
+     *
      * @return tutorial object
      * @param dbTutorial tutorial to be extracted from the database
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.

@@ -7,7 +7,7 @@ CourseSketch.redirector = {};
 $(document).ready(
 function() {
     /**
-     * gets tutorial and appends it to the document
+     * Gets tutorial and appends it to the document.
      */
     CourseSketch.loadCreateTutorial = function() {
         var element = document.createElement('entire-timeline');
