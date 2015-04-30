@@ -376,6 +376,7 @@ public interface Institution {
 
     /**
      * Gets all of the courses of a specific user.
+     *
      * @param userId The user asking for their courses.
      * @return A list of all courses for a specific user.
      * @throws AuthenticationException Thrown if the user does not have authentication to some of the courses.
@@ -386,6 +387,7 @@ public interface Institution {
     /**
      * A message sent from the submission server that allows the insertion of
      * the submission.
+     *
      * @param userId The user that the submission is associated.
      * @param problemId The bank problem that is related
      * @param submissionId The submission that is being inserted.
@@ -397,6 +399,7 @@ public interface Institution {
 
     /**
      * Calls the submission server for a specific experiment from a specific user.
+     *
      * @param userId User requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
      * @param sessionInfo The session information of this query.
@@ -408,6 +411,7 @@ public interface Institution {
 
     /**
      * Calls the submission server for a specific experiment from a specific user.
+     *
      * @param userId User requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
      * @param sessionInfo The session information of this query.
@@ -421,6 +425,7 @@ public interface Institution {
 
     /**
      * Inserts a tutorial into the database and returns the tutorial ID
+     *
      * @param userId User associated with the tutorial
      * @param tutorialObject The tutorial being inserted
      * @return tutorialId of inserted tutorial
@@ -432,6 +437,7 @@ public interface Institution {
 
     /**
      * Gets a tutorial from the database
+     *
      * @param tutorialId ID of the tutorial to get
      * @param userId User associated with the tutorial
      * @return The requested tutorial
@@ -443,6 +449,7 @@ public interface Institution {
 
     /**
      * Gets all bank problems in the database by a page.
+     *
      * @param userId the user who is requesting all bank problems
      * @param courseId must be admin of the course.
      * @param page The page number.
