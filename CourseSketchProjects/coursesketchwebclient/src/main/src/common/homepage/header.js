@@ -5,10 +5,9 @@ function HeaderHandler() {
         if (value) { // Close header
             $('.ui-header').animate({
                 top: '-' + (height + 2) + 'px',
-                }, 300, function() {
-                    open = false;
-                }
-            );
+            }, 300, function() {
+                open = false;
+            });
             return false;
         } else { // Open header
             $('.ui-header').animate({
