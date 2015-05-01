@@ -242,13 +242,13 @@ public final class GradeManager {
      * @param requesterId
      *         The id of the user requesting the grade. This is required.
      * @param userId
-     *         The id of the user that the grade is for. This is required.
+     *         The id of the user that the grade is for. This is required. This value is at itemId(3).
      * @param courseId
-     *         The id of the course that the grade is for. This is required.
+     *         The id of the course that the grade is for. This is required. This value is at itemId(0).
      * @param assignmentId
-     *         The id of the assignment that the grade is for. This is optional.
+     *         The id of the assignment that the grade is for. This is optional. This value is at itemId(1).
      * @param problemId
-     *         The id of the problem that the grade is for. This is optional.
+     *         The id of the problem that the grade is for. This is optional. This value is at itemId(2).
      * @return ProtoGrade object representing the grade requested.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
