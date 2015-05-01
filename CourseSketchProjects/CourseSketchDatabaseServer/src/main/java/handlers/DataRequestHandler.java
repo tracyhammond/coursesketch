@@ -8,8 +8,11 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading.ProtoGrade;
+import protobuf.srl.grading.Grading.ProtoGradeHolder;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.lecturedata.Lecturedata.SrlLectureDataHolder;
@@ -203,6 +206,13 @@ public final class DataRequestHandler {
                             final SrlLectureDataHolder.Builder lectureBuilder = SrlLectureDataHolder.newBuilder();
                             lectureBuilder.addAllSlides(lectureSlideLoop);
                             results.add(ResultBuilder.buildResult(lectureBuilder.build().toByteString(), ItemQuery.LECTURESLIDE));
+                        }
+                        break;
+                        case GRADE: {
+                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, userId);
+                            final ProtoGradeHolder.Builder gradeListHolder = ProtoGradeHolder.newBuilder();
+                            gradeListHolder.addAllGrades(gradeList);
+                            results.add(ResultBuilder.buildResult(gradeListHolder.build().toByteString(), ItemQuery.GRADE));
                         }
                         break;
                         default:
