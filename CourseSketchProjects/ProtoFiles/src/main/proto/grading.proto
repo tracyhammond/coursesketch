@@ -3,6 +3,10 @@ import "util.proto";
 package protobuf.srl.grading;
 
 // Represents the grading policy for a course.
+message ProtoGradeHolder {
+    repeated ProtoGrade grades = 1;
+}
+
 message ProtoGradingPolicy {
     required string courseId = 1;                           // CourseId that the gradingPolicy belongs to.
     optional PolicyType policyType = 2 [default = PERCENT]; // Tells if the gradingPolicy is percent or point based.
@@ -99,4 +103,19 @@ message GradeHistory {
     optional string comment = 2;                            // Any comment associated with the grade.
     optional protobuf.srl.utils.DateTime gradedDate = 3;    // If this is the original submission, it is the date the user submitted
     optional string whoChanged = 4;                         // UserId of the person who changed the grade
+}
+
+message GradingQuery {
+    optional PermissionLevel permissionLevel = 1 [default = STUDENT]; // This indicates the permission level of the requester.
+    optional SearchType searchType = 2 [default = SINGLE_GRADE];      // This indicates the request type.
+
+    enum PermissionLevel {
+        STUDENT = 0;    // Requester is a student.
+        INSTRUCTOR = 1; // Requester is an instructor.
+    }
+
+    enum SearchType {
+        SINGLE_GRADE = 0; // Request is for a single grade.
+        ALL_GRADES = 1;   // Request is for all grades.
+    }
 }
