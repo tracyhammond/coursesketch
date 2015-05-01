@@ -78,9 +78,7 @@ validateFirstRun(document.currentScript);
      */
     function loadTyping(navigator) {
         var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel';
-        typingSurface.style.width = '100%';
-        typingSurface.style.height = '100%';
+        typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
