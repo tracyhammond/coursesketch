@@ -247,7 +247,6 @@ if (isUndefined(validateFirstRun)) {
     }
 }
 
-
 /**
  * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
  * And prevents further execution of the script.
@@ -273,5 +272,23 @@ if (isUndefined(validateFirstGlobalRun)) {
         }
         CourseSketch.scriptBay[scriptObject.src] = {};
         validateFirstRun(scriptObject); // look locally too!
+    }
+}
+
+if (isUndefined(safeLoad)) {
+    /**
+     * Loads a script but only once.
+     *
+     * @param {String} url The url that is being loaded.
+     * @param {Object} uniqueGlobalObject a global object that is unique to the script that will be undefined if the script does not exist.
+     */
+    function safeLoad(url, uniqueGlobalObject) {
+        if (typeof window[uniqueGlobalObject] === 'undefined') {
+            // load jquery
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            document.getElementsByTagName('head')[0].appendChild(script);
+        }
     }
 }
