@@ -16,11 +16,18 @@
      -->
     <style>
         @import "/src/utilities/libraries/materializecss/css/materialize.min.css";
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
-    <div id = "panelWrapper" class = "panelWrapper" style = "width:50px;">
+    <div id = "panelWrapper" class = "panelWrapper noselect">
         <div id = "toolPanel">
             <div class = "transBox">
-                <h1></h1>
                 <!--
                 |--------|
                 |   sub  |
@@ -29,23 +36,19 @@
                 |   red  |
                 |--------|
                  -->
-                <div id="constanButtons" class="fixed-action-btn" style="top: 45px; right: 24px;">
-                    <a class="btn-floating btn-large red">
-                        <i class="large mdi-editor-mode-edit"></i>
-                    </a>
-                    <ul>
-                        <li><a id="submission" class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
-                        <li><a id="save" class="btn-floating yellow darken-1"><i class="large mdi-editor-format-quote"></i></a></li>
-                        <li><a id="undo" class="btn-floating green"><i class="large mdi-editor-publish"></i></a></li>
-                        <li><a id="redo" class="btn-floating blue"><i class="large mdi-editor-attach-file"></i></a></li>
+                <div id="constantButtons" class="" style="display:inline-flex;">
+                    <ul style="display:inline-flex;">
+                        <li><a id="submission" class="btn-floating red z-depth-2"><i class="large mdi-editor-insert-chart"></i></a></li>
+                        <li><a id="save" class="btn-floating yellow darken-1 z-depth-2"><i class="large mdi-content-save"></i></a></li>
+                        <li><a id="undo" class="btn-floating green z-depth-2"><i class="large mdi-content-undo"></i></a></li>
+                        <li><a id="redo" class="btn-floating blue z-depth-2"><i class="large mdi-content-redo"></i></a></li>
+                        <content id = "specific_buttons" select=".specific_button"></content>
                     </ul>
                 </div>
                 <!--
                 Shows buttons that are specific to the current content
                  -->
-                <content id = "specific_buttons" select=".specific_button">
-                </content>
-                <h1></h1>
+
             </div>
         </div>
     </div>
