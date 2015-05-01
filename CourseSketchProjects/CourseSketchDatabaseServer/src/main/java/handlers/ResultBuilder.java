@@ -1,6 +1,6 @@
 package handlers;
 
-import com.google.protobuf.ByteString;
+import com.google.protobuf.GeneratedMessage;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by gigemjt on 1/2/15.
  */
-final class ResultBuilder {
+public final class ResultBuilder {
 
     /**
      * Utility class.
@@ -20,19 +20,48 @@ final class ResultBuilder {
      * Builds a complete result from the query. This one is typically used in
      * the case of success.
      *
-     * @param data
-     *         The data from the result.
      * @param text
      *         A message from the result (typically used if there is an error
      *         but no data).
      * @param type
      *         What the original query was.
+     * @param data
+     *         The data from the result.
      * @return A fully built item result.
      */
-    public static Data.ItemResult buildResult(final ByteString data, final String text, final Data.ItemQuery type) {
+    public static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final GeneratedMessage... data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
-            result.setData(data);
+            for (GeneratedMessage message : data) {
+                result.addData(message.toByteString());
+            }
+        }
+        result.setQuery(type);
+        if (text != null) {
+            result.setReturnText(text);
+        }
+        return result.build();
+    }
+
+    /**
+     * Builds a complete result from the query. This one is typically used in
+     * the case of success.
+     *
+     * @param text
+     *         A message from the result (typically used if there is an error
+     *         but no data).
+     * @param type
+     *         What the original query was.
+     * @param data
+     *         The data from the result.
+     * @return A fully built item result.
+     */
+    public static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
+        final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
+        if (data != null) {
+            for (GeneratedMessage message : data) {
+                result.addData(message.toByteString());
+            }
         }
         result.setQuery(type);
         if (text != null) {
@@ -44,13 +73,13 @@ final class ResultBuilder {
     /**
      * Builds a result but with no binary data.
      *
-     * @param data
-     *         The data from the result.
      * @param type
      *         What the original query was.
+     * @param data
+     *         The data from the result.
      * @return A built item result with no binary data.
      */
-    public static Data.ItemResult buildResult(final String data, final Data.ItemQuery type) {
+    public static Data.ItemResult buildResult(final Data.ItemQuery type, final String data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         result.setReturnText(data);
         result.setQuery(type);
@@ -90,17 +119,41 @@ final class ResultBuilder {
      * Builds a complete result from the query. This one is typically used in
      * the case of success.
      *
-     * @param data
-     *         The data from the result.
      * @param type
      *         What the original query was.
+     * @param data
+     *         The data from the result.
      * @return A fully built item result.
      */
-    public static Data.ItemResult buildResult(final ByteString data, final Data.ItemQuery type) {
+    public static Data.ItemResult buildResult(final Data.ItemQuery type, final GeneratedMessage... data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
-        result.setData(data);
+        if (data != null) {
+            for (GeneratedMessage message : data) {
+                result.addData(message.toByteString());
+            }
+        }
         result.setQuery(type);
         return result.build();
     }
 
+    /**
+     * Builds a complete result from the query. This one is typically used in
+     * the case of success.
+     *
+     * @param type
+     *         What the original query was.
+     * @param data
+     *         The data from the result.
+     * @return A fully built item result.
+     */
+    public static Data.ItemResult buildResult(final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
+        final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
+        if (data != null) {
+            for (GeneratedMessage message : data) {
+                result.addData(message.toByteString());
+            }
+        }
+        result.setQuery(type);
+        return result.build();
+    }
 }

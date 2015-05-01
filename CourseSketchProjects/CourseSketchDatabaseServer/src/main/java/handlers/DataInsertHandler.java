@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
@@ -92,38 +91,27 @@ public final class DataInsertHandler {
                 try {
                     switch (itemSet.getQuery()) {
                         case COURSE: {
-                            try {
-                                final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
-                                final String resultId = instance.insertCourse(userId, course);
-                                results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + course.getId(), itemSet.getQuery()));
-                            } catch (DatabaseAccessException e) {
-                                // unable to register user for course
-                                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                                conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
-                                final ItemResult.Builder build = ItemResult.newBuilder();
-                                build.setQuery(itemSet.getQuery());
-                                results.add(ResultBuilder.buildResult(build.build().toByteString(),
-                                        "Unable to register user for course: " + e.getMessage(),
-                                        ItemQuery.ERROR));
-                            }
+                            final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
+                            final String resultId = instance.insertCourse(userId, course);
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + course.getId()));
                         }
                         break;
                         case ASSIGNMENT: {
                             final SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
                             final String resultId = instance.insertAssignment(userId, assignment);
-                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + assignment.getId(), itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + assignment.getId()));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
                             final String resultId = instance.insertCourseProblem(userId, problem);
-                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + problem.getId(), itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
                             final String resultId = instance.insertBankProblem(userId, problem);
-                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + problem.getId(), itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
                         /*
@@ -142,20 +130,20 @@ public final class DataInsertHandler {
                             final String courseId = course.getId();
                             final boolean success = instance.putUserInCourse(courseId, userId);
                             if (!success) {
-                                results.add(ResultBuilder.buildResult("User was already registered for course!", itemSet.getQuery()));
+                                results.add(ResultBuilder.buildResult(itemSet.getQuery(), "User was already registered for course!"));
                             }
                         }
                         break;
                         case LECTURE: {
                             final Lecture lecture = Lecture.parseFrom(itemSet.getData());
                             final String resultId = instance.insertLecture(userId, lecture);
-                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + lecture.getId(), itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lecture.getId()));
                         }
                         break;
                         case LECTURESLIDE: {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
                             final String resultId = instance.insertLectureSlide(userId, lectureSlide);
-                            results.add(ResultBuilder.buildResult(resultId + ID_SEPARATOR + lectureSlide.getId(), itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lectureSlide.getId()));
                         }
                         break;
                         case EXPERIMENT: {
@@ -174,7 +162,7 @@ public final class DataInsertHandler {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemSet.getQuery());
-                        results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), itemSet.getQuery()));
+                        results.add(ResultBuilder.buildResult(e.getMessage(), itemSet.getQuery(), build.build()));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
@@ -186,8 +174,8 @@ public final class DataInsertHandler {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemSet.getQuery());
-                    build.setData(itemSet.toByteString());
-                    results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                    build.addData(itemSet.toByteString());
+                    results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, build.build()));
                 }
             }
             if (!results.isEmpty()) {

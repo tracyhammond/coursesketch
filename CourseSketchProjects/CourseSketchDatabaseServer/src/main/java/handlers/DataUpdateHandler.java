@@ -83,44 +83,44 @@ public final class DataUpdateHandler {
                         case LECTURE: {
                             final Lecture lecture = Lecture.parseFrom(itemSet.getData());
                             instance.updateLecture(userId, lecture);
-                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case LECTURESLIDE: {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
                             instance.updateLectureSlide(userId, lectureSlide);
-                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case COURSE: {
                             final School.SrlCourse course = School.SrlCourse.parseFrom(itemSet.getData());
                             instance.updateCourse(userId, course);
-                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case ASSIGNMENT: {
                             final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
                             instance.updateAssignment(userId, assignment);
-                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final School.SrlProblem srlProblem = School.SrlProblem.parseFrom(itemSet.getData());
                             instance.updateCourseProblem(userId, srlProblem);
-                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final School.SrlBankProblem srlBankProblem = School.SrlBankProblem.parseFrom(itemSet.getData());
                             instance.updateBankProblem(userId, srlBankProblem);
-                            results.add(ResultBuilder.buildResult("", itemSet.getQuery()));
+                            results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         default:
                             final ItemResult.Builder build = ItemResult.newBuilder();
                             build.setQuery(itemSet.getQuery());
-                            results.add(ResultBuilder.buildResult(build.build().toByteString(), "Update is not supported for this type",
-                                    ItemQuery.ERROR));
+                            results.add(ResultBuilder.buildResult("Update is not supported for this type", ItemQuery.ERROR,
+                                    build.build()));
                             break;
                     }
                 } catch (AuthenticationException e) {
@@ -129,7 +129,7 @@ public final class DataUpdateHandler {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder build = ItemResult.newBuilder();
                         build.setQuery(itemSet.getQuery());
-                        results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                        results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, build.build()));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
@@ -139,8 +139,8 @@ public final class DataUpdateHandler {
                     conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     final ItemResult.Builder build = ItemResult.newBuilder();
                     build.setQuery(itemSet.getQuery());
-                    build.setData(itemSet.toByteString());
-                    results.add(ResultBuilder.buildResult(build.build().toByteString(), e.getMessage(), ItemQuery.ERROR));
+                    build.addData(itemSet.toByteString());
+                    results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, build.build()));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }

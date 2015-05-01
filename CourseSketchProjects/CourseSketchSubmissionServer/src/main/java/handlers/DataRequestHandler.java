@@ -99,7 +99,7 @@ public final class DataRequestHandler {
         send.setQuery(ItemQuery.EXPERIMENT);
 
         if (experiment != null) {
-            send.setData(experiment.toByteString());
+            send.addData(experiment.toByteString());
         } else {
             send.setNoData(true);
             send.setErrorMessage(errorMessage);
@@ -130,7 +130,7 @@ public final class DataRequestHandler {
         }
         final ItemResult.Builder send = ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
-        send.setData(experiments.build().toByteString());
+        send.addData(experiments.build().toByteString());
         send.setErrorMessage(errorMessage.toString());
         send.setAdvanceQuery(itemReq.getAdvanceQuery());
         return send.build();
