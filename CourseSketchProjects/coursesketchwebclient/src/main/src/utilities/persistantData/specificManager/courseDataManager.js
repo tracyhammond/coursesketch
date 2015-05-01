@@ -106,8 +106,11 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             if (isUndefined(course) || course instanceof DatabaseException) {
                 advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
-                    var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                    var course = school.courses[0];
+                    if (isUndefined(item.data) || item.data === null) {
+                        courseCallback(new DatabaseException('The data sent back from the server for course: ' + courseId + ' does not exist.'));
+                        return;
+                    }
+                    var course = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getSrlCourseClass());
                     if (isUndefined(course)) {
                         courseCallback(new DatabaseException('Course does not exist in the remote database.'));
                         return;
@@ -213,8 +216,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 courseCallback(new DatabaseException(item.returnText, 'Getting all courses for user ' + parent.getCurrentId()));
                 return;
             }
-            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-            var courseList = school.courses;
+            var courseList = [];
+            console.log(item.data);
+            for (var i = 0; i < item.data.length; i++) {
+                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0],
+                        CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+            }
 
             var setCourseCallback = createBarrier(courseList.length, function() {
                 courseCallback(courseList);
@@ -350,5 +357,35 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         if (list.length === 0) {
             clearCallback();
         }
+    };
+
+    parent.searchCourses = function(callback) {
+        var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
+        var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
+        request.items = [ item ];
+
+        /**
+         * Listens for the search result and displays the result given to it.
+         */
+        CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+                CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+            // there was an error getting the user classes.
+            if (isUndefined(item.data) || item.data === null) {
+                callback(new DatabaseException('The data sent back from the server for searching courses'));
+                return;
+            }
+            var courseList = [];
+            for (var i = 0; i < item.data.length; i++) {
+                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
+                        CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+            }
+            var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
+            var courseList = school.courses;
+        }
+
+        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
+                CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
     };
 }

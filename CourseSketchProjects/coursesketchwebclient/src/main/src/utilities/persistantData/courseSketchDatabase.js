@@ -216,6 +216,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
+            return;
             clearTimeout(timeout);
             var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
             var courseList = school.courses;

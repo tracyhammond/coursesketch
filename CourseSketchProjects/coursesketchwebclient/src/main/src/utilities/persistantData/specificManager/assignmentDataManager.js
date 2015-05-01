@@ -316,8 +316,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                         assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist.'));
                                         return;
                                     }
-                                    var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                    var assignment = school.assignments[0];
+
+                                    var assignment = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0],
+                                            CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass());
                                     if (isUndefined(assignment) || assignment instanceof DatabaseException) {
                                         var result = assignment;
                                         if (isUndefined(result)) {
