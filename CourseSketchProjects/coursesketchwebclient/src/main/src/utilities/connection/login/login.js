@@ -68,7 +68,7 @@ function LoginSystem() {
      *
      */
     function attachButtons() {
-        var loginButton = this.shadowRoot.querySelector('#registerButton');
+        var loginButton = shadowRoot.querySelector('#loginnButton');
         Waves.attach(loginButton);
     }
 
