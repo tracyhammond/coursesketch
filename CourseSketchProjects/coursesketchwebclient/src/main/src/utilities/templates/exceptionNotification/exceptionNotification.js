@@ -34,6 +34,7 @@
             body: protoEx.getMssg(),
             icon: imageUrl
         });
+        console.log(notification);
         notification.onclick = function(event) {
             console.log(event);
             createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
@@ -71,10 +72,14 @@ function ExceptionNotification() {
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
         this.createShadowRoot();
+
         this.shadowRoot.appendChild(templateClone);
+        $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
+        console.log(this);
         this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
             localScope.parentNode.removeChild(localScope);
         };
+
     };
 
     /**
@@ -88,15 +93,20 @@ function ExceptionNotification() {
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
      */
     this.loadProtoException = function(protoEx) {
-        var title = document.createElement('p');
+        var header = document.createElement('h4');
+        header.className = 'header';
+
+        var title = document.createElement('div');
         title.textContent = protoEx.getExceptionType();
-        title.className = 'title';
-        this.appendChild(title);
+        title.className = 'exceptionTitle';
+        header.appendChild(title);
 
         var message = document.createElement('div');
         message.textContent = protoEx.getMssg();
-        message.className = 'message';
-        this.appendChild(message);
+        message.className = 'exceptionMessage';
+        header.appendChild(message);
+
+        this.appendChild(header);
 
         var stack = document.createElement('div');
         var exceptionStackTrace = protoEx.getStackTrace();
