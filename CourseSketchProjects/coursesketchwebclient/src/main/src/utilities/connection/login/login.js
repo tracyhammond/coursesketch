@@ -57,10 +57,20 @@ function LoginSystem() {
     this.initializeElement = function(document, templateClone) {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
+
         setupLoginScript();
         setupFormScript();
         setupCallbacks();
+        attachButtons();
     };
+
+    /**
+     *
+     */
+    function attachButtons() {
+        var loginButton = this.shadowRoot.querySelector('#registerButton');
+        Waves.attach(loginButton);
+    }
 
     /**
      * Sets up what happens upon the server return the result of attempting to
