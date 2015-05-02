@@ -7,25 +7,24 @@
 		@import "/src/utilities/libraries/materializecss/css/materialize.min.css";
 	</style>
 	<div id="content" style="z-index:1;">
-		<nav style="height:40%;min-height:150px;z-index:-1;position:absolute;">
-			<div class="nav-wrapper"></div>
-		</nav>
-		<div class="row" style="display:inline-block;">
-			<div style="display:inline-flex;">
-				<h1 class="center bold white-text">Course</h1>
-				<h1 class="center light white-text">Sketch</h1>
+		<div class="row" style="">
+			<div class="col s12 center-align">
+				<h1 class="center bold white-text" style="display:inline-flex;">Course</h1>
+				<h1 class="center light white-text" style="display:inline-flex;">Sketch</h1>
 			</div>
 			<!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
-			<div id="form" class="card row" style="position:relative;">
+			<div id="form" class="card col s6 offset-s3" style="position:relative;">
 				<form id="submitForm" class="col s12" action="#">
 					<div class="col s12 card-content">
 						<div id="user" class="input-field col s11">
 							<i class="mdi-action-account-circle prefix"></i>
-							<input id="username" type="text" name="username" placeholder="USERNAME" required>
+							<input id="username" type="text" name="username"
+								   placeholder="USERNAME" autofocus="true" required>
 						</div>
 						<div id="pass" class="input-field col s11">
 							<i class="mdi-action-lock-open prefix"></i>
-							<input id="password" type="password" name="password" placeholder="PASSWORD" required>
+							<input id="password" type="password" name="password"
+								   placeholder="PASSWORD" required>
 						</div>
 					</div>
 					<div class="card-action col s12">
@@ -33,15 +32,8 @@
 					</div>
 				</form>
 			</div>
-			<a id="registerButton" class ="btn-flat">Register</a>
+			<a id="registerButton" class ="btn-flat col s12">Register</a>
 		</div>
-		<footer class="page-footer" style="position:fixed; bottom:0; width:100%; z-index:-1;">
-			<div class="footer-copyright">
-				<div class="container center">
-					Developed in the Sketch Recognition Lab at Texas A&M University
-				</div>
-			</div>
-		</footer>
 	</div>
 	</template>
 </body>
