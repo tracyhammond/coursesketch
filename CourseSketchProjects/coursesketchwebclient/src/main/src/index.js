@@ -83,7 +83,6 @@ function() {
         element.appendChild(register);
     }
     createLogin(createRegister);
-    element.style.display = 'flex';
 
     // create the load menu function.
     function loadMenu(importDoc) {
