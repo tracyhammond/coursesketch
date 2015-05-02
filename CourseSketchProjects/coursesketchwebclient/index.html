@@ -42,8 +42,6 @@ html,body,#mainPageContent {
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
-	width: 100%;
-	height: 100vh;
 }
 
 #mainPageContent {
@@ -51,14 +49,16 @@ html,body,#mainPageContent {
 }
 
 body {
-	background: #EDEEEF;
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+
+main {
+	flex: 1 0 auto;
 }
 
 #loginLocation {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 10;
@@ -74,7 +74,30 @@ login-system, register-system {
 <script src="/src/index.js"></script>
 </head>
 <body>
-	<div id="mainPageContent" style="display: none;"></div>
-	<div id="loginLocation"></div>
+
+	<header class="row" style="margin:0; width:100%; z-index:2;">
+		<nav class="col s12 white">
+			<div class="nav-wrapper">
+				<div class="brand-logo" style="display:inline-flex;">
+					<a class="center bold teal-text">Course</a>
+					<a class="center light black-text">Sketch</a>
+				</div>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="#" class="black-text">Learn More</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<main class="row teal" style="margin:0; height:100%;">
+		<div id="mainPageContent" style="display: none;"></div>
+		<div id="loginLocation" style="z-index:1;"></div>
+	</main>
+	<footer class="page-footer teal darken-1" style="padding:0; margin:0;">
+		<div class="footer-copyright">
+			<div class="container center white-text">
+				Developed in the Sketch Recognition Lab at Texas A&M University
+			</div>
+		</div>
+	</footer>
 </body>
 </html>
