@@ -31,11 +31,11 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
                         CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
-                    if (isUndefined(item.data) || item.data === null) {
+                    if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                         submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
                         return;
                     }
-                    var experiment = CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data);
+                    var experiment = CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data[0]);
                     var sub = experiment.submission;
                     localScope.setSubmission(problemId, sub);
                     submissionCallback(sub);
@@ -66,7 +66,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             }
             var list;
             try {
-                list = CourseSketch.PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data);
+                list = CourseSketch.PROTOBUF_UTIL.getSrlExperimentListClass().decode(item.data[0]);
             } catch (exception) {
                 console.log(exception);
                 submissionCallback(new DatabaseException('Exception decoding experiment data data: ' + exception.toString()));
