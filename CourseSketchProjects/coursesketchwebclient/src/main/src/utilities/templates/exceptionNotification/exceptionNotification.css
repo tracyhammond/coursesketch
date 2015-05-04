@@ -1,57 +1,17 @@
-/*
-#closeButton {
-    position: relative;
-    float: right;
-    left: -15px;
-    z-index: 1;
-    margin-top: 2%;
-    margin-left: 30px;
-    cursor:pointer;
-    color: #FFDBDB;
-    border: 1px solid #FFDBDB;
-    border-radius: 30px;
-    background: #A31919;
-    font-size: 31px;
-    font-weight: bold;
-    line-height: 0px;
-    display: block;
-    padding: 11px 3px;
-    opacity: .4;
-}
-
-#closeButton:hover {
-    opacity: 1.0;
-}
-
-:host {
-    position: absolute;
-    top: 15%;
-    left: 40%;
-    margin-left: -270px;
-    width: 100px;
-    height: 100px;
-}
-
-#notificationInformation {
-    border-radius: 25px;
-    border: 2px solid #A31919;
-    padding: 0px;
-    background: #F0F0F0;
-    overflow: hidden;
-}
-*/
 .modal {
     display: none;
     position: fixed;
     left: 0;
     right: 0;
-    background-color: #fafafa;
+    background: #FF4D4D;
     padding: 0;
     max-height: 70%;
     max-width: 60%;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1000;
-    border-radius: 2px;
+    border-radius: 25px;
+    border: 2px solid #fafafa;
     -webkit-transform: translate(0);
     -moz-transform: translate(0);
     -ms-transform: translate(0);
@@ -60,7 +20,7 @@
     will-change: top, opacity;
 }
 
-.modal.modal-fixed-footer .modal-content {
+.modal.modal-fixed-footer .modal-content .modal-header {
   position: fixed;
   max-height: 100%;
   padding-bottom: 64px;
@@ -80,15 +40,12 @@
   margin: 6px 0;
 }
 
+.modal-content {
+    background: #fafafa;
+}
+
 ::content .stacktrace {
-    /*
-    min-width: 200px;
-    height: 275px;
-    overflow-y: scroll;
-    padding: 20px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    */
+    text-wrap: unrestricted;
     opacity: .4;
     transition: opacity 420ms ease-in-out;
 }
@@ -97,29 +54,24 @@
     opacity: 1.0;
 }
 
-/*
 ::content .header {
-    width: 100%;
+    color: #fafafa;
 }
-*/
-::content .exceptionTitle {
-    color: #A31919;
+
+::content .header > .exceptionTitle {
     font-size: 150%;
     font-family: Impact, Charcoal, sans-serif;
     font-stretch: condensed;
     padding: 20px;
     position: relative;
     left: 15px;
-    /*
-    margin-top: 0;
-    -webkit-font-smoothing: antialiased;
-    font-size: 2.28rem;
-    line-height: 2.508rem;
-    margin: 1.14rem 0 0.912rem 0;
-    font-weight: 100;
-    */
 }
 
 ::content .header > .exceptionMessage {
-    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
+    font-size: 75%;
+    position: relative;
+    left: 15px;
 }
+
