@@ -12,18 +12,17 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
@@ -173,6 +172,10 @@ public final class SubmissionManager {
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject corsor = myDbRef.fetch();
+
+        if (corsor == null) {
+            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
+        }
         for (String key : corsor.keySet()) {
             if (SELF_ID.equals(key)) {
                 continue;

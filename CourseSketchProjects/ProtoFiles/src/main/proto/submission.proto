@@ -37,7 +37,3 @@ message SrlExperiment {
     optional SrlSubmission submission = 6;
     optional protobuf.srl.utils.SrlPermission accessPermission = 7;
 }
-
-message SrlExperimentList {
-    repeated SrlExperiment experiments = 1;
-}
