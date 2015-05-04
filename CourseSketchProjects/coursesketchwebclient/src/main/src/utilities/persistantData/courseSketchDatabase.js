@@ -277,7 +277,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * @param {Function} callback Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
-        var localScope = this;
         var interval = setInterval(function() {
             if (localScope.isDatabaseReady()) {
                 clearInterval(interval);
