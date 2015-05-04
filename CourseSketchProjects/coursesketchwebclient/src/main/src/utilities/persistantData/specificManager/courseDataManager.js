@@ -219,7 +219,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             var courseList = [];
             console.log(item.data);
             for (var i = 0; i < item.data.length; i++) {
-                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0],
+                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
                         CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
             }
 
@@ -383,7 +383,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
             var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
             var courseList = school.courses;
-        }
+        });
 
         CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
                 CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
