@@ -250,6 +250,13 @@
             // add our loaded element to the page.
             document.body.appendChild(host);
 
+            // open scripting window and sketch saving/loading
+            var scriptButton = shadow.querySelector('button.scripting');
+            scriptButton.onclick = function() {
+                var data = getInput(shadow);
+                location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
+            };
+
             // save data
             var saveButton = shadow.querySelector('button.save');
             saveButton.onclick = function() {
