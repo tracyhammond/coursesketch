@@ -38,16 +38,6 @@
 
 <link rel="icon" type="image/ico" href="images/CSpencil.ico">
 <style>
-html,body,#mainPageContent {
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
-}
-
-#mainPageContent {
-	overflow: visible;
-}
-
 body {
 	display: flex;
 	min-height: 100vh;
@@ -56,13 +46,6 @@ body {
 
 main {
 	flex: 1 0 auto;
-}
-
-#loginLocation {
-	top: 0;
-	left: 0;
-	z-index: 10;
-	text-align: center;
 }
 
 login-system, register-system {
@@ -74,7 +57,6 @@ login-system, register-system {
 <script src="/src/index.js"></script>
 </head>
 <body>
-
 	<header class="row" style="margin:0; width:100%; z-index:2;">
 		<nav class="col s12 white">
 			<div class="nav-wrapper">
@@ -88,9 +70,9 @@ login-system, register-system {
 			</div>
 		</nav>
 	</header>
-	<main class="row teal" style="margin:0; height:100%;">
-		<div id="mainPageContent" style="display: none;"></div>
-		<div id="loginLocation" style="z-index:1;"></div>
+	<main class="row teal" style="margin:0;">
+		<div id="mainPageContent" style="z-index:1; display: flex;"></div>
+		<div id="loginLocation" style="z-index:1; text-align:center;"></div>
 	</main>
 	<footer class="page-footer teal darken-1" style="padding:0; margin:0;">
 		<div class="footer-copyright">
