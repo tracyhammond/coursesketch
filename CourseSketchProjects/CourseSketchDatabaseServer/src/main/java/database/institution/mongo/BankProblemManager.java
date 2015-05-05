@@ -155,7 +155,11 @@ public final class BankProblemManager {
         exactProblem.setSource((String) dbObject.get(SOURCE));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         try {
-            exactProblem.setBaseSketch(Commands.SrlUpdateList.parseFrom((byte[]) dbObject.get(BASESKETCH)));
+            if (dbObject.get(BASESKETCH) == null) {
+                exactProblem.setBaseSketch(null);
+            } else {
+                exactProblem.setBaseSketch(Commands.SrlUpdateList.parseFrom((byte[]) dbObject.get(BASESKETCH)));
+            }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
@@ -250,7 +254,7 @@ public final class BankProblemManager {
             update = true;
         }
         if (problem.hasBaseSketch()) {
-            updated.append(SET_COMMAND, new BasicDBObject(BASESKETCH, problem.getBaseSketch()));
+            updated.append(SET_COMMAND, new BasicDBObject(BASESKETCH, problem.getBaseSketch().toByteArray()));
         }
         if (problem.getOtherKeywordsCount() > 0) {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
