@@ -153,7 +153,10 @@ public final class BankProblemManager {
             permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
             exactProblem.setAccessPermission(permissions.build());
         }
-        exactProblem.setScript((String) dbObject.get(SCRIPT));
+
+        if (dbObject.get(SCRIPT) != null) {
+            exactProblem.setScript((String) dbObject.get(SCRIPT));
+        }
         return exactProblem.build();
     }
 
@@ -182,10 +185,14 @@ public final class BankProblemManager {
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = myDbRef.fetch();
+
+        if (cursor == null) {
+            throw new DatabaseAccessException("Bank Problem was not found with the following ID: " + problemBankId);
+        }
 
         boolean isAdmin;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(ADMIN));
         final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!isAdmin) {
@@ -194,7 +201,7 @@ public final class BankProblemManager {
 
         final BasicDBObject updated = new BasicDBObject();
         if (problem.hasQuestionText()) {
-            problemCollection.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
+            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
             update = true;
         }
@@ -248,8 +255,8 @@ public final class BankProblemManager {
         }
 
         if (update) {
-            problemCollection.update(corsor, updated);
-            final List<String> users = (List) corsor.get(USERS);
+            problemCollection.update(cursor, updated);
+            final List<String> users = (List) cursor.get(USERS);
             for (int i = 0; i < users.size(); i++) {
                 UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
             }
@@ -273,9 +280,11 @@ public final class BankProblemManager {
      * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to retrieve any bank problems.
+     * @throws DatabaseAccessException
+     *         Thrown if there are fields missing that make the problem inaccessible.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
-            final String courseId, final int page) throws AuthenticationException {
+            final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdmin(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {

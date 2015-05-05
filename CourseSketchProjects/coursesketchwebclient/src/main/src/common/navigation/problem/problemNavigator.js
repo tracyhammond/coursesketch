@@ -47,7 +47,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      */
     this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
-    }
+    };
 
     // Sets the current index.
     if (!isUndefined(preferredIndex)) {
@@ -110,7 +110,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Order of the callbacks is not guaranteed.
      */
     function changeProblem(index) {
-        // if asignment is random ignore index choose random
+        // If assignment is random, ignore the index and choose a random assignment.
         var type = currentAssignment.assignmentType;
         if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
@@ -259,6 +259,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         dataLoaded = false;
         var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
+            this.reloadAssignment();
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
                 problemList = [];
                 for (var i = 0; i < problems.length; i++) {
@@ -268,10 +269,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
                     refresh();
                 }
                 dataLoaded = true; // this one will take longer so we do this one second.
-            });
-
-            CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
-                currentAssignment = assignment;
             });
         }
     };
