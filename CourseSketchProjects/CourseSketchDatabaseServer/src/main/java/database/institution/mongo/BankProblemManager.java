@@ -23,7 +23,7 @@ import java.util.List;
 
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.BASESKETCH;
+import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
@@ -82,7 +82,7 @@ public final class BankProblemManager {
                 .append(KEYWORDS, problem.getOtherKeywordsList());
 
         if (problem.getBaseSketch() != null) {
-            insertObject.append(BASESKETCH, problem.getBaseSketch().toByteArray());
+            insertObject.append(BASE_SKETCH, problem.getBaseSketch().toByteArray());
         }
         if (!problem.hasAccessPermission()) {
             insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
@@ -155,10 +155,8 @@ public final class BankProblemManager {
         exactProblem.setSource((String) dbObject.get(SOURCE));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         try {
-            if (dbObject.get(BASESKETCH) == null) {
-                exactProblem.setBaseSketch(null);
-            } else {
-                exactProblem.setBaseSketch(Commands.SrlUpdateList.parseFrom((byte[]) dbObject.get(BASESKETCH)));
+            if (dbObject.get(BASE_SKETCH) != null) {
+                exactProblem.setBaseSketch(Commands.SrlUpdateList.parseFrom((byte[]) dbObject.get(BASE_SKETCH)));
             }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
@@ -254,7 +252,7 @@ public final class BankProblemManager {
             update = true;
         }
         if (problem.hasBaseSketch()) {
-            updated.append(SET_COMMAND, new BasicDBObject(BASESKETCH, problem.getBaseSketch().toByteArray()));
+            updated.append(SET_COMMAND, new BasicDBObject(BASE_SKETCH, problem.getBaseSketch().toByteArray()));
         }
         if (problem.getOtherKeywordsCount() > 0) {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
