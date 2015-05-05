@@ -64,7 +64,7 @@ function WaitScreenManager() {
         element.startWaiting = function() {
             running = true;
             if (element.parentNode) {
-                element.style.display = 'initial'; // default
+                element.style.display = 'inline-flex'; // default
             } else {
                 throw new Error('Element must be added before it can start waiting');
             }
@@ -138,6 +138,9 @@ function WaitScreenManager() {
         overlay.style.width = '100%';
         overlay.style.height = '100%';
         overlay.style.zIndex = 2147483647;
+        overlay.style.display = 'inline-flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
         overlay.open = true;
         overlay.id = 'overlay';
         element.appendChild(overlay);
@@ -149,8 +152,6 @@ function WaitScreenManager() {
      * @param {Element} element element to which the wait icon will be added
      */
     this.buildWaitIcon = function buildWaitIcon(element) {
-        var farouter = document.createElement('div');
-        farouter.setAttribute('style', 'display: flex;justify-content: center;align-items: center; height:100%;');
         var outer = document.createElement('div');
         outer.setAttribute('class', 'preloader-wrapper big active valign');
         var inner1 = document.createElement('div');
@@ -163,7 +164,6 @@ function WaitScreenManager() {
         inner2.appendChild(inner3);
         inner1.appendChild(inner2);
         outer.appendChild(inner1);
-        farouter.appendChild(outer);
 
         /*<div class="preloader-wrapper big active">
             <div class="spinner-layer spinner-blue-only">
@@ -187,13 +187,15 @@ function WaitScreenManager() {
             img.src = '/images/loading/000000_large_loader.gif';
         }
         outer.appendChild(img);*/
+        element.appendChild(outer);
         if (this.waitIconText) {
-            var text = document.createElement('h1');
+            var text = document.createElement('h4');
             text.textContent = this.waitIconText;
+            text.style.textAlign = 'center';
             text.setAttribute('class', 'waitingIconText');
-            farouter.appendChild(text);
+            element.appendChild(text);
         }
-        element.appendChild(farouter);
+
     };
 }
 
