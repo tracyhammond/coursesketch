@@ -21,7 +21,7 @@ import protobuf.srl.utils.Util;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.BASESKETCH;
+import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
@@ -75,7 +75,7 @@ public class BankProblemManagerTest {
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(COURSE_TOPIC), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TYPE), FAKE_QUESTION_TYPE.getNumber());
-        Assert.assertEquals(Commands.SrlUpdateList.parseFrom((byte[]) mongoBankProblem.get(BASESKETCH)),
+        Assert.assertEquals(Commands.SrlUpdateList.parseFrom((byte[]) mongoBankProblem.get(BASE_SKETCH)),
                 FAKE_UPDATELIST.build());
     }
 
@@ -311,7 +311,7 @@ public class BankProblemManagerTest {
         DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
         System.out.println(curse);
         DBObject obj = curse.next();
-        Commands.SrlUpdateList UpdateList = Commands.SrlUpdateList.parseFrom((byte[]) obj.get(BASESKETCH));
+        Commands.SrlUpdateList UpdateList = Commands.SrlUpdateList.parseFrom((byte[]) obj.get(BASE_SKETCH));
         Assert.assertEquals(FAKE_UPDATELIST.build(), UpdateList);
     }
     /*
