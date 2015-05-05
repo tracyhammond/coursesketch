@@ -10,12 +10,12 @@
 
 :host {
     text-align: left;
+    line-height: 1.5;
     position: relative;
-    box-shadow: 0px 1px 1px #808080;
     margin-bottom: 5px;
     background: #eee;
-    display: inline-flex;
-    flex-direction: row;
+    display: flex;
+    flex-direction: column;
     z-index: 1;
     /* in case we need to place other items behind it with a z-index*/
     max-height: 200px;
@@ -55,11 +55,11 @@ img[src] ~ .school_item {
 
 /* title */
 ::content .name {
-    display: inline-block;
+    margin: 0;
 }
 
 .title {
-    margin-bottom: .5em;
+    flex: 0 0 auto;
 }
 /* date */
 
@@ -105,12 +105,12 @@ img[src] ~ .school_item {
 
 .description .contentHolder:not(.expandedContent) {
     max-height: 150px;
+    margin: 0;
     overflow: inherit;
 }
 
 p {
     margin: 0px;
-
 }
 
 ::content .expandedContent {
@@ -259,14 +259,10 @@ advanceButton:after, .advanceButton:before, .advanceButton:hover:after, .advance
 /* making margins 0 */
 h3 {
     margin: 0;
-    color: #333;
-    text-shadow: 0px -1px 1px #666;
 }
 
 h1,h4 {
     margin: 0;
-    color: #376C9F;
-    text-shadow: 1px 1px 1px #699DCF;
 }
 
 
