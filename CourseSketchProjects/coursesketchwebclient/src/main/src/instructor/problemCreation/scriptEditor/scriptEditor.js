@@ -98,12 +98,12 @@ validateFirstRun(document.currentScript);
             typingSurface = undefined;
             console.log(performance.memory);
         });
-    };
+    }
 
     // Save script and sketch to problem navigator
     var saveScript = document.querySelector('button.save');
     saveScript.onclick = function() {
-        console.log("Entered");
+        console.log('Entered');
         //Create bank problem (proto object)
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
 
