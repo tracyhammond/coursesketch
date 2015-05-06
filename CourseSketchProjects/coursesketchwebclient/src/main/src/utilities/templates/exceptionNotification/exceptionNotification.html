@@ -6,7 +6,6 @@
             @import "/src/utilities/templates/exceptionNotification/exceptionNotification.css";
         </style>
         <dialog id="notificationInformation" class="modal modal-fixed-footer" open>
-            <!--<button id="closeButton">X</button>-->
             <div class="modal-header">
                 <content select=".header">
                     <content select=".exceptionTitle"></content>
@@ -18,24 +17,9 @@
                 <content select=".cause"></content>
             </div>
             <div class="modal-footer">
-                <button id="closeButton" class="modal-action btn-flat red modal-close waves-effect waves-light">Close</button>
+                <button id="closeButton" href="#close" class="modal-action btn-flat red waves-effect waves-light">Close</button>
             </div>
         </dialog>
-        <!--
-        <div id="notificationInformation" class="modal">
-            <div class="modal-content">
-                <content select=".header">
-                    <content select=".exceptionTitle"></content>
-                    <content select=".exceptionMessage"></content>
-                </content>
-                <content select=".stacktrace"></content>
-                <content select=".cause"></content>
-            </div>
-            <div class="modal-footer">
-                <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Close</a>
-            </div>
-        </div>
-        -->
     </template>
 </head>
 </html>
