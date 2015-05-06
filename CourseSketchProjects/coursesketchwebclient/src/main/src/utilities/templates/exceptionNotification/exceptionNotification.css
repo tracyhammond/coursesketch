@@ -3,14 +3,13 @@
     position: fixed;
     left: 0;
     right: 0;
-    background: #FF4D4D;
+    background: #f44336;
     padding: 0;
     max-height: 70%;
     max-width: 60%;
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 1000;
-    border-radius: 25px;
     border: 2px solid #fafafa;
     -webkit-transform: translate(0);
     -moz-transform: translate(0);
@@ -73,5 +72,9 @@
     font-size: 75%;
     position: relative;
     left: 15px;
+}
+
+#closeButton {
+    color: #fafafa;
 }
 
