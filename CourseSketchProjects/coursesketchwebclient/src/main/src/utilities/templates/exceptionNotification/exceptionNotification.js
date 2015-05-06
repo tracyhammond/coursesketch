@@ -77,9 +77,9 @@ function ExceptionNotification() {
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
         console.log(this);
         this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
-            //document.getElementById('closeButton').style.cssText = waves-red;
             localScope.parentNode.removeChild(localScope);
         };
+        Waves.attach(this.shadowRoot.querySelector('#closeButton'));
     };
 
     /**
