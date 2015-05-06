@@ -72,12 +72,29 @@ function ExceptionNotification() {
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
         this.createShadowRoot();
-
+        console.log(this.shadowRoot.querySelector('.closeButton'));
+        console.log("HELLO");
         this.shadowRoot.appendChild(templateClone);
+        var modal_id = $(this.shadowRoot.querySelector('#closeButton')).attr('href');
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
-        console.log(this);
-        this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
+        document.body.querySelector("#lean-overlay").onclick = function(event) {
+            console.log("REMOVE");
+            event.preventDefault();
+            event.stopPropagation();
             localScope.parentNode.removeChild(localScope);
+            return false;
+        };
+        this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
+            $(document.body.querySelector('#lean-overlay')).fadeOut(250);
+            setTimeout(function() {
+                var remElem = document.body.querySelector('#lean-overlay');
+                console.log(remElem);
+                if(!isUndefined(remElem) && remElem !== null) {
+                    document.body.removeChild(remElem);
+                }
+                localScope.parentNode.removeChild(localScope);
+            }, 250);
+            //localScope.parentNode.removeChild(localScope);
         };
         Waves.attach(this.shadowRoot.querySelector('#closeButton'));
     };
