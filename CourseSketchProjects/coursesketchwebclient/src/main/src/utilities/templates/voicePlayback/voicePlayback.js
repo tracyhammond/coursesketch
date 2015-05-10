@@ -6,9 +6,9 @@ function VoicePlayback() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             navigator.getUserMedia = (navigator.getUserMedia ||
-                                      navigator.webkitGetUserMedia ||
-                                      navigator.mozgetUserMedia ||
-                                      navigator.msGetUserMedia);
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozgetUserMedia ||
+                    navigator.msGetUserMedia);
             window.URL = window.URL || window.webkitURL;
 
             console.log('Audio context set up');
@@ -92,24 +92,24 @@ function VoicePlayback() {
         localScope.recorder = undefined;
         localScope.initRecorder();
 
-        localScope.vid            = this.shadowRoot.querySelector('#myaudio');
-        localScope.vid.src        = '/src/utilities/templates/voicePlayback/test.mp3';
-        localScope.playBack       = undefined;
-        localScope.isPaused       = false;
-        localScope.pauseIndex     = 0;
-        localScope.startTime      = 0;
+        localScope.vid = this.shadowRoot.querySelector('#myaudio');
+        localScope.vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
+        localScope.playBack = undefined;
+        localScope.isPaused = false;
+        localScope.pauseIndex = 0;
+        localScope.startTime = 0;
 
-        localScope.vid.onplay           = function() {
+        localScope.vid.onplay = function() {
             localScope.playMe();
         };
-        localScope.vid.onpause          = function() {
+        localScope.vid.onpause = function() {
             localScope.pauseMe();
         };
 
         setTimeout(function() {
-            localScope.surface        = localScope.shadowRoot.querySelector('sketch-surface');
-            localScope.graphics       = localScope.surface.graphics;
-            localScope.updateManager  = localScope.surface.getUpdateManager();
+            localScope.surface = localScope.shadowRoot.querySelector('sketch-surface');
+            localScope.graphics = localScope.surface.graphics;
+            localScope.updateManager = localScope.surface.getUpdateManager();
 
             this.shadowRoot.querySelector('#recordBtn').onclick = function() {
                 if (localScope.isRecording === true) {
@@ -123,16 +123,6 @@ function VoicePlayback() {
                     localScope.isRecording = true;
                 }
             }.bind(this);
-
-            // document.ready(function() {
-            //     localScope.shadowRoot.querySelector('#myaudio') {
-            //         alwaysShowControls: true,
-            //         features: ['playpause','volume','progress'],
-            //         audioVolume: 'horizontal',
-            //         audioWidth: 364,
-            //         audioHeight: 70
-            //     };
-            // });
         }, 2000);
     };
 
