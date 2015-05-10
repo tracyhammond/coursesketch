@@ -15,7 +15,6 @@ function Playback(updateList, updateManager, graphics) {
     var lastPausedIndex = Number.MAX_VALUE;
     var lastCreatedStroke = undefined;
     var lastPointAdded = undefined;
-    var startTime;
     var pointList;
 
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
@@ -51,11 +50,10 @@ function Playback(updateList, updateManager, graphics) {
                         strokePath.simplify();
                         commandFinished();
                     });
-                    //console.log(ps);
-
+                    
                     var startingTime = pointList[0].getTime();
-                    var t;
-                    var tList = [];
+                    var timeOut;
+                    var timeOutList = [];
                     var startingIndex = 0;
                     if (pauseDuringStroke) {
                         startingIndex = lastPausedIndex;
@@ -65,14 +63,14 @@ function Playback(updateList, updateManager, graphics) {
                     for (var i = startingIndex; i < pointList.length; i++) {
 
                         (function(index) {
-                            t = setTimeout(function() {
+                            timeOut = setTimeout(function() {
                                 if (isPlaying) {
                                     strokePath.add(new ps.Point(pointList[index].getX(), pointList[index].getY()));
                                     graphics.getPaper().view.update();
                                     pointAdded();
                                 } else if (!isPlaying) { //pause during the stroke
-                                    for (var j = 0; j < tList.length; j++) {
-                                        clearTimeout(tList[j]);
+                                    for (var j = 0; j < timeOutList.length; j++) {
+                                        clearTimeout(timeOutList[j]);
                                     }
                                     if (lastPausedIndex > index) {
                                         lastPausedIndex = index;
@@ -84,7 +82,7 @@ function Playback(updateList, updateManager, graphics) {
 
                                 }
                             }, pointList[index].getTime() - startingTime);
-                            tList.push(t);
+                            timeOutList.push(timeOut);
                         })(i);
                     }
                 })();
@@ -97,9 +95,9 @@ function Playback(updateList, updateManager, graphics) {
         }
     };
 
-    this.playNext = function(sTime, surface) {
-        if (!isUndefined(sTime)) {
-            startingTime = sTime;
+    this.playNext = function(startTime, surface) {
+        if (!isUndefined(startTime)) {
+            startingTime = startTime;
         }
         graphics.setDrawUpdate(false);
         currentIndex++;
@@ -119,7 +117,9 @@ function Playback(updateList, updateManager, graphics) {
             var playTime = currentTime - startingTime; //time play button pressed
             var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
             var delayTime = updateTime - playTime;
-            if (currentIndex == 1 || currentIndex == 0) { delayTime = 0; }
+            if (currentIndex == 1 || currentIndex == 0) { 
+                delayTime = 0; 
+            }
             console.log(updateTime - playTime);
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
