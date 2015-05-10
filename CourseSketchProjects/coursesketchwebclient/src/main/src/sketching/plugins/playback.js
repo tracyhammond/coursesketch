@@ -10,11 +10,11 @@ function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
-    var isPlaying = true;
-    var pauseDuringStroke = false;
-    var lastPausedIndex = Number.MAX_VALUE;
-    var lastCreatedStroke = undefined;
-    var lastPointAdded = undefined;
+    var isPlaying = true; //Bool for whether or not the sketching is currently playing back
+    var pauseDuringStroke = false; //Bool for whether or not the sketch was paused in the middle of a stroke
+    var lastPausedIndex = Number.MAX_VALUE; //Keeps track of the last index the playback was on when it paused
+    var lastCreatedStroke = undefined; //Last stroke that was played back
+    var lastPointAdded = undefined; //Last point that was added to the canvas
     var pointList;
 
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
@@ -114,9 +114,9 @@ function Playback(updateList, updateManager, graphics) {
 
         isPlaying = true;
         if (!pauseDuringStroke) {
-            var playTime = currentTime - startingTime; //time play button pressed
-            var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
-            var delayTime = updateTime - playTime;
+            var playTime = currentTime - startingTime; //Time passed from start to current stroke
+            var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber(); //Time of the next stroke
+            var delayTime = updateTime - playTime; //Time between the last played stroke and the next one
             if (currentIndex == 1 || currentIndex == 0) { 
                 delayTime = 0; 
             }

@@ -1,9 +1,20 @@
+/**
+ * Sets up and saves recordings. 
+ */
 function VoiceRecording() {
+	
+	/**
+     * Initialize the VoiceRecording
+	 * @param {Node} templateClone is a clone of the custom HTML Element for the voice Recording
+     */
     this.initializeElement = function(templateClone) {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+		/**
+		* Calls blink if the button is blinking or starts blink if it is not blinking
+		*/
         this.shadowRoot.querySelector('#recordBtn').onclick = function() {
             if (this.isRecording === true) {
                 this.stopRecording();
@@ -17,6 +28,10 @@ function VoiceRecording() {
             }
         }.bind(this);
 
+		/**
+		* Blink the elem passed in
+		* @param {Element} The element that needs to blink
+		*/
         this.blink = function(elm) {
             this.voiceBtnTimer = setInterval(function() {
                 elm.fadeOut(400, function() {
@@ -25,12 +40,18 @@ function VoiceRecording() {
             }, 800);
             elm.val('REC');
         }.bind(this);
-
+		
+		/**
+		* Start recording voice
+		*/
         this.startRecording = function() {
             this.recorder.record();
             console.log('Recording...');
         }.bind(this);
 
+		/**
+		* Stop recording voice
+		*/
         this.stopRecording = function() {
             this.recorder.stop();
             console.log('Stopped recording.');
@@ -38,17 +59,26 @@ function VoiceRecording() {
             this.saveFile();
         }.bind(this);
 
+		/**
+		* Create the recorder
+		*/
         this.startUserMedia = function(stream) {
             this.recorder = new Recorder(stream);
             console.log('Recorder initialized.');
         }.bind(this);
-
+		
+		/**
+		* Save the file to the database
+		* NOTE: CURRENTLY SETS LOCALLY
+		*/
         this.saveFile = function() {
             this.recorder.exportMP3(function(blob, mp3name) {
 
             });
         }.bind(this);
-
+		/**
+		* Initialize the recorder
+		*/
         init = function() {
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
