@@ -1,7 +1,13 @@
+/**
+ * Sets up and saves recordings. 
+ * Calls playback.js and starts music when play button is pushed.
+ */
 function VoicePlayback() {
     var localScope = undefined;
 
-    // Initialize microphone on client
+	/**
+     * Initialize microphone on client
+     */
     this.initRecorder = function() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -17,6 +23,9 @@ function VoicePlayback() {
             alert('No web audio support in this browser');
         }
 
+		/**
+		* Create the recorder and check to see if failed or not
+		*/
         navigator.getUserMedia({ audio: true }, function(stream) {
             localScope.recorder = new Recorder(stream);
             console.log('Recorder initialized.');
@@ -25,13 +34,17 @@ function VoicePlayback() {
         });
     };
 
-    // Start recording voice
+	/**
+     * Start recording voice
+     */
     this.startRecording = function() {
         localScope.recorder.record();
         console.log('Recording...');
     };
 
-    // Stop recording voice
+	/**
+     * Stop recording voice
+     */
     this.stopRecording = function() {
         localScope.recorder.stop();
         console.log('Stopped recording.');
@@ -39,8 +52,10 @@ function VoicePlayback() {
         localScope.saveFile();
     };
 
-    // Save the file to the database
-    // NOTE: CURRENTLY SETS LOCALLY
+	/**
+     * Save the file to the database
+     * NOTE: CURRENTLY SETS LOCALLY
+     */
     this.saveFile = function() {
         localScope.recorder.exportMP3(function(blob, mp3name) {
             localScope.vid.src = URL.createObjectURL(blob);
@@ -48,7 +63,10 @@ function VoicePlayback() {
         });
     };
 
-    // Blink the red record button
+	/**
+     * Blink the elem passed in
+	 * @param {Element} The element that needs to blink
+     */
     this.blink = function(elm) {
         localScope.voiceBtnTimer = setInterval(function() {
             elm.fadeOut(400, function() {
@@ -58,7 +76,9 @@ function VoicePlayback() {
         elm.val('REC');
     };
 
-    // Playback the drawn sketch
+    /**
+     * Playback the drawn sketch
+     */
     this.playMe = function() {
         localScope.surface.resizeSurface();
         if (!localScope.isPaused){
@@ -78,12 +98,19 @@ function VoicePlayback() {
         }
     };
 
-    // Pause the sketch
+    /**
+     * Pause the drawn sketch
+     */
     this.pauseMe = function() {
         localScope.pauseIndex = localScope.playBack.pauseNext();
         localScope.isPaused = true;
     };
 
+	/**
+     * Initialize the passed in element.
+	 * Used for initializing the video
+	 * @param {Node} templateClone is a clone of the custom HTML Element for the voicePlayback
+     */
     this.initializeElement = function(templateClone) {
         localScope = this;
         shadowRoot = this.createShadowRoot();
@@ -99,9 +126,15 @@ function VoicePlayback() {
         localScope.pauseIndex = 0;
         localScope.startTime = 0;
 
+		/**
+		* Calls playMe when the play button is bushed to start playback
+		*/
         localScope.vid.onplay = function() {
             localScope.playMe();
         };
+		/**
+		* Calls pauseMe when the play button is bushed to pause playback
+		*/
         localScope.vid.onpause = function() {
             localScope.pauseMe();
         };
@@ -110,7 +143,10 @@ function VoicePlayback() {
             localScope.surface = localScope.shadowRoot.querySelector('sketch-surface');
             localScope.graphics = localScope.surface.graphics;
             localScope.updateManager = localScope.surface.getUpdateManager();
-
+			
+			/**
+			* Calls blink if the button is blinking or starts blink if it is not blinking
+			*/
             this.shadowRoot.querySelector('#recordBtn').onclick = function() {
                 if (localScope.isRecording === true) {
                     localScope.stopRecording();
