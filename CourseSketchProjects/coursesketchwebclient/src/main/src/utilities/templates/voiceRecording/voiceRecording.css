@@ -1,46 +1,43 @@
 #recordBtn {
-                height: 50px;
-                width: 50px;
-                border-radius: 50px;
-                border: 1px solid #FF0000;
-                background: #ff1919;
-                font-weight: bold;
-                line-height: 1;
-                text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-                font-family: Lucida Sans Unicode;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    border: 1px solid #FF0000;
+    background: #ff1919;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    font-family: Lucida Sans Unicode;
 }
 #redo-btn {
-                height: 52px;
-                width: 52px;
-                border-radius: 50px;
-                border: 1px solid #C1CDCD;
-                background: white;
-                background-image: url(/src/utilities/templates/voiceRecording/redo_icon.svg);
-                background-size: 40px 40px;
-                background-repeat: no-repeat;
-                background-position: 60% 50%;
-
-             }
+    height: 52px;
+    width: 52px;
+    border-radius: 50px;
+    border: 1px solid #C1CDCD;
+    background: white;
+    background-image: url(/src/utilities/templates/voiceRecording/redo_icon.svg);
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
+    background-position: 60% 50%;
+}
 #undo-btn {
-                height: 52px;
-                width: 52px;
-                border-radius: 50px;
-                border: 1px solid #C1CDCD;
-                background: white;
-                background-image: url(/src/utilities/templates/voiceRecording/undo_icon.svg);
-                background-size: 40px 40px;
-                background-repeat: no-repeat;
-                background-position: 60% 50%;
-             }
-#button-bar{
-                width: 79.5%;
-                height: 60px;
-                background: black;
-                position:absolute;
-                left:10px;
-                bottom: 20%;
-                background-color:rgba(0, 0, 0, 1);
-                z-index: 100;
-
-
-            }
+    height: 52px;
+    width: 52px;
+    border-radius: 50px;
+    border: 1px solid #C1CDCD;
+    background: white;
+    background-image: url(/src/utilities/templates/voiceRecording/undo_icon.svg);
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
+    background-position: 60% 50%;
+}
+#button-bar {
+    width: 79.5%;
+    height: 60px;
+    background: black;
+    position:absolute;
+    left:10px;
+    bottom: 20%;
+    background-color:rgba(0, 0, 0, 1);
+    z-index: 100;
+}

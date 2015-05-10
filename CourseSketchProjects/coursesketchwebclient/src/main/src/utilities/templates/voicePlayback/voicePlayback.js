@@ -24,8 +24,8 @@ function VoicePlayback() {
         }
 
 		/**
-		* Create the recorder and check to see if failed or not
-		*/
+		 * Create the recorder and check to see if failed or not
+		 */
         navigator.getUserMedia({ audio: true }, function(stream) {
             localScope.recorder = new Recorder(stream);
             console.log('Recorder initialized.');
@@ -127,14 +127,14 @@ function VoicePlayback() {
         localScope.startTime = 0;
 
 		/**
-		* Calls playMe when the play button is bushed to start playback
-		*/
+		 * Calls playMe when the play button is bushed to start playback
+		 */
         localScope.vid.onplay = function() {
             localScope.playMe();
         };
 		/**
-		* Calls pauseMe when the play button is bushed to pause playback
-		*/
+		 * Calls pauseMe when the play button is bushed to pause playback
+		 */
         localScope.vid.onpause = function() {
             localScope.pauseMe();
         };
@@ -145,8 +145,8 @@ function VoicePlayback() {
             localScope.updateManager = localScope.surface.getUpdateManager();
 			
 			/**
-			* Calls blink if the button is blinking or starts blink if it is not blinking
-			*/
+			 * Calls blink if the button is blinking or starts blink if it is not blinking
+			 */
             this.shadowRoot.querySelector('#recordBtn').onclick = function() {
                 if (localScope.isRecording === true) {
                     localScope.stopRecording();
