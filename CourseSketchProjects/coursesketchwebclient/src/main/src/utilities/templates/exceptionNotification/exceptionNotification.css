@@ -20,23 +20,23 @@
 }
 
 .modal.modal-fixed-footer .modal-content .modal-header {
-  position: fixed;
-  max-height: 100%;
-  padding-bottom: 64px;
-  width: 60%;
+    position: fixed;
+    max-height: 100%;
+    padding-bottom: 64px;
+    width: 60%;
 }
 
 .modal .modal-footer {
-  border-radius: 0 0 2px 2px;
-  background-color: #fafafa;
-  padding: 4px 6px;
-  height: 56px;
-  width: 100%;
+    border-radius: 0 0 2px 2px;
+    background-color: #fafafa;
+    padding: 4px 6px;
+    height: 56px;
+    width: 100%;
 }
 
 .modal .modal-footer .btn-flat {
-  float: right;
-  margin: 6px 0;
+    float: right;
+    margin: 6px 0;
 }
 
 .modal-content {
