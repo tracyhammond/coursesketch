@@ -90,7 +90,6 @@ function ExceptionNotification() {
                 }
                 localScope.parentNode.removeChild(localScope);
             }, 250);
-            //localScope.parentNode.removeChild(localScope);
         };
         Waves.attach(this.shadowRoot.querySelector('#closeButton'));
     };
