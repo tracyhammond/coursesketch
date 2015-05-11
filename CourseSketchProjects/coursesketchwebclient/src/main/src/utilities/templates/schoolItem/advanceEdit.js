@@ -249,8 +249,11 @@
 
             // add our loaded element to the page.
             document.body.appendChild(host);
-
-            // open scripting window and sketch saving/loading
+            
+            /**
+            * Opens scripting window on click
+            */
+             open scripting window and sketch saving/loading
             var scriptButton = shadow.querySelector('button.scripting');
             scriptButton.onclick = function() {
                 var data = getInput(shadow);

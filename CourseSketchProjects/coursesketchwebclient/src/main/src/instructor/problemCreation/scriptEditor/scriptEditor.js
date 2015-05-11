@@ -100,7 +100,10 @@ validateFirstRun(document.currentScript);
         });
     }
 
-    // Save script and sketch to problem navigator
+    /**
+    * Saves script in order to display it on the problem when opened. Saves
+    * to problem navigator.
+    */
     var saveScript = document.querySelector('button.save');
     saveScript.onclick = function() {
         console.log('Entered');
