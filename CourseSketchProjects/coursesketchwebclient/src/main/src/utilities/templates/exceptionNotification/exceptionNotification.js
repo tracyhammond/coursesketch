@@ -74,7 +74,7 @@ function ExceptionNotification() {
         this.shadowRoot.appendChild(templateClone);
         var modal_id = $(this.shadowRoot.querySelector('#closeButton')).attr('href');
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
-        document.body.querySelector("#lean-overlay").onclick = function(event) {
+        document.body.querySelector('#lean-overlay').onclick = function(event) {
             event.preventDefault();
             event.stopPropagation();
             localScope.parentNode.removeChild(localScope);
