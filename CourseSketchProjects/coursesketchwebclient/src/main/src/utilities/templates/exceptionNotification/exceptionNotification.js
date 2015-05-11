@@ -7,7 +7,7 @@
     CourseSketch.showShallowException = function notifyMe(protoEx) {
         // Let's check if the browser supports notifications
         if (!('Notification' in window)) {
-            alert('This browser does not support desktop notification');
+            console.log('this browser does not support desktop notification');
         } else if (Notification.permission === 'granted') {
             // If it's okay let's create a notification
             createShallowNotification(protoEx);
