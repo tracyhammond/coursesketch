@@ -1,26 +1,79 @@
-#closeButton {
-    padding: 15px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    background: #f44336;
+    padding: 0;
+    max-height: 70%;
+    max-width: 60%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+    border: 2px solid #fafafa;
+    -webkit-transform: translate(0);
+    -moz-transform: translate(0);
+    -ms-transform: translate(0);
+    -o-transform: translate(0);
+    transform: translate(0);
+    will-change: top, opacity;
 }
 
-:host {
-    position: absolute;
-    top: 20%;
-    left: 40%;
-    margin-left: -310px;
-    width: 100px;
-    height: 100px;
+.modal.modal-fixed-footer .modal-content .modal-header {
+    position: fixed;
+    max-height: 100%;
+    padding-bottom: 64px;
+    width: 60%;
+}
+
+.modal .modal-footer {
+    border-radius: 0 0 2px 2px;
+    background-color: #fafafa;
+    padding: 4px 6px;
+    height: 56px;
+    width: 100%;
+}
+
+.modal .modal-footer .btn-flat {
+    float: right;
+    margin: 6px 0;
+}
+
+.modal-content {
+    background: #fafafa;
 }
 
 ::content .stacktrace {
-    min-width: 200px;
-    height: 300px;
-    overflow-y: scroll;
+    text-wrap: unrestricted;
+    opacity: .4;
+    transition: opacity 420ms ease-in-out;
 }
 
-::content .message {
-    text-align: center;
-    font-weight: bold;
+::content .stacktrace:hover {
+    opacity: 1.0;
+}
+
+::content .header {
+    color: #fafafa;
+}
+
+::content .header > .exceptionTitle {
+    font-size: 150%;
+    font-family: Impact, Charcoal, sans-serif;
+    font-stretch: condensed;
+    padding: 20px;
+    position: relative;
+    left: 15px;
+}
+
+::content .header > .exceptionMessage {
+    padding-top: 10px;
+    padding-left: 20px;
+    font-size: 75%;
+    position: relative;
+    left: 15px;
+}
+
+#closeButton {
+    color: #fafafa;
 }
