@@ -34,7 +34,6 @@
             body: protoEx.getMssg(),
             icon: imageUrl
         });
-        console.log(notification);
         notification.onclick = function(event) {
             console.log(event);
             createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
@@ -72,13 +71,10 @@ function ExceptionNotification() {
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
         this.createShadowRoot();
-        console.log(this.shadowRoot.querySelector('.closeButton'));
-        console.log("HELLO");
         this.shadowRoot.appendChild(templateClone);
         var modal_id = $(this.shadowRoot.querySelector('#closeButton')).attr('href');
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
         document.body.querySelector("#lean-overlay").onclick = function(event) {
-            console.log("REMOVE");
             event.preventDefault();
             event.stopPropagation();
             localScope.parentNode.removeChild(localScope);
@@ -89,7 +85,7 @@ function ExceptionNotification() {
             setTimeout(function() {
                 var remElem = document.body.querySelector('#lean-overlay');
                 console.log(remElem);
-                if(!isUndefined(remElem) && remElem !== null) {
+                if (!isUndefined(remElem) && remElem !== null) {
                     document.body.removeChild(remElem);
                 }
                 localScope.parentNode.removeChild(localScope);
@@ -129,7 +125,6 @@ function ExceptionNotification() {
         var exceptionStackTrace = protoEx.getStackTrace();
         for (var i = 0; i < exceptionStackTrace.length; i++) {
             var singleTrace = document.createElement('p');
-            console.log(exceptionStackTrace[i]);
             singleTrace.textContent = exceptionStackTrace[i];
             stack.appendChild(singleTrace);
         }
