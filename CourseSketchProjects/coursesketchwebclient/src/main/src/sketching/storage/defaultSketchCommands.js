@@ -1,4 +1,4 @@
-validateFirstGlobalRun(document.currentScript);
+validateFirstGlobalRun(document.currentScript, CourseSketch);
 
 /*******************************************************************************
  * METHODS FOR THE REDO AND UNDO ARE BELOW.

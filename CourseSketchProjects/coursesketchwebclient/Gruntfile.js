@@ -197,17 +197,6 @@ module.exports = function(grunt) {
                     }
                 ]
             },
-            appEngine: {
-                src: [ 'target/website/app.yaml' ],
-                overwrite: true,
-                replacements: [
-                    {
-                        // starts with the different lettering because app engine gui cuts off some of the lettering.
-                        from: 'dev-coursesketch',
-                        to: 'prod-coursesketch'
-                    }
-                ]
-            },
             bowerSlash: {
                 src: '<%= fileConfigOptions.prodHtml %>',
                 overwrite: true,
@@ -216,6 +205,41 @@ module.exports = function(grunt) {
                         // looks for the bower_components url in scripts and replaces it with a /
                         from: /=['"].*bower_components/g,
                         to: '="/bower_components'
+                    }
+                ]
+            },
+            bowerRunOnce: {
+                src: '<%= fileConfigOptions.prodHtml %>',
+                overwrite: true,
+                replacements: [
+                    {
+                        // <!-- bower: -->
+                        from: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)/,
+                        to: '<!-- bower: -->\n<script src="bower_components/validate-first-run/validateRunOnce.js"></script>'
+                    }
+                ]
+            },
+            // TODO: change this into a plugin
+            runOncePlugins: {
+                src: [ 'target/website/bower_components/jquery/dist/jquery.js', 'target/website/bower_components/babel-polyfill/browser-polyfill.js',
+                        'target/website/bower_components/webcomponentsjs/webcomponents.js' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        // looks for the very first character of the file.
+                        from: /^/,
+                        to: 'validateFirstRun(document.currentScript);'
+                    }
+                ]
+            },
+            appEngine: {
+                src: [ 'target/website/app.yaml' ],
+                overwrite: true,
+                replacements: [
+                    {
+                        // starts with the different lettering because app engine gui cuts off some of the lettering.
+                        from: 'dev-coursesketch',
+                        to: 'prod-coursesketch'
                     }
                 ]
             },
@@ -280,8 +304,7 @@ module.exports = function(grunt) {
                         'DEBUG': false
                     },
                     dead_code: true
-                },
-                mangle: true
+                }
             },
             main: {
                 files: [
@@ -357,7 +380,9 @@ module.exports = function(grunt) {
         grunt.task.run([
             'replace:bowerLoad',
             'wiredep',
-            'replace:bowerSlash'
+            'replace:bowerRunOnce',
+            'replace:bowerSlash',
+            'replace:runOncePlugins'
         ]);
     });
 
