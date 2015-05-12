@@ -10,29 +10,29 @@ function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
-	
+    
     /**
      * @type {Boolean}
      * Whether or not the sketching is currently playing back. 
     */
     var isPlaying = true;
-	
+    
     /**
      * @type {Boolean}
      * Whether or not the sketch was paused in the middle of a stroke.
     */
     var pauseDuringStroke = false;
-	
+    
     /**
      * Keeps track of the last index the playback was on when it paused.
      */ 
     var lastPausedIndex = Number.MAX_VALUE; 
-	
+    
     /**
      * Last stroke that was played back.
      */ 
     var lastCreatedStroke = undefined;
-	
+    
     /**
      * Last point that was added to the canvas.
      */ 
@@ -115,7 +115,7 @@ function Playback(updateList, updateManager, graphics) {
             }
         }
     };
-	
+    
     /*
      * Calculates time between strokes and plays them back with a delay corresponding to this time.
      * Also playback the sketch back from saved stroke index if it is paused.
@@ -143,11 +143,11 @@ function Playback(updateList, updateManager, graphics) {
              */
             var playTime = currentTime - startingTime;
             
-			/*
+            /*
              * Time of the next stroke.
              */
             var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
-			
+            
             /*
              * Time between the last played stroke and the next one.
              */
@@ -162,7 +162,7 @@ function Playback(updateList, updateManager, graphics) {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
     };
-	
+    
     /*
      * Set isPlaying to false and pause the drawing.
      */
