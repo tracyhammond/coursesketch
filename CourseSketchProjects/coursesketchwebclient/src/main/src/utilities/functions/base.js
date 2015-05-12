@@ -206,7 +206,9 @@ if (isUndefined(BaseException)) {
          *          is the cause of the exception.
          */
         this.setCause = function(causeValue) {
-            this.cause = causeValue;
+            if (!isUndefined(cause)) {
+                this.cause = causeValue;
+            }
         };
         /**
          *  A getter function used to access the cause of the stacktrace without the risk of manipulating it.

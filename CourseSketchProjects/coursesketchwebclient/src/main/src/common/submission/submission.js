@@ -2,9 +2,7 @@ function SubmissionException(message, cause) {
     this.name = 'SubmissionException';
     this.setMessage(message);
     this.message = '';
-    if (!isUndefined(cause)){
-        this.setCause(cause);
-    }
+    this.setCause(cause);
     this.createStackTrace();
 }
 SubmissionException.prototype = new BaseException();

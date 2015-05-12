@@ -19,9 +19,7 @@ function ArrayException(message, cause) {
     this.name = 'ArrayException';
     this.specificMessage = message;
     this.message = '';
-    if (!isUndefined(cause)){
-        this.setCause(cause);
-    }
+    this.setCause(cause);
     this.createStackTrace();
 }
 ArrayException.prototype = new BaseException();
