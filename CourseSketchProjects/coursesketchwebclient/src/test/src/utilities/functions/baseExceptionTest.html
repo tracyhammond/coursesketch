@@ -18,9 +18,16 @@
 <div id="qunit-fixture"></div>
 
 <script>
+        var word = 'This is a TestException';
+        /**
+         * Mocking this function.
+         */
         CourseSketch.getExceptionParentElement = function() {
             return document.body;
         };
+        /**
+         * TestException is a fake exception used to test BaseException.
+         */
         function TestException(message, cause) {
             this.name = 'TestException';
             this.setMessage(message);
@@ -30,17 +37,16 @@
             }
             this.createStackTrace();
         }
-        var word = 'Hola';
         TestException.prototype = new BaseException();
         QUnit.test("test exceptions", function(assert) {
+            expect(1);
             try {
                 throw new TestException(word);
             }
             catch (exception) {
                 var sTrace = exception.getStackTrace();
-                if (exception instanceof TestException){
+                if (exception instanceof TestException) {
                     assert.equal(exception.specificMessage, word);
-                    assert.equal(exception.stackTrace, sTrace);
                     console.log(sTrace);
                     console.log(exception);
                     CourseSketch.showShallowException(CourseSketch.PROTOBUF_UTIL.createProtoException(exception));
