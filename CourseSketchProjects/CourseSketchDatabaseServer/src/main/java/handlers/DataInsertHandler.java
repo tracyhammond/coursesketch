@@ -6,6 +6,8 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
@@ -20,13 +22,10 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
 import protobuf.srl.submission.Submission;
-
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+
+import java.util.ArrayList;
 
 /**
  * Handles data being added or edited.
@@ -160,9 +159,9 @@ public final class DataInsertHandler {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                     conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
-                        final ItemResult.Builder build = ItemResult.newBuilder();
-                        build.setQuery(itemSet.getQuery());
-                        results.add(ResultBuilder.buildResult(e.getMessage(), itemSet.getQuery(), build.build()));
+                        final ItemResult.Builder itemResult = ItemResult.newBuilder();
+                        itemResult.setQuery(itemSet.getQuery());
+                        results.add(ResultBuilder.buildResult(e.getMessage(), itemSet.getQuery(), itemResult.build()));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
@@ -172,10 +171,10 @@ public final class DataInsertHandler {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                     conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    final ItemResult.Builder build = ItemResult.newBuilder();
-                    build.setQuery(itemSet.getQuery());
-                    build.addData(itemSet.toByteString());
-                    results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, build.build()));
+                    final ItemResult.Builder itemResult = ItemResult.newBuilder();
+                    itemResult.setQuery(itemSet.getQuery());
+                    itemResult.addData(itemSet.toByteString());
+                    results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, itemResult.build()));
                 }
             }
             if (!results.isEmpty()) {

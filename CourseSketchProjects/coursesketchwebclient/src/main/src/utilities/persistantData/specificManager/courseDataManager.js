@@ -217,7 +217,6 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 return;
             }
             var courseList = [];
-            console.log(item.data);
             for (var i = 0; i < item.data.length; i++) {
                 courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
                         CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
@@ -233,17 +232,16 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         });
         if (userCourseId.length === 0 && userHasCourses && !onlyLocal) {
             sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
-            // console.log('course list from server polled!');
         } else {
             // This calls the server for updates then creates a list from the
             // local data to appear fast
             // then updates list after server polling and comparing the two
             // list.
-            // console.log('course list from local place polled!');
             var courseList = [];
 
             // ask server for course list
-            if (!onlyLocal && false) { // TODO: this should maybe only ask after a certain amount of time since last updated?
+            if (!onlyLocal && false) {
+                // TODO: this should maybe only ask after a certain amount of time since last updated?
                 sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
             }
 

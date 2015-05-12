@@ -5,6 +5,8 @@ import coursesketch.server.interfaces.SocketSession;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
@@ -14,13 +16,10 @@ import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School;
-
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+
+import java.util.ArrayList;
 
 /**
  * Handles data being added or edited.
@@ -117,19 +116,19 @@ public final class DataUpdateHandler {
                         }
                         break;
                         default:
-                            final ItemResult.Builder build = ItemResult.newBuilder();
-                            build.setQuery(itemSet.getQuery());
+                            final ItemResult.Builder result = ItemResult.newBuilder();
+                            result.setQuery(itemSet.getQuery());
                             results.add(ResultBuilder.buildResult("Update is not supported for this type", ItemQuery.ERROR,
-                                    build.build()));
+                                    result.build()));
                             break;
                     }
                 } catch (AuthenticationException e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                     conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
-                        final ItemResult.Builder build = ItemResult.newBuilder();
-                        build.setQuery(itemSet.getQuery());
-                        results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, build.build()));
+                        final ItemResult.Builder result = ItemResult.newBuilder();
+                        result.setQuery(itemSet.getQuery());
+                        results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, result.build()));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
@@ -137,10 +136,10 @@ public final class DataUpdateHandler {
                 } catch (Exception e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                     conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
-                    final ItemResult.Builder build = ItemResult.newBuilder();
-                    build.setQuery(itemSet.getQuery());
-                    build.addData(itemSet.toByteString());
-                    results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, build.build()));
+                    final ItemResult.Builder result = ItemResult.newBuilder();
+                    result.setQuery(itemSet.getQuery());
+                    result.addData(itemSet.toByteString());
+                    results.add(ResultBuilder.buildResult(e.getMessage(), ItemQuery.ERROR, result.build()));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 }
             }

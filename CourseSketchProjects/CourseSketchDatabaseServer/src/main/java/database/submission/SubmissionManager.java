@@ -193,8 +193,8 @@ public final class SubmissionManager {
      * @return {@link ItemRequest} That is used to query the submission server.
      */
     private static ItemRequest createSubmissionRequest(final DBObject experiments, final ByteString review) {
-        final ItemRequest.Builder build = ItemRequest.newBuilder();
-        build.setQuery(ItemQuery.EXPERIMENT);
+        final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
+        itemRequest.setQuery(ItemQuery.EXPERIMENT);
         for (String key : experiments.keySet()) {
             if (SELF_ID.equals(key)) {
                 continue;
@@ -205,10 +205,10 @@ public final class SubmissionManager {
             }
             final String sketchId = experiments.get(key).toString();
             LOG.info("SketchId: {}", sketchId);
-            build.addItemId(sketchId);
+            itemRequest.addItemId(sketchId);
         }
-        build.setAdvanceQuery(review);
-        return build.build();
+        itemRequest.setAdvanceQuery(review);
+        return itemRequest.build();
     }
 
     // need to be able to get a single submission
