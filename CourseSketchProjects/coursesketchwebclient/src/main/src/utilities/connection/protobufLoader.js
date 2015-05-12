@@ -224,6 +224,9 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
+        if (exception instanceof error) {
+            return this.errorToProtoException(exception);
+        }
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
         pException.setMssg(exception.specificMessage);
 
@@ -235,6 +238,23 @@ function ProtobufSetup() {
         pException.setExceptionType(exception.name);
         return pException;
     };
+
+    /**
+     * Given an javascript error, a ProtoException Object will be created.
+     *
+     * @param {error} anError
+     *              An JS error that has occurred or been defined.
+     * @return {ProtoException}
+     */
+    this.errorToProtoException = function(anError) {
+        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        pException.setMssg(anError.message);
+
+        pException.stackTrace = anError.stack;
+
+        pException.setExceptionType('Error');
+        return pException;
+    }
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
