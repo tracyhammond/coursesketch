@@ -10,20 +10,22 @@
     font-family: Lucida Sans Unicode;
     z-index: 101;
 }
+
 #button-bar {
     width: 79.5%;
     height: 60px;
     background: black;
-    position:absolute;
-    left:10px;
+    position: absolute;
+    left: 10px;
     bottom: 11.5%;
-    background-color:rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 1);
     z-index: 100;
 }
+
 #play-btn {
-    position:float;
-    top:1%;
-    left:20%;
+    position: float;
+    top: 1%;
+    left: 20%;
     height: 52px;
     width: 52px;
     border-radius: 50px;
@@ -34,10 +36,11 @@
     background-repeat: no-repeat;
     background-position: 60% 50%;
 }
+
 #pause-btn {
-    position:float;
-    top:1%;
-    left:20%;
+    position: float;
+    top: 1%;
+    left: 20%;
     height: 52px;
     width: 52px;
     border-radius: 50px;
@@ -61,6 +64,7 @@
     background-repeat: no-repeat;
     background-position: 60% 50%;
 }
+
 #slowdown-btn {
     height: 52px;
     width: 52px;
@@ -72,6 +76,7 @@
     background-repeat: no-repeat;
     background-position: 60% 50%;
 }
+
 #setting-btn {
     height: 52px;
     width: 52px;
@@ -83,14 +88,16 @@
     background-repeat: no-repeat;
     background-position: 60% 50%;
 }
+
 #progressBar {
-   border:1px solid white;
-   color:grey;
-   width:295px;
-   height:20px;
+   border: 1px solid white;
+   color: grey;
+   width: 295px;
+   height: 20px;
 }
+
 #progress {
-   background-color:#ADD8E6; /* red */
-   height:20px;
-   display:inline-block;
+   background-color: #ADD8E6; /* red */
+   height: 20px;
+   display: inline-block;
 } 

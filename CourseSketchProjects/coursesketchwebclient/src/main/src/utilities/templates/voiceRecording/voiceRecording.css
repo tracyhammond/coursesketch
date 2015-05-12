@@ -9,6 +9,7 @@
     text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
     font-family: Lucida Sans Unicode;
 }
+
 #redo-btn {
     height: 52px;
     width: 52px;
@@ -20,6 +21,7 @@
     background-repeat: no-repeat;
     background-position: 60% 50%;
 }
+
 #undo-btn {
     height: 52px;
     width: 52px;
@@ -31,13 +33,14 @@
     background-repeat: no-repeat;
     background-position: 60% 50%;
 }
+
 #button-bar {
     width: 79.5%;
     height: 60px;
     background: black;
-    position:absolute;
-    left:10px;
+    position: absolute;
+    left: 10px;
     bottom: 20%;
-    background-color:rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 1);
     z-index: 100;
 }
