@@ -10,24 +10,29 @@ function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
+	
     /**
      * @type {Boolean}
      * Whether or not the sketching is currently playing back. 
     */
     var isPlaying = true;
+	
     /**
      * @type {Boolean}
      * Whether or not the sketch was paused in the middle of a stroke.
     */
     var pauseDuringStroke = false;
+	
     /**
      * Keeps track of the last index the playback was on when it paused.
      */ 
     var lastPausedIndex = Number.MAX_VALUE; 
+	
     /**
      * Last stroke that was played back.
      */ 
     var lastCreatedStroke = undefined;
+	
     /**
      * Last point that was added to the canvas.
      */ 
@@ -95,7 +100,6 @@ function Playback(updateList, updateManager, graphics) {
                                     lastCreatedStroke = strokePath;
                                     lastPointAdded = pointAdded;
                                     pauseDuringStroke = true;
-                                    console.log('PAUSE!!!');
 
                                 }
                             }, pointList[index].getTime() - startingTime);
@@ -111,9 +115,10 @@ function Playback(updateList, updateManager, graphics) {
             }
         }
     };
+	
     /*
-     * Calculates time between strokes and playback them back with actual time difference between strokes when drawn.
-     * Also playback the sketch back from saved stroke index if it paused 
+     * Calculates time between strokes and plays them back with a delay corresponding to this time.
+     * Also playback the sketch back from saved stroke index if it is paused.
      */
     this.playNext = function(startTime, surface) {
         if (!isUndefined(startTime)) {
@@ -127,7 +132,6 @@ function Playback(updateList, updateManager, graphics) {
         }
         if (currentIndex >= length) {
             graphics.setDrawUpdate(true);
-            console.log('Finished');
             return;
         }
         var currentTime = (new Date().getTime());
@@ -138,10 +142,12 @@ function Playback(updateList, updateManager, graphics) {
              * Time passed from start to current stroke.
              */
             var playTime = currentTime - startingTime;
-            /*
+            
+			/*
              * Time of the next stroke.
              */
             var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
+			
             /*
              * Time between the last played stroke and the next one.
              */
@@ -149,7 +155,6 @@ function Playback(updateList, updateManager, graphics) {
             if (currentIndex == 1 || currentIndex == 0) { 
                 delayTime = 0; 
             }
-            console.log(updateTime - playTime);
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
             }, delayTime);
@@ -157,6 +162,7 @@ function Playback(updateList, updateManager, graphics) {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
     };
+	
     /*
      * Set isPlaying to false and pause the drawing.
      */
