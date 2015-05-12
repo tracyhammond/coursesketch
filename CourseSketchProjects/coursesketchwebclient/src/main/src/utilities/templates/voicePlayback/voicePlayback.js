@@ -1,5 +1,5 @@
 /**
- * Sets up and saves recordings. 
+ * Sets up and saves recordings.
  * Calls playback.js and starts music when play button is pushed.
  */
 function VoicePlayback() {
@@ -12,9 +12,9 @@ function VoicePlayback() {
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             navigator.getUserMedia = (navigator.getUserMedia ||
-                    navigator.webkitGetUserMedia ||
-                    navigator.mozgetUserMedia ||
-                    navigator.msGetUserMedia);
+            navigator.webkitGetUserMedia ||
+            navigator.mozgetUserMedia ||
+            navigator.msGetUserMedia);
             window.URL = window.URL || window.webkitURL;
         } catch (e) {
             alert('Web audio is not supported in this browser.');
@@ -57,15 +57,15 @@ function VoicePlayback() {
 
     /**
      * Blink the elem passed in
-     * @param {Element} The element that needs to blink
+     * @param {Element} element The element that needs to blink
      */
-    this.blink = function(elm) {
+    this.blink = function(element) {
         localScope.voiceBtnTimer = setInterval(function() {
-            elm.fadeOut(400, function() {
-                elm.fadeIn(400);
+            element.fadeOut(400, function() {
+                element.fadeIn(400);
             });
         }, 800);
-        elm.val('REC');
+        element.val('REC');
     };
 
     /**
@@ -73,7 +73,7 @@ function VoicePlayback() {
      */
     this.playMe = function() {
         localScope.surface.resizeSurface();
-        if (!localScope.isPaused){
+        if (!localScope.isPaused) {
             var updateList = localScope.surface.getUpdateList();
             var copyList = [];
             for (var i = 0; i < updateList.length; i++) {
@@ -135,7 +135,7 @@ function VoicePlayback() {
             localScope.surface = localScope.shadowRoot.querySelector('sketch-surface');
             localScope.graphics = localScope.surface.graphics;
             localScope.updateManager = localScope.surface.getUpdateManager();
-            
+
             /**
              * Calls blink if the button is blinking or starts blink if it is not blinking
              */

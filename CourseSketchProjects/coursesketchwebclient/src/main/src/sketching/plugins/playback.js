@@ -10,35 +10,50 @@ function Playback(updateList, updateManager, graphics) {
     var ps = graphics.getPaper();
     var currentIndex = -1;
     var length = updateList.length;
-    
+
     /**
+     * Whether or not the sketching is currently playing back.
+     *
      * @type {Boolean}
-     * Whether or not the sketching is currently playing back. 
-    */
+     */
     var isPlaying = true;
-    
+
     /**
-     * @type {Boolean}
      * Whether or not the sketch was paused in the middle of a stroke.
-    */
+     *
+     * @type {Boolean}
+     */
     var pauseDuringStroke = false;
-    
+
     /**
      * Keeps track of the last index the playback was on when it paused.
-     */ 
-    var lastPausedIndex = Number.MAX_VALUE; 
-    
+     *
+     * @type {Integer}
+     */
+    var lastPausedIndex = Number.MAX_VALUE;
+
     /**
      * Last stroke that was played back.
-     */ 
+     *
+     * @type {PaperStroke}
+     */
     var lastCreatedStroke = undefined;
-    
+
     /**
      * Last point that was added to the canvas.
-     */ 
+     *
+     * @type {SRL_Point}
+     */
     var lastPointAdded = undefined;
     var pointList;
 
+    /**
+     * Adds an update that is played back slowly.
+     *
+     * @param {SrlUpdate} update The update that the sketch list is currently replaying
+     * @param {Boolean} redraw True if the sketch surface needs to be redrawn.
+     * @param {Integer} updateIndex The index that this update is in the update list.
+     */
     this.addUpdate = function addUpdate(update, redraw, updateIndex) {
         var commandList = update.commands;
 
@@ -50,7 +65,7 @@ function Playback(updateList, updateManager, graphics) {
         var commandFinished = commandBarrier.getCallbackAmount(commandList.length);
         commandBarrier.finalize(this.playNext);
 
-        /* 
+        /*
          * Runs through all of the commands in the update.
          */
         for (var i = 0; i < commandList.length; i++) {
@@ -63,7 +78,7 @@ function Playback(updateList, updateManager, graphics) {
                     // set up the barrier...
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
-                    var strokePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
+                    var strokePath = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
                     if (pauseDuringStroke) {
                         pointAdded = lastPointAdded;
                         strokePath = lastCreatedStroke;
@@ -72,7 +87,7 @@ function Playback(updateList, updateManager, graphics) {
                         strokePath.simplify();
                         commandFinished();
                     });
-                    
+
                     var startingTime = pointList[0].getTime();
                     var timeOut;
                     var timeOutList = [];
@@ -115,9 +130,10 @@ function Playback(updateList, updateManager, graphics) {
             }
         }
     };
-    
+
     /*
      * Calculates time between strokes and plays them back with a delay corresponding to this time.
+     *
      * Also playback the sketch back from saved stroke index if it is paused.
      */
     this.playNext = function(startTime, surface) {
@@ -142,18 +158,18 @@ function Playback(updateList, updateManager, graphics) {
              * Time passed from start to current stroke.
              */
             var playTime = currentTime - startingTime;
-            
+
             /*
              * Time of the next stroke.
              */
             var updateTime = ((updateList[currentIndex].getTime()).subtract(updateList[0].getTime())).toNumber();
-            
+
             /*
              * Time between the last played stroke and the next one.
              */
             var delayTime = updateTime - playTime;
-            if (currentIndex == 1 || currentIndex == 0) { 
-                delayTime = 0; 
+            if (currentIndex === 1 || currentIndex === 0) {
+                delayTime = 0;
             }
             setTimeout(function() {
                 updateManager.addUpdate(updateList[currentIndex]);
@@ -162,7 +178,7 @@ function Playback(updateList, updateManager, graphics) {
             this.addUpdate(updateList[currentIndex], true, currentIndex);
         }
     };
-    
+
     /*
      * Set isPlaying to false and pause the drawing.
      */
