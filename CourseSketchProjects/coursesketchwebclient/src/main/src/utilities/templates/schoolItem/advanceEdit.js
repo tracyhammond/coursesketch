@@ -261,6 +261,7 @@
             };
 
             // save data
+            //NOT WORKING, NEEDS TO BE MODIFIED
             var saveButton = shadow.querySelector('button.save');
             saveButton.onclick = function() {
                 var newData = getInput(shadow);
