@@ -13,9 +13,7 @@ validateFirstGlobalRun(document.currentScript);
         this.name = 'CommandException';
         this.setMessage(message);
         this.message = '';
-        if (!isUndefined(cause)){
-            this.setCause(cause);
-        }
+        this.setCause(cause);
         this.createStackTrace();
     }
     CommandException.prototype = new BaseException();

@@ -4,9 +4,7 @@ function ProtobufException(message, cause) {
     this.name = 'ProtobufException';
     this.setMessage(message);
     this.message = '';
-    if (!isUndefined(cause)){
-        this.setCause(cause);
-    }
+    this.setCause(cause);
     this.createStackTrace();
 }
 ProtobufException.prototype = new BaseException();
