@@ -59,7 +59,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
             console.log('SERVER RESPONDED WITH EXPERIMENT');
-            console.log(item.data);
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
                 return;
@@ -74,7 +73,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 submissionCallback(new DatabaseException('Exception decoding experiment data data: ' + exception.toString()));
                 return;
             }
-            console.log(list);
             submissionCallback(list);
             list = undefined;
         });

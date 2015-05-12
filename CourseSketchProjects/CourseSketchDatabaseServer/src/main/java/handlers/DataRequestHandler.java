@@ -198,10 +198,10 @@ public final class DataRequestHandler {
                         // If
                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                         conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
-                        final ItemResult.Builder build = ItemResult.newBuilder();
-                        build.setQuery(itemRequest.getQuery());
+                        final ItemResult.Builder result = ItemResult.newBuilder();
+                        result.setQuery(itemRequest.getQuery());
                         results.add(ResultBuilder.buildResult("The item is not valid for access during the specified time range. " + e.getMessage(),
-                                ItemQuery.ERROR, build.build()));
+                                ItemQuery.ERROR, result.build()));
                     } else {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;

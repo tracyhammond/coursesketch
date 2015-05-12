@@ -17,8 +17,10 @@ public final class ResultBuilder {
     private ResultBuilder() { }
 
     /**
-     * Builds a complete result from the query. This one is typically used in
-     * the case of success.
+     * Builds a complete result from the query.
+     *
+     * This one is typically used in the case of success.
+     * This uses varags to take in multiple messages.
      *
      * @param text
      *         A message from the result (typically used if there is an error
@@ -44,8 +46,10 @@ public final class ResultBuilder {
     }
 
     /**
-     * Builds a complete result from the query. This one is typically used in
-     * the case of success.
+     * Builds a complete result from the query.
+     *
+     * This one is typically used in the case of success.
+     * This takes in a list.
      *
      * @param text
      *         A message from the result (typically used if there is an error
@@ -116,8 +120,10 @@ public final class ResultBuilder {
     }
 
     /**
-     * Builds a complete result from the query. This one is typically used in
-     * the case of success.
+     * Builds a complete result from the query.
+     *
+     * This one is typically used in the case of success.
+     * This uses varags to take in multiple messages.
      *
      * @param type
      *         What the original query was.
@@ -137,8 +143,10 @@ public final class ResultBuilder {
     }
 
     /**
-     * Builds a complete result from the query. This one is typically used in
-     * the case of success.
+     * Builds a complete result from the query.
+     *
+     * This one is typically used in the case of success.
+     * This takes in a list.
      *
      * @param type
      *         What the original query was.
