@@ -75,9 +75,20 @@ function PanelEditApi(panel){
      *
      * @param {String} bgClass A string containing the className that corresponds to the background type.
      */
-    this.setSketchSurfaceBG = function(bgClass) {
+    this.setSketchSurfaceBg = function(bgClass) {
         // Sets the className of the sketch surface and adds .sub-panel + .submittable
         panel.querySelector('.submittable').className = bgClass + ' sub-panel submittable';
+    };
+
+    /**
+     * This function allows scripts to set the image in the image-background class type.
+     *
+     * @param {String} backgroundUrl A string containing the Url of the desired background image.
+     */
+    this.setSketchBgImage = function(backgroundUrl) {
+        // Sets the Url of backgroundImage
+        var urlString = 'url(http://' + backgroundUrl + ')';
+        panel.querySelector('.submittable').style.backgroundImage = urlString;
     };
 
     /**
@@ -92,12 +103,16 @@ function PanelEditApi(panel){
         embeddedHtml.style.position = 'relative';
         if (htmlObj.location === 'top' || htmlObj.location === 'bottom') {
             sketchSurface.style.height = 'calc(' + (parseInt(sketchSurface.style.height, 10) - htmlObj.height - 1) + '% - 110px)';
-            embeddedHtml.style.width = 'calc(100% - 110px)';
+            embeddedHtml.style.width = 'calc(100%)';
             embeddedHtml.style.height = 'calc(' + (htmlObj.height) + '% - 110px)';
+            embeddedHtml.width = 'calc(100%)';
+            embeddedHtml.height = 'calc(' + (htmlObj.height) + '% - 110px)';
         } else {
             sketchSurface.style.width = '' + (parseInt(sketchSurface.style.width, 10) - htmlObj.width - 1) + '%';
             embeddedHtml.style.width = '' + (htmlObj.width - 1) + '%';
             embeddedHtml.style.height = 'calc(100% - 110px)';
+            embeddedHtml.width = '' + (htmlObj.width - 1) + '%';
+            embeddedHtml.height = 'calc(100% - 110px)';
         }
         if (htmlObj.location === 'top' || htmlObj.location === 'left') {
             panel.insertBefore(embeddedHtml, sketchSurface);
@@ -105,8 +120,8 @@ function PanelEditApi(panel){
             panel.appendChild(embeddedHtml);
         }
         sketchSurface.resizeSurface();
-        var builtHtml = '<iframe src=\"' + htmlObj.htmlCode + '\" frameborder=\"0\" allowfullscreen=\"\"' +
-               'style= position: absolute; left: 0px; top: 0px; \"width: 100%; height: 100%;\"></iframe>';
+        var builtHtml = '<iframe src=\"' + htmlObj.htmlCode + '\" frameborder=\"0\" allowfullscreen=\"1\"' +
+               'style= "position: inline-flex; left: 0px; top: 0px; width: 100%; height: 100%;"></iframe>';
         embeddedHtml.setHtml(builtHtml);
     };
 
@@ -135,7 +150,7 @@ function executeScript(script, panel, callback) {
     var scriptWorker = new jailed.DynamicPlugin(script, totalApi);
     var timer = setTimeout(function() {
         scriptWorker.disconnect();
-    }, 2000); // This time value is arbitrary. It serves as a cutoff time to force script execution to stop.
+    }, 1000); // This time value is arbitrary. It serves as a cutoff time to force script execution to stop.
     scriptWorker.whenDisconnected(function() {
         clearTimeout(timer);
         callback();
