@@ -5,7 +5,7 @@
 function VoicePlayback() {
     var localScope = undefined;
 
-	/**
+    /**
      * Initialize microphone on client
      */
     this.initRecorder = function() {
@@ -20,23 +20,23 @@ function VoicePlayback() {
             alert('Web audio is not supported in this browser.');
         }
 
-		/**
-		 * Create the recorder and check to see if failed or not
-		 */
+        /**
+         * Create the recorder and check to see if failed or not
+         */
         navigator.getUserMedia({ audio: true }, function(stream) {
             localScope.recorder = new Recorder(stream);
         }, function(e) {
         });
     };
 
-	/**
+    /**
      * Start recording voice
      */
     this.startRecording = function() {
         localScope.recorder.record();
     };
 
-	/**
+    /**
      * Stop recording voice
      */
     this.stopRecording = function() {
@@ -44,7 +44,7 @@ function VoicePlayback() {
         localScope.saveFile();
     };
 
-	/**
+    /**
      * Save the file to the database
      * NOTE: CURRENTLY SAVES LOCALLY
      */
@@ -55,9 +55,9 @@ function VoicePlayback() {
         });
     };
 
-	/**
+    /**
      * Blink the elem passed in
-	 * @param {Element} The element that needs to blink
+     * @param {Element} The element that needs to blink
      */
     this.blink = function(elm) {
         localScope.voiceBtnTimer = setInterval(function() {
@@ -98,10 +98,10 @@ function VoicePlayback() {
         localScope.isPaused = true;
     };
 
-	/**
+    /**
      * Initialize the passed in element.
-	 * Used for initializing the video
-	 * @param {Node} templateClone is a clone of the custom HTML Element for the voicePlayback
+     * Used for initializing the video
+     * @param {Node} templateClone is a clone of the custom HTML Element for the voicePlayback
      */
     this.initializeElement = function(templateClone) {
         localScope = this;
@@ -118,15 +118,15 @@ function VoicePlayback() {
         localScope.pauseIndex = 0;
         localScope.startTime = 0;
 
-		/**
-		 * Calls playMe when the play button is bushed to start playback
-		 */
+        /**
+         * Calls playMe when the play button is bushed to start playback
+         */
         localScope.vid.onplay = function() {
             localScope.playMe();
         };
-		/**
-		 * Calls pauseMe when the play button is bushed to pause playback
-		 */
+        /**
+         * Calls pauseMe when the play button is bushed to pause playback
+         */
         localScope.vid.onpause = function() {
             localScope.pauseMe();
         };
@@ -135,10 +135,10 @@ function VoicePlayback() {
             localScope.surface = localScope.shadowRoot.querySelector('sketch-surface');
             localScope.graphics = localScope.surface.graphics;
             localScope.updateManager = localScope.surface.getUpdateManager();
-			
-			/**
-			 * Calls blink if the button is blinking or starts blink if it is not blinking
-			 */
+            
+            /**
+             * Calls blink if the button is blinking or starts blink if it is not blinking
+             */
             this.shadowRoot.querySelector('#recordBtn').onclick = function() {
                 if (localScope.isRecording === true) {
                     localScope.stopRecording();
