@@ -1,4 +1,4 @@
-validateFirstGlobalRun(document.currentScript);
+validateFirstGlobalRun(document.currentScript, CourseSketch);
 
 /**
  * Adds a couple of really useful methods to the commands. depends on
