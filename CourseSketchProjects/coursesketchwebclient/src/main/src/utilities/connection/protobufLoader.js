@@ -254,7 +254,7 @@ function ProtobufSetup() {
 
         pException.setExceptionType('Error');
         return pException;
-    }
+    };
 
     /**
      * Given a protobuf Command array an SrlUpdate is created.
