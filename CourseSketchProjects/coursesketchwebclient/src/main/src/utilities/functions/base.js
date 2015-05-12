@@ -174,16 +174,16 @@ if (isUndefined(BaseException)) {
         };
         /**
          * Sets the message of the Exception.
-         * @param {String}
-         *          A string that contains the description of the the exception that occurred.
+         * @param {messageValue} messageValue
+         *          is a string that contains the description
+         *          of the the exception that occurred.
          */
         this.setMessage = function(messageValue) {
             this.specificMessage = messageValue;
         };
         /**
          * Used to access the stacktrace of the exception without modifying it.
-         * @return{String}
-         *          Returns a string that contains the entire stacktrace of the exception.
+         * @return {stackTrace} Returns a string that contains the entire stacktrace of the exception.
          */
         this.getStackTrace = function() {
             return this.stackTrace;
@@ -195,15 +195,15 @@ if (isUndefined(BaseException)) {
             console.log(printStackTrace().join('\n\n'));
         };
         /**
-         *  Assigns the stacktrace object to an existing stacktrace.
+         * Assigns the stacktrace object to an existing stacktrace.
          */
         this.createStackTrace = function() {
             this.stackTrace = CourseSketch.printStackTrace();
         };
         /**
-         *  Sets the cause of baseException to the causeValue passed in.
-         * @param {Cause}
-         *          The cause of the exception.
+         * Sets the cause of baseException to the causeValue passed in.
+         * @param {causeValue} causeValue
+         *          is the cause of the exception.
          */
         this.setCause = function(causeValue) {
             this.cause = causeValue;
