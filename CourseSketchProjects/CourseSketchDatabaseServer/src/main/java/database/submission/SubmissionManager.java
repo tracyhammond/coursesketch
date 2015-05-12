@@ -14,6 +14,8 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
@@ -22,27 +24,24 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.tutorial.TutorialOuterClass;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
-
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
+import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.MOD;
+import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
+import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.TUTORIAL_COLLECTION;
-import static database.DatabaseStringConstants.DESCRIPTION;
+import static database.DatabaseStringConstants.UPDATELIST;
 import static database.DatabaseStringConstants.URL;
 import static database.DatabaseStringConstants.URL_HASH;
-import static database.DatabaseStringConstants.NAME;
-import static database.DatabaseStringConstants.UPDATELIST;
 
 /**
  * Manages data that has to deal with submissions in the database server.
@@ -273,7 +272,7 @@ public final class SubmissionManager {
             final String tutorialUrl, final int pageNumber) throws DatabaseAccessException, AuthenticationException {
         final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
 
-        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()));
+        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()), new BasicDBObject(UPDATELIST, 0));
         final List<TutorialOuterClass.Tutorial> tutorialList = new ArrayList<>();
         if (cursor == null) {
             throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialUrl);
@@ -299,11 +298,13 @@ public final class SubmissionManager {
         tutorial.setName(dbTutorial.get(NAME).toString());
         tutorial.setDescription(dbTutorial.get(DESCRIPTION).toString());
         tutorial.setUrl(dbTutorial.get(URL).toString());
-        try {
-            tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)).toByteString());
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            throw new DatabaseAccessException("unable to decode steps", e);
+        if (dbTutorial.containsField(UPDATELIST)) {
+            try {
+                tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)).toByteString());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                throw new DatabaseAccessException("unable to decode steps", e);
+            }
         }
         return tutorial.build();
     }
