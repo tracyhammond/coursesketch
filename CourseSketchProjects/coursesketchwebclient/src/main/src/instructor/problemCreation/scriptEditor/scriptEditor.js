@@ -126,7 +126,7 @@ validateFirstRun(document.currentScript);
 
     var exitButton = document.querySelector('button.exit');
     exitButton.onclick = function() {
-
+        alert('Not yet implemented!');
     };
 
     /**
