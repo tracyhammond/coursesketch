@@ -223,6 +223,7 @@ function ProtobufSetup() {
      *
      * @param {Exception} exception
      *              An custom exception that extends BaseException.
+     * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
