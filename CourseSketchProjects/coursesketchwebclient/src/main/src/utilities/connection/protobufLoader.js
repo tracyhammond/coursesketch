@@ -224,7 +224,7 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (exception instanceof error) {
+        if (exception instanceof Error) {
             return this.errorToProtoException(exception);
         }
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
