@@ -91,6 +91,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         tables.push(database.createTable('Lectures', 'id', addFunction));
         tables.push(database.createTable('Slides', 'id', addFunction));
         tables.push(database.createTable('Other', 'id', addFunction));
+        tables.push(database.createTable('Tutorials', 'id', addFunction));
 
         database.setTables(tables);
         database.open();
@@ -100,16 +101,21 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Sends a request to retrive data from the server.
      */
     dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
+        var itemRequest = undefined;
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
         dataSend.items = [];
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        itemRequest.setQuery(queryType);
+        if (idList instanceof CourseSketch.PROTOBUF_UTIL.getItemRequestClass() && isUndefined(advanceQuery)) {
+            itemRequest = idList;
+        } else {
+            itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+            itemRequest.setQuery(queryType);
 
-        if (!isUndefined(idList)) {
-            itemRequest.setItemId(idList);
-        }
-        if (!isUndefined(advanceQuery)) {
-            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+            if (!isUndefined(idList)) {
+                itemRequest.setItemId(idList);
+            }
+            if (!isUndefined(advanceQuery)) {
+                itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+            }
         }
         dataSend.items.push(itemRequest);
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
