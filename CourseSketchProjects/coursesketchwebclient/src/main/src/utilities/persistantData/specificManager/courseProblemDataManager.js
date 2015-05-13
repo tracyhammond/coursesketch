@@ -291,26 +291,16 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                                         CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
 
                                 // after listener is removed
-                                if (isUndefined(item.data) || item.data === null) {
-                                    courseProblemCallbackComplete(new DatabaseException('The data sent back from the server does not exist.'));
+                                if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                                    courseProblemCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
+                                            leftOverId));
                                     return;
                                 }
-                                var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                var courseProblem = school.problems[0];
-                                if (isUndefined(courseProblem) || courseProblem instanceof DatabaseException) {
-                                    var result = courseProblem;
-                                    if (isUndefined(result)) {
-                                        result = new DatabaseException('Nothing is in the server database!',
-                                                'failed while attempting to grab from server address: ' + leftOverId);
-                                    }
-                                    if (!isUndefined(courseProblemCallbackComplete)) {
-                                        courseProblemCallbackComplete(result);
-                                    }
-                                    return;
-                                } // undefined course problem
-                                for (var i = 0; i < school.problems.length; i++) {
-                                    parent.setCourseProblem(school.problems[i]);
-                                    courseProblemList.push(school.problems[i]);
+
+                                for (var i = 0; i < item.data.length; i++) {
+                                    var decodedCourseProblem = CourseSketch.PROTOBUF_UTIL.getSrlProblemClass().decode(item.data[i]);
+                                    parent.setCourseProblem(decodedCourseProblem);
+                                    courseProblemList.push(decodedCourseProblem);
                                 }
                                 courseProblemCallbackComplete(courseProblemList);
                             });
