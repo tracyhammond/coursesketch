@@ -120,6 +120,34 @@
     opacity: 1;
 }
 
+.savetutorial {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    width: 100px;
+    margin: 10px;
+    padding: 20px;
+    overflow: hidden;
+    border: none;
+    font: normal 16px/1 "Times New Roman", Times, serif;
+    color: rgba(255,255,255,1);
+    text-align: center;
+    z-index: 10;
+    position: absolute;
+    bottom: 165px;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    background: #0199d9;
+    -webkit-box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+    box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+    opacity: .5;
+}
+
+.savetutorial:hover {
+    opacity: 1;
+}
+
 .toolarea {
 	flex-direction: row;
 	justify-content: flex-start;

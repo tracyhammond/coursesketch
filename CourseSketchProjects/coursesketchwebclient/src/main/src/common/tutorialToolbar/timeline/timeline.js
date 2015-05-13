@@ -31,7 +31,7 @@ function Timeline () {
         redoCreator();
 
         shadowRoot.querySelector('.btn').style.display = 'none';
-
+        shadowRoot.querySelector('.savetutorial').style.display = 'none';
         shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
             this.parentNode.removeChild(this);
         };
@@ -76,6 +76,8 @@ function Timeline () {
                 }
                 timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
                 shadowRoot.querySelector('.btn').style.display = 'inline-block';
+                shadowRoot.querySelector('.savetutorial').style.display = 'initial';
+                saveTutorial(localScope);
             }
         });
 
@@ -441,6 +443,17 @@ function Timeline () {
             }
         });
     }
+    function saveTutorial(timeLine) {
+        var savefd = timeLine.shadowRoot.querySelector('.savetutorial');
+        savefd.onclick = function() {
+            //save tutorial
 
+            // reset timeline!
+            var timeParent = timeLine.parentNode;
+            timeParent.removeChild(timeLine);
+            //var timeline = document.createElement('entire-timeline');
+            //timeParent.appendChild(timeline);
+        }
+    }
 }
 Timeline.prototype = Object.create(HTMLElement.prototype);
