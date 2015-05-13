@@ -13,7 +13,6 @@ function Timeline () {
         this.continueButton(shadowRoot);
         undoCreator(this);
         redoCreator(this);
-        createTutorialTutorial();
     };
 
     /**
@@ -36,7 +35,7 @@ function Timeline () {
         var toolArea = document.createElement('div');
         toolArea.className = 'toolarea';
         parent.appendChild(toolArea);
-        if (!viewingMode) {
+        if (!this.viewingMode) {
             addPlusButton(toolArea, this);
         }
         this.index.addNewToolArea(toolArea);
@@ -61,17 +60,22 @@ function Timeline () {
                     addMarker(toolArea, commandId, markerClass, this);
                 }
             }
-            // TODO: Call redo on the last step if creationMode. First step if viewingMode.
+        }
+        // Creation mode shows last step, viewing mode shows first step
+        if (!viewingMode) {
+            this.updateList.list[this.updateList.length - 1].redo();
+        } else {
+            this.updateList.list[0].redo();
         }
     }
 
     function getCommandClass(commandType) {
         var commandClass = '';
-        if (commandType = CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX) {
+        if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX) {
             commandClass = 'textbox';
-        } else if (commandType = CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX) {
+        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX) {
             commandClass = 'ttsbox';
-        } else if (commandType = CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT) {
+        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT) {
             commandClass = 'highlight';
         }
         return commandClass;
@@ -103,20 +107,21 @@ function Timeline () {
     }
 
     function addMarker(toolArea, commandId, markerClass, localScope) {
-        var textBoxMarker = document.createElement('timeline-marker');
-        textBoxMarker.className = markerClass;
-        toolArea.appendChild(textBoxMarker);
-        textBoxMarker.id = commandId;
-        var textBox = document.getElementById(commandId);
-        textBoxMarker.showBox = textBox;
+        var marker = document.createElement('timeline-marker');
+        marker.className = markerClass;
+        toolArea.appendChild(marker);
+        marker.id = commandId;
+        var stepTool = document.getElementById(commandId);
+        marker.showBox = stepTool;
 
-        textBoxMarker.setRemoveFunction(function() {
-            closeTextBox(textBox.createdCommand, localScope);
+        marker.setRemoveFunction(function() {
+            closeTutorialTool(stepTool.createdCommand, localScope);
         });
     }
 
     function tutorialToolFinishedListener(command, event, currentUpdate) {
-        var textBox = document.getElementById(command.commandId);
+        var stepTool = document.getElementById(command.commandId);
+        var localScope = document.body.querySelector('entire-timeline');
         //textBox.id = command.commandId;
         if (isUndefined(currentUpdate.commands)) {
             return;
@@ -125,26 +130,35 @@ function Timeline () {
             currentUpdate.commands.push(command);
         }
         if (!isUndefined(event)) {
-            closeTextBox(command, this);
+            closeTutorialTool(command, localScope);
             return;
         }
-        var textBoxMarker = this.shadowRoot.getElementById(command.commandId);
-        commandClass = getCommandClass(command);
-        if (commandClass == 'textbox' || commandClass == 'ttsbox') {
-            var textArea = textBox.shadowRoot.querySelector('textarea');
-            textBoxMarker.setPreviewText(textArea.value);
+
+        if (!isUndefined(localScope.shadowRoot)) {
+            var marker = localScope.shadowRoot.getElementById(command.commandId);
+        }
+        var commandClass = getCommandClass(command.commandType);
+        if ((commandClass === 'textbox' || commandClass === 'ttsbox') && marker !== null && !isUndefined(marker)) {
+            var textArea = stepTool.shadowRoot.querySelector('textarea');
+            marker.setPreviewText(textArea.value);
         }
     };
 
-    function closeTextBox(command, localScope) {
-        var textBox = document.getElementById(command.commandId);
-        var textBoxMarker = this.shadowRoot.getElementById(command.commandId);
-        if (!isUndefined(textBox.command)) {
-            removeObjectFromArray(textBox.currentUpdate.commands, textBox.command);
+    function closeTutorialTool(command, localScope) {
+        var stepTool = document.getElementById(command.commandId);
+        var marker = localScope.shadowRoot.getElementById(command.commandId);
+        if (!isUndefined(stepTool.command)) {
+            removeObjectFromArray(stepTool.currentUpdate.commands, stepTool.command);
         }
-        textBox.parentNode.removeChild(textBox);
-        if (textBoxMarker !== null) {
-            textBoxMarker.parentNode.removeChild(textBoxMarker);
+        stepTool.parentNode.removeChild(stepTool);
+        if (marker !== null) {
+            marker.parentNode.removeChild(marker);
+        }
+
+        // Removes highlighted text if command is highlightText
+        if (getCommandClass(command.commandType) === 'highlight') {
+            $('.highlightedText').contents().unwrap();
+            document.normalize();
         }
     }
 
@@ -175,7 +189,7 @@ function Timeline () {
              */
             $(plusButton).removeClass('tall');
 
-            textBox.setFinishedListener(tutorialToolFinishedListener.bind(localScope));
+            textBox.setFinishedListener(tutorialToolFinishedListener);
             textBox.saveData();
             addMarker(toolArea, textBox.id, 'textbox', localScope);
         };
@@ -202,48 +216,12 @@ function Timeline () {
             ttsBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
 
-            function closeTtsBox(command) {
-                var ttsBox = document.getElementById(command.commandId);
-                var ttsBoxMarker = localScope.shadowRoot.getElementById(command.commandId);
-                if (!isUndefined(ttsBox.command)) {
-                    removeObjectFromArray(ttsBox.currentUpdate.commands, ttsBox.command);
-                }
-                ttsBox.parentNode.removeChild(ttsBox);
-                if (ttsBoxMarker !== null) {
-                    ttsBoxMarker.parentNode.removeChild(ttsBoxMarker);
-                }
-            }
-
-            var ttsBoxMarker = document.createElement('timeline-marker');
-            ttsBoxMarker.className = 'ttsbox';
-            toolArea.appendChild(ttsBoxMarker);
-            ttsBoxMarker.showBox = ttsBox;
             $(plusButton).empty();
             $(plusButton).removeClass('tall');
 
-            ttsBoxFinishedListener = function(command, event, currentUpdate) {
-                var ttsBox = document.getElementById(command.commandId);
-                if (isUndefined(currentUpdate.commands)) {
-                    return;
-                }
-                if (currentUpdate.commands.indexOf(command) < 0) {
-                    currentUpdate.commands.push(command);
-                }
-                if (!isUndefined(event)) {
-                    closeTtsBox(command);
-                    return;
-                }
-                var textArea = ttsBox.shadowRoot.querySelector('textarea');
-                ttsBoxMarker.setPreviewText(textArea.value);
-            };
-
-            ttsBoxMarker.setRemoveFunction(function() {
-                closeTtsBox(ttsBox.createdCommand);
-            });
-
-            ttsBox.setFinishedListener(ttsBoxFinishedListener);
+            ttsBox.setFinishedListener(tutorialToolFinishedListener);
             ttsBox.saveData();
-            ttsBoxMarker.id = ttsBox.id;
+            addMarker(toolArea, ttsBox.id, 'ttsbox', localScope);
         };
     }
 
@@ -275,55 +253,19 @@ function Timeline () {
             highlightText.currentUpdate = currentUpdate;
             /* end of creating the highlightTool */
 
-            var highlightMarker = document.createElement('timeline-marker');
-            highlightMarker.className = 'highlight';
-            toolArea.appendChild(highlightMarker);
             $(plusButton).empty();
             $(plusButton).removeClass('tall');
 
-            function closeHighlightText(command) {
-                var highlightText = document.getElementById(command.commandId);
-                var highlightMarker = localScope.shadowRoot.getElementById(command.commandId);
-                if (!isUndefined(highlightText.command)) {
-                    removeObjectFromArray(highlightText.currentUpdate.commands, highlightText.command);
-                }
-                highlightText.parentNode.removeChild(highlightText);
-                if (highlightMarker !== null) {
-                    highlightMarker.parentNode.removeChild(highlightMarker);
-                }
-                $('.highlightedText').contents().unwrap();
-                document.normalize();
-            }
-
-            highlightTextFinishedListener = function(command, event, currentUpdate) {
-                if (isUndefined(currentUpdate.commands)) {
-                    return;
-                }
-                if (currentUpdate.commands.indexOf(command) < 0) {
-                    currentUpdate.commands.push(command);
-                }
-                if (!isUndefined(event)) {
-                    closeHighlightText(command);
-                    return;
-                }
-            };
-
-            highlightMarker.setRemoveFunction(function() {
-                closeHighlightText(highlightText.createdCommand);
-            });
-
-            highlightText.setFinishedListener(highlightTextFinishedListener);
+            highlightText.setFinishedListener(tutorialToolFinishedListener);
             highlightText.saveData();
-            highlightMarker.id = highlightText.id;
+            addMarker(toolArea, highlightText.id, 'highlight', localScope);
         };
     }
+
     /**
      * the tools all follow a format of creating a div, adding the css, and appending the child to the right thing.
      * when clicked, the "preview" button will be added to the step
-     * This will create a simple s    function insertTutorial(tutorial, function) {
-
-    }
-ketch surface to draw on.  Currently this isn't called because it isn't finished
+     * This will create a simple sketch surface to draw on.  Currently this isn't called because it isn't finished
      */
     function addSketchSurfaceButton(plusButton, toolArea, localScope) {
         var sketchSurfaceButton = document.createElement('div');
@@ -338,18 +280,7 @@ ketch surface to draw on.  Currently this isn't called because it isn't finished
             $(plusButton).removeClass('tall');
         };
     }
-    /**
-     * creates textbox that explains the tutorial system
-     */
-    function createTutorialTutorial() {
-        var tutorialTutorial = document.body.querySelector.className('tutorialtutorial');
-        document.body.appendChild(tutorialTutorial);
-        tutorialTutorial.onclick = function(event) {
-            console.log('Hello, from function land!!');
-            event.stopPropagation();
-            this.parentNode.removeChild(this);
-        };
-    }
+
     /**
      * creates undos
      */
@@ -359,7 +290,7 @@ ketch surface to draw on.  Currently this isn't called because it isn't finished
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
-                    if (!viewingMode) {
+                    if (!this.viewingMode) {
                         elementToDelete.saveData();
                     }
                     document.body.removeChild(elementToDelete);
@@ -371,7 +302,7 @@ ketch surface to draw on.  Currently this isn't called because it isn't finished
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
-                    if (!viewingMode) {
+                    if (!this.viewingMode) {
                         elementToDelete.saveData();
                     }
                     document.body.removeChild(elementToDelete);
@@ -430,7 +361,7 @@ ketch surface to draw on.  Currently this isn't called because it isn't finished
                 ttsBox.id = this.commandId;
                 ttsBox.command = this;
                 ttsBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
-                ttsBox.setFinishedListener(ttsBoxFinishedListener);
+                ttsBox.setFinishedListener(tutorialToolFinishedListener);
                 ttsBox.saveData();
             }
         });
@@ -449,7 +380,7 @@ ketch surface to draw on.  Currently this isn't called because it isn't finished
                 highlightText.id = this.commandId;
                 highlightText.command = this;
                 highlightText.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
-                highlightText.setFinishedListener(highlightTextFinishedListener);
+                highlightText.setFinishedListener(tutorialToolFinishedListener);
             }
         });
     }
