@@ -26,8 +26,12 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
             CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
-        var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
-        var courseList = school.courses;
+        var courseList = [];
+        for (var i = 0; i < item.data.length; i++) {
+            courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
+                    CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+        }
+
         var idList = [];
         for (var i = 0; i < courseList.length; i++) {
             courseProtoMap[courseList[i].id] = courseList[i];
