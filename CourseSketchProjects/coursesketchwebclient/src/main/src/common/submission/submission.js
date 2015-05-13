@@ -1,10 +1,11 @@
-function SubmissionException(message) {
+function SubmissionException(message, cause) {
     this.name = 'SubmissionException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
+    this.setCause(cause);
+    this.createStackTrace();
 }
-SubmissionException.prototype = BaseException;
+SubmissionException.prototype = new BaseException();
 
 /**
  * A class that handles submitting a problem to the database.
