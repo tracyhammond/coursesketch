@@ -80,7 +80,6 @@ public final class BankProblemManager {
                 .append(SOURCE, problem.getSource())
                 .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
-                .append(BASESKETCH, problem.getBaseSketch())
                 .append(KEYWORDS, problem.getOtherKeywordsList());
 
         if (problem.getBaseSketch() != null) {
@@ -155,7 +154,6 @@ public final class BankProblemManager {
         exactProblem.setCourseTopic((String) dbObject.get(COURSE_TOPIC));
         exactProblem.setSubTopic((String) dbObject.get(SUB_TOPIC));
         exactProblem.setSource((String) dbObject.get(SOURCE));
-        exactProblem.setBaseSketch((Commands.SrlUpdateList) dbObject.get(BASESKETCH));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         try {
             if (dbObject.get(BASE_SKETCH) != null) {
