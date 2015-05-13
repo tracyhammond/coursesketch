@@ -22,18 +22,9 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
 import protobuf.srl.submission.Submission;
-<<<<<<< HEAD
+
 import protobuf.srl.tutorial.TutorialOuterClass;
 
-
-
-
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-=======
->>>>>>> master
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
