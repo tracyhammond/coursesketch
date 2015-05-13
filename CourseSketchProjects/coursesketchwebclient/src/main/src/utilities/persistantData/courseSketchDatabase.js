@@ -91,6 +91,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         tables.push(database.createTable('Lectures', 'id', addFunction));
         tables.push(database.createTable('Slides', 'id', addFunction));
         tables.push(database.createTable('Other', 'id', addFunction));
+        tables.push(database.createTable('Tutorials', 'id', addFunction));
 
         database.setTables(tables);
         database.open();
@@ -100,16 +101,21 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Sends a request to retrive data from the server.
      */
     dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
+        var itemRequest = undefined;
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
         dataSend.items = [];
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        itemRequest.setQuery(queryType);
+        if (idList instanceof CourseSketch.PROTOBUF_UTIL.getItemRequestClass() && isUndefined(advanceQuery)) {
+            itemRequest = idList;
+        } else {
+            itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+            itemRequest.setQuery(queryType);
 
-        if (!isUndefined(idList)) {
-            itemRequest.setItemId(idList);
-        }
-        if (!isUndefined(advanceQuery)) {
-            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+            if (!isUndefined(idList)) {
+                itemRequest.setItemId(idList);
+            }
+            if (!isUndefined(advanceQuery)) {
+                itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+            }
         }
         dataSend.items.push(itemRequest);
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
@@ -216,27 +222,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
-            clearTimeout(timeout);
-            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-            var courseList = school.courses;
-            for (var i = 0; i < courseList.length; i++) {
-                localScope.setCourse(courseList[i]);
-            }
-
-            var assignmentList = school.assignments;
-            for (i = 0; i < assignmentList.length; i++) {
-                localScope.setAssignment(assignmentList[i]);
-            }
-
-            var problemList = school.problems;
-            for (i = 0; i < problemList.length; i++) {
-                localScope.setCourseProblem(problemList[i]);
-            }
-
-            if (!functionCalled && callback) {
-                functionCalled = true;
-                callback();
-            }
+            // TODO: there used to be update code here that would update the local cache
+            // When that code isbeing used again to optimize load times please add back the update function here!
         });
     };
 
@@ -276,7 +263,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * @param {Function} callback Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
-        var localScope = this;
         var interval = setInterval(function() {
             if (localScope.isDatabaseReady()) {
                 clearInterval(interval);

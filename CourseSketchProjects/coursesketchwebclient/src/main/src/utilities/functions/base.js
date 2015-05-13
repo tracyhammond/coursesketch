@@ -159,23 +159,64 @@ if (isUndefined(BaseException)) {
      * @class BaseException
      * Defines the base exception class that can be extended by all other exceptions.
      */
-    var BaseException = {
-        name:           'BaseException',
+    function BaseException() {
+        this.name = 'BaseException';
         /**
          * The level defines how bad it is. level 5 is the okayest exception
          * (with 6+ typically being ignored completely) and level 0 is the worst
          * exception (with <0 being treated as 0).
          */
-        level:          5,
-        message:        'BaseException Thrown.\n Please subclass this to create a better exception.',
-        htmlMessage:    'BaseException Thrown<br> Please subclass this to create a better exception.',
-        toString: function() {
-            return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '');
-        },
-        setMessage: function(messageValue) {
+        this.message = 'BaseException Thrown.\n Please subclass this to create a better exception.';
+        this.stackTrace = undefined;
+        this.cause = undefined;
+        this.toString = function() {
+            return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '\n') + this.stackTrace.join('\n\n');
+        };
+        /**
+         * Sets the message of the Exception.
+         * @param {messageValue} messageValue
+         *          is a string that contains the description
+         *          of the the exception that occurred.
+         */
+        this.setMessage = function(messageValue) {
             this.specificMessage = messageValue;
-        }
-    };
+        };
+        /**
+         * Used to access the stacktrace of the exception without modifying it.
+         * @return {stackTrace} Returns a string that contains the entire stacktrace of the exception.
+         */
+        this.getStackTrace = function() {
+            return this.stackTrace;
+        };
+        /**
+         * Used to log the stacktrace object in BaseException.
+         */
+        this.printStackTrace = function() {
+            console.log(printStackTrace().join('\n\n'));
+        };
+        /**
+         * Assigns the stacktrace object to an existing stacktrace.
+         */
+        this.createStackTrace = function() {
+            this.stackTrace = CourseSketch.printStackTrace();
+        };
+        /**
+         * Sets the cause of baseException to the causeValue passed in.
+         * @param {causeValue} causeValue
+         *          is the cause of the exception.
+         */
+        this.setCause = function(causeValue) {
+            if (!isUndefined(cause)) {
+                this.cause = causeValue;
+            }
+        };
+        /**
+         *  A getter function used to access the cause of the stacktrace without the risk of manipulating it.
+         */
+        this.getCause = function() {
+            return this.cause;
+        };
+    }
 }
 
 if (isUndefined(getTypeName)) {
@@ -247,7 +288,6 @@ if (isUndefined(validateFirstRun)) {
     }
 }
 
-
 /**
  * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
  * And prevents further execution of the script.
@@ -273,5 +313,23 @@ if (isUndefined(validateFirstGlobalRun)) {
         }
         CourseSketch.scriptBay[scriptObject.src] = {};
         validateFirstRun(scriptObject); // look locally too!
+    }
+}
+
+if (isUndefined(safeLoad)) {
+    /**
+     * Loads a script but only once.
+     *
+     * @param {String} url The url that is being loaded.
+     * @param {Object} uniqueGlobalObject a global object that is unique to the script that will be undefined if the script does not exist.
+     */
+    function safeLoad(url, uniqueGlobalObject) {
+        if (typeof window[uniqueGlobalObject] === 'undefined') {
+            // load jquery
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            document.getElementsByTagName('head')[0].appendChild(script);
+        }
     }
 }
