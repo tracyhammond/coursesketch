@@ -83,5 +83,6 @@ sketch-surface.image_background {
     background-color: white;
     /* Set the default image to a warning sign, in case the url is bad. Feel free to change this image.*/
     background-image: url('http://www.clipartbest.com/cliparts/yio/LMp/yioLMpBiE.jpeg');
-    background-size:100%;
+    background-size: contain;
+    background-repeat: no-repeat;
 }

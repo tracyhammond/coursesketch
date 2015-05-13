@@ -1,12 +1,13 @@
 /* Depends on the protobuf library, base.js, objectAndInheritance.js */
 
-function ProtobufException(message) {
+function ProtobufException(message, cause) {
     this.name = 'ProtobufException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
+    this.setCause(cause);
+    this.createStackTrace();
 }
-ProtobufException.prototype = BaseException;
+ProtobufException.prototype = new BaseException();
 
 /**
  * *************************************************************
@@ -202,9 +203,9 @@ function ProtobufSetup() {
      * Given a protobuf object compile it to other data and return a request.
      *
      * @param {Protobuf} data
-     *            An uncompiled protobuf object.
+     *              An uncompiled protobuf object.
      * @param {MessageType} requestType
-     *            The message type of the request.
+     *              The message type of the request.
      * @return {Request}
      */
     this.createRequestFromData = function(data, requestType) {
@@ -213,6 +214,46 @@ function ProtobufSetup() {
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
         return request;
+    };
+
+    /**
+     * Given an custom exception, a ProtoException Object will be created.
+     *
+     * @param {Exception} exception
+     *              An custom exception that extends BaseException.
+     * @return {ProtoException}
+     */
+    this.createProtoException = function(exception) {
+        if (exception instanceof Error) {
+            return this.errorToProtoException(exception);
+        }
+        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        pException.setMssg(exception.specificMessage);
+
+        pException.stackTrace = exception.getStackTrace();
+
+        if (!isUndefined(exception.getCause())) {
+            pException.setCause(this.createProtoException(exception.getCause()));
+        }
+        pException.setExceptionType(exception.name);
+        return pException;
+    };
+
+    /**
+     * Given an javascript error, a ProtoException Object will be created.
+     *
+     * @param {error} anError
+     *              An JS error that has occurred or been defined.
+     * @return {ProtoException}
+     */
+    this.errorToProtoException = function(anError) {
+        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        pException.setMssg(anError.message);
+
+        pException.stackTrace = anError.stack;
+
+        pException.setExceptionType('Error');
+        return pException;
     };
 
     /**
