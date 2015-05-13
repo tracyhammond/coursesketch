@@ -15,9 +15,8 @@ function Timeline () {
                 tutorial.id = 'id' + i;
                 tutorialList.push(tutorial);
             }
-            console.log(tutorialList);
             callback(tutorialList);
-        }
+        };
 
         // END OF STUPID DAVID STUFF!
         var shadowRoot = this.createShadowRoot();
@@ -25,8 +24,7 @@ function Timeline () {
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         this.index = new IndexManager(this);
         this.tutorialList(this);
-        //this.addToolArea(shadowRoot.querySelector('.timeline'));
-        //this.continueButton(shadowRoot);
+
         undoCreator();
         redoCreator();
 
@@ -44,15 +42,12 @@ function Timeline () {
     this.tutorialList = function(parent) {
         var shadowRoot = this.shadowRoot;
         var localScope = this;
-        console.log("INSIDE TUTLIST");
         var newTutorial = document.createElement('div');
         var timelinefd = this.shadowRoot.querySelector('.timeline');
         var addfd = document.createElement('div');
-        console.log("LOADING TUTS");
         CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
-            // display tutorial info yo!
+            // displays the list of tutorials and their info.
             for (var i = 0; i < tutorialList.length; i++) {
-                console.log('creating tutorial', tutorialList[i]);
                 (function(index) {
                     var viewTutorial = document.createElement('div');
                     var listfd = document.createElement('div');
@@ -78,7 +73,7 @@ function Timeline () {
                 shadowRoot.querySelector('.btn').style.display = 'inline-block';
                 shadowRoot.querySelector('.savetutorial').style.display = 'initial';
                 saveTutorial(localScope);
-            }
+            };
         });
 
     };
