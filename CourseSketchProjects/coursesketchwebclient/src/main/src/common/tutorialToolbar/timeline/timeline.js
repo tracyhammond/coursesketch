@@ -4,15 +4,76 @@ function Timeline () {
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
+
+        // DELETE THIS AFTER DAVID's STUFF IS IMPLEMENTED!!!!!
+        CourseSketch.dataManager.getTutorialList = function(url, callback) {
+            var tutorialList = [];
+            for (var i = 0; i < 5; i++) {
+                var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
+                tutorial.name = "TUT" + i;
+                tutorial.description = "DESCRIPT" + i;
+                tutorial.id = 'id' + i;
+                tutorialList.push(tutorial);
+            }
+            callback(tutorialList);
+        };
+
+        // END OF STUPID DAVID STUFF!
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         this.index = new IndexManager(this);
-        this.addToolArea(shadowRoot.querySelector('.timeline'));
-        this.continueButton(shadowRoot);
+        this.tutorialList(this);
+
         undoCreator();
         redoCreator();
-        createTutorialTutorial();
+
+        shadowRoot.querySelector('.btn').style.display = 'none';
+
+        shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
+            this.parentNode.removeChild(this);
+        };
+    };
+
+    /**
+     * When the tutorial view pops up, it has a page that lists all current tutorials
+     * as well as a button that will allow the user to create a new tutorial
+     */
+    this.tutorialList = function(parent) {
+        var shadowRoot = this.shadowRoot;
+        var localScope = this;
+        var newTutorial = document.createElement('div');
+        var timelinefd = this.shadowRoot.querySelector('.timeline');
+        var addfd = document.createElement('div');
+        CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
+            // displays the list of tutorials and their info.
+            for (var i = 0; i < tutorialList.length; i++) {
+                (function(index) {
+                    var viewTutorial = document.createElement('div');
+                    var listfd = document.createElement('div');
+                    listfd.title = i;
+                    listfd.className = 'smallicon';
+                    timelinefd.appendChild(listfd);
+                    viewTutorial.onclick = function() {
+                        // do tutorial loading here
+                    };
+                })(i);
+            }
+            addfd.title = 'Create new tutorial';
+            addfd.className = 'newicon';
+            timelinefd.appendChild(addfd);
+            addfd.onclick = function() {
+                localScope.addToolArea(shadowRoot.querySelector('.timeline'));
+                localScope.continueButton(shadowRoot);
+                for (var i = 0; i < tutorialList.length; i++) {
+                    // remove first instance of the file descriptor
+                    timelinefd.removeChild(shadowRoot.querySelector('.smallicon'));
+                }
+                timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
+                shadowRoot.querySelector('.btn').style.display = 'inline-block';
+            };
+        });
+
     };
 
     /**
@@ -287,18 +348,7 @@ function Timeline () {
             $(plusButton).removeClass('tall');
         };
     }
-    /**
-     * creates textbox that explains the tutorial system
-     */
-    function createTutorialTutorial () {
-        var tutorialTutorial = document.body.querySelector.className('tutorialtutorial');
-        document.body.appendChild(tutorialTutorial);
-        tutorialTutorial.onclick = function(event) {
-            console.log('Hello, from function land!!');
-            event.stopPropagation();
-            this.parentNode.removeChild(this);
-        };
-    }
+
     /**
      * creates undos
      */
