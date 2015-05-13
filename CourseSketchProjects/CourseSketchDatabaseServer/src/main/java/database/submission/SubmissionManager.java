@@ -12,18 +12,17 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
@@ -169,32 +168,47 @@ public final class SubmissionManager {
         final Request.Builder requestBuilder = Request.newBuilder();
         requestBuilder.setSessionInfo(sessionInfo);
         requestBuilder.setRequestType(MessageType.DATA_REQUEST);
-        final ItemRequest.Builder build = ItemRequest.newBuilder();
-        build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-        final DBObject corsor = myDbRef.fetch();
-        for (String key : corsor.keySet()) {
-            if (SELF_ID.equals(key)) {
-                continue;
-            }
-            final Object experimentId = corsor.get(key);
-            if (experimentId == null || experimentId instanceof ObjectId) {
-                continue;
-            }
-            final String sketchId = corsor.get(key).toString();
-            LOG.info("SketchId: {}", sketchId);
-            build.addItemId(sketchId);
+        final DBObject dbObject = myDbRef.fetch();
+
+        if (dbObject == null) {
+            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
         }
-        build.setAdvanceQuery(review);
+
+        final ItemRequest itemRequest = createSubmissionRequest(dbObject, review);
         final DataRequest.Builder data = DataRequest.newBuilder();
-        data.addItems(build);
+        data.addItems(itemRequest);
         requestBuilder.setOtherData(data.build().toByteString());
-        LOG.info("Sending command: {}", requestBuilder.build());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
+    }
+
+    /**
+     * Creates a submission request for the submission server.
+     * @param experiments A {@link DBObject} that represents the experiments in the database.
+     * @param review An advance query used for reviewing students submissions.
+     * @return {@link ItemRequest} That is used to query the submission server.
+     */
+    private static ItemRequest createSubmissionRequest(final DBObject experiments, final ByteString review) {
+        final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
+        itemRequest.setQuery(ItemQuery.EXPERIMENT);
+        for (String key : experiments.keySet()) {
+            if (SELF_ID.equals(key)) {
+                continue;
+            }
+            final Object experimentId = experiments.get(key);
+            if (experimentId == null || experimentId instanceof ObjectId) {
+                continue;
+            }
+            final String sketchId = experiments.get(key).toString();
+            LOG.info("SketchId: {}", sketchId);
+            itemRequest.addItemId(sketchId);
+        }
+        itemRequest.setAdvanceQuery(review);
+        return itemRequest.build();
     }
 
     // need to be able to get a single submission
