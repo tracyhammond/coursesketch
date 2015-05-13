@@ -2,15 +2,23 @@
 <head>
     <template id="exceptionNotification">
         <style>
+            @import "/bower_components/materialize/bin/materialize.css";
             @import "/src/utilities/templates/exceptionNotification/exceptionNotification.css";
         </style>
-        <dialog id="notificationInformation" open>
-            <content select=".title"></content>
-            <content select=".message"></content>
-            <br>
-            <content select=".stacktrace"></content>
-            <content select=".cause"></content>
-            <button id="closeButton">X</button>
+        <dialog id="notificationInformation" class="modal modal-fixed-footer" open>
+            <div class="modal-header">
+                <content select=".header">
+                    <content select=".exceptionTitle"></content>
+                    <content select=".exceptionMessage"></content>
+                </content>
+            </div>
+            <div class="modal-content">
+                <content select=".stacktrace"></content>
+                <content select=".cause"></content>
+            </div>
+            <div class="modal-footer">
+                <button id="closeButton" href="#close" class="modal-action btn-flat red waves-effect waves-light">Close</button>
+            </div>
         </dialog>
     </template>
 </head>

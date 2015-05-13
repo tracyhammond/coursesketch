@@ -216,27 +216,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
-            clearTimeout(timeout);
-            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-            var courseList = school.courses;
-            for (var i = 0; i < courseList.length; i++) {
-                localScope.setCourse(courseList[i]);
-            }
-
-            var assignmentList = school.assignments;
-            for (i = 0; i < assignmentList.length; i++) {
-                localScope.setAssignment(assignmentList[i]);
-            }
-
-            var problemList = school.problems;
-            for (i = 0; i < problemList.length; i++) {
-                localScope.setCourseProblem(problemList[i]);
-            }
-
-            if (!functionCalled && callback) {
-                functionCalled = true;
-                callback();
-            }
+            // TODO: there used to be update code here that would update the local cache
+            // When that code isbeing used again to optimize load times please add back the update function here!
         });
     };
 
@@ -276,7 +257,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * @param {Function} callback Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
-        var localScope = this;
         var interval = setInterval(function() {
             if (localScope.isDatabaseReady()) {
                 clearInterval(interval);

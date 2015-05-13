@@ -1,5 +1,6 @@
 package database.institution.mongo;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -11,17 +12,18 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
+import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
@@ -29,13 +31,13 @@ import static database.DatabaseStringConstants.KEYWORDS;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
+import static database.DatabaseStringConstants.SCRIPT;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
-import static database.DatabaseStringConstants.SCRIPT;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -69,12 +71,19 @@ public final class BankProblemManager {
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
         final DBCollection problemBankCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
-        final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()).append(IMAGE, problem.getImage())
-                .append(SOLUTION_ID, problem.getSolutionId()).append(COURSE_TOPIC, problem.getCourseTopic()).append(SUB_TOPIC, problem.getSubTopic())
-                .append(SOURCE, problem.getSource()).append(QUESTION_TYPE, problem.getQuestionType().getNumber())
+        final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
+                .append(IMAGE, problem.getImage())
+                .append(SOLUTION_ID, problem.getSolutionId())
+                .append(COURSE_TOPIC, problem.getCourseTopic())
+                .append(SUB_TOPIC, problem.getSubTopic())
+                .append(SOURCE, problem.getSource())
+                .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList());
 
+        if (problem.getBaseSketch() != null) {
+            insertObject.append(BASE_SKETCH, problem.getBaseSketch().toByteArray());
+        }
         if (!problem.hasAccessPermission()) {
             insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
         } else {
@@ -145,6 +154,13 @@ public final class BankProblemManager {
         exactProblem.setSubTopic((String) dbObject.get(SUB_TOPIC));
         exactProblem.setSource((String) dbObject.get(SOURCE));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
+        try {
+            if (dbObject.get(BASE_SKETCH) != null) {
+                exactProblem.setBaseSketch(Commands.SrlUpdateList.parseFrom((byte[]) dbObject.get(BASE_SKETCH)));
+            }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
         // arraylist
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
@@ -185,10 +201,14 @@ public final class BankProblemManager {
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = myDbRef.fetch();
+
+        if (cursor == null) {
+            throw new DatabaseAccessException("Bank Problem was not found with the following ID: " + problemBankId);
+        }
 
         boolean isAdmin;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) corsor.get(ADMIN));
+        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(ADMIN));
         final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!isAdmin) {
@@ -197,7 +217,7 @@ public final class BankProblemManager {
 
         final BasicDBObject updated = new BasicDBObject();
         if (problem.hasQuestionText()) {
-            problemCollection.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
+            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
             updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
             update = true;
         }
@@ -231,6 +251,9 @@ public final class BankProblemManager {
             updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
             update = true;
         }
+        if (problem.hasBaseSketch()) {
+            updated.append(SET_COMMAND, new BasicDBObject(BASE_SKETCH, problem.getBaseSketch().toByteArray()));
+        }
         if (problem.getOtherKeywordsCount() > 0) {
             updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
             update = true;
@@ -251,8 +274,8 @@ public final class BankProblemManager {
         }
 
         if (update) {
-            problemCollection.update(corsor, updated);
-            final List<String> users = (List) corsor.get(USERS);
+            problemCollection.update(cursor, updated);
+            final List<String> users = (List) cursor.get(USERS);
             for (int i = 0; i < users.size(); i++) {
                 UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
             }
@@ -276,9 +299,11 @@ public final class BankProblemManager {
      * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to retrieve any bank problems.
+     * @throws DatabaseAccessException
+     *         Thrown if there are fields missing that make the problem inaccessible.
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
-            final String courseId, final int page) throws AuthenticationException {
+            final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckAdmin(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
