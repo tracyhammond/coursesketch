@@ -153,13 +153,11 @@
                 course.id = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = fakeID;
                 course.courseId = course.id;
-                SrlCoursedata.courses = [ course];
-                itemResult.data =  SrlCoursedata.toArrayBuffer();
+                itemResult.data =  [course.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 expect(1);
@@ -249,12 +247,10 @@
                 var fakeID = generateUUID();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = generateUUID();
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = fakeID;
                 course.courseId = course.id;
-                course.name = "Preupdated"
-                SrlCoursedata.courses = [course];
+                course.name = "Preupdated";
                 var waitfor = 0;
 
                 // TEST STARTING
@@ -288,7 +284,6 @@
                 course.id = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = fakeID;
@@ -296,9 +291,8 @@
                 course.name ='preupdate';
                 course2.id = course.id;
                 course2.courseId = course.id;
-                course2.name = "Update complete!"
-                SrlCoursedata.courses = [ course];
-                itemResult.data =  SrlCoursedata.toArrayBuffer();
+                course2.name = "Update complete!";
+                itemResult.data =  [course.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -328,7 +322,6 @@
                 var fakeID = generateUUID();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = generateUUID();
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = fakeID;
@@ -336,8 +329,7 @@
                 course.name = "Preupdated"
                 course2.id = course.id;
                 course2.courseId = course.id;
-                course2.name = "Update complete!"
-                SrlCoursedata.courses = [ course];
+                course2.name = "Update complete!";
                 var waitfor = 0;
 
                 // TEST STARTING

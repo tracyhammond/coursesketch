@@ -1,18 +1,8 @@
 import "util.proto";
 import "grading.proto";
+import "commands.proto";
 
 package protobuf.srl.school;
-
-// holds all data that is sent from server. (grades, roster, classes, assignments, problems
-message SrlSchool {
-    repeated SrlCourse courses = 1;
-    repeated SrlAssignment assignments = 2;
-    repeated SrlProblem problems = 3;
-    repeated SrlBankProblem bankProblems = 4;
-    repeated SrlGrade grades = 5;
-    //repeated SrlBankGrade bankGrades = 6; //????
-
-}
 
 message SrlCourse {
     required string id = 1; // This must be globally unique.
@@ -94,6 +84,7 @@ message SrlBankProblem {
     repeated string otherKeywords = 9;
     optional protobuf.srl.utils.SrlPermission accessPermission = 10;
     optional string script = 11; // a script string that is used for custom setups in experiments
+    optional protobuf.srl.commands.SrlUpdateList baseSketch = 12; // the base sketch the instructor will make for assignments
 }
 
 message SrlGrade {
