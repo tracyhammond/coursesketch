@@ -193,14 +193,12 @@
                 assignment.courseId = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
-                var srlProblemData =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeId;
                 courseProblem.assignmentId = assignment.id;
                 courseProblem.courseId = assignment.courseId;
-                srlProblemData.problems = [courseProblem];
-                itemResult.data =  srlProblemData.toArrayBuffer();
+                itemResult.data =  [courseProblem.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -282,7 +280,6 @@
                 assignment.courseId = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM;
-                var SrlProblemData =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeId;
@@ -293,8 +290,7 @@
                 courseProblem2.name = "Update complete!"
                 courseProblem.courseId = assignment.courseId;
                 courseProblem2.courseId = assignment.courseId;
-                SrlProblemData.courseProblems = [ courseProblem];
-                itemResult.data =  SrlProblemData.toArrayBuffer();
+                itemResult.data =  [courseProblem.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -329,7 +325,6 @@
                 var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 assignment.id = generateUUID();
                 assignment.courseId = generateUUID();
-                var SrlProblemData =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 var courseProblem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
                 courseProblem.id = fakeId;
@@ -340,7 +335,6 @@
                 courseProblem2.name = "Update complete!"
                 courseProblem.courseId = assignment.courseId;
                 courseProblem2.courseId = assignment.courseId;
-                SrlProblemData.courseProblems = [ courseProblem];
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourseProblem(courseProblem,  function() {
                         dataManager.updateCourseProblem(courseProblem2, function() {
