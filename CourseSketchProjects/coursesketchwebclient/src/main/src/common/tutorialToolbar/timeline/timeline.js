@@ -69,6 +69,7 @@ function Timeline () {
         }
     }
 
+    // returns command class of command type
     function getCommandClass(commandType) {
         var commandClass = '';
         if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX) {
@@ -106,6 +107,7 @@ function Timeline () {
         //addSketchSurfaceButton(plusButton, toolArea, localScope);
     }
 
+    // adds marker for tutorial tool based on commandId
     function addMarker(toolArea, commandId, markerClass, localScope) {
         var marker = document.createElement('timeline-marker');
         marker.className = markerClass;
@@ -119,10 +121,10 @@ function Timeline () {
         });
     }
 
+    // finished listener for all tutorial tools
     function tutorialToolFinishedListener(command, event, currentUpdate) {
         var stepTool = document.getElementById(command.commandId);
         var localScope = document.body.querySelector('entire-timeline');
-        //textBox.id = command.commandId;
         if (isUndefined(currentUpdate.commands)) {
             return;
         }
@@ -144,6 +146,7 @@ function Timeline () {
         }
     };
 
+    // closes tutorial tool based on passed command
     function closeTutorialTool(command, localScope) {
         var stepTool = document.getElementById(command.commandId);
         var marker = localScope.shadowRoot.getElementById(command.commandId);
