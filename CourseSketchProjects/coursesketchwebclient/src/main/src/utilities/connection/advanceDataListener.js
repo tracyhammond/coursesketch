@@ -49,7 +49,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         var localMap = requestMap[messageType];
         try {
             if (msg.otherData === null) {
-                console.log('No data was attached to the result');
+                console.log('No data was attached to the result.');
                 return;
             }
             try {
