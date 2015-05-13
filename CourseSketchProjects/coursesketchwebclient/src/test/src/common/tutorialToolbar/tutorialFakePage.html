@@ -3,6 +3,18 @@
 <link rel="import" href="/src/common/tutorialToolbar/timeline/timelineInclude.html">
 <link rel="stylesheet" href="/css/utility/columns.css">
 <link rel="stylesheet" href="/css/courseSketch2.css">
+	<script>
+		function loadUpdateList(viewingMode) {
+			var timeline = document.body.querySelector('entire-timeline');
+			var updateList = timeline.updateList;
+			var tutorial = {steps: updateList};
+			timeline.parentNode.removeChild(timeline);
+			timeline = document.createElement('entire-timeline');
+			document.body.appendChild(timeline);
+			console.log(tutorial.steps);
+			timeline.loadTutorial(tutorial, viewingMode);
+		}
+	</script>
 </head>
 
 

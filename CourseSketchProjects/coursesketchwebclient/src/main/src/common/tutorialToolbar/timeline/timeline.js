@@ -11,8 +11,12 @@ function Timeline () {
         this.index = new IndexManager(this);
         this.addToolArea(shadowRoot.querySelector('.timeline'));
         this.continueButton(shadowRoot);
-        undoCreator(this);
-        redoCreator(this);
+        try {
+            undoCreator();
+            redoCreator();
+        } catch(e) {
+            console.log(e);
+        }
     };
 
     /**
@@ -45,26 +49,34 @@ function Timeline () {
      * loads a tutorial for viewing
      */
     this.loadTutorial = function(tutorial, viewingMode) {
+        this.viewingMode = viewingMode;
         this.updateList = tutorial.steps;
-        for (var i = 0; i < this.updateList.length; i++) {
+        var initialToolArea = this.shadowRoot.querySelector('.toolarea');
+        initialToolArea.parentNode.removeChild(initialToolArea); // Removes default toolArea that is added when a tutorial object is initialized
+        for (var i = 0; i < this.updateList.list.length; i++) {
             //create one box for step
-            this.addToolArea(shadowRoot.querySelector('.timeline'));
-            var toolAreaList = document.querySelectorAll('.toolarea'); // Grabs all tool areas on the screen
+            this.addToolArea(this.shadowRoot.querySelector('.timeline'));
+            var toolAreaList = this.shadowRoot.querySelectorAll('.toolarea'); // Grabs all tool areas on the screen
             var toolArea = toolAreaList[toolAreaList.length - 1]; // Gets current tool area (last tool area is for the step being loaded)
             if (!viewingMode) {
-                var commandList = this.updateList[i].commands;
+                this.updateList.list.pop(); // In creation mode, addToolArea adds a blank update to the end of the list. Removes blank update
+                var commandList = this.updateList.list[i].commands;
                 var markerClass = '';
                 for (var j = 0; j < commandList.length; j++) {
-                    var markerClass = getCommandClass(commandList[i].commandType);
+                    var markerClass = getCommandClass(commandList[j].commandType);
                     var commandId = commandList[j].commandId;
                     addMarker(toolArea, commandId, markerClass, this);
                 }
+            } else {
+                toolArea.textContent = i;
             }
         }
         // Creation mode shows last step, viewing mode shows first step
         if (!viewingMode) {
-            this.updateList.list[this.updateList.length - 1].redo();
+            this.index.switchIndex(this.updateList.list.length); // Sets indexManager to lastStep as the currentStep
+            this.updateList.list[this.updateList.list.length - 1].redo();
         } else {
+            this.index.switchIndex(1); // Sets indexManager to 1st step as currentStep. Step indexes start from 1. Reason in indexManager.
             this.updateList.list[0].redo();
         }
     }
@@ -136,7 +148,7 @@ function Timeline () {
             return;
         }
 
-        if (!isUndefined(localScope.shadowRoot)) {
+        if (!isUndefined(localScope) && localScope !== null && !isUndefined(localScope.shadowRoot)) {
             var marker = localScope.shadowRoot.getElementById(command.commandId);
         }
         var commandClass = getCommandClass(command.commandType);
@@ -287,13 +299,13 @@ function Timeline () {
     /**
      * creates undos
      */
-    function undoCreator(localScope) {
+    function undoCreator() {
         // creates undo for textbox
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
-                    if (!this.viewingMode) {
+                    if (!document.querySelector('entire-timeline').viewingMode) {
                         elementToDelete.saveData();
                     }
                     document.body.removeChild(elementToDelete);
@@ -305,7 +317,7 @@ function Timeline () {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
-                    if (!this.viewingMode) {
+                    if (!document.querySelector('entire-timeline').viewingMode) {
                         elementToDelete.saveData();
                     }
                     document.body.removeChild(elementToDelete);
@@ -329,14 +341,14 @@ function Timeline () {
     /**
      * creates redos
      */
-    function redoCreator(localScope) {
+    function redoCreator() {
         //creates textbox redo
         CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-                if (!localScope.viewingMode) {
-                    var textBox  = document.createElement('text-box-creation');
+                if (!document.querySelector('entire-timeline').viewingMode) {
+                    var textBox = document.createElement('text-box-creation');
                 } else {
                     var textBox = document.createElement('text-box-viewing');
                 }
@@ -346,7 +358,9 @@ function Timeline () {
                 textBox.command = this;
                 textBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
                 textBox.setFinishedListener(tutorialToolFinishedListener);
-                textBox.saveData();
+                if (!document.querySelector('entire-timeline').viewingMode) {
+                    textBox.saveData();
+                }
             }
         });
         // creates tts box redo
@@ -354,7 +368,7 @@ function Timeline () {
             if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-                if (!localScope.viewingMode) {
+                if (!document.querySelector('entire-timeline').viewingMode) {
                     var ttsBox = document.createElement('tts-box-creation');
                 } else {
                     var ttsBox = document.createElement('tts-box-viewing');
@@ -365,7 +379,9 @@ function Timeline () {
                 ttsBox.command = this;
                 ttsBox.currentUpdate = document.querySelector('entire-timeline').index.getCurrentUpdate();
                 ttsBox.setFinishedListener(tutorialToolFinishedListener);
-                ttsBox.saveData();
+                if (!document.querySelector('entire-timeline').viewingMode) {
+                    ttsBox.saveData();
+                }
             }
         });
         // creates highlightText redo
@@ -373,7 +389,7 @@ function Timeline () {
             if (!isUndefined(this.commandId)) {
                 var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
                         CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
-                if (!localScope.viewingMode) {
+                if (!document.querySelector('entire-timeline').viewingMode) {
                     var highlightText = document.createElement('highlight-text-creation');
                 } else {
                     var highlightText = document.createElement('highlight-text-viewing');
@@ -386,6 +402,12 @@ function Timeline () {
                 highlightText.setFinishedListener(tutorialToolFinishedListener);
             }
         });
+    }
+
+    this.clearTimeline = function() {
+        for (var i = 0; i < this.updateList.list.length; i++) {
+            this.updateList.list[i].undo();
+        }
     }
 
 }
