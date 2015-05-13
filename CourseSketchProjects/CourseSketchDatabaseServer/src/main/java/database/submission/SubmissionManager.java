@@ -31,17 +31,17 @@ import java.util.List;
 
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
+import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.MOD;
+import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.SELF_ID;
-import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
+import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.TUTORIAL_COLLECTION;
-import static database.DatabaseStringConstants.DESCRIPTION;
+import static database.DatabaseStringConstants.UPDATELIST;
 import static database.DatabaseStringConstants.URL;
 import static database.DatabaseStringConstants.URL_HASH;
-import static database.DatabaseStringConstants.NAME;
-import static database.DatabaseStringConstants.UPDATELIST;
 
 /**
  * Manages data that has to deal with submissions in the database server.
@@ -200,7 +200,6 @@ public final class SubmissionManager {
     }
 
     /**
-<<<<<<< HEAD
      * Inserts a tutorial into the database.
      *
      * @return ID of the inserted tutorial
@@ -263,7 +262,7 @@ public final class SubmissionManager {
             final String tutorialUrl, final int pageNumber) throws DatabaseAccessException, AuthenticationException {
         final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
 
-        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()));
+        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()), new BasicDBObject(UPDATELIST, 0));
         final List<TutorialOuterClass.Tutorial> tutorialList = new ArrayList<>();
         if (cursor == null) {
             throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialUrl);
@@ -289,15 +288,18 @@ public final class SubmissionManager {
         tutorial.setName(dbTutorial.get(NAME).toString());
         tutorial.setDescription(dbTutorial.get(DESCRIPTION).toString());
         tutorial.setUrl(dbTutorial.get(URL).toString());
-        try {
-            tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)).toByteString());
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            throw new DatabaseAccessException("unable to decode steps", e);
+        if (dbTutorial.containsField(UPDATELIST)) {
+            try {
+                tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)).toByteString());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                throw new DatabaseAccessException("unable to decode steps", e);
+            }
         }
         return tutorial.build();
     }
-=======
+
+    /**
      * Creates a submission request for the submission server.
      * @param experiments A {@link DBObject} that represents the experiments in the database.
      * @param review An advance query used for reviewing students submissions.
@@ -322,7 +324,6 @@ public final class SubmissionManager {
         return itemRequest.build();
     }
 
->>>>>>> master
     // need to be able to get a single submission
     // be able to get all of the submissions
     // if you are trying to get your submission you just need your userId
