@@ -48,6 +48,10 @@ function AdvanceDataListener(connection, Request, defListener) {
     function decode(evt, msg, messageType) {
         var localMap = requestMap[messageType];
         try {
+            if (msg.otherData === null) {
+                console.log('No data was attached to the result.');
+                return;
+            }
             try {
                 msg.otherData.mark();
             } catch (exception) {

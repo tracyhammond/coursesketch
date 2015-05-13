@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Command Methods test</title>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <script src="/bower_components/stacktrace-js/stacktrace.js"></script>
+    <link rel="import" href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html">
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/utilities/functions/base.js" data-cover></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+        var word = 'This is a TestException';
+        /**
+         * Mocking this function.
+         */
+        CourseSketch.getExceptionParentElement = function() {
+            return document.body;
+        };
+        /**
+         * TestException is a fake exception used to test BaseException.
+         */
+        function TestException(message, cause) {
+            this.name = 'TestException';
+            this.setMessage(message);
+            this.message = '';
+            if (!isUndefined(cause)){
+                this.setCause(cause);
+            }
+            this.createStackTrace();
+        }
+        TestException.prototype = new BaseException();
+        QUnit.test("test exceptions", function(assert) {
+            expect(1);
+            try {
+                throw new TestException(word);
+            }
+            catch (exception) {
+                var sTrace = exception.getStackTrace();
+                if (exception instanceof TestException) {
+                    assert.equal(exception.specificMessage, word);
+                    console.log(sTrace);
+                    console.log(exception);
+                    CourseSketch.showShallowException(CourseSketch.PROTOBUF_UTIL.createProtoException(exception));
+                }
+            }
+        });
+    </script>
+</body>
