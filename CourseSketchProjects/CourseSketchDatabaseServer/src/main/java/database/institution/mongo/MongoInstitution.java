@@ -469,6 +469,7 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
+<<<<<<< HEAD
     public String insertTutorial(final String userId, final TutorialOuterClass.Tutorial tutorialObject)
             throws DatabaseAccessException, AuthenticationException {
         return SubmissionManager.mongoInsertTutorial(getInstance().auth, getInstance().database, userId, tutorialObject);
@@ -482,6 +483,10 @@ public final class MongoInstitution implements Institution {
 
     @Override
     public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page) throws AuthenticationException {
+=======
+    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page)
+            throws AuthenticationException, DatabaseAccessException {
+>>>>>>> master
         return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }
 }

@@ -1,4 +1,4 @@
-validateFirstGlobalRun(document.currentScript);
+validateFirstGlobalRun(document.currentScript, CourseSketch);
 
 /**
  * Adds a couple of really useful methods to the commands. depends on
@@ -9,13 +9,14 @@ validateFirstGlobalRun(document.currentScript);
      * @class CommandException
      * @extends BaseException
      */
-    function CommandException(message) {
+    function CommandException(message, cause) {
         this.name = 'CommandException';
         this.setMessage(message);
         this.message = '';
-        this.htmlMessage = '';
+        this.setCause(cause);
+        this.createStackTrace();
     }
-    CommandException.prototype = BaseException;
+    CommandException.prototype = new BaseException();
 
     var ProtoSrlUpdate = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlUpdate());
     var ProtoSrlCommand = Object.getPrototypeOf(CourseSketch.PROTOBUF_UTIL.SrlCommand());

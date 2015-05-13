@@ -32,7 +32,10 @@ validateFirstRun(document.currentScript);
         // todo: better way of removing elements
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
-        parentPanel.emptyPanel();
+        var oldElement = parentPanel.querySelector('.sub-panel');
+        if (oldElement instanceof Node) {
+            parentPanel.removeChild(oldElement);
+        }
         if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
@@ -96,6 +99,35 @@ validateFirstRun(document.currentScript);
             console.log(performance.memory);
         });
     }
+
+    /**
+    * Saves script in order to display it on the problem when opened. Saves
+    * to problem navigator.
+    */
+    var saveScript = document.querySelector('button.save');
+    saveScript.onclick = function() {
+        console.log('Entered');
+        //Create bank problem (proto object)
+        var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+
+        //Get problem ID
+        bankProblem.id = navigator.getCurrentProblemId();
+        console.log(bankProblem.id);
+
+        //Get sketch surface
+        bankProblem.baseSketch = document.querySelector('.submittable').getUpdateList();
+
+        //Set script and update list
+        bankProblem.script = document.getElementById('scriptBox').value;
+
+        //Update bank problem
+        CourseSketch.dataManager.updateBankProblem(bankProblem);
+    };
+
+    var exitButton = document.querySelector('button.exit');
+    exitButton.onclick = function() {
+        alert('Not yet implemented!');
+    };
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
