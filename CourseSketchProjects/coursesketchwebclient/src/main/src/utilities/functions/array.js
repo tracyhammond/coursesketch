@@ -15,13 +15,14 @@
 /**
  * Creates an ArrayException object that returns exception values.
  */
-function ArrayException(message) {
+function ArrayException(message, cause) {
     this.name = 'ArrayException';
     this.specificMessage = message;
     this.message = '';
-    this.htmlMessage = '';
+    this.setCause(cause);
+    this.createStackTrace();
 }
-ArrayException.prototype = BaseException;
+ArrayException.prototype = new BaseException();
 
 if (isUndefined(removeObjectFromArray)) {
 

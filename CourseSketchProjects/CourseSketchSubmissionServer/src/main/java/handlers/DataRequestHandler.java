@@ -14,7 +14,6 @@ import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
-import protobuf.srl.submission.Submission.SrlExperimentList;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
@@ -99,7 +98,7 @@ public final class DataRequestHandler {
         send.setQuery(ItemQuery.EXPERIMENT);
 
         if (experiment != null) {
-            send.setData(experiment.toByteString());
+            send.addData(experiment.toByteString());
         } else {
             send.setNoData(true);
             send.setErrorMessage(errorMessage);
@@ -118,19 +117,18 @@ public final class DataRequestHandler {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private static ItemResult getExperimentsForInstructor(final ItemRequest itemReq) {
         LOG.info("attempting to get an experiment as an instructor");
-        final SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
+        final ItemResult.Builder send = ItemResult.newBuilder();
+        send.setQuery(ItemQuery.EXPERIMENT);
         final StringBuilder errorMessage = new StringBuilder();
         for (String item : itemReq.getItemIdList()) {
             try {
-                experiments.addExperiments(DatabaseClient.getExperiment(item, DatabaseClient.getInstance()));
+                final SrlExperiment exp = DatabaseClient.getExperiment(item, DatabaseClient.getInstance());
+                send.addData(exp.toByteString());
             } catch (Exception e) {
                 errorMessage.append('\n').append(e.getMessage());
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
-        final ItemResult.Builder send = ItemResult.newBuilder();
-        send.setQuery(ItemQuery.EXPERIMENT);
-        send.setData(experiments.build().toByteString());
         send.setErrorMessage(errorMessage.toString());
         send.setAdvanceQuery(itemReq.getAdvanceQuery());
         return send.build();
