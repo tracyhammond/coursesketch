@@ -419,7 +419,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- version -->
-		<jettyVersion>[9.2.2,)</jettyVersion> <!-- 9.2.2.v20140723 -->
+		<jettyVersion>9.3.0.M2</jettyVersion> <!-- 9.2.2.v20140723 -->
 		<protobufVersion>[2.6.0,)</protobufVersion>
 		<jodaVersion>[2.1,)</jodaVersion>
 		<mongodbVersion>[2.12.3,)</mongodbVersion>
