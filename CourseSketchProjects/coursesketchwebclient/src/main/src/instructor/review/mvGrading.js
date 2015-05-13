@@ -18,9 +18,7 @@ validateFirstRun(document.currentScript);
     function getSketches(callback, navigator) {
         CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
             if (isUndefined(sketchList)) {
-                if (element.isRunning()) {
-                    element.finishWaiting();
-                }
+                alert('This problem has no student submissions.');
                 return;
             }
             if (!isUndefined(callback)) {

@@ -31,12 +31,16 @@ function ProblemSelectionPanel() {
                 CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
             CourseSketch.dataListener.removeListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
                                 CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
-            if (isUndefined(item.data) || item.data === null) {
+            if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 throw new Error('The data is null!');
             }
             clickSelector.clearAllSelectedItems();
-            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-            var bankProblems = school.bankProblems;
+
+            var bankProblems = [];
+            for (var i = 0; i < item.data.length; i++) {
+                var decodedBankProblem = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().decode(item.data[i]);
+                bankProblems.push(decodedBankProblem);
+            }
             var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
                     clickSelector.toggleSelection(this);
                     if ($(this).hasClass(clickSelector.selectionClassName)) {
