@@ -5,16 +5,20 @@
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
-          href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+        href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
     <script src="/test/testUtilities/databaseHelper.js"></script>
 
 <!-- files needed for testing -->
-<link rel="import" href="/src/instructor/homePage/homePage.html" data-fake>
+<link rel="import" href="/src/instructor/gradebook/gradebookSelection.html" data-fake>
 <script>
+    CourseSketch.redirectContent = function(page, title) {
+            var courseid = CourseSketch.dataManager.getState('gradebookCourseid');
+            alert("You went to Gradebook " + courseid + "!");
+    };
     $(document).ready(function() {
         // calls the list with an empty array.
         CourseSketch.dataManager.getAllCourses = function(callback) {
-            callback(new DatabaseException());
+            callback(CourseSketch.fakeCourses);
         };
         CourseSketch.connection.isInstructor = true;
     });
@@ -22,3 +26,4 @@
 </head>
 <body>
 </body>
+</html>
