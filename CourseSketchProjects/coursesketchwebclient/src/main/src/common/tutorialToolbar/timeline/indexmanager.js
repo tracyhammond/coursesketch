@@ -10,7 +10,9 @@ function IndexManager (timeline) {
         toolArea.onclick = function() {
             switchIndex(getElementIndex(this));
         };
-        timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
+        if (!timeline.viewingMode) {
+            timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
+        }
     };
 
     /**
