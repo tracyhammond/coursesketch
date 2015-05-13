@@ -141,13 +141,11 @@
                 course.id = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT;
-                var SrlAssignmentdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 var assignment2 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 assignment.id = fakeID;
                 assignment.courseId = course.id;
-                SrlAssignmentdata.assignments = [ assignment];
-                itemResult.data =  SrlAssignmentdata.toArrayBuffer();
+                itemResult.data =  [assignment.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 expect(1);
@@ -275,7 +273,6 @@
                 course.id = generateUUID();
                 var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
                 itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT;
-                var SrlAssignmentdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 var assignment2 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 assignment.id = fakeID;
@@ -283,9 +280,8 @@
                 assignment.name ='preupdate';
                 assignment2.id = assignment.id;
                 assignment2.courseId = course.id;
-                assignment2.name = "Update complete!"
-                SrlAssignmentdata.assignments = [ assignment];
-                itemResult.data =  SrlAssignmentdata.toArrayBuffer();
+                assignment2.name = "Update complete!";
+                itemResult.data =  [assignment.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -313,16 +309,14 @@
                 var fakeID = generateUUID();
                 var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
                 course.id = generateUUID();
-                var SrlAssignmentdata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
                 var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 var assignment2 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
                 assignment.id = fakeID;
                 assignment.courseId = course.id;
-                assignment.name = "Preupdated"
+                assignment.name = "Preupdated";
                 assignment2.id = assignment.id;
                 assignment2.courseId = course.id;
-                assignment2.name = "Update complete!"
-                SrlAssignmentdata.assignments = [ assignment];
+                assignment2.name = "Update complete!";
                 waitForDatabase(dataManager, function() {
                     dataManager.setAssignment(assignment,  function() {
                         dataManager.updateAssignment(assignment2, function() {
