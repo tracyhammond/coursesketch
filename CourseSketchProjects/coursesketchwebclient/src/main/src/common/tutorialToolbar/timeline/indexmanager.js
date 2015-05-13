@@ -7,10 +7,12 @@ function IndexManager (timeline) {
     var current; // Used to set currently selected index class to 'focused'
     var index = -1; // Tracks the current index in the IndexManager
     this.addNewToolArea = function(toolArea) {
+        var localScope = this;
         toolArea.onclick = function() {
-            switchIndex(getElementIndex(this));
+            localScope.switchIndex(getElementIndex(this));
         };
         if (!timeline.viewingMode) {
+            console.log("dangit");
             timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
         }
     };
@@ -20,7 +22,7 @@ function IndexManager (timeline) {
      * This removes the focused class from the previously selected step
      * It then adds the focused class to the currently selected step
      */
-    function switchIndex(destination) {
+    this.switchIndex = function(destination) {
         if (destination === index) {
             return; // No need to switch if the destination index and current index are the same
         }
@@ -30,7 +32,7 @@ function IndexManager (timeline) {
         current = timeline.shadowRoot.querySelector('.timeline').children[destination]; // Continue btn is index 0. First toolArea is index 1.
         $(current).addClass('focused');
         changeListIndex(oldIndex, index);
-    }
+    };
 
     /**
      * @param {Object} child is the toolArea/step being queried

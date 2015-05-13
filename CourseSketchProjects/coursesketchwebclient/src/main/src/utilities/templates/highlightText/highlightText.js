@@ -119,7 +119,8 @@ function HighlightText() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        if (isUndefined(this.backgroundColor)) {
+        var viewingMode = (shadowRoot.querySelector('#backgroundColor') === null);
+        if (!viewingMode && isUndefined(this.backgroundColor)) {
             this.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
         }
         if (isUndefined(this.textColor)) {
