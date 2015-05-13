@@ -1,13 +1,15 @@
 /**
  * Manages the data for the tutorial.
  *
- * Talks with the remote server to simplify getting data from the database
- * @param parent
- * @param advanceDataListener
- * @param parentDatabase
- * @param sendData
- * @param request
- * @param buffer
+ * Talks with the remote server to simplify getting data from the database.
+ * Created by gigemjt on 5/12/15.
+ *
+ * @param {CourseSketchDatabase} parent the parent server
+ * @param {AdvanceDataListener} dataListener makes listening to the server easier
+ * @param {IndexedDB} database (Not used in this manager)
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
  * @constructor
  */
 function TutorialDataManager(parent, dataListener, database, sendData, Request, ByteBuffer) {
