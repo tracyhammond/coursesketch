@@ -2,10 +2,10 @@
 
     $(document).ready(function() {
         CourseSketch.gradeBook.loadGrades('courseId');
+        CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
     });
 
     CourseSketch.gradeBook.loadGrades = function(courseId) {
-        document.querySelector('.tabletalk').innerHtml = ''; // resets table
 
         CourseSketch.dataManager.getCourse(courseId, function(course) {
             // loads all of the grades
@@ -39,12 +39,13 @@
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
      */
     CourseSketch.gradeBook.populateGrades = function(listAssignments, listGrades, table) {
+        table.innerHTML = '';
         var assignmentMap = new Map();
         var studentMap = new Map();
         var header = document.createElement('thead');
         var row = document.createElement('tr');
         var nameLabel = document.createElement('th');
-        nameLabel.textContent = 'Sutdent Name';
+        nameLabel.textContent = 'Student Name';
         row.appendChild(nameLabel);
         for (var i = 0; i < listAssignments.length; i++) {
             assignmentMap.set(listAssignments[i], i);
@@ -76,7 +77,52 @@
             cell.textContent = key;
             row.insertBefore(cell, row.firstChild);
         });
-        
+
     };
 
+/**
+     * This creates tabs, one for each grading category.
+     *
+     * @param {List<String>} gradeCategories The list of categories for grades in the gradebook.
+     * @param {element} tabholder The element that will hold the tabs.
+     */
+    CourseSketch.gradeBook.createTabs = function(gradeCategories, tabholder) {
+        tabholder.innerHTML = '';
+        var tabs = document.createElement('ul');
+        tabs.className = 'tabs';
+        for (var i = 0; i < gradeCategories.length; i++) {
+                var item = document.createElement('li');
+                item.className = 'tab col';
+                var link = document.createElement('a');
+                link.textContent = gradeCategories[i];
+                link.href = "#" + gradeCategories[i];
+                item.appendChild(link);
+                tabs.appendChild(item);
+            }
+        tabholder.appendChild(tabs);
+        $('ul.tabs').tabs();
+    };
 })();
+
+/*
+    CourseSketch.gradeBook.populateGrades = function(listAssignments, listGrades, table) {
+        table.innerHTML = '';
+        var assignmentMap = new Map();
+        var studentMap = new Map();
+        var header = document.createElement('thead');
+        var row = document.createElement('tr');
+        var nameLabel = document.createElement('th');
+        nameLabel.textContent = 'Sutdent Name';
+        row.appendChild(nameLabel);
+        for (var i = 0; i < listAssignments.length; i++) {
+            assignmentMap.set(listAssignments[i], i);
+            var th = document.createElement('th');
+            th.textContent = listAssignments[i];
+            row.appendChild(th);
+        }
+        header.appendChild(row);
+        table.appendChild(header);
+
+        var body = document.createElement('tbody');
+        table.appendChild(body);
+*/
