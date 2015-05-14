@@ -13,6 +13,14 @@
  */
 function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
 
+    /**
+     * Adds a new grade change to the database.
+     *
+     * The protograde specifies how you are inserting a grade.
+     * The userId says who the grade is affecting.
+     * @param {ProtoGrade} protoGrade used to help create the query.  This should be similar to what you would expect it to return.
+     * @param {Function} callback called after the grade has been set.
+     */
     parent.setGrade = function(protoGrade, callback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
@@ -21,15 +29,39 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
         sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, protoGrade.toArrayBuffer());
     };
 
-    parent.getGrade = function(protoGrade) {
-        idList = [protoGrade.courseId, protoGrade.assignmentId, protoGrade.problemId, protoGrade.userId];
+    /**
+     * Returns a grade from the database.
+     *
+     * @param {ProtoGrade} protoGrade The grade in a similar format to what you want back.
+     */
+    parent.getGrade = function(protoGrade, callback) {
+        if (isUndefined(callback)) {
+            throw new DatabaseException('Calling getGrade with an undefined callback');
+        }
+
+        var isInstructor = CourseSketch.connection.isInstructor;
+        idList = [ protoGrade.courseId, protoGrade.assignmentId, protoGrade.problemId, protoGrade.userId ];
 
         var gradingQuery = CourseSketch.PROTOBUF_UTIL.GradingQuery();
         var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
         var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
 
-        gradingQuery.setPermissionLevel(isInsturctor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
+        gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
         gradingQuery.setSearchType(SearchType.ALL_GRADES);
+
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
+            // after listener is removed
+            if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                // not calling the state callback because this should skip that step.
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId));
+                return;
+            }
+
+            var decodedGrade = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getProtoGradeClass());
+            callback(decodedGrade);
+        });
 
         sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, idList, gradingQuery);
     };
@@ -40,6 +72,10 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
      * @param {Function} callback
      */
     parent.getAllAssignmentGrades = function(courseId, callback) {
+        if (isUndefined(callback)) {
+            throw new DatabaseException('Calling getGrade with an undefined callback');
+        }
+
         var isInstructor = CourseSketch.connection.isInstructor;
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
@@ -63,9 +99,9 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
         var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
         var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
 
-        gradingQuery.setPermissionLevel(isInsturctor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
+        gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
         gradingQuery.setSearchType(SearchType.ALL_GRADES);
 
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, [courseId], gradingQuery);
+        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, [ courseId ], gradingQuery);
     };
 }
