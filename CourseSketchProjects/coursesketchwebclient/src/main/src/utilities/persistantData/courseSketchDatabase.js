@@ -104,8 +104,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         var itemRequest = undefined;
         var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
         dataSend.items = [];
-        if (idList instanceof CourseSketch.PROTOBUF_UTIL.getItemRequestClass() && isUndefined(advanceQuery)) {
-            itemRequest = idList;
+        if (queryType instanceof CourseSketch.PROTOBUF_UTIL.getItemRequestClass() && isUndefined(advanceQuery)) {
+            itemRequest = queryType;
         } else {
             itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
             itemRequest.setQuery(queryType);

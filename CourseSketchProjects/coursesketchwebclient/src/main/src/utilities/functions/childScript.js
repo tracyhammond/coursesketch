@@ -42,4 +42,7 @@ var CourseSketch = parent.CourseSketch;
             CourseSketch.addNamespace(dataNamespaceList[i].trim());
         }
     }
+
+    CourseSketch.currentUrl = window.location.href;
+    console.log('Now on page ', CourseSketch.currentUrl);
 })();

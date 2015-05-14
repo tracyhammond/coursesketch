@@ -6,28 +6,6 @@ function Timeline () {
     this.initializeElement = function(templateClone) {
         this.viewingMode = false;
 
-        // DELETE THIS AFTER DAVID's STUFF IS IMPLEMENTED!!!!!
-        CourseSketch.dataManager.getTutorialList = function(url, callback) {
-            var tutorialList = [];
-            for (var i = 0; i < 5; i++) {
-                var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
-                tutorial.name = 'TUT' + i;
-                tutorial.description = 'DESCRIPT' + i;
-                tutorial.id = 'id' + i;
-                tutorialList.push(tutorial);
-            }
-            callback(tutorialList);
-        };
-
-        CourseSketch.dataManager.getTutorial = function(tutorialId, callback) {
-            var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
-            tutorial.id = tutorialId;
-            tutorial.steps = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-            callback(tutorial);
-        };
-
-        // END OF STUPID DAVID STUFF!
-
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
@@ -501,8 +479,9 @@ function Timeline () {
         tutorial.name = prompt('Enter a name for the tutorial: ', 'defaultName');
         tutorial.description = prompt('Enter a description for the tutorial: ', 'defaultDescription');
         tutorial.steps = this.updateList;
+        tutorial.url = CourseSketch.currentUrl;
         CourseSketch.dataManager.insertTutorial(tutorial);
-    }
+    };
 
     /**
      * Inserts a tutorial into the server
