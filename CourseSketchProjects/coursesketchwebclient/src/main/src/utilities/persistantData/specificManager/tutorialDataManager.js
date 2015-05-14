@@ -130,14 +130,6 @@ function TutorialDataManager(parent, advanceDataListener, database, sendData, Re
         if (isUndefined(tutorialCallback)) {
             throw new DatabaseException('Calling get Tutorial with an undefined callback');
         }
-        var called = false;
-
-        function callOnce(tutorial) {
-            if (!called) {
-                called = true;
-                tutorialCallback(tutorial[0]);
-            }
-        }
 
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.TUTORIAL, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
@@ -145,30 +137,18 @@ function TutorialDataManager(parent, advanceDataListener, database, sendData, Re
 
             // after listener is removed
             if (isUndefined(item.data) || item.data === null) {
-                tutorialCallbackComplete(new DatabaseException('The data sent back from the server does not exist.'));
+                tutorialCallback(new DatabaseException('The data sent back from the server does not exist.'));
                 return;
             }
-            var tutorial = CourseSketch.PROTOBUF_UTIL.getTutorial().decode(item.data[0]);
+            var tutorial = CourseSketch.PROTOBUF_UTIL.getTutorialClass().decode(item.data[0]);
             if (isUndefined(tutorial) || tutorial instanceof DatabaseException) {
-                var result = tutorial;
-                if (isUndefined(result)) {
-                    result = new DatabaseException('Nothing is in the server database!',
-                        'Grabbing tutorial from server: ' + tutorialIdList);
-                }
-                if (!isUndefined(tutorialCallbackComplete)) {
-                    tutorialCallbackComplete(result);
-                }
-                return;
+                tutorialCallback(new DatabaseException('Nothing is in the server database!',
+                    'Grabbing tutorial from server: ' + tutorialIdList));
             }
-            for (var i = 0; i < school.tutorials.length; i++) {
-                localScope.setTutorial(school.tutorials[i]);
-                tutorialList.push(school.tutorials[i]);
-            }
-            tutorialCallbackComplete(tutorialList);
-            tutorialIdList = null;
+            tutorialCallback(tutorial);
         });
         // creates a request that is then sent to the server
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.TUTORIAL, leftOverId);
+        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.TUTORIAL, tutorialId);
     }
 
     parent.getTutorial = getTutorial;
