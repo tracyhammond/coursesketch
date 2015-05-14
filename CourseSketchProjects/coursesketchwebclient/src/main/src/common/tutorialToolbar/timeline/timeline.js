@@ -34,13 +34,21 @@ function Timeline () {
             console.log(e);
         }
 
-        this.tutorialList(this);
 
-        shadowRoot.querySelector('.btn').style.display = 'none';
+
+
 
         shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
             this.parentNode.removeChild(this);
         };
+    };
+
+    /**
+     * Call this to load the existing tutorials for the current page.
+     */
+    this.loadExistingTutorials = function() {
+        shadowRoot.querySelector('.btn').style.display = 'none';
+        this.tutorialList(this);
     };
 
     /**
