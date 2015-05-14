@@ -290,7 +290,7 @@ public final class SubmissionManager {
         tutorial.setUrl(dbTutorial.get(URL).toString());
         if (dbTutorial.containsField(UPDATELIST)) {
             try {
-                tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)).toByteString());
+                tutorial.setSteps(Commands.SrlUpdateList.parseFrom((byte[]) dbTutorial.get(UPDATELIST)));
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
                 throw new DatabaseAccessException("unable to decode steps", e);

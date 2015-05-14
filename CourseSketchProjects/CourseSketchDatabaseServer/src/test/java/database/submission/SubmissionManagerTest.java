@@ -15,12 +15,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import protobuf.srl.commands.Commands;
-import protobuf.srl.submission.Submission;
 import protobuf.srl.tutorial.TutorialOuterClass;
 
 import java.util.List;
 
-import static database.DatabaseStringConstants.*;
+import static database.DatabaseStringConstants.DESCRIPTION;
+import static database.DatabaseStringConstants.NAME;
+import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.TUTORIAL_COLLECTION;
+import static database.DatabaseStringConstants.UPDATELIST;
+import static database.DatabaseStringConstants.URL;
+import static database.DatabaseStringConstants.URL_HASH;
 
 /**
  * Created by kyle on 4/14/15.
@@ -51,7 +56,7 @@ public class SubmissionManagerTest {
         tutorialObject.setUrl(url);
         tutorialObject.setDescription(description);
         steps = Commands.SrlUpdateList.newBuilder();
-        tutorialObject.setSteps(steps.build().toByteString());
+        tutorialObject.setSteps(steps.build());
 
         fakeDBObject = new BasicDBObject(DESCRIPTION, tutorialObject.getDescription()).append(NAME, tutorialObject.getName())
                 .append(URL, tutorialObject.getUrl()).append(URL_HASH, tutorialObject.getUrl().hashCode())
