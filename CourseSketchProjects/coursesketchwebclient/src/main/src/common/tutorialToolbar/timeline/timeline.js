@@ -20,7 +20,6 @@ function Timeline () {
             console.log(e);
         }
 
-
         shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
             this.parentNode.removeChild(this);
         };
@@ -49,37 +48,37 @@ function Timeline () {
     this.tutorialList = function(tutorialList) {
         var shadowRoot = this.shadowRoot;
         var localScope = this;
-        var newTutorial = document.createElement('div');
-        var timelinefd = this.shadowRoot.querySelector('.timeline');
-        var addfd = document.createElement('div');
+        var timeline = this.shadowRoot.querySelector('.timeline');
+        var createNewTutorialButton = document.createElement('div');
 
         // displays the list of tutorials and their info.
         for (var i = 0; i < tutorialList.length; i++) {
-            (function(index) {
-                var viewTutorial = document.createElement('div');
-                var listfd = document.createElement('div');
-                listfd.title = i;
-                listfd.className = 'smallicon';
-                timelinefd.appendChild(listfd);
-                viewTutorial.onclick = function() {
-                    loadTutorial();
-                };
-            })(i);
+            var tutorial = tutorialList[i];
+            console.log(tutorial);
+            var existingTutorial = document.createElement('div');
+            existingTutorial.title = tutorial.name;
+            existingTutorial.className = 'smallicon';
+            existingTutorial.id = tutorial.id;
+            existingTutorial.onclick = function() {
+                console.log('LOADING EXISTING TUTORIAL');
+                console.log(this.id);
+                loadTutorialFromServer(localScope, this.id, true);
+            };
+            timeline.appendChild(existingTutorial);
         }
-        addfd.title = 'Create new tutorial';
-        addfd.className = 'newicon';
-        timelinefd.appendChild(addfd);
-        addfd.onclick = function() {
+        createNewTutorialButton.title = 'Create new tutorial';
+        createNewTutorialButton.className = 'newicon';
+        timeline.appendChild(createNewTutorialButton);
+        createNewTutorialButton.onclick = function() {
             localScope.addToolArea(shadowRoot.querySelector('.timeline'));
             localScope.continueButton(shadowRoot);
             for (var i = 0; i < tutorialList.length; i++) {
                 // remove first instance of the file descriptor
-                timelinefd.removeChild(shadowRoot.querySelector('.smallicon'));
+                timeline.removeChild(shadowRoot.querySelector('.smallicon'));
             }
-            timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
+            timeline.removeChild(shadowRoot.querySelector('.newicon'));
             shadowRoot.querySelector('.btn').style.display = 'inline-block';
             shadowRoot.querySelector('.savetutorial').style.display = 'initial';
-                        console.log('localScope', localScope);
             setupSaveButton(localScope);
         };
     };
@@ -146,7 +145,7 @@ function Timeline () {
             this.index.switchIndex(1); // Sets indexManager to 1st step as currentStep. Step indexes start from 1. Reason in indexManager.
             this.updateList.list[0].redo();
         }
-    }
+    };
 
     // returns command class of command type
     function getCommandClass(commandType) {
@@ -515,12 +514,13 @@ function Timeline () {
         document.normalize();
     };
 
-    function loadTutorial(timeline, tutorialId, viewingMode) {
-        timeline.parentNode.removeChild(timeline);
-        timeline = document.createElement('entire-timeline');
-        document.body.appendChild(timeline);
-        CourseSketch.dataManager.loadTutorial(tutorialId, function(tutorial) {
-            timeline.loadTutorial(tutorial, viewingMode);
+    function loadTutorialFromServer(timeline, tutorialId, viewingMode) {
+        CourseSketch.dataManager.getTutorial(tutorialId, function(tutorial) {
+            var parentNode = timeline.parentNode;
+            parentNode.removeChild(timeline);
+            var newTimeline = document.createElement('entire-timeline');
+            parentNode.appendChild(newTimeline);
+            newTimeline.loadTutorial(tutorial, viewingMode);
         });
     }
 
