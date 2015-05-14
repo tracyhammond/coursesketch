@@ -19,6 +19,13 @@ function Timeline () {
             callback(tutorialList);
         };
 
+        CourseSketch.dataManager.getTutorial = function(tutorialId, callback) {
+            var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
+            tutorial.id = tutorialId;
+            tutorial.steps = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+            callback(tutorial);
+        };
+
         // END OF STUPID DAVID STUFF!
 
         var shadowRoot = this.createShadowRoot();
@@ -486,17 +493,14 @@ function Timeline () {
     }
 
     this.clearTimeline = function() {
-        console.log(this.index.getCurrentUpdate());
         var currentStep = this.index.getCurrentUpdate();
         for (var i = 0; i < currentStep.commands.length; i++) {
             var commandId = currentStep.commands[i].commandId;
             var elementToDelete = document.getElementById(commandId);
-            console.log(elementToDelete);
             if (this.viewingMode) {
                 elementToDelete.saveData();
             }
             elementToDelete.parentNode.removeChild(elementToDelete);
-            //this.updateList.list[i].undo();
         }
         $('.highlightedText').contents().unwrap();
         document.normalize();
