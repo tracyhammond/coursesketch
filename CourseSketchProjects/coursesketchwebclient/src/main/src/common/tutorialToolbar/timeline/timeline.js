@@ -115,6 +115,8 @@ function Timeline () {
     this.loadTutorial = function(tutorial, viewingMode) {
         this.viewingMode = viewingMode;
         this.updateList = tutorial.steps;
+        console.log(this.updateList);
+        var shadowRoot = this.shadowRoot;
         var initialToolArea = this.shadowRoot.querySelector('.toolarea');
         initialToolArea.parentNode.removeChild(initialToolArea); // Removes default toolArea that is added when a tutorial object is initialized
         for (var i = 0; i < this.updateList.list.length; i++) {
