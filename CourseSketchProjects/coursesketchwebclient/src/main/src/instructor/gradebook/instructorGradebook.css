@@ -1,22 +1,12 @@
 .tabletalk {
-    border-color: black;
-    border-style: solid;
-    border-width: 2 px;
-    border-radius: 10%;
-    width: 90%;
-    height: 100%;
-    margin-top: 10%;
-    margin-right: auto;
-    margin-left: auto;
+    border-collapse: collapse;
+    display: block-inline;
 }
 
 td {
-    border-color: black;
-    border-style: solid;
-    border-width: 2 px;
-    border-radius:20%
+    white-space:nowrap;
 }
-
+/*
 th {
     border-color: black;
     border-style: none;
@@ -25,8 +15,8 @@ th {
     background-color: #C2E0FF;
 }
 
-.tabletalk: hover td  div {
-    background-color: blue;
+.tabletalk: hoverable td  div {
+    background-color: yellow;
 }
 
 .tabletalk  th div {
@@ -37,3 +27,5 @@ th {
     border-bottom-style: solid;
     border-width: 1px;
 }
+
+*/
