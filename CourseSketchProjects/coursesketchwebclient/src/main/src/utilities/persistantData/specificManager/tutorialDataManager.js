@@ -99,7 +99,7 @@ function TutorialDataManager(parent, advanceDataListener, database, sendData, Re
             tutorialList = [];
             for (var i = 0; i < item.data.length; i++) {
                 var tutorial = CourseSketch.PROTOBUF_UTIL.getTutorialClass().decode(item.data[i]);
-                tutorialList.append(tutorial);
+                tutorialList.push(tutorial);
             }
             tutorialCallback(tutorialList);
         });
