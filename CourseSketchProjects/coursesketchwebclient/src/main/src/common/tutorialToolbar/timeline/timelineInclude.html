@@ -42,6 +42,7 @@
             };
 
             newElement.detachedCallback = function() {
+                this.clearTimeline();
             };
 
             document.registerElement('entire-timeline', {
