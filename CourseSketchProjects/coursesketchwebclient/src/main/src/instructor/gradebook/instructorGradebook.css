@@ -1,6 +1,5 @@
 .tabletalk {
     border-collapse: collapse;
-    display: block-inline;
 }
 
 td {
@@ -15,6 +14,10 @@ td {
 td:hover {
     background-color:#fffde7;
 
+}
+
+td:first-child:hover {
+    background-color:inherit;
 }
 /*
 th {
