@@ -1,6 +1,8 @@
 package handlers;
 
 import com.google.protobuf.GeneratedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 
@@ -10,6 +12,12 @@ import java.util.List;
  * Created by gigemjt on 1/2/15.
  */
 public final class ResultBuilder {
+
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ResultBuilder.class);
 
     /**
      * Utility class.
@@ -34,9 +42,12 @@ public final class ResultBuilder {
     public static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final GeneratedMessage... data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
+            LOG.debug("Building {} results ", data.length);
             for (GeneratedMessage message : data) {
                 result.addData(message.toByteString());
             }
+        } else {
+            LOG.warn("Data was null no results were built");
         }
         result.setQuery(type);
         if (text != null) {
@@ -63,9 +74,12 @@ public final class ResultBuilder {
     public static Data.ItemResult buildResult(final String text, final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
+            LOG.debug("Building {} results ", data.size());
             for (GeneratedMessage message : data) {
                 result.addData(message.toByteString());
             }
+        } else {
+            LOG.warn("Data was null no results were built");
         }
         result.setQuery(type);
         if (text != null) {
@@ -134,10 +148,14 @@ public final class ResultBuilder {
     public static Data.ItemResult buildResult(final Data.ItemQuery type, final GeneratedMessage... data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
+            LOG.debug("Building {} results ", data.length);
             for (GeneratedMessage message : data) {
                 result.addData(message.toByteString());
             }
+        } else {
+            LOG.warn("Data was null no results were built");
         }
+
         result.setQuery(type);
         return result.build();
     }
@@ -157,9 +175,12 @@ public final class ResultBuilder {
     public static Data.ItemResult buildResult(final Data.ItemQuery type, final List<? extends GeneratedMessage> data) {
         final Data.ItemResult.Builder result = Data.ItemResult.newBuilder();
         if (data != null) {
+            LOG.debug("Building {} results ", data.size());
             for (GeneratedMessage message : data) {
                 result.addData(message.toByteString());
             }
+        } else {
+            LOG.warn("Data was null no results were built");
         }
         result.setQuery(type);
         return result.build();
