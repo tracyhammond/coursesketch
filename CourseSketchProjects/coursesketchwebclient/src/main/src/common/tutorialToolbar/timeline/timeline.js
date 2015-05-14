@@ -11,8 +11,8 @@ function Timeline () {
             var tutorialList = [];
             for (var i = 0; i < 5; i++) {
                 var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
-                tutorial.name = "TUT" + i;
-                tutorial.description = "DESCRIPT" + i;
+                tutorial.name = 'TUT' + i;
+                tutorial.description = 'DESCRIPT' + i;
                 tutorial.id = 'id' + i;
                 tutorialList.push(tutorial);
             }
@@ -25,15 +25,8 @@ function Timeline () {
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         this.index = new IndexManager(this);
-<<<<<<< HEAD
-        this.tutorialList(this);
-
-        undoCreator();
-        redoCreator();
-
-        shadowRoot.querySelector('.btn').style.display = 'none';
         shadowRoot.querySelector('.savetutorial').style.display = 'none';
-=======
+
         this.addToolArea(shadowRoot.querySelector('.timeline'));
         this.continueButton(shadowRoot);
         try {
@@ -44,10 +37,6 @@ function Timeline () {
         }
 
 
-
-
-
->>>>>>> Tutorial
         shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
             this.parentNode.removeChild(this);
         };
@@ -78,39 +67,6 @@ function Timeline () {
         var newTutorial = document.createElement('div');
         var timelinefd = this.shadowRoot.querySelector('.timeline');
         var addfd = document.createElement('div');
-<<<<<<< HEAD
-        CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
-            // displays the list of tutorials and their info.
-            for (var i = 0; i < tutorialList.length; i++) {
-                (function(index) {
-                    var viewTutorial = document.createElement('div');
-                    var listfd = document.createElement('div');
-                    listfd.title = i;
-                    listfd.className = 'smallicon';
-                    timelinefd.appendChild(listfd);
-                    viewTutorial.onclick = function() {
-                        // do tutorial loading here
-                    };
-                })(i);
-            }
-            addfd.title = 'Create new tutorial';
-            addfd.className = 'newicon';
-            timelinefd.appendChild(addfd);
-            addfd.onclick = function() {
-                localScope.addToolArea(shadowRoot.querySelector('.timeline'));
-                localScope.continueButton(shadowRoot);
-                for (var i = 0; i < tutorialList.length; i++) {
-                    // remove first instance of the file descriptor
-                    timelinefd.removeChild(shadowRoot.querySelector('.smallicon'));
-                }
-                timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
-                shadowRoot.querySelector('.btn').style.display = 'inline-block';
-                shadowRoot.querySelector('.savetutorial').style.display = 'initial';
-                saveTutorial(localScope);
-            };
-        });
-
-=======
 
         // displays the list of tutorials and their info.
         for (var i = 0; i < tutorialList.length; i++) {
@@ -137,8 +93,8 @@ function Timeline () {
             }
             timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
             shadowRoot.querySelector('.btn').style.display = 'inline-block';
+            saveTutorial(localScope);
         };
->>>>>>> Tutorial
     };
 
     /**
