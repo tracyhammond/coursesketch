@@ -161,6 +161,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         submissionManager = new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         lectureDataManager = new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
         slideDataManager = new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        tutorialDataManager = new TutorialDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
 
         console.log('Database is ready for use! with user: ' + userId);
         databaseFinishedLoading = true;
