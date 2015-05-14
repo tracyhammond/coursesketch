@@ -78,7 +78,7 @@ function Timeline () {
                 listfd.className = 'smallicon';
                 timelinefd.appendChild(listfd);
                 viewTutorial.onclick = function() {
-                    // do tutorial loading here
+                    loadTutorial();
                 };
             })(i);
         }
@@ -500,6 +500,15 @@ function Timeline () {
         }
         $('.highlightedText').contents().unwrap();
         document.normalize();
+    };
+
+    function loadTutorial(timeline, tutorialId, viewingMode) {
+        timeline.parentNode.removeChild(timeline);
+        timeline = document.createElement('entire-timeline');
+        document.body.appendChild(timeline);
+        CourseSketch.dataManager.loadTutorial(tutorialId, function(tutorial) {
+            timeline.loadTutorial(tutorial, viewingMode);
+        });
     }
 
 }
