@@ -12,6 +12,11 @@ import java.util.List;
 public final class ResultBuilder {
 
     /**
+     * The string used to separate ids when returning a result.
+     */
+    public static final String ID_SEPARATOR = " : ";
+
+    /**
      * Utility class.
      */
     private ResultBuilder() { }
