@@ -37,7 +37,7 @@ function Timeline () {
             toolElement.parentNode.removeChild(toolElement);
         }
         var localScope = this;
-        CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
+        CourseSketch.dataManager.getTutorialList(CourseSketch.currentUrl, function(tutorialList) {
             localScope.tutorialList(tutorialList);
         });
     };
