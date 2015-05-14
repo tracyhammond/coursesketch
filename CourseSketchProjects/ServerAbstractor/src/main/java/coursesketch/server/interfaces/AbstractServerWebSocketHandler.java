@@ -3,7 +3,9 @@ package coursesketch.server.interfaces;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
+import utilities.ExceptionUtilities;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
@@ -227,14 +229,9 @@ public abstract class AbstractServerWebSocketHandler {
      * @return {@link Request} with a message explaining what happened.
      */
     public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientWebSocket> connectionType) {
-        final Request.Builder response = Request.newBuilder();
-        if (req == null) {
-            response.setRequestType(Request.MessageType.ERROR);
-        } else {
-            response.setRequestType(req.getRequestType());
-        }
-        response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
-        return response.build();
+        final Message.ProtoException exception = ExceptionUtilities.createProtoException(new Exception("A server with connection type: " +
+                connectionType.getSimpleName() + " Is not connected correctly"));
+        return ExceptionUtilities.createExceptionRequest(exception, req);
     }
 
     /**
