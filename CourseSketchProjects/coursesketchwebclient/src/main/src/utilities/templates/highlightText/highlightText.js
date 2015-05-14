@@ -53,7 +53,7 @@ function HighlightText() {
         return true;
     }
 
-    /**
+    /**var viewingMode = (shadowRoot.querySelector('#backgroundColor') === null); // If the element doesn't exist, we are in viewing mode.
      * Wraps the selected text in span tags with the color of the color selector
      * If the selection crosses elements, there is an alert to notify the user of an invalid selection
      * The selection must also contain characters (no alert for this)
@@ -119,10 +119,11 @@ function HighlightText() {
         var localScope = this;
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        if (isUndefined(this.backgroundColor)) {
+        var viewingMode = (shadowRoot.querySelector('#backgroundColor') === null); // If the element doesn't exist, we are in viewing mode.
+        if (!viewingMode && isUndefined(this.backgroundColor)) {
             this.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
         }
-        if (isUndefined(this.textColor)) {
+        if (!viewingMode && isUndefined(this.textColor)) {
             this.textColor = shadowRoot.querySelector('#textColor').value;
         }
         this.startPath = undefined;
@@ -131,34 +132,36 @@ function HighlightText() {
         this.endOffset = undefined;
         this.highlightProto = undefined;
 
-        // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
-        shadowRoot.querySelector('#highlightMode').onchange = function() {
-            if (shadowRoot.querySelector('#highlightMode').checked) {
-                $(document).on('mouseup', highlightText.bind(this));
-            } else {
-                $(document).off('mouseup', highlightText.bind(this));
-            }
-        }.bind(this); // Binds this so the highlightText function can write to variables (this is to define the correct scope)
+        if (!viewingMode) {
+            // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
+            shadowRoot.querySelector('#highlightMode').onchange = function() {
+                if (shadowRoot.querySelector('#highlightMode').checked) {
+                    $(document).on('mouseup', highlightText.bind(this));
+                } else {
+                    $(document).off('mouseup', highlightText.bind(this));
+                }
+            }.bind(this); // Binds this so the highlightText function can write to variables (this is to define the correct scope)
 
-        // Click action for the 'X' that closes the dialog
-        shadowRoot.querySelector('#closeButton').onclick = function() {
-            if (confirm('You are about to permanently remove the highlighting from this step.')) {
-                $(document).off('mouseup', highlightText); // Removes the bound mouseup event
-                localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate); // Gets and calls finishedCallback
-            }
-        };
+            // Click action for the 'X' that closes the dialog
+            shadowRoot.querySelector('#closeButton').onclick = function() {
+                if (confirm('You are about to permanently remove the highlighting from this step.')) {
+                    $(document).off('mouseup', highlightText); // Removes the bound mouseup event
+                    localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate); // Gets and calls finishedCallback
+                }
+            };
 
-        // Updates value of backgroundColor when the color selector value is changed by the user
-        shadowRoot.querySelector('#backgroundColor').onchange = function() {
-            localScope.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
-        };
+            // Updates value of backgroundColor when the color selector value is changed by the user
+            shadowRoot.querySelector('#backgroundColor').onchange = function() {
+                localScope.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
+            };
 
-        // Updates value of textColor when the color selecor value is changed by the user
-        shadowRoot.querySelector('#textColor').onchange = function() {
-            localScope.textColor = shadowRoot.querySelector('#textColor').value;
-        };
+            // Updates value of textColor when the color selecor value is changed by the user
+            shadowRoot.querySelector('#textColor').onchange = function() {
+                localScope.textColor = shadowRoot.querySelector('#textColor').value;
+            };
 
-        enableDragging();
+            enableDragging();
+        }
         this.loadData(this.loadedData);
     };
 
@@ -241,11 +244,15 @@ function HighlightText() {
             }
         }
 
-        // This will set the text/background color to the last used combination
-        shadowRoot.querySelector('#textColor').value = textColor;
-        shadowRoot.querySelector('#backgroundColor').value = backgroundColor;
-        this.textColor = textColor;
-        this.backgroundColor = backgroundColor;
+        var viewingMode = (shadowRoot.querySelector('#backgroundColor') === null); // If the element doesn't exist, we are in viewing mode.
+
+        if (!viewingMode) {
+            // This will set the text/background color to the last used combination
+            shadowRoot.querySelector('#textColor').value = textColor;
+            shadowRoot.querySelector('#backgroundColor').value = backgroundColor;
+            this.textColor = textColor;
+            this.backgroundColor = backgroundColor;
+        }
     };
 
     this.getFinishedCallback = function() {
