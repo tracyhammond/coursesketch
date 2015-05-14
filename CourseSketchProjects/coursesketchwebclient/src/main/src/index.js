@@ -10,7 +10,6 @@ CourseSketch.redirector = {};
 $(document).ready(
 function() {
 
-    
     /**
      * @returns {Element} the element that encapsulates the exception.
      */
@@ -150,17 +149,22 @@ function() {
             // clicked.
         });
 
+        /**
+         * Shows the menu sliding.
+         * @param {Boolean} value true to close the menu false to open the menu.
+         * @returns {Boolean} returns false.
+         */
         function animateMenu(value) {
             if (value) { // close menu
                 $('#content').animate({
-                    marginLeft: '0px',
+                    marginLeft: '0px'
                 }, 300, function() {
                     menuStatus = false;
                 });
                 return false;
             } else { // open menu
                 $('#content').animate({
-                    marginLeft: '200px',
+                    marginLeft: '200px'
                 }, 300, function() {
                     menuStatus = true;
                 });
