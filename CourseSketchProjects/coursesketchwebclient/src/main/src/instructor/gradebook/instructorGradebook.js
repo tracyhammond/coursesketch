@@ -43,6 +43,9 @@
         var studentMap = new Map();
         var header = document.createElement('thead');
         var row = document.createElement('tr');
+        var nameLabel = document.createElement('th');
+        nameLabel.textContent = 'Sutdent Name';
+        row.appendChild(nameLabel);
         for (var i = 0; i < listAssignments.length; i++) {
             assignmentMap.set(listAssignments[i], i);
             var th = document.createElement('th');
@@ -67,6 +70,13 @@
             var cell = columnList[assignmentMap.get(assignmentId)];
             cell.textContent = protoGrade.getCurrentGrade();
         }
+        studentMap.forEach(function(value, key, map) {
+            row = map.get(key);
+            var cell = document.createElement('td');
+            cell.textContent = key;
+            row.insertBefore(cell, row.firstChild);
+        });
+        
     };
 
 })();

@@ -6,6 +6,10 @@
 td {
     white-space:nowrap;
 }
+
+td:hover {
+    background-color:#fff9c4;
+}
 /*
 th {
     border-color: black;
