@@ -1,0 +1,18 @@
+<html>
+<head>
+
+    <template id="voice-recording-template">
+        <style onload="init()">
+            @import "/src/utilities/templates/voiceRecording/voiceRecording.css";
+        </style>
+        <script src="/src/utilities/templates/voiceRecording/cdn/recordmp3.js"></script>
+        <table id = "button-bar">
+            <tr><td style="width:5%"><input type="button" value=" " id="recordBtn" /></td>
+                <td style="width:5%"><button type="submit" id = "redo-btn" ></button></td>
+                <td style="width:5%"><button type="submit" id = "undo-btn" ></button></td>
+                <td></td>
+        </table>
+        <sketch-surface id="sketchCanvas" style="height:80%; width:80%; border: 5px solid red;"></sketch-surface>
+    </template>
+</head>
+</html>
