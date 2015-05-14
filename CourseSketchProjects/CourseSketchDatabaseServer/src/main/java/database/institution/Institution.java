@@ -444,7 +444,19 @@ public interface Institution {
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
-     TutorialOuterClass.Tutorial getTutorial(final String userId, final String tutorialId)
+    TutorialOuterClass.Tutorial getTutorial(final String userId, final String tutorialId)
+            throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Gets a list of tutorials based on the url
+     * @param userId
+     * @param url
+     * @param page
+     * @return
+     * @throws DatabaseAccessException
+     * @throws AuthenticationException
+     */
+    List<TutorialOuterClass.Tutorial> getTutorialList(String userId, String url, int page)
             throws DatabaseAccessException, AuthenticationException;
 
     /**
