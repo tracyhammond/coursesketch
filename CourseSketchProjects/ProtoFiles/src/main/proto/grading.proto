@@ -2,11 +2,6 @@ import "util.proto";
 
 package protobuf.srl.grading;
 
-// Represents the grading policy for a course.
-message ProtoGradeHolder {
-    repeated ProtoGrade grades = 1;
-}
-
 message ProtoGradingPolicy {
     required string courseId = 1;                           // CourseId that the gradingPolicy belongs to.
     optional PolicyType policyType = 2 [default = PERCENT]; // Tells if the gradingPolicy is percent or point based.

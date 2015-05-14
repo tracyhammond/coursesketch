@@ -13,7 +13,6 @@ import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
-import protobuf.srl.grading.Grading.ProtoGradeHolder;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data;
@@ -195,9 +194,7 @@ public final class DataRequestHandler {
                         break;
                         case GRADE: {
                             final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, userId);
-                            final ProtoGradeHolder.Builder gradeListHolder = ProtoGradeHolder.newBuilder();
-                            gradeListHolder.addAllGrades(gradeList);
-                            results.add(ResultBuilder.buildResult(gradeListHolder.build().toByteString(), ItemQuery.GRADE));
+                            results.add(ResultBuilder.buildResult(ItemQuery.GRADE, gradeList));
                         }
                         break;
                         default:

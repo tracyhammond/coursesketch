@@ -8,6 +8,8 @@ import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading;
+import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
@@ -24,6 +26,8 @@ import protobuf.srl.school.School.SrlUser;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+
+import static handlers.ResultBuilder.ID_SEPARATOR;
 
 import java.util.ArrayList;
 
@@ -43,11 +47,6 @@ public final class DataInsertHandler {
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DataInsertHandler.class);
-
-    /**
-     * The string used to separate ids when returning a result.
-     */
-    private static final String ID_SEPARATOR = " : ";
 
     /**
      * A message returned when the insert was successful.
@@ -150,6 +149,11 @@ public final class DataInsertHandler {
                             final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
                             LOG.info("Experiment: {}", experiment);
                             instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
+                        }
+                        break;
+                        case GRADE: {
+                            final Grading.ProtoGrade grade = ProtoGrade.parseFrom(itemSet.getData());
+                            instance.addGrade(userId, grade);
                         }
                         break;
                         default:
