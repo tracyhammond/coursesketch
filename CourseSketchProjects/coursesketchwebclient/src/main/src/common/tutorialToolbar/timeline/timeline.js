@@ -32,7 +32,6 @@ function Timeline () {
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         this.index = new IndexManager(this);
-        shadowRoot.querySelector('.savetutorial').style.display = 'none';
 
         this.addToolArea(shadowRoot.querySelector('.timeline'));
         this.continueButton(shadowRoot);
@@ -53,6 +52,7 @@ function Timeline () {
      * Call this to load the existing tutorials for the current page.
      */
     this.loadExistingTutorials = function() {
+        this.shadowRoot.querySelector('.savetutorial').style.display = 'none';
         this.shadowRoot.querySelector('.btn').style.display = 'none';
         var toolElement = this.shadowRoot.querySelector('.toolarea');
         if (toolElement !== null) {
@@ -100,7 +100,9 @@ function Timeline () {
             }
             timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
             shadowRoot.querySelector('.btn').style.display = 'inline-block';
-            saveTutorial(localScope);
+            shadowRoot.querySelector('.savetutorial').style.display = 'initial';
+                        console.log('localScope', localScope);
+            setupSaveButton(localScope);
         };
     };
 
@@ -158,9 +160,11 @@ function Timeline () {
         }
         // Creation mode shows last step, viewing mode shows first step
         if (!viewingMode) {
+            shadowRoot.querySelector('.savetutorial').style.display = 'initial';
             this.index.switchIndex(this.updateList.list.length); // Sets indexManager to lastStep as the currentStep
             this.updateList.list[this.updateList.list.length - 1].redo();
         } else {
+            shadowRoot.querySelector('.savetutorial').style.display = 'none';
             this.index.switchIndex(1); // Sets indexManager to 1st step as currentStep. Step indexes start from 1. Reason in indexManager.
             this.updateList.list[0].redo();
         }
@@ -491,17 +495,31 @@ function Timeline () {
             }
         });
     }
-    function saveTutorial(timeLine) {
-        var savefd = timeLine.shadowRoot.querySelector('.savetutorial');
-        savefd.onclick = function() {
-            //save tutorial
+    this.saveTutorial = function() {
+        var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
+        tutorial.id = generateUUID();
+        tutorial.name = prompt('Enter a name for the tutorial: ', 'defaultName');
+        tutorial.description = prompt('Enter a description for the tutorial: ', 'defaultDescription');
+        tutorial.steps = this.updateList;
+        CourseSketch.dataManager.insertTutorial(tutorial);
+    }
 
+    /**
+     * Inserts a tutorial into the server
+     */
+    function setupSaveButton(timeline) {
+        var savefd = timeline.shadowRoot.querySelector('.savetutorial');
+                  console.log('timeline', timeline);
+        savefd.onclick = function() {
+            console.log('timeline', timeline);
+            //save tutorial
+            timeline.saveTutorial();
             // reset timeline!
-            var timeParent = timeLine.parentNode;
-            timeParent.removeChild(timeLine);
-            //var timeline = document.createElement('entire-timeline');
-            //timeParent.appendChild(timeline);
-        }
+//            var timeParent = timeline.parentNode;
+//            timeParent.removeChild(timeline);
+//            var timeline = document.createElement('entire-timeline');
+//            timeParent.appendChild(timeline);
+        };
     }
 
     this.clearTimeline = function() {
