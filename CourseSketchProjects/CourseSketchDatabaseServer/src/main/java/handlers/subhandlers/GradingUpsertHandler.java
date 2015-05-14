@@ -20,6 +20,7 @@ public final class GradingUpsertHandler {
     }
 
     /**
+     * Handles grading upsert requests to the server.
      *
      * @param institution The database interface.
      * @param itemSet The upsert object being sent.
