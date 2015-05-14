@@ -11,8 +11,8 @@ function Timeline () {
             var tutorialList = [];
             for (var i = 0; i < 5; i++) {
                 var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
-                tutorial.name = "TUT" + i;
-                tutorial.description = "DESCRIPT" + i;
+                tutorial.name = 'TUT' + i;
+                tutorial.description = 'DESCRIPT' + i;
                 tutorial.id = 'id' + i;
                 tutorialList.push(tutorial);
             }
@@ -32,6 +32,8 @@ function Timeline () {
         shadowRoot.appendChild(templateClone);
         this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
         this.index = new IndexManager(this);
+        shadowRoot.querySelector('.savetutorial').style.display = 'none';
+
         this.addToolArea(shadowRoot.querySelector('.timeline'));
         this.continueButton(shadowRoot);
         try {
@@ -40,9 +42,6 @@ function Timeline () {
         } catch(e) {
             console.log(e);
         }
-
-
-
 
 
         shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
@@ -101,6 +100,7 @@ function Timeline () {
             }
             timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
             shadowRoot.querySelector('.btn').style.display = 'inline-block';
+            saveTutorial(localScope);
         };
     };
 
@@ -490,6 +490,18 @@ function Timeline () {
                 highlightText.setFinishedListener(tutorialToolFinishedListener);
             }
         });
+    }
+    function saveTutorial(timeLine) {
+        var savefd = timeLine.shadowRoot.querySelector('.savetutorial');
+        savefd.onclick = function() {
+            //save tutorial
+
+            // reset timeline!
+            var timeParent = timeLine.parentNode;
+            timeParent.removeChild(timeLine);
+            //var timeline = document.createElement('entire-timeline');
+            //timeParent.appendChild(timeline);
+        }
     }
 
     this.clearTimeline = function() {
