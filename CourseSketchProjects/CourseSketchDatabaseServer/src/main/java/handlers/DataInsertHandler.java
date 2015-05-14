@@ -6,6 +6,7 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading;
@@ -152,8 +153,7 @@ public final class DataInsertHandler {
                         }
                         break;
                         case GRADE: {
-                            final Grading.ProtoGrade grade = ProtoGrade.parseFrom(itemSet.getData());
-                            instance.addGrade(userId, grade);
+                            GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, userId);
                         }
                         break;
                         default:
