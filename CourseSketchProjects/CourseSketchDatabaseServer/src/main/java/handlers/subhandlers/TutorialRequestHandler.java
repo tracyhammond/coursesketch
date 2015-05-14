@@ -35,7 +35,7 @@ public class TutorialRequestHandler {
             final String userId) throws AuthenticationException, DatabaseAccessException, InvalidProtocolBufferException {
         List<TutorialOuterClass.Tutorial> result = new ArrayList<>();
         if (!request.hasPage()) {
-            result.add(institution.getTutorial(request.getItemId(0), userId));
+            result.add(institution.getTutorial(userId, request.getItemId(0)));
         } else {
             result = institution.getTutorialList(userId, request.getItemId(0), request.getPage());
         }
