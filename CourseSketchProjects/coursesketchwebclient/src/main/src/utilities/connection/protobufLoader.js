@@ -444,6 +444,10 @@ function ProtobufSetup() {
         return decoded;
     };
 
+    this.cleanProtobuf = function(protobuf, protobufType) {
+        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(protobuf.toArrayBuffer(), protobufType);
+    };
+
     // makes all of the methods read only
     for (var obj in localScope) {
         if (localScope.hasOwnProperty(obj)) {

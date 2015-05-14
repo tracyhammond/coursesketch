@@ -114,7 +114,7 @@ function Timeline () {
      */
     this.loadTutorial = function(tutorial, viewingMode) {
         this.viewingMode = viewingMode;
-        this.updateList = tutorial.steps;
+        this.updateList = CourseSketch.PROTOBUF_UTIL.cleanProtobuf(tutorial.steps, CourseSketch.PROTOBUF_UTIL.getSrlUpdateListClass());
         console.log(this.updateList);
         var shadowRoot = this.shadowRoot;
         var initialToolArea = this.shadowRoot.querySelector('.toolarea');
