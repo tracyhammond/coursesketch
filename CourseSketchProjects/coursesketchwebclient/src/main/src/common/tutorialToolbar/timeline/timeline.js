@@ -48,47 +48,49 @@ function Timeline () {
      */
     this.loadExistingTutorials = function() {
         shadowRoot.querySelector('.btn').style.display = 'none';
-        this.tutorialList(this);
+        var localScope = this;
+        CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
+            localScope.tutorialList(tutorialList);
+        };
     };
 
     /**
      * When the tutorial view pops up, it has a page that lists all current tutorials
      * as well as a button that will allow the user to create a new tutorial
      */
-    this.tutorialList = function(parent) {
+    this.tutorialList = function(tutorialList) {
         var shadowRoot = this.shadowRoot;
         var localScope = this;
         var newTutorial = document.createElement('div');
         var timelinefd = this.shadowRoot.querySelector('.timeline');
         var addfd = document.createElement('div');
-        CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
-            // displays the list of tutorials and their info.
+
+        // displays the list of tutorials and their info.
+        for (var i = 0; i < tutorialList.length; i++) {
+            (function(index) {
+                var viewTutorial = document.createElement('div');
+                var listfd = document.createElement('div');
+                listfd.title = i;
+                listfd.className = 'smallicon';
+                timelinefd.appendChild(listfd);
+                viewTutorial.onclick = function() {
+                    // do tutorial loading here
+                };
+            })(i);
+        }
+        addfd.title = 'Create new tutorial';
+        addfd.className = 'newicon';
+        timelinefd.appendChild(addfd);
+        addfd.onclick = function() {
+            localScope.addToolArea(shadowRoot.querySelector('.timeline'));
+            localScope.continueButton(shadowRoot);
             for (var i = 0; i < tutorialList.length; i++) {
-                (function(index) {
-                    var viewTutorial = document.createElement('div');
-                    var listfd = document.createElement('div');
-                    listfd.title = i;
-                    listfd.className = 'smallicon';
-                    timelinefd.appendChild(listfd);
-                    viewTutorial.onclick = function() {
-                        // do tutorial loading here
-                    };
-                })(i);
+                // remove first instance of the file descriptor
+                timelinefd.removeChild(shadowRoot.querySelector('.smallicon'));
             }
-            addfd.title = 'Create new tutorial';
-            addfd.className = 'newicon';
-            timelinefd.appendChild(addfd);
-            addfd.onclick = function() {
-                localScope.addToolArea(shadowRoot.querySelector('.timeline'));
-                localScope.continueButton(shadowRoot);
-                for (var i = 0; i < tutorialList.length; i++) {
-                    // remove first instance of the file descriptor
-                    timelinefd.removeChild(shadowRoot.querySelector('.smallicon'));
-                }
-                timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
-                shadowRoot.querySelector('.btn').style.display = 'inline-block';
-            };
-        });
+            timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
+            shadowRoot.querySelector('.btn').style.display = 'inline-block';
+        };
     };
 
     /**
