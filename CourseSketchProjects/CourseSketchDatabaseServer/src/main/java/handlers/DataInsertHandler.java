@@ -9,8 +9,6 @@ import database.user.UserClient;
 import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.grading.Grading;
-import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
