@@ -262,7 +262,8 @@ public final class SubmissionManager {
             final String tutorialUrl, final int pageNumber) throws DatabaseAccessException, AuthenticationException {
         final DBCollection tutorialCollection = dbs.getCollection(TUTORIAL_COLLECTION);
 
-        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, tutorialUrl.hashCode()), new BasicDBObject(UPDATELIST, 0));
+        final int hash = tutorialUrl.hashCode();
+        final DBCursor cursor = tutorialCollection.find(new BasicDBObject(URL_HASH, hash), new BasicDBObject(UPDATELIST, 0));
         final List<TutorialOuterClass.Tutorial> tutorialList = new ArrayList<>();
         if (cursor == null) {
             throw new DatabaseAccessException("No tutorials were found with the following URL: " + tutorialUrl);
