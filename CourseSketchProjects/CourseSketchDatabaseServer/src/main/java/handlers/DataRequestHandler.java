@@ -9,6 +9,7 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import handlers.subhandlers.TutorialRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
@@ -24,6 +25,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.tutorial.TutorialOuterClass;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
@@ -188,6 +190,12 @@ public final class DataRequestHandler {
                         case LECTURESLIDE: {
                             final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(itemRequest.getItemIdList(), userId);
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURESLIDE, lectureSlideLoop));
+                        }
+                        break;
+                        case TUTORIAL: {
+                            final List<TutorialOuterClass.Tutorial> tutorials = TutorialRequestHandler.handleTutorialRequest(instance,
+                                    itemRequest, userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.TUTORIAL, tutorials));
                         }
                         break;
                         default:
