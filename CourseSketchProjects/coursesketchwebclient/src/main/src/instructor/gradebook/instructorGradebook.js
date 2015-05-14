@@ -1,9 +1,11 @@
 (function() {
 
     $(document).ready(function() {
-        var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
-        CourseSketch.gradeBook.loadGrades(courseId);
-        CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
+        CourseSketch.dataManager.waitForDatabase(function() {
+            var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
+            CourseSketch.gradeBook.loadGrades(courseId);
+            CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
+        });
     });
 
     CourseSketch.gradeBook.loadGrades = function(courseId) {
