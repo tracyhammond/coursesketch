@@ -195,8 +195,6 @@ function TextBox() {
             node = this.shadowRoot.querySelector('#viewText');
         }
 
-        $(dialog).height(textBoxProto.getHeight()); // Sets dialog height
-        $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
         $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions

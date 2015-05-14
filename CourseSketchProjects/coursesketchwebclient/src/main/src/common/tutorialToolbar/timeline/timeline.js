@@ -207,6 +207,9 @@ function Timeline () {
 
     // finished listener for all tutorial tools
     function tutorialToolFinishedListener(command, event, currentUpdate) {
+        if (isUndefined(command)) {
+            return;
+        }
         var stepTool = document.getElementById(command.commandId);
         var localScope = document.body.querySelector('entire-timeline');
         if (isUndefined(currentUpdate.commands)) {
@@ -477,9 +480,20 @@ function Timeline () {
     }
 
     this.clearTimeline = function() {
-        for (var i = 0; i < this.updateList.list.length; i++) {
-            this.updateList.list[i].undo();
+        console.log(this.index.getCurrentUpdate());
+        var currentStep = this.index.getCurrentUpdate();
+        for (var i = 0; i < currentStep.commands.length; i++) {
+            var commandId = currentStep.commands[i].commandId;
+            var elementToDelete = document.getElementById(commandId);
+            console.log(elementToDelete);
+            if (this.viewingMode) {
+                elementToDelete.saveData();
+            }
+            elementToDelete.parentNode.removeChild(elementToDelete);
+            //this.updateList.list[i].undo();
         }
+        $('.highlightedText').contents().unwrap();
+        document.normalize();
     }
 
 }
