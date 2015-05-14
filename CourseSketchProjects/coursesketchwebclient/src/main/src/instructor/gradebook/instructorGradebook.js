@@ -1,7 +1,8 @@
 (function() {
 
     $(document).ready(function() {
-        CourseSketch.gradeBook.loadGrades('courseId');
+        var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
+        CourseSketch.gradeBook.loadGrades(courseId);
         CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
     });
 

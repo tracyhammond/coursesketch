@@ -15,13 +15,14 @@
 <body>
 <script>
     CourseSketch.dataManager.waitForDatabase(function() {
+        CourseSketch.dataManager.addState('gradebookCourseid', 'courseId');
         var assignmentList = ["assignment1", "fake2", "Test", 'lastAssignment'];
         var studentList = ["student1", "stud2", "gilbert", "gabby"];
         CourseSketch.dataManager.getCourse = function(courseId, callback) {
             CourseSketch.fakeCourses[0].assignmentList = assignmentList;
             callback(CourseSketch.fakeCourses[0]);
         };
-        
+
         CourseSketch.dataManager.getAllAssignmentGrades = function(courseId, callback) {
             var gradeList = [];
             var grade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
@@ -44,28 +45,28 @@
             grade.assignmentId = assignmentList[0];
             grade.currentGrade = 105;
             gradeList.push(grade);
-            
+
             var grade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
             grade.courseId = courseId;
             grade.userId = studentList[0];
             grade.assignmentId = assignmentList[1];
             grade.currentGrade = 80;
             gradeList.push(grade);
-            
+
             var grade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
             grade.courseId = courseId;
             grade.userId = studentList[1];
             grade.assignmentId = assignmentList[1];
             grade.currentGrade = 50;
             gradeList.push(grade);
-            
+
             var grade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
             grade.courseId = courseId;
             grade.userId = studentList[2];
             grade.assignmentId = assignmentList[1];
             grade.currentGrade = 98;
             gradeList.push(grade);
-            
+
             var grade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
             grade.courseId = courseId;
             grade.userId = studentList[1];
