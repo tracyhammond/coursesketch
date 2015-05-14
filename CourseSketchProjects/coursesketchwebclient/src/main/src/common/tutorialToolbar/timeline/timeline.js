@@ -51,7 +51,7 @@ function Timeline () {
         var localScope = this;
         CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
             localScope.tutorialList(tutorialList);
-        };
+        });
     };
 
     /**
