@@ -4,7 +4,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
-import database.institution.mongo.GradingPolicyManager;
 import handlers.DataInsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +71,7 @@ public final class GradingRequestHandler {
         final boolean allGrades = query.getSearchType() == GradingQuery.SearchType.ALL_GRADES;
         final boolean singleGrade = query.getSearchType() == GradingQuery.SearchType.SINGLE_GRADE;
 
+        LOG.debug("Query State instructor: {}, student: {}, allGrades: {}, singleGrade: {}", instructor, student, allGrades, singleGrade);
         List<ProtoGrade> returnList = new ArrayList<>();
         if (instructor && allGrades) {
             returnList = institution.getAllAssignmentGradesInstructor(request.getItemId(COURSE_INDEX), userId);
