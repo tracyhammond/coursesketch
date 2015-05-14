@@ -47,7 +47,11 @@ function Timeline () {
      * Call this to load the existing tutorials for the current page.
      */
     this.loadExistingTutorials = function() {
-        shadowRoot.querySelector('.btn').style.display = 'none';
+        this.shadowRoot.querySelector('.btn').style.display = 'none';
+        var toolElement = this.shadowRoot.querySelector('.toolarea');
+        if (toolElement !== null) {
+            toolElement.parentNode.removeChild(toolElement);
+        }
         var localScope = this;
         CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
             localScope.tutorialList(tutorialList);
