@@ -31,6 +31,7 @@
             var column = document.createElement('td');
             column.style.width = '6ch';
             column.style.maxWidth = '8ch';
+            column.onclick = gradeCellOnClick;
             row.appendChild(column);
         }
         table.appendChild(row);
@@ -75,7 +76,7 @@
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
             cell.textContent = protoGrade.getCurrentGrade();
-            cell.onclick = gradeCellOnClick;
+
         }
         studentMap.forEach(function(value, key, map) {
             row = map.get(key);
