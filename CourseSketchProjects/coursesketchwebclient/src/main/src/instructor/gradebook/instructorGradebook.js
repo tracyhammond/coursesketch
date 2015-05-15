@@ -70,17 +70,33 @@
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
             cell.textContent = protoGrade.getCurrentGrade();
+            cell.onclick = gradeCellOnClick;
         }
         studentMap.forEach(function(value, key, map) {
             row = map.get(key);
             var cell = document.createElement('td');
             cell.textContent = key;
             row.insertBefore(cell, row.firstChild);
-        });
-
+        })
     };
 
-/**
+    function gradeCellOnClick() {
+        if (this.querySelector('input') === null) {
+            var grade = this.textContent;
+            var inputElement = document.createElement('input');
+            inputElement.type = "text";
+            this.innerHTML = '';
+            this.classname = "input-field";
+            inputElement.value = grade;
+            inputElement.pattern = "\\d*"
+            inputElement.style.padding = "0px";
+            this.appendChild(inputElement);
+            inputElement.focus();
+            inputElement.select();
+        }
+    }
+
+    /**
      * This creates tabs, one for each grading category.
      *
      * @param {List<String>} gradeCategories The list of categories for grades in the gradebook.

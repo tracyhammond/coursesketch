@@ -19,6 +19,10 @@ td:hover {
 td:first-child:hover {
     background-color:inherit;
 }
+
+input {
+    text-align: center;
+}
 /*
 th {
     border-color: black;
