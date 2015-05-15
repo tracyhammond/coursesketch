@@ -1,8 +1,11 @@
 (function() {
 
     $(document).ready(function() {
-        CourseSketch.gradeBook.loadGrades('courseId');
-        CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
+        CourseSketch.dataManager.waitForDatabase(function() {
+            var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
+            CourseSketch.gradeBook.loadGrades(courseId);
+            CourseSketch.gradeBook.createTabs(['Quiz', 'Homework', 'Test'], document.querySelector('.tabholder'));
+        });
     });
 
     CourseSketch.gradeBook.loadGrades = function(courseId) {
@@ -106,15 +109,23 @@
         tabholder.innerHTML = '';
         var tabs = document.createElement('ul');
         tabs.className = 'tabs';
+        gradeCategories.unshift('All');
+        gradeCategories.push('Add New');
         for (var i = 0; i < gradeCategories.length; i++) {
-                var item = document.createElement('li');
-                item.className = 'tab col';
-                var link = document.createElement('a');
-                link.textContent = gradeCategories[i];
-                link.href = "#" + gradeCategories[i];
-                item.appendChild(link);
-                tabs.appendChild(item);
+            var item = document.createElement('li');
+            item.className = 'tab col';
+            var link = document.createElement('a');
+            link.textContent = gradeCategories[i];
+
+            // The last catagory will be adding a new catagory so we denote it with a plus
+            if (i === gradeCategories.length - 1) {
+                link.textContent = '+';
             }
+
+            link.href = '#' + gradeCategories[i];
+            item.appendChild(link);
+            tabs.appendChild(item);
+        }
         tabholder.appendChild(tabs);
         $('ul.tabs').tabs();
     };

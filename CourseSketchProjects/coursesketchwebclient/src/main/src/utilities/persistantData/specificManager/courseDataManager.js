@@ -98,8 +98,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *            asynchronous)
      */
     function getCourse(courseId, courseCallback) {
+        if (isUndefined(courseCallback)) {
+            throw new DatabaseException('Calling getCourse with an undefined callback');
+        }
+
         if (isUndefined(courseId) || courseId === null) {
-            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
+            throw new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId);
         }
 
         getCourseLocal(courseId, function(course) {
