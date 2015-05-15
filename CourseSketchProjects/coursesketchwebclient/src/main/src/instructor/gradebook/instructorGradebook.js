@@ -30,8 +30,8 @@
         var row = document.createElement('tr');
         for (var i = 0; i < numberOfAssignments; i++) {
             var column = document.createElement('td');
-           // column.style.width = '6ch';
-            column.style.maxWidth = '8ch';
+            column.style.width = '10ch';
+            column.style.maxWidth = '10ch';
             column.style.position = 'relative';
             column.onclick = gradeCellOnClick;
             row.appendChild(column);
@@ -86,8 +86,13 @@
         for (var i = 0; i < assignmentList.length; i++) {
             assignmentMap.set(assignmentList[i], i);
             var th = document.createElement('th');
-            th.style.maxWidth = '8ch';
-            th.textContent = assignmentList[i];
+            th.style.minWidth = '10ch';
+            th.style.maxWidth = '11ch';
+            var button = document.createElement('a');
+            button.textContent = assignmentList[i];
+            button.className = 'waves-effect waves-teal btn-flat';
+            //Waves.attach(button, 'waves-effect waves-teal');
+            th.appendChild(button);
             row.appendChild(th);
         }
         header.appendChild(row);
@@ -105,24 +110,6 @@
             cell.textContent = key;
             row.insertBefore(cell, row.firstChild);
         });
-    }
-
-    function gradeCellOnClick() {
-        if (this.querySelector('input') === null) {
-            var grade = this.textContent;
-            var inputElement = document.createElement('input');
-            inputElement.type = 'text';
-            this.innerHTML = '';
-            this.classname = 'input-field';
-            inputElement.value = grade;
-            inputElement.pattern = '\\d*';
-            inputElement.style.padding = '0px';
-            inputElement.style.width = '5ch';
-            inputElement.maxlength = 5;
-            this.appendChild(inputElement);
-            inputElement.focus();
-            inputElement.select();
-        }
     }
 
     /**
@@ -155,27 +142,25 @@
         tabholder.appendChild(tabs);
         $('ul.tabs').tabs();
     };
-})();
 
-/*
-    CourseSketch.gradeBook.populateGrades = function(listAssignments, listGrades, table) {
-        table.innerHTML = '';
-        var assignmentMap = new Map();
-        var studentMap = new Map();
-        var header = document.createElement('thead');
-        var row = document.createElement('tr');
-        var nameLabel = document.createElement('th');
-        nameLabel.textContent = 'Sutdent Name';
-        row.appendChild(nameLabel);
-        for (var i = 0; i < listAssignments.length; i++) {
-            assignmentMap.set(listAssignments[i], i);
-            var th = document.createElement('th');
-            th.textContent = listAssignments[i];
-            row.appendChild(th);
+    function gradeCellOnClick() {
+        if (this.querySelector('input') === null) {
+            var grade = this.textContent;
+            this.textContent = '';
+            var container = createFocusedCell();
+            var input = container.querySelector('.gradeInput');
+            this.appendChild(container);
+            input.value = grade;
+            input.focus();
+            input.select();
+            $(this).addClass('gradeSelected');
         }
-        header.appendChild(row);
-        table.appendChild(header);
+    }
 
-        var body = document.createElement('tbody');
-        table.appendChild(body);
-*/
+    function createFocusedCell() {
+        var template = document.querySelector('#inputTemplate');
+        var container = document.importNode(template.content, true);
+        return container;
+    }
+
+})();
