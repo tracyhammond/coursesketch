@@ -29,6 +29,8 @@
         var row = document.createElement('tr');
         for (var i = 0; i < numberOfAssignments; i++) {
             var column = document.createElement('td');
+            column.style.width = '6ch';
+            column.style.maxWidth = '8ch';
             row.appendChild(column);
         }
         table.appendChild(row);
@@ -87,12 +89,13 @@
         if (this.querySelector('input') === null) {
             var grade = this.textContent;
             var inputElement = document.createElement('input');
-            inputElement.type = "text";
+            inputElement.type = 'text';
             this.innerHTML = '';
-            this.classname = "input-field";
+            this.classname = 'input-field';
             inputElement.value = grade;
-            inputElement.pattern = "\\d*"
-            inputElement.style.padding = "0px";
+            inputElement.pattern = '\\d*';
+            inputElement.style.padding = '0px';
+            inputElement.style.width = 'auto';
             this.appendChild(inputElement);
             inputElement.focus();
             inputElement.select();

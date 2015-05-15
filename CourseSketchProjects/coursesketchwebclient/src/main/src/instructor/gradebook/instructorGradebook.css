@@ -1,9 +1,14 @@
 .tabletalk {
-    border-collapse: collapse;
+    /* border-collapse: collapse; */
+}
+
+td, th {
+    padding-left:0px;
+    padding-right:0px;
 }
 
 td {
-    white-space:nowrap;
+    /* white-space:nowrap; */
     -webkit-transition: background-color .25s ease;
     -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
