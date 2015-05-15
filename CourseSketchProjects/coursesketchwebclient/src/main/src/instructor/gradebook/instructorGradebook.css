@@ -16,17 +16,36 @@ td {
     transition: background-color .25s ease;
 }
 
-td:hover {
+td:hover, .gradeSelected {
     background-color:#fffde7;
 
 }
 
+td:hover:not(:first-child) {
+    cursor: text;
+}
+
 td:first-child:hover {
     background-color:inherit;
+    cursor: default;
+}
+
+tr:first-child:hover {
+    cursor: pointer;
 }
 
 input {
     text-align: center;
+}
+
+.gradeCell {
+    font-size: .75em;
+    text-align: center;
+    cursor: default;
+}
+
+.gradeSelected {
+    padding-top:2px;
 }
 /*
 th {
