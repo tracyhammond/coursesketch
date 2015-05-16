@@ -21,6 +21,7 @@
     position: absolute;
     top: 0px;
     background-color:#FFFFFF;
+    z-index: 1;
 }
 th {
     font-weight:normal;
