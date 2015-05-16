@@ -6,6 +6,7 @@
             CourseSketch.gradeBook.loadGrades(courseId);
             CourseSketch.gradeBook.createTabs([ 'Quiz', 'Homework', 'Test' ], document.querySelector('.tabholder'));
         });
+        CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), $('.tabletalk').offset());
     });
 
     CourseSketch.gradeBook.loadGrades = function(courseId) {
@@ -17,6 +18,7 @@
                 CourseSketch.gradeBook.populateGrades(assignmentList, gradeList, document.querySelector('.tabletalk'));
             });
         });
+
     };
 
     /**
@@ -80,6 +82,7 @@
      */
     function createAssignmentHeader(assignmentList, table, assignmentMap) {
         var header = document.createElement('thead');
+        header.className = 'scrollHeader';
         var row = document.createElement('tr');
         var nameLabel = document.createElement('th');
         nameLabel.textContent = 'Student Name';
