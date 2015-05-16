@@ -13,10 +13,11 @@
 </head>
 <template id="inputTemplate">
     <div class = 'gradeCell'>
-        <form>
+        <form class="gradeForm">
             <input class="gradeInput input-field" type="text" pattern="\d*" style="padding:0px; width:9ch;" maxlength = "5">
             <a href="#" style="display:block;">Add Comment</a>
-            <input class="input-field" type="text" maxlength = "20" style="display:none;">
+            <input class="commentInput input-field" type="text" maxlength = "20" style="display:none;">
+            <input type="submit" value="Submit" style="display:none;">
         </form>
         <a href="#" style="display:block;">View Assignment</a>
         <a href="#" style="display:block;">View History</a>

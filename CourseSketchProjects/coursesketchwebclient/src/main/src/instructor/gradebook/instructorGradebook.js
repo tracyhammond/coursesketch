@@ -146,6 +146,8 @@
     function gradeCellOnClick() {
         if (this.querySelector('input') === null) {
             var grade = this.textContent;
+            // datasets have to be underscore.
+            this.dataset.old_grade = grade;
             this.textContent = '';
             var container = createFocusedCell();
             var input = container.querySelector('.gradeInput');
@@ -156,6 +158,37 @@
             $(this).addClass('gradeSelected');
         }
     }
+
+    /**
+     * removes the selection of a cell by removing the html code inside and replacing it with a grade.
+     *
+     * This may also trigger a grade save.
+     *
+     * @param {Element} cell the selected cell whose code is being removed.
+     */
+    function unselectCell(cell) {
+        var oldGrade = cell.dataset.old_grade;
+        var form = cell.querySelector('.gradeForm');
+        if ($(form)[0].checkValidity()) {
+            var newGrade = form.querySelector('.gradeInput').value;
+            var comment = form.querySelector('.commentInput').value;
+
+            // TODO: extra grade validation here (is it out of max points for the assignment?)
+
+            if (oldGrade !== newGrade) {
+                console.log('SAVING GRADE: [' , newGrade, ', ', comment, ']');
+                // TODO: save grade here
+            }
+
+            // replaces input with new grade value.
+            cell.textContent = '' + newGrade;
+            $(cell).removeClass('gradeSelected');
+        } else {
+            $(form).find(':submit').click();
+            throw new BaseException('Grade input is not valid');
+        }
+    }
+    globalTestFunc = unselectCell;
 
     function createFocusedCell() {
         var template = document.querySelector('#inputTemplate');
