@@ -155,6 +155,7 @@
             input.value = grade;
             input.focus();
             input.select();
+            input.setCustomValidity('Please enter numbers only.');
             $(this).addClass('gradeSelected');
         }
     }
