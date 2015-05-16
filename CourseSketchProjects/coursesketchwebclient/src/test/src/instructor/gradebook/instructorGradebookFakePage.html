@@ -16,7 +16,8 @@
 <script>
     CourseSketch.dataManager.waitForDatabase(function() {
         CourseSketch.dataManager.addState('gradebookCourseid', 'courseId');
-        var assignmentList = ["assignment1", "fake2", "Test", 'lastAssignment'];
+        var assignmentList = ["long", "fake2", "Test", 'test1.5', 'test2', 'quiz1', 'quiz2', 'quiz3',
+            'hw1', 'hw2', 'project1', 'project2', 'hw3'];
         var studentList = ["student1", "stud2", "gilbert", "gabby", "student5", "student6",
         "matt", "stud8", "stud9", "stud10"];
         CourseSketch.dataManager.getCourse = function(courseId, callback) {
