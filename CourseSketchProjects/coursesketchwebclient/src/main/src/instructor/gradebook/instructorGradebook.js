@@ -65,7 +65,8 @@
             var studentRow = studentMap.get(studentId);
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
-            cell.textContent = protoGrade.getCurrentGrade();
+            var stringGrade = '' + protoGrade.getCurrentGrade();
+            cell.textContent = stringGrade.substring(0, 6);
         }
 
         populateStudentNames(studentMap);
