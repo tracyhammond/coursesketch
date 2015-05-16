@@ -155,11 +155,14 @@
             input.value = grade;
             input.focus();
             input.select();
-            input.setCustomValidity('Please enter numbers only.');
+
+            // setCustomValidity must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
+            input.oninvalid = function() { this.setCustomValidity('Please enter numbers only.') };
+            input.oninput = function() { this.setCustomValidity('') };
             $(this).addClass('gradeSelected');
         }
     }
-
+70
     /**
      * removes the selection of a cell by removing the html code inside and replacing it with a grade.
      *
