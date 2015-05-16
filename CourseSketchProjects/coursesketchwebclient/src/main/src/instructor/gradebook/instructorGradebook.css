@@ -1,19 +1,19 @@
 .verticalTableHolder {
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: visible;
     position: relative;
     max-height: calc(100% - 20px - 48px - 5px);
 }
 
 .tableHolder {
-
     position: relative;
 }
 
 .horizontalTableHolder {
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: hidden;
     position: relative;
+    max-width: 100%;
 }
 
 .fixedHead {

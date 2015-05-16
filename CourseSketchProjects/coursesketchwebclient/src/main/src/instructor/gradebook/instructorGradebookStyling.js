@@ -49,20 +49,33 @@
                 var table = document.createElement('table');
                 $(table).addClass('fixedHead z-depth-1');
                 table.appendChild(verticalHeader);
-                scrollingTable.querySelector('thead').style.visibility = 'hidden';
-                document.querySelector('.tableHolder').appendChild(table);
+                document.querySelector('.horizontalTableHolder').appendChild(table);
             } else if (offset > triggerVerticalOffset && verticalHeader.style.display === 'none') {
                 verticalHeader.style.display = 'block';
-                scrollingTable.querySelector('thead').style.visibility = 'hidden';
             } else if (offset <= triggerVerticalOffset && !isUndefined(verticalHeader)) {
                 verticalHeader.style.display = 'none';
-                scrollingTable.querySelector('thead').style.visibility = 'initial';
             }
         });
 
         // independent of which table is active
-        $('.horizontalTableHolder').scroll(function(event) {
+        $('.verticalTableHolder').scroll(function(event) {
             //console.log(event);
+            var newPosition = $(scrollingTable).offset();
+            if (isUndefined(newPosition)) {
+                return;
+            }
+
+            if (!isUndefined(verticalHeader)) {
+                $(verticalHeader).offset({ left: $(scrollingTable).offset().left });
+            }
+
+            if (isUndefined(startingPosition)) {
+                startingPosition = newPosition;
+                return;
+            }
+
+            var newTop = newPosition.left;
+            var offset = startingPosition.left - newTop;
             var scrolledElement = document.querySelector('.tabletalk');
             console.log($(scrolledElement).offset());
             //console.log($('.horizontalTableHolder').scrollTop());
