@@ -1,12 +1,18 @@
-function SubmissionDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
-    var userCourses = {};
-    var userCourseId = [];
-    var userHasCourses = true;
-    var dataListener = advanceDataListener;
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ *
+ * @param {CourseSketchDatabase} parent
+ * @param {AdvanceDataListener} advanceDataListener
+ * @param {IndexedDB} parentDatabase (Not used in this manager)
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
+function SubmissionDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var database = parentDatabase;
-    var Request = request;
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Returns a submission.  but right now only treats it as an exerpiment.
@@ -55,6 +61,11 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
     }
     parent.getSubmission = getSubmission;
 
+    /**
+     * Attempts to get all experiments from the specific problem id.
+     * @param {String} problemId the problem we are currently looking at.
+     * @param {Function} submissionCallback called after the server responds with all experiments.
+     */
     function getAllExperiments(problemId, submissionCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
@@ -99,10 +110,19 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
     }
     parent.setSubmission = setSubmission;
 
-    function deleteSubmission(problemId, couresCallback) {
+    /**
+     * Deletes a submissions from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param {String} problemId
+     *                ID of the submissions to delete
+     * @param {Function} submissionsCallback
+     *                function to be called after the deletion is done
+     */
+    function deleteSubmission(problemId, submissionsCallback) {
         database.deleteFromSubmissions(problemId, function(e, request) {
-            if (courseCallback) {
-                courseCallback(e, request);
+            if (submissionsCallback) {
+                submissionsCallback(e, request);
             }
         });
     }

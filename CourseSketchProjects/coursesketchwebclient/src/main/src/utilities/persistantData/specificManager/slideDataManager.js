@@ -1,3 +1,15 @@
+/**
+ * A manager for slides that talks with the remote server.
+ *
+ *
+ * @param {CourseSketchDatabase} parent
+ * @param {AdvanceDataListener} advanceDataListener
+ * @param {IndexedDB} database (Not used in this manager)
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
 function SlideDataManager(parent, advanceDataListener, database, sendData, Request, ByteBuffer) {
     var localScope = parent;
 
