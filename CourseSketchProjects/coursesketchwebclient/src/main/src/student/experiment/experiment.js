@@ -114,6 +114,10 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+
+        /**
+         * called when the sketch surface is done loading to remove the overlay.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();
