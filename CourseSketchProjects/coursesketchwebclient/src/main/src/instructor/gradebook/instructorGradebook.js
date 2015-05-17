@@ -154,20 +154,20 @@
         $('ul.tabs').tabs();
     };
 
-	function clearOpenedCells() {
+    function clearOpenedCells() {
         var selectedCell = document.querySelector('.gradeselected');
-		if (selectedCell === null) {
-			return;
-		}
-		unselectCell(selectedCell);
-	}
+        if (selectedCell === null) {
+            return;
+        }
+        unselectCell(selectedCell);
+    }
 
     function gradeCellSelected(event) {
         if (this.querySelector('input') === null) {
-			clearOpenedCells();
-			if (!isUndefined(event)) {
-				event.stopPropagation();
-			}
+            clearOpenedCells();
+            if (!isUndefined(event)) {
+                event.stopPropagation();
+            }
 
             var grade = this.textContent;
             // datasets have to be underscore.
@@ -273,16 +273,11 @@
     function moveDown(cell) {
         unselectCell(cell);
         var currentRow = cell.parentNode;
-        console.log(currentRow);
         var rowIndex = getChildIndex(currentRow);
-        console.log(currentRow.parentNode, rowIndex, currentRow.parentNode.children);
         var nextRow = currentRow.parentNode.children[getChildIndex(currentRow) + 1];
-        console.log(nextRow);
         var nextCell = nextRow.children[getChildIndex(cell)];
-        console.log(nextCell);
 
         gradeCellSelected.bind(nextCell)();
-
     }
 
     function moveUp(cell) {
