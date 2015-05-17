@@ -190,7 +190,7 @@ if (isUndefined(BaseException)) {
          *          is the cause of the exception.
          */
         this.setCause = function(causeValue) {
-            if (!isUndefined(cause)) {
+            if (!isUndefined(causeValue)) {
                 this.cause = causeValue;
             }
         };
