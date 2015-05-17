@@ -12,6 +12,10 @@ function EmbeddedHtml() {
         shadowRoot.appendChild(templateClone);
     };
 
+    /**
+     * Sets the html source that is being embedded.
+     * @param {String} html html code.
+     */
     this.setHtml = function(html) {
         this.shadowRoot.innerHTML = html;
     };
@@ -62,6 +66,10 @@ function EmbeddedHtml() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener
+     * @param {Function} listener called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

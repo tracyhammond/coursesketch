@@ -136,6 +136,9 @@ function SchoolItem() {
                 var nodes = content.getDistributedNodes();
                 var contentElement = nodes[0];
                 var editorElement = getEditorElement(parentNode);
+                /**
+                 * Called when a user is done editing a certain part of the edit panel.
+                 */
                 var finishEditing = function() {
                     localScope.dataset.isediting = false;
                     $(parentNode).removeClass(editingClass);
@@ -164,6 +167,11 @@ function SchoolItem() {
                     }
                     return;
                 }
+                /**
+                 * Called when an edit button has been pressed to toggle editing.
+                 * @param {Event} event
+                 * @returns {Boolean} returns false.
+                 */
                 element.onclick = function(event) {
                     localScope.dataset.isediting = true;
                     event.stopPropagation();

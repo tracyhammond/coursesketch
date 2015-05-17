@@ -7,6 +7,10 @@ function ClickSelectionManager() {
     this.selectionClassName = ' selectedBox';
     this.localDoc = document;
 
+    /**
+     * Adds a selected element to the list of selected elements
+     * @param {Element} element
+     */
     this.addSelectedItem = function(element) {
         this.selectedItems.push(element);
         this.selectItem(element);
@@ -52,7 +56,7 @@ function ClickSelectionManager() {
 
     /**
      * @param {Element} element - the item that we are checking if it is selected.
-     * @returns true if the given element is in fact currently selected by this specific manager.
+     * @returns {Boolean} true if the given element is in fact currently selected by this specific manager.
      */
     this.isItemSelected = function(element) {
         return this.selectedItems.indexOf(element) > -1;
