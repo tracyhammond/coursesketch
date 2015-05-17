@@ -16,6 +16,9 @@ validateFirstRun(document.currentScript);
          * @memberof "lecturePage/student"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
+            /**
+             * Called when a user is changing slide.
+             */
             var completionHandler = function() {
                 $('.slide-thumb').each(function() {
                     $(this).removeClass('selected');

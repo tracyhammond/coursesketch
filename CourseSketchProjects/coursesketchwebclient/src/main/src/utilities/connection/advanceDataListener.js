@@ -16,6 +16,11 @@ function AdvanceDataListener(connection, Request, defListener) {
     var localScope = this;
     var defaultListener = defListener || false;
     var errorListener = false;
+
+    /**
+     * sets a listener that is called when an error occurs.
+     * @param {Function} func
+     */
     this.setErrorListener = function(func) {
         errorListener = func;
     };
