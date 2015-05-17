@@ -6,7 +6,9 @@
             CourseSketch.gradeBook.loadGrades(courseId);
             CourseSketch.gradeBook.createTabs([ 'Quiz', 'Homework', 'Test' ], document.querySelector('.tabholder'));
         });
-        CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), $('.tabletalk').offset());
+        var table = $('.tabletalk');
+        CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), table.offset());
+        table.keyup(tabAndEnterKeyEvents);
     });
 
     CourseSketch.gradeBook.loadGrades = function(courseId) {
@@ -35,6 +37,7 @@
             column.style.width = '10ch';
             column.style.maxWidth = '10ch';
             column.style.position = 'relative';
+            column.className = 'gradecell';
             column.onclick = gradeCellOnClick;
             row.appendChild(column);
         }
@@ -112,6 +115,7 @@
             row = map.get(key);
             var cell = document.createElement('td');
             cell.textContent = key;
+            cell.className = 'namecell';
             row.insertBefore(cell, row.firstChild);
         });
     }
@@ -166,7 +170,7 @@
             $(this).addClass('gradeSelected');
         }
     }
-70
+
     /**
      * removes the selection of a cell by removing the html code inside and replacing it with a grade.
      *
@@ -198,6 +202,52 @@
     }
     globalTestFunc = unselectCell;
 
+    function tabAndEnterKeyEvents(event) {
+        console.log("HI");
+        event.stopPropagation();
+        var cell = document.querySelector('.gradeselected');
+        if (isUndefined(cell) || cell === null) { return; } // Just in case there is no entry cell
+        var isTab = event.which === 9; // Keycode for tab key
+        var isEnter = event.which === 13; // Keycode for enter key
+        if (isEnter) { moveDown(cell); }
+        if (isTab) { moveRight(cell); }
+    }
+
+    function moveLeft(cell) {
+
+        unselectCell(cell);
+    }
+
+    function moveRight(cell) {
+        // If there is a cell to move to.
+        if (cell.nextSibling !== null) {
+            createFocusedCell(cell.nextSibling);
+        } else {
+            var currentRow = cell.parentElement;
+            var nextRow = currentRow.parentElement.rows[currentRow.rowIndex]; // rows[] indexes from 0. rowIndex starts at 1. Idk why.
+            var nextCell = nextRow.querySelector('.gradecell');
+            createFocusedCell(nextCell);
+        }
+        unselectCell(cell);
+    }
+
+    function moveDown(cell) {
+        console.log("I'm HERE");
+        var currentRow = cell.parentElement;
+        console.log(currentRow);
+        var nextRow = currentRow.parentElement.rows[currentRow.rowIndex];
+        var nextCell = nextRow.querySelector('.gradecell');
+        console.log(currentRow);
+        console.log(nextRow);
+        console.log(nextCell);
+        unselectCell(cell);
+        $(nextCell).trigger('click');
+
+    }
+
+    function moveUp(cell) {
+        unselectCell(cell);
+    }
     function createFocusedCell() {
         var template = document.querySelector('#inputTemplate');
         var container = document.importNode(template.content, true);
