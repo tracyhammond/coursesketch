@@ -72,23 +72,37 @@ function ProblemSelectionPanel() {
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        /**
+         * Called when the user accepts the problems.
+         */
         shadowRoot.querySelector('#accept').onclick = function() {
             localScope.acceptCallback(selectedBankProblems);
         };
 
-        // cancel options
+        /**
+         * Called when the user rejects the selected problems
+         */
         shadowRoot.querySelector('#cancel').onclick = function() {
             localScope.canceledCallback(selectedBankProblems);
         };
 
+        /**
+         * Called to signify the using rejecting the selected problems.
+         */
         shadowRoot.querySelector('.outer-dialog').onclick = function() {
             localScope.canceledCallback(selectedBankProblems);
         };
 
+        /**
+         * Called to stop the event from going up to the outer-dialog onclick function.
+         */
         shadowRoot.querySelector('.inner-dialog').onclick = function(event) {
             event.stopPropagation();
         };
 
+        /**
+         * Called to signify the using rejecting the selected problems.
+         */
         this.onclick = function(event) {
             localScope.canceledCallback(selectedBankProblems);
         };
@@ -122,7 +136,7 @@ function ProblemSelectionPanel() {
     }
 
     /**
-     * @returns the list of selected elements that are currently on the screen.
+     * @returns {List<Element>} the list of selected elements that are currently on the screen.
      * @memberof ProblemSelectionPanel
      */
     this.getListOfSelectedElements = function() {

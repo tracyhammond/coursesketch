@@ -206,6 +206,9 @@ function ProtobufSetup() {
         if (isFunction(ClassType)) {
             objectList.push(objectName);
             Object.defineProperty(localScope, objectName, {
+                /**
+                 * @returns {ProtobufObject} An instance a protobuf object.
+                 */
                 value: function() {
                     if (arguments.length > 0) {
                         throw new ProtobufException('you can not create this object with arguments.');
@@ -216,6 +219,9 @@ function ProtobufSetup() {
             });
 
             Object.defineProperty(localScope, 'get' + objectName + 'Class', {
+                /**
+                 * @returns {Function|Enum} A class representing a protobuf object.
+                 */
                 value: function() {
                     // somehow change it to make this read only?
                     return ClassType;
@@ -225,6 +231,9 @@ function ProtobufSetup() {
         } else {
             enumList.push(objectName);
             Object.defineProperty(localScope, objectName, {
+                /**
+                 * @returns {Enum} An enum defined in protobuf.
+                 */
                 get: function() {
                     return ClassType;
                 }
