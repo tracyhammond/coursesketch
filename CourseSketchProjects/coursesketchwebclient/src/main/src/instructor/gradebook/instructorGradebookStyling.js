@@ -46,6 +46,9 @@
 
             if (offset > triggerVerticalOffset && isUndefined(verticalHeader)) {
                 var clonedElement = scrollingTable.querySelector('thead').cloneNode(true);
+				
+				synchronizeFirstColumnWidth(clonedElement, scrollingTable.querySelector('thead'));
+				
                 var table = document.createElement('table');
                 table.appendChild(clonedElement);
                 verticalHeader = table;
@@ -80,23 +83,10 @@
             var offset = startingPosition.left - newLeft;
         });
     }); // document ready
-
-    /**
-     * Returns a deep clone copying height and width.
-     * @param {Element} node The node we want a copy of that contains the width and height needed.
-     */
-    function deepComputedClone(node) {
-        var result = undefined;
-        if (node.children.length <= 0) {
-            result = node.cloneNode(true);
-        } else {
-            result = node.cloneNode(false);
-            for (var i = 0; i < node.children.length; i++) {
-                result.appendChild(deepComputedClone(node.children[i]));
-            }
-        }
-        //$(result).width($(node).width());
-        //$(result).height($(node).height());
-        return result;
-    }
+	
+	function synchronizeFirstColumnWidth(clonedElement, originalElement) {
+		var clonedFirstDiv = clonedElement.querySelector('div');
+		var originalFirstDice = scrollingTable.querySelector('thead div');
+		$(clonedFirstDiv).width($(originalFirstDice).width());
+	}
 })();

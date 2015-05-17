@@ -91,7 +91,9 @@
         header.className = 'scrollHeader';
         var row = document.createElement('tr');
         var nameLabel = document.createElement('th');
-        nameLabel.textContent = 'Student Name';
+		var nameHolder = document.createElement('div');
+		nameHolder.textContent = 'Student Name';
+        nameLabel.appendChild(nameHolder);
         row.appendChild(nameLabel);
         for (var i = 0; i < assignmentList.length; i++) {
             assignmentMap.set(assignmentList[i], i);
@@ -174,7 +176,6 @@
             this.dataset.old_grade = grade;
             this.textContent = '';
             var container = createFocusedCell();
-
             var input = container.querySelector('.gradeInput');
             this.appendChild(container);
             input.value = grade;
