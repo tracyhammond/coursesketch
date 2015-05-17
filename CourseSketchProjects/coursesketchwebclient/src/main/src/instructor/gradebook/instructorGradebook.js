@@ -174,11 +174,7 @@
             this.dataset.old_grade = grade;
             this.textContent = '';
             var container = createFocusedCell();
-            $(container).click(function(event) {
-                // stops clicks from the container to bubble up
-                // this is because we have a listener on the table and we dont want that listener to capture events from this element.
-                event.stopPropagation();
-            })
+
             var input = container.querySelector('.gradeInput');
             this.appendChild(container);
             input.value = grade;
