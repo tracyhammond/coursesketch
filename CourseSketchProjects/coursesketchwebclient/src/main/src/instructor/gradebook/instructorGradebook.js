@@ -8,7 +8,8 @@
         });
         var table = $('.tabletalk');
         CourseSketch.gradeBook.initializeTableScrolling(document.querySelector('.tabletalk'), table.offset());
-        table.keyup(tabAndEnterKeyEvents);
+        table.keyup(keyEventHandler);
+
     });
 
     CourseSketch.gradeBook.loadGrades = function(courseId) {
@@ -39,6 +40,9 @@
             column.style.position = 'relative';
             column.className = 'gradecell';
             column.onclick = gradeCellOnClick;
+            column.dataset.student = studentId;
+            // note that this is i minus the offset
+            column.dataset.column = i;
             row.appendChild(column);
         }
         table.appendChild(row);
@@ -200,18 +204,29 @@
             throw new BaseException('Grade input is not valid');
         }
     }
-    globalTestFunc = unselectCell;
 
-    function tabAndEnterKeyEvents(event) {
-        console.log("HI");
-        event.stopPropagation();
-        var cell = document.querySelector('.gradeselected');
-        if (isUndefined(cell) || cell === null) { return; } // Just in case there is no entry cell
-        var isTab = event.which === 9; // Keycode for tab key
-        var isEnter = event.which === 13; // Keycode for enter key
-        if (isEnter) { moveDown(cell); }
-        if (isTab) { moveRight(cell); }
-    }
+	var keyEventHandler = undefined;
+	(function() {
+		/**
+		 * @type {Number} this is used to throttle events.
+		 */
+		var previousTimeStamp = 0;
+    	keyEventHandler = function(event) {
+			if (event.timeStamp - previousTimeStamp < 50) {
+				previousTimeStamp = event.timeStamp;
+				// less than 50 millis we return and don't process the event
+				return;
+			}
+			previousTimeStamp = event.timeStamp;
+
+        	var cell = document.querySelector('.gradeselected');
+        	if (isUndefined(cell) || cell === null) { return; } // Just in case there is no entry cell
+        	var isTab = event.which === 9; // Keycode for tab key
+        	var isEnter = event.which === 13; // Keycode for enter key
+        	if (isEnter) { moveDown(cell); }
+        	if (isTab) { moveRight(cell); }
+    	};
+	})();
 
     function moveLeft(cell) {
 
@@ -219,6 +234,7 @@
     }
 
     function moveRight(cell) {
+        unselectCell(cell);
         // If there is a cell to move to.
         if (cell.nextSibling !== null) {
             createFocusedCell(cell.nextSibling);
@@ -228,19 +244,20 @@
             var nextCell = nextRow.querySelector('.gradecell');
             createFocusedCell(nextCell);
         }
-        unselectCell(cell);
+
     }
 
     function moveDown(cell) {
-        console.log("I'm HERE");
-        var currentRow = cell.parentElement;
-        console.log(currentRow);
-        var nextRow = currentRow.parentElement.rows[currentRow.rowIndex];
-        var nextCell = nextRow.querySelector('.gradecell');
-        console.log(currentRow);
-        console.log(nextRow);
-        console.log(nextCell);
         unselectCell(cell);
+        var currentRow = cell.parentNode;
+        console.log(currentRow);
+		var rowIndex = getChildIndex(currentRow);
+		console.log(currentRow.parentNode, rowIndex, currentRow.parentNode.children);
+        var nextRow = currentRow.parentNode.children[getChildIndex(currentRow) + 1];
+        console.log(nextRow);
+        var nextCell = nextRow.children[getChildIndex(cell)];
+        console.log(nextCell);
+
         $(nextCell).trigger('click');
 
     }
@@ -254,4 +271,20 @@
         return container;
     }
 
+    /**
+     * Returns the index of an element in reference to its parent element.
+     */
+    function getChildIndex(element) {
+		var k=-1, e=element;
+		while (e) {
+		    if ( "previousSibling" in e ) {
+		        e = e.previousSibling;
+		        k = k + 1;
+		    } else {
+		        k= -1;
+		        break;
+		    }
+		}
+		return k;
+    }
 })();
