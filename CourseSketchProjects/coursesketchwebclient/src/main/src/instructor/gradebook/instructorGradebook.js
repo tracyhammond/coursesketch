@@ -211,28 +211,28 @@
         }
     }
 
-	var keyEventHandler = undefined;
-	(function() {
-		/**
-		 * @type {Number} this is used to throttle events.
-		 */
-		var previousTimeStamp = 0;
-    	keyEventHandler = function(event) {
-			if (event.timeStamp - previousTimeStamp < 50) {
-				previousTimeStamp = event.timeStamp;
-				// less than 50 millis we return and don't process the event
-				return;
-			}
-			previousTimeStamp = event.timeStamp;
+    var keyEventHandler = undefined;
+    (function() {
+        /**
+         * @type {Number} this is used to throttle events.
+         */
+        var previousTimeStamp = 0;
+        keyEventHandler = function(event) {
+            if (event.timeStamp - previousTimeStamp < 50) {
+                previousTimeStamp = event.timeStamp;
+                // less than 50 millis we return and don't process the event
+                return;
+            }
+            previousTimeStamp = event.timeStamp;
 
-        	var cell = document.querySelector('.gradeselected');
-        	if (isUndefined(cell) || cell === null) { return; } // Just in case there is no entry cell
-        	var isTab = event.which === 9; // Keycode for tab key
-        	var isEnter = event.which === 13; // Keycode for enter key
-        	if (isEnter) { moveDown(cell); }
-        	if (isTab) { moveRight(cell); }
-    	};
-	})();
+            var cell = document.querySelector('.gradeselected');
+            if (isUndefined(cell) || cell === null) { return; } // Just in case there is no entry cell
+            var isTab = event.which === 9; // Keycode for tab key
+            var isEnter = event.which === 13; // Keycode for enter key
+            if (isEnter) { moveDown(cell); }
+            if (isTab) { moveRight(cell); }
+        };
+    })();
 
     function moveLeft(cell) {
 
@@ -243,7 +243,7 @@
         unselectCell(cell);
         // If there is a cell to move to.
         if (cell.nextSibling !== null) {
-			gradeCellSelected.bind(cell.nextSibling)();
+            gradeCellSelected.bind(cell.nextSibling)();
         } else {
             var currentRow = cell.parentElement;
             var nextRow = currentRow.parentElement.rows[currentRow.rowIndex]; // rows[] indexes from 0. rowIndex starts at 1. Idk why.
@@ -257,14 +257,14 @@
         unselectCell(cell);
         var currentRow = cell.parentNode;
         console.log(currentRow);
-		var rowIndex = getChildIndex(currentRow);
-		console.log(currentRow.parentNode, rowIndex, currentRow.parentNode.children);
+        var rowIndex = getChildIndex(currentRow);
+        console.log(currentRow.parentNode, rowIndex, currentRow.parentNode.children);
         var nextRow = currentRow.parentNode.children[getChildIndex(currentRow) + 1];
         console.log(nextRow);
         var nextCell = nextRow.children[getChildIndex(cell)];
         console.log(nextCell);
 
-		gradeCellSelected.bind(nextCell)();
+        gradeCellSelected.bind(nextCell)();
 
     }
 
@@ -277,16 +277,16 @@
      * Returns the index of an element in reference to its parent element.
      */
     function getChildIndex(element) {
-		var k=-1, e=element;
-		while (e) {
-		    if ( "previousSibling" in e ) {
-		        e = e.previousSibling;
-		        k = k + 1;
-		    } else {
-		        k= -1;
-		        break;
-		    }
-		}
-		return k;
+        var k=-1, e=element;
+        while (e) {
+            if ( "previousSibling" in e ) {
+                e = e.previousSibling;
+                k = k + 1;
+            } else {
+                k= -1;
+                break;
+            }
+        }
+        return k;
     }
 })();
