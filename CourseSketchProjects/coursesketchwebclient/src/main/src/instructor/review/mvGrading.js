@@ -8,7 +8,7 @@ validateFirstRun(document.currentScript);
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
 
-    /*
+    /**
      * A list of experiments to load into the sketching panels.
      *
      * gets all experiments that hold the current problem id and places them is
@@ -83,6 +83,9 @@ validateFirstRun(document.currentScript);
     }
 
     $(document).ready(function() {
+        /**
+         * closes the dialog panel.
+         */
         document.getElementById('dialogPanel').querySelector('button').onclick = function() {
             document.getElementById('dialogPanel').close();
         };
@@ -161,6 +164,9 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+        /**
+         * Called when the sketch has been completely loaded.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();
