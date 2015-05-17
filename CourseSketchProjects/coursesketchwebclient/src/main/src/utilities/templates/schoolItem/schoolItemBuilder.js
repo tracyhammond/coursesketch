@@ -86,7 +86,8 @@ function SchoolItemBuilder() {
             hostElement.innerHTML = '';
         }
 
-        var element = document.createElement('h1');
+        var element = document.createElement('p');
+        element.className='flow-text';
         // if there is no list add the empty message and then exit
         if (!this.list || this.list.length <= 0) {
             var message = 'There are no items in this list!';
@@ -228,7 +229,8 @@ function SchoolItemBuilder() {
 
         if (srlSchoolItem.name) {
             var name = document.createElement('span');
-            name.className = 'name';
+            name.className = 'name light';
+            name.setAttribute('width','100%');
             name.textContent = srlSchoolItem.name;
             box.appendChild(name);
         }

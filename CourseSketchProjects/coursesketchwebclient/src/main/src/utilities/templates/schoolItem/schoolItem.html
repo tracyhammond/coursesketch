@@ -4,17 +4,18 @@
 <body>
 	<template id="schoolItemTemplate">
 	<style>
-	@import "/src/utilities/templates/schoolItem/schoolItem.css";
+		@import "/src/utilities/templates/schoolItem/schoolItem.css";
+		@import "/src/utilities/libraries/materializecss/css/materialize.min.css";
 	</style>
 	<span class="schoolItemState"><content select="span.grade"></content></span>
 	<img class=".image">
 	<div class="school_item">
 		<div class="text">
 			<div class="title">
-				<h3 class="name">
+				<h4 class="name truncate">
 					<content select=".name"></content>
 					<span class="editButton" data-type="name">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				</h3>
+				</h4>
 			</div>
 			<span class="date">
 				<h4 class="accessDate">

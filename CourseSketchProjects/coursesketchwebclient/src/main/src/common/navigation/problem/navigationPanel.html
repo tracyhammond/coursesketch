@@ -4,7 +4,7 @@
 <body>
 <template id="navigationPanel">
     <style>
-        @import "/src/common/navigation/problem/navigationPanel.css";
+        @import "/src/utilities/libraries/materializecss/css/materialize.min.css";
     </style>
     <!--
     |---------------------------------|
@@ -14,34 +14,25 @@
     |<- ->	|------------------------||
     |---------------------------------|
      -->
-    <div id="panelWrapper" class="panelWrapper" style="width:100%;">
-        <div id="navPanel">
-            <div class="innerShadow">
-                <!--
-                |--------|
-                | prob # |
-                | out of |
-                |--------|
-                 <== ==>
-                 -->
-                <div id="selectionBox">
-                    <!-- TODO: this box should have the problem state showing-->
-                    <h1 id="selectionBoxNumber">1</h1>
-                    <span id="problemState"></span>
-                    <p>out of <span id="totalNumber">1</span></p>
+    <div id="panelWrapper" class="panelWrapper">
+        <div id="navPanel" style="position:absolute; z-index:1;">
+            <div class="card blue-grey darken-2 z-depth-3" style="overflow:visible; margin:10;">
+                <div class="card-content white-text center-align">
+                    <div id="selectionBox" class="valign-wrapper">
+                        <a id="iop" class="waves-effect waves-light btn">Stuff</a>
+                        <i id="buttonPrev" class="small mdi-navigation-arrow-back left"></i>
+                        <span id="selectionBoxNumber" class="card-title" style="font-size:48px;">1</span>
+                        <i id="buttonNext" class="small mdi-navigation-arrow-forward right"></i>
+                        <span id="problemState"></span>
+                    </div>
+
                 </div>
-                <div class="arrowBox">
-                    <button id="buttonPrev"><--</button>
-                    <button id="buttonNext">--></button>
+                <div class="card-action blue white-text center-align" style="padding:5; border:0;">
+                    <p  style="margin:0;">out of <span id="totalNumber">1</span></p>
                 </div>
             </div>
         </div>
-        <p id="problemPanel">
-            Your browser is having some problems or the text has not loaded yet, for the mean time please try viewing this in incognito mode in
-            Chrome.
-        </p>
     </div>
-    <div class="bottomShadow" style="height:5px; width:100%;"></div>
 </template>
 </body>
 </html>

@@ -1,0 +1,112 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
+
+    <link rel="import" href="/src/instructor/review/userActionReviewInclude.html">
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+    <script src="/src/utilities/functions/barrier.js"></script>
+    <script src="/src/sketching/plugins/playback_alt.js"></script>
+</head>
+<body style="background:#FFFFFF;">
+<div class="row">
+    <div class="col s6 card-panel teal lighten-4">
+        <user-action-graph id="hello" style="height:90%;"></user-action-graph>
+    </div>
+    <div class="col s6 card-panel cyan lighten-5">
+        <sketch-surface id="fakeCanvas" style="height:90%;"></sketch-surface>
+    </div>
+</div>
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red">
+        <i class="large mdi-editor-mode-edit""></i>
+    </a>
+    <ul>
+        <li><a class="btn-floating red" onclick="primeMe();"><i class="large mdi-editor-insert-chart"></i></a></li>
+        <li><a class="btn-floating yellow darken-1" onclick="graphMe();"><i class="large mdi-editor-format-quote"></i></a></li>
+        <li><a class="btn-floating green"><i class="large mdi-editor-publish"></i></a></li>
+        <li><a class="btn-floating blue"><i class="large mdi-editor-attach-file"></i></a></li>
+    </ul>
+</div>
+<script>
+    //fakeCanvas
+    var surface = document.body.querySelector("sketch-surface");
+    var graphics = surface.graphics;
+    var updateManager, safeManager;
+    var updateList = [];
+    var playBack;
+    function primeMe() {
+        graphics = surface.graphics;
+        var tempList = surface.getUpdateList();
+        for (var i = 0; i < tempList.length; i++) {
+            updateList.push(tempList[i]);
+        }
+        updateManager = surface.getUpdateManager();
+        safeManager = updateManager;
+
+        updateManager = surface.getUpdateManager();
+        var copyList = [];
+        for (var i = 0; i < updateList.length; i++) {
+            copyList.push(updateList[i]);
+        }
+        console.log(copyList);
+        updateManager.clearUpdates(false, true);
+
+        playBack = new Playback(copyList, updateManager, graphics);
+        updateManager.addPlugin(playBack);
+    }
+
+    function playMe(target) {
+        playBack.playNext(target+1);
+    }
+
+    function graphMe() {
+        //userActionGraph
+        /*var updateList = new UpdateManager(undefined, function(error) {
+            console.log(error);
+        });*/
+        var updates = safeManager;
+
+        /*
+        //begin creating test data
+        var stubs = function(){
+            return false;
+        }
+
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+
+        var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
+        var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+
+        updateList.addUpdate(assignUpdate);
+        updateList.addUpdate(assignUpdate);
+        updateList.addUpdate(assignUpdate);
+        updateList.undoAction(false);
+        updateList.undoAction(false);
+        updateList.redoAction(false);
+        updateList.undoAction(false);
+        updateList.redoAction(false);
+        updateList.addUpdate(assignUpdate);
+        updateList.undoAction(false);
+        updateList.redoAction(false);
+        updateList.addUpdate(assignUpdate);*/
+
+        var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        //updateData.list=(updates.getUpdateList());
+        updateData.list= updateList;
+        console.log(updateData);
+        //end creating test data
+
+        var userGraph = document.body.querySelector("user-action-graph");
+        userGraph.loadData(updateData);
+    }
+
+
+</script>
+</body>
+</html>

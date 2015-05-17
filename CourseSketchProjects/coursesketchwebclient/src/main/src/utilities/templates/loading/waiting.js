@@ -64,7 +64,7 @@ function WaitScreenManager() {
         element.startWaiting = function() {
             running = true;
             if (element.parentNode) {
-                element.style.display = 'initial'; // default
+                element.style.display = 'inline-flex'; // default
             } else {
                 throw new Error('Element must be added before it can start waiting');
             }
@@ -138,6 +138,9 @@ function WaitScreenManager() {
         overlay.style.width = '100%';
         overlay.style.height = '100%';
         overlay.style.zIndex = 2147483647;
+        overlay.style.display = 'inline-flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
         overlay.open = true;
         overlay.id = 'overlay';
         element.appendChild(overlay);
@@ -150,7 +153,31 @@ function WaitScreenManager() {
      */
     this.buildWaitIcon = function buildWaitIcon(element) {
         var outer = document.createElement('div');
-        outer.setAttribute('class', 'outerWaitingIcon');
+        outer.setAttribute('class', 'preloader-wrapper big active valign');
+        var inner1 = document.createElement('div');
+        inner1.setAttribute('class', 'spinner-layer spinner-blue-only');
+        var inner2 = document.createElement('div');
+        inner2.setAttribute('class', 'circle-clipper left');
+        var inner3 = document.createElement('div');
+        inner3.setAttribute('class', 'circle');
+
+        inner2.appendChild(inner3);
+        inner1.appendChild(inner2);
+        outer.appendChild(inner1);
+
+        /*<div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
 
         var img = document.createElement('img');
         img.setAttribute('class', 'waitingIcon');
@@ -159,14 +186,16 @@ function WaitScreenManager() {
         } else {
             img.src = '/images/loading/000000_large_loader.gif';
         }
-        outer.appendChild(img);
-        if (this.waitIconText) {
-            var text = document.createElement('h1');
-            text.textContent = this.waitIconText;
-            text.setAttribute('class', 'waitingIconText');
-            outer.appendChild(text);
-        }
+        outer.appendChild(img);*/
         element.appendChild(outer);
+        if (this.waitIconText) {
+            var text = document.createElement('h4');
+            text.textContent = this.waitIconText;
+            text.style.textAlign = 'center';
+            text.setAttribute('class', 'waitingIconText');
+            element.appendChild(text);
+        }
+
     };
 }
 

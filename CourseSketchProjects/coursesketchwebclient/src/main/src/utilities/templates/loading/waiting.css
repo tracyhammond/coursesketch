@@ -1,7 +1,9 @@
 .waiting_box {
-	margin-left:auto;
-	margin-right:auto;
-	width:90%;
+	width:100%;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .waitingIcon {
@@ -47,6 +49,7 @@
 }
 
 #overlayDiv {
+
     background-color: white;
     position: absolute;
     top: 0px;

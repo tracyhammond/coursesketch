@@ -3,24 +3,20 @@
 </head>
 <body>
 <template id = "tool-bar">
-    <!--
-    |-----|
-    | sub |
-    | sav |
-    | und |
-    | red |
-    | spe |
-    |  |  |
-    |  v  |
-    |-----|
-     -->
     <style>
-        @import "/src/common/submission/toolbar/toolBar.css";
+        @import "/src/utilities/libraries/materializecss/css/materialize.min.css";
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
-    <div id = "panelWrapper" class = "panelWrapper" style = "width:50px;">
+    <div id = "panelWrapper" class = "panelWrapper noselect">
         <div id = "toolPanel">
             <div class = "transBox">
-                <h1></h1>
                 <!--
                 |--------|
                 |   sub  |
@@ -29,18 +25,19 @@
                 |   red  |
                 |--------|
                  -->
-                <div id ="constantButtons">
-                    <img id = "submission" src="/images/toolbar/submission_button.svg" title = "Click to submit the problem">
-                    <img id = "save" src="/images/toolbar/save_button.svg" title = "Click to save the problem">
-                    <img id = "undo" src="/images/toolbar/undo_button.svg" title = "Click to undo">
-                    <img id = "redo" src="/images/toolbar/redo_button.svg" title = "Click to redo">
+                <div id="constantButtons" class="" style="display:inline-flex;">
+                    <ul style="display:inline-flex;">
+                        <li><a id="submission" class="btn-floating red z-depth-2"><i class="large mdi-editor-insert-chart"></i></a></li>
+                        <li><a id="save" class="btn-floating yellow darken-1 z-depth-2"><i class="large mdi-content-save"></i></a></li>
+                        <li><a id="undo" class="btn-floating green z-depth-2"><i class="large mdi-content-undo"></i></a></li>
+                        <li><a id="redo" class="btn-floating blue z-depth-2"><i class="large mdi-content-redo"></i></a></li>
+                        <content id = "specific_buttons" select=".specific_button"></content>
+                    </ul>
                 </div>
                 <!--
                 Shows buttons that are specific to the current content
                  -->
-                <content id = "specific_buttons" select=".specific_button">
-                </content>
-                <h1></h1>
+
             </div>
         </div>
     </div>
