@@ -39,7 +39,7 @@
             column.style.maxWidth = '10ch';
             column.style.position = 'relative';
             column.className = 'gradecell';
-            column.onclick = gradeCellOnClick;
+            column.onclick = gradeCellSelected;
             column.dataset.student = studentId;
             // note that this is i minus the offset
             column.dataset.column = i;
@@ -155,7 +155,7 @@
         $('ul.tabs').tabs();
     };
 
-    function gradeCellOnClick() {
+    function gradeCellSelected() {
         if (this.querySelector('input') === null) {
             var grade = this.textContent;
             // datasets have to be underscore.
@@ -173,6 +173,12 @@
             input.oninput = function() { this.setCustomValidity('') };
             $(this).addClass('gradeSelected');
         }
+    }
+
+    function createFocusedCell() {
+        var template = document.querySelector('#inputTemplate');
+        var container = document.importNode(template.content, true);
+        return container;
     }
 
     /**
@@ -237,12 +243,12 @@
         unselectCell(cell);
         // If there is a cell to move to.
         if (cell.nextSibling !== null) {
-            createFocusedCell(cell.nextSibling);
+			gradeCellSelected.bind(cell.nextSibling)();
         } else {
             var currentRow = cell.parentElement;
             var nextRow = currentRow.parentElement.rows[currentRow.rowIndex]; // rows[] indexes from 0. rowIndex starts at 1. Idk why.
             var nextCell = nextRow.querySelector('.gradecell');
-            createFocusedCell(nextCell);
+            gradeCellSelected.bind(nextCell)();
         }
 
     }
@@ -258,18 +264,14 @@
         var nextCell = nextRow.children[getChildIndex(cell)];
         console.log(nextCell);
 
-        $(nextCell).trigger('click');
+		gradeCellSelected.bind(nextCell)();
 
     }
 
     function moveUp(cell) {
         unselectCell(cell);
     }
-    function createFocusedCell() {
-        var template = document.querySelector('#inputTemplate');
-        var container = document.importNode(template.content, true);
-        return container;
-    }
+
 
     /**
      * Returns the index of an element in reference to its parent element.
