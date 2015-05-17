@@ -74,10 +74,14 @@ input {
     text-align: center;
 }
 
-.gradeCell {
+.filledGradeCell {
     font-size: .75em;
     text-align: center;
     cursor: default;
+}
+
+.gradeCell {
+    font-size: .95em;
 }
 
 .gradeSelected {
