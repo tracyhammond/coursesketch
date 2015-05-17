@@ -45,11 +45,14 @@
             var offset = startingPosition.top - newTop;
 
             if (offset > triggerVerticalOffset && isUndefined(verticalHeader)) {
-                verticalHeader = deepComputedClone(scrollingTable.querySelector('thead'));
+                var clonedElement = scrollingTable.querySelector('thead').cloneNode(true);
                 var table = document.createElement('table');
+                table.appendChild(clonedElement);
+                verticalHeader = table;
                 $(table).addClass('fixedHead z-depth-1');
-                table.appendChild(verticalHeader);
+
                 document.querySelector('.horizontalTableHolder').appendChild(table);
+                $(verticalHeader).offset({ left: $(scrollingTable).offset().left });
             } else if (offset > triggerVerticalOffset && verticalHeader.style.display === 'none') {
                 verticalHeader.style.display = 'block';
             } else if (offset <= triggerVerticalOffset && !isUndefined(verticalHeader)) {

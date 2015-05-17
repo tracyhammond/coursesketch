@@ -23,6 +23,16 @@
     background-color:#FFFFFF;
     z-index: 1;
 }
+
+.fixedHead th:first-child {
+    padding-left: 4px;
+}
+
+.fixedHead a {
+    margin-right: 1px;
+    margin-right: 1px;
+}
+
 th {
     font-weight:normal;
     text-align: center;
