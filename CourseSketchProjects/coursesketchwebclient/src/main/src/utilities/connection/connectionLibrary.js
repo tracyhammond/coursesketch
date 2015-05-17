@@ -37,6 +37,10 @@ function Connection(uri, encrypted, attemptReconnect) {
             console.log('Creating socket at ' + wsUri);
             websocket = new WebSocket(wsUri);
             websocket.binaryType = 'arraybuffer'; // We are talking binary
+            /**
+             * called when the websocekt opens
+             * @param {Event} evt
+             */
             websocket.onopen = function(evt) {
                 connected = true;
                 if (onOpen) {
@@ -48,6 +52,10 @@ function Connection(uri, encrypted, attemptReconnect) {
                 }
             };
 
+            /**
+             * called when the websocket closes
+             * @param {Event} evt
+             */
             websocket.onclose = function(evt) {
                 connected = false;
                 websocket.close();
@@ -64,6 +72,11 @@ function Connection(uri, encrypted, attemptReconnect) {
                     }, 3000);
                 }
             };
+
+            /**
+             * called when the websocket receives a message.
+             * @param {Event} evt
+             */
             websocket.onmessage = function(evt) {
                 /*jshint maxcomplexity:15 */
                 try {
@@ -116,6 +129,11 @@ function Connection(uri, encrypted, attemptReconnect) {
                 }
                 // Decode with protobuff and pass object to client
             };
+
+            /**
+             * called when the websocket throws an error.
+             * @param {Event} evt
+             */
             websocket.onerror = function(evt) {
                 if (onError) {
                     onError(evt, null);
@@ -161,38 +179,83 @@ function Connection(uri, encrypted, attemptReconnect) {
         onError = error;
     };
 
+    /**
+     * Sets a listener to listen to login events.
+     *
+     * @param {Function} listener the function that is called when the client receives a login message from the server
+     */
     this.setLoginListener = function(listener) {
         onLogin = listener;
     };
 
+    /**
+     * Sets a listener to listen to recognition events.
+     *
+     * @param {Function} listener the function that is called when the client receives a recognition message from the server.
+     */
     this.setRecognitionListener = function(listener) {
         onRecognition = listener;
     };
 
+    /**
+     * Sets a listener to listen to answer checker events.
+     *
+     * @param {Function} listener the function that is called when the client receives a answer checker message from the server.
+     */
     this.setAnswerCheckingListener = function(listener) {
         onAnswerChecker = listener;
     };
 
+    /**
+     * Sets a listener to listen to submission events.
+     *
+     * @param {Function} listener the function that is called when the client receives a submission message from the server.
+     */
     this.setSubmissionListener = function(listener) {
         onSubmission = listener;
     };
 
+    /**
+     * Sets a listener to listen to submission events.
+     *
+     * @param {Function} listener the function that is called when the client receives a submission message from the server.
+     */
     this.setSchoolDataListener = function(listener) {
         onSchoolData = listener;
     };
 
+    /**
+     * Sets a listener to listen to a connection opening.
+     *
+     * @param {Function} listener the function that is called when the client opens a connection.
+     */
     this.setOnOpenListener = function(listener) {
         onOpen = listener;
     };
 
+    /**
+     * Sets a listener to listen to a connection closing.
+     *
+     * @param {Function} listener the function that is called when the client closes a connection.
+     */
     this.setOnCloseListener = function(listener) {
         onClose = listener;
     };
 
+    /**
+     * Sets a listener to listen to a any message.
+     *
+     * @param {Function} listener the function that is called when the client receives any message.
+     */
     this.setOnMessageListener = function(listener) {
         onRequest = listener;
     };
 
+    /**
+     * Sets a listener to listen to a an error event from the server.
+     *
+     * @param {Function} listener the function that is called when the client receives an error from the server.
+     */
     this.setOnErrorListener = function(listener) {
         onError = listener;
     };
@@ -247,6 +310,13 @@ function Connection(uri, encrypted, attemptReconnect) {
 
     CourseSketch.getCurrentTime = this.getCurrentTime;
 
+    /**
+     * Called to syncrhonize time events.
+     *
+     * @param {Event} evt
+     * @param {Request} msg
+     * @returns {Long|Null} returns the time to send or null if no time is being sent
+     */
     function onTime(evt, msg) {
         if (msg.getResponseText() === SEND_TIME_TO_CLIENT_MSG) { // client
             return clientReciveTimeDiff(msg);
@@ -256,6 +326,10 @@ function Connection(uri, encrypted, attemptReconnect) {
         return null;
     }
 
+    /**
+     * @param {Request} req the time request
+     * @returns {Request}
+     */
     function clientReciveTimeDiff(req) {
         var startCounter = localScope.getCurrentTime();
         timeDifferance = dcodeIO.Long.fromString('' + req.getMessageTime()).subtract(localScope.getCurrentTime());
@@ -266,6 +340,10 @@ function Connection(uri, encrypted, attemptReconnect) {
         return rsp;
     }
 
+    /**
+     * @param {Request} req the time request
+     * @returns {Request|Null}
+     */
     function clientReciveLatency(req) {
         latency = dcodeIO.Long.fromString('' + req.getMessageTime());
         totalTimeDifferance = timeDifferance.add(latency);
