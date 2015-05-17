@@ -207,7 +207,7 @@ function ProtobufSetup() {
             objectList.push(objectName);
             Object.defineProperty(localScope, objectName, {
                 /**
-                 * @returns {ProtobufObject} An instance a protobuf object.
+                 * @returns {Object} An instance a protobuf object.
                  */
                 value: function() {
                     if (arguments.length > 0) {
