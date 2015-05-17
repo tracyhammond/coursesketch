@@ -14,7 +14,7 @@
 </head>
 <template id="inputTemplate">
     <div class = 'gradeCell'>
-        <form class="gradeForm">
+        <form class="gradeForm" target="hiddenFrame">
             <input class="gradeInput input-field" type="text" pattern="\d*\.?\d*" style="padding:0px; width:9ch;" maxlength = "5">
             <a href="#" style="display:block;">Add Comment</a>
             <input class="commentInput input-field" type="text" maxlength = "20" style="display:none;">
@@ -25,6 +25,7 @@
     </div>
 </template>
     <body>
+    <iframe name="hiddenFrame" style="display:none"></iframe>
     <div class="row">
         <div class="col s12 tabholder">
         </div>
