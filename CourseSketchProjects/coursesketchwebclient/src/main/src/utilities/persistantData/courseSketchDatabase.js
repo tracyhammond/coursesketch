@@ -242,7 +242,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns the state at the given key.
-     * @param key
+     * @param {String} key
      */
     this.getState = function(key) {
         return stateMachine.get(key);
@@ -250,7 +250,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns true if the state exists
-     * @param key
+     * @param {String} key
      */
     this.hasState = function(key) {
         return stateMachine.has(key);

@@ -33,10 +33,10 @@ if (isUndefined(getTextWidth)) {
      * Uses canvas.measureText to compute and return the width of the given text of
      * given font in pixels.
      *
-     * @param {String}
-     *            text The text to be rendered.
-     * @param {String}
-     *            font The css font descriptor that text is to be rendered with
+     * @param {String} text
+     *            The text to be rendered.
+     * @param {String} font
+     *            The css font descriptor that text is to be rendered with
      *            (e.g. 'bold 14px verdana').
      *
      * @see http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
@@ -56,8 +56,8 @@ if (isUndefined(cssEscapeId)) {
     /**
      * Does a very simple escaping of the id for css purposes.
      * A more complicated version is found here: https://mothereff.in/css-escapes
-     * @param inputId The id we want escaped.
-     * @return escaped value
+     * @param {String} inputId The id we want escaped.
+     * @return {String} escaped value
      *
      * Example:
      * Input: 12a2b3c

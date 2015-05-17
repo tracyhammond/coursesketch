@@ -51,6 +51,11 @@ function SchoolItemBuilder() {
                 // capitalizes only the first letter.
                 var capitalName = objectName.charAt(0).toUpperCase() + objectName.slice(1);
                 var setName = 'set' + capitalName;
+                /**
+                 * Allows the setting of custom values
+                 * @param {*} value The value that is wanted to be set in the school Item.
+                 * @returns {SchoolItemBuilder}
+                 */
                 scope[setName] = function(value) {
                     scope[objectName] = value;
                     return scope;
@@ -72,6 +77,10 @@ function SchoolItemBuilder() {
      * CREATING LIST LOGIC
      **************************************************************************/
 
+    /**
+     * Builds the list given the settings
+     * @param {String|Element} id the element or string of the id of the element.
+     */
     this.build = function(id) {
 
         var hostElement = undefined;

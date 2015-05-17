@@ -199,6 +199,13 @@
         return undefined;
     };
 
+    /**
+     * Loads the data from the school item into the edit panel
+     * @param {Element} schoolItemElement the school Item that is currently being edited.
+     * @param {Map} schoolItemData A mpa containing the school item.
+     * @param {Element} editPanel a panel that displays the editable material.
+     * @returns {Map}
+     */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
         var inputList = editPanel.querySelectorAll('.need-loading');
         var mappedInput = new Map();
@@ -255,6 +262,9 @@
              * open scripting window and sketch saving/loading
              */
             var scriptButton = shadow.querySelector('button.scripting');
+            /**
+             * Called to open a script editor.
+             */
             scriptButton.onclick = function() {
                 var data = getInput(shadow);
                 location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
@@ -263,6 +273,9 @@
             // save data
             //NOT WORKING, NEEDS TO BE MODIFIED
             var saveButton = shadow.querySelector('button.save');
+            /**
+             * Called to save all of the input.
+             */
             saveButton.onclick = function() {
                 var newData = getInput(shadow);
                 var schoolItem = getHostElement(parentNode);
@@ -273,6 +286,11 @@
             };
 
             // cancel!
+            /**
+             * Called to cancel the editing process
+             * @param {Element} event
+             * @returns {Boolean}
+             */
             function close(event) {
                 if (event.toElement === host) {
                     return false;

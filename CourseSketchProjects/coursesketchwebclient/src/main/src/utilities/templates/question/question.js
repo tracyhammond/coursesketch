@@ -13,18 +13,36 @@ function Question() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        /**
+         * Called when the actions event has been clicked.
+         * @param {Event} event
+         */
         shadowRoot.getElementById('actions').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = true;
         };
+        /**
+         * Called to closed the question dialog.
+         * @param {Event} event
+         */
         shadowRoot.getElementById('dialog-close').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = false;
         };
+
+        /**
+         * Called when the correct button has been pressed.
+         * @param {Event} event
+         */
         shadowRoot.getElementById('correct-lecture').onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById('correct-slide'));
         };
+
+        /**
+         * Called when the incorrect button has been pressed.
+         * @param {Event} event
+         */
         shadowRoot.getElementById('incorrect-lecture').onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
@@ -204,6 +222,10 @@ function Question() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener
+     * @param {Function} listener called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };
