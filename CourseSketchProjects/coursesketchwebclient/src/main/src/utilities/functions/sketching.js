@@ -12,12 +12,21 @@
  * ******************************
  */
 if (isUndefined(convertRGBtoHex)) {
+    /**
+     * Converts RGB to a hex value
+     * @returns {String}
+     */
     function convertRGBtoHex(a, r, g, b) {
         return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
 }
 
 if (isUndefined(convertHexToRgb)) {
+    /**
+     * Given a hex value convert it to rgb values.
+     * @param {String} hex
+     * @returns {{r: (*|Number), g: (*|Number), b: (*|Number)}}
+     */
     function convertHexToRgb(hex) {
         var localHex = hex;
         // Expand shorthand form (e.g. '03F') to full form (e.g. '0033FF')

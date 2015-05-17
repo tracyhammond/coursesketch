@@ -73,7 +73,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var database = new ProtoDatabase(localUserId, version, initalizedFunction);
 
     (function() {
-
+        /**
+         * Add function for adding elements to the database.
+         * @returns {*}
+         */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
                 'id': objectId,
@@ -143,10 +146,18 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
+    /**
+     * This is supposed to clean out the database.
+     *
+     * Currently does not work.
+     */
     this.emptySchoolData = function() {
         database.emptySelf();
     };
 
+    /**
+     * Creates the specific datamanagers.
+     */
     this.start = function() {
         // creates a manager for just courses.
         courseManager = new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
@@ -229,14 +240,25 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         stateMachine.set(key, value);
     };
 
+    /**
+     * Returns the state at the given key.
+     * @param key
+     */
     this.getState = function(key) {
         return stateMachine.get(key);
     };
 
+    /**
+     * Returns true if the state exists
+     * @param key
+     */
     this.hasState = function(key) {
         return stateMachine.has(key);
     };
 
+    /**
+     * Empties all state data.
+     */
     this.clearStates = function() {
         stateMachine = new Map();
     };

@@ -148,6 +148,10 @@ if (isUndefined(BaseException)) {
         this.message = 'BaseException Thrown.\n Please subclass this to create a better exception.';
         this.stackTrace = undefined;
         this.cause = undefined;
+
+        /**
+         * @returns {String} A string representation of the exception.
+         */
         this.toString = function() {
             return this.name + ': ' + this.message + (this.specificMessage ? '\n' + this.specificMessage : '\n') + this.stackTrace.join('\n\n');
         };
