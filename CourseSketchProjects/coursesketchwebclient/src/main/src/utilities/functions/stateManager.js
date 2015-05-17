@@ -45,16 +45,31 @@ function Redirector(scope, affectedWindow) {
         scope.location.replace(replacedHash);
     };
 
+    /**
+     * Replaces all strings with a different value.
+     * @param {String} find
+     * @param {RegularExpression} replace
+     * @param {String} str
+     * @returns {*}
+     */
     function replaceAll(find, replace, str) {
         return str.replace(new RegExp(find, 'g'), replace);
     }
 
+    /**
+     * Gets the redirection url of the page from the hash.
+     * @returns {String}
+     */
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
         var addedSlashes = STARTING_URL + '/' + replaceAll('\\.', '/', starting) + '.' + FILE_ENDINGS;
         return addedSlashes;
     };
 
+    /**
+     * Changes the window address and adds a browser event.
+     * @param {String} url
+     */
     this.moveWindow = function(url) {
         affectedWindow.src = url;
     };

@@ -1,7 +1,13 @@
-// Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
+/**
+ * Gets an image in base 64 so we can save it as binary.
+ *
+ * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
+ * @param {String} imgTag
+ * @returns {String}
+ */
 function getBase64Image(imgTag) {
     if (imgTag.src.endsWith('.svg')) {
-        console.log('ENDInG WITH SVG OH NOES!');
+        throw new BaseException('ENDInG WITH SVG OH NOES!');
     }
     console.log(imgTag);
     // Create an empty canvas element
@@ -21,11 +27,22 @@ function getBase64Image(imgTag) {
     return dataURL;//dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
 }
 
-// Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
+/**
+ * Currently broken.
+ *
+ * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
+ * @param {Element} imgTag
+ * @returns {*}
+ */
 function getBase64Svg(imgTag) {
     return dataURL;//dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
 }
 
+/**
+ * Sets the image as data.
+ * @param {Element} imgTag
+ * @param {String} data
+ */
 function setBase64Image(imgTag, data) {
     imgTag.src = /*'data:image/png;base64,' + */data;
 }
