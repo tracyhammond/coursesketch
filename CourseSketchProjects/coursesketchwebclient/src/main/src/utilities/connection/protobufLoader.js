@@ -3,7 +3,7 @@
 /**
  * Any exception that occurs relating to protobufs.
  * @param {String} message A custom message for the user.
- * @param {[BaseException|Error]} cause Optional exception that caused this instance.
+ * @param {BaseException|Error} [cause] Optional exception that caused this instance.
  * @constructor
  */
 function ProtobufException(message, cause) {
@@ -480,7 +480,7 @@ function ProtobufSetup() {
      *            A callback that is called when an error occurs
      *            (optional). This will be called before the result is returned
      *            and may be called up to two times.
-     * @return {ProyobufObject} decoded protobuf object.
+     * @return {ProtobufObject} decoded protobuf object.
      */
     this.decodeProtobuf = function(data, proto, onError) {
         try {

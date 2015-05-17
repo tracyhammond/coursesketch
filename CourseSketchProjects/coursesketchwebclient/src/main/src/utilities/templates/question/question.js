@@ -57,6 +57,10 @@ function Question() {
      */
     this.loadLectures = function(lectureIds) {
         var localScope = this;
+        /**
+         * Called after lectures have been loaded.
+         * @param {List<SrlLecture>} lectures
+         */
         var callback = function(lectures) {
             shadowRoot.getElementById('correct-lecture').innerHTML = '';
             shadowRoot.getElementById('incorrect-lecture').innerHTML = '';
@@ -88,6 +92,10 @@ function Question() {
      * @param {Element} slideSelect select element to load the slides into
      */
     this.loadSlides = function(idList, slideSelect) {
+        /**
+         * Called when lecture slides have been loaded.
+         * @param {List<SrlSlide>} slides
+         */
         var callback = function(slides) {
             slideSelect.innerHTML = '';
             for (var i = 0; i < slides.length; ++i) {

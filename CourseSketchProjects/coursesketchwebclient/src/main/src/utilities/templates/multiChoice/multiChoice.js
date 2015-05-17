@@ -98,7 +98,9 @@ function MultiChoice() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        // Bind addAnswer to click
+        /**
+         * Bind addAnswer to click.
+         */
         localScope.shadowRoot.querySelector('#add').onclick = function(event) {
             localScope.addAnswer(event);
         };
