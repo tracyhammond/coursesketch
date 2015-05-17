@@ -62,7 +62,6 @@
 
         // independent of which table is active
         $('.verticalTableHolder').scroll(function(event) {
-            //console.log(event);
             var newPosition = $(scrollingTable).offset();
             if (isUndefined(newPosition)) {
                 return;
@@ -77,22 +76,8 @@
                 return;
             }
 
-            var newTop = newPosition.left;
-            var offset = startingPosition.left - newTop;
-            var scrolledElement = document.querySelector('.tabletalk');
-            console.log($(scrolledElement).offset());
-            //console.log($('.horizontalTableHolder').scrollTop());
-            var y_scroll_pos = window.pageYOffset;
-            var scroll_pos_test = 150;
-            // set to whatever you want it to be
-
-            if(y_scroll_pos > scroll_pos_test) {
-                $('body').css('background-color','#000');
-            }
-            else
-            {
-                $('body').css('background-color','#FFF');
-            }
+            var newLeft = newPosition.left;
+            var offset = startingPosition.left - newLeft;
         });
     }); // document ready
 
