@@ -1,5 +1,6 @@
 /**
  * An exception that is thrown for the uses of submissions.
+ *
  * @extends BaseException
  * @class SubmissionException
  */
@@ -13,8 +14,8 @@ function SubmissionException(message, cause) {
 SubmissionException.prototype = new BaseException();
 
 /**
- * A class that handles submitting a problem to the database.
- * and listening for the result.
+ * A class that handles submitting a problem to the database and listening for the result.
+ *
  * This class does not retrieve submissions.
  *
  * Assumptions made:
@@ -32,7 +33,7 @@ SubmissionException.prototype = new BaseException();
 function SubmissionPanel() {
 
     /**
-     * @param {element} templateClone
+     * @param {Element} templateClone
      *            An element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
@@ -46,7 +47,8 @@ function SubmissionPanel() {
     };
 
     /**
-     * Sets the callback for the toolbar buttons.  (If the toolbar exist)
+     * Sets the callback for the toolbar buttons if the toolbar exists.
+     *
      * @see Toolbar
      * @instance
      * @memberof SubmissionPanel
@@ -71,7 +73,9 @@ function SubmissionPanel() {
     };
 
     /**
-     * This sends data to the server but catches any exception.  This method should only be used for testing purposes.
+     * This sends data to the server but catches any exception.
+     *
+     * This method should only be used for testing purposes.
      * @instance
      * @memberof SubmissionPanel
      * @param {Boolean} isSubmitting - true if the data is being submitted.
@@ -91,6 +95,7 @@ function SubmissionPanel() {
 
     /**
      * Sends the submission to the server.
+     *
      * @param {Boolean} isSubmitting - true if the data is a submission as opposed to just a normal save.
      * @throws {SubmissionException} - thrown if there is a problem
      * @instance
@@ -151,6 +156,7 @@ function SubmissionPanel() {
 
     /**
      * Gets the text that has been typed.
+     *
      * @return {SrlSubmission} object that is ready to be sent to the server.
      *
      * @param {Element} textArea The element that contains the text answer
@@ -165,7 +171,9 @@ function SubmissionPanel() {
     }
 
     /**
-     * Creates the submission object for the sketch surface.  This also adds the submit or save marker to the update list.
+     * Creates the submission object for the sketch surface.
+     *
+     * This also adds the submit or save marker to the update list.
      * @param {SketchSurface} sketchSurface - the sketch surface that is being submitted.
      * @param {Boolean} isSubmitting - true if this is a submission instead of a save.
      * @return {SrlSubmission} object that is ready to be sent to the server.
@@ -204,7 +212,9 @@ function SubmissionPanel() {
     }
 
     /**
-     * Sets the wrapperFunction, This function takes in a submission and wraps it as either the experiment or solution.
+     * Sets the wrapperFunction.
+     *
+     * This function takes in a submission and wraps it as either the experiment or solution.
      * This wrapped value is returned from the function and then it is sent to the server internally.
      * @param  {Function} wrapperFunction - used to wrap the submission in its required data.
      * @instance
@@ -248,6 +258,7 @@ function SubmissionPanel() {
 
     /**
      * Makes callbacks for the toolbar that depend on the type of problem.
+     *
      * @param {QuestionType} problemType - the type of problem that is currently being submitted.
      * @param {Element} element - the element contained inside the submission panel.
      * @param {Toolbar} toolbar - the custom toolbar element that is contained inside the submission panel.
@@ -297,6 +308,9 @@ function SubmissionPanel() {
 SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
 
 /**
+ * Sets the problem type for the submission panel.
+ *
+ * The problem type is used to detirmine how to load and save the panel.
  * @param {QuestionType} problemType sets the problem element.
  * @instance
  * @memberof SubmissionPanel

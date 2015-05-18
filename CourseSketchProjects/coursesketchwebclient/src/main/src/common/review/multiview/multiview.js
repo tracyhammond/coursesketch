@@ -1,6 +1,6 @@
 /**
- * The MvSketch function handles all the action that can take place
- * in the multiview units.
+ * The MvSketch function handles all the action that can take place in the multiview units.
+ *
  * Attributes:
  * data-binary: if set then the button will be disabled.
  * data-max_points: if set then this is the max number of points that can be input
@@ -13,8 +13,9 @@ function MvSketch() {
 
     /**
      * Sets the update list.
-     * after the update list is done loading
-     * @param {SrlUpdateList} updateList - a list that contains all the changes made in sketch.
+     *
+     * After the update list is done loading this attempts to resize the sketch surface so that it fills the canvas correctly.
+     * @param {SrlUpdateList} updateList a list that contains all the changes made in sketch.
      * @instance
      * @memberof MvSketch
      */
@@ -28,7 +29,7 @@ function MvSketch() {
     /**
      * Sets the user id for display purposes.
      *
-     * @param {String} userId - the name that shows up for instructors to find the user name of.
+     * @param {String} userId the name that shows up for instructors to find the user name of.
      */
     this.setUserId = function(userId) {
         // Uses only the first 7 characters to ensure that they are easy to read by a human and do not take up much space on the screen.
@@ -38,6 +39,8 @@ function MvSketch() {
 
     /**
      * This creates the shadow root and attaches it to the object in question.
+     *
+     * @param {Element} templateClone A clone of the shadow dom.
      * @instance
      * @memberof MvSketch
      */
@@ -56,6 +59,7 @@ function MvSketch() {
 
     /**
      * Looks at the data attributes of this element and configures the element appropriately.
+     *
      * @instance
      * @memberof MvSketch
      */
@@ -76,6 +80,7 @@ function MvSketch() {
 
     /**
      * Marks the sketch at correct and changes the background to outercorrect.
+     *
      * @instance
      * @memberof MvSketch
      * @access private
@@ -89,6 +94,7 @@ function MvSketch() {
 
     /**
      * Marks the sketch as wrong and changes the background to outerwrong.
+     *
      * @instance
      * @memberof MvSketch
      * @access private
@@ -102,6 +108,8 @@ function MvSketch() {
 
     /**
      * Sets the callback that is called when the sketch is clicked.
+     *
+     * @param {Function} sketchClickedFunction A function called when the sketch is clicked.
      * @instance
      * @memberof MvSketch
      */

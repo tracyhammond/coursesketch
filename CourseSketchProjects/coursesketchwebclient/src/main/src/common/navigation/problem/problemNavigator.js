@@ -22,6 +22,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var uiLoaded = false;
 
     /**
+     * Changes the index to point at this new problem.
+     *
      * @param {Number} index {Number} the problem that we want to switch to.
      * @instance
      * @memberof ProblemNavigator
@@ -32,6 +34,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Attempts to change to the next problem.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -41,6 +44,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Attempts to change to the previous problem.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -66,6 +70,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Changes the problem to the current index.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -74,7 +79,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * @return {Boolean} true if the data has been loaded.
+     * @return {Boolean} true if the problems have been loaded into memory.
      * @instance
      * @memberof ProblemNavigator
      */
@@ -83,6 +88,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
+     * Sets the knowledge of if the navigator ui has been loaded.
+     *
      * @param {Boolean} value true if the ui has been loaded.
      * @instance
      * @memberof ProblemNavigator
@@ -92,7 +99,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * @returns {SrlProblemBank} the information of the current problem.
+     * @returns {Number} the number of problems in the list.
      * @memberof ProblemNavigator
      */
     this.getProblemListSize = function getProblemListSize() {
@@ -109,7 +116,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Scopes the index for the callbackList.
-     * this way the browser is not locked up by callbacks.
+     *
+     * This way the browser is not locked up by callbacks.
      * @instance
      * @access private
      * @memberof ProblemNavigator
@@ -164,7 +172,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     }
 
     /**
-     * adds a callback that is called when changing problem index.
+     * Adds a callback that is called when changing problem index.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -225,7 +234,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * sets the information about a specific submission.
+     * Sets the information about a specific submission.
+     *
      * @param {SrlExperiment | SrlSolution} submissionWrapper this is either an experiment or solution this is NOT a submission object.
      * @instance
      * @memberof ProblemNavigator
@@ -261,7 +271,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Sets the new Id for the assignment, this does not refresh the navigator.
-     * That can be done by calling {@link #reloadProblems}.
+     *
+     * Refreshing the navigator can be done by calling {@link #reloadProblems}.
      * @param {String} currentAssignmentId The new assignmentid.
      * @instance
      * @memberof ProblemNavigator
@@ -271,8 +282,11 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
+     * Sets the preferred index to start navigation at.
+     *
+     * This does not change what the current index is.  This function is only useful when first creating the problem navigator.
+     *
      * @param {Number} selectedIndex sets the preferred index to start the problem at.
-     * This does not change what the current index is.
      * @instance
      * @memberof ProblemNavigator
      */
@@ -282,6 +296,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Reloads the assignment from the id and assigns it to the currentAssignment.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -292,7 +307,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * @return {SrlAssignment} the current assignment.
+     * @return {SrlAssignment} the current assignment stored in this navigator..
      * @instance
      * @memberof ProblemNavigator
      */
@@ -301,7 +316,9 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Loads all of the problems given an assignment.
+     * ReLoads all of the problems given an assignment.
+     *
+     * This also will refresh the navigator.
      * @instance
      * @memberof ProblemNavigator
      */
@@ -327,6 +344,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Add an event mapping for a specific callback.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -342,6 +360,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Attempts to remove the event from the current event map.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
@@ -353,7 +372,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * clears all mappings.
+     * Clears all mappings of event callbacks.
+     *
      * @instance
      * @memberof ProblemNavigator
      */
