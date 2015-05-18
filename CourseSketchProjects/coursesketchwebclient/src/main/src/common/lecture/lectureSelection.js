@@ -27,8 +27,7 @@ validateFirstRun(document.currentScript);
         };
 
         /**
-         * Function that is called when a lecture is selected
-         * (clicked on)
+         * Function that is called when a lecture is selected (clicked on).
          *
          * @param {protoObject} lecture
          *            protobuf object of the lecture that was selected
@@ -70,8 +69,9 @@ validateFirstRun(document.currentScript);
         };
 
         /**
-         * Called when a course is selected. Updates selection
-         * and gets lectures for the course.
+         * Updates selection and gets lectures for the course.
+         *
+         * Called when a course is selected.
          *
          * @param {Object} course
          *                course object of the selected element
@@ -129,7 +129,7 @@ validateFirstRun(document.currentScript);
         /**
          * Renders a list of courses to the screen.
          *
-         * @param {list} courseList list of courses to display.
+         * @param {List<SrlCourse>} courseList list of courses to display.
          * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.showCourses = function(courseList) {
@@ -142,7 +142,8 @@ validateFirstRun(document.currentScript);
         };
 
         /**
-         * Loads the courses from the database
+         * Loads the courses from the database.
+         *
          * @memberof lectureSelection
          */
         var loadCourses = function(courseList) {

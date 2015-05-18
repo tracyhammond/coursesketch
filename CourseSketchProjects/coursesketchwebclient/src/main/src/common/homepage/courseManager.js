@@ -6,6 +6,7 @@ validateFirstRun(document.currentScript);
 
 /**
  * The element that handles the waiting icon.
+ *
  * [TODO change docs to custom element]
  * @memberof courseManagement
  */
@@ -61,8 +62,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     };
 
     /**
-     * Given a list of {@link SrlCourse} a bunch of school items are built then
-     * added to the class_list_column div.
+     * Given a list of {@link SrlCourse} a bunch of school items are built then added to the class_list_column div.
+     *
      * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
@@ -91,6 +92,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a user clicks on a course school item.
+     *
      * This loads the assignments from the database then calls 'showAssignments' to display them.
      * @memberof courseManagement
      */
@@ -121,10 +123,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called to show a specific set of assignments with the given list.
+     *
      * @memberof courseManagement
      */
     courseManagement.showAssignments = function(assignmentList, course) {
-        console.log(assignmentList);
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
@@ -150,6 +152,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when an assignment is clicked.
+     *
      * @memberof courseManagement
      */
     courseManagement.assignmentClicked = function(assignment) {
@@ -173,6 +176,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Displays the list of problems for the user to pick from.
+     *
      * @param {list} problemList The list of problems that are wanting to be showed
      * @param {assignment} assignment (optional) The assignment that created this problem list
      * @memberof courseManagement
@@ -198,6 +202,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a problem is displayed.
+     *
      * @memberof courseManagement
      */
     courseManagement.problemClicked = function(problem) {
@@ -250,6 +255,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Sets the message to hint that the previous column is selectable and gives prompts to action.
+     *
      * @memberof courseManagement
      */
     function setNotSelectedMessage(number) {
@@ -268,6 +274,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * A helper method to simplify the code for changing the selection.
+     *
      * Clears the existing selection then selects the given id.
      * @memberof courseManagement
      */

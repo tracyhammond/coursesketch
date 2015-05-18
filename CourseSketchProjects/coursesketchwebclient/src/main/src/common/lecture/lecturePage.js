@@ -10,6 +10,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Resizes the element that was affected by the event.
+     *
      * @param {Event} event the event that contains the element needing a resize.
      * @memberof lecturePage
      */
@@ -29,6 +30,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new text box and loads data into it.
+     *
      * @param {TextBoxProto} textBox the data needed for the text box.
      * @memberof lecturePage
      */
@@ -39,6 +41,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new question element and loads data into it.
+     *
      * @param {QuestionProto} question the data needed for the question.
      * @memberof lecturePage
      */
@@ -49,6 +52,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new imageBox element and loads data into it.
+     *
      * @param {ImageProto} imageBox the data needed for the image.
      * @memberof lecturePage
      */
@@ -59,6 +63,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new embeddedHtml element and loads data into it.
+     *
      * @param {embeddedHtmlProto} embeddedHtml the data needed for the embedded html page.
      * @memberof lecturePage
      */
@@ -69,6 +74,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new text box to the currently selected lecture slide.
+     *
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.newTextBox = function() {
@@ -85,6 +91,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new sketch content element to the currently selected slide.
+     *
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.newSketchContent = function() {
@@ -97,7 +104,8 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Adds a new image to the currently selected slide
+     * Adds a new image to the currently selected slide.
+     *
      * @param {element} input the input element from the form specifying the image.
      * @memberof lecturePage
      */
@@ -123,6 +131,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new embedded HTML element to the currently selected slide.
+     *
      * @param {element} form the form that contains the HTML element to be added.
      * @memberof lecturePage
      */
@@ -138,6 +147,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a new multiple choice question to the currently selected slide.
+     *
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
@@ -151,9 +161,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Renders a slide to the DOM.
-
-     * @param {protoObject} slide
-     *            protobuf slide element to be rendered.
+     *
+     * @param {protoObject} slide protobuf slide element to be rendered.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.renderSlide = function(slide) {
@@ -181,6 +190,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
+     *
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.addWaitOverlay = function() {
@@ -191,6 +201,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Removes the wait overlay from the DOM if it exists.
+     *
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.removeWaitOverlay = function() {
@@ -202,9 +213,7 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a slide thumbnail to the DOM.
      *
-     * @param {int} slideIndex
-     *            index of the slide in the current lecture's protobuf
-     *            object.
+     * @param {Integer} slideIndex index of the slide in the current lecture's protobuf object.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {
@@ -222,6 +231,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Displays all of the slides for the current lecture.
+     *
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.displaySlides = function() {
