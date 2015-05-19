@@ -78,6 +78,11 @@ input {
 .gradeSelected {
     padding-top:2px;
 }
+
+.gradeForm {
+    margin: 0px;
+}
+
 /*
 th {
     border-color: black;
