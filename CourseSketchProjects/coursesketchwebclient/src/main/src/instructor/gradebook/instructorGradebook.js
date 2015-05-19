@@ -272,7 +272,14 @@
         var currentRow = cell.parentNode;
         var rowIndex = getChildIndex(currentRow);
         var nextRow = currentRow.parentNode.children[getChildIndex(currentRow) + 1];
-        var nextCell = nextRow.children[getChildIndex(cell)];
+        var columnIndex = getChildIndex(cell);
+
+        // If the end of the column is reached, there is no nextRow
+        if (isUndefined(nextRow) || nextRow === null) {
+            nextRow = currentRow.parentNode.children[0] // Wrap back to the top row
+            columnIndex += 1; // Wrap over one column
+        }
+        var nextCell = nextRow.children[columnIndex];
 
         gradeCellSelected.bind(nextCell)();
     }
