@@ -26,7 +26,6 @@ if (typeof isUndefined === 'undefined') {
 // jshint bitwise:false
 if (isUndefined(generateUUID)) {
     /**
-     *
      * Generates an rfc4122 version 4 compliant solution.
      *
      * found at http://stackoverflow.com/a/2117523/2187510 and further improved at
@@ -47,8 +46,8 @@ if (isUndefined(generateUUID)) {
 // jshint bitwise:true
 if (isUndefined(createTimeStamp)) {
     /**
-     * Creates a number that represents the current time in milliseconds since jan
-     * 1st 1970.
+     * Creates a number that represents the current time in milliseconds since jan 1st 1970.
+     *
      * @return {Number} milliseconds since jan 1st 1970
      */
     function createTimeStamp() {
@@ -69,8 +68,9 @@ if (isUndefined(createTimeStamp)) {
 if (isUndefined(isFunction)) {
     /**
      * Checks to see if the given object is a function.
-     * @param {Function} object takes in something
-     * @returns {Boolean} true if the input object is a function.
+     *
+     * @param {*} object Object that is being checked if it is a function.
+     * @returns {Boolean} true if the input object is a function, false otherwise.
      */
     function isFunction(object) {
         return typeof (object) === 'function';
@@ -89,7 +89,8 @@ if (isUndefined(isFunction)) {
 
 if (isUndefined(make2Digits)) {
     /**
-     * Given a number that could be 1 or 2 digits returns a 2 digit version of that number
+     * Given a number that could be 1 or 2 digits returns a 2 digit version of that number.
+     *
      * ex: 1 -> 01, or 15 -> 15
      * @param {Number} num the number that is needed to be forced into 2 digits.
      */
@@ -98,13 +99,14 @@ if (isUndefined(make2Digits)) {
     }
 }
 
-if (isUndefined(getMillitaryFormattedDateTime)) {
+if (isUndefined(getMilitaryFormattedDateTime)) {
     /**
-     * Returns the date formatted as military time.
+     * Returns the date formatted as Military Time.
+     *
      * @param {Date} dateTime the date that is being formatted.
      * @returns {String} The formatted result.
      */
-    function getMillitaryFormattedDateTime(dateTime) {
+    function getMilitaryFormattedDateTime(dateTime) {
         var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
         var time = make2Digits(dateTime.getHours()) + ':' + make2Digits(dateTime.getMinutes());
         return date + ' ' + time;
@@ -113,7 +115,12 @@ if (isUndefined(getMillitaryFormattedDateTime)) {
 
 if (isUndefined(getFormattedDateTime)) {
     /**
-     * @param {Date} dateTime uses the default Date object in the browser to return
+     * Creates and return a formatted date time.
+     *
+     * ex: 01-18-1994 10:50PM
+     *
+     * @param {Date} dateTime uses the default Date object in the browser to return.
+     * @return {String} A formatted date time.
      */
     function getFormattedDateTime(dateTime) {
         var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
@@ -278,7 +285,8 @@ if (isUndefined(validateFirstRun)) {
         if (!isUndefined(scriptBay[scriptObject.src])) {
             var errorEvent = { src: scriptObject.src };
             /**
-             * The listener that ignores the event
+             * The listener that ignores the event.
+             *
              * @param {Event} event the error event that was thrown.
              * @memberof validateFirstRun
              */
@@ -313,7 +321,8 @@ if (isUndefined(validateFirstGlobalRun)) {
         if (!isUndefined(CourseSketch.scriptBay[scriptObject.src])) {
             var errorEvent = { src: scriptObject.src };
             /**
-             * The listener that ignores the event
+             * The listener that ignores the event.
+             *
              * @param {Event} event the error event that was thrown.
              * @memberof validateFirstGlobalRun
              */

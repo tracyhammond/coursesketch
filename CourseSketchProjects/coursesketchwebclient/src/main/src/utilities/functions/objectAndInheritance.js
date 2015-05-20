@@ -68,7 +68,8 @@ Function.prototype.Inherits = function(Parent) {
  */
 if (isUndefined(makeValueReadOnly)) {
     /**
-     * Makes a value readonly
+     * Makes a value readonly.
+     *
      * @param {Object} obj The object this is applying to
      * @param {String} property The property that is being defined as read only.
      * @param {*} value The value that is returned when the property is accessed.

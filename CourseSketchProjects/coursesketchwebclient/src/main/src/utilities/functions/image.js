@@ -9,7 +9,6 @@ function getBase64Image(imgTag) {
     if (imgTag.src.endsWith('.svg')) {
         throw new BaseException('ENDInG WITH SVG OH NOES!');
     }
-    console.log(imgTag);
     // Create an empty canvas element
     var canvas = document.createElement('canvas');
     canvas.width = imgTag.width;
