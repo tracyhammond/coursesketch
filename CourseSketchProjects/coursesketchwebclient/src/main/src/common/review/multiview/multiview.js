@@ -81,6 +81,7 @@ function MvSketch() {
     /**
      * Marks the sketch at correct and changes the background to outercorrect.
      *
+     * @param {Event} event The event propagation is stopped.
      * @instance
      * @memberof MvSketch
      * @access private
@@ -95,6 +96,7 @@ function MvSketch() {
     /**
      * Marks the sketch as wrong and changes the background to outerwrong.
      *
+     * @param {Event} event The event propagation is stopped.
      * @instance
      * @memberof MvSketch
      * @access private
