@@ -105,6 +105,7 @@ validateFirstRun(document.currentScript);
 
         /**
          * Adds a new slide to the current lecture.
+         *
          * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.newSlide = function() {
@@ -129,7 +130,9 @@ validateFirstRun(document.currentScript);
             };
 
             /**
-             * Called when the slide is sucesfully inserted into the database.
+             * Called when the slide is successfully inserted into the database.
+             *
+             * @param {Slide} slide A slide which points at a separate lecture.
              * @memberof "lecturePage/instructor"
              */
             var finishInsert = function(slide) {

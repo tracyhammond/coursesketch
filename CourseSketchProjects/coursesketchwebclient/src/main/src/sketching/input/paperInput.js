@@ -15,7 +15,8 @@ function InputListener() {
     var totalZoom = 0;
 
     /**
-     * Creates mouse listeners that enable strokes, panning and zooming.
+     * Creates mouse listeners that enable strokes, panning, and zooming.
+     *
      * @function initializeCanvas
      * @instance
      * @memberof InputListener
@@ -119,7 +120,7 @@ function InputListener() {
         };
 
         /**
-         * finishes up the path that has been created by the mouse pointer, unless shift has been held, then it throws up.
+         * Finishes up the path that has been created by the mouse pointer, unless shift has been held, then it throws up.
          *
          * @function onMouseDown
          * @memberof PSTool
@@ -173,6 +174,7 @@ function InputListener() {
 
     /**
      * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point.
+     *
      * @memberof InputListener
      * @private
      */
@@ -192,6 +194,7 @@ function InputListener() {
 
     /**
      * Creates and returns a time stamp every time this function is called.
+     *
      * @returns {Number} - The time stamp.
      */
     function createTimeStamp() {

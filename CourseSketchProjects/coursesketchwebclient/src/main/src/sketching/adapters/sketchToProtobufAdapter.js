@@ -2,7 +2,8 @@
 
 (function(localScope) {
     /**
-     * Creates an SRL prtobuf version of a point
+     * Creates an SRL prtobuf version of a point.
+     *
      * @memberof SRL_Point
      */
     SRL_Point.prototype.sendToProtobuf = function(scope) {
@@ -21,6 +22,7 @@
 
     /**
      * Static function that returns an {@link SRL_Point}.
+     *
      * @memberof SRL_Point
      */
     SRL_Point.createFromProtobuf = function(proto) {
@@ -46,7 +48,8 @@
     };
 
     /**
-     * Creates an SRL protobuf version of a stroke
+     * Creates an SRL protobuf version of a stroke.
+     *
      * @memberof SRL_Stroke
      */
     SRL_Stroke.prototype.sendToProtobuf = function(scope) {
@@ -66,6 +69,7 @@
 
     /**
      * Static function that returns an {@link SRL_Stroke}.
+     *
      * @memberof SRL_Stroke
      */
     SRL_Stroke.createFromProtobuf = function(stroke) {
@@ -88,6 +92,7 @@
 
     /**
      * Creates an SRL protobuf version of a shape.
+     *
      * @memberof SRL_Shape
      */
     SRL_Shape.prototype.sendToProtobuf = function(scope) {
@@ -117,6 +122,7 @@
 
     /**
      * Static function that returns an {@link SRL_Shape}.
+     *
      * @memberof SRL_Shape
      */
     SRL_Shape.createFromProtobuf = function(shape) {
@@ -138,6 +144,7 @@
 
     /**
      * Creates an SRL protobuf version of an Interpretation.
+     *
      * @memberof SRL_Interpretation
      */
     SRL_Interpretation.prototype.sendToProtobuf = function(scope) {
@@ -150,6 +157,7 @@
 
     /**
      * Used locally to decode the srl object.
+     *
      * @returns {Srl_Object} SRL_Object or its subclass.
      */
     function decodeSrlObject(object) {

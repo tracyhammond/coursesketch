@@ -104,11 +104,11 @@ validateFirstRun(document.currentScript);
     var saveScript = document.querySelector('button.save');
 
     /**
-     * Saves script in order to display it on the problem when opened. Saves
-     * to problem navigator.
+     * Saves script in order to display it on the problem when opened.
+     *
+     * Saves to problem navigator.
      */
     saveScript.onclick = function() {
-        console.log('Entered');
         //Create bank problem (proto object)
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
 

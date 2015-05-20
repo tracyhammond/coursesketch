@@ -87,7 +87,7 @@ function ProblemSelectionPanel() {
         };
 
         /**
-         * Called to signify the using rejecting the selected problems.
+         * Called to signify the user rejecting the selected problems.
          */
         shadowRoot.querySelector('.outer-dialog').onclick = function() {
             localScope.canceledCallback(selectedBankProblems);
@@ -101,7 +101,7 @@ function ProblemSelectionPanel() {
         };
 
         /**
-         * Called to signify the using rejecting the selected problems.
+         * Called to signify the user rejecting the selected problems.
          */
         this.onclick = function(event) {
             localScope.canceledCallback(selectedBankProblems);
@@ -125,6 +125,8 @@ function ProblemSelectionPanel() {
     };
 
     /**
+     * Applies a funciton to a list of elements.
+     *
      * @param {Array<Element>} listOfElements - the list of elements that have the function
      * @param {Function} func - the function that is being applied to.
      * @memberof ProblemSelectionPanel
@@ -136,7 +138,7 @@ function ProblemSelectionPanel() {
     }
 
     /**
-     * @returns {List<Element>} the list of selected elements that are currently on the screen.
+     * @returns {List<Element>} The list of selected bank problems that are currently on the screen.
      * @memberof ProblemSelectionPanel
      */
     this.getListOfSelectedElements = function() {
