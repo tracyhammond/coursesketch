@@ -13,8 +13,9 @@
  */
 if (isUndefined(convertRGBtoHex)) {
     /**
-     * Converts RGB to a hex value
-     * @returns {String}
+     * Converts RGB to a hex value.
+     *
+     * @returns {String} A hexcode string representing the color.
      */
     function convertRGBtoHex(a, r, g, b) {
         return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -24,8 +25,9 @@ if (isUndefined(convertRGBtoHex)) {
 if (isUndefined(convertHexToRgb)) {
     /**
      * Given a hex value convert it to rgb values.
-     * @param {String} hex
-     * @returns {{r: (*|Number), g: (*|Number), b: (*|Number)}}
+     *
+     * @param {String} hex A hexcode string representing the color.
+     * @returns {{r: (*|Number), g: (*|Number), b: (*|Number)}} An object that contains rgb values.
      */
     function convertHexToRgb(hex) {
         var localHex = hex;
@@ -40,7 +42,7 @@ if (isUndefined(convertHexToRgb)) {
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
             b: parseInt(result[3], 16)
-        } : null;
+        } : undefined;
     }
 }
 // jshint bitwise:true
