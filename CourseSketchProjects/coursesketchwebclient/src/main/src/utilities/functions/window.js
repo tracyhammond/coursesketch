@@ -14,8 +14,7 @@
 
 if (isUndefined(fillScreen)) {
     /**
-     * Takes the height and width of this element and expands it to fill the size of
-     * the screen.
+     * Takes the height and width of this element and expands it to fill the size of the screen.
      */
     function fillScreen(scope, id) {
         var height = scope.window.innerHeight - 4;
@@ -31,8 +30,7 @@ if (isUndefined(fillScreen)) {
 
 if (isUndefined(fillHeight)) {
     /**
-     * Takes the height of this element and expands it to fill the size of the
-     * screen.
+     * Takes the height of this element and expands it to fill the size of the screen.
      */
     function fillHeight(scope, id) {
         var height = scope.window.innerHeight - 4;
@@ -45,8 +43,7 @@ if (isUndefined(fillHeight)) {
 
 if (isUndefined(fillWidth)) {
     /**
-     * Takes the width of this element and expands it to fill the size of the
-     * screen.
+     * Takes the width of this element and expands it to fill the size of the screen.
      */
     function fillWidth(scope, id) {
         var width = scope.window.innerWidth - 4;
@@ -78,7 +75,7 @@ if (isUndefined(setHeightToContent)) {
 
 if (isUndefined(setWidthToContent)) {
     /**
-     * Sets the height of the iFrame to the height of the content.
+     * Sets the width of the iFrame to the width of the content.
      */
     function setWidthToContent(scope, iframeId, contentId, offset) {
         if (!offset) {
@@ -96,7 +93,7 @@ if (isUndefined(setWidthToContent)) {
 
 if (isUndefined(setSizeToContent)) {
     /**
-     * Sets the height of the iFrame to the height of the content.
+     * Sets the size of the iFrame to the size of the content.
      */
     function setSizeToContent(scope, iframeId, contentId, offsetX, offsetY) {
         if (!offsetX) {
@@ -149,6 +146,7 @@ if (isUndefined(makeFullScreen)) {
 if (isUndefined(makeNotFullScreen)) {
     /**
      * Stops the element from being full screen.
+     *
      * @param {Element} element The element that full screen is being removed from.
      */
     function makeNotFullScreen(element) {

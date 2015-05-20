@@ -17,12 +17,13 @@ if (isUndefined(replaceAll)) {
     /**
      * Replaces all strings with a different value.
      *
-     * @param {RegularExpression} find
-     * @param {String} replace what the replacement value is.
-     * @param {String} src The string that contains the replacement
-     * @returns {*}
+     * @param {String} src The string that the replace is happening in.
+     * @param {RegularExpression} find the expression that is being looked for.
+     * @param {String} replace what is being replaced with.
+     *
+     * @returns {String} A string with the replaced values.
      */
-    function replaceAll(find, replace, src) {
+    function replaceAll(src, find, replace) {
         return src.replace(new RegExp(find, 'g'), replace);
     }
 }
@@ -30,8 +31,7 @@ if (isUndefined(replaceAll)) {
 
 if (isUndefined(getTextWidth)) {
     /**
-     * Uses canvas.measureText to compute and return the width of the given text of
-     * given font in pixels.
+     * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
      *
      * @param {String} text
      *            The text to be rendered.

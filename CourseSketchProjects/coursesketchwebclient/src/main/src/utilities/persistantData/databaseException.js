@@ -1,4 +1,6 @@
 /**
+ * An exception that is used to represent problems with the database.
+ *
  * @class DatabaseException
  * @extends BaseException
  */
