@@ -57,7 +57,7 @@ if (isUndefined(cssEscapeId)) {
      * Does a very simple escaping of the id for css purposes.
      * A more complicated version is found here: https://mothereff.in/css-escapes
      * @param {String} inputId The id we want escaped.
-     * @return {String} escaped value
+     * @return {String} An escaped value is returned.
      *
      * Example:
      * Input: 12a2b3c
