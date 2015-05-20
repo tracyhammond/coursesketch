@@ -81,7 +81,7 @@ validateFirstRun(document.currentScript);
 
     $(document).ready(function() {
         /**
-         * closes the dialog panel.
+         * Closes the dialog panel.
          */
         document.getElementById('dialogPanel').querySelector('button').onclick = function() {
             document.getElementById('dialogPanel').close();
