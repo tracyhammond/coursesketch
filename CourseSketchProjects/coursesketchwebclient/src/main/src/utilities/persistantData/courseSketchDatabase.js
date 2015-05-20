@@ -53,8 +53,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * After the lower level database has been completely setup the higher level
-     * specific databases can be called.
+     * After the lower level database has been completely setup the higher level specific databases can be called.
+     *
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
@@ -75,7 +75,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     (function() {
         /**
          * Add function for adding elements to the database.
-         * @returns {*}
+         *
+         * @returns {Transaction} The transaction from storing the data in the database.
          */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
@@ -242,15 +243,17 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns the state at the given key.
-     * @param {String} key
+     * @param {String} key The unique identifier for the state.
      */
     this.getState = function(key) {
         return stateMachine.get(key);
     };
 
     /**
-     * Returns true if the state exists
-     * @param {String} key
+     * Returns true if the given key is a valid state, false otherwise.
+     *
+     * @param {String} key The unique identifier for the state.
+     * @returns {Boolean} true if the state exists false otherwise.
      */
     this.hasState = function(key) {
         return stateMachine.has(key);

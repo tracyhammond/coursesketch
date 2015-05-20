@@ -28,8 +28,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
     var upgradeTables = null;
     /**
-     * Sets the upgrade table to the input table
-     * @param {Table} tables
+     * Sets the upgrade table to the input table.
+     *
+     * @param {Table} tables A list of tables that are being stored in the database.
      */
     this.setTables = function(tables) {
         upgradeTables = tables;
@@ -77,7 +78,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
             // We can only create Object stores in a version change transaction.
             /**
              * Called if an upgrade is required
-             * @param {Event} e
+             *
+             * @param {Event} e An upgrade event.
              */
             request.onupgradeneeded = function(e) {
                 var db = e.target.result;
@@ -94,7 +96,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
             };
             /**
              * Called when the database is succesfuly upgraded.
-             * @param {Event} e
+             *
+             * @param {Event} e A success event.
              */
             request.onsuccess = function(e) {
                 console.log('Database has opened');
@@ -106,7 +109,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
             };
             /**
              * Called if there is an error in opening the database.
-             * @param {Event} e
+             *
+             * @param {Event} e An error event.
              */
             request.onerror = function(e) {
                 console.log(e);
@@ -130,8 +134,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * creates a bunch of functions for the table which are created upon
-     * successful database creation.
+     * creates a bunch of functions for the table which are created upon successful database creation.
      */
     function createTableFunctions() {
         if (upgradeTables === null) {
@@ -166,7 +169,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = localTable.add(store, objectId, objectToAdd);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e
+                     *
+                     * @param {Event} e A success event.
                      */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
@@ -176,7 +180,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e
+                     *
+                     * @param {Event} e An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -202,7 +207,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.delete(objectId);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e
+                     * @param {Event} e A success event.
                      */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
@@ -212,7 +217,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e
+                     * @param {Event} e An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -243,7 +248,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.get(objectId);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e
+                     * @param {Event} e A success event.
                      */
                     request.onsuccess = function(e) {
                         if (callback) {
@@ -253,7 +258,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e
+                     * @param {Event} e An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -267,7 +272,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
     }
 
     /**
-     * THis is supposed to empty out the database.
+     * This is supposed to empty out the database.
+     *
      * Currently does not work.
      */
     this.emptySelf = function() {
@@ -275,7 +281,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * THis is supposed to empty out the database.
+     * This is supposed to empty out the database.
      *
      * Currently does not work.
      */
@@ -285,15 +291,17 @@ function ProtoDatabase(databaseName, version, openCallback) {
             if (result === true) {
                 var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
                 /**
-                 * Called if emptying is succesful;
-                 * @param {Event} event
+                 * Called if emptying is succesful.
+                 *
+                 * @param {Event} event A success event.
                  */
                 dbreq.onsuccess = function(event) {
                     output_trace('indexedDB: ' + databaseName + ' deleted');
                 };
                 /**
-                 * Called if there is an error emptying the database
-                 * @param {Event} event
+                 * Called if there is an error emptying the database.
+                 *
+                 * @param {Event} event An error event.
                  */
                 dbreq.onerror = function(event) {
                     output_trace('indexedDB.delete Error: ' + event.message);
