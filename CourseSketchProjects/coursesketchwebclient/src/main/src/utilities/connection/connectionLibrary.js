@@ -38,8 +38,9 @@ function Connection(uri, encrypted, attemptReconnect) {
             websocket = new WebSocket(wsUri);
             websocket.binaryType = 'arraybuffer'; // We are talking binary
             /**
-             * called when the websocekt opens
-             * @param {Event} evt
+             * Called when the websocekt opens.
+             *
+             * @param {Event} evt An event containing data about opening.
              */
             websocket.onopen = function(evt) {
                 connected = true;
@@ -53,8 +54,9 @@ function Connection(uri, encrypted, attemptReconnect) {
             };
 
             /**
-             * called when the websocket closes
-             * @param {Event} evt
+             * Called when the websocket closes.
+             *
+             * @param {Event} evt An event containing data about closing.
              */
             websocket.onclose = function(evt) {
                 connected = false;
@@ -74,8 +76,9 @@ function Connection(uri, encrypted, attemptReconnect) {
             };
 
             /**
-             * called when the websocket receives a message.
-             * @param {Event} evt
+             * Called when the websocket receives a message.
+             *
+             * @param {Event} evt An event containing data about receiving a message.
              */
             websocket.onmessage = function(evt) {
                 /*jshint maxcomplexity:15 */
@@ -87,7 +90,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                     if (msg.requestType === MessageType.TIME) {
                         console.log('getting from time');
                         var rsp = onTime(evt, msg);
-                        if (rsp !== null) {
+                        if (rsp !== null && !isUndefined(rsp)) {
                             localScope.sendRequest(rsp);
                         }
                     } else if (msg.requestType === MessageType.LOGIN && onLogin) {
@@ -131,8 +134,9 @@ function Connection(uri, encrypted, attemptReconnect) {
             };
 
             /**
-             * called when the websocket throws an error.
-             * @param {Event} evt
+             * Called when the websocket throws an error.
+             *
+             * @param {Event} evt An event containing data about the error.
              */
             websocket.onerror = function(evt) {
                 if (onError) {
@@ -243,7 +247,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * Sets a listener to listen to a any message.
+     * Sets a listener to listen to any message.
      *
      * @param {Function} listener the function that is called when the client receives any message.
      */
@@ -252,7 +256,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * Sets a listener to listen to a an error event from the server.
+     * Sets a listener to listen to an error event from the server.
      *
      * @param {Function} listener the function that is called when the client receives an error from the server.
      */
@@ -311,11 +315,11 @@ function Connection(uri, encrypted, attemptReconnect) {
     CourseSketch.getCurrentTime = this.getCurrentTime;
 
     /**
-     * Called to syncrhonize time events.
+     * Called to synchronize time events.
      *
-     * @param {Event} evt
-     * @param {Request} msg
-     * @returns {Long|Null} returns the time to send or null if no time is being sent
+     * @param {Event} evt An event about receiving a message
+     * @param {Request} msg The message the contains timing data.
+     * @returns {Request|Undefined} returns the time to send or null if no time is being sent
      */
     function onTime(evt, msg) {
         if (msg.getResponseText() === SEND_TIME_TO_CLIENT_MSG) { // client
@@ -323,12 +327,15 @@ function Connection(uri, encrypted, attemptReconnect) {
         } else if (msg.getResponseText() === SEND_LATENCY_TO_CLIENT_MSG) { // client
             return clientReciveLatency(msg);
         }
-        return null;
+        return undefined;
     }
 
     /**
+     * Computes the time difference and returns a request for the latency.
+     *
+     * Called when the server returns the request for the time difference.
      * @param {Request} req the time request
-     * @returns {Request}
+     * @returns {Request} A request that specifies a request to the server to return latency.
      */
     function clientReciveTimeDiff(req) {
         var startCounter = localScope.getCurrentTime();
@@ -341,13 +348,15 @@ function Connection(uri, encrypted, attemptReconnect) {
     }
 
     /**
-     * @param {Request} req the time request
-     * @returns {Request|Null}
+     * Saves the offset locally.
+     *
+     * @param {Request} req The time request.
+     * @returns {Undefined} No more server actions are needed.  Return null to denote that.
      */
     function clientReciveLatency(req) {
         latency = dcodeIO.Long.fromString('' + req.getMessageTime());
         totalTimeDifferance = timeDifferance.add(latency);
-        return null;
+        return undefined;
     }
 }
 
