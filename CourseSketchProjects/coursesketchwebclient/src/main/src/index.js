@@ -11,14 +11,15 @@ $(document).ready(
 function() {
 
     /**
-     * @returns {Element} the element that encapsulates the exception.
+     * @returns {Element} The element that encapsulates the exception.
      */
     CourseSketch.getExceptionParentElement = function() {
         return document.body;
     };
 
     /**
-     * refreshes the page without adding a browser event.
+     * Refreshes the page without adding a browser event.
+     *
      * @memberof CourseSketch
      */
     CourseSketch.reloadContent = function() {
@@ -27,7 +28,8 @@ function() {
     };
 
     /**
-     * changes the page to point at a different location.
+     * Changes the page to point at a different location.
+     *
      * @param {URL} url - a url that points to a different page
      * @param {String} title - the title that appears on the top of course sketch.
      * @memberof CourseSketch
@@ -54,6 +56,7 @@ function() {
 
     /**
      * Called when the user logs in correctly.
+     *
      * @param {ConnectionLibrary} loggedInConnection - a valid connection of the user being logged in.
      * @memberof Index
      */
@@ -82,8 +85,10 @@ function() {
     };
 
     /**
-     * Creates a login element and a function so that when the register button is clinked the register is created.
-     * This is called on the Register element when cancel is pressed.
+     * Creates a login element and a function so that when the register button is clicked the register is created.
+     *
+     * This is called on the Register element when cancel is pressed.  This forms an infinite loop with {@link Index.createRegister}.
+     * They each call the other when clicked.
      * @param {Function} register - the createRegister function
      * @see {@link Index.createRegister}
      * @memberof Index
@@ -99,18 +104,18 @@ function() {
     }
 
     /**
-     * Creates a register element and a function so that when the cancel button is clinked the login is created.
-     * This is called on the Login element when register is pressed.
+     * Creates a register element and a function so that when the cancel button is clicked the login is created.
+     *
+     * This is called on the Login element when register is pressed.  This forms an infinite loop with {@link Index.createLogin}.
+     * They each call the other when clicked.
      * @param {Function} login - the createLogin function
      * @see {@link Index.createLogin}
      * @memberof Index
      */
     function createRegister(login) {
-        console.log('creating new register element');
         $('#loginLocation').empty();
         var register = document.createElement('register-system');
         register.setOnSuccessLogin(successLogin);
-        console.log(register);
         register.setCancelCallback(function() {
             login(createRegister);
         });
@@ -121,6 +126,8 @@ function() {
 
     /**
      * Creates and loads the menu.
+     *
+     * @param {Link} importDoc The link element that contains the menu template.
      * @memberof Index
      */
     function loadMenu(importDoc) {
@@ -138,6 +145,7 @@ function() {
 
     /**
      * Sets up the sliding for the menu.
+     *
      * TODO look up the Header.js and see what is happening there.
      * @memberof Index
      */
@@ -192,11 +200,12 @@ function() {
     }
 
     /**
-     * loads the homepage.  This loads a different page depending on if the user is currently an instructor or a user.
+     * loads the homepage.
+     *
+     * This loads a different page depending on if the user is currently an instructor or a user.
      * @memberof Index
      */
     function loadHomePage() {
-        console.log('LOADING HOMEPAGE');
         if (CourseSketch.connection.isInstructor) {
             CourseSketch.redirectContent('/src/instructor/homepage/homePage.html', 'Welcome Instructor');
         } else {
@@ -215,14 +224,14 @@ function() {
 
 CourseSketch.isMenuSwipeable = true;
 /**
- * turns on menu swiping.
+ * Turns on menu swiping.
  * @memberof CourseSketch
  */
 CourseSketch.enableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = true;
 };
 /**
- * turns off menu swiping.
+ * Turns off menu swiping.
  * @memberof CourseSketch
  */
 CourseSketch.disableMenuSwiping = function() {

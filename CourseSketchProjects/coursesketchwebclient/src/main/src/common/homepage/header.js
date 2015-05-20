@@ -1,6 +1,6 @@
 /**
- *
  * Handles the opening and closing of menu bar and changing the title.
+ *
  * @class HeaderHandler
  */
 function HeaderHandler() {
