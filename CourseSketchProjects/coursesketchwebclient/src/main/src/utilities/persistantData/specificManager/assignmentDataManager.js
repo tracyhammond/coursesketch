@@ -1,10 +1,9 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- *
- * @param {CourseSketchDatabase} parent
- * @param {AdvanceDataListener} advanceDataListener
- * @param {IndexedDB} parentDatabase (Not used in this manager)
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
  * @param {Function} sendData A function that makes sending data much easier
  * @param {SrlRequest} Request A shortcut to a request
  * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
@@ -375,7 +374,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         /**
          * Ensures that the callback is only called once.
          *
-         * @param {List<Assignments>} assignmentList
+         * @param {List<Assignments>} assignmentList The assignments that were loaded.
          */
         function callOnce(assignmentList) {
             if (!called) {
