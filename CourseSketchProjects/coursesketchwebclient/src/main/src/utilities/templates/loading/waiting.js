@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 function WaitScreenManager() {
     /**
      * resets the values in the school builder so that the same build object can be used again.

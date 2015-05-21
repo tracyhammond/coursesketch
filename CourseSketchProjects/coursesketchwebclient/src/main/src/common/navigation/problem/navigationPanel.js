@@ -1,6 +1,6 @@
 /**
- *
  * The custom element for navigating a problem.
+ *
  * @class NavigationPanel
  * @attribute loop {Existence} If this property exist the navigator will loop.  (Setting the navigator overrides this property).
  * @attribute assignment_id {String} uses the given value as the assignment id inside the navigator.
@@ -43,6 +43,8 @@ function NavigationPanel() {
         var tt = this.shadowRoot.querySelector('#iop');
 
         Waves.attach(tt);
+
+        /* jscs:disable jsDoc */
         button.onclick = function() {
             nav.gotoNext();
         };
@@ -60,6 +62,7 @@ function NavigationPanel() {
         } else {
             button.disabled = true;
         }
+        /* jscs:enable jsDoc */
     }
 
     /*
