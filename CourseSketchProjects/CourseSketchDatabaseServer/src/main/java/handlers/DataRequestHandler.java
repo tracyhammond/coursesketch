@@ -26,6 +26,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.utils.Util;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
@@ -197,6 +198,12 @@ public final class DataRequestHandler {
                             results.add(ResultBuilder.buildResult(ItemQuery.GRADE, gradeList));
                         }
                         break;
+                        case COURSE_ROSTER: {
+                            final List<String> userList = instance.getCourseRoster(userId, itemRequest.getItemId(0));
+                            Util.IdChain.Builder idChain = Util.IdChain.newBuilder();
+                            idChain.addAllIdChain(userList);
+                            results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, idChain.build()));
+                        }
                         default:
                             break;
                     }
