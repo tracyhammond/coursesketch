@@ -131,7 +131,7 @@ function Playback(updateList, updateManager, graphics) {
         }
     };
 
-    /*
+    /**
      * Calculates time between strokes and plays them back with a delay corresponding to this time.
      *
      * Also playback the sketch back from saved stroke index if it is paused.
@@ -179,7 +179,7 @@ function Playback(updateList, updateManager, graphics) {
         }
     };
 
-    /*
+    /**
      * Set isPlaying to false and pause the drawing.
      */
     this.pauseNext = function() {
