@@ -84,21 +84,25 @@
      *
      * @param {List<String>} assignmentList The list of assignment IDs.
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
+	 * @return {List<ProtoGrade>} grades that were not displayed.   This is because the users do not exist anymore in the course roster.
      */
     CourseSketch.gradeBook.populateGrades = function(listGrades, studentMap, assignmentMap, table) {
+		var gradesNotShown = [];
         for (var i = 0; i < listGrades.length; i++) {
             var protoGrade = listGrades[i];
             var studentId = protoGrade.userId;
             var assignmentId = protoGrade.assignmentId;
-            if (!studentMap.has(studentId)) {
-                addNewStudent(studentMap, studentId, assignmentList, body);
-            }
+			if (!studentMap.has(studentId)) {
+				gradesNotShown.push(protoGrade);
+				continue;
+			}
             var studentRow = studentMap.get(studentId);
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
             var stringGrade = '' + protoGrade.getCurrentGrade();
             cell.textContent = stringGrade.substring(0, 6);
         }
+		return gradesNotShown;
     };
 
     /**
