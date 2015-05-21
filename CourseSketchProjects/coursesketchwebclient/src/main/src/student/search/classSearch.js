@@ -87,6 +87,9 @@ validateFirstRun(document.currentScript);
             }
             var button = localDoc.createElement('button');
             button.setAttribute('id', 'button' + id);
+            /**
+             * Called to reigster the student.
+             */
             button.onclick = function() {
                 CourseSketch.classSearch.registerClass(id);
                 setTimeVar = setTimeout(function() {
@@ -104,12 +107,12 @@ validateFirstRun(document.currentScript);
             //localDoc.appendChild(button);
             localDoc.getElementById('registerButton').appendChild(button);
             $('#' + id).animate({
-                marginLeft: moveAmount,
+                marginLeft: moveAmount
                 }, 300, function() {
                 });
         } else {
             $('#' + id).animate({
-                marginLeft: '0px',
+                marginLeft: '0px'
             }, 300, function() {
                 localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });
@@ -128,7 +131,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
             CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT));
         $('#' + id).animate({
-            marginLeft: '0px',
+            marginLeft: '0px'
             }, 300, function() {
                 localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });

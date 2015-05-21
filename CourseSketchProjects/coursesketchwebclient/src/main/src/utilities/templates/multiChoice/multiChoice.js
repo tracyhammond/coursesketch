@@ -63,6 +63,10 @@ function MultiChoice() {
         // Correct check box
         var correct = document.createElement('span');
         correct.className = 'correct';
+        /**
+         * Called to say that a check box is correct.
+         * @param {Event} event On Click event.
+         */
         correct.onclick = function(event) {
             localScope.setCorrectAnswer(event, answer);
         };
@@ -72,6 +76,10 @@ function MultiChoice() {
         var close = document.createElement('span');
         close.className = 'close';
         close.textContent = '×';
+        /**
+         * Called to remove the answer choice.
+         * @param {Event} event On Click event.
+         */
         close.onclick = function(event) {
             localScope.removeAnswer(event, answer);
         };
@@ -90,7 +98,9 @@ function MultiChoice() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        // Bind addAnswer to click
+        /**
+         * Bind addAnswer to click.
+         */
         localScope.shadowRoot.querySelector('#add').onclick = function(event) {
             localScope.addAnswer(event);
         };
@@ -157,6 +167,10 @@ function MultiChoice() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener
+     * @param {Function} listener called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };
