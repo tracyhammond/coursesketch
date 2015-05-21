@@ -67,8 +67,9 @@ function EmbeddedHtml() {
     };
 
     /**
-     * Sets the listener
-     * @param {Function} listener called when the data is finished saving.
+     * Sets the listener.
+     *
+     * @param {Function} listener Called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
