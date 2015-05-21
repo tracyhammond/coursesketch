@@ -27,6 +27,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
     }
 
     var upgradeTables = null;
+    /**
+     * Sets the upgrade table to the input table.
+     *
+     * @param {Table} tables A list of tables that are being stored in the database.
+     */
     this.setTables = function(tables) {
         upgradeTables = tables;
     };
@@ -61,6 +66,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
         };
     };
 
+    /**
+     * Called to open the database.
+     */
     this.open = function() {
         var tableCreationCalled = false;
         try {
@@ -68,6 +76,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
             var request = indexedDB.open(databaseName, version);
 
             // We can only create Object stores in a version change transaction.
+            /**
+             * Called if an upgrade is required
+             *
+             * @param {Event} e An upgrade event.
+             */
             request.onupgradeneeded = function(e) {
                 var db = e.target.result;
                 // A versionchange transaction is started automatically.
@@ -81,6 +94,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var store = db.createObjectStore(table.name, { keyPath: table.key });
                 }
             };
+            /**
+             * Called when the database is succesfuly upgraded.
+             *
+             * @param {Event} e A success event.
+             */
             request.onsuccess = function(e) {
                 console.log('Database has opened');
                 dbNameSpace.indexedDB.db = e.target.result;
@@ -89,6 +107,11 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     createTableFunctions();
                 }
             };
+            /**
+             * Called if there is an error in opening the database.
+             *
+             * @param {Event} e An error event.
+             */
             request.onerror = function(e) {
                 console.log(e);
                 console.log('Exception has occured when getting data');
@@ -111,8 +134,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * creates a bunch of functions for the table which are created upon
-     * successful database creation.
+     * creates a bunch of functions for the table which are created upon successful database creation.
      */
     function createTableFunctions() {
         if (upgradeTables === null) {
@@ -145,12 +167,22 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var trans = db.transaction([ localTable.name ], 'readwrite');
                     var store = trans.objectStore(localTable.name);
                     var request = localTable.add(store, objectId, objectToAdd);
+                    /**
+                     * Called when the transaction is complete.
+                     *
+                     * @param {Event} e A success event.
+                     */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
                             callback(e, request);
                         }
                     };
 
+                    /**
+                     * Called if there is an error during the transaction.
+                     *
+                     * @param {Event} e An error event.
+                     */
                     request.onerror = function(e) {
                         console.log(e.value);
                     };
@@ -173,12 +205,20 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var trans = db.transaction([ localTable.name ], 'readwrite');
                     var store = trans.objectStore(localTable.name);
                     var request = store.delete(objectId);
+                    /**
+                     * Called when the transaction is complete.
+                     * @param {Event} e A success event.
+                     */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
                             callback(e, request);
                         }
                     };
 
+                    /**
+                     * Called if there is an error during the transaction.
+                     * @param {Event} e An error event.
+                     */
                     request.onerror = function(e) {
                         console.log(e.value);
                     };
@@ -206,12 +246,20 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var trans = db.transaction([ localTable.name ]);
                     var store = trans.objectStore(localTable.name);
                     var request = store.get(objectId);
+                    /**
+                     * Called when the transaction is complete.
+                     * @param {Event} e A success event.
+                     */
                     request.onsuccess = function(e) {
                         if (callback) {
                             callback(e, request, request.result);
                         }
                     };
 
+                    /**
+                     * Called if there is an error during the transaction.
+                     * @param {Event} e An error event.
+                     */
                     request.onerror = function(e) {
                         console.log(e.value);
                     };
@@ -223,18 +271,38 @@ function ProtoDatabase(databaseName, version, openCallback) {
         }
     }
 
+    /**
+     * This is supposed to empty out the database.
+     *
+     * Currently does not work.
+     */
     this.emptySelf = function() {
         emptyDB(databaseName);
     };
 
+    /**
+     * This is supposed to empty out the database.
+     *
+     * Currently does not work.
+     */
     function emptyDB(databaseName) {
         try {
             var result = confirm('Do you want to empty all of the local data?');
             if (result === true) {
                 var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
+                /**
+                 * Called if emptying is succesful.
+                 *
+                 * @param {Event} event A success event.
+                 */
                 dbreq.onsuccess = function(event) {
                     output_trace('indexedDB: ' + databaseName + ' deleted');
                 };
+                /**
+                 * Called if there is an error emptying the database.
+                 *
+                 * @param {Event} event An error event.
+                 */
                 dbreq.onerror = function(event) {
                     output_trace('indexedDB.delete Error: ' + event.message);
                 };
