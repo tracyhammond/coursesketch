@@ -385,4 +385,19 @@
         }
         return k;
     }
+
+    function expandColumns(assignmentId, problemList, index) {
+
+        // create an assignmentMap that has index is set so that it will insert grades in the problem slot (this means the indexes are offset)
+    }
+
+    function viewAssignmentBreakdown(cell) {
+        var index = getChildIndex(cell);
+        var assignmentId = cell.dataset.assignment;
+        CourseSketch.dataManager.getAssignment(assignemntId, function(assignment) {
+            CourseSketch.dataManager.getCourseProblems(assignment.problemList, undefined, function(courseProblems) {
+
+            });
+        });
+    }
 })();
