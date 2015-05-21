@@ -200,7 +200,7 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var problem = element.schoolItemData;
-        newValue.forEach(function(value, key, mapObj) {
+        newValue.forEach(function(value, key) {
             if (key === 'description') {
                 var bankProblem = problem.getProblemInfo();
                 bankProblem.questionText = value;
