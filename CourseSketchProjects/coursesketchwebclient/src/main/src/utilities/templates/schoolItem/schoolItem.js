@@ -169,7 +169,8 @@ function SchoolItem() {
                 }
                 /**
                  * Called when an edit button has been pressed to toggle editing.
-                 * @param {Event} event
+                 *
+                 * @param {Event} event On Click event.
                  * @returns {Boolean} returns false.
                  */
                 element.onclick = function(event) {

@@ -80,7 +80,7 @@ function ExceptionNotification() {
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
         /**
          * Removes the element when clicked.
-         * @param {Event} event
+         * @param {Event} event On Click event.
          * @returns {Boolean} false.
          */
         document.body.querySelector('#lean-overlay').onclick = function(event) {
@@ -93,7 +93,7 @@ function ExceptionNotification() {
         /**
          * Removes the element when clicked.
          *
-         * @param {Event} event
+         * @param {Event} event On Click event.
          */
         this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
             $(document.body.querySelector('#lean-overlay')).fadeOut(250);

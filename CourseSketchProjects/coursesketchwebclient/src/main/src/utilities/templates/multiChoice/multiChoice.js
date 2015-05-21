@@ -65,7 +65,7 @@ function MultiChoice() {
         correct.className = 'correct';
         /**
          * Called to say that a check box is correct.
-         * @param {Event} event
+         * @param {Event} event On Click event.
          */
         correct.onclick = function(event) {
             localScope.setCorrectAnswer(event, answer);
@@ -78,7 +78,7 @@ function MultiChoice() {
         close.textContent = '×';
         /**
          * Called to remove the answer choice.
-         * @param {Event} event
+         * @param {Event} event On Click event.
          */
         close.onclick = function(event) {
             localScope.removeAnswer(event, answer);

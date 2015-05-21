@@ -15,14 +15,15 @@ function Question() {
 
         /**
          * Called when the actions event has been clicked.
-         * @param {Event} event
+         * @param {Event} event On Click event.
          */
         shadowRoot.getElementById('actions').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = true;
         };
+
         /**
          * Called to closed the question dialog.
-         * @param {Event} event
+         * @param {Event} event On Click event.
          */
         shadowRoot.getElementById('dialog-close').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = false;
@@ -30,7 +31,7 @@ function Question() {
 
         /**
          * Called when the correct button has been pressed.
-         * @param {Event} event
+         * @param {Event} event On Change event.
          */
         shadowRoot.getElementById('correct-lecture').onchange = function(event) {
             var value = event.srcElement.value;
@@ -41,7 +42,7 @@ function Question() {
 
         /**
          * Called when the incorrect button has been pressed.
-         * @param {Event} event
+         * @param {Event} event On Change event.
          */
         shadowRoot.getElementById('incorrect-lecture').onchange = function(event) {
             var value = event.srcElement.value;
@@ -94,7 +95,7 @@ function Question() {
     this.loadSlides = function(idList, slideSelect) {
         /**
          * Called when lecture slides have been loaded.
-         * @param {List<SrlSlide>} slides
+         * @param {List<SrlSlide>} slides Slides that have been loaded from the server.
          */
         var callback = function(slides) {
             slideSelect.innerHTML = '';
