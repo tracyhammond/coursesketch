@@ -12,6 +12,10 @@ function ImageBox() {
         shadowRoot.appendChild(templateClone);
     };
 
+    /**
+     * Sets the source of the image.
+     * @param {String} src The source data of the image (or url).
+     */
     this.setSrc = function(src) {
         this.shadowRoot.querySelector('.image').src = src;
     };
@@ -62,6 +66,10 @@ function ImageBox() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets a listener.
+     * @param {Function} listener Called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

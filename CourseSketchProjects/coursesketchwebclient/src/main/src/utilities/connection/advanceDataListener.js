@@ -16,9 +16,16 @@ function AdvanceDataListener(connection, Request, defListener) {
     var localScope = this;
     var defaultListener = defListener || false;
     var errorListener = false;
+
+    /**
+     * Sets a listener that is called when an error occurs.
+     *
+     * @param {Function} func A function that is called when an error occurs.
+     */
     this.setErrorListener = function(func) {
         errorListener = func;
     };
+
     /**
      * Sets the listener to listen for database code.
      */
@@ -40,6 +47,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         //console.log(queryType);
         localMap[queryType] = undefined;
     };
+
     /**
      * Gets the message type and the query type and finds the correct listener.
      *
