@@ -139,4 +139,17 @@
     assignment10.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME;
     assignment10.problemList = ["1", "2", "3", "4", "5", "6", "7", "8", "14"];
     CourseSketch.fakeAssignments.push(assignment10);
+
+	for (var i = 0; i < 10; i++) {
+	    var assignmentLoop = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+		assignmentLoop.courseId = '8';
+		assignmentLoop.id = '' + (11 + i);
+		assignmentLoop.name = 'homework' + i;
+		assignmentLoop.description = 'This is a homework that contains 10 problems!';
+		assignmentLoop.problemList = [];
+		for (var j = 0; j < 10; j++) {
+			assignmentLoop.problemList.push('' + (11 + i * 10 + j));
+		}
+		CourseSketch.fakeAssignments.push(assignmentLoop);
+	}
 })();
