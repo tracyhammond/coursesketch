@@ -582,4 +582,18 @@ public interface Institution {
      */
     ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * @param userId
+     *         The id of the user requesting the courseRoster
+     * @param courseId
+     *         The id of what courseRoster is being grabbed
+     * @return a list of users in the course
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems accessing the database.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the course.
+     */
+    List<String> getCourseRoster(final String userId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException;
 }

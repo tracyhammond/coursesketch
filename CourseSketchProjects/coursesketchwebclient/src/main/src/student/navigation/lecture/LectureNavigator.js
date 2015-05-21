@@ -1,3 +1,11 @@
+/**
+ * A navigator for navigating lectures.
+ *
+ * Takes in the perferredIndex and a lecture Id.
+ * @param {String} lectureId the id to start the lecture at
+ * @param {Number} preferredIndex the number slide to start at.
+ * @constructor
+ */
 function LectureNavigator(lectureId, preferredIndex) {
     var callbackList = [];
     var currentLecture;
@@ -8,6 +16,11 @@ function LectureNavigator(lectureId, preferredIndex) {
     var currentSlide;
     var isDone = false;
 
+    /**
+     * Goes to a slide at the specific index in the current lecture.
+     *
+     * @param {Number} index The index to navigate the lecture to.
+     */
     this.goToSlide = function goToSlide(index) {
         changeSlide(index);
     };
@@ -22,6 +35,11 @@ function LectureNavigator(lectureId, preferredIndex) {
             nextSlideIndex = indicesStack.pop();
             nextLectureId = lectureIdStack.pop();
         }
+
+        /**
+         * Called when the lecture is loaded.
+         * @param {SrlLecture} lecture a proto lecture object.
+         */
         function hasLecture(lecture) {
             if (nextSlideIndex === -1) {
                 isDone = true;
@@ -91,9 +109,15 @@ function LectureNavigator(lectureId, preferredIndex) {
         }, 20);
     }
 
+    /**
+     * Changes the slide to the given index.
+     *
+     * @param {Integer} index
+     */
     function changeSlide(index) {
         if (index < 0 || index >= currentLecture.idList.length) {
-            return;
+            // TODO: change this to a lecture exception.
+            throw new CourseSketch.BaseException('Index is not valid: ' + index);
         }
         currentSlideIndex = index;
         currentSlide = currentLecture.idList[index];
@@ -106,6 +130,10 @@ function LectureNavigator(lectureId, preferredIndex) {
      * @param {Integer} index The new index that will become the current index.
      */
     function loadSlide(nextSlideId, index) {
+        /**
+         * Called when the slide has been loaded.
+         * @param {SrlSlide} slide the protobuf slide object.
+         */
         function hasSlide(slide) {
             currentSlide = slide;
             currentSlideIndex = index;
@@ -124,6 +152,10 @@ function LectureNavigator(lectureId, preferredIndex) {
     function loadLecture(nextLectureId, index) {
         lectureIdStack.push(currentLectureId);
         indicesStack.push(index);
+        /**
+         * Called when the lecture has loaded from the server.
+         * @param {SrlLecture} lecture the lecture protobuf object from the server.
+         */
         function hasLecture(lecture) {
             currentLecture = lecture;
             currentLectureId = lecture.id;
@@ -136,50 +168,74 @@ function LectureNavigator(lectureId, preferredIndex) {
         CourseSketch.dataManager.getCourseLecture(nextLectureId, hasLecture, hasLecture);
     }
 
+    /**
+     * Callback that is called after a slide has been loaded.
+     * @param {Function} callback called after the function has been loaded.
+     */
     this.addCallback = function(callback) {
         callbackList.push(callback);
     };
 
     /**
-     * Does not apply to the entire scope just the current lecture scope
+     * Does not apply to the entire scope just the current lecture scope.
      */
     this.hasPrevious = function() {
         return currentSlideIndex > 0;
     };
 
     /**
-     * Does not apply to the entire scope just the current lecture scope
+     * Does not apply to the entire scope just the current lecture scope.
      */
     this.hasNext = function() {
         return currentSlideIndex < currentLecture.idList.length;
     };
 
+    /**
+     * Returns the current slide number in a human readable format.
+     *
+     * @returns {Number} slide index + 1
+     */
     this.getCurrentNumber = function() {
         return currentSlideIndex + 1;
     };
 
+    /**
+     * @returns {Number} Number of slides in the current lecture.
+     */
     this.getLength = function() {
         return currentLecture.idList.length;
     };
 
+    /**
+     * @returns {String} The id of the current slide.
+     */
     this.getCurrentSlideId = function() {
         return currentSlide.id;
     };
 
+    /**
+     * @returns {Slide} A protobuf object that represents the current slide.
+     */
     this.getCurrentSlide = function() {
         return currentSlide;
     };
 
+    /**
+     * @returns {String} The id of the current lecture.
+     */
     this.getCurrentLectureId = function() {
         return currentLectureId;
     };
 
+    /**
+     * @returns {Boolean} True if the lecture is done false otherwise.
+     */
     this.getIsDone = function() {
         return isDone;
     };
 
     /**
-     * removes a callback from the callback list
+     * Removes a callback from the callback list.
      */
     this.removeCallback = function(callback) {
         var index = callbackList.indexOf(callback);
@@ -189,9 +245,14 @@ function LectureNavigator(lectureId, preferredIndex) {
     };
 
     /**
-     * refresh reloads the current slide and lecture
+     * Refresh reloads the current slide and lecture.
      */
     this.refresh = function() {
+        /**
+         * Called when the lecture has loaded from the server.
+         *
+         * @param {SrlLecture} lecture the lecture protobuf object from the server.
+         */
         function hasLecture(lecture) {
             currentLecture = lecture;
             var id = currentLecture.idList[currentSlideIndex].id;

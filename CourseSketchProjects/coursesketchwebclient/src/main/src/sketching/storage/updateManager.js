@@ -596,6 +596,9 @@ function UpdateManager(sketchManager, onError) {
         return !(this.isLastUpdateSubmission() || this.isLastUpdateSave());
     };
 
+    /**
+     * @returns {Number} The current update index.
+     */
     this.getCurrentPointer = function() {
         return currentUpdateIndex;
     };

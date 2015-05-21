@@ -1,8 +1,18 @@
+/**
+ * A manager for courses that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
 function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var COURSE_LIST = 'COURSE_LIST';
     var userCourseId = [];
     var userHasCourses = true;
-    var dataListener = advanceDataListener;
     var database = parentDatabase;
     var sendDataRequest = sendData.sendDataRequest;
 
@@ -184,6 +194,15 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     }
     parent.updateCourse = updateCourse;
 
+    /**
+     * Deletes a course from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param {String} courseId
+     *                ID of the course to delete
+     * @param {Function} courseCallback
+     *                function to be called after the deletion is done
+     */
     function deleteCourse(courseId, courseCallback) {
         database.deleteFromCourses(courseId, function(e, request) {
             // remove course
@@ -198,6 +217,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     }
     parent.deleteCourse = deleteCourse;
 
+    /**
+     * Stores the course ids locally in the database.
+     * @param {List<String>} idList the list of ids the user currently have in their courses.
+     */
     function setCourseIdList(idList) {
         database.putInCourses(COURSE_LIST, idList); // no call back needed!
     }
@@ -326,6 +349,36 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     parent.insertCourse = insertCourse;
 
     /**
+     * Gets the course roster.
+     * @param courseId
+     * @param {Functon} callback A callback is called with a list of userIds
+     */
+    function getCourseRoster(courseId, callback) {
+        if (isUndefined(callback)) {
+            throw new DatabaseException('Calling getGrade with an undefined callback');
+        }
+
+        var idList = [ courseId ];
+
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
+            // after listener is removed
+            if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                // not calling the state callback because this should skip that step.
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId));
+                return;
+            }
+
+            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getIdChainClass());
+            callback(decodedRoster.idChain);
+        });
+
+        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, idList);
+    }
+    parent.getCourseRoster = getCourseRoster;
+
+    /**
      * gets the id's of all of the courses in the user's local client.
      */
     database.getFromCourses(COURSE_LIST, function(e, request, result) {
@@ -361,6 +414,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         }
     };
 
+    /**
+     * Searches the course list.
+     * @param {Function} callback called with a list of all courses meeting the search requirements.
+     */
     parent.searchCourses = function(callback) {
         var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
         var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
