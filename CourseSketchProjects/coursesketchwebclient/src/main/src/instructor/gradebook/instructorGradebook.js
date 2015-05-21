@@ -14,6 +14,7 @@
     CourseSketch.gradeBook.loadGrades = function(courseId) {
 
         CourseSketch.dataManager.getCourse(courseId, function(course) {
+            CourseSketch.gradeBook.course = course;
             CourseSketch.dataManager.getCourseRoster(courseId, function(studentList) {
                 // loads all of the grades
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
@@ -22,7 +23,6 @@
                 });
             });
         });
-
     };
 
     /**
@@ -30,11 +30,11 @@
      *
      * @param {Map<String,Element>} studentMap This is a map of studentId's to table rows.
      * @param {String} studentId The student's ID number.
-     * @param {Integer} numberOfAssignments The number of assignments and length of the listAssignments list.
+     * @param {Integer} assignmentList The list of assignments for the course.
      */
-    function addNewStudent(studentMap, studentId, numberOfAssignments, table) {
+    function addNewStudent(studentMap, studentId, assignmentList, table) {
         var row = document.createElement('tr');
-        for (var i = 0; i < numberOfAssignments; i++) {
+        for (var i = 0; i < assignmentList.length; i++) {
             var column = document.createElement('td');
             column.style.width = '10ch';
             column.style.maxWidth = '10ch';
@@ -43,7 +43,8 @@
             column.onclick = gradeCellSelected;
             column.dataset.student = studentId;
             // note that this is i minus the offset
-            column.dataset.column = i;
+            // column.dataset.column = i;
+            column.dataset.assignment = assignmentList[i];
             row.appendChild(column);
         }
         table.appendChild(row);
@@ -65,7 +66,7 @@
         var body = document.createElement('tbody');
         table.appendChild(body);
         for (var i = 0; i < studentList.length; i++) {
-            addNewStudent(studentMap, studentList[i], assignmentList.length, body);
+            addNewStudent(studentMap, studentList[i], assignmentList, body);
         }
 
         for (var i = 0; i < listGrades.length; i++) {
@@ -73,7 +74,7 @@
             var studentId = protoGrade.userId;
             var assignmentId = protoGrade.assignmentId;
             if (!studentMap.has(studentId)) {
-                addNewStudent(studentMap, studentId, assignmentList.length, body);
+                addNewStudent(studentMap, studentId, assignmentList, body);
             }
             var studentRow = studentMap.get(studentId);
             var columnList = studentRow.children;
@@ -223,7 +224,8 @@
 
             if (oldGrade !== newGrade) {
                 console.log('SAVING GRADE: [' , newGrade, ', ', comment, ']');
-                // TODO: save grade here
+                var protoGrade = buildProtoGrade(cell, newGrade, comment);
+                CourseSketch.dataManager.setGrade(protoGrade);
             }
 
             // replaces input with new grade value.
@@ -298,6 +300,20 @@
         unselectCell(cell);
     }
 
+    function buildProtoGrade(cell, grade, comment) {
+        grade = parseFloat(grade); // Sent in is a string. Proto requires a float.
+        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        protoGrade.setCourseId(CourseSketch.gradeBook.course.id);
+        protoGrade.setUserId(cell.dataset.student);
+        if (!isUndefined(cell.dataset.assignment)) { protoGrade.setAssignmentId(cell.dataset.assignment); }
+        if (!isUndefined(cell.dataset.problem)) { protoGrade.setProblemId(cell.dataset.problem); }
+        if (!isNaN(grade)) { protoGrade.setCurrentGrade(grade); }
+        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
+        if (!isNaN(grade)) { gradeHistory.setGradeValue(grade); }
+        if (!isUndefined(comment)) { gradeHistory.setComment(comment); }
+        protoGrade.setGradeHistory(gradeHistory); // Don't need to add to list since there is only one gradeHistory value
+        return protoGrade;
+    }
 
     /**
      * Returns the index of an element in reference to its parent element.
