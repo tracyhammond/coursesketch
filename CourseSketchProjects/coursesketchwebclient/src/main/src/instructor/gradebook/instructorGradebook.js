@@ -102,6 +102,7 @@
         nameHolder.textContent = 'Student Name';
         nameLabel.appendChild(nameHolder);
         row.appendChild(nameLabel);
+        var buttonList = [];
         for (var i = 0; i < assignmentList.length; i++) {
             assignmentMap.set(assignmentList[i], i);
             var th = document.createElement('th');
@@ -109,13 +110,28 @@
             th.style.maxWidth = '11ch';
             var button = document.createElement('a');
             button.textContent = assignmentList[i];
+            buttonList.push(button);
+            // TODO: use this code once the single request method has been resolved
+            // Don't push until that refactor has been complete.
+            /*
             CourseSketch.dataManager.getAssignment(assignmentList[i], function(assignment) {
                 button.textContent = assignment.name;
             });
+            */
             button.className = 'waves-effect waves-teal btn-flat truncate';
             th.appendChild(button);
             row.appendChild(th);
         }
+
+        // Remove this code once the single request method has been resolved.
+        CourseSketch.dataManager.getAssignments(assignmentList, undefined, function(assignments) {
+            for (var i = 0; i < assignments.length; i++) {
+                // The order in the assigmment list may not match the order in the list of assigments.
+                // this is used to match the order together so the right name goes with the correct button.
+                var index = assignmentList.indexOf(assignments[i].id);
+                buttonList[index].textContent = assignments[i].name;
+            }
+        });
         header.appendChild(row);
         table.appendChild(header);
     }
