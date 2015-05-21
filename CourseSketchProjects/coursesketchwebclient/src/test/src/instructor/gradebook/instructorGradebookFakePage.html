@@ -15,15 +15,15 @@
 <body>
 <script>
     CourseSketch.dataManager.waitForDatabase(function() {
-        CourseSketch.dataManager.addState('gradebookCourseid', 'courseId');
-        var assignmentList = ["long", "fake2", "Test", 'test1.5', 'test2', 'quiz1', 'quiz2', 'quiz3',
-            'hw1', 'hw2', 'project1', 'project2', 'hw3'];
+        CourseSketch.dataManager.addState('gradebookCourseid', '8');
+
+		var assignmentList = [];
+		for (var i = 0; i < 10; i++) {
+			assignmentList.push('' + (i + 11));
+		}
+
         var studentList = ["student1", "stud2", "gilbert", "gabby", "student5", "student6",
         "matt", "stud8", "stud9", "stud10"];
-        CourseSketch.dataManager.getCourse = function(courseId, callback) {
-            CourseSketch.fakeCourses[0].assignmentList = assignmentList;
-            callback(CourseSketch.fakeCourses[0]);
-        };
 
         CourseSketch.dataManager.getCourseRoster = function(courseId, callback) {
             var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
