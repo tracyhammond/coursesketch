@@ -1,9 +1,18 @@
-function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
+function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var dataListener = advanceDataListener;
     var database = parentDatabase;
-    var Request = request;
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Looks at the assignment and gives it some state if the state values do
@@ -361,6 +370,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             throw new DatabaseException('Calling get Assignment with an undefined callback');
         }
         var called = false;
+
+        /**
+         * Ensures that the callback is only called once.
+         *
+         * @param {List<Assignments>} assignmentList The assignments that were loaded.
+         */
         function callOnce(assignmentList) {
             if (!called) {
                 called = true;
