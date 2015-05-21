@@ -42,11 +42,9 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
+import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
+import static database.DatabaseStringConstants.USER_LIST;
 
 /**
  * Interfaces with the database to manage course data.
@@ -317,7 +315,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * With that being said this allows a course to be updated adding the
      * assignmentId to its list of items.
      *
@@ -344,7 +342,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * With that being said this allows a course to be updated adding the
      * lectureId to its list of items.
      *
@@ -372,7 +370,7 @@ public final class CourseManager {
     /**
      * @param dbs The database where the course is being stored.
      * @return a list of all public courses.
-     *
+     * <p/>
      * FUTURE: this should probably be paginated so it does not crush
      * the database.
      */
@@ -412,7 +410,7 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public.
-     *
+     * <p/>
      * With that being said this allows the default ids to be inserted.
      *
      * @param dbs          The database where the course is being stored.
@@ -434,11 +432,10 @@ public final class CourseManager {
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * Returns a list of Id for the default group for an assignment.
-     *
-     * The list are ordered as so: AdminGroup, ModGro        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
-up, UserGroup
+     * <p/>
+     * The list are ordered as so: AdminGroup, ModGroup, UserGroup
      *
      * @param dbs      The database where the course is being stored.
      * @param courseId the course that the groups are being grabbed from.
@@ -456,9 +453,9 @@ up, UserGroup
 
     /**
      * NOTE: This is meant for internal use do not make this method public
-     *
+     * <p/>
      * Returns a list of Ids for the default group for a course.
-     *
+     * <p/>
      * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup
      *
      * @param dbs      The database where the course is being stored.
@@ -473,5 +470,43 @@ up, UserGroup
         returnValue[1] = corsor.get(MOD_GROUP_ID).toString();
         returnValue[2] = corsor.get(USER_GROUP_ID).toString();
         return returnValue;
+    }
+
+    /**
+     * @param authenticator
+     *         The object that is performing the authentication
+     * @param dbs
+     *         The database where the roster is coming from
+     * @param userId
+     *         The id of the user requesting the courseRoster
+     * @param courseId
+     *         The id of what courseRoster is being grabbed
+     * @return a list of users in the course
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems accessing the database.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the course.
+     */
+    static List<String> mongoGetCourseRoster(final Authenticator authenticator, final DB dbs, final String userId, final String courseId)
+        throws DatabaseAccessException, AuthenticationException {
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
+            throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
+        }
+
+        final ArrayList<String> adminList = (ArrayList<String>) cursor.get(ADMIN);
+        final ArrayList<String> userList = (ArrayList<String>) cursor.get(USERS);
+
+        boolean isAdmin;
+        isAdmin = authenticator.checkAuthentication(userId, adminList);
+
+        if (!isAdmin) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBRef groupDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(userList.get(0).substring(5)));
+        final DBObject groupCursor = groupDbRef.fetch();
+        return (List) groupCursor.get(USER_LIST);
     }
 }
