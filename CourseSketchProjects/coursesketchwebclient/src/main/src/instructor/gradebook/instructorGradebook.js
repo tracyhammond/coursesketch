@@ -17,12 +17,40 @@
             CourseSketch.gradeBook.course = course;
             CourseSketch.dataManager.getCourseRoster(courseId, function(studentList) {
                 // loads all of the grades
+                CourseSketch.dataManager.courseRoster = studentList;
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
                     var assignmentList = course.assignmentList;
-                    CourseSketch.gradeBook.populateGrades(assignmentList, gradeList, studentList, document.querySelector('.tabletalk'));
+                    var table = document.querySelector('.tabletalk');
+                    CourseSketch.gradeBook.initializeTable(assignmentList, gradeList, studentList, table);
                 });
             });
         });
+    };
+
+    /**
+     * Initializes a table from the given values.
+     *
+     * @param asignmentList
+     * @param gradeList
+     * @param studentList
+     * @param table
+     */
+    CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, studentList, table) {
+        table.innerHTML = '';
+
+        var assignmentMap = new Map();
+        var studentMap = new Map();
+        var body = document.createElement('tbody');
+        table.appendChild(body);
+
+        for (var i = 0; i < studentList.length; i++) {
+            addNewStudent(studentMap, studentList[i], assignmentList, body);
+        }
+        CourseSketch.gradeBook.studentMap = studentMap;
+
+        createAssignmentHeader(assignmentList, assignmentMap, table);
+        CourseSketch.gradeBook.populateGrades(gradeList, studentMap, assignmentMap, body);
+        populateStudentNames(studentMap);
     };
 
     /**
@@ -57,18 +85,7 @@
      * @param {List<String>} assignmentList The list of assignment IDs.
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
      */
-    CourseSketch.gradeBook.populateGrades = function(assignmentList, listGrades, studentList, table) {
-        table.innerHTML = '';
-        var assignmentMap = new Map();
-        var studentMap = new Map();
-
-        createAssignmentHeader(assignmentList, table, assignmentMap);
-        var body = document.createElement('tbody');
-        table.appendChild(body);
-        for (var i = 0; i < studentList.length; i++) {
-            addNewStudent(studentMap, studentList[i], assignmentList, body);
-        }
-
+    CourseSketch.gradeBook.populateGrades = function(listGrades, studentMap, assignmentMap, table) {
         for (var i = 0; i < listGrades.length; i++) {
             var protoGrade = listGrades[i];
             var studentId = protoGrade.userId;
@@ -82,8 +99,6 @@
             var stringGrade = '' + protoGrade.getCurrentGrade();
             cell.textContent = stringGrade.substring(0, 6);
         }
-
-        populateStudentNames(studentMap);
     };
 
     /**
@@ -93,7 +108,7 @@
      * @param {Element} table
      * @param {Map<String, Integer>} assignmentMap
      */
-    function createAssignmentHeader(assignmentList, table, assignmentMap) {
+    function createAssignmentHeader(assignmentList, assignmentMap, table) {
         var header = document.createElement('thead');
         header.className = 'scrollHeader';
         var row = document.createElement('tr');
@@ -108,6 +123,7 @@
             var th = document.createElement('th');
             th.style.minWidth = '10ch';
             th.style.maxWidth = '11ch';
+            th.dataset.assignemnt = assignmentList[i];
             var button = document.createElement('a');
             button.textContent = assignmentList[i];
             buttonList.push(button);
@@ -352,9 +368,10 @@
      * Returns the index of an element in reference to its parent element.
      */
     function getChildIndex(element) {
-        var k=-1, e=element;
+        var k = -1;
+        var e = element;
         while (e) {
-            if ( "previousSibling" in e ) {
+            if ("previousSibling" in e) {
                 e = e.previousSibling;
                 k = k + 1;
             } else {
