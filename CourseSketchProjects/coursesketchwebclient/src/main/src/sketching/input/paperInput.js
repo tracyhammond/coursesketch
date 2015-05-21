@@ -1,19 +1,34 @@
 /**
  * Contains input listeners for canvas interaction and functions for creating points using drawing events
+ * @class InputListener
  */
 function InputListener() {
     var currentPoint;
     var pastPoint;
     var currentStroke;
+    /**
+     * @typedef {Object} PSTool.
+     * @member {PSTool}
+     * @memberof InputListener
+     */
     var tool = undefined;
     var totalZoom = 0;
 
     /**
-     * Creates mouse listeners that enable strokes, panning and zooming
+     * Creates mouse listeners that enable strokes, panning, and zooming.
+     *
+     * @function initializeCanvas
+     * @instance
+     * @memberof InputListener
      */
     this.initializeCanvas = function(sketchCanvas, strokeCreationCallback, graphics) {
         var ps = graphics.getPaper();
         tool = new ps.Tool();
+        /**
+         * The pixel distance between points when recording points.
+         * @member {Number}
+         * @memberof PSTool
+         */
         tool.fixedDistance = 5;
 
         //used for panning and zooming
@@ -21,7 +36,12 @@ function InputListener() {
         var startingPoint;
         var lastPoint;
 
-        // allows you to zoom in or out based on a delta
+        /**
+         * Allows you to zoom in or out based on a delta.
+         * Attempts to limit zoom out to an exponential decay function.
+         * This also makes sure that the final zoom function is in fact linear.
+         * @memberof InputListener#initializeCanvas
+         */
         function zoom(delta) {
             var oldZoom = totalZoom;
             totalZoom += delta;
@@ -58,8 +78,12 @@ function InputListener() {
         });
         $(sketchCanvas).data('touchy-drag').settings.requiredTouches = 2;
 
-        //if shift is held, pans
-        //if shift is not held, it starts a new path from the mouse point
+        /**
+         * If shift is held, pans else if shift is not held, it starts a new path from the mouse point.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         */
         tool.onMouseDown = function(event) {
             if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
@@ -75,8 +99,11 @@ function InputListener() {
             }
         };
 
-        //if shift is held, pans the view to follow the mouse
-        //if shift is not held, it adds more points to the path created on MouseDown
+        /**
+         * If shift is held, pans the view to follow the mouse else if shift is not held, it adds more points to the path created on MouseDown.
+         * @function onMouseDown
+         * @memberof PSTool
+         */
         tool.onMouseDrag = function(event) {
             if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
@@ -92,8 +119,12 @@ function InputListener() {
             }
         };
 
-        //finishes up the path that has been created by the mouse pointer
-        //unless shift has been held, then it throws up
+        /**
+         * Finishes up the path that has been created by the mouse pointer, unless shift has been held, then it throws up.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         */
         tool.onMouseUp = function(event) {
             currentPoint = createPointFromEvent(event);
             //currentPoint.setSpeed(pastPoint);
@@ -142,7 +173,10 @@ function InputListener() {
     };
 
     /**
-     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point
+     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point.
+     *
+     * @memberof InputListener
+     * @private
      */
     function createPointFromEvent(drawingEvent) {
         var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
@@ -158,7 +192,11 @@ function InputListener() {
         return currentPoint;
     }
 
-    // Creates a time stamp for every point.
+    /**
+     * Creates and returns a time stamp every time this function is called.
+     *
+     * @returns {Number} - The time stamp.
+     */
     function createTimeStamp() {
         return new Date().getTime();
     }
