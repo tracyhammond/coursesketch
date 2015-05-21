@@ -53,8 +53,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * After the lower level database has been completely setup the higher level
-     * specific databases can be called.
+     * After the lower level database has been completely setup the higher level specific databases can be called.
+     *
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
@@ -73,7 +73,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var database = new ProtoDatabase(localUserId, version, initalizedFunction);
 
     (function() {
-
+        /**
+         * Add function for adding elements to the database.
+         *
+         * @returns {Transaction} The transaction from storing the data in the database.
+         */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
                 'id': objectId,
@@ -149,10 +153,18 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
+    /**
+     * This is supposed to clean out the database.
+     *
+     * Currently does not work.
+     */
     this.emptySchoolData = function() {
         database.emptySelf();
     };
 
+    /**
+     * Creates the specific datamanagers.
+     */
     this.start = function() {
         // creates a manager for just courses.
         courseManager = new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
@@ -236,14 +248,27 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         stateMachine.set(key, value);
     };
 
+    /**
+     * Returns the state at the given key.
+     * @param {String} key The unique identifier for the state.
+     */
     this.getState = function(key) {
         return stateMachine.get(key);
     };
 
+    /**
+     * Returns true if the given key is a valid state, false otherwise.
+     *
+     * @param {String} key The unique identifier for the state.
+     * @returns {Boolean} true if the state exists false otherwise.
+     */
     this.hasState = function(key) {
         return stateMachine.has(key);
     };
 
+    /**
+     * Empties all state data.
+     */
     this.clearStates = function() {
         stateMachine = new Map();
     };
