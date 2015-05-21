@@ -4,6 +4,9 @@ if (isUndefined(CourseSketch)) {
 CourseSketch.connection = false;
 CourseSketch.redirector = {};
 
+/**
+ * @namespace Index
+ */
 $(document).ready(
 function() {
     /**
@@ -12,20 +15,33 @@ function() {
     CourseSketch.loadCreateTutorial = function() {
         var element = document.createElement('entire-timeline');
         document.getElementById('tutorial').appendChild(element);
+        element.loadExistingTutorials();
     };
 
     /**
-     * @returns {Element} the element that encapsulates the exception.
+     * @returns {Element} The element that encapsulates the exception.
      */
     CourseSketch.getExceptionParentElement = function() {
         return document.body;
     };
 
+    /**
+     * Refreshes the page without adding a browser event.
+     *
+     * @memberof CourseSketch
+     */
     CourseSketch.reloadContent = function() {
         var value = CourseSketch.redirector.getRedirect();
         CourseSketch.redirector.changeSourceNoEvent(value);
     };
 
+    /**
+     * Changes the page to point at a different location.
+     *
+     * @param {URL} url - a url that points to a different page
+     * @param {String} title - the title that appears on the top of course sketch.
+     * @memberof CourseSketch
+     */
     CourseSketch.redirectContent = function(url, title) {
         CourseSketch.redirector.changeSourceNoEvent(url);
 
@@ -46,13 +62,22 @@ function() {
 
     var element = document.querySelector('#loginLocation');
 
-    // Creates the scuccess funciton.
+    /**
+     * Called when the user logs in correctly.
+     *
+     * @param {ConnectionLibrary} loggedInConnection - a valid connection of the user being logged in.
+     * @memberof Index
+     */
     var successLogin = function(loggedInConnection) {
         CourseSketch.connection = loggedInConnection;
         $('#loginLocation').empty();
         var importPage = document.createElement('link');
         importPage.rel = 'import';
         importPage.href = '/src/main.html';
+        /**
+         * Imports main.html.
+         * @memberof Index
+         */
         importPage.onload = function() {
             var content = importPage.import;
             document.querySelector('#mainPageContent').appendChild(content.querySelector('#mainPage'));
@@ -67,7 +92,15 @@ function() {
         element.style.display = 'none';
     };
 
-    // This section creates a cross so that the login links to the register and register links to login.
+    /**
+     * Creates a login element and a function so that when the register button is clicked the register is created.
+     *
+     * This is called on the Register element when cancel is pressed.  This forms an infinite loop with {@link Index.createRegister}.
+     * They each call the other when clicked.
+     * @param {Function} register - the createRegister function
+     * @see {@link Index.createRegister}
+     * @memberof Index
+     */
     function createLogin(register) {
         $('#loginLocation').empty();
         var login = document.createElement('login-system');
@@ -78,12 +111,19 @@ function() {
         element.appendChild(login);
     }
 
+    /**
+     * Creates a register element and a function so that when the cancel button is clicked the login is created.
+     *
+     * This is called on the Login element when register is pressed.  This forms an infinite loop with {@link Index.createLogin}.
+     * They each call the other when clicked.
+     * @param {Function} login - the createLogin function
+     * @see {@link Index.createLogin}
+     * @memberof Index
+     */
     function createRegister(login) {
-        console.log('creating new register element');
         $('#loginLocation').empty();
         var register = document.createElement('register-system');
         register.setOnSuccessLogin(successLogin);
-        console.log(register);
         register.setCancelCallback(function() {
             login(createRegister);
         });
@@ -92,7 +132,12 @@ function() {
     createLogin(createRegister);
     element.style.display = 'flex';
 
-    // create the load menu function.
+    /**
+     * Creates and loads the menu.
+     *
+     * @param {Link} importDoc The link element that contains the menu template.
+     * @memberof Index
+     */
     function loadMenu(importDoc) {
         var content = importDoc.querySelector('#menubarTemplate').import;
         var template = undefined;
@@ -106,6 +151,12 @@ function() {
         startMenuSliding();
     }
 
+    /**
+     * Sets up the sliding for the menu.
+     *
+     * TODO look up the Header.js and see what is happening there.
+     * @memberof Index
+     */
     function startMenuSliding() {
         var menuStatus = false;
 
@@ -114,17 +165,22 @@ function() {
             // clicked.
         });
 
+        /**
+         * Shows the menu sliding.
+         * @param {Boolean} value true to close the menu false to open the menu.
+         * @returns {Boolean} returns false.
+         */
         function animateMenu(value) {
             if (value) { // close menu
                 $('#content').animate({
-                    marginLeft: '0px',
+                    marginLeft: '0px'
                 }, 300, function() {
                     menuStatus = false;
                 });
                 return false;
             } else { // open menu
                 $('#content').animate({
-                    marginLeft: '200px',
+                    marginLeft: '200px'
                 }, 300, function() {
                     menuStatus = true;
                 });
@@ -151,8 +207,13 @@ function() {
         // Menu behaviour
     }
 
+    /**
+     * loads the homepage.
+     *
+     * This loads a different page depending on if the user is currently an instructor or a user.
+     * @memberof Index
+     */
     function loadHomePage() {
-        console.log('LOADING HOMEPAGE');
         if (CourseSketch.connection.isInstructor) {
             CourseSketch.redirectContent('/src/instructor/homepage/homePage.html', 'Welcome Instructor');
         } else {
@@ -170,10 +231,17 @@ function() {
 });
 
 CourseSketch.isMenuSwipeable = true;
+/**
+ * Turns on menu swiping.
+ * @memberof CourseSketch
+ */
 CourseSketch.enableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = true;
 };
-
+/**
+ * Turns off menu swiping.
+ * @memberof CourseSketch
+ */
 CourseSketch.disableMenuSwiping = function() {
     CourseSketch.isMenuSwipeable = false;
 };

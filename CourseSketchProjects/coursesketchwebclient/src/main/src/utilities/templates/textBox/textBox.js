@@ -1,3 +1,4 @@
+
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed
@@ -121,7 +122,10 @@ function TextBox() {
     this.saveData = function(event) {
         /*jshint maxcomplexity:13 */
         var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
-        textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
+        var creatorText = this.shadowRoot.querySelector('#creatorText');
+        if (creatorText !== null && !isUndefined(creatorText)) {
+            textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
+        }
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
         var x = '' + dialog.style.left; // Makes sure x is a string for following check function
         var y = '' + dialog.style.top; // Makes sure y is a string for following check function
@@ -188,11 +192,10 @@ function TextBox() {
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
 
         // If creatorText element does not exist, make the selected node the viewText element
-        if (node === null) {
+        if (node === null || isUndefined(node)) {
             node = this.shadowRoot.querySelector('#viewText');
         }
-        $(dialog).height(textBoxProto.getHeight()); // Sets dialog height
-        $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
+
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
         $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
@@ -201,10 +204,11 @@ function TextBox() {
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
         if (dialog.style.display === 'none') {
             var textToRead = textBoxProto.getText();
+            var finishedCallback = this.getFinishedCallback.bind(this);
             this.parentNode.removeChild(this);
 
             // Speaking happens after DOM removal in case callback relies on element no longer existing
-            this.speakText(textToRead, this.getFinishedCallback()());
+            this.speakText(textToRead, finishedCallback());
         }
     };
 

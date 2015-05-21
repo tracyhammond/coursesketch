@@ -1,7 +1,10 @@
 /* jshint camelcase: false */
+
 (function(localScope) {
     /**
-     * Creates an SRL prtobuf version of a point
+     * Creates an SRL prtobuf version of a point.
+     *
+     * @memberof SRL_Point
      */
     SRL_Point.prototype.sendToProtobuf = function(scope) {
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
@@ -19,6 +22,8 @@
 
     /**
      * Static function that returns an {@link SRL_Point}.
+     *
+     * @memberof SRL_Point
      */
     SRL_Point.createFromProtobuf = function(proto) {
         var point = new SRL_Point(proto.x, proto.y);
@@ -43,7 +48,9 @@
     };
 
     /**
-     * Creates an SRL protobuf version of a stroke
+     * Creates an SRL protobuf version of a stroke.
+     *
+     * @memberof SRL_Stroke
      */
     SRL_Stroke.prototype.sendToProtobuf = function(scope) {
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
@@ -62,6 +69,8 @@
 
     /**
      * Static function that returns an {@link SRL_Stroke}.
+     *
+     * @memberof SRL_Stroke
      */
     SRL_Stroke.createFromProtobuf = function(stroke) {
         var pointList = stroke.getPoints();
@@ -83,6 +92,8 @@
 
     /**
      * Creates an SRL protobuf version of a shape.
+     *
+     * @memberof SRL_Shape
      */
     SRL_Shape.prototype.sendToProtobuf = function(scope) {
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlShape();
@@ -111,6 +122,8 @@
 
     /**
      * Static function that returns an {@link SRL_Shape}.
+     *
+     * @memberof SRL_Shape
      */
     SRL_Shape.createFromProtobuf = function(shape) {
         var interpretations = shape.interpretations;
@@ -131,6 +144,8 @@
 
     /**
      * Creates an SRL protobuf version of an Interpretation.
+     *
+     * @memberof SRL_Interpretation
      */
     SRL_Interpretation.prototype.sendToProtobuf = function(scope) {
         var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlInterpretation();
@@ -140,6 +155,11 @@
         return proto;
     };
 
+    /**
+     * Used locally to decode the srl object.
+     *
+     * @returns {Srl_Object} SRL_Object or its subclass.
+     */
     function decodeSrlObject(object) {
         var proto = false;
         var scope = false;
@@ -162,8 +182,11 @@
         }
     }
 
+    /**
+     * Used locally to encode an SRL_Object into its protobuf type.
+     */
     function encodeSrlObject(scope, object) {
-        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlIbject();
+        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlObject();
 
         if (object.check_type() === SRL_ShapeType) {
             proto.type = SrlObject.ObjectType.SHAPE;
