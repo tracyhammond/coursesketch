@@ -188,10 +188,16 @@
             this.textContent = '';
             var container = createFocusedCell();
             var input = container.querySelector('.gradeInput');
+            var addCommentButton = container.querySelector('.addComment');
+
             this.appendChild(container);
             input.value = grade;
             input.focus();
             input.select();
+
+            addCommentButton.onclick = function() {
+                addComment(this);
+            }.bind(this);
 
             // setCustomValidity must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
             input.oninvalid = function() { this.setCustomValidity('Please enter numbers only.') };
@@ -204,6 +210,14 @@
         var template = document.querySelector('#inputTemplate');
         var container = document.importNode(template.content, true);
         return container;
+    }
+
+    function addComment(cell) {
+        console.log(cell);
+        var addCommentButton = cell.querySelector('.addComment');
+        var addCommentInput = cell.querySelector('.commentInput');
+        addCommentButton.style.display = 'none';
+        addCommentInput.style.display = 'block';
     }
 
     /**
