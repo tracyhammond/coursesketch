@@ -443,7 +443,7 @@ public final class GradeManager {
         }
 
         if (grade.containsField(CURRENT_GRADE)) {
-            protoGrade.setCurrentGrade((float) grade.get(CURRENT_GRADE));
+            protoGrade.setCurrentGrade((float) ((double) grade.get(CURRENT_GRADE)));
         }
 
         if (grade.containsField(GRADE_HISTORY)) {
@@ -474,7 +474,7 @@ public final class GradeManager {
     static GradeHistory buildProtoGradeHistory(final DBObject history) throws DatabaseAccessException {
         final GradeHistory.Builder protoHistory = GradeHistory.newBuilder();
         if (history.containsField(GRADE_VALUE)) {
-            protoHistory.setGradeValue((float) history.get(GRADE_VALUE));
+            protoHistory.setGradeValue((float) ((double) history.get(GRADE_VALUE)));
         }
 
         if (history.containsField(COMMENT)) {
