@@ -1,3 +1,5 @@
+//jscs:disable jsDoc
+
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jscs');
