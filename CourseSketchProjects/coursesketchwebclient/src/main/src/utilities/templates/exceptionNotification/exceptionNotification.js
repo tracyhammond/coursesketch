@@ -37,7 +37,7 @@
 
         /**
          * Called when the html5 notification is clicked.
-         * @param {Event} event
+         * @param {Event} event On Click event.
          */
         notification.onclick = function(event) {
             console.log(event);
