@@ -14,10 +14,12 @@
     CourseSketch.gradeBook.loadGrades = function(courseId) {
 
         CourseSketch.dataManager.getCourse(courseId, function(course) {
-            // loads all of the grades
-            CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
-                var assignmentList = course.assignmentList;
-                CourseSketch.gradeBook.populateGrades(assignmentList, gradeList, document.querySelector('.tabletalk'));
+            CourseSketch.dataManager.getCourseRoster(courseId, function(studentList) {
+                // loads all of the grades
+                CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
+                    var assignmentList = course.assignmentList;
+                    CourseSketch.gradeBook.populateGrades(assignmentList, gradeList, studentList, document.querySelector('.tabletalk'));
+                });
             });
         });
 
@@ -54,7 +56,7 @@
      * @param {List<String>} assignmentList The list of assignment IDs.
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
      */
-    CourseSketch.gradeBook.populateGrades = function(assignmentList, listGrades, table) {
+    CourseSketch.gradeBook.populateGrades = function(assignmentList, listGrades, studentList, table) {
         table.innerHTML = '';
         var assignmentMap = new Map();
         var studentMap = new Map();
@@ -62,6 +64,9 @@
         createAssignmentHeader(assignmentList, table, assignmentMap);
         var body = document.createElement('tbody');
         table.appendChild(body);
+        for (var i = 0; i < studentList.length; i++) {
+            addNewStudent(studentMap, studentList[i], assignmentList.length, body);
+        }
 
         for (var i = 0; i < listGrades.length; i++) {
             var protoGrade = listGrades[i];
@@ -102,7 +107,7 @@
             th.style.maxWidth = '11ch';
             var button = document.createElement('a');
             button.textContent = assignmentList[i];
-            button.className = 'waves-effect waves-teal btn-flat';
+            button.className = 'waves-effect waves-teal btn-flat truncate';
             //Waves.attach(button, 'waves-effect waves-teal');
             th.appendChild(button);
             row.appendChild(th);
@@ -119,7 +124,12 @@
         studentMap.forEach(function(value, key, map) {
             row = map.get(key);
             var cell = document.createElement('td');
-            cell.textContent = key;
+            cell.dataset.student = key;
+            var cellText = key;
+            if (key.length > 13) {
+                cellText = key.substring(0, 10) + '...';
+            }
+            cell.textContent = cellText;
             cell.className = 'namecell';
             row.insertBefore(cell, row.firstChild);
         });

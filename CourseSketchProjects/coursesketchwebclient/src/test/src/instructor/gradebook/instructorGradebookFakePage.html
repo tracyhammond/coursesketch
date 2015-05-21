@@ -25,6 +25,11 @@
             callback(CourseSketch.fakeCourses[0]);
         };
 
+        CourseSketch.dataManager.getCourseRoster = function(courseId, callback) {
+            var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
+            callback(studentRoster);
+        };
+
         CourseSketch.dataManager.getAllAssignmentGrades = function(courseId, callback) {
             var gradeList = [];
             var grade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();

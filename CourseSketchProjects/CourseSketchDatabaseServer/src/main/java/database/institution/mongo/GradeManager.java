@@ -339,11 +339,16 @@ public final class GradeManager {
                 .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1).append(USER_ID, 1); // Sort by assignmentId then userId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
-        if (!cursor.hasNext()) {
-            throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
-        }
 
         final List<ProtoGrade> grades = new ArrayList<>();
+
+        if (!cursor.hasNext()) {
+            // TODO: do not let this code merge into master without a refactor for timeouts when getting data from the database.
+            // and then this method will still throw an error.
+            // throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
+            return grades;
+        }
+
         while (cursor.hasNext()) {
             grades.add(buildProtoGrade(cursor.next()));
         }
