@@ -52,7 +52,9 @@ public final class ExceptionUtilities {
         final Message.Request.Builder builder = Message.Request.newBuilder();
         builder.setRequestType(Message.Request.MessageType.ERROR);
         builder.setOtherData(exception.toByteString());
-        builder.setSessionInfo(inputRequest.getSessionInfo());
+        if (inputRequest != null) {
+            builder.setSessionInfo(inputRequest.getSessionInfo());
+        }
         builder.setResponseText(exception.getMssg());
         return builder.build();
     }
