@@ -100,13 +100,15 @@ validateFirstRun(document.currentScript);
         });
     }
 
-    /**
-    * Saves script in order to display it on the problem when opened. Saves
-    * to problem navigator.
-    */
+
     var saveScript = document.querySelector('button.save');
+
+    /**
+     * Saves script in order to display it on the problem when opened.
+     *
+     * Saves to problem navigator.
+     */
     saveScript.onclick = function() {
-        console.log('Entered');
         //Create bank problem (proto object)
         var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
 
@@ -125,6 +127,12 @@ validateFirstRun(document.currentScript);
     };
 
     var exitButton = document.querySelector('button.exit');
+
+    /**
+     * Called to leave the script editor.
+     *
+     * TODO: implement exiting the script editor.
+     */
     exitButton.onclick = function() {
         alert('Not yet implemented!');
     };
@@ -146,6 +154,9 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+        /**
+         * Called when the sketch is done loading.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();

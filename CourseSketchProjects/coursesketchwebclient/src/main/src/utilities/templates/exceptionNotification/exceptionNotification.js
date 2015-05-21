@@ -34,6 +34,11 @@
             body: protoEx.getMssg(),
             icon: imageUrl
         });
+
+        /**
+         * Called when the html5 notification is clicked.
+         * @param {Event} event On Click event.
+         */
         notification.onclick = function(event) {
             console.log(event);
             createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
@@ -61,7 +66,6 @@
 /**
  * Creates an custom element ExceptionNotification.
  */
-
 function ExceptionNotification() {
     /**
      * Makes the exit button close the box and enables dragging.
@@ -74,12 +78,23 @@ function ExceptionNotification() {
         this.shadowRoot.appendChild(templateClone);
         var modal_id = $(this.shadowRoot.querySelector('#closeButton')).attr('href');
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
+        /**
+         * Removes the element when clicked.
+         * @param {Event} event On Click event.
+         * @returns {Boolean} false.
+         */
         document.body.querySelector('#lean-overlay').onclick = function(event) {
             event.preventDefault();
             event.stopPropagation();
             localScope.parentNode.removeChild(localScope);
             return false;
         };
+
+        /**
+         * Removes the element when clicked.
+         *
+         * @param {Event} event On Click event.
+         */
         this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
             $(document.body.querySelector('#lean-overlay')).fadeOut(250);
             setTimeout(function() {

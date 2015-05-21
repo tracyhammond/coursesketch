@@ -1,8 +1,18 @@
+/**
+ * A manager for courses that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
 function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var COURSE_LIST = 'COURSE_LIST';
     var userCourseId = [];
     var userHasCourses = true;
-    var dataListener = advanceDataListener;
     var database = parentDatabase;
     var sendDataRequest = sendData.sendDataRequest;
 
@@ -180,6 +190,15 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     }
     parent.updateCourse = updateCourse;
 
+    /**
+     * Deletes a course from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param {String} courseId
+     *                ID of the course to delete
+     * @param {Function} courseCallback
+     *                function to be called after the deletion is done
+     */
     function deleteCourse(courseId, courseCallback) {
         database.deleteFromCourses(courseId, function(e, request) {
             // remove course
@@ -194,6 +213,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     }
     parent.deleteCourse = deleteCourse;
 
+    /**
+     * Stores the course ids locally in the database.
+     * @param {List<String>} idList the list of ids the user currently have in their courses.
+     */
     function setCourseIdList(idList) {
         database.putInCourses(COURSE_LIST, idList); // no call back needed!
     }
@@ -357,6 +380,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         }
     };
 
+    /**
+     * Searches the course list.
+     * @param {Function} callback called with a list of all courses meeting the search requirements.
+     */
     parent.searchCourses = function(callback) {
         var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
         var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
