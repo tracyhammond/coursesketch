@@ -88,6 +88,7 @@
 
     /**
      * Creates the assignment header while populating the assignment map.
+     *
      * @param {List<String>} assignmentList
      * @param {Element} table
      * @param {Map<String, Integer>} assignmentMap
@@ -97,8 +98,8 @@
         header.className = 'scrollHeader';
         var row = document.createElement('tr');
         var nameLabel = document.createElement('th');
-		var nameHolder = document.createElement('div');
-		nameHolder.textContent = 'Student Name';
+        var nameHolder = document.createElement('div');
+        nameHolder.textContent = 'Student Name';
         nameLabel.appendChild(nameHolder);
         row.appendChild(nameLabel);
         for (var i = 0; i < assignmentList.length; i++) {
@@ -108,8 +109,10 @@
             th.style.maxWidth = '11ch';
             var button = document.createElement('a');
             button.textContent = assignmentList[i];
+            CourseSketch.dataManager.getAssignment(assignmentList[i], function(assignment) {
+                button.textContent = assignment.name;
+            });
             button.className = 'waves-effect waves-teal btn-flat truncate';
-            //Waves.attach(button, 'waves-effect waves-teal');
             th.appendChild(button);
             row.appendChild(th);
         }
@@ -237,7 +240,7 @@
             // TODO: extra grade validation here (is it out of max points for the assignment?)
 
             if (oldGrade !== newGrade) {
-                console.log('SAVING GRADE: [' , newGrade, ', ', comment, ']');
+                console.log('SAVING GRADE: [', newGrade, ', ', comment, ']');
                 var protoGrade = buildProtoGrade(cell, newGrade, comment);
                 CourseSketch.dataManager.setGrade(protoGrade);
             }
