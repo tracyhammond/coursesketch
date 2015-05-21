@@ -24,12 +24,13 @@ function ArrayException(message, cause) {
 }
 ArrayException.prototype = new BaseException();
 
-/**
- * removes the object from an array.
- *
- * @return the object that was removed if it exist.
- */
 if (isUndefined(removeObjectFromArray)) {
+
+    /**
+     * Removes the object from an array.
+     *
+     * @return {*} the object that was removed if it exist.
+     */
     function removeObjectFromArray(array, object) {
         var index = array.indexOf(object);
         if (index !== -1) {
@@ -41,12 +42,13 @@ if (isUndefined(removeObjectFromArray)) {
     }
 }
 
-/**
- * removes the object from an array.
- *
- * @return the object that was removed if it exist.
- */
 if (isUndefined(removeObjectByIndex)) {
+
+    /**
+     * Removes the object from an array.
+     *
+     * @return {*} the object that was removed if it exist.
+     */
     function removeObjectByIndex(array, index) {
         if (index !== -1) {
             var result = array[index];
@@ -57,24 +59,26 @@ if (isUndefined(removeObjectByIndex)) {
     }
 }
 
-/**
- * Checks to see if an item is an instance of an array.
- *
- * returns true if it is an array, (hopefully).
- */
 if (isUndefined(isArray)) {
+
+    /**
+     * Checks to see if an item is an instance of an array.
+     *
+     * @returns {Boolean} true if it is an array, (hopefully).
+     */
     function isArray(object) {
         return object instanceof Array || (Array.isArray && Array.isArray(object));
     }
 }
 
-/**
- * Makes a list out of an object map.
- *
- * @param map
- * @returns {Array}
- */
 if (isUndefined(getMapAsList)) {
+
+    /**
+     * Makes a list out of an object map.
+     *
+     * @param {Object} map The map that you want to convert into a list. (Note this is an object and not ES6 Map
+     * @returns {Array} A list of the values in the object.
+     */
     function getMapAsList(map) {
         var list = [];
         for (var key in map) {

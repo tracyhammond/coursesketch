@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 /**
  * This class creates the highlightText dialog
  * The dialog is moveable with a color selector and checkbox for turning highlight mode on and off
