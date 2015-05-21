@@ -1,4 +1,3 @@
-//jscs:disable jsDoc
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed

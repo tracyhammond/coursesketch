@@ -1,4 +1,3 @@
-//jscs:disable jsDoc
 /**
  * @param {Object} timeline is the timeline object that the index manager will be associated with
  * Creates an IndexManager for a tutorial timeline
