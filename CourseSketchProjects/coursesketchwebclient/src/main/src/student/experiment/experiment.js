@@ -111,6 +111,10 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+
+        /**
+         * Called when the sketch surface is done loading to remove the overlay.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();
@@ -145,13 +149,10 @@ validateFirstRun(document.currentScript);
             //loads and runs the script
             executeScript(problemScript, document.getElementById('problemPanel'), function() {
                 console.log('script executed - worker disconnect');
-                console.log(submission);
                 var updateList = submission.getUpdateList();
-                //console.log(updateList);
                 sketchSurface.loadUpdateList(updateList.getList(), element);
                 updateList = null;
                 element = null;
-                //console.log(submission);
             });
         });
         //end of getSubmission
