@@ -443,7 +443,9 @@ public final class GradeManager {
         }
 
         if (grade.containsField(CURRENT_GRADE)) {
-            protoGrade.setCurrentGrade((float) ((double) grade.get(CURRENT_GRADE)));
+            // The reason appears that some instances are returing a double and others return a float.
+            // So we convert it to a string and parse it.
+            protoGrade.setCurrentGrade(Float.parseFloat(grade.get(CURRENT_GRADE).toString()));
         }
 
         if (grade.containsField(GRADE_HISTORY)) {
@@ -474,7 +476,9 @@ public final class GradeManager {
     static GradeHistory buildProtoGradeHistory(final DBObject history) throws DatabaseAccessException {
         final GradeHistory.Builder protoHistory = GradeHistory.newBuilder();
         if (history.containsField(GRADE_VALUE)) {
-            protoHistory.setGradeValue((float) ((double) history.get(GRADE_VALUE)));
+            // The reason appears that some instances are returing a double and others return a float.
+            // So we convert it to a string and parse it.
+            protoHistory.setGradeValue(Float.parseFloat(history.get(GRADE_VALUE).toString()));
         }
 
         if (history.containsField(COMMENT)) {
