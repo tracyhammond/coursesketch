@@ -40,14 +40,15 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
         }
 
         var isInstructor = CourseSketch.connection.isInstructor;
-        idList = [ protoGrade.courseId, protoGrade.assignmentId, protoGrade.problemId, protoGrade.userId ];
+        var idList = [ protoGrade.courseId, protoGrade.assignmentId, protoGrade.problemId, protoGrade.userId ];
 
         var gradingQuery = CourseSketch.PROTOBUF_UTIL.GradingQuery();
         var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
         var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
 
         gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
-        gradingQuery.setSearchType(SearchType.ALL_GRADES);
+        gradingQuery.setSearchType(SearchType.SINGLE_GRADE);
+        console.log('getting grade id list: ', idList);
 
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
