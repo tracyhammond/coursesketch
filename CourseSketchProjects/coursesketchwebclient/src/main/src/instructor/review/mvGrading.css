@@ -28,11 +28,13 @@ body {
 	text-align: center;
 	font-size: 175%;
 	overflow-y:scroll;
+	width: 100%;
 }
 
 mv-sketch {
 	display: inline-block;
-	width: 100%;
+	width: 32%;
+	margin-right: 1%;
 }
 
 #dialogPanel {

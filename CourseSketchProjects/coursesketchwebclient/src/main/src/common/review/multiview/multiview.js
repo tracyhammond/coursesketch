@@ -94,6 +94,7 @@ function MvSketch() {
     function correct(event) {
         event.stopPropagation();
         this.gradeValue = this.maxValue;
+        this.shadowRoot.querySelector('#outline').className = 'green accent-1';
         this.shadowRoot.querySelector('#outer').className = 'outerCorrect';
         this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
@@ -109,6 +110,7 @@ function MvSketch() {
     function wrong(event) {
         event.stopPropagation();
         this.gradeValue = 0;
+        this.shadowRoot.querySelector('#outline').className = 'red accent-1';
         this.shadowRoot.querySelector('#outer').className = 'outerWrong';
         this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
