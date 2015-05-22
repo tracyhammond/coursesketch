@@ -49,9 +49,9 @@ validateFirstRun(document.currentScript);
 
             var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
             protoGrade.userId = array[i].userId;
-            protoGrade.courseId = array[i].courseId;
-            protoGrade.assignmentId = array[i].assignmentId;
-            protoGrade.problemId = array[i].problemId;
+            mvSketch.courseId = protoGrade.courseId = array[i].courseId;
+            mvSketch.assignmentId = protoGrade.assignmentId = array[i].assignmentId;
+            mvSketch.problemId = protoGrade.problemId = array[i].problemId;
             console.log('before I get the grade ', protoGrade);
 
             // TODO: don't merge in until refactor is complete.
@@ -59,6 +59,8 @@ validateFirstRun(document.currentScript);
             CourseSketch.dataManager.getGrade(protoGrade, function(protoGrade) {
                 console.log('LOADING GRADE FROM SERVER', protoGrade);
                 mvSketch.setGrade(protoGrade.currentGrade);
+                var history = protoGrade.gradeHistory;
+                mvSketch.setComment(history[history.length - 1].comment);
             });
         }
     }

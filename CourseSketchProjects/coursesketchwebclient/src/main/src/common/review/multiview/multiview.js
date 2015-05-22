@@ -35,12 +35,18 @@ function MvSketch() {
         // Uses only the first 7 characters to ensure that they are easy to read by a human and do not take up much space on the screen.
         // But is long enough to ensure that there is high probability of uniqueness between all students in the class.
         this.shadowRoot.querySelector('#userName').textContent = userId.substring(0, 7);
+        this.userId = userId;
     };
 
     this.setGrade = function(grade) {
         this.gradeValue = grade;
         this.shadowRoot.querySelector('#gradeInput').value = grade;
-    }
+    };
+
+    this.setComment = function(comment) {
+        this.comment = comment;
+        this.shadowRoot.querySelector('#comment').value = comment;
+    };
 
     /**
      * This creates the shadow root and attaches it to the object in question.
@@ -53,13 +59,25 @@ function MvSketch() {
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
 
-        this.shadowRoot.querySelector('.correctButton').onclick = correct.bind(this);
-        this.shadowRoot.querySelector('.wrongButton').onclick = wrong.bind(this);
+        var correctButton = this.shadowRoot.querySelector('.correctButton');
+        var wrongButton = this.shadowRoot.querySelector('.wrongButton');
+        var submitButton = this.shadowRoot.querySelector('#submitButton');
+        correctButton.onclick = correct.bind(this);
+        wrongButton.onclick = wrong.bind(this);
+        submitButton.onclick = saveGrade.bind(this);
+
+        if (Waves) {
+            Waves.attach(correctButton, 'waves-effect waves-light');
+            Waves.attach(wrongButton, 'waves-effect waves-light');
+            Waves.attach(submitButton, null);
+        }
+
         this.shadowRoot.querySelector('input').addEventListener('click',
             function(event) {
                 event.stopPropagation();
             }, false);
         this.setupAttributes();
+
     };
 
     /**
@@ -115,6 +133,38 @@ function MvSketch() {
         this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
 
+    function saveGrade(event) {
+        event.stopPropagation();
+        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        if (!isUndefined(this.courseId)) {
+            protoGrade.courseId = this.courseId;
+        }
+        if (!isUndefined(this.assignmentId)) {
+            protoGrade.assignmentId = this.assignmentId;
+        }
+        if (!isUndefined(this.problemId)) {
+            protoGrade.problemId = this.problemId;
+        }
+        if (!isUndefined(this.userId)) {
+            protoGrade.userId = this.userId;
+        }
+        var grade = parseFloat(this.shadowRoot.querySelector('#gradeInput').value);
+        var comment = this.shadowRoot.querySelector('#comment').value;
+
+        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
+        if (!isNaN(grade)) {
+            gradeHistory.setGradeValue(grade);
+        }
+        if (!isUndefined(comment)) {
+
+            gradeHistory.setComment(comment);
+        }
+        protoGrade.setGradeHistory(gradeHistory); // Don't need to add to list since there is only one gradeHistory value
+        CourseSketch.dataManager.setGrade(protoGrade, function() {
+            console.log('submission successful!');
+        });
+    }
+
     /**
      * Sets the callback that is called when the sketch is clicked.
      *
@@ -124,6 +174,18 @@ function MvSketch() {
      */
     this.setSketchClickedFunction = function(sketchClickedFunction) {
         this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;
+    };
+
+    this.setAssignmentId = function(assignmentId) {
+        this.assigmentId = asignmentId;
+    };
+
+    this.setCourseId = function(courseId) {
+        this.courseId = courseId;
+    };
+
+    this.setProblemId = function(problemId) {
+        this.problemId = problemId;
     };
 }
 
