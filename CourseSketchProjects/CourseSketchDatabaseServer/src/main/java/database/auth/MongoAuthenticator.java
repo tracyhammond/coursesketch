@@ -68,9 +68,15 @@ public final class MongoAuthenticator implements AuthenticationDataCreator {
 
         data.setAdminList((List) ((List<Object>) cursor.get(ADMIN)));
 
-        data.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
+        Number accessDate = (Number) cursor.get(ACCESS_DATE);
+        if (accessDate != null) {
+            data.setAccessDate(RequestConverter.getProtoFromMilliseconds(accessDate.longValue()));
+        }
 
-        data.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
+        Number closeDate = (Number) cursor.get(CLOSE_DATE);
+        if (closeDate != null) {
+            data.setCloseDate(RequestConverter.getProtoFromMilliseconds(closeDate.longValue()));
+        }
         return data;
     }
 
