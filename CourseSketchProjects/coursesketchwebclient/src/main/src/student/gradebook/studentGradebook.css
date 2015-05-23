@@ -10,3 +10,8 @@ body > div {
     height: 100%;
     width: 100%;
 }
+
+ul.collection {
+    margin-top: 0;
+    margin-bottom:0;
+}
