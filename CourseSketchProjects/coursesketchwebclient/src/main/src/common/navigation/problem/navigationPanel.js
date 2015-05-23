@@ -40,9 +40,6 @@ function NavigationPanel() {
      */
     function setUpButtons(nav) {
         var button = this.shadowRoot.querySelector('#buttonNext');
-        var tt = this.shadowRoot.querySelector('#iop');
-
-        Waves.attach(tt);
 
         /* jscs:disable jsDoc */
         button.onclick = function() {
