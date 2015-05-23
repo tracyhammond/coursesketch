@@ -1,0 +1,12 @@
+.column1, .column2 {
+    display:inline-block;
+    width: 49%;
+    margin: auto;
+    overflow-y: auto;
+    height:calc(100% - 2em);
+}
+
+body > div {
+    height: 100%;
+    width: 100%;
+}
