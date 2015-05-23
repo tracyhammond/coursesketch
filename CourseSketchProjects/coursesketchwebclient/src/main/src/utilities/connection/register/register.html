@@ -6,6 +6,7 @@
         <style>
             @import "/css/inputStyles/style1.css";
             @import "/src/utilities/connection/login/introForms.css";
+            @import "/src/utilities/libraries/materializecss/css/materialize.min.css";
         </style>
         <div id="content">
                <!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
@@ -19,14 +20,15 @@
                         <input type="email" id="email" placeholder="Email Address" required="" name="email"><br />
                         <input type="password" id="password1" placeholder="password" required="" autocomplete="off" name="password1"><br />
                         <input type="password" id="password2" placeholder="confirm password" required="" autocomplete="off" name="password2"><br />
-                        <p>Check to register as an instructor.</p>
-                        <div class="onoffswitch">
-						    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
-						    <label class="onoffswitch-label" for="myonoffswitch">
-						        <div class="onoffswitch-inner"></div>
-						        <div class="onoffswitch-switch"></div>
-						    </label>
-						</div>
+                        <p>Register as a student or instructor?</p>
+                        <div class="switch">
+                            <label>
+                                Student
+                                <input id="myonoffswitch" name="onoffswitch" type="checkbox">
+                                <span class="lever"></span>
+                                Instructor
+                            </label>
+                        </div>
                         <input type="submit" value="submit">
                         <div id = "cancel" class="fakeInput"><p>cancel</p></div>
                     </form>
