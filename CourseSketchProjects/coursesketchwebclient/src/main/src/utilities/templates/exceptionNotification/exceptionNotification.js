@@ -71,7 +71,7 @@
              */
             function showClientSideException(exception) {
                 console.log(exception);
-                var protoException = CourseSketch.PROTOBUF_UTIL.createProtoException(exception);
+                var protoException = CourseSketch.prutil.createProtoException(exception);
                 createShallowNotification(protoException);
             }
 

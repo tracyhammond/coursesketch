@@ -104,9 +104,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Sends a request to retrive data from the server.
      */
     dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
+        var dataSend = CourseSketch.prutil.DataRequest();
         dataSend.items = [];
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        var itemRequest = CourseSketch.prutil.ItemRequest();
         itemRequest.setQuery(queryType);
 
         if (!isUndefined(idList)) {
@@ -116,35 +116,35 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
             itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
         }
         dataSend.items.push(itemRequest);
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
+        serverConnection.sendRequest(CourseSketch.prutil.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
     };
 
     /**
      * Inserts data into the server database.
      */
     dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        var dataSend = CourseSketch.prutil.DataSend();
         dataSend.items = [];
-        var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        var itemSend = CourseSketch.prutil.ItemSend();
         itemSend.setQuery(queryType);
         itemSend.setData(data);
         dataSend.items.push(itemSend);
 
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
+        serverConnection.sendRequest(CourseSketch.prutil.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
     };
 
     /**
      * Sends an update to the server for the data to be updated.
      */
     dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        var dataSend = CourseSketch.prutil.DataSend();
         dataSend.items = [];
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        var itemUpdate = CourseSketch.prutil.ItemSend();
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
 
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
+        serverConnection.sendRequest(CourseSketch.prutil.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
     /**
@@ -211,10 +211,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     this.pollUpdates = function(callback) {
         database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE);
+                dataSender.sendDataRequest(CourseSketch.prutil.ItemQuery.UPDATE);
             } else {
                 var lastTime = result.data;
-                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, [ lastTime ]);
+                dataSender.sendDataRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
             }
         });
         var functionCalled = false;
@@ -225,7 +225,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
             }
         }, 5000);
 
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
             // TODO: there used to be update code here that would update the local cache
