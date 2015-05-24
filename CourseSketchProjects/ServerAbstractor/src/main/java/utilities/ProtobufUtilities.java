@@ -91,19 +91,45 @@ public class ProtobufUtilities {
      *     <li>sessionInfo</li>
      * </ul>
      *
-     * If the input is null a blank request is returned
+     * If the input is null a blank request is returned.
+     * If deep is true then all data is copied from the input request
      * @param req
      * @return
      */
-    public static Message.Request.Builder createBaseResponse(final Message.Request req) {
+    public static Message.Request.Builder createBaseResponse(final Message.Request req, final boolean deep) {
         if (req == null) {
             return Message.Request.newBuilder();
         }
+        if (deep) {
+            return Message.Request.newBuilder(req);
+        }
+
         final Message.Request.Builder response = Message.Request.newBuilder();
         response.setRequestId(req.getRequestId());
         response.setRequestType(req.getRequestType());
         response.setSessionInfo(req.getSessionInfo());
         return response;
+    }
+
+    /**
+     * Creates a base response from the request.
+     *
+     * This contains information that does not change when responding.
+     * Right now this contains:
+     * <ul>
+     *     <li>requestId</li>
+     *     <li>requestType</li>
+     *     <li>sessionInfo</li>
+     * </ul>
+     *
+     * If the input is null a blank request is returned.
+     *
+     * This called {@link #createBaseResponse(Message.Request, boolean)} with deep being false.
+     * @param req
+     * @return
+     */
+    public static Message.Request.Builder createBaseResponse(final Message.Request req) {
+        return createBaseResponse(req, false);
     }
 
     /**
@@ -122,7 +148,7 @@ public class ProtobufUtilities {
      * @return
      */
     public static Message.Request.Builder createRequestFromData(final Message.Request.MessageType type, final GeneratedMessage data,
-            final String requestId, final String sessionInfo) {
+            final String sessionInfo, final String requestId) {
         if (type == null) {
             throw new ProtobufException("Request type can not be null");
         }
@@ -153,7 +179,7 @@ public class ProtobufUtilities {
     }
 
     public static Message.Request.Builder createRequestFromData(final Message.Request.MessageType type, final GeneratedMessage data,
-            final String requestId) {
-        return createRequestFromData(type, data, null, null);
+            final String sessionInfo) {
+        return createRequestFromData(type, data, sessionInfo, null);
     }
 }
