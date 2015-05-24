@@ -116,7 +116,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *                function to be called after assignment setting is done
      */
     function insertAssignmentServer(assignment, assignmentCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
+        advanceDataListener.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
@@ -138,7 +138,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
     }
 
 
@@ -203,14 +202,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
+            advanceDataListener.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
                 advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
                  // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
         });
     }
     parent.updateAssignment = updateAssignment;
@@ -315,30 +313,30 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         // after the entire list has been gone through pull the
                         // leftovers from the server
                         if (leftOverId.length >= 1) {
-                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT,
-                                function(evt, item) {
-                                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                            CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+                            var itemRequest = CourseSketch.PROTOBUF_UTIL.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT,
+                                    leftOverId);
+                            advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                                        CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
 
-                                    // after listener is removed
-                                    if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
-                                        // not calling the state callback because this should skip that step.
-                                        assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
-                                                assignmendIdList));
-                                        return;
-                                    }
+                                // after listener is removed
+                                if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                                    // not calling the state callback because this should skip that step.
+                                    assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
+                                            assignmendIdList));
+                                    return;
+                                }
 
-                                    for (var i = 0; i < item.data.length; i++) {
-                                        var decodedAssignment = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                                            CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass());
-                                        localScope.setAssignment(decodedAssignment);
-                                        assignmentList.push(decodedAssignment);
-                                    }
-                                    stateCallbackList(assignmentList, assignmentCallbackComplete);
-                                    assignmentIdList = null;
-                                });
-                            // creates a request that is then sent to the server
-                            sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);
+                                for (var i = 0; i < item.data.length; i++) {
+                                    var decodedAssignment = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
+                                        CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass());
+                                    localScope.setAssignment(decodedAssignment);
+                                    assignmentList.push(decodedAssignment);
+                                }
+                                stateCallbackList(assignmentList, assignmentCallbackComplete);
+                                assignmentIdList = null;
+                            });
+                            // end server listener
                         } else {
                             stateCallbackList(assignmentList, assignmentCallbackComplete);
                         }
