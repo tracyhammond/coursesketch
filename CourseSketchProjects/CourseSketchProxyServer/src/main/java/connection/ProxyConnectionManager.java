@@ -8,6 +8,7 @@ import utilities.ConnectionException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -96,7 +97,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * @return A clean version of this request.
      */
     public static Request createClientRequest(final Request request) {
-        final Request.Builder build = Request.newBuilder(request);
+        final Request.Builder build = ProtobufUtilities.createBaseResponse(request, true);
         build.clearServersideId();
         build.clearSessionInfo();
         return build.build();
@@ -119,7 +120,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      */
     public void send(final Request req, final String sessionId, final Class<? extends AbstractClientWebSocket> connectionType, final String userId)
             throws ConnectionException {
-        final Request.Builder builder = Request.newBuilder(req);
+        final Request.Builder builder = ProtobufUtilities.createBaseResponse(req, true);
         builder.clearServersideId();
         builder.setServersideId(userId);
         super.send(builder.build(), sessionId, connectionType);

@@ -6,6 +6,8 @@ import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message;
@@ -15,10 +17,8 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A simple WebSocketServer implementation.
@@ -85,10 +85,9 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
 
                 // request the solution for checking FUTURE: need to
                 // actually retrieve answer.
-                final Request.Builder builder = Request.newBuilder();
-                builder.setRequestType(MessageType.DATA_REQUEST);
-                builder.setSessionInfo(req.getSessionInfo() + "+"
-                        + state.getKey());
+                final Request.Builder builder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, null,
+                        req.getSessionInfo() + "+" + state.getKey());
+
                 final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
                 itemRequest.setQuery(ItemQuery.SOLUTION);
                 itemRequest.addItemId(student.getProblemId());

@@ -21,6 +21,7 @@ import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 import java.util.ArrayList;
 
@@ -105,9 +106,7 @@ public final class SubmissionManager {
      */
     public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        final Request.Builder requestBuilder = Request.newBuilder();
-        requestBuilder.setSessionInfo(sessionInfo);
-        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
+
         final ItemRequest.Builder build = ItemRequest.newBuilder();
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
@@ -123,7 +122,8 @@ public final class SubmissionManager {
         build.addItemId(sketchId);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
-        requestBuilder.setOtherData(data.build().toByteString());
+
+        final Request.Builder requestBuilder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, data.build(), sessionInfo);
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
@@ -165,9 +165,6 @@ public final class SubmissionManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final Request.Builder requestBuilder = Request.newBuilder();
-        requestBuilder.setSessionInfo(sessionInfo);
-        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
         final DBObject dbObject = myDbRef.fetch();
 
@@ -178,7 +175,7 @@ public final class SubmissionManager {
         final ItemRequest itemRequest = createSubmissionRequest(dbObject, review);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(itemRequest);
-        requestBuilder.setOtherData(data.build().toByteString());
+        final Request.Builder requestBuilder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, data.build(), sessionInfo);
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
