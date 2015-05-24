@@ -523,6 +523,7 @@ function ProtobufSetup() {
     }
     // making ProtobufException read only
     makeValueReadOnly(localScope, 'ProtobufException', ProtobufException);
+
 }
 
 (function(scope) {
@@ -533,5 +534,20 @@ function ProtobufSetup() {
         return;
     }
     makeValueReadOnly(scope, 'dcodeIO', dcodeIO);
-    makeValueReadOnly(scope.CourseSketch, 'prutil', new ProtobufSetup().initializeBuf());
+    var protobuf = new ProtobufSetup().initializeBuf();
+    makeValueReadOnly(scope.CourseSketch, 'prutil', protobuf);
+
+    // For old existing code that has not mage the switch.
+    Object.defineProperty(scope.CourseSketch, 'PROTOBUF_UTIL', {
+        /**
+         * @returns {Enum} An existing protobuf
+         */
+        get: function() {
+            // prints stack trace
+            console.warn('USING OLD TYPE OF PROTOBUF USE prutil INSTEAD [trace of possible use below]');
+            console.trace();
+            console.warn('USING OLD TYPE OF PROTOBUF USE prutil INSTEAD [trace of possible use above]');
+            return protobuf;
+        }
+    });
 })(window);
