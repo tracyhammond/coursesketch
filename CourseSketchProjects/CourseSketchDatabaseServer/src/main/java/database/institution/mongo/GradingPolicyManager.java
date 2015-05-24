@@ -159,7 +159,7 @@ public final class GradingPolicyManager {
      * @param courseId
      *         The gradingPolicy we will get is from this course.
      * @param userId
-     *         The id of the user asking for the state.
+     *         The id of the user asking for the policy.
      * @return The protoObject representing the gradingPolicy.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
