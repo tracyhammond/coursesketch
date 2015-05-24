@@ -249,6 +249,10 @@ if (isUndefined(isException)) {
                 (CourseSketch && CourseSketch.BaseException && exception instanceof CourseSketch.BaseException)) {
             return true;
         }
+
+        if (!isUndefined(exception.name) && exception.name.endsWith('Exception')) {
+            return true;
+        }
         return false;
     }
 }
