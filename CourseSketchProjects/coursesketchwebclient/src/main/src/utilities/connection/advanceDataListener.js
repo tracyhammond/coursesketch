@@ -63,7 +63,7 @@ function AdvanceDataListener(connection, Request, defListener) {
             try {
                 msg.otherData.mark();
             } catch (exception) {
-				CourseSketch.clientException(exception);
+                CourseSketch.clientException(exception);
                 console.log(msg);
             }
             var dataList = CourseSketch.PROTOBUF_UTIL.getDataResultClass().decode(msg.otherData).results;
@@ -82,7 +82,7 @@ function AdvanceDataListener(connection, Request, defListener) {
                 }
             }
         } catch (exception) {
-			CourseSketch.clientException(exception);
+            CourseSketch.clientException(exception);
             console.log('decoding data failed: ', msg);
             if (errorListener) {
                 errorListener(msg);

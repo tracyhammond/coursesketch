@@ -62,20 +62,28 @@
         detailedNotification.loadProtoException(protoEx);
     }
 
-    if (isUndefined(CourseSketch.clientException)) {
-        function showClientSideException(exception) {
-		    console.log(exception);
-       	    var protoException = CourseSketch.PROTOBUF_UTIL.createProtoException(exception);
-            createShallowNotification(protoException);
-        }
-	    CourseSketch.clientException = showClientSideException;
+    if (!window.errorListenerSet) {
+        if (isUndefined(CourseSketch.clientException)) {
+            /**
+             * Handles an exception or error then shows it on the client.
+             *
+             * @param {BaseException|Error} exception The exception that was thrown.
+             */
+            function showClientSideException(exception) {
+                console.log(exception);
+                var protoException = CourseSketch.PROTOBUF_UTIL.createProtoException(exception);
+                createShallowNotification(protoException);
+            }
 
-        console.log('Adding uncaught exception handler!');
-        window.addEventListener('error', function (evt) {
+            CourseSketch.clientException = showClientSideException;
+
+            console.log('Adding uncaught exception handler!');
+        }
+        window.addEventListener('error', function(evt) {
             showClientSideException(evt.error);
         });
-
-   }
+        window.errorListenerSet = true;
+    }
 })();
 
 /**
