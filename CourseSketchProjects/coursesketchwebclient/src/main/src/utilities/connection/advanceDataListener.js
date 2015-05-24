@@ -12,6 +12,7 @@ function AdvanceDataListener(connection, Request, defListener) {
     requestMap[Request.MessageType.DATA_REQUEST] = {};
     requestMap[Request.MessageType.DATA_INSERT] = {};
     requestMap[Request.MessageType.DATA_UPDATE] = {};
+    var TIMEOUT_CONST = "TIMED_OUT";
 
     var localScope = this;
     var defaultListener = defListener || false;
@@ -28,13 +29,15 @@ function AdvanceDataListener(connection, Request, defListener) {
 
     /**
      * Sets the listener to listen for database code.
+     * @param {Number} [times] the number of times you want the function to be called before it is removed;
      */
-    this.setListener = function(messageType, requestId, func) {
+    function setListener(messageType, requestId, func, times) {
         var localMap = requestMap[messageType];
-        //console.log('Adding listener');
-        //console.log(messageType);
-        //console.log(queryType);
-        localMap[requestId] = func;
+
+        localMap[requestId] = {
+            func: func,
+            times: (isUndefined(times)? 1 : times)
+        };
     };
 
     /**
@@ -43,10 +46,11 @@ function AdvanceDataListener(connection, Request, defListener) {
      * And it also unwraps the DataResult type.
      * @param {MessageType} messageType
      * @param {String} requestId
-     * @param {Function} func
+     * @param {Function} func The function that is called as a result of listening
+     * @param {Number} [times] the number of times you want the function to be called before it is removed;
      */
-    this.setDataResultListener = function(messageType, requestId, func) {
-        this.setListener(messageType, requestId, queryWrap(func));
+    this.setDataResultListener = function(messageType, requestId, func, times) {
+        setListener(messageType, requestId, queryWrap(func), times);
     };
 
     /**
@@ -54,9 +58,6 @@ function AdvanceDataListener(connection, Request, defListener) {
      */
     this.removeListener = function(messageType, requestId) {
         var localMap = requestMap[messageType];
-        //console.log('Adding listener');
-        //console.log(messageType);
-        //console.log(queryType);
         localMap[requestId] = undefined;
     };
 
@@ -66,7 +67,7 @@ function AdvanceDataListener(connection, Request, defListener) {
      * @returns {Function}
      */
     function queryWrap(func) {
-        return function(evt, msg) {
+        return function(evt, msg, listener) {
             var result = undefined;
             try {
                 result = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.otherData, CourseSketch.PROTOBUF_UTIL.getDataResultClass());
@@ -84,16 +85,25 @@ function AdvanceDataListener(connection, Request, defListener) {
             for (var i = 0; i < dataList.length; i++) {
                 //console.log('Decoding listener');
                 var item = dataList[i];
-                if (!isUndefined(func)) {
-                    try {
-                        func(evt, item);
-                    } catch (exception) {
-                        removeListener(msg.requestType, msg.requestId);
-                        CourseSketch.clientException(exception);
-                    }
+                if (listener.times >= 0) {
+                    listener.times -= 1;
+                    if (!isUndefined(func)) {
+                        try {
+                            func(evt, item);
+                        } catch (exception) {
+                            removeListener(msg.requestType, msg.requestId);
+                            CourseSketch.clientException(exception);
+                        }
+                    } else {
+                        defListener(evt, item);
+                    } // if isUndefined func
                 } else {
-                    defListener(evt, item);
-                }
+                    removeListener(msg.requestType, msg.requestId);
+                    return; // no more callbacks
+                } // if times >= 0
+            } // for
+            if (listener.times <= 0) {
+                removeListener(msg.requestType, msg.requestId);
             }
         };
     }
@@ -104,14 +114,15 @@ function AdvanceDataListener(connection, Request, defListener) {
      * If the correct type does not exist then the defaultListener is called instead.
      * @param {Event} evt This is websocket event regarding the receive event of the message.
      * @param {Request} msg This is the request object that was received.
-     * @param {MessageType} messageType if the message is a DataResult or a DataRequest or others.
      */
-    function decode(evt, msg, messageType) {
+    function decode(evt, msg) {
+        var messageType = msg.requestType;
         var localMap = requestMap[messageType];
-        var func = localMap[msg.requestId];
+        var listener = localMap[msg.requestId];
+        var func = listener.func;
         if (!isUndefined(func)) {
             try {
-                func(evt, item);
+                func(evt, msg, listener);
             } catch (exception) {
                 removeListener(msg.requestType, msg.requestId);
                 CourseSketch.clientException(exception);
@@ -120,9 +131,9 @@ function AdvanceDataListener(connection, Request, defListener) {
             defListener(evt, msg);
         }
     }
-    var localFunction = decode;
+
     connection.setSchoolDataListener(function(evt, msg) {
-        localFunction(evt, msg, msg.requestType);
+        decode(evt, msg);
     });
 
     /**
@@ -130,16 +141,98 @@ function AdvanceDataListener(connection, Request, defListener) {
      * @param request
      * @param callback
      */
-    this.sendRequestWithTimeout = function(request, callback) {
+    this.sendRequestWithTimeout = function(request, callback, times) {
         var callbackCalled = false;
-        var wrappedCallback = function(evt, msg) {
-            if (callbackCalled) {
-                return;
+        var callbackTimedOut = false;
+        var timeoutVariable = undefined;
+        var wrappedCallback = function(evt, msg, listener) {
+            if (!callbackCalled) {
+                callbackTimedOut = true;
+                callback(evt, msg, listener);
+            } else if (!callbackTimedOut) {
+                callbackCalled = true;
+                clearTimeout(timeoutVariable);
+                callback(evt, msg, listener);
             }
-            callbackCalled = true;
-            removeListener(msg.requestType, msg.requestId);
-            callback(evt, msg);
+            throw new BaseException('We got into an odd state');
         };
+        // set listener
+        this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times);
 
+        // send request
+        serverConnection.sendRequest(request);
+
+        // set timeout
+        timeoutVariable = setTimeout(function() {
+            var clonedRequest = CourseSketch.PROTOBUF_UTIL.cleanProtobuf(request, CourseSketch.PROTOBUF_UTIL.getRequestClass());
+            clonedRequest.otherData = TIMEOUT_CONST;
+            decode(undefined, request);
+        }, 5000);
     };
+
+
+    /**
+     * Sends a request to retrieve data from the server.
+     *
+     * This sends a data request
+     * (this will automatically time out after 5 seconds)
+     * @param {ItemRequest | List<ItemRequest>} itemRequest This can be either a single item request or a list of itme requests.
+     * @param {Function} callback The function that is called as a result of listening.
+     * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
+     * @param {Number} [times] The number of times you want the function to be called before it is removed;
+     */
+    this.sendDataRequest = function sendDataRequest(itemRequest, callback, requestId, times) {
+        if (isUndefined(callback)) {
+            throw new BaseException('Can not request data without a callback');
+        }
+        var dataRequest = CourseSketch.PROTOBUF_UTIL.DataRequest();
+
+        dataRequest.items = [].concat(itemRequest);
+
+        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataRequest, Request.MessageType.DATA_REQUEST, requestId);
+
+        this.sendRequestWithTimeout(request, callback, times);
+    };
+
+    /**
+     * Inserts data into the server database.
+     *
+     * (only inserts a single one right now)
+     * @param {Function} callback The function that is called as a result of listening.
+     * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
+     * @param {Number} [times] The number of times you want the function to be called before it is removed;
+     */
+    this.sendDataInsert = function sendDataInsert(queryType, data, callback, requestId, times) {
+        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        dataSend.items = [];
+        var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        itemSend.setQuery(queryType);
+        itemSend.setData(data);
+        dataSend.items.push(itemSend);
+
+        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT, requestId);
+        this.sendRequestWithTimeout(request, callback, times);
+    };
+
+    /**
+     * Sends an update to the server for the data to be updated.
+     *
+     * @param {QueryType} queryType
+     * @oaram {ByteArray} data
+     * @param {Function} callback The function that is called as a result of listening.
+     * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
+     * @param {Number} [times] The number of times you want the function to be called before it is removed;
+     */
+    this.sendDataUpdate = function sendDataUpdate(queryType, data, callback, requestId, times) {
+        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        dataSend.items = [];
+        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        itemUpdate.setQuery(queryType);
+        itemUpdate.setData(data);
+        dataSend.items.push(itemUpdate);
+
+        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE, requestId);
+        this.sendRequestWithTimeout(request, callback, times);
+    };
+
 }
