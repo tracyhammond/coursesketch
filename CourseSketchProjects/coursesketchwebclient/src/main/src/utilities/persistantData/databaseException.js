@@ -4,12 +4,22 @@
  * @class DatabaseException
  * @extends BaseException
  */
-function DatabaseException(message, cause) {
+function DatabaseException(message, request, cause) {
+
     this.name = 'DatabaseException';
-    this.setMessage(message);
     this.message = '';
-    this.setCause(cause);
+    this.setMessage(message);
     this.createStackTrace();
+
+    if (!isUndefined(request) && (typeof request !== 'string')) {
+        this.setCause(request);
+    } else {
+        this.setCause(cause);
+    }
+
+    if (typeof request === 'string') {
+        this.setMessage(': [' + message  + '] for request [' + request + ']');
+    }
 }
 
 DatabaseException.prototype = new BaseException();
