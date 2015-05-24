@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import utilities.ExceptionUtilities;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
@@ -341,13 +342,18 @@ public abstract class AbstractServerWebSocketHandler {
             if (sessionInfo == null) {
                 return req;
             }
-            final Request.Builder breq = Request.newBuilder();
-            breq.mergeFrom(req);
-            breq.setSessionInfo(sessionInfo);
-            if (!breq.hasMessageTime()) {
-                breq.setMessageTime(TimeManager.getSystemTime());
+
+            // why do the work if they are the same?
+            if (sessionInfo.equals(req.getSessionInfo())) {
+                return req;
             }
-            return breq.build();
+
+            final Request.Builder sessionInfoReplacement = ProtobufUtilities.createBaseResponse(req, true);
+            sessionInfoReplacement.setSessionInfo(sessionInfo);
+            if (!sessionInfoReplacement.hasMessageTime()) {
+                sessionInfoReplacement.setMessageTime(TimeManager.getSystemTime());
+            }
+            return sessionInfoReplacement.build();
         }
 
         /**

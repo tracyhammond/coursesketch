@@ -1,17 +1,13 @@
 package connection;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
-
+import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
-
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ExperimentReview;
 import protobuf.srl.query.Data.ItemQuery;
@@ -19,11 +15,12 @@ import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
+
+import java.net.URI;
+import java.nio.ByteBuffer;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -93,7 +90,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                 this.getParentServer().send(getConnectionFromState(state), ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
-            final Request.Builder builder = Request.newBuilder(req);
+            final Request.Builder builder = ProtobufUtilities.createBaseResponse(req, true);
             builder.setSessionInfo(sessionInfo[0]);
             final SocketSession connection = getConnectionFromState(state);
             builder.setOtherData(result2.build().toByteString());
