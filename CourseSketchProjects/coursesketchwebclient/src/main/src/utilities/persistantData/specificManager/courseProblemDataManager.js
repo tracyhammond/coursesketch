@@ -80,6 +80,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      */
     function insertCourseProblemServer(courseProblem, courseProblemCallback) {
         advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer(), function(event, item) {
+            if (isException(item)) {
+                courseProblemCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                    'Inserting course problem ' + courseProblem,  item));
+                return;
+            }
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -121,6 +126,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                 localCallback();
             }
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer(), function(evt, item) {
+                if (isException(item)) {
+                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'updating course problem ' + courseProblem,  item));
+                    return;
+                }
                 // We do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
@@ -147,6 +157,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             localCallback(bankProblem);
         }
         advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer(), function(evt, item) {
+            if (isException(item)) {
+                serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                    'updating bank problem ' + bankProblem,  item));
+                return;
+            }
              // we do not need to make server changes we just need to make sure it was successful.
             if (!isUndefined(serverCallback)) {
                 serverCallback(item);
@@ -168,6 +183,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             bankProblem.id = generateUUID();
         }
         advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer(), function(evt, item) {
+            if (isException(item)) {
+                serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                    'inesrting bank problem ' + bankProblem,  item));
+                return;
+            }
             var resultArray = item.getReturnText().split(':');
             // We do not need the old id as it is never stored in a way that we need to delete.
             var newId = resultArray[0].trim();
@@ -311,6 +331,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                         if (leftOverId.length >= 1) {
                             var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, leftOverId);
                             advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                                if (isException(item)) {
+                                    courseProblemCallbackComplete(new DatabaseException('exception thrown while waiting for response from sever',
+                                        'getting course problem ' + leftOverId,  item));
+                                    return;
+                                }
                                 if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                                     courseProblemCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
                                             leftOverId));
