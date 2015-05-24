@@ -11,7 +11,7 @@ import protobuf.srl.query.Data.ItemRequest;
  *
  * Created by matt on 5/24/15.
  */
-public class GradingPolicyRequestHandler {
+public final class GradingPolicyRequestHandler {
     /**
      * Private constructor.
      */

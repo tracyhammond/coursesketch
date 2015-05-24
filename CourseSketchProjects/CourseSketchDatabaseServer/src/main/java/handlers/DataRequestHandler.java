@@ -202,12 +202,14 @@ public final class DataRequestHandler {
                         break;
                         case COURSE_ROSTER: {
                             final List<String> userList = instance.getCourseRoster(userId, itemRequest.getItemId(0));
-                            Util.IdChain.Builder idChain = Util.IdChain.newBuilder();
+                            final Util.IdChain.Builder idChain = Util.IdChain.newBuilder();
                             idChain.addAllIdChain(userList);
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, idChain.build()));
                         }
                         case GRADING_POLICY: {
-                            final ProtoGradingPolicy gradingPolicy = GradingPolicyRequestHandler.
+                            final ProtoGradingPolicy gradingPolicy = GradingPolicyRequestHandler.gradingPolicyRequestHandler(instance, itemRequest,
+                                    userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.GRADING_POLICY, gradingPolicy));
                         }
                         break;
                         default:
