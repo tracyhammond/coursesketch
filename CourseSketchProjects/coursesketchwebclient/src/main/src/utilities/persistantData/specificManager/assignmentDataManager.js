@@ -1,9 +1,18 @@
-function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
+function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var dataListener = advanceDataListener;
     var database = parentDatabase;
-    var Request = request;
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Looks at the assignment and gives it some state if the state values do
@@ -312,26 +321,18 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                                             CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
 
                                     // after listener is removed
-                                    if (isUndefined(item.data) || item.data === null) {
-                                        assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist.'));
+                                    if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                                        // not calling the state callback because this should skip that step.
+                                        assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
+                                                assignmendIdList));
                                         return;
                                     }
-                                    var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                    var assignment = school.assignments[0];
-                                    if (isUndefined(assignment) || assignment instanceof DatabaseException) {
-                                        var result = assignment;
-                                        if (isUndefined(result)) {
-                                            result = new DatabaseException('Nothing is in the server database!',
-                                                'Grabbing assignment from server: ' + assignmentIdList);
-                                        }
-                                        if (!isUndefined(assignmentCallbackComplete)) {
-                                            assignmentCallbackComplete(result);
-                                        }
-                                        return;
-                                    }
-                                    for (var i = 0; i < school.assignments.length; i++) {
-                                        localScope.setAssignment(school.assignments[i]);
-                                        assignmentList.push(school.assignments[i]);
+
+                                    for (var i = 0; i < item.data.length; i++) {
+                                        var decodedAssignment = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
+                                            CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass());
+                                        localScope.setAssignment(decodedAssignment);
+                                        assignmentList.push(decodedAssignment);
                                     }
                                     stateCallbackList(assignmentList, assignmentCallbackComplete);
                                     assignmentIdList = null;
@@ -369,6 +370,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             throw new DatabaseException('Calling get Assignment with an undefined callback');
         }
         var called = false;
+
+        /**
+         * Ensures that the callback is only called once.
+         *
+         * @param {List<Assignments>} assignmentList The assignments that were loaded.
+         */
         function callOnce(assignmentList) {
             if (!called) {
                 called = true;

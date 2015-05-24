@@ -26,8 +26,12 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
             CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
-        var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
-        var courseList = school.courses;
+        var courseList = [];
+        for (var i = 0; i < item.data.length; i++) {
+            courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
+                    CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+        }
+
         var idList = [];
         for (var i = 0; i < courseList.length; i++) {
             courseProtoMap[courseList[i].id] = courseList[i];
@@ -83,6 +87,9 @@ validateFirstRun(document.currentScript);
             }
             var button = localDoc.createElement('button');
             button.setAttribute('id', 'button' + id);
+            /**
+             * Called to reigster the student.
+             */
             button.onclick = function() {
                 CourseSketch.classSearch.registerClass(id);
                 setTimeVar = setTimeout(function() {
@@ -100,12 +107,12 @@ validateFirstRun(document.currentScript);
             //localDoc.appendChild(button);
             localDoc.getElementById('registerButton').appendChild(button);
             $('#' + id).animate({
-                marginLeft: moveAmount,
+                marginLeft: moveAmount
                 }, 300, function() {
                 });
         } else {
             $('#' + id).animate({
-                marginLeft: '0px',
+                marginLeft: '0px'
             }, 300, function() {
                 localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });
@@ -124,7 +131,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
             CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT));
         $('#' + id).animate({
-            marginLeft: '0px',
+            marginLeft: '0px'
             }, 300, function() {
                 localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });

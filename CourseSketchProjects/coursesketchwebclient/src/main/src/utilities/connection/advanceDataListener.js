@@ -16,9 +16,16 @@ function AdvanceDataListener(connection, Request, defListener) {
     var localScope = this;
     var defaultListener = defListener || false;
     var errorListener = false;
+
+    /**
+     * Sets a listener that is called when an error occurs.
+     *
+     * @param {Function} func A function that is called when an error occurs.
+     */
     this.setErrorListener = function(func) {
         errorListener = func;
     };
+
     /**
      * Sets the listener to listen for database code.
      */
@@ -58,12 +65,23 @@ function AdvanceDataListener(connection, Request, defListener) {
      * @param {Function} func The function that is wrapper to process data results.
      * @returns {Function}
      */
+<<<<<<< HEAD
     function queryWrap(func) {
         return function(evt, msg) {
             var result = undefined;
+=======
+    function decode(evt, msg, messageType) {
+        var localMap = requestMap[messageType];
+        try {
+            if (msg.otherData === null) {
+                console.log('No data was attached to the result.');
+                return;
+            }
+>>>>>>> master
             try {
                 result = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.otherData, CourseSketch.PROTOBUF_UTIL.getDataResultClass());
             } catch (exception) {
+<<<<<<< HEAD
                 // removes listener on error to prevent data leakage.
                 removeListener(msg.requestType, msg.requestId);
                 console.log(exception);
@@ -72,6 +90,10 @@ function AdvanceDataListener(connection, Request, defListener) {
                 if (errorListener) {
                     errorListener(msg);
                 }
+=======
+                CourseSketch.clientException(exception);
+                console.log(msg);
+>>>>>>> master
             }
             var dataList = result.results;
             for (var i = 0; i < dataList.length; i++) {
@@ -81,15 +103,20 @@ function AdvanceDataListener(connection, Request, defListener) {
                     try {
                         func(evt, item);
                     } catch (exception) {
+<<<<<<< HEAD
                         removeListener(msg.requestType, msg.requestId);
                         console.error(exception);
                         console.error(exception.stack);
                         console.log(msg);
+=======
+                        CourseSketch.clientException(exception);
+>>>>>>> master
                     }
                 } else {
                     defListener(evt, item);
                 }
             }
+<<<<<<< HEAD
         };
     }
 
@@ -112,6 +139,13 @@ function AdvanceDataListener(connection, Request, defListener) {
                 console.error(exception);
                 console.error(exception.stack);
                 console.log(msg);
+=======
+        } catch (exception) {
+            CourseSketch.clientException(exception);
+            console.log('decoding data failed: ', msg);
+            if (errorListener) {
+                errorListener(msg);
+>>>>>>> master
             }
         } else {
             defListener(evt, msg);
