@@ -110,7 +110,7 @@ function SubmissionPanel() {
             throw new SubmissionException('Problem data is not set correctly aborting');
         }
         var submission = undefined;
-        var QuestionType = CourseSketch.PROTOBUF_UTIL.QuestionType;
+        var QuestionType = CourseSketch.prutil.QuestionType;
         switch (this.problemType) {
             case QuestionType.SKETCH: {
                 submission = createSketchSubmission(subPanel, isSubmitting);
@@ -130,15 +130,15 @@ function SubmissionPanel() {
         }
         var submittingValue = this.wrapperFunction(submission);
         console.log(submittingValue);
-        var submissionRequest = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+        var submissionRequest = CourseSketch.prutil.createRequestFromData(submittingValue,
+                CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener(function(event, request) {
             console.log(request);
             CourseSketch.connection.setSubmissionListener(undefined);
             alert(request.responseText);
-            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
                 var sketchSurface = this.querySelector('.submittable');
                 // Potential conflict if it was save multiple times in quick succession.
                 sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
@@ -190,9 +190,9 @@ function SubmissionPanel() {
             throw new SubmissionException('must make changes to save again.');
         }
 
-        var MarkerType = CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType;
+        var MarkerType = CourseSketch.prutil.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
-        var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerCommand ]);
+        var markerUpdate = CourseSketch.prutil.createUpdateFromCommands([ markerCommand ]);
         updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
@@ -207,7 +207,7 @@ function SubmissionPanel() {
      * @memberof SubmissionPanel
      */
     function createBaseSubmission() {
-        var submission = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
+        var submission = CourseSketch.prutil.SrlSubmission();
         return submission;
     }
 
@@ -266,25 +266,25 @@ function SubmissionPanel() {
      * @memberof SubmissionPanel
      */
     this.setSpecificCallbacks = function(problemType, element, toolbar) {
-        var QuestionType = CourseSketch.PROTOBUF_UTIL.QuestionType;
+        var QuestionType = CourseSketch.prutil.QuestionType;
         if (problemType === QuestionType.SKETCH) {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton('/images/toolbar/clear_button.svg', function() {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CLEAR, true);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
             toolbar.appendChild(clearButton);
 
             toolbar.setUndoCallback(function() {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, true);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
 
             toolbar.setRedoCallback(function() {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.REDO, true);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {

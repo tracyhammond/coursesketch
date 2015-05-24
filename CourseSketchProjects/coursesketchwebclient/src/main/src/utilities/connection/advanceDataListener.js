@@ -66,7 +66,7 @@ function AdvanceDataListener(connection, Request, defListener) {
                 CourseSketch.clientException(exception);
                 console.log(msg);
             }
-            var dataList = CourseSketch.PROTOBUF_UTIL.getDataResultClass().decode(msg.otherData).results;
+            var dataList = CourseSketch.prutil.getDataResultClass().decode(msg.otherData).results;
             for (var i = 0; i < dataList.length; i++) {
                 //console.log('Decoding listener');
                 var item = dataList[i];

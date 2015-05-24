@@ -25,7 +25,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
         var state = course.getState();
         var updateCourse = false;
         if (isUndefined(state) || state === null) {
-            state = CourseSketch.PROTOBUF_UTIL.State();
+            state = CourseSketch.prutil.State();
             updateCourse = true;
         }
         try {
@@ -86,7 +86,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
-                    stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
+                    stateCallback(CourseSketch.prutil.getSrlCourseClass().decode(bytes), courseCallback);
                 } catch (exception) {
                     console.error(exception);
                     courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
@@ -114,13 +114,13 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
         getCourseLocal(courseId, function(course) {
             if (isUndefined(course) || course instanceof DatabaseException) {
-                advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+                advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.COURSE, function(evt, item) {
+                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.COURSE);
                     if (isUndefined(item.data) || item.data === null) {
                         courseCallback(new DatabaseException('The data sent back from the server for course: ' + courseId + ' does not exist.'));
                         return;
                     }
-                    var course = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getSrlCourseClass());
+                    var course = CourseSketch.prutil.decodeProtobuf(item.data[0], CourseSketch.prutil.getSrlCourseClass());
                     if (isUndefined(course)) {
                         courseCallback(new DatabaseException('Course does not exist in the remote database.'));
                         return;
@@ -130,7 +130,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     });
                 });
                 // creates a request that is then sent to the server
-                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, [ courseId ]);
+                sendDataRequest(CourseSketch.prutil.ItemQuery.COURSE, [ courseId ]);
             } else {
                 // get course local calls state callback so it is not needed here if it exists.
                 courseCallback(course);
@@ -178,14 +178,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.COURSE, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.COURSE);
                  // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
+            sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer());
         });
     }
     parent.updateCourse = updateCourse;
@@ -230,8 +230,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      */
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.SCHOOL, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.SCHOOL);
             // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText !== '' && item.returnText !== 'null' && item.returnText !== null) {
                 userHasCourses = false;
@@ -241,8 +241,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
-                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                        CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+                courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
+                        CourseSketch.prutil.getSrlCourseClass()));
             }
 
             var setCourseCallback = createBarrier(courseList.length, function() {
@@ -254,7 +254,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
         });
         if (userCourseId.length === 0 && userHasCourses && !onlyLocal) {
-            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+            sendDataRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
         } else {
             // This calls the server for updates then creates a list from the
             // local data to appear fast
@@ -265,7 +265,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             // ask server for course list
             if (!onlyLocal && false) {
                 // TODO: this should maybe only ask after a certain amount of time since last updated?
-                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+                sendDataRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
             }
 
             var localCourseCallback = createBarrier(userCourseId.length, function() {
@@ -317,8 +317,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 courseCallback(course);
             }
 
-            advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+            advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.COURSE, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.COURSE);
                 var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
@@ -339,7 +339,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     }
                 });
             });
-            sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
+            sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer());
         });
     }
     parent.insertCourse = insertCourse;
@@ -385,17 +385,17 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * @param {Function} callback called with a list of all courses meeting the search requirements.
      */
     parent.searchCourses = function(callback) {
-        var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
-        var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
+        var request = CourseSketch.prutil.DataRequest();
+        var item = CourseSketch.prutil.ItemRequest();
+        item.query = CourseSketch.prutil.ItemQuery.COURSE_SEARCH;
         request.items = [ item ];
 
         /**
          * Listens for the search result and displays the result given to it.
          */
-        CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-                CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+        CourseSketch.dataListener.setListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+                CourseSketch.prutil.ItemQuery.COURSE_SEARCH, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.SCHOOL);
             // there was an error getting the user classes.
             if (isUndefined(item.data) || item.data === null) {
                 callback(new DatabaseException('The data sent back from the server for searching courses'));
@@ -403,14 +403,14 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
-                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                        CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+                courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
+                        CourseSketch.prutil.getSrlCourseClass()));
             }
-            var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
+            var school = CourseSketch.prutil.decodeProtobuf(item.data, CourseSketch.prutil.getSrlSchoolClass());
             var courseList = school.courses;
         });
 
-        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
+        CourseSketch.connection.sendRequest(CourseSketch.prutil.createRequestFromData(request,
+                CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST));
     };
 }

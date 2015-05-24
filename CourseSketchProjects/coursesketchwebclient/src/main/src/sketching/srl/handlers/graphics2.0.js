@@ -170,14 +170,14 @@ function Graphics(canvas, sketchManager) {
      * @instance
      */
     function runCommand(command, lastUpdateType) {
-        if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE) {
+        if (command.commandType === CourseSketch.prutil.CommandType.ADD_STROKE) {
             var stroke = command.decodedData;
             if (lastUpdateType === 0 || lastUpdateType === 1) {
                 loadStroke(stroke);
             } else if (lastUpdateType === -1) {
                 removeItem(stroke.getId());
             }
-        } else if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR) {
+        } else if (command.commandType === CourseSketch.prutil.CommandType.CLEAR) {
             if (lastUpdateType === 0 || lastUpdateType === 1) {
                 ps.project.activeLayer.removeChildren();
             } else {

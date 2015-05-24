@@ -27,10 +27,10 @@ function ProblemSelectionPanel() {
         currentCourse = courseId;
         currentAssignment = assignmentId;
         var request = this.createRequest(courseId, assignmentId, page);
-        CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-                CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
-            CourseSketch.dataListener.removeListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-                                CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
+        CourseSketch.dataListener.setListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+                CourseSketch.prutil.ItemQuery.BANK_PROBLEM, function(evt, item) {
+            CourseSketch.dataListener.removeListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+                                CourseSketch.prutil.ItemQuery.BANK_PROBLEM);
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 throw new Error('The data is null!');
             }
@@ -38,7 +38,7 @@ function ProblemSelectionPanel() {
 
             var bankProblems = [];
             for (var i = 0; i < item.data.length; i++) {
-                var decodedBankProblem = CourseSketch.PROTOBUF_UTIL.getSrlBankProblemClass().decode(item.data[i]);
+                var decodedBankProblem = CourseSketch.prutil.getSrlBankProblemClass().decode(item.data[i]);
                 bankProblems.push(decodedBankProblem);
             }
             var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
@@ -165,17 +165,17 @@ ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);
  * @memberof ProblemSelectionPanel
  */
 ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId, page) {
-    var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+    var itemRequest = CourseSketch.prutil.ItemRequest();
     itemRequest.page = page;
-    itemRequest.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM;
+    itemRequest.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
     itemRequest.itemId = [];
     itemRequest.itemId.push(courseId);
     itemRequest.itemId.push(assignmentId);
 
-    var dataRequest = CourseSketch.PROTOBUF_UTIL.DataRequest();
+    var dataRequest = CourseSketch.prutil.DataRequest();
     dataRequest.items = [ itemRequest ];
-    var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataRequest,
-            CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST);
+    var request = CourseSketch.prutil.createRequestFromData(dataRequest,
+            CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST);
     return request;
 };
 

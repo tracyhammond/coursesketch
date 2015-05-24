@@ -65,7 +65,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
             } else {
                 // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
-                courseProblemCallback(CourseSketch.PROTOBUF_UTIL.getSrlProblemClass().decode(bytes));
+                courseProblemCallback(CourseSketch.prutil.getSrlProblemClass().decode(bytes));
             }
         });
     }
@@ -80,8 +80,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
      *                Function to be called after courseProblem setting is done.
      */
     function insertCourseProblemServer(courseProblem, courseProblemCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(event, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, function(event, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.COURSE_PROBLEM);
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -102,7 +102,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
+        sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
     }
 
     /**
@@ -123,14 +123,14 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                 localCallback();
             }
             advanceDataListener.setListener(Request.MessageType.DATA_UPDATE,
-                CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+                CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.COURSE_PROBLEM);
                 // We do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
+            sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
         });
     }
     parent.updateCourseProblem = updateCourseProblem;
@@ -152,14 +152,14 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
             localCallback(bankProblem);
         }
         advanceDataListener.setListener(Request.MessageType.DATA_UPDATE,
-            CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
+            CourseSketch.prutil.ItemQuery.BANK_PROBLEM, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.BANK_PROBLEM);
              // we do not need to make server changes we just need to make sure it was successful.
             if (!isUndefined(serverCallback)) {
                 serverCallback(item);
             }
         });
-        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
+        sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
     }
     parent.updateBankProblem = updateBankProblem;
 
@@ -175,15 +175,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         if (isUndefined(bankProblem.id) || bankProblem.id === null) {
             bankProblem.id = generateUUID();
         }
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM);
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.BANK_PROBLEM, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.BANK_PROBLEM);
             var resultArray = item.getReturnText().split(':');
             // We do not need the old id as it is never stored in a way that we need to delete.
             var newId = resultArray[0].trim();
             // we return the new id knowing it was inserted in the database correctly.
             serverCallback(newId);
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
+        sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.BANK_PROBLEM, bankProblem.toArrayBuffer());
     }
 
     /**
@@ -320,9 +320,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                         // after the entire list has been gone through pull the leftovers from the server
                         if (leftOverId.length >= 1) {
                             advanceDataListener.setListener(
-                                    Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, function(evt, item) {
+                                    Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, function(evt, item) {
                                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                        CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
+                                        CourseSketch.prutil.ItemQuery.COURSE_PROBLEM);
 
                                 // after listener is removed
                                 if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
@@ -332,14 +332,14 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                                 }
 
                                 for (var i = 0; i < item.data.length; i++) {
-                                    var decodedCourseProblem = CourseSketch.PROTOBUF_UTIL.getSrlProblemClass().decode(item.data[i]);
+                                    var decodedCourseProblem = CourseSketch.prutil.getSrlProblemClass().decode(item.data[i]);
                                     parent.setCourseProblem(decodedCourseProblem);
                                     courseProblemList.push(decodedCourseProblem);
                                 }
                                 courseProblemCallbackComplete(courseProblemList);
                             });
                             // creates a request that is then sent to the server
-                            sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM, leftOverId);
+                            sendData.sendDataRequest(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, leftOverId);
                         }
 
                         // this calls actually before the response from the server is received!

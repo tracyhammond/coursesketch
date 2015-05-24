@@ -34,13 +34,13 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                 // the listener from the server of the request
                 // it stores the course locally then cals the callback with the course
                 advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                        CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
-                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
+                        CourseSketch.prutil.ItemQuery.EXPERIMENT, function(evt, item) {
+                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.EXPERIMENT);
                     if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                         submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
                         return;
                     }
-                    var experiment = CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data[0]);
+                    var experiment = CourseSketch.prutil.getSrlExperimentClass().decode(item.data[0]);
                     var sub = experiment.submission;
                     localScope.setSubmission(problemId, sub);
                     submissionCallback(sub);
@@ -49,11 +49,11 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
                 });
                 // creates a request that is then sent to the server
-                sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ]);
+                sendData.sendDataRequest(CourseSketch.prutil.ItemQuery.EXPERIMENT, [ problemId ]);
             } else {
                 // gets the data from the database and calls the callback
                 var bytes = ByteBuffer.fromBase64(result.data);
-                submissionCallback(CourseSketch.PROTOBUF_UTIL.getSrlSubmissionClass().decode(bytes));
+                submissionCallback(CourseSketch.prutil.getSrlSubmissionClass().decode(bytes));
                 bytes = null;
             }
         });
@@ -66,8 +66,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
      * @param {Function} submissionCallback called after the server responds with all experiments.
      */
     function getAllExperiments(problemId, submissionCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT);
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.EXPERIMENT, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.EXPERIMENT);
             console.log('SERVER RESPONDED WITH EXPERIMENT');
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
@@ -76,7 +76,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             var list = [];
             try {
                 for (var i = 0; i < item.data.length; i++) {
-                    list.push(CourseSketch.PROTOBUF_UTIL.getSrlExperimentClass().decode(item.data[i]));
+                    list.push(CourseSketch.prutil.getSrlExperimentClass().decode(item.data[i]));
                 }
             } catch (exception) {
                 console.log(exception);
@@ -88,10 +88,10 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
         });
 
         // creates a request that is then sent to the server
-        var advanceQuery = CourseSketch.PROTOBUF_UTIL.ExperimentReview();
+        var advanceQuery = CourseSketch.prutil.ExperimentReview();
         advanceQuery.allowEditing = true;
         advanceQuery.showUserNames = false;
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.EXPERIMENT, [ problemId ], advanceQuery);
+        sendData.sendDataRequest(CourseSketch.prutil.ItemQuery.EXPERIMENT, [ problemId ], advanceQuery);
     }
     parent.getAllExperiments = getAllExperiments;
 

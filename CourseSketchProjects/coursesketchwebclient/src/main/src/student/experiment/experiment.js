@@ -33,10 +33,10 @@ validateFirstRun(document.currentScript);
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
         parentPanel.emptyPanel();
-        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+        if (problemType === CourseSketch.prutil.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(navigator);
         }
@@ -48,7 +48,7 @@ validateFirstRun(document.currentScript);
         parentPanel.isGrader = false;
 
         parentPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+            var studentExperiment = CourseSketch.prutil.SrlExperiment();
             navigator.setSubmissionInformation(studentExperiment, true);
             console.log('student experiment data set', studentExperiment);
             studentExperiment.submission = submission;
