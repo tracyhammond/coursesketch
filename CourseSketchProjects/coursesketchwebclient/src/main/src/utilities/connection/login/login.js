@@ -144,12 +144,7 @@ function LoginSystem() {
             loginInfo.username = arg1;
             loginInfo.password = '' + arg2;
 
-            var request = CourseSketch.prutil.Request();
-            request.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
-            if (!isUndefined(request.setLogin)) {
-                request.login = loginInfo;
-            }
-            request.otherData = loginInfo.toArrayBuffer();
+            var request = CourseSketch.prutil.createRequestFromData(loginInfo, CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
             console.log('Sending login information');
             connection.sendRequest(request);
             console.log('login information sent successfully');
