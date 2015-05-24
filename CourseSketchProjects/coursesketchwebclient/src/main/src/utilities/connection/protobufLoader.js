@@ -284,7 +284,7 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (!(exception instanceof BaseException) || !(exception instanceof CourseSketch.prutil.getProtoExceptionClass())) {
+        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass())) {
             return this.errorToProtoException(exception);
         }
         var pException = CourseSketch.prutil.ProtoException();
