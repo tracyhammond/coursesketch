@@ -1,4 +1,4 @@
-package internalconnections;
+package connection;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
