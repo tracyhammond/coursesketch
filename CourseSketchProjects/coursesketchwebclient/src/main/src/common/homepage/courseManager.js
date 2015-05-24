@@ -133,13 +133,17 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showAssignments = function(assignmentList, course) {
+        if (CourseSketch.isException(assignmentList)) {
+            CourseSketch.clientException(assignmentList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            if (!isUndefined(course) && course.getState() !== null &&!(course.getState().accessible)) {
+            builder.setEmptyListMessage('an exception was thrown so assignments can not be loaded');
+            if (!isUndefined(course) && course.getState() !== null && !(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
             assignmentList = [];
@@ -188,12 +192,16 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showProblems = function(problemList, assignment) {
+        if (CourseSketch.isException(problemList)) {
+            CourseSketch.clientException(problemList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
+            builder.setEmptyListMessage('an exception was thrown so problems can not be loaded');
             problemList = [];
             if (!isUndefined(assignment) && assignment.getState() !== null && !assignment.getState().accessible) {
                 builder.setEmptyListMessage('This assignment is currently not available. ' +

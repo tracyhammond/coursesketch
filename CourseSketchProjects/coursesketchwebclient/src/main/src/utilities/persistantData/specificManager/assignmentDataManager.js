@@ -116,6 +116,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      */
     function insertAssignmentServer(assignment, assignmentCallback) {
         advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
+            if (isException(item)) {
+                assignmentCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                    'Getting the list of asignments: ' + asignmentIdList,  item));
+                return;
+            }
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -201,6 +206,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                 localCallback();
             }
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
+                if (isException(item)) {
+                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'Getting the list of asignments: ' + asignmentIdList,  item));
+                    return;
+                }
                  // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
@@ -313,6 +323,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                             var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.ASSIGNMENT,
                                     leftOverId);
                             advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                                if (isException(item)) {
+                                    assignmentCallbackComplete(new DatabaseException('exception thrown while waiting for response from sever',
+                                        'Getting the list of asignments: ' + assignmentIdList,  item));
+                                    return;
+                                }
 
                                 // after listener is removed
                                 if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
