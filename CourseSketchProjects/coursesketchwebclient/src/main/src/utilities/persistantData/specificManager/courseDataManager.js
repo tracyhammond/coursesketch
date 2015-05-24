@@ -113,6 +113,11 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             if (isUndefined(course) || course instanceof DatabaseException) {
                 var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE, [ courseId ]);
                 advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                    if (item instanceof BaseException) {
+                        serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                            'updating course ' + course, item));
+                        return;
+                    }
                     if (isUndefined(item.data) || item.data === null) {
                         courseCallback(new DatabaseException('The data sent back from the server for course: ' + courseId + ' does not exist.'));
                         return;
@@ -169,12 +174,20 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      *                function to be called after server course setting is done
      */
     function updateCourse(course, localCallback, serverCallback) {
+        if (isUndefined(course)) {
+            throw new DatabaseException('Can not update an undefined course');
+        }
         setCourse(course, function() {
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
                  // we do not need to make server changes we just need to make sure it was successful.
+                if (item instanceof BaseException) {
+                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'updating course ' + course, item));
+                    return;
+                }
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
@@ -225,6 +238,11 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         // there are no courses loaded onto this client!
         var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
         var callback = function(evt, item) {
+            if (item instanceof BaseException) {
+                courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'Getting all courses for user ' + parent.getCurrentId(), item));
+                return;
+            }
             // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText !== '' && item.returnText !== 'null' && item.returnText !== null) {
                 userHasCourses = false;
@@ -311,6 +329,10 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
 
             advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
+                if (item instanceof BaseException) {
+                    serverCallback(new DatabaseException('An exception was thrown from the server while inserting a course', item));
+                    return;
+                }
                 var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
@@ -382,6 +404,11 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
          */
         advanceDataListener.sendDataRequest(itemRequest, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
                 CourseSketch.prutil.ItemQuery.COURSE_SEARCH, function(evt, item) {
+            if (item instanceof BaseException) {
+                callback(new DatabaseException('The data sent back from the server for searching courses', item));
+                return;
+            }
+
             // there was an error getting the user classes.
             if (isUndefined(item.data) || item.data === null) {
                 callback(new DatabaseException('The data sent back from the server for searching courses'));
