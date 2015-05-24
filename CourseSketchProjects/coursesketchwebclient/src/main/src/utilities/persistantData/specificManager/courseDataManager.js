@@ -403,8 +403,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         /**
          * Listens for the search result and displays the result given to it.
          */
-        advanceDataListener.sendDataRequest(itemRequest, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
-                CourseSketch.prutil.ItemQuery.COURSE_SEARCH, function(evt, item) {
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
                 callback(new DatabaseException('The data sent back from the server for searching courses', item));
                 return;

@@ -67,7 +67,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
-        if (isException(courseList)) {
+        if (CourseSketch.isException(courseList)) {
             CourseSketch.clientException(courseList);
         }
         var builder = new SchoolItemBuilder();
