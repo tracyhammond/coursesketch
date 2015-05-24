@@ -122,10 +122,10 @@ validateFirstRun(document.currentScript);
         if (oldElement instanceof Node) {
             parentPanel.removeChild(oldElement);
         }
-        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+        if (problemType === CourseSketch.prutil.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             CourseSketch.multiViewPage.loadSketch(submissionData);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(submissionData);
         }
@@ -138,7 +138,7 @@ validateFirstRun(document.currentScript);
 
         // THIS WILL BE DONE A TINY BIT LATER
         parentPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+            var studentExperiment = CourseSketch.prutil.SrlExperiment();
             navigator.setSubmissionInformation(studentExperiment, true);
             studentExperiment.submission = submission;
             return studentExperiment;
