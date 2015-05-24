@@ -2,22 +2,22 @@
 
     CourseSketch.fakeAssignments = [];
 
-    var assignment1 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment2 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment3 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment4 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment5 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment6 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment7 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment8 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment9 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-    var assignment10 = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+    var assignment1 = CourseSketch.prutil.SrlAssignment();
+    var assignment2 = CourseSketch.prutil.SrlAssignment();
+    var assignment3 = CourseSketch.prutil.SrlAssignment();
+    var assignment4 = CourseSketch.prutil.SrlAssignment();
+    var assignment5 = CourseSketch.prutil.SrlAssignment();
+    var assignment6 = CourseSketch.prutil.SrlAssignment();
+    var assignment7 = CourseSketch.prutil.SrlAssignment();
+    var assignment8 = CourseSketch.prutil.SrlAssignment();
+    var assignment9 = CourseSketch.prutil.SrlAssignment();
+    var assignment10 = CourseSketch.prutil.SrlAssignment();
 
     assignment1.courseId = "1";
     assignment1.id = "1";
     assignment1.name = "Test Assignment";
     assignment1.description = "Test description not the best description though...";
-    assignment1.state = CourseSketch.PROTOBUF_UTIL.State();
+    assignment1.state = CourseSketch.prutil.State();
     assignment1.state.published = true;
     assignment1.state.accessible = true;// late
     assignment1.state.pastDue = true;
@@ -30,14 +30,14 @@
     assignment2.courseId = "1";
     assignment2.id = "2";
     assignment2.name = "Test HW1";
-    assignment2.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.HOMEWORK;
+    assignment2.type = CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.HOMEWORK;
     assignment2.other = "";
     assignment2.description = "This was a triumph test";
     assignment2.links = "http://en.wikipedia.org/wiki/Moose";
-    //assignment2.latePolicy = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().LatePolicy.POLICY1;
+    //assignment2.latePolicy = CourseSketch.prutil.getSrlAssignmentClass().LatePolicy.POLICY1;
     assignment2.gradeWeight = "15";
     assignment2.grade = 97;
-    assignment2.state = CourseSketch.PROTOBUF_UTIL.State();
+    assignment2.state = CourseSketch.prutil.State();
     assignment2.state.published = true;
     assignment2.state.accessible = true;//started
     assignment2.state.pastDue = false;
@@ -46,10 +46,10 @@
     assignment2.state.graded = false;
     assignment2.problemList = ["3", "4"];
 
-    //assignment2.accessDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 9, 01, 1200,0,0, new Date().getTime());
-    //assignment2.dueDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 01, 1200, 0, 0, new Date().getTime());
-    //assignment2.closeDate = CourseSketch.PROTOBUF_UTIL.DateTime(2015, 11, 02, 2300, 0, 0, new Date().getTime());
-    //assignment2.state = CourseSketch.PROTOBUF_UTIL.State(true, false, false, false, false);
+    //assignment2.accessDate = CourseSketch.prutil.DateTime(2015, 9, 01, 1200,0,0, new Date().getTime());
+    //assignment2.dueDate = CourseSketch.prutil.DateTime(2015, 11, 01, 1200, 0, 0, new Date().getTime());
+    //assignment2.closeDate = CourseSketch.prutil.DateTime(2015, 11, 02, 2300, 0, 0, new Date().getTime());
+    //assignment2.state = CourseSketch.prutil.State(true, false, false, false, false);
     assignment2.imageURL = "test/truss_thumb.png";
     CourseSketch.fakeAssignments.push(assignment2);
 
@@ -57,8 +57,8 @@
     assignment3.id = "3";
     assignment3.name = "Quiz 101";
     assignment3.description = "We will gracefully guide you through a quiz because we are nice";
-    assignment3.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.QUIZ;
-    assignment3.state = CourseSketch.PROTOBUF_UTIL.State();
+    assignment3.type = CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.QUIZ;
+    assignment3.state = CourseSketch.prutil.State();
     assignment3.state.published = true;
     assignment3.state.accessible = false;
     assignment3.state.pastDue = false;
@@ -72,8 +72,8 @@
     assignment4.id = "4";
     assignment4.name = "Quantum entanglement";
     assignment4.description = "tests you over your tanglement";
-    assignment4.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.HOMEWORK;
-    assignment4.state = CourseSketch.PROTOBUF_UTIL.State();
+    assignment4.type = CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.HOMEWORK;
+    assignment4.state = CourseSketch.prutil.State();
     assignment4.state.published = true; //closed
     assignment4.state.accessible = false;
     assignment4.state.pastDue = true;
@@ -87,7 +87,7 @@
     assignment5.id = "5";
     assignment5.name = "Quantum spin states";
     assignment5.description = "guess which state the cat is in";
-    assignment5.state = CourseSketch.PROTOBUF_UTIL.State();
+    assignment5.state = CourseSketch.prutil.State();
     assignment5.state.published = true; //completed
     assignment5.state.accessible = true;
     assignment5.state.pastDue = false;
@@ -101,7 +101,7 @@
     assignment6.id = "6";
     assignment6.name = "weave identification";
     assignment6.description = "do you know your weaves?";
-    assignment6.state = CourseSketch.PROTOBUF_UTIL.State();
+    assignment6.state = CourseSketch.prutil.State();
     assignment6.state.published = false; //not published
     assignment6.state.accessible = false;
     assignment6.state.pastDue = false;
@@ -136,7 +136,7 @@
     assignment10.courseId = "5";
     assignment10.id = "10";
     assignment10.name = "random problem loading";
-    assignment10.type = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME;
+    assignment10.type = CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.GAME;
     assignment10.problemList = ["1", "2", "3", "4", "5", "6", "7", "8", "14"];
     CourseSketch.fakeAssignments.push(assignment10);
 })();
