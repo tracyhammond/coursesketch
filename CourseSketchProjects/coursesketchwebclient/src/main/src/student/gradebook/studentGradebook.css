@@ -15,3 +15,19 @@ ul.collection {
     margin-top: 0;
     margin-bottom:0;
 }
+
+.mdi-av-play-arrow::before {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transition: transform 0.1s;
+    -webkit-transition: transform 0.1s;
+}
+
+.mdi-av-play-arrow.active::before {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transition: transform 0.1s;
+    -webkit-transition: transform 0.1s;
+}
+
+
