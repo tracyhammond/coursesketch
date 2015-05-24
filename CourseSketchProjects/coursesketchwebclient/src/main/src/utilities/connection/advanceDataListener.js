@@ -6,7 +6,7 @@
  * @extends BaseException
  */
 function AdvanceListenerException(message, cause) {
-    this.name = 'DatabaseException';
+    this.name = 'AdvanceListenerException';
     this.setMessage(message);
     this.message = '';
     this.setCause(cause);
@@ -89,6 +89,11 @@ function AdvanceDataListener(connection, Request, defListener) {
     function queryWrap(func) {
         return function(evt, msg, listener) {
             var result = undefined;
+            if (msg.otherData === TIMEOUT_CONST) {
+                removeListener(msg.requestType, msg.requestId);
+                func(evt, new AdvanceListenerException('Connection to the database Timed Out'));
+                return;
+            }
             try {
                 result = CourseSketch.prutil.decodeProtobuf(msg.otherData, CourseSketch.prutil.getDataResultClass());
             } catch (exception) {
@@ -166,7 +171,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         var callbackTimedOut = false;
         var timeoutVariable = undefined;
         var wrappedCallback = function(evt, msg, listener) {
-            if (!callbackCalled) {
+            if ((isUndefined(msg) || msg.otherData === TIMEOUT_CONST || msg instanceof BaseException) && !callbackCalled) {
                 callbackTimedOut = true;
                 callback(evt, msg, listener);
                 return;
@@ -188,7 +193,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         timeoutVariable = setTimeout(function() {
             var clonedRequest = CourseSketch.prutil.cleanProtobuf(request, CourseSketch.prutil.getRequestClass());
             clonedRequest.otherData = TIMEOUT_CONST;
-            decode(undefined, request);
+            decode(undefined, clonedRequest);
         }, 5000);
     };
 
