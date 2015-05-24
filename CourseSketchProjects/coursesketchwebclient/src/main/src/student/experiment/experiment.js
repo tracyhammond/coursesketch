@@ -86,7 +86,10 @@ validateFirstRun(document.currentScript);
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException ||isUndefined(submission.getTextAnswer())) {
+            if (isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            if (isUndefined(submission) || CourseSketch.isException(submission) ||isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }
@@ -131,7 +134,10 @@ validateFirstRun(document.currentScript);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             var problemScript = navigator.getProblemScript();
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
+            if (CourseSketch.isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            if (isUndefined(submission) || CourseSketch.isException(submission) || isUndefined(submission.getUpdateList())) {
                 executeScript(problemScript, document.getElementById('problemPanel'), function() {
                     console.log('script executed - worker disconnect');
                     if (element.isRunning()) {
