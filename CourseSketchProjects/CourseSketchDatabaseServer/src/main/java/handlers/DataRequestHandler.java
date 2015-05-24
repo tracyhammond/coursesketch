@@ -154,7 +154,7 @@ public final class DataRequestHandler {
                                         results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
                                     } catch (DatabaseAccessException e) {
                                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                                        conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                                         results.add(ResultBuilder.buildResult(e.getLocalizedMessage(), ItemQuery.EXPERIMENT,
                                                 (GeneratedMessage[]) null));
                                         break;
@@ -197,7 +197,7 @@ public final class DataRequestHandler {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         // If
                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                        conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                         final ItemResult.Builder result = ItemResult.newBuilder();
                         result.setQuery(itemRequest.getQuery());
                         results.add(ResultBuilder.buildResult("The item is not valid for access during the specified time range. " + e.getMessage(),
@@ -215,15 +215,15 @@ public final class DataRequestHandler {
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }  catch (DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }

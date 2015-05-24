@@ -80,7 +80,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             } catch (InvalidProtocolBufferException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 this.getParentServer().send(getConnectionFromState(getStateFromId(request.getSessionInfo())),
-                        ExceptionUtilities.createExceptionRequest(protoEx, request));
+                        ExceptionUtilities.createExceptionRequest(request, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
 
             }

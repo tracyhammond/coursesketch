@@ -67,7 +67,7 @@ public final class SubmissionRequestHandler {
             return build.build();
         } catch (SubmissionException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            final Request build = ExceptionUtilities.createExceptionRequest(protoEx, req);
+            final Request build = ExceptionUtilities.createExceptionRequest(req, protoEx);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             return build;
         } catch (ConnectionException e) {
