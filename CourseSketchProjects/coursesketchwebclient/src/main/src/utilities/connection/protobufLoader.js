@@ -291,7 +291,7 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (exception instanceof Error) {
+        if (!(exception instanceof BaseException) || !(exception instanceof CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass())) {
             return this.errorToProtoException(exception);
         }
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
@@ -315,9 +315,20 @@ function ProtobufSetup() {
      */
     this.errorToProtoException = function(anError) {
         var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        if (typeof anError === 'string') {
+            pException.setMssg(anError);
+            pException.setExceptionType('String');
+            pException.setName('String Error');
+            return pException;
+        }
         pException.setMssg(anError.message);
 
-        pException.stackTrace = anError.stack;
+        var stack = anError.stack;
+        if (!isArray(stack)) {
+            pException.stackTrace = [ stack ];
+        } else {
+            pException.stackTrace = anError.stack;
+        }
 
         pException.setExceptionType('Error');
         return pException;
