@@ -318,7 +318,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                                 if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                                     // not calling the state callback because this should skip that step.
                                     assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
-                                            assignmendIdList));
+                                            assignmentIdList));
                                     return;
                                 }
                                 for (var i = 0; i < item.data.length; i++) {
