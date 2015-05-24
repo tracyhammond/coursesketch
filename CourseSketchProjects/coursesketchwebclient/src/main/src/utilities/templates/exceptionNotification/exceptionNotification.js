@@ -34,13 +34,18 @@
             body: protoEx.getMssg(),
             icon: imageUrl
         });
+
+        /**
+         * Called when the html5 notification is clicked.
+         * @param {Event} event On Click event.
+         */
         notification.onclick = function(event) {
             console.log(event);
             createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
         };
         setTimeout(function() {
             notification.close();
-        }, 7001);
+        }, 5501);
     }
 
     /**
@@ -56,12 +61,32 @@
         parentElement.appendChild(detailedNotification);
         detailedNotification.loadProtoException(protoEx);
     }
+
+    if (!window.errorListenerSet) {
+        if (isUndefined(CourseSketch.clientException)) {
+            /**
+             * Handles an exception or error then shows it on the client.
+             *
+             * @param {BaseException|Error} exception The exception that was thrown.
+             */
+            function showClientSideException(exception) {
+                console.log(exception);
+                var protoException = CourseSketch.PROTOBUF_UTIL.createProtoException(exception);
+                createShallowNotification(protoException);
+            }
+
+            CourseSketch.clientException = showClientSideException;
+        }
+        window.addEventListener('error', function(evt) {
+            showClientSideException(evt.error);
+        });
+        window.errorListenerSet = true;
+    }
 })();
 
 /**
  * Creates an custom element ExceptionNotification.
  */
-
 function ExceptionNotification() {
     /**
      * Makes the exit button close the box and enables dragging.
@@ -72,9 +97,37 @@ function ExceptionNotification() {
         var localScope = this; // This sets the variable to the level of the custom element tag
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
-        this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
+        var modal_id = $(this.shadowRoot.querySelector('#closeButton')).attr('href');
+        $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
+        /**
+         * Removes the element when clicked.
+         * @param {Event} event On Click event.
+         * @returns {Boolean} false.
+         */
+        document.body.querySelector('#lean-overlay').onclick = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
             localScope.parentNode.removeChild(localScope);
+            return false;
         };
+
+        /**
+         * Removes the element when clicked.
+         *
+         * @param {Event} event On Click event.
+         */
+        this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
+            $(document.body.querySelector('#lean-overlay')).fadeOut(250);
+            setTimeout(function() {
+                var remElem = document.body.querySelector('#lean-overlay');
+                console.log(remElem);
+                if (!isUndefined(remElem) && remElem !== null) {
+                    document.body.removeChild(remElem);
+                }
+                localScope.parentNode.removeChild(localScope);
+            }, 250);
+        };
+        Waves.attach(this.shadowRoot.querySelector('#closeButton'));
     };
 
     /**
@@ -88,23 +141,28 @@ function ExceptionNotification() {
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
      */
     this.loadProtoException = function(protoEx) {
-        var title = document.createElement('p');
+        var header = document.createElement('h4');
+        header.className = 'header';
+
+        var title = document.createElement('div');
         title.textContent = protoEx.getExceptionType();
-        title.className = 'title';
-        this.appendChild(title);
+        title.className = 'exceptionTitle';
+        header.appendChild(title);
 
         var message = document.createElement('div');
         message.textContent = protoEx.getMssg();
-        message.className = 'message';
-        this.appendChild(message);
+        message.className = 'exceptionMessage';
+        header.appendChild(message);
+
+        this.appendChild(header);
 
         var stack = document.createElement('div');
         var exceptionStackTrace = protoEx.getStackTrace();
-        var stackTraceWithNewLine = '';
-        for (var i = 0; i < exceptionStackTrace.length; i++){
-            stackTraceWithNewLine += exceptionStackTrace[i] + ' ';
+        for (var i = 0; i < exceptionStackTrace.length; i++) {
+            var singleTrace = document.createElement('p');
+            singleTrace.textContent = exceptionStackTrace[i];
+            stack.appendChild(singleTrace);
         }
-        stack.textContent = stackTraceWithNewLine;
         stack.className = 'stacktrace';
         this.appendChild(stack);
 

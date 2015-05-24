@@ -53,8 +53,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * After the lower level database has been completely setup the higher level
-     * specific databases can be called.
+     * After the lower level database has been completely setup the higher level specific databases can be called.
+     *
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
@@ -73,7 +73,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var database = new ProtoDatabase(localUserId, version, initalizedFunction);
 
     (function() {
-
+        /**
+         * Add function for adding elements to the database.
+         *
+         * @returns {Transaction} The transaction from storing the data in the database.
+         */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
                 'id': objectId,
@@ -143,10 +147,18 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
     };
 
+    /**
+     * This is supposed to clean out the database.
+     *
+     * Currently does not work.
+     */
     this.emptySchoolData = function() {
         database.emptySelf();
     };
 
+    /**
+     * Creates the specific datamanagers.
+     */
     this.start = function() {
         // creates a manager for just courses.
         courseManager = new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
@@ -216,27 +228,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
-            clearTimeout(timeout);
-            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-            var courseList = school.courses;
-            for (var i = 0; i < courseList.length; i++) {
-                localScope.setCourse(courseList[i]);
-            }
-
-            var assignmentList = school.assignments;
-            for (i = 0; i < assignmentList.length; i++) {
-                localScope.setAssignment(assignmentList[i]);
-            }
-
-            var problemList = school.problems;
-            for (i = 0; i < problemList.length; i++) {
-                localScope.setCourseProblem(problemList[i]);
-            }
-
-            if (!functionCalled && callback) {
-                functionCalled = true;
-                callback();
-            }
+            // TODO: there used to be update code here that would update the local cache
+            // When that code isbeing used again to optimize load times please add back the update function here!
         });
     };
 
@@ -248,14 +241,27 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         stateMachine.set(key, value);
     };
 
+    /**
+     * Returns the state at the given key.
+     * @param {String} key The unique identifier for the state.
+     */
     this.getState = function(key) {
         return stateMachine.get(key);
     };
 
+    /**
+     * Returns true if the given key is a valid state, false otherwise.
+     *
+     * @param {String} key The unique identifier for the state.
+     * @returns {Boolean} true if the state exists false otherwise.
+     */
     this.hasState = function(key) {
         return stateMachine.has(key);
     };
 
+    /**
+     * Empties all state data.
+     */
     this.clearStates = function() {
         stateMachine = new Map();
     };
@@ -276,7 +282,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * @param {Function} callback Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
-        var localScope = this;
         var interval = setInterval(function() {
             if (localScope.isDatabaseReady()) {
                 clearInterval(interval);

@@ -1,12 +1,19 @@
 /* Depends on the protobuf library, base.js, objectAndInheritance.js */
 
-function ProtobufException(message) {
+/**
+ * Any exception that occurs relating to protobufs.
+ * @param {String} message A custom message for the user.
+ * @param {BaseException|Error} [cause] Optional exception that caused this instance.
+ * @constructor
+ */
+function ProtobufException(message, cause) {
     this.name = 'ProtobufException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
+    this.setCause(cause);
+    this.createStackTrace();
 }
-ProtobufException.prototype = BaseException;
+ProtobufException.prototype = new BaseException();
 
 /**
  * *************************************************************
@@ -55,54 +62,99 @@ function ProtobufSetup() {
         return localScope;
     };
 
+    /**
+     * Builds the Utility protobuf files.
+     *
+     * These can be used by all other protobuf files.
+     */
     function buildUtil() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'util.proto');
         var utilBuilder = builder.build(PROTOBUF_PACKAGE).srl.utils;
         assignValues(utilBuilder);
     }
 
+    /**
+     * Builds the Message protobuf files.
+     *
+     * This is the base for talking to the server.
+     */
     function buildMessage() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'message.proto');
         var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
         assignValues(requestPackage);
     }
 
+    /**
+     * Builds the Data protobuf files.
+     *
+     * These ares used to talk with the database.
+     */
     function buildDataQuery() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'data.proto');
         var QueryBuilder = builder.build(PROTOBUF_PACKAGE).srl.query;
         assignValues(QueryBuilder);
     }
 
+    /**
+     * Builds the School protobuf files.
+     *
+     * These contain data about courses, assignments, and problems
+     */
     function buildSchool() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'school.proto');
         var SchoolBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
         assignValues(SchoolBuilder);
     }
 
+    /**
+     * Builds the Sketch protobuf files.
+     *
+     * This contains the sketchml format kinda.  It holds points, strokes, and shapes
+     */
     function buildSketch() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'sketch.proto');
         var sketchBuilder = builder.build(PROTOBUF_PACKAGE).srl.sketch;
         assignValues(sketchBuilder, 'Proto');
     }
 
+    /**
+     * Builds the UpdateList protobuf files.
+     *
+     * These contain all of the little actions that can occur
+     */
     function buildUpdateList() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'commands.proto');
         var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
         assignValues(ProtoUpdateCommandBuilder);
     }
 
+    /**
+     * Builds the Tutorial protobuf files.
+     *
+     * These ares used for the tutorials
+     */
     function buildTutorial() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'tutorial.proto');
         var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
         assignValues(ProtoTutorialBuilder);
     }
 
+    /**
+     * Builds the Submission protobuf files.
+     *
+     * These ares for submitting experiments or solutions.
+     */
     function buildSubmissions() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'submission.proto');
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
         assignValues(ProtoSubmissionBuilder);
     }
 
+    /**
+     * Builds the Lecture protobuf files.
+     *
+     * These ares used for lecture data.
+     */
     function buildLectures() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'lecturedata.proto');
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
@@ -154,6 +206,9 @@ function ProtobufSetup() {
         if (isFunction(ClassType)) {
             objectList.push(objectName);
             Object.defineProperty(localScope, objectName, {
+                /**
+                 * @returns {Object} An instance a protobuf object.
+                 */
                 value: function() {
                     if (arguments.length > 0) {
                         throw new ProtobufException('you can not create this object with arguments.');
@@ -164,6 +219,9 @@ function ProtobufSetup() {
             });
 
             Object.defineProperty(localScope, 'get' + objectName + 'Class', {
+                /**
+                 * @returns {Function|Enum} A class representing a protobuf object.
+                 */
                 value: function() {
                     // somehow change it to make this read only?
                     return ClassType;
@@ -173,6 +231,9 @@ function ProtobufSetup() {
         } else {
             enumList.push(objectName);
             Object.defineProperty(localScope, objectName, {
+                /**
+                 * @returns {Enum} An enum defined in protobuf.
+                 */
                 get: function() {
                     return ClassType;
                 }
@@ -202,9 +263,9 @@ function ProtobufSetup() {
      * Given a protobuf object compile it to other data and return a request.
      *
      * @param {Protobuf} data
-     *            An uncompiled protobuf object.
+     *              An uncompiled protobuf object.
      * @param {MessageType} requestType
-     *            The message type of the request.
+     *              The message type of the request.
      * @return {Request}
      */
     this.createRequestFromData = function(data, requestType) {
@@ -213,6 +274,57 @@ function ProtobufSetup() {
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
         return request;
+    };
+
+    /**
+     * Given an custom exception, a ProtoException Object will be created.
+     *
+     * @param {Exception} exception
+     *              An custom exception that extends BaseException.
+     * @return {ProtoException}
+     */
+    this.createProtoException = function(exception) {
+        if (!(exception instanceof BaseException) || !(exception instanceof CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass())) {
+            return this.errorToProtoException(exception);
+        }
+        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        pException.setMssg(exception.specificMessage);
+
+        pException.stackTrace = exception.getStackTrace();
+
+        if (!isUndefined(exception.getCause())) {
+            pException.setCause(this.createProtoException(exception.getCause()));
+        }
+        pException.setExceptionType(exception.name);
+        return pException;
+    };
+
+    /**
+     * Given an javascript error, a ProtoException Object will be created.
+     *
+     * @param {error} anError
+     *              An JS error that has occurred or been defined.
+     * @return {ProtoException}
+     */
+    this.errorToProtoException = function(anError) {
+        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        if (typeof anError === 'string') {
+            pException.setMssg(anError);
+            pException.setExceptionType('String');
+            pException.setName('String Error');
+            return pException;
+        }
+        pException.setMssg(anError.message);
+
+        var stack = anError.stack;
+        if (!isArray(stack)) {
+            pException.stackTrace = [ stack ];
+        } else {
+            pException.stackTrace = anError.stack;
+        }
+
+        pException.setExceptionType('Error');
+        return pException;
     };
 
     /**
@@ -378,7 +490,7 @@ function ProtobufSetup() {
      * @param {Function} [onError]
      *            A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
-     *            and may be called up to two times.
+     *
      * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
      * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */

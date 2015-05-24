@@ -2,22 +2,24 @@
  * @class UpdateException
  * @extends BaseException
  */
-function UpdateException(message) {
+function UpdateException(message, cause) {
     this.name = 'UpdateException';
     this.setMessage(message);
     this.message = '';
-    this.htmlMessage = '';
+    this.setCause(cause);
+    this.createStackTrace();
 }
 
-UpdateException.prototype = BaseException;
+UpdateException.prototype = new BaseException();
 
 /**
  * @class UndoRedoException
  * @extends UpdateException
  */
-function UndoRedoException(message) {
+function UndoRedoException(message, cause) {
     this.name = 'UndoRedoException';
     this.setMessage(message);
+    this.setCause(cause);
 }
 UndoRedoException.prototype = new UpdateException();
 
@@ -594,6 +596,9 @@ function UpdateManager(sketchManager, onError) {
         return !(this.isLastUpdateSubmission() || this.isLastUpdateSave());
     };
 
+    /**
+     * @returns {Number} The current update index.
+     */
     this.getCurrentPointer = function() {
         return currentUpdateIndex;
     };

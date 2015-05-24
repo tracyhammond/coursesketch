@@ -1,5 +1,24 @@
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase  The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
 
+    /**
+     * Sets a courseProblem in local database.
+     *
+     * @param {SrlCourseProblem} courseProblem
+     *                courseproblem object to set
+     * @param {Function} courseProblemCallback
+     *                function to be called after the courseProblem setting is done
+     */
     function setCourseProblem(courseProblem, courseProblemCallback) {
         parentDatabase.putInCourseProblems(courseProblem.id, courseProblem.toBase64(), function(e, request) {
             if (courseProblemCallback) {
@@ -9,6 +28,15 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
     }
     parent.setCourseProblem = setCourseProblem;
 
+    /**
+     * Deletes a courseProblem from local database.
+     * This does not delete the id pointing to this item in the respective course.
+     *
+     * @param {String} courseProblemId
+     *                ID of the lecture to delete
+     * @param {Function} courseProblemCallback
+     *                function to be called after the deletion is done
+     */
     function deleteCourseProblem(courseProblemId, courseProblemCallback) {
         parentDatabase.deleteFromCourseProblems(courseProblemId, function(e, request) {
             if (courseProblemCallback) {
@@ -177,8 +205,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
             courseProblem.id = generateUUID();
         }
 
-        // This function is called after the bank problem is inserted if the course problem does not have a bank problem id.
-        // Otherwise it is called immediately.
+        /**
+         * This function is called after the bank problem is inserted if the course problem does not have a bank problem id.
+         * Otherwise it is called immediately.
+         */
         function insertingCourseProblem() {
             setCourseProblem(courseProblem, function() {
                 console.log('inserted locally :' + courseProblem.id);
@@ -273,7 +303,11 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
         // create local courseProblem list so everything appears really fast!
         for (var i = 0; i < courseProblemIdList.length; i++) {
             var courseProblemIdLoop = courseProblemIdList[i];
-            // the purpose of this function is purely to scope the courseProblemId so that it changes
+            /**
+             * The purpose of this function is purely to scope the courseProblemId so that it changes.
+             *
+             * @param {String} courseProblemId The id of a single courseProblem.
+             */
             function loopContainer(courseProblemId) {
                 getCourseProblemLocal(courseProblemId, function(courseProblem) {
                     if (!isUndefined(courseProblem) && !(courseProblem instanceof DatabaseException)) {
@@ -291,26 +325,16 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, s
                                         CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_PROBLEM);
 
                                 // after listener is removed
-                                if (isUndefined(item.data) || item.data === null) {
-                                    courseProblemCallbackComplete(new DatabaseException('The data sent back from the server does not exist.'));
+                                if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                                    courseProblemCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
+                                            leftOverId));
                                     return;
                                 }
-                                var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                var courseProblem = school.problems[0];
-                                if (isUndefined(courseProblem) || courseProblem instanceof DatabaseException) {
-                                    var result = courseProblem;
-                                    if (isUndefined(result)) {
-                                        result = new DatabaseException('Nothing is in the server database!',
-                                                'failed while attempting to grab from server address: ' + leftOverId);
-                                    }
-                                    if (!isUndefined(courseProblemCallbackComplete)) {
-                                        courseProblemCallbackComplete(result);
-                                    }
-                                    return;
-                                } // undefined course problem
-                                for (var i = 0; i < school.problems.length; i++) {
-                                    parent.setCourseProblem(school.problems[i]);
-                                    courseProblemList.push(school.problems[i]);
+
+                                for (var i = 0; i < item.data.length; i++) {
+                                    var decodedCourseProblem = CourseSketch.PROTOBUF_UTIL.getSrlProblemClass().decode(item.data[i]);
+                                    parent.setCourseProblem(decodedCourseProblem);
+                                    courseProblemList.push(decodedCourseProblem);
                                 }
                                 courseProblemCallbackComplete(courseProblemList);
                             });

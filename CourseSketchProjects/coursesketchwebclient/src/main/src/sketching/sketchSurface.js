@@ -259,7 +259,13 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
     this.sketchCanvas = this.shadowRoot.querySelector('#drawingCanvas');
 };
 
-
+/**
+ * Called to initialize the sketch surface.
+ *
+ * Looks at attributes and sets up the sketch surface based on these attributes.
+ * @param {InputListener} InputListenerClass
+ * @param {UpdateManager} UpdateManagerClass
+ */
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     /*jshint maxcomplexity:13 */
     this.initializeSketch();
@@ -284,4 +290,9 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
     if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize))) {
         this.makeResizeable();
     }
+    window.addEventListener('load', function() {
+        this.resizeSurface();
+    }.bind(this));
+
+
 };
