@@ -26,7 +26,7 @@
             },
             setup : function() {
                 CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                    CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                    CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 QUnit.stop();
                 waitForDatabase(CourseSketch.dataManager, function() {
                     CourseSketch.dataManager.getLectureSlide = function(id, callback) {
@@ -50,21 +50,21 @@
             }
         });
         QUnit.asyncTest("moving from one slide in a lecture to the next", function(assert) {
-            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture = CourseSketch.prutil.Lecture();
             lecture.id = "lectureID!";
             lecture.idList = [];
             lectureList.push(lecture);
-            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide1 = CourseSketch.prutil.LectureSlide();
             slide1.lectureId = lecture.id;
             slide1.id = "SlIDE1";
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide2 = CourseSketch.prutil.LectureSlide();
             slide2.lectureId = lecture.id;
             slide2.id = "Slide2";
             slideList.push(slide1);
             slideList.push(slide2);
 
-            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id1 = CourseSketch.prutil.IdsInLecture();
+            var id2 = CourseSketch.prutil.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
@@ -73,8 +73,8 @@
             id1.unlocked = true;
             id2.unlocked = true;
 
-            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav1 = CourseSketch.prutil.LectureNavigator();
+            var nav2 = CourseSketch.prutil.LectureNavigator();
             nav1.nextSlide = 1;
             nav2.nextSlide = -1;
             id1.nav = nav1;
@@ -100,26 +100,26 @@
             nav.refresh();
         });
         QUnit.asyncTest("Skipping a slide to move to another slide", function(assert) {
-            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture = CourseSketch.prutil.Lecture();
             lecture.id = "lectureID!";
             lecture.idList = [];
             lectureList.push(lecture);
-            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide1 = CourseSketch.prutil.LectureSlide();
             slide1.lectureId = lecture.id;
             slide1.id = "SlIDE1";
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide2 = CourseSketch.prutil.LectureSlide();
             slide2.lectureId = lecture.id;
             slide2.id = "Slide2";
-            var slide3 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide3 = CourseSketch.prutil.LectureSlide();
             slide3.lectureId = lecture.id;
             slide3.id = "Slide3";
             slideList.push(slide1);
             slideList.push(slide2);
             slideList.push(slide3);
 
-            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id3 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id1 = CourseSketch.prutil.IdsInLecture();
+            var id2 = CourseSketch.prutil.IdsInLecture();
+            var id3 = CourseSketch.prutil.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
@@ -131,9 +131,9 @@
             id2.unlocked = true;
             id3.unlocked = true;
 
-            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav3 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav1 = CourseSketch.prutil.LectureNavigator();
+            var nav2 = CourseSketch.prutil.LectureNavigator();
+            var nav3 = CourseSketch.prutil.LectureNavigator();
             nav1.nextSlide = 2;
             nav2.nextSlide = -1;
             nav3.nextSlide = -1;
@@ -162,25 +162,25 @@
             nav.refresh();
         });
         QUnit.asyncTest("Moving from a slide to a slide in a different lecture", function(assert) {
-            var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture1 = CourseSketch.prutil.Lecture();
             lecture1.id = "lectureID1!";
             lecture1.idList = [];
             lectureList.push(lecture1);
-            var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture2 = CourseSketch.prutil.Lecture();
             lecture2.id = "lectureID2!";
             lecture2.idList = [];
             lectureList.push(lecture2);
-            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide1 = CourseSketch.prutil.LectureSlide();
             slide1.lectureId = lecture1.id;
             slide1.id = "SlIDE1";
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide2 = CourseSketch.prutil.LectureSlide();
             slide2.lectureId = lecture2.id;
             slide2.id = "Slide2";
             slideList.push(slide1);
             slideList.push(slide2);
 
-            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id1 = CourseSketch.prutil.IdsInLecture();
+            var id2 = CourseSketch.prutil.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
@@ -189,8 +189,8 @@
             id1.unlocked = true;
             id2.unlocked = true;
 
-            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav1 = CourseSketch.prutil.LectureNavigator();
+            var nav2 = CourseSketch.prutil.LectureNavigator();
             nav1.nextLectureId = lecture2.id;
             nav2.nextSlide = -1;
             id1.nav = nav1;
@@ -221,30 +221,30 @@
             nav.refresh();
         });
         QUnit.asyncTest("Moving from a slide to a slide in a different lecture and then back to the original lecture", function(assert) {
-            var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture1 = CourseSketch.prutil.Lecture();
             lecture1.id = "lectureID1!";
             lecture1.idList = [];
             lectureList.push(lecture1);
-            var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture2 = CourseSketch.prutil.Lecture();
             lecture2.id = "lectureID2!";
             lecture2.idList = [];
             lectureList.push(lecture2);
-            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide1 = CourseSketch.prutil.LectureSlide();
             slide1.lectureId = lecture1.id;
             slide1.id = "SlIDE1";
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide2 = CourseSketch.prutil.LectureSlide();
             slide2.lectureId = lecture2.id;
             slide2.id = "Slide2";
-            var slide3 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide3 = CourseSketch.prutil.LectureSlide();
             slide3.lectureId = lecture1.id;
             slide3.id = "Slide3";
             slideList.push(slide1);
             slideList.push(slide2);
             slideList.push(slide3);
 
-            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id3 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id1 = CourseSketch.prutil.IdsInLecture();
+            var id2 = CourseSketch.prutil.IdsInLecture();
+            var id3 = CourseSketch.prutil.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
@@ -256,9 +256,9 @@
             id2.unlocked = true;
             id3.unlocked = true;
 
-            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav3 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav1 = CourseSketch.prutil.LectureNavigator();
+            var nav2 = CourseSketch.prutil.LectureNavigator();
+            var nav3 = CourseSketch.prutil.LectureNavigator();
             nav1.nextLectureId = lecture2.id;
             nav1.nextSlide = 1;
             nav2.nextSlide = -1;
@@ -302,21 +302,21 @@
             nav.refresh();
         });
         QUnit.asyncTest("moving from one slide in a lecture to the last slide in the lecture testing the done variable", function(assert) {
-            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture = CourseSketch.prutil.Lecture();
             lecture.id = "lectureID!";
             lecture.idList = [];
             lectureList.push(lecture);
-            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide1 = CourseSketch.prutil.LectureSlide();
             slide1.lectureId = lecture.id;
             slide1.id = "SlIDE1";
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide2 = CourseSketch.prutil.LectureSlide();
             slide2.lectureId = lecture.id;
             slide2.id = "Slide2";
             slideList.push(slide1);
             slideList.push(slide2);
 
-            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id1 = CourseSketch.prutil.IdsInLecture();
+            var id2 = CourseSketch.prutil.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
@@ -325,8 +325,8 @@
             id1.unlocked = true;
             id2.unlocked = true;
 
-            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav1 = CourseSketch.prutil.LectureNavigator();
+            var nav2 = CourseSketch.prutil.LectureNavigator();
             nav1.nextSlide = 1;
             nav2.nextSlide = -1;
             id1.nav = nav1;
@@ -358,25 +358,25 @@
             nav.refresh();
         });
         QUnit.asyncTest("Moving from a slide to a slide in a different lecture then checking if it finished", function(assert) {
-            var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture1 = CourseSketch.prutil.Lecture();
             lecture1.id = "lectureID1!";
             lecture1.idList = [];
             lectureList.push(lecture1);
-            var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture2 = CourseSketch.prutil.Lecture();
             lecture2.id = "lectureID2!";
             lecture2.idList = [];
             lectureList.push(lecture2);
-            var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide1 = CourseSketch.prutil.LectureSlide();
             slide1.lectureId = lecture1.id;
             slide1.id = "SlIDE1";
-            var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide2 = CourseSketch.prutil.LectureSlide();
             slide2.lectureId = lecture2.id;
             slide2.id = "Slide2";
             slideList.push(slide1);
             slideList.push(slide2);
 
-            var id1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-            var id2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+            var id1 = CourseSketch.prutil.IdsInLecture();
+            var id2 = CourseSketch.prutil.IdsInLecture();
 
             id1.id = slide1.id;
             id2.id = slide2.id;
@@ -385,8 +385,8 @@
             id1.unlocked = true;
             id2.unlocked = true;
 
-            var nav1 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var nav2 = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var nav1 = CourseSketch.prutil.LectureNavigator();
+            var nav2 = CourseSketch.prutil.LectureNavigator();
             nav1.nextLectureId = lecture2.id;
             nav1.nextSlide = -1;
             nav2.nextSlide = -1;

@@ -70,7 +70,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         return function(evt, msg, listener) {
             var result = undefined;
             try {
-                result = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.otherData, CourseSketch.PROTOBUF_UTIL.getDataResultClass());
+                result = CourseSketch.prutil.decodeProtobuf(msg.otherData, CourseSketch.prutil.getDataResultClass());
             } catch (exception) {
                 // removes listener on error to prevent data leakage.
                 removeListener(msg.requestType, msg.requestId);
@@ -164,7 +164,7 @@ function AdvanceDataListener(connection, Request, defListener) {
 
         // set timeout
         timeoutVariable = setTimeout(function() {
-            var clonedRequest = CourseSketch.PROTOBUF_UTIL.cleanProtobuf(request, CourseSketch.PROTOBUF_UTIL.getRequestClass());
+            var clonedRequest = CourseSketch.prutil.cleanProtobuf(request, CourseSketch.prutil.getRequestClass());
             clonedRequest.otherData = TIMEOUT_CONST;
             decode(undefined, request);
         }, 5000);
@@ -185,11 +185,11 @@ function AdvanceDataListener(connection, Request, defListener) {
         if (isUndefined(callback)) {
             throw new BaseException('Can not request data without a callback');
         }
-        var dataRequest = CourseSketch.PROTOBUF_UTIL.DataRequest();
+        var dataRequest = CourseSketch.prutil.DataRequest();
 
         dataRequest.items = [].concat(itemRequest);
 
-        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataRequest, Request.MessageType.DATA_REQUEST, requestId);
+        var request = CourseSketch.prutil.createRequestFromData(dataRequest, Request.MessageType.DATA_REQUEST, requestId);
 
         this.sendRequestWithTimeout(request, callback, times);
     };
@@ -203,14 +203,14 @@ function AdvanceDataListener(connection, Request, defListener) {
      * @param {Number} [times] The number of times you want the function to be called before it is removed;
      */
     this.sendDataInsert = function sendDataInsert(queryType, data, callback, requestId, times) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        var dataSend = CourseSketch.prutil.DataSend();
         dataSend.items = [];
-        var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        var itemSend = CourseSketch.prutil.ItemSend();
         itemSend.setQuery(queryType);
         itemSend.setData(data);
         dataSend.items.push(itemSend);
 
-        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT, requestId);
+        var request = CourseSketch.prutil.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT, requestId);
         this.sendRequestWithTimeout(request, callback, times);
     };
 
@@ -224,14 +224,14 @@ function AdvanceDataListener(connection, Request, defListener) {
      * @param {Number} [times] The number of times you want the function to be called before it is removed;
      */
     this.sendDataUpdate = function sendDataUpdate(queryType, data, callback, requestId, times) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
+        var dataSend = CourseSketch.prutil.DataSend();
         dataSend.items = [];
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
+        var itemUpdate = CourseSketch.prutil.ItemSend();
         itemUpdate.setQuery(queryType);
         itemUpdate.setData(data);
         dataSend.items.push(itemUpdate);
 
-        var request = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE, requestId);
+        var request = CourseSketch.prutil.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE, requestId);
         this.sendRequestWithTimeout(request, callback, times);
     };
 
