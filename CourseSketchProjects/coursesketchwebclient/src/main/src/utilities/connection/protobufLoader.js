@@ -266,13 +266,21 @@ function ProtobufSetup() {
      *              An uncompiled protobuf object.
      * @param {MessageType} requestType
      *              The message type of the request.
+     * @param {String} [requestId]
+     *              An id that is required for every request.
      * @return {Request}
      */
-    this.createRequestFromData = function(data, requestType) {
+    this.createRequestFromData = function(data, requestType, requestId) {
         var request = this.Request();
         request.requestType = requestType;
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
+
+        if (!isUndefined(requestId)) {
+            request.requestId = requestId;
+        } else {
+            request.requestId = generateUUID();
+        }
         return request;
     };
 
@@ -383,11 +391,7 @@ function ProtobufSetup() {
             throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
         }
 
-        var request = this.Request();
-        request.requestType = requestType;
-        var buffer = update.toArrayBuffer();
-        request.setOtherData(buffer);
-        return request;
+        return createRequestFromData(update, requestType);
     };
 
     /**
@@ -407,6 +411,27 @@ function ProtobufSetup() {
         command.setIsUserCreated(userCreated);
         command.commandId = generateUUID(); // unique ID
         return command;
+    };
+
+    /**
+     * Creates an itemRequest from the given data.
+     *
+     * @param queryType
+     * @param idList
+     * @param advanceQuery
+     * @returns {ItemRequest}
+     */
+    this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
+        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        itemRequest.setQuery(queryType);
+
+        if (!isUndefined(idList)) {
+            itemRequest.setItemId(idList);
+        }
+        if (!isUndefined(advanceQuery)) {
+            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+        }
+        return itemRequest;
     };
 
     /**
@@ -522,6 +547,18 @@ function ProtobufSetup() {
             }
         }
         return decoded;
+    };
+
+    /**
+     * Returns a "clean" version of the protobuf files that can be considered a clone.
+     *
+     * @param protobuf
+     * @param protobufType
+     * @returns {ProyobufObject}
+     */
+    this.cleanProtobuf = function(protobuf, protobufType) {
+        // TODO: check to see if we can extract the type from the protobuf object.
+        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(protobuf.toArrayBuffer(), protobufType);
     };
 
     // makes all of the methods read only

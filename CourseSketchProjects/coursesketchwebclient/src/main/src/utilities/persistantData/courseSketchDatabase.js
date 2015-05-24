@@ -36,8 +36,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var lectureDataManager;
     var slideDataManager;
 
-    var dataSender = {};
-
     /*
      * END OF VARIABLE SETTING
      */
@@ -101,53 +99,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     })();
 
     /**
-     * Sends a request to retrive data from the server.
-     */
-    dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
-        dataSend.items = [];
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        itemRequest.setQuery(queryType);
-
-        if (!isUndefined(idList)) {
-            itemRequest.setItemId(idList);
-        }
-        if (!isUndefined(advanceQuery)) {
-            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
-        }
-        dataSend.items.push(itemRequest);
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
-    };
-
-    /**
-     * Inserts data into the server database.
-     */
-    dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
-        dataSend.items = [];
-        var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
-        itemSend.setQuery(queryType);
-        itemSend.setData(data);
-        dataSend.items.push(itemSend);
-
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
-    };
-
-    /**
-     * Sends an update to the server for the data to be updated.
-     */
-    dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
-        dataSend.items = [];
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
-        itemUpdate.setQuery(queryType);
-        itemUpdate.setData(data);
-        dataSend.items.push(itemUpdate);
-
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
-    };
-
-    /**
      * This is supposed to clean out the database.
      *
      * Currently does not work.
@@ -161,12 +112,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
     this.start = function() {
         // creates a manager for just courses.
-        courseManager = new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        assignmentManager = new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        courseProblemManager = new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        submissionManager = new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        lectureDataManager = new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        slideDataManager = new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        courseManager = new CourseDataManager(this, dataListener, database, Request, ByteBuffer);
+        assignmentManager = new AssignmentDataManager(this, dataListener, database, Request, ByteBuffer);
+        courseProblemManager = new CourseProblemDataManager(this, dataListener, database, Request, ByteBuffer);
+        submissionManager = new SubmissionDataManager(this, dataListener, database, Request, ByteBuffer);
+        lectureDataManager = new LectureDataManager(this, dataListener, database, Request, ByteBuffer);
+        slideDataManager = new SlideDataManager(this, dataListener, database, Request, ByteBuffer);
 
         console.log('Database is ready for use! with user: ' + userId);
         databaseFinishedLoading = true;
