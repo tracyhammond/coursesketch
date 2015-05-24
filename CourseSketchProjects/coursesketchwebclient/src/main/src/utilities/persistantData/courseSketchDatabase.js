@@ -162,10 +162,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     this.pollUpdates = function(callback) {
         database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE);
+                dataSender.sendDataRequest(CourseSketch.prutil.ItemQuery.UPDATE);
             } else {
                 var lastTime = result.data;
-                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, [ lastTime ]);
+                dataSender.sendDataRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
             }
         });
         var functionCalled = false;
@@ -176,7 +176,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
             }
         }, 5000);
 
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
+        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
             // TODO: there used to be update code here that would update the local cache

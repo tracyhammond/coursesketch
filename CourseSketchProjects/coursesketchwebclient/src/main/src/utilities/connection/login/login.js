@@ -90,7 +90,7 @@ function LoginSystem() {
                 }
             } else {
                 if (message.otherData) {
-                    var loginInfo = CourseSketch.PROTOBUF_UTIL.getLoginInformationClass().decode(message.otherData);
+                    var loginInfo = CourseSketch.prutil.getLoginInformationClass().decode(message.otherData);
                     console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
                         console.log('successfully login!');
@@ -139,13 +139,13 @@ function LoginSystem() {
                         ' \n server@coursesketch.com with your device, and web browser');
                 return;
             }
-            var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
+            var loginInfo = CourseSketch.prutil.LoginInformation();
 
             loginInfo.username = arg1;
             loginInfo.password = '' + arg2;
 
-            var request = CourseSketch.PROTOBUF_UTIL.Request();
-            request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
+            var request = CourseSketch.prutil.Request();
+            request.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
             if (!isUndefined(request.setLogin)) {
                 request.login = loginInfo;
             }
