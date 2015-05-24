@@ -76,8 +76,6 @@
             }
 
             CourseSketch.clientException = showClientSideException;
-
-            console.log('Adding uncaught exception handler!');
         }
         window.addEventListener('error', function(evt) {
             showClientSideException(evt.error);
