@@ -14,7 +14,7 @@ function AdvanceListenerException(message, cause) {
 }
 
 AdvanceListenerException.prototype = new BaseException();
-
+CourseSketch.AdvanceListenerException = AdvanceListenerException;
 
 
 /**

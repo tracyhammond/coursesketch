@@ -67,6 +67,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
+        if (isException(courseList)) {
+            CourseSketch.clientException(courseList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
@@ -77,7 +80,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         });
 
         if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
-            if (CourseSketch.connection.isInstructor) {
+            if (!isUndefined(courseList.getCause()) && courseList.getCause() instanceof CourseSketch.AdvanceListenerException) {
+                CourseSketch.clientException(courseList);
+                builder.setEmptyListMessage('An exception occured while getting the course please try again later');
+            } else if (CourseSketch.connection.isInstructor) {
                 builder.setEmptyListMessage('Please Create a new course to get started!');
             } else {
                 builder.setEmptyListMessage('Please add a new course to get started');

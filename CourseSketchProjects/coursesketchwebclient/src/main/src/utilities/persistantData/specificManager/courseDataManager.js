@@ -113,9 +113,9 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             if (isUndefined(course) || course instanceof DatabaseException) {
                 var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE, [ courseId ]);
                 advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
-                    if (item instanceof BaseException) {
-                        serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                            'updating course ' + course, item));
+                    if (isException(item)) {
+                        courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                            'getting course ' + courseId, item));
                         return;
                     }
                     if (isUndefined(item.data) || item.data === null) {
@@ -183,7 +183,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
                  // we do not need to make server changes we just need to make sure it was successful.
-                if (item instanceof BaseException) {
+                if (isException(item)) {
                     serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
                         'updating course ' + course, item));
                     return;
@@ -238,7 +238,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         // there are no courses loaded onto this client!
         var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
         var callback = function(evt, item) {
-            if (item instanceof BaseException) {
+            if (isException(item)) {
                 courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
                         'Getting all courses for user ' + parent.getCurrentId(), item));
                 return;
@@ -329,8 +329,9 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
 
             advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
-                if (item instanceof BaseException) {
-                    serverCallback(new DatabaseException('An exception was thrown from the server while inserting a course', item));
+                if (isException(item)) {
+                    serverCallback(new DatabaseException('An exception was thrown from the server while inserting a course',
+                        '' + course, item));
                     return;
                 }
                 var resultArray = item.getReturnText().split(':');
@@ -404,7 +405,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
          */
         advanceDataListener.sendDataRequest(itemRequest, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
                 CourseSketch.prutil.ItemQuery.COURSE_SEARCH, function(evt, item) {
-            if (item instanceof BaseException) {
+            if (isException(item)) {
                 callback(new DatabaseException('The data sent back from the server for searching courses', item));
                 return;
             }

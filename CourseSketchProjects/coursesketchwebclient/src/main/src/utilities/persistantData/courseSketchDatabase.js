@@ -161,6 +161,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
     this.pollUpdates = function(callback) {
         var updateListener = function(evt, item) {
+            if (isException(item)) {
+                CourseSketch.clientException(item);
+            }
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
             // TODO: there used to be update code here that would update the local cache

@@ -142,6 +142,10 @@ if (isUndefined(getFormattedDateTime)) {
     }
 }
 
+if (CourseSketch && isUndefined(BaseException) && !isUndefined(CourseSketch.BaseException)) {
+    BaseException = CourseSketch.BaseException;
+}
+
 if (isUndefined(BaseException)) {
     /**
      * @class BaseException
@@ -225,7 +229,32 @@ if (isUndefined(BaseException)) {
 }
 
 if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
-    CourseSketch.BaseException = CourseSketch.BaseException;
+    CourseSketch.BaseException = BaseException;
+}
+
+if (CourseSketch && isUndefined(isException) && !isUndefined(CourseSketch.isException)) {
+    isException = CourseSketch.isException;
+}
+
+if (isUndefined(isException)) {
+    /**
+     *
+     * @param exception
+     */
+    function isException(exception) {
+        if (isUndefined(exception) || exception === null) {
+            return false;
+        }
+        if (exception instanceof BaseException || exception instanceof Error ||
+                (CourseSketch && CourseSketch.BaseException && exception instanceof CourseSketch.BaseException)) {
+            return true;
+        }
+        return false;
+    }
+}
+
+if (CourseSketch && isUndefined(CourseSketch.isException)) {
+    CourseSketch.isException = isException;
 }
 
 if (isUndefined(getTypeName)) {
