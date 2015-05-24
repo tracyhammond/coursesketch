@@ -213,6 +213,10 @@ if (isUndefined(BaseException)) {
             return this.cause;
         };
     }
+
+    if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
+        CourseSketch.BaseException = CourseSketch.BaseException;
+    }
 }
 
 if (isUndefined(getTypeName)) {

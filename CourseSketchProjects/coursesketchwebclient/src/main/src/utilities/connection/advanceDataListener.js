@@ -63,7 +63,7 @@ function AdvanceDataListener(connection, Request, defListener) {
             try {
                 msg.otherData.mark();
             } catch (exception) {
-                console.log(exception);
+				CourseSketch.clientException(exception);
                 console.log(msg);
             }
             var dataList = CourseSketch.PROTOBUF_UTIL.getDataResultClass().decode(msg.otherData).results;
@@ -75,17 +75,14 @@ function AdvanceDataListener(connection, Request, defListener) {
                     try {
                         func(evt, item);
                     } catch (exception) {
-                        console.error(exception);
-                        console.error(exception.stack);
-                        console.log(msg);
+                        CourseSketch.clientException(exception);
                     }
                 } else {
                     defListener(evt, item);
                 }
             }
         } catch (exception) {
-            console.error(exception);
-            console.error(exception.stack);
+			CourseSketch.clientException(exception);
             console.log('decoding data failed: ', msg);
             if (errorListener) {
                 errorListener(msg);

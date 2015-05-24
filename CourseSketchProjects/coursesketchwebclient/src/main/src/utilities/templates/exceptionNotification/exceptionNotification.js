@@ -61,6 +61,21 @@
         parentElement.appendChild(detailedNotification);
         detailedNotification.loadProtoException(protoEx);
     }
+
+    if (isUndefined(CourseSketch.clientException)) {
+        function showClientSideException(exception) {
+		    console.log(exception);
+       	    var protoException = CourseSketch.PROTOBUF_UTIL.createProtoException(exception);
+            createShallowNotification(protoException);
+        }
+	    CourseSketch.clientException = showClientSideException;
+
+        console.log('Adding uncaught exception handler!');
+        window.addEventListener('error', function (evt) {
+            showClientSideException(evt.error);
+        });
+
+   }
 })();
 
 /**
