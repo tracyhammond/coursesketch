@@ -1,6 +1,5 @@
 package utilities;
 
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,10 +102,8 @@ public final class TimeManager {
      */
     public static Request serverSendTimeToClient() {
 
-        final Request.Builder req = Request.newBuilder();
-        req.setRequestType(Request.MessageType.TIME);
+        final Request.Builder req = ProtobufUtilities.createRequestFromData(Request.MessageType.TIME);
         req.setMessageTime(getSystemTime());
-        req.setRequestId(AbstractServerWebSocketHandler.Encoder.nextID().toString());
         // Server sending client  'true' time
         req.setResponseText(SEND_TIME_TO_CLIENT_MSG);
         return req.build();
@@ -126,8 +123,7 @@ public final class TimeManager {
         LOG.info("server time: {}", milltoDate(req.getMessageTime()));
         LOG.info("my (client) time: {}", milltoDate(DateTime.now().getMillis()));
         LOG.info("time difference: {}", timeDifference);
-        final Request.Builder rsp = Request.newBuilder();
-        rsp.setRequestType(Request.MessageType.TIME);
+        final Request.Builder rsp = ProtobufUtilities.createBaseResponse(req);
         // message time plus adjusted time minus time it took to compute adjusted time.
         rsp.setMessageTime(req.getMessageTime() + getSystemTime() - startCounter);
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
@@ -162,9 +158,8 @@ public final class TimeManager {
         final long latency = getSystemTime() - req.getMessageTime();
         LOG.info("latency: {}", latency);
 
-        final Request.Builder rsp = Request.newBuilder();
+        final Request.Builder rsp = ProtobufUtilities.createBaseResponse(req);
 
-        rsp.setRequestType(Request.MessageType.TIME);
         rsp.setMessageTime(latency / 2);
         rsp.setResponseText(SEND_LATENCY_TO_CLIENT_MSG);
         return rsp.build();
