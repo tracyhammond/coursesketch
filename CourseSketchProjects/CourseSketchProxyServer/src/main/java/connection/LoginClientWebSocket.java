@@ -1,4 +1,4 @@
-package internalconnections;
+package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;

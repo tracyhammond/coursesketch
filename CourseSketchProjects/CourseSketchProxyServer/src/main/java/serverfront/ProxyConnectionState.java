@@ -1,6 +1,6 @@
 package serverfront;
 
-import internalconnections.LoginConnectionState;
+import connection.LoginConnectionState;
 
 /**
  * An extension of the login connection state this handles timing and the id.
