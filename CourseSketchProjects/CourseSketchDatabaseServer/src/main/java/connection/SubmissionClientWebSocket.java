@@ -90,7 +90,7 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                 }
             } catch (InvalidProtocolBufferException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                this.getParentServer().send(getConnectionFromState(state), ExceptionUtilities.createExceptionRequest(protoEx, req));
+                this.getParentServer().send(getConnectionFromState(state), ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
             final Request.Builder builder = Request.newBuilder(req);

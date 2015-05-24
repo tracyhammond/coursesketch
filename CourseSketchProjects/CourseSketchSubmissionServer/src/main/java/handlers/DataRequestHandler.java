@@ -62,7 +62,7 @@ public final class DataRequestHandler {
             } catch (Exception e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                return ExceptionUtilities.createExceptionRequest(protoEx, req);
+                return ExceptionUtilities.createExceptionRequest(req, protoEx);
             }
             resultReq.setOtherData(builder.build().toByteString());
             resultReq.setRequestType(MessageType.DATA_REQUEST);
@@ -70,7 +70,7 @@ public final class DataRequestHandler {
         } catch (InvalidProtocolBufferException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            return ExceptionUtilities.createExceptionRequest(protoEx, req);
+            return ExceptionUtilities.createExceptionRequest(req, protoEx);
         }
     }
 

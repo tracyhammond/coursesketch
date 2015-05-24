@@ -231,7 +231,7 @@ public abstract class AbstractServerWebSocketHandler {
     public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientWebSocket> connectionType) {
         final Message.ProtoException exception = ExceptionUtilities.createProtoException(new Exception("A server with connection type: "
                 + connectionType.getSimpleName() + " Is not connected correctly"));
-        return ExceptionUtilities.createExceptionRequest(exception, req);
+        return ExceptionUtilities.createExceptionRequest(req, exception);
     }
 
     /**
