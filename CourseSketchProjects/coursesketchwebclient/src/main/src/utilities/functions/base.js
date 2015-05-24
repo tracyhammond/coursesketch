@@ -1,6 +1,8 @@
 // jshint undef:false
 // jshint latedef:false
 
+// in case it was not defined before
+var CourseSketch = CourseSketch || {};
 
 if (typeof isUndefined === 'undefined') {
     /**
@@ -145,7 +147,7 @@ if (isUndefined(BaseException)) {
      * @class BaseException
      * Defines the base exception class that can be extended by all other exceptions.
      */
-    function BaseException() {
+    function BaseException(optionalMessage) {
         this.name = 'BaseException';
         /**
          * The level defines how bad it is. level 5 is the okayest exception
@@ -212,11 +214,18 @@ if (isUndefined(BaseException)) {
         this.getCause = function() {
             return this.cause;
         };
-    }
 
-    if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
-        CourseSketch.BaseException = CourseSketch.BaseException;
+        if (!isUndefined(optionalMessage)) {
+            this.setMessage(optionalMessage);
+        }
+        if (CourseSketch && CourseSketch.printStackTrace) {
+            this.createStackTrace();
+        }
     }
+}
+
+if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
+    CourseSketch.BaseException = CourseSketch.BaseException;
 }
 
 if (isUndefined(getTypeName)) {

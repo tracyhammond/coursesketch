@@ -1,3 +1,22 @@
+
+/**
+ * An exception that is used to represent problems with the advance data listener.
+ *
+ * @class DatabaseException
+ * @extends BaseException
+ */
+function AdvanceListenerException(message, cause) {
+    this.name = 'DatabaseException';
+    this.setMessage(message);
+    this.message = '';
+    this.setCause(cause);
+    this.createStackTrace();
+}
+
+AdvanceListenerException.prototype = new BaseException();
+
+
+
 /**
  * Allows for more separation for the Data Result.
  *
@@ -56,10 +75,11 @@ function AdvanceDataListener(connection, Request, defListener) {
     /**
      * Removes the function associated with the listener
      */
-    this.removeListener = function(messageType, requestId) {
+    function removeListener(messageType, requestId) {
         var localMap = requestMap[messageType];
         localMap[requestId] = undefined;
-    };
+    }
+    this.removeListener = removeListener;
 
     /**
      * Returns a function that is wrapped to process data results.
@@ -119,8 +139,8 @@ function AdvanceDataListener(connection, Request, defListener) {
         var messageType = msg.requestType;
         var localMap = requestMap[messageType];
         var listener = localMap[msg.requestId];
-        var func = listener.func;
-        if (!isUndefined(func)) {
+        if (!isUndefined(listener)) {
+            var func = listener.func;
             try {
                 func(evt, msg, listener);
             } catch (exception) {
@@ -149,18 +169,20 @@ function AdvanceDataListener(connection, Request, defListener) {
             if (!callbackCalled) {
                 callbackTimedOut = true;
                 callback(evt, msg, listener);
+                return;
             } else if (!callbackTimedOut) {
                 callbackCalled = true;
                 clearTimeout(timeoutVariable);
                 callback(evt, msg, listener);
+                return;
             }
-            throw new BaseException('We got into an odd state');
+            throw new AdvanceListenerException('We got into an odd state');
         };
         // set listener
         this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times);
 
         // send request
-        serverConnection.sendRequest(request);
+        connection.sendRequest(request);
 
         // set timeout
         timeoutVariable = setTimeout(function() {
@@ -183,7 +205,7 @@ function AdvanceDataListener(connection, Request, defListener) {
      */
     this.sendDataRequest = function sendDataRequest(itemRequest, callback, requestId, times) {
         if (isUndefined(callback)) {
-            throw new BaseException('Can not request data without a callback');
+            throw new AdvanceListenerException('Can not request data without a callback');
         }
         var dataRequest = CourseSketch.prutil.DataRequest();
 
