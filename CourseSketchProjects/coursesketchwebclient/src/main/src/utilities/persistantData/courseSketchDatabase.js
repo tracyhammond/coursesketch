@@ -160,27 +160,22 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Polls the server for updates, after all items
      */
     this.pollUpdates = function(callback) {
-        database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
-            if (isUndefined(result) || isUndefined(result.data)) {
-                dataSender.sendDataRequest(CourseSketch.prutil.ItemQuery.UPDATE);
-            } else {
-                var lastTime = result.data;
-                dataSender.sendDataRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
-            }
-        });
-        var functionCalled = false;
-        var timeout = setTimeout(function() {
-            if (!functionCalled && callback) {
-                functionCalled = true;
-                callback();
-            }
-        }, 5000);
-
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.UPDATE, function(evt, item) {
+        var updateListener = function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
             // TODO: there used to be update code here that would update the local cache
             // When that code isbeing used again to optimize load times please add back the update function here!
+            callback();
+        };
+        database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
+            var item = undefined;
+            if (isUndefined(result) || isUndefined(result.data)) {
+                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE);
+            } else {
+                var lastTime = result.data;
+                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
+            }
+            advanceDataListener.sendDataRequest(item, updateListener);
         });
     };
 

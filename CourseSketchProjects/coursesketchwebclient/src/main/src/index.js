@@ -46,7 +46,7 @@ function() {
     };
 
     window.addEventListener('beforeunload', function(e) {
-        var r = PROTOBUF_UITL.Request();
+        var r = CourseSketch.prutil.Request();
         r.setRequestType(Request.MessageType.CLOSE);
         connection.sendRequest(r);
         return 'you can close this window';

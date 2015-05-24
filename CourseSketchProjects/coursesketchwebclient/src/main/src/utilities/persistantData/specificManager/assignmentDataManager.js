@@ -200,7 +200,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
+            advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
                  // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
@@ -310,7 +310,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                         // after the entire list has been gone through pull the
                         // leftovers from the server
                         if (leftOverId.length >= 1) {
-                            var itemRequest = CourseSketch.PROTOBUF_UTIL.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT,
+                            var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.ASSIGNMENT,
                                     leftOverId);
                             advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
 
@@ -322,8 +322,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                                     return;
                                 }
                                 for (var i = 0; i < item.data.length; i++) {
-                                    var decodedAssignment = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                                        CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass());
+                                    var decodedAssignment = CourseSketch.prutil.decodeProtobuf(item.data[i],
+                                        CourseSketch.prutil.getSrlAssignmentClass());
                                     localScope.setAssignment(decodedAssignment);
                                     assignmentList.push(decodedAssignment);
                                 }

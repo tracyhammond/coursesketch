@@ -111,7 +111,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
 
         getCourseLocal(courseId, function(course) {
             if (isUndefined(course) || course instanceof DatabaseException) {
-                var itemRequest = CourseSketch.PROTOBUF_UTIL.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, [ courseId ]);
+                var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE, [ courseId ]);
                 advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
                     if (isUndefined(item.data) || item.data === null) {
                         courseCallback(new DatabaseException('The data sent back from the server for course: ' + courseId + ' does not exist.'));
@@ -173,7 +173,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
+            advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
                  // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
@@ -223,7 +223,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      */
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
         var callback = function(evt, item) {
             // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText !== '' && item.returnText !== 'null' && item.returnText !== null) {
@@ -247,7 +247,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         };
         if (userCourseId.length === 0 && !onlyLocal) {
-            sendDataRequest(itemRequest, callback);
+            advanceDataListener.sendDataRequest(itemRequest, callback);
         } else {
             // This calls the server for updates then creates a list from the
             // local data to appear fast
@@ -258,7 +258,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             // ask server for course list
             if (!onlyLocal && false) {
                 // TODO: this should maybe only ask after a certain amount of time since last updated?
-                sendDataRequest(itemRequest, callback);
+                advanceDataListener.sendDataRequest(itemRequest, callback);
             }
 
             var localCourseCallback = createBarrier(userCourseId.length, function() {
@@ -310,7 +310,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
                 courseCallback(course);
             }
 
-            advanceDataListener.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
+            advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
                 var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
@@ -376,12 +376,12 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      * @param {Function} callback called with a list of all courses meeting the search requirements.
      */
     parent.searchCourses = function(callback) {
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH);
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE_SEARCH);
         /**
          * Listens for the search result and displays the result given to it.
          */
-        advanceDataListener.sendDataRequest(itemRequest, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-                CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
+        advanceDataListener.sendDataRequest(itemRequest, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+                CourseSketch.prutil.ItemQuery.COURSE_SEARCH, function(evt, item) {
             // there was an error getting the user classes.
             if (isUndefined(item.data) || item.data === null) {
                 callback(new DatabaseException('The data sent back from the server for searching courses'));

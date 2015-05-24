@@ -292,7 +292,7 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (!(exception instanceof BaseException) || !(exception instanceof CourseSketch.prutil.getProtoExceptionClass())) {
+        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass())) {
             return this.errorToProtoException(exception);
         }
         var pException = CourseSketch.prutil.ProtoException();
@@ -422,7 +422,7 @@ function ProtobufSetup() {
      * @returns {ItemRequest}
      */
     this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
+        var itemRequest = CourseSketch.prutil.ItemRequest();
         itemRequest.setQuery(queryType);
 
         if (!isUndefined(idList)) {
@@ -558,7 +558,7 @@ function ProtobufSetup() {
      */
     this.cleanProtobuf = function(protobuf, protobufType) {
         // TODO: check to see if we can extract the type from the protobuf object.
-        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(protobuf.toArrayBuffer(), protobufType);
+        return CourseSketch.prutil.decodeProtobuf(protobuf.toArrayBuffer(), protobufType);
     };
 
     // makes all of the methods read only
