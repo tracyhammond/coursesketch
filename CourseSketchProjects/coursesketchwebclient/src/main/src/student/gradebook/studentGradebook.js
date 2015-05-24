@@ -82,7 +82,11 @@
         for (var i = 0; i < categoryList.length; i++) {
             var categoryElement = container.cloneNode(true);
             categoryMap.set(categoryList[i], categoryElement.firstElementChild);
-            categoryElement.querySelector('.collapsible-header').textContent = categoryList[i];
+
+            var header = categoryElement.querySelector('.collapsible-header');
+            header.textContent = categoryList[i];
+            $(header).addClass('mdi-av-play-arrow');
+
             table.appendChild(categoryElement);
         }
     }
