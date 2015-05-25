@@ -5,11 +5,11 @@
      * tansfering the sketches into submissions to be used to make experiments
      * for testing purposes
      */
-    var submission1 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
-    var submission2 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
-    var submission3 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
-    var submission4 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
-    var submission5 = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
+    var submission1 = CourseSketch.prutil.SrlSubmission();
+    var submission2 = CourseSketch.prutil.SrlSubmission();
+    var submission3 = CourseSketch.prutil.SrlSubmission();
+    var submission4 = CourseSketch.prutil.SrlSubmission();
+    var submission5 = CourseSketch.prutil.SrlSubmission();
 
     submission1.setUpdateList(CourseSketch.fakeSketches[0]);
     submission2.setUpdateList(CourseSketch.fakeSketches[1]);
@@ -21,11 +21,11 @@
      * setting the submissions to experiments to be used as test data
      */
 
-    var experiment1 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
-    var experiment2 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
-    var experiment3 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
-    var experiment4 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
-    var experiment5 = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+    var experiment1 = CourseSketch.prutil.SrlExperiment();
+    var experiment2 = CourseSketch.prutil.SrlExperiment();
+    var experiment3 = CourseSketch.prutil.SrlExperiment();
+    var experiment4 = CourseSketch.prutil.SrlExperiment();
+    var experiment5 = CourseSketch.prutil.SrlExperiment();
 
     experiment1.setSubmission(submission1);
     experiment2.setSubmission(submission2);
@@ -73,5 +73,5 @@
  * cleans the update to make sure it is the same as all new versions
  */
 function cleanSubmission(submisson) {
-    return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(submisson.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlSubmissionClass());
+    return CourseSketch.prutil.decodeProtobuf(submisson.toArrayBuffer(), CourseSketch.prutil.getSrlSubmissionClass());
 }

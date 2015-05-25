@@ -11,9 +11,9 @@ validateFirstRun(document.currentScript);
          * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.saveTextBox = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getActionCreateTextBoxClass());
+            var element = CourseSketch.prutil.LectureElement();
             element.id = generateUUID();
             element.textBox = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -24,9 +24,9 @@ validateFirstRun(document.currentScript);
          * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getSrlQuestionClass());
+            var element = CourseSketch.prutil.LectureElement();
             element.id = generateUUID();
             element.question = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -37,9 +37,9 @@ validateFirstRun(document.currentScript);
          * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getImageClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getImageClass());
+            var element = CourseSketch.prutil.LectureElement();
             element.id = generateUUID();
             element.image = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -50,9 +50,9 @@ validateFirstRun(document.currentScript);
          * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.saveEmbeddedHtml = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getEmbeddedHtmlClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getEmbeddedHtmlClass());
+            var element = CourseSketch.prutil.LectureElement();
             element.id = generateUUID();
             element.embeddedHtml = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -110,7 +110,7 @@ validateFirstRun(document.currentScript);
          */
         CourseSketch.lecturePage.newSlide = function() {
             CourseSketch.lecturePage.addWaitOverlay();
-            var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide = CourseSketch.prutil.LectureSlide();
             slide.id = generateUUID();
             slide.lectureId = CourseSketch.lecturePage.lecture.id;
             slide.unlocked = true;
@@ -120,7 +120,7 @@ validateFirstRun(document.currentScript);
              * @memberof "lecturePage/instructor"
              */
             var finishGetCourseLecture = function(lecture) {
-                var id = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+                var id = CourseSketch.prutil.IdsInLecture();
                 id.id = slide.id;
                 id.isSlide = true;
                 id.unlocked = true;

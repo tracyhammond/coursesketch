@@ -65,11 +65,11 @@
             $(real.shadowRoot.querySelector('#textBoxDialog')).offset({ top: 200, left: 100 });
             real.shadowRoot.querySelector('#creatorText').value = 'Test value'
             real.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_TEXTBOX,
                         'Expecting command type CREATE_TEXTBOX from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 var height = decoded.getHeight();
                 var width = decoded.getWidth();
                 var x = decoded.getX();
@@ -114,7 +114,7 @@
 
         test("Load Data", function(assert) {
             expect(7);
-            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            var textBoxProto = CourseSketch.prutil.ActionCreateTextBox();
             textBoxProto.setText("Test text");
             textBoxProto.setHeight(100);
             textBoxProto.setWidth(250);
@@ -126,11 +126,11 @@
             real.initializeElement(template.cloneNode(true));
             real.loadData(textBoxProto);
             real.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_TEXTBOX,
                         'Expecting command type CREATE_TEXTBOX from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 var height = decoded.getHeight();
                 var width = decoded.getWidth();
                 var x = decoded.getX();
@@ -166,8 +166,8 @@
             real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-x', 50);
             real.shadowRoot.querySelector('#textBoxDialog').setAttribute('data-y', 75);
             real.setFinishedListener(function(command) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 var x = decoded.getX();
                 var y = decoded.getY();
                 assert.equal(x, '150', 'Expected 100 for data-x. Got ' + x);
@@ -178,7 +178,7 @@
 
         test("Load Data called before initializeElement is called", function(assert) {
             expect(7);
-            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            var textBoxProto = CourseSketch.prutil.ActionCreateTextBox();
             textBoxProto.setText("Test text");
             textBoxProto.setHeight(100);
             textBoxProto.setWidth(250);
@@ -190,11 +190,11 @@
             real.loadData(textBoxProto);
             real.initializeElement(template.cloneNode(true));
             real.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_TEXTBOX,
                         'Expecting command type CREATE_TEXTBOX from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 var height = decoded.getHeight();
                 var width = decoded.getWidth();
                 var x = decoded.getX();
@@ -221,7 +221,7 @@
 
         test("Load data in viewing mode selects the node correctly", function(assert) {
             expect(2);
-            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            var textBoxProto = CourseSketch.prutil.ActionCreateTextBox();
             textBoxProto.setText("Test text");
             textBoxProto.setHeight(116); // Some really weird stuff happens with saving due to padding of elements. See textBox.js loadData method for slightly more info
             textBoxProto.setWidth(250);

@@ -83,9 +83,9 @@ function Connection(uri, encrypted, attemptReconnect) {
             websocket.onmessage = function(evt) {
                 /*jshint maxcomplexity:15 */
                 try {
-                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
+                    var MessageType = CourseSketch.prutil.getRequestClass().MessageType;
                     // Decode the Request
-                    var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
+                    var msg = CourseSketch.prutil.getRequestClass().decode(evt.data);
                     // console.log('request decoded succesfully ');
                     if (msg.requestType === MessageType.TIME) {
                         console.log('getting from time');
@@ -111,8 +111,8 @@ function Connection(uri, encrypted, attemptReconnect) {
                         //console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType === MessageType.ERROR) {
-                        var exception = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(msg.getOtherData(),
-                            CourseSketch.PROTOBUF_UTIL.getProtoExceptionClass());
+                        var exception = CourseSketch.prutil.decodeProtobuf(msg.getOtherData(),
+                            CourseSketch.prutil.getProtoExceptionClass());
 
                         console.log('exception object', exception);
                         console.log(msg.getResponseText());
@@ -340,10 +340,11 @@ function Connection(uri, encrypted, attemptReconnect) {
     function clientReciveTimeDiff(req) {
         var startCounter = localScope.getCurrentTime();
         timeDifferance = dcodeIO.Long.fromString('' + req.getMessageTime()).subtract(localScope.getCurrentTime());
-        var rsp = CourseSketch.PROTOBUF_UTIL.Request();
-        rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
+        var rsp = CourseSketch.prutil.Request();
+        rsp.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.TIME);
         rsp.setMessageTime(dcodeIO.Long.fromString('' + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
+        rsp.setRequestId(generateUUID());
         return rsp;
     }
 
