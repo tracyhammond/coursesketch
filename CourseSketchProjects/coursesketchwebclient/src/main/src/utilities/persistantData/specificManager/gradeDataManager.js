@@ -4,14 +4,13 @@
  * Created by gigemjt on 5/12/15.
  *
  * @param {CourseSketchDatabase} parent
- * @param {AdvanceDataListener} advanceDataListener
+ * @param {AdvanceDataListener} advanceDataListener An object that makes sending data much easier.
  * @param {IndexedDB} parentDatabase (Not used in this manager)
- * @param {Function} sendData A function that makes sending data much easier
  * @param {SrlRequest} Request A shortcut to a request
  * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
  * @constructor
  */
-function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
+function GradeDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
 
     /**
      * Adds a new grade change to the database.
@@ -52,7 +51,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
         console.log('getting grade id list: ', idList);
         var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, idList, gradingQuery);
 
-        advanceDataListener.semdDataRequest(itemRequest, function(evt, item) {
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
                 protoGrade), item);
