@@ -378,10 +378,14 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             throw new DatabaseException('Calling getGrade with an undefined callback');
         }
 
-        var idList = [ courseId ];
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, [ courseId ]);
 
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId, item));
+                return;
+            }
             // after listener is removed
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 // not calling the state callback because this should skip that step.
@@ -394,7 +398,6 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             callback(decodedRoster.idChain);
         });
 
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, idList);
     }
     parent.getCourseRoster = getCourseRoster;
 
