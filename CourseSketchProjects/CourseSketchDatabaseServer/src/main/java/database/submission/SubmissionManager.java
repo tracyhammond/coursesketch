@@ -18,7 +18,6 @@ import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
@@ -104,7 +103,7 @@ public final class SubmissionManager {
      * @param internalConnections A manager of connections to another database.
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      */
-    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
+    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
 
         final ItemRequest.Builder build = ItemRequest.newBuilder();
@@ -123,7 +122,8 @@ public final class SubmissionManager {
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
 
-        final Request.Builder requestBuilder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, data.build(), sessionInfo);
+        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(sessionInfo);
+        requestBuilder.setOtherData(data.build().toByteString());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
@@ -146,7 +146,7 @@ public final class SubmissionManager {
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static void mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs, final String userId,
-            final String problemId, final String sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            final String problemId, final Request sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {
@@ -175,7 +175,8 @@ public final class SubmissionManager {
         final ItemRequest itemRequest = createSubmissionRequest(dbObject, review);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(itemRequest);
-        final Request.Builder requestBuilder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, data.build(), sessionInfo);
+        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(sessionInfo);
+        requestBuilder.setOtherData(data.build().toByteString());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
