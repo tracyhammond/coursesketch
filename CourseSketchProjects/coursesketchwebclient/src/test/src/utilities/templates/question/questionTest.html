@@ -82,11 +82,11 @@
             mc.addAnswer();
             mc.setCorrectAnswer(undefined, mc.shadowRoot.getElementById("1"));
             question.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_QUESTION,
                         'Expecting command type CREATE_QUESTION from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getSrlQuestionClass());
                 assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
             });
             question.saveData();
@@ -99,11 +99,11 @@
             document.querySelector("#question").appendChild(question);
             question.addAnswerContent(sketch);
             question.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_QUESTION,
                         'Expecting command type CREATE_QUESTION from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getSrlQuestionClass());
                 assert.equal(question.shadowRoot.querySelector("#text").textContent, decoded.questionText, "Question text is the same in proto and DOM");
             });
             question.saveData();
@@ -125,11 +125,11 @@
             expect(0);
             var question = document.createElement("question-test");
             document.querySelector("#question").appendChild(question);
-            var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
+            var questionProto = CourseSketch.prutil.SrlQuestion();
             questionProto.id = generateUUID();
             questionProto.setQuestionText("How awesome are CourseSketch Lectures?");
-            var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-            var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+            var correctNav = CourseSketch.prutil.LectureNavigator();
+            var incorrectNav = CourseSketch.prutil.LectureNavigator();
             correctNav.nextLectureId = "1";
             correctNav.nextSlide = 0;
             incorrectNav.nextLectureId = "2";

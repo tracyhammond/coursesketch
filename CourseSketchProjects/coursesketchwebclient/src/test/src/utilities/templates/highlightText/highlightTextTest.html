@@ -89,11 +89,11 @@
             var real = createTestHighlight();
 
             real.setFinishedListener(function(command, event, commandId) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT,
                         'Expecting command type CREATE_HIGHLIGHT_TEXT from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getActionCreateHighlightTextClass());
                 var nodes = decoded.getSelectedNodePath();
                 var loadNode = nodes[0];
                 assert.equal(loadNode.getStartPath(), '/HTML[1]/BODY[1]/DIV[3]/P[1]/text()[1]');
@@ -155,8 +155,8 @@
         test("Load Data", function(assert) {
             expect(3);
             var real = createTestHighlight();
-            var nodeProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
-            var highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            var nodeProto = CourseSketch.prutil.SelectedNodePath();
+            var highlightProto = CourseSketch.prutil.ActionCreateHighlightText();
             nodeProto.setStartPath(real.startPath);
             nodeProto.setStartOffset(real.startOffset);
             nodeProto.setEndPath(real.endPath);
@@ -187,8 +187,8 @@
         test("Load data called before initialize data", function(assert) {
             expect(3);
             var real = createTestHighlight();
-            var nodeProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
-            var highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            var nodeProto = CourseSketch.prutil.SelectedNodePath();
+            var highlightProto = CourseSketch.prutil.ActionCreateHighlightText();
             nodeProto.setStartPath(real.startPath);
             nodeProto.setStartOffset(real.startOffset);
             nodeProto.setEndPath(real.endPath);

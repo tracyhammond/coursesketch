@@ -67,6 +67,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
+        if (CourseSketch.isException(courseList)) {
+            CourseSketch.clientException(courseList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true && !courseManagement.gradebookMode) {
             builder.setInstructorCard(true);
@@ -77,10 +80,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         });
 
         if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
-            if (CourseSketch.connection.isInstructor) {
-                builder.setEmptyListMessage('Please Create a new course to get started!');
+            if (!isUndefined(courseList.getCause()) && courseList.getCause() instanceof CourseSketch.AdvanceListenerException) {
+                CourseSketch.clientException(courseList);
+                builder.setEmptyListMessage('An exception occurred while getting the course. Please try again later.');
+            } else if (CourseSketch.connection.isInstructor) {
+                builder.setEmptyListMessage('Please create a new course to get started!');
             } else {
-                builder.setEmptyListMessage('Please add a new course to get started');
+                builder.setEmptyListMessage('Please add a new course to get started.');
             }
             courseList = [];
         }
@@ -129,13 +135,17 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showAssignments = function(assignmentList, course) {
+        if (CourseSketch.isException(assignmentList)) {
+            CourseSketch.clientException(assignmentList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            if (!isUndefined(course) && course.getState() !== null &&!(course.getState().accessible)) {
+            builder.setEmptyListMessage('An exception was thrown, so assignments can not be loaded.');
+            if (!isUndefined(course) && course.getState() !== null && !(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
             assignmentList = [];
@@ -184,12 +194,16 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * @memberof courseManagement
      */
     courseManagement.showProblems = function(problemList, assignment) {
+        if (CourseSketch.isException(problemList)) {
+            CourseSketch.clientException(problemList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
+            builder.setEmptyListMessage('An exception was thrown so problems can not be loaded.');
             problemList = [];
             if (!isUndefined(assignment) && assignment.getState() !== null && !assignment.getState().accessible) {
                 builder.setEmptyListMessage('This assignment is currently not available. ' +
