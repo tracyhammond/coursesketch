@@ -160,6 +160,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Polls the server for updates, after all items
      */
     this.pollUpdates = function(callback) {
+        /**
+         * Called from the server.
+         *
+         * @param {Event} evt websocket event.
+         * @param {ItemResult | BaseException} item The response from the server.
+         */
         var updateListener = function(evt, item) {
             if (isException(item)) {
                 CourseSketch.clientException(item);

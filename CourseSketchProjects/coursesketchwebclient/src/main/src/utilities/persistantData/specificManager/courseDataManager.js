@@ -237,6 +237,12 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
         var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
+        /**
+         * Called when the server responds.
+         *
+         * @param {Event} evt websocket event
+         * @param {ItemResult | BaseException} item The result from the server.
+         */
         var callback = function(evt, item) {
             if (isException(item)) {
                 courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
