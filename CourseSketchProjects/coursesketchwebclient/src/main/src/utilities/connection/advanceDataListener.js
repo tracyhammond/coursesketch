@@ -31,7 +31,7 @@ function AdvanceDataListener(connection, Request, defListener) {
     requestMap[Request.MessageType.DATA_REQUEST] = {};
     requestMap[Request.MessageType.DATA_INSERT] = {};
     requestMap[Request.MessageType.DATA_UPDATE] = {};
-    var TIMEOUT_CONST = "TIMED_OUT";
+    var TIMEOUT_CONST = 'TIMED_OUT';
 
     var localScope = this;
     var defaultListener = defListener || false;
@@ -47,8 +47,12 @@ function AdvanceDataListener(connection, Request, defListener) {
     };
 
     /**
-     * Sets the listener to listen for database code.
-     * @param {Number} [times] the number of times you want the function to be called before it is removed;
+     * Sets the listener to listen for server response.
+     *
+     * @param {String} messageType The message type of the request.
+     * @param {String} requestId The unique identifier for the request.
+     * @param {Function} func The function that is called as a result of listening.
+     * @param {Number} [times] the number of times you want the function to be called before it is removed.
      */
     function setListener(messageType, requestId, func, times) {
         var localMap = requestMap[messageType];
@@ -57,16 +61,16 @@ function AdvanceDataListener(connection, Request, defListener) {
             func: func,
             times: (isUndefined(times)? 1 : times)
         };
-    };
+    }
 
     /**
      * Sets the listener to listen for database code.
      *
      * And it also unwraps the DataResult type.
-     * @param {MessageType} messageType
-     * @param {String} requestId
-     * @param {Function} func The function that is called as a result of listening
-     * @param {Number} [times] the number of times you want the function to be called before it is removed;
+     * @param {MessageType} messageType The message type of the request.
+     * @param {String} requestId The unique identifier for the request.
+     * @param {Function} func The function that is called as a result of listening.
+     * @param {Number} [times] the number of times you want the function to be called before it is removed.
      */
     this.setDataResultListener = function(messageType, requestId, func, times) {
         setListener(messageType, requestId, queryWrap(func), times);
@@ -83,8 +87,9 @@ function AdvanceDataListener(connection, Request, defListener) {
 
     /**
      * Returns a function that is wrapped to process data results.
+     *
      * @param {Function} func The function that is wrapper to process data results.
-     * @returns {Function}
+     * @returns {Function} A wrapped function that processes data results.
      */
     function queryWrap(func) {
         return function(evt, msg, listener) {
@@ -162,14 +167,26 @@ function AdvanceDataListener(connection, Request, defListener) {
     });
 
     /**
+     * Sends a request that will timeout after the server.
      *
-     * @param request
-     * @param callback
+     * @param {Request} request The request being sent to the server.
+     * @param {Function} callback The function that is called as a result of listening.
+     * @param {Number} [times] The number of times you want the function to be called before it is removed.
      */
     this.sendRequestWithTimeout = function(request, callback, times) {
         var callbackCalled = false;
         var callbackTimedOut = false;
         var timeoutVariable = undefined;
+        /**
+         * A wrapped callback that handles the timeout.
+         *
+         * If the regular function is called the timeout is cleared.
+         * If the timeout version is called then it will not call the regular version.
+         * This is called for every item result.
+         * @param {Event} evt WebsocketEvent
+         * @param {Request|BaseException} msg The protobuf request object sent from the server or an exception that occured along the way.
+         * @param {Function} listener The user function that is called as a result of listening.
+         */
         var wrappedCallback = function(evt, msg, listener) {
             if ((isUndefined(msg) || msg.otherData === TIMEOUT_CONST || msg instanceof BaseException) && !callbackCalled) {
                 callbackTimedOut = true;
@@ -181,7 +198,8 @@ function AdvanceDataListener(connection, Request, defListener) {
                 callback(evt, msg, listener);
                 return;
             }
-            throw new AdvanceListenerException('We got into an odd state');
+            // it appears the server did eventually respond
+            throw new AdvanceListenerException('The server responded but took too long to respond.');
         };
         // set listener
         this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times);
@@ -225,6 +243,8 @@ function AdvanceDataListener(connection, Request, defListener) {
      * Inserts data into the server database.
      *
      * (only inserts a single one right now)
+     * @param {ItemQuery} queryType The type of query it is.
+     * @param {ByteArray} data The protobuf bytes that are being sent to the server.
      * @param {Function} callback The function that is called as a result of listening.
      * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
      * @param {Number} [times] The number of times you want the function to be called before it is removed;
@@ -244,8 +264,8 @@ function AdvanceDataListener(connection, Request, defListener) {
     /**
      * Sends an update to the server for the data to be updated.
      *
-     * @param {QueryType} queryType
-     * @oaram {ByteArray} data
+     * @param {ItemQuery} queryType The type of query it is.
+     * @param {ByteArray} data The protobuf bytes that are being sent to the server.
      * @param {Function} callback The function that is called as a result of listening.
      * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
      * @param {Number} [times] The number of times you want the function to be called before it is removed;

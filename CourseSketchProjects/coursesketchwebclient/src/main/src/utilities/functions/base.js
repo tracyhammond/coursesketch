@@ -238,8 +238,10 @@ if (CourseSketch && isUndefined(isException) && !isUndefined(CourseSketch.isExce
 
 if (isUndefined(isException)) {
     /**
+     * Checks to see if the input is an exception.
      *
-     * @param exception
+     * @param {*} exception What we want to see is an exception.
+     * @return {Boolean} True if the input is an exception or error. False otherwise.
      */
     function isException(exception) {
         if (isUndefined(exception) || exception === null) {
@@ -250,10 +252,9 @@ if (isUndefined(isException)) {
             return true;
         }
 
-        if (!isUndefined(exception.name) && exception.name.endsWith('Exception')) {
-            return true;
-        }
-        return false;
+        // returns true if the below statement is true.
+        return (!isUndefined(exception.name) && exception.name.endsWith('Exception'));
+
     }
 }
 

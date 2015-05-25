@@ -292,8 +292,8 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass())
-            && !(exception instanceof CourseSketch.BaseException)) {
+        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass()) &&
+            !(exception instanceof CourseSketch.BaseException)) {
             return this.errorToProtoException(exception);
         }
         var pException = CourseSketch.prutil.ProtoException();
@@ -417,10 +417,10 @@ function ProtobufSetup() {
     /**
      * Creates an itemRequest from the given data.
      *
-     * @param queryType
-     * @param idList
-     * @param advanceQuery
-     * @returns {ItemRequest}
+     * @param {ItemQuery} queryType The query type of the object.
+     * @param {String | List<String>} [idList] A list of ids used for retrieving data from the database.
+     * @param {ByteArray} [advanceQuery] A protobuf object used to represent more complex queries.
+     * @returns {ItemRequest} An item request from the data.
      */
     this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
         var itemRequest = CourseSketch.prutil.ItemRequest();
@@ -437,6 +437,7 @@ function ProtobufSetup() {
 
     /**
      * Creates a protobuf date time object.
+     *
      * @param {Number|Date|Long} inputDateTime representing the time that this object should be created with.
      * @return {DateTime} A protobuf date time objct that can be used for date stuff.
      */
@@ -553,9 +554,13 @@ function ProtobufSetup() {
     /**
      * Returns a "clean" version of the protobuf files that can be considered a clone.
      *
-     * @param protobuf
-     * @param protobufType
-     * @returns {ProyobufObject}
+     * "clean" means that the protobuf object is compiled into a byteArray then immediately decompiled.
+     * The purpose of cleaning is in case you want to prototype a protobuf object but the object was created on an old version of objects.
+     * Then the protubf would not correctly apply to this new object.
+     *
+     * @param {ProtobufObject} protobuf An object that we want to "clean".
+     * @param {ProtobufMessage} protobufType A class representing the object we want to "clean".
+     * @returns {ProyobufObject} A clean version of the object we sent in.
      */
     this.cleanProtobuf = function(protobuf, protobufType) {
         // TODO: check to see if we can extract the type from the protobuf object.
