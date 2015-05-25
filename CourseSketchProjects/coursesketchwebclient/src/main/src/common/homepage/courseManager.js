@@ -82,11 +82,11 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
             if (!isUndefined(courseList.getCause()) && courseList.getCause() instanceof CourseSketch.AdvanceListenerException) {
                 CourseSketch.clientException(courseList);
-                builder.setEmptyListMessage('An exception occured while getting the course please try again later');
+                builder.setEmptyListMessage('An exception occurred while getting the course. Please try again later.');
             } else if (CourseSketch.connection.isInstructor) {
-                builder.setEmptyListMessage('Please Create a new course to get started!');
+                builder.setEmptyListMessage('Please create a new course to get started!');
             } else {
-                builder.setEmptyListMessage('Please add a new course to get started');
+                builder.setEmptyListMessage('Please add a new course to get started.');
             }
             courseList = [];
         }
@@ -142,7 +142,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            builder.setEmptyListMessage('an exception was thrown so assignments can not be loaded');
+            builder.setEmptyListMessage('An exception was thrown, so assignments can not be loaded.');
             if (!isUndefined(course) && course.getState() !== null && !(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
@@ -201,7 +201,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
-            builder.setEmptyListMessage('an exception was thrown so problems can not be loaded');
+            builder.setEmptyListMessage('An exception was thrown so problems can not be loaded.');
             problemList = [];
             if (!isUndefined(assignment) && assignment.getState() !== null && !assignment.getState().accessible) {
                 builder.setEmptyListMessage('This assignment is currently not available. ' +
