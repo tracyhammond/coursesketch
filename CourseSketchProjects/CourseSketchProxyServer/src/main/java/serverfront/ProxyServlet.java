@@ -3,7 +3,7 @@ package serverfront;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
-import internalconnections.ProxyConnectionManager;
+import connection.ProxyConnectionManager;
 
 /**
  *

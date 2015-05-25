@@ -101,7 +101,7 @@ validateFirstRun(document.currentScript);
          * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
-            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture = CourseSketch.prutil.Lecture();
             lecture.courseId = currentCourse;
             lecture.name = 'Untitled Lecture';
             lecture.id = generateUUID();

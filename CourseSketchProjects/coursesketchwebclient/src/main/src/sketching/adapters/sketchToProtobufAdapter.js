@@ -7,7 +7,7 @@
      * @memberof SRL_Point
      */
     SRL_Point.prototype.sendToProtobuf = function(scope) {
-        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
+        var proto = CourseSketch.prutil.ProtoSrlPoint();
         proto.id = this.getId();
         var n = this.getTime();
         proto.setTime('' + n);
@@ -53,7 +53,7 @@
      * @memberof SRL_Stroke
      */
     SRL_Stroke.prototype.sendToProtobuf = function(scope) {
-        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
+        var proto = CourseSketch.prutil.ProtoSrlStroke();
         proto.id = this.getId();
         var n = this.getTime();
         proto.setTime('' + n);
@@ -96,7 +96,7 @@
      * @memberof SRL_Shape
      */
     SRL_Shape.prototype.sendToProtobuf = function(scope) {
-        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlShape();
+        var proto = CourseSketch.prutil.ProtoSrlShape();
 
         var interpretations = this.getInterpretations();
         var protoInterp = [];
@@ -148,7 +148,7 @@
      * @memberof SRL_Interpretation
      */
     SRL_Interpretation.prototype.sendToProtobuf = function(scope) {
-        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlInterpretation();
+        var proto = CourseSketch.prutil.ProtoSrlInterpretation();
         proto.label = this.label;
         proto.confidence = this.confidence;
         proto.complexity = this.complexity;
@@ -186,7 +186,7 @@
      * Used locally to encode an SRL_Object into its protobuf type.
      */
     function encodeSrlObject(scope, object) {
-        var proto = CourseSketch.PROTOBUF_UTIL.ProtoSrlObject();
+        var proto = CourseSketch.prutil.ProtoSrlObject();
 
         if (object.check_type() === SRL_ShapeType) {
             proto.type = SrlObject.ObjectType.SHAPE;

@@ -1,37 +1,37 @@
 (function() {
 	CourseSketch.fakeLectures = [];
-	
-	var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture3 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture4 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture5 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture6 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture7 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture8 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture9 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture10 = CourseSketch.PROTOBUF_UTIL.Lecture();
 
-	var slideId1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId3 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId4 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId5 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId6 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId7 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId8 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId9 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId10 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId11 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId12 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId13 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId14 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId15 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId16 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId17 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId18 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId19 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId20 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+	var lecture1 = CourseSketch.prutil.Lecture();
+	var lecture2 = CourseSketch.prutil.Lecture();
+	var lecture3 = CourseSketch.prutil.Lecture();
+	var lecture4 = CourseSketch.prutil.Lecture();
+	var lecture5 = CourseSketch.prutil.Lecture();
+	var lecture6 = CourseSketch.prutil.Lecture();
+	var lecture7 = CourseSketch.prutil.Lecture();
+	var lecture8 = CourseSketch.prutil.Lecture();
+	var lecture9 = CourseSketch.prutil.Lecture();
+	var lecture10 = CourseSketch.prutil.Lecture();
+
+	var slideId1 = CourseSketch.prutil.IdsInLecture();
+	var slideId2 = CourseSketch.prutil.IdsInLecture();
+	var slideId3 = CourseSketch.prutil.IdsInLecture();
+	var slideId4 = CourseSketch.prutil.IdsInLecture();
+	var slideId5 = CourseSketch.prutil.IdsInLecture();
+	var slideId6 = CourseSketch.prutil.IdsInLecture();
+	var slideId7 = CourseSketch.prutil.IdsInLecture();
+	var slideId8 = CourseSketch.prutil.IdsInLecture();
+	var slideId9 = CourseSketch.prutil.IdsInLecture();
+	var slideId10 = CourseSketch.prutil.IdsInLecture();
+	var slideId11 = CourseSketch.prutil.IdsInLecture();
+	var slideId12 = CourseSketch.prutil.IdsInLecture();
+	var slideId13 = CourseSketch.prutil.IdsInLecture();
+	var slideId14 = CourseSketch.prutil.IdsInLecture();
+	var slideId15 = CourseSketch.prutil.IdsInLecture();
+	var slideId16 = CourseSketch.prutil.IdsInLecture();
+	var slideId17 = CourseSketch.prutil.IdsInLecture();
+	var slideId18 = CourseSketch.prutil.IdsInLecture();
+	var slideId19 = CourseSketch.prutil.IdsInLecture();
+	var slideId20 = CourseSketch.prutil.IdsInLecture();
 
 	slideId1.id = "1";
 	slideId1.isSlide = true;
@@ -153,7 +153,7 @@
 	lecture3.description = "Learn how to make a super awesome CourseSketch lecture!";
 	lecture3.idList = idList3;
 	CourseSketch.fakeLectures.push(lecture3);
-	
+
 	lecture4.id = "4";
 	lecture4.courseId = "2";
 	lecture4.name = "CourseSketch Tutorials";
@@ -188,7 +188,7 @@
 	lecture8.description = "This class will teach you one of the basic challenges behind weaving baskets underwater: hydronics.";
 	lecture8.idList = idList8;
 	CourseSketch.fakeLectures.push(lecture8);
-	
+
 	lecture9.id = "9";
 	lecture9.courseId = "5";
 	lecture9.name = "Using the Fake Page";
