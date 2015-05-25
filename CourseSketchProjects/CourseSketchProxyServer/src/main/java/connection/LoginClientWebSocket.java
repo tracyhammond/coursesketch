@@ -1,4 +1,4 @@
-package internalconnections;
+package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -8,6 +8,7 @@ import protobuf.srl.request.Message;
 import utilities.ConnectionException;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 import coursesketch.server.base.ClientWebSocket;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -80,7 +81,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             } catch (InvalidProtocolBufferException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 this.getParentServer().send(getConnectionFromState(getStateFromId(request.getSessionInfo())),
-                        ExceptionUtilities.createExceptionRequest(protoEx, request));
+                        ExceptionUtilities.createExceptionRequest(request, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
 
             }
@@ -89,7 +90,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             if (login == null) {
                 LOG.error("Login failed to get to the client");
                 final Request result = ProxyConnectionManager.createClientRequest(request);
-                final Request.Builder errorMessage = Request.newBuilder(result);
+                final Request.Builder errorMessage = ProtobufUtilities.createBaseResponse(result, true);
                 errorMessage.setResponseText(errorMessage.getResponseText()
                         + " : The data sent back from the login server was not the correct format");
                 this.getParentServer().send(getConnectionFromState(state), result);
@@ -128,9 +129,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
     private void createUser(final LoginInformation login, final Request request) {
         if (login.getIsRegistering() && login.getIsLoggedIn()) {
             // extra steps that we need to do
-            final Request.Builder createUser = Request.newBuilder();
-            createUser.setServersideId(request.getServersideId());
-            createUser.setRequestType(MessageType.DATA_INSERT);
+
             final DataSend.Builder dataSend = DataSend.newBuilder();
             final ItemSend.Builder itemSend = ItemSend.newBuilder();
             itemSend.setQuery(ItemQuery.USER_INFO);
@@ -139,7 +138,10 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             user.setUsername(login.getUsername());
             itemSend.setData(user.build().toByteString());
             dataSend.addItems(itemSend);
-            createUser.setOtherData(dataSend.build().toByteString());
+            final Request.Builder createUser = ProtobufUtilities.createRequestFromData(MessageType.DATA_INSERT, dataSend.build(),
+                    request.getSessionInfo());
+
+            createUser.setServersideId(request.getServersideId());
             try {
                 this.getParentManager().send(createUser.build(), request.getSessionInfo(), DataClientWebSocket.class);
             } catch (ConnectionException e) {
