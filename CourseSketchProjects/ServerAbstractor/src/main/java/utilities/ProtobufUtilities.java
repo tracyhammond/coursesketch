@@ -9,8 +9,11 @@ import protobuf.srl.request.Message;
  *
  * Created by gigemjt on 5/24/15.
  */
-public class ProtobufUtilities {
+public final class ProtobufUtilities {
 
+    /**
+     * An exception that is specific to protobuf errors.
+     */
     public static class ProtobufException extends RuntimeException {
 
         /**
@@ -19,6 +22,7 @@ public class ProtobufUtilities {
          * initialized by a call to {@link #initCause}.
          */
         public ProtobufException() {
+            super();
         }
 
         /**
@@ -77,7 +81,7 @@ public class ProtobufUtilities {
      * Empty constructor.
      */
     private ProtobufUtilities() {
-
+        // empty constructor.
     }
 
     /**
@@ -93,8 +97,9 @@ public class ProtobufUtilities {
      *
      * If the input is null a blank request is returned.
      * If deep is true then all data is copied from the input request
-     * @param req
-     * @return
+     * @param req The request that contains the information that is being copied.
+     * @param deep True if the entire request is copied. If false then only the minimum needed to be sent from the server is saved.
+     * @return A copy of the Request in builder form.
      */
     public static Message.Request.Builder createBaseResponse(final Message.Request req, final boolean deep) {
         if (req == null) {
@@ -125,8 +130,8 @@ public class ProtobufUtilities {
      * If the input is null a blank request is returned.
      *
      * This called {@link #createBaseResponse(Message.Request, boolean)} with deep being false.
-     * @param req
-     * @return
+     * @param req The request that contains the information that is being copied.
+     * @return A copy of the Request in builder form.
      */
     public static Message.Request.Builder createBaseResponse(final Message.Request req) {
         return createBaseResponse(req, false);
@@ -138,14 +143,18 @@ public class ProtobufUtilities {
      * This contains information that does not change when responding.
      * Right now this contains:
      * <ul>
-     *     <li>requestId</li>
      *     <li>requestType</li>
      *     <li>otherData</li>
+     *     <li>sessionInfo</li>
+     *     <li>requestId</li>
      * </ul>
      *
      * If the input is null a blank request is returned
      * @param type An exception is thrown if this is null.
-     * @return
+     * @param data compiled to a byte array and set as otherData
+     * @param sessionInfo information about where the request came from.
+     * @param requestId sets on automatically if this null.
+     * @return A built request containing all of this information
      */
     public static Message.Request.Builder createRequestFromData(final Message.Request.MessageType type, final GeneratedMessage data,
             final String sessionInfo, final String requestId) {
@@ -170,14 +179,65 @@ public class ProtobufUtilities {
         return response;
     }
 
+    /**
+     * Creates a base response from the request.
+     *
+     * This contains information that does not change when responding.
+     * Right now this contains:
+     * <ul>
+     *     <li>requestType</li>
+     *     <li>requestId</li>
+     * </ul>
+     *
+     * If the input is null a blank request is returned
+     * @param type An exception is thrown if this is null.
+     * @return A built request containing all of this information
+     * @see #createRequestFromData(Message.Request.MessageType, GeneratedMessage, String, String)
+     */
     public static Message.Request.Builder createRequestFromData(final Message.Request.MessageType type) {
         return createRequestFromData(type, null);
     }
 
+    /**
+     * Creates a base response from the request.
+     *
+     * This contains information that does not change when responding.
+     * Right now this contains:
+     * <ul>
+     *     <li>requestType</li>
+     *     <li>otherData</li>
+     *     <li>requestId</li>
+     * </ul>
+     *
+     * If the input is null a blank request is returned
+     * @param type An exception is thrown if this is null.
+     * @param data compiled to a byte array and set as otherData
+     * @return A built request containing all of this information
+     * @see #createRequestFromData(Message.Request.MessageType, GeneratedMessage, String, String)
+     */
     public static Message.Request.Builder createRequestFromData(final Message.Request.MessageType type, final GeneratedMessage data) {
         return createRequestFromData(type, data, null);
     }
 
+    /**
+     * Creates a base response from the request.
+     *
+     * This contains information that does not change when responding.
+     * Right now this contains:
+     * <ul>
+     *     <li>requestType</li>
+     *     <li>otherData</li>
+     *     <li>sessionInfo</li>
+     *     <li>requestId</li>
+     * </ul>
+     *
+     * If the input is null a blank request is returned
+     * @param type An exception is thrown if this is null.
+     * @param data compiled to a byte array and set as otherData
+     * @param sessionInfo information about where the request came from.
+     * @return A built request containing all of this information
+     * @see #createRequestFromData(Message.Request.MessageType, GeneratedMessage, String, String)
+     */
     public static Message.Request.Builder createRequestFromData(final Message.Request.MessageType type, final GeneratedMessage data,
             final String sessionInfo) {
         return createRequestFromData(type, data, sessionInfo, null);

@@ -166,7 +166,7 @@ public final class DataRequestHandler {
                             } else {
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                Request baseRequest = build.build();
+                                final Request baseRequest = build.build();
                                 for (String itemId : itemRequest.getItemIdList()) {
 
                                     instance.getExperimentAsInstructor(userId, itemId, baseRequest, internalConnections,

@@ -91,6 +91,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
                 itemRequest.setQuery(ItemQuery.SOLUTION);
                 itemRequest.addItemId(student.getProblemId());
+                builder.setOtherData(itemRequest.build().toByteString());
                 // FIXME this needs to change probably to make this work
                 // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
                 // state.getKey(), SubmissionConnection.class);
