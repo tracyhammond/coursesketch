@@ -3,6 +3,7 @@ package handlers;
 import com.google.protobuf.GeneratedMessage;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
+import utilities.ProtobufUtilities;
 
 import java.util.List;
 
@@ -114,9 +115,7 @@ public final class ResultBuilder {
             dataResult.addAllResults(results);
         }
 
-        final Message.Request.Builder dataReq = Message.Request.newBuilder();
-        dataReq.setRequestType(req.getRequestType());
-        dataReq.setSessionInfo(req.getSessionInfo());
+        final Message.Request.Builder dataReq = ProtobufUtilities.createBaseResponse(req);
         dataReq.setResponseText(message);
         if (dataResult != null) {
             dataReq.setOtherData(dataResult.build().toByteString());

@@ -3,7 +3,7 @@
 (function() {
     CourseSketch.makeNewDatabase = function(connection, dataListener) {
         return new SchoolDataManager(connection.userId, dataListener, connection,
-            CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+            CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
     };
     var db = CourseSketch.makeNewDatabase(CourseSketch.connection, CourseSketch.dataListener);
     CourseSketch.dataManager = db;
