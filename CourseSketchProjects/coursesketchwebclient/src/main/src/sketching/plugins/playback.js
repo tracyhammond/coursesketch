@@ -70,7 +70,7 @@ function Playback(updateList, updateManager, graphics) {
          */
         for (var i = 0; i < commandList.length; i++) {
             var command = commandList[i];
-            if (command.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE && isPlaying) {
+            if (command.commandType === CourseSketch.prutil.CommandType.ADD_STROKE && isPlaying) {
                 (function() {
                     var stroke = command.decodedData;
                     pointList = stroke.getPoints();

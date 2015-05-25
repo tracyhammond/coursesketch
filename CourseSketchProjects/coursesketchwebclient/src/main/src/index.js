@@ -46,7 +46,7 @@ function() {
     };
 
     window.addEventListener('beforeunload', function(e) {
-        var r = PROTOBUF_UITL.Request();
+        var r = CourseSketch.prutil.Request();
         r.setRequestType(Request.MessageType.CLOSE);
         connection.sendRequest(r);
         return 'you can close this window';
@@ -213,11 +213,11 @@ function() {
         }
 
         CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
+                CourseSketch.prutil.getRequestClass(), function(evt, item) {
             console.log('default listener');
         });
         CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
         CourseSketch.DatabaseException = DatabaseException;
     }
 });

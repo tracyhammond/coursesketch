@@ -22,11 +22,12 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
      * @param {Function} callback called after the grade has been set.
      */
     parent.setGrade = function(protoGrade, callback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
+        advanceDataListener.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, protoGrade.toArrayBuffer(), function(evt, item) {
+            if (isException(item)) {
+                CourseSketch.clientException(item);
+            }
             callback(protoGrade);
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, protoGrade.toArrayBuffer());
     };
 
     /**
@@ -49,22 +50,24 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
         gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
         gradingQuery.setSearchType(SearchType.SINGLE_GRADE);
         console.log('getting grade id list: ', idList);
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, idList, gradingQuery);
 
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
-            // after listener is removed
+        advanceDataListener.semdDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                protoGrade), item);
+                return;
+            }
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 // not calling the state callback because this should skip that step.
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
-                courseId));
+                protoGrade));
                 return;
             }
 
             var decodedGrade = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getProtoGradeClass());
             callback(decodedGrade);
         });
-
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, idList, gradingQuery);
     };
 
     /**
@@ -81,9 +84,21 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
         }
 
         var isInstructor = CourseSketch.connection.isInstructor;
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
-            // after listener is removed
+
+        var gradingQuery = CourseSketch.PROTOBUF_UTIL.GradingQuery();
+        var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
+        var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
+
+        gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
+        gradingQuery.setSearchType(SearchType.ALL_GRADES);
+
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, [ courseId ], gradingQuery);
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId), item);
+                return;
+            }
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 // not calling the state callback because this should skip that step.
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
@@ -98,14 +113,5 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, sendData,
             }
             callback(protoGradeList);
         });
-
-        var gradingQuery = CourseSketch.PROTOBUF_UTIL.GradingQuery();
-        var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
-        var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
-
-        gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
-        gradingQuery.setSearchType(SearchType.ALL_GRADES);
-
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, [ courseId ], gradingQuery);
     };
 }
