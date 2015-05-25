@@ -1,6 +1,8 @@
 // jshint undef:false
 // jshint latedef:false
 
+// in case it was not defined before
+var CourseSketch = CourseSketch || {};
 
 if (typeof isUndefined === 'undefined') {
     /**
@@ -140,12 +142,16 @@ if (isUndefined(getFormattedDateTime)) {
     }
 }
 
+if (CourseSketch && isUndefined(BaseException) && !isUndefined(CourseSketch.BaseException)) {
+    BaseException = CourseSketch.BaseException;
+}
+
 if (isUndefined(BaseException)) {
     /**
      * @class BaseException
      * Defines the base exception class that can be extended by all other exceptions.
      */
-    function BaseException() {
+    function BaseException(optionalMessage) {
         this.name = 'BaseException';
         /**
          * The level defines how bad it is. level 5 is the okayest exception
@@ -212,7 +218,48 @@ if (isUndefined(BaseException)) {
         this.getCause = function() {
             return this.cause;
         };
+
+        if (!isUndefined(optionalMessage)) {
+            this.setMessage(optionalMessage);
+        }
+        if (CourseSketch && CourseSketch.printStackTrace) {
+            this.createStackTrace();
+        }
     }
+}
+
+if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
+    CourseSketch.BaseException = BaseException;
+}
+
+if (CourseSketch && isUndefined(isException) && !isUndefined(CourseSketch.isException)) {
+    isException = CourseSketch.isException;
+}
+
+if (isUndefined(isException)) {
+    /**
+     * Checks to see if the input is an exception.
+     *
+     * @param {*} exception What we want to see is an exception.
+     * @return {Boolean} True if the input is an exception or error. False otherwise.
+     */
+    function isException(exception) {
+        if (isUndefined(exception) || exception === null) {
+            return false;
+        }
+        if (exception instanceof BaseException || exception instanceof Error ||
+                (CourseSketch && CourseSketch.BaseException && exception instanceof CourseSketch.BaseException)) {
+            return true;
+        }
+
+        // returns true if the below statement is true.
+        return (!isUndefined(exception.name) && exception.name.endsWith('Exception'));
+
+    }
+}
+
+if (CourseSketch && isUndefined(CourseSketch.isException)) {
+    CourseSketch.isException = isException;
 }
 
 if (isUndefined(getTypeName)) {

@@ -49,7 +49,7 @@
                     assert.equal(exception.specificMessage, word);
                     console.log(sTrace);
                     console.log(exception);
-                    CourseSketch.showShallowException(CourseSketch.PROTOBUF_UTIL.createProtoException(exception));
+                    CourseSketch.showShallowException(CourseSketch.prutil.createProtoException(exception));
                 }
             }
         });

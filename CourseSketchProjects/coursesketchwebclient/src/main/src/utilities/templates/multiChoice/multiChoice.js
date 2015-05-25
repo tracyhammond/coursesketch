@@ -113,12 +113,12 @@ function MultiChoice() {
      * @return {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
-        var mcProto = CourseSketch.PROTOBUF_UTIL.MultipleChoice();
+        var mcProto = CourseSketch.prutil.MultipleChoice();
 
         // Populate data in the proto object
         var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
         for (var i = 0; i < answerChoices.length; ++i) {
-            var answerChoice = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            var answerChoice = CourseSketch.prutil.AnswerChoice();
             answerChoice.id = answerChoices[i].id;
             answerChoice.text = answerChoices[i].querySelector('.label').value;
             mcProto.answerChoices.push(answerChoice);
@@ -127,7 +127,7 @@ function MultiChoice() {
 
         // If the multi-choice item does not have an id, then a command has not been created for the multi-choice item
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_MULTIPLE_CHOICE, true);
         }
         this.command.setCommandData(mcProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;

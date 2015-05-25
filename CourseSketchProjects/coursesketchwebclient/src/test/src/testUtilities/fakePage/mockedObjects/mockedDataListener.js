@@ -1,7 +1,7 @@
 // assumes fake connection
 (function() {
     CourseSketch.makeNewDataListener = function(connection) {
-        return new AdvanceDataListener(connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), function(evt, item) {
+        return new AdvanceDataListener(connection, CourseSketch.prutil.getRequestClass(), function(evt, item) {
             console.log("default listener");
         });
     };
