@@ -30,17 +30,20 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
         database.getFromSubmissions(problemId, function(e, request, result) {
             // TODO: change it so the database can pull locally as well.
             if (isUndefined(result) || isUndefined(result.data) || true) {
-
                 var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.EXPERIMENT, [ problemId ]);
                 // the listener from the server of the request
                 // it stores the course locally then cals the callback with the course
                 advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                    if (item.query === CourseSketch.prutil.ItemQuery.NO_OP) {
+                        return;
+                    }
                     if (isException(item)) {
                         submissionCallback(new DatabaseException('exception thrown while waiting for server response.'), item);
                         return;
                     }
                     if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
-                        submissionCallback(new DatabaseException('The data sent back from the server does not exist.'));
+                        submissionCallback(new DatabaseException(
+                                item.returnText? item.returnText : 'The data sent back from the server does not exist.'));
                         return;
                     }
                     var experiment = CourseSketch.prutil.getSrlExperimentClass().decode(item.data[0]);
@@ -49,8 +52,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                     submissionCallback(sub);
                     sub = undefined;
                     experiment = undefined;
-
-                });
+                    // The times parameter is 2 because it is called ones with NO_OP and once with the actual submission.
+                }, undefined, 2);
 
             } else {
                 // gets the data from the database and calls the callback
@@ -76,6 +79,9 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
         var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.EXPERIMENT, [ problemId ], advanceQuery);
 
         advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (item.query === CourseSketch.prutil.ItemQuery.NO_OP) {
+                return;
+            }
             if (isException(item)) {
                 submissionCallback(new DatabaseException('exception thrown while waiting for server response.'), item);
                 return;
@@ -97,7 +103,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             }
             submissionCallback(list);
             list = undefined;
-        });
+            // The times parameter is 2 because it is called ones with NO_OP and once with the actual submission.
+        }, undefined, 2);
 
     }
     parent.getAllExperiments = getAllExperiments;
