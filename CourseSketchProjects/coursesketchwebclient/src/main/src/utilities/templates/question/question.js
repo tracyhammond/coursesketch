@@ -132,7 +132,7 @@ function Question() {
      * @return {SrlQuestion} the created protobuf object.
      */
     this.saveData = function(event) {
-        var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
+        var questionProto = CourseSketch.prutil.SrlQuestion();
 
         // Populate data in the proto object
         questionProto.id = generateUUID();
@@ -166,8 +166,8 @@ function Question() {
             if (!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) &&
                     !isUndefined(incorrectSlideStr) && correctLectureId !== '' && correctSlideStr !== '' && incorrectLectureId !== '' &&
                     incorrectSlideStr !== '') {
-                var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-                var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+                var correctNav = CourseSketch.prutil.LectureNavigator();
+                var incorrectNav = CourseSketch.prutil.LectureNavigator();
                 correctNav.nextLectureId = correctLectureId;
                 correctNav.nextSlide = parseInt(correctSlideStr, 10);
                 incorrectNav.nextLectureId = incorrectLectureId;
@@ -179,7 +179,7 @@ function Question() {
 
         // If the textbox does not have an id, then a command has not been created for the question
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_QUESTION, true);
         }
         this.command.setCommandData(questionProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;

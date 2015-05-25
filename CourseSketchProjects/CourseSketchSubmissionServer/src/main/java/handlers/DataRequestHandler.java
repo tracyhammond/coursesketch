@@ -12,10 +12,10 @@ import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 /**
  * Handles request for submissions.
@@ -45,7 +45,7 @@ public final class DataRequestHandler {
         DataRequest dataReq;
         try {
             dataReq = DataRequest.parseFrom(req.getOtherData());
-            final Request.Builder resultReq = Request.newBuilder(req);
+            final Request.Builder resultReq = ProtobufUtilities.createBaseResponse(req, true);
             resultReq.clearOtherData();
             final DataResult.Builder builder = DataResult.newBuilder();
             try {
@@ -62,15 +62,14 @@ public final class DataRequestHandler {
             } catch (Exception e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                return ExceptionUtilities.createExceptionRequest(protoEx, req);
+                return ExceptionUtilities.createExceptionRequest(req, protoEx);
             }
             resultReq.setOtherData(builder.build().toByteString());
-            resultReq.setRequestType(MessageType.DATA_REQUEST);
             return resultReq.build();
         } catch (InvalidProtocolBufferException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            return ExceptionUtilities.createExceptionRequest(protoEx, req);
+            return ExceptionUtilities.createExceptionRequest(req, protoEx);
         }
     }
 
