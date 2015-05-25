@@ -15,6 +15,10 @@ validateFirstRun(document.currentScript);
      */
     function getSketches(callback, navigator) {
         CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
+            if (isException(sketchList)) {
+                CourseSketch.clientException(sketchList);
+                return;
+            }
             if (isUndefined(sketchList)) {
                 alert('This problem has no student submissions.');
                 return;
