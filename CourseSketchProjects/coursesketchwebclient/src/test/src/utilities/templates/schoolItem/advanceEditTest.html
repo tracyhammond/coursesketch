@@ -49,7 +49,7 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        var schoolItemProto = CourseSketch.prutil.SrlCourse();
         schoolItemProto.id = "fakeId";
         schoolItem.schoolItemData = schoolItemProto;
 
@@ -69,7 +69,7 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        var schoolItemProto = CourseSketch.prutil.SrlCourse();
         schoolItemProto.name = "fakeId";
         schoolItem.schoolItemData = schoolItemProto;
 
@@ -89,7 +89,7 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        var schoolItemProto = CourseSketch.prutil.SrlCourse();
         schoolItemProto.description = "fakeDescription";
         schoolItem.schoolItemData = schoolItemProto;
 
@@ -108,9 +108,9 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-        var latePolicy = CourseSketch.PROTOBUF_UTIL.LatePolicy();
-        latePolicy.functionType = CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().FunctionType.EXPONENTIAL;
+        var schoolItemProto = CourseSketch.prutil.SrlAssignment();
+        var latePolicy = CourseSketch.prutil.LatePolicy();
+        latePolicy.functionType = CourseSketch.prutil.getLatePolicyClass().FunctionType.EXPONENTIAL;
         schoolItem.schoolItemData = schoolItemProto;
         schoolItemProto.latePolicy = latePolicy;
 
@@ -124,7 +124,7 @@
         var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
         var result = shadow.querySelector('#elementFunction').value;
         assert.equal(result, "EXPONENTIAL", 'the function type should be loaded correctly');
-        assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().FunctionType[result], latePolicy.functionType,
+        assert.equal(CourseSketch.prutil.getLatePolicyClass().FunctionType[result], latePolicy.functionType,
             'we can get the number from the value using protobuf');
     });
 
@@ -132,9 +132,9 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-        var latePolicy = CourseSketch.PROTOBUF_UTIL.LatePolicy();
-        latePolicy.timeFrameType = CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().TimeFrame.HOUR;
+        var schoolItemProto = CourseSketch.prutil.SrlAssignment();
+        var latePolicy = CourseSketch.prutil.LatePolicy();
+        latePolicy.timeFrameType = CourseSketch.prutil.getLatePolicyClass().TimeFrame.HOUR;
         schoolItem.schoolItemData = schoolItemProto;
         schoolItemProto.latePolicy = latePolicy;
 
@@ -148,7 +148,7 @@
         var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
         var result = shadow.querySelector('#elementTimeFrame').value;
         assert.equal(result, "HOUR", 'the function type should be loaded correctly');
-        assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().TimeFrame[result], latePolicy.timeFrameType,
+        assert.equal(CourseSketch.prutil.getLatePolicyClass().TimeFrame[result], latePolicy.timeFrameType,
             'we can get the number from the value using protobuf');
     });
 
@@ -156,9 +156,9 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-        var latePolicy = CourseSketch.PROTOBUF_UTIL.LatePolicy();
-        latePolicy.subtractionType = CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().SubtractionType.PERCENT;
+        var schoolItemProto = CourseSketch.prutil.SrlAssignment();
+        var latePolicy = CourseSketch.prutil.LatePolicy();
+        latePolicy.subtractionType = CourseSketch.prutil.getLatePolicyClass().SubtractionType.PERCENT;
         schoolItem.schoolItemData = schoolItemProto;
         schoolItemProto.latePolicy = latePolicy;
 
@@ -172,7 +172,7 @@
         var shadow = document.querySelector('dialog.advanceEditHost').shadowRoot;
         var result = shadow.querySelector('#elementSubtraction').value;
         assert.equal(result, "PERCENT", 'the function type should be loaded correctly');
-        assert.equal(CourseSketch.PROTOBUF_UTIL.getLatePolicyClass().SubtractionType[result], latePolicy.subtractionType,
+        assert.equal(CourseSketch.prutil.getLatePolicyClass().SubtractionType[result], latePolicy.subtractionType,
             'we can get the number from the value using protobuf');
     });
 
@@ -181,7 +181,7 @@
         schoolItem.dataset.instructor="";
         // set up data
         var secondValue = "fakeId2";
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        var schoolItemProto = CourseSketch.prutil.SrlCourse();
         schoolItemProto.name = "fakeId";
         schoolItem.schoolItemData = schoolItemProto;
 
@@ -210,8 +210,8 @@
         var schoolItem = document.createElement("school-item");
         schoolItem.dataset.instructor="";
         // set up data
-        var schoolItemProto = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-        schoolItemProto.assignmentType = CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.LAB;
+        var schoolItemProto = CourseSketch.prutil.SrlAssignment();
+        schoolItemProto.assignmentType = CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.LAB;
         schoolItem.schoolItemData = schoolItemProto;
 
         // append data
