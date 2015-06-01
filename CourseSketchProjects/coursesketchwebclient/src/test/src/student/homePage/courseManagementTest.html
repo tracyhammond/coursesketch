@@ -5,7 +5,7 @@
 <!-- test Library -->
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 <link rel="import"
-	href="/test/testUtilities/mockedObjects/mockedObjectsInclude.html">
+	href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
 
 <!-- files needed for testing -->
 <link rel="import" href="/src/student/homePage/homePage.html"
@@ -115,7 +115,7 @@
         });
 
         test("Showing the courses appear in the list", function(assert) {
-            var fakeCourse = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            var fakeCourse = CourseSketch.prutil.SrlCourse();
             fakeCourse.name = "Insert name";
             fakeCourse.description = "Insert description";
             var courseList = [fakeCourse];
@@ -145,14 +145,14 @@
         test("course clicker makes an assignment", function(assert) {
             // mocking setup
             var fakeIdList = ["fakeId"];
-            var fakeAssignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var fakeAssignment = CourseSketch.prutil.SrlAssignment();
             fakeAssignment.name = "assignment name";
             fakeAssignment.description = "assignment name";
             var assignmentList = [fakeAssignment];
             CourseSketch.dataManager.getAssignments.withArgs(fakeIdList).callsArgWith(1, assignmentList);
 
             // other setup
-            var fakeCourse = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            var fakeCourse = CourseSketch.prutil.SrlCourse();
             fakeCourse.name = "Insert name";
             fakeCourse.description = "Insert description";
             fakeCourse.assignmentList = fakeIdList;

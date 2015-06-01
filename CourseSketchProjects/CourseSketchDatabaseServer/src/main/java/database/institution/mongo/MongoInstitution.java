@@ -17,22 +17,21 @@ import database.submission.SubmissionManager;
 import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
-import protobuf.srl.school.School.SrlPermission;
+import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.GROUP_PREFIX;
@@ -163,15 +162,12 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public ArrayList<SrlCourse> getCourses(final List<String> courseIds, final String userId) throws AuthenticationException {
+    public ArrayList<SrlCourse> getCourses(final List<String> courseIds, final String userId) throws AuthenticationException,
+            DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
         for (String courseId : courseIds) {
-            try {
-                allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
-            } catch (DatabaseAccessException e) {
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            }
+            allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
         }
         return allCourses;
     }
@@ -469,5 +465,11 @@ public final class MongoInstitution implements Institution {
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);
+    }
+
+    @Override
+    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page)
+            throws AuthenticationException, DatabaseAccessException {
+        return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }
 }

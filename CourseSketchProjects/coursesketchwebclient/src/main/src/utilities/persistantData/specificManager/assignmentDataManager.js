@@ -1,19 +1,29 @@
-function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
+function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var dataListener = advanceDataListener;
     var database = parentDatabase;
-    var Request = request;
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Looks at the assignment and gives it some state if the state values do
      * not exist.
      */
     function stateCallback(assignment, assignmentCallback) {
+        /*jshint maxcomplexity:13 */
         var state = assignment.getState();
         var updateAssignment = false;
-        if (isUndefined(state) || state == null) {
-            state = CourseSketch.PROTOBUF_UTIL.State();
+        if (isUndefined(state) || state === null) {
+            state = CourseSketch.prutil.State();
             updateAssignment = true;
         }
         try {
@@ -22,7 +32,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             var close = assignment.getCloseDate().getMillisecond();
             var due = assignment.getDueDate().getMillisecond();
             var current = parent.getCurrentTime();
-            if (isUndefined(state.accessible) || state.accessible == null) {
+            if (isUndefined(state.accessible) || state.accessible === null) {
                 if (current.lessThan(access) || current.greaterThan(close)) {
                     state.accessible = false;
                 } else {
@@ -31,7 +41,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 updateAssignment = true;
             }
 
-            if (isUndefined(state.pastDue) || state.pastDue == null) {
+            if (isUndefined(state.pastDue) || state.pastDue === null) {
                 if (current.greaterThan(due)) {
                     state.pastDue = true;
                 } else {
@@ -40,7 +50,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 updateAssignment = true;
             }
         } catch (exception) {
-           // console.error(exception);
+            // console.error(exception);
         }
 
         // so we do not have to perform this again!
@@ -83,9 +93,9 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Deletes a assignment from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
-     * @param assignmentId
+     * @param {String} assignmentId
      *                ID of the assignment to delete
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *                function to be called after the deletion is done
      */
     function deleteAssignment(assignmentId, assignmentCallback) {
@@ -100,15 +110,15 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     /**
      * Sets a assignment in server database.
      *
-     * @param assignment
+     * @param {SrlAssignment} assignment
      *                assignment object to set
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *                function to be called after assignment setting is done
      */
     function insertAssignmentServer(assignment, assignmentCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
-            var resultArray = item.getReturnText().split(":");
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.ASSIGNMENT, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.ASSIGNMENT);
+            var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
             // we want to get the current course in the local database in case
@@ -128,7 +138,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
+        sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
     }
 
 
@@ -136,19 +146,19 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Adds a new assignment to both local and server databases. Also updates the
      * corresponding course given by the assignment's courseId.
      *
-     * @param assignment
+     * @param {String} assignment
      *                assignment object to insert
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local insert is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server insert is done
      */
     function insertAssignment(assignment, localCallback, serverCallback) {
-        if (isUndefined(assignment.id) || assignment.id == null) {
+        if (isUndefined(assignment.id) || assignment.id === null) {
             assignment.id = generateUUID();
         }
         setAssignment(assignment, function(e, request) {
-            console.log("inserted locally :" + assignment.id)
+            console.log('inserted locally :' + assignment.id);
             if (!isUndefined(localCallback)) {
                 localCallback(assignment);
             }
@@ -181,11 +191,11 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Updates an existing assignment into the database. This assignment must already
      * exist.
      *
-     * @param assignment
+     * @param {SrlAssignment} assignment
      *                assignment object to set
-     * @param localCallback
+     * @param {Function} localCallback
      *                function to be called after local assignment setting is done
-     * @param serverCallback
+     * @param {Function} serverCallback
      *                function to be called after server assignment setting is done
      */
     function updateAssignment(assignment, localCallback, serverCallback) {
@@ -193,15 +203,14 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
-                 // we do not need to make server changes we
-                                        // just need to make sure it was successful.
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.ASSIGNMENT, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.ASSIGNMENT);
+                 // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
+            sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
         });
     }
     parent.updateAssignment = updateAssignment;
@@ -209,31 +218,27 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
     /**
      * Gets an Assignment from the local database.
      *
-     * @param assignmentId
+     * @param {String} assignmentId
      *                ID of the assignment to get
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *                function to be called after getting is complete, parameter
      *                is the assignment object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getAssignmentLocal(assignmentId, assignmentCallback) {
-        if (isUndefined(assignmentId) || assignmentId == null) {
-            assignmentCallback(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentId));
+        if (isUndefined(assignmentId) || assignmentId === null) {
+            assignmentCallback(new DatabaseException('The given id is not assigned', 'getting Assignment: ' + assignmentId));
         }
         database.getFromAssignments(assignmentId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
-                assignmentCallback(new DatabaseException("The result is undefined", "getting Assignment: " + assignmentId));
-            } else if (result.data == nonExistantValue) {
-                // the server holds this special value then it means the server
-                // does not have the value
-                assignmentCallback(new DatabaseException("The database does not hold this value", "getting Assignment: " + assignmentId));
+                assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
             } else {
                 // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
-                    stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().decode(bytes), assignmentCallback);
+                    stateCallback(CourseSketch.prutil.getSrlAssignmentClass().decode(bytes), assignmentCallback);
                 } catch (exception) {
                     console.error(exception);
-                    assignmentCallback(new DatabaseException("The result is undefined", "getting Assignment: " + assignmentId));
+                    assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
                 }
             }
         });
@@ -246,13 +251,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *
      * This does attempt to pull assignments from the server!
      *
-     * @param assignmentIdList
+     * @param {List<String>} assignmentIdList
      *            list of IDs of the assignments to get
-     * @param assignmentCallbackPartial
+     * @param {Function} assignmentCallbackPartial
      *            {Function} called when assignments are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local assignments.
-     * @param assignmentCallbackComplete
+     * @param {Function} assignmentCallbackComplete
      *            {Function} called when the complete list of assignments are
      *            grabbed.
      */
@@ -282,10 +287,10 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
          */
 
         // standard preventative checking
-        if (isUndefined(assignmentIdList) || assignmentIdList == null || assignmentIdList.length == 0) {
-            assignmentCallbackPartial(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
+        if (isUndefined(assignmentIdList) || assignmentIdList === null || assignmentIdList.length === 0) {
+            assignmentCallbackPartial(new DatabaseException('The given id is not assigned', 'getting Assignment: ' + assignmentIdList));
             if (assignmentCallbackComplete) {
-                assignmentCallbackComplete(new DatabaseException("The given id is not assigned", "getting Assignment: " + assignmentIdList));
+                assignmentCallbackComplete(new DatabaseException('The given id is not assigned', 'getting Assignment: ' + assignmentIdList));
             }
         }
 
@@ -310,38 +315,30 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         // after the entire list has been gone through pull the
                         // leftovers from the server
                         if (leftOverId.length >= 1) {
-                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT,
+                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.ASSIGNMENT,
                                 function(evt, item) {
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                            CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+                                            CourseSketch.prutil.ItemQuery.ASSIGNMENT);
 
                                     // after listener is removed
-                                    if (isUndefined(item.data) || item.data == null) {
-                                        assignmentCallbackComplete(new DatabaseException("The data sent back from the server does not exist."));
+                                    if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                                        // not calling the state callback because this should skip that step.
+                                        assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
+                                                assignmendIdList));
                                         return;
                                     }
-                                    var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                    var assignment = school.assignments[0];
-                                    if (isUndefined(assignment) || assignment instanceof DatabaseException) {
-                                        var result = assignment;
-                                        if (isUndefined(result)) {
-                                            result = new DatabaseException("Nothing is in the server database!",
-                                                "Grabbing assignment from server: " + assignmentIdList);
-                                        }
-                                        if (!isUndefined(assignmentCallbackComplete)) {
-                                            assignmentCallbackComplete(result);
-                                        }
-                                        return;
-                                    }
-                                    for (var i = 0; i < school.assignments.length; i++) {
-                                        localScope.setAssignment(school.assignments[i]);
-                                        assignmentList.push(school.assignments[i]);
+
+                                    for (var i = 0; i < item.data.length; i++) {
+                                        var decodedAssignment = CourseSketch.prutil.decodeProtobuf(item.data[i],
+                                            CourseSketch.prutil.getSrlAssignmentClass());
+                                        localScope.setAssignment(decodedAssignment);
+                                        assignmentList.push(decodedAssignment);
                                     }
                                     stateCallbackList(assignmentList, assignmentCallbackComplete);
                                     assignmentIdList = null;
                                 });
                             // creates a request that is then sent to the server
-                            sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);
+                            sendData.sendDataRequest(CourseSketch.prutil.ItemQuery.ASSIGNMENT, leftOverId);
                         } else {
                             stateCallbackList(assignmentList, assignmentCallbackComplete);
                         }
@@ -351,7 +348,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         if (assignmentList.length > 0) {
                             stateCallbackList(assignmentList, assignmentCallbackPartial);
                         }
-                    } // end of if(barrier == 0)
+                    } // end of if(barrier === 0)
                 }); // end of getting local assignment
             })(assignmentIdLoop); // end of loopContainer
         } // end of loop
@@ -362,21 +359,23 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      * Returns a assignment with the given assignmentId will ask the server if it
      * does not exist locally
      *
-     * If the server is pulled and the assignment still does not exist the Id is
-     * set with nonExistantValue and the database is never polled for this item
-     * for the life of the program again.
-     *
-     * @param assignmentId
+     * @param {String} assignmentId
      *            The id of the assignment we want to find.
-     * @param assignmentCallback
+     * @param {Function} assignmentCallback
      *            The method to call when the assignment has been found. (this
      *            is asynchronous)
      */
     function getAssignment(assignmentId, assignmentCallback) {
         if (isUndefined(assignmentCallback)) {
-            throw new DatabaseException("Calling get Assignment with an undefined callback");
+            throw new DatabaseException('Calling get Assignment with an undefined callback');
         }
         var called = false;
+
+        /**
+         * Ensures that the callback is only called once.
+         *
+         * @param {List<Assignments>} assignmentList The assignments that were loaded.
+         */
         function callOnce(assignmentList) {
             if (!called) {
                 called = true;

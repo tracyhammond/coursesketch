@@ -1,19 +1,34 @@
 /**
  * Contains input listeners for canvas interaction and functions for creating points using drawing events
+ * @class InputListener
  */
 function InputListener() {
     var currentPoint;
     var pastPoint;
     var currentStroke;
+    /**
+     * @typedef {Object} PSTool.
+     * @member {PSTool}
+     * @memberof InputListener
+     */
     var tool = undefined;
     var totalZoom = 0;
 
     /**
-     * Creates mouse listeners that enable strokes, panning and zooming
+     * Creates mouse listeners that enable strokes, panning, and zooming.
+     *
+     * @function initializeCanvas
+     * @instance
+     * @memberof InputListener
      */
     this.initializeCanvas = function(sketchCanvas, strokeCreationCallback, graphics) {
         var ps = graphics.getPaper();
         tool = new ps.Tool();
+        /**
+         * The pixel distance between points when recording points.
+         * @member {Number}
+         * @memberof PSTool
+         */
         tool.fixedDistance = 5;
 
         //used for panning and zooming
@@ -21,27 +36,59 @@ function InputListener() {
         var startingPoint;
         var lastPoint;
 
-        // allows you to zoom in or out based on a delta
+        /**
+         * Allows you to zoom in or out based on a delta.
+         * Attempts to limit zoom out to an exponential decay function.
+         * This also makes sure that the final zoom function is in fact linear.
+         * @memberof InputListener#initializeCanvas
+         */
         function zoom(delta) {
             var oldZoom = totalZoom;
             totalZoom += delta;
             if (totalZoom < 0 && totalZoom > -1) {
-                ps.view.zoom = -1/(totalZoom - 1);
+                ps.view.zoom = -1 / (totalZoom - 1);
             } else if (totalZoom <= -1) {
-                 ps.view.zoom = -1/(totalZoom - 1);
+                ps.view.zoom = -1 / (totalZoom - 1);
             } else {
                 //console.log(totalZoom);
                 ps.view.zoom = totalZoom + 1;
             }
         }
 
-        //if shift is held, pans
-        //if shift is not held, it starts a new path from the mouse point
+        /**
+         * A listener that attempts to listen for 2 finger scroll events so that tablets can scroll the sketch surface.
+         * @param {Event} event - the event that contains normal event data.
+         * @param {String} phase - The phases of the event.  ("start", "move", "end")
+         * @param {Element} $target - the element the event is based off of.
+         * @param {Object} data - Contains:<ul>
+         *                  <li>movePoint</li>
+         *                  <li>lastMovePoint</li>
+         *                  <li>startPoint</li>
+         *                  <li>velocity</li>
+         *                  </ul>
+         */
+        $(sketchCanvas).bind('touchy-drag', function(event, phase, $target, data) {
+            if (phase === 'start') {
+                startingPoint = data.startPoint;
+                startingCenter = ps.project.activeLayer.localToGlobal(ps.view.center);
+            } else {
+                ps.view.center = startingCenter.subtract(ps.project.activeLayer.
+                        localToGlobal(data.movePoint).subtract(startingPoint));
+            }
+        });
+        $(sketchCanvas).data('touchy-drag').settings.requiredTouches = 2;
+
+        /**
+         * If shift is held, pans else if shift is not held, it starts a new path from the mouse point.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         */
         tool.onMouseDown = function(event) {
-            if (Key.isDown('shift') || event.event.button == 1) {
+            if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 startingPoint = ps.project.activeLayer.localToGlobal(event.point);
-                startingCenter= ps.project.activeLayer.localToGlobal(ps.view.center);
+                startingCenter = ps.project.activeLayer.localToGlobal(ps.view.center);
 
             } else {
                 currentPoint = createPointFromEvent(event);
@@ -52,10 +99,13 @@ function InputListener() {
             }
         };
 
-        //if shift is held, pans the view to follow the mouse
-        //if shift is not held, it adds more points to the path created on MouseDown
+        /**
+         * If shift is held, pans the view to follow the mouse else if shift is not held, it adds more points to the path created on MouseDown.
+         * @function onMouseDown
+         * @memberof PSTool
+         */
         tool.onMouseDrag = function(event) {
-            if (Key.isDown('shift') || event.event.button == 1) {
+            if (Key.isDown('shift') || event.event.button === 1) {
                 // do panning
                 currentStroke = undefined;
                 ps.view.center =
@@ -69,8 +119,12 @@ function InputListener() {
             }
         };
 
-        //finishes up the path that has been created by the mouse pointer
-        //unless shift has been held, then it throws up
+        /**
+         * Finishes up the path that has been created by the mouse pointer, unless shift has been held, then it throws up.
+         *
+         * @function onMouseDown
+         * @memberof PSTool
+         */
         tool.onMouseUp = function(event) {
             currentPoint = createPointFromEvent(event);
             //currentPoint.setSpeed(pastPoint);
@@ -82,7 +136,7 @@ function InputListener() {
                 if (strokeCreationCallback) {
                     strokeCreationCallback(currentStroke); // Sends back the current stroke.
                 }
-            } catch(err) {
+            } catch (err) {
                 currentStroke = false;
                 currentPoint = false;
                 console.log(err);
@@ -92,13 +146,13 @@ function InputListener() {
         };
 
         //zooms the view with the mousewheel
-        sketchCanvas.addEventListener("mousewheel", function(event) {
+        sketchCanvas.addEventListener('mousewheel', function(event) {
             //event.stopPropagation();
             //event.preventDefault();
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(delta/3);
+            zoom(delta / 3);
         });
 
         $(sketchCanvas).bind('touchy-pinch', function(event, $target, data) {
@@ -111,15 +165,18 @@ function InputListener() {
             // cross-browser wheel delta
             var e = window.event || e; // old IE support
             //var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            zoom(data.scale-data.previousScale);
+            zoom(data.scale - data.previousScale);
         });
 
         // makes zoom public.
         this.zoom = zoom;
-    }
+    };
 
     /**
-     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point
+     * Creates an {@link SRL_Point} from a drawing event. Returns the SRL_Point.
+     *
+     * @memberof InputListener
+     * @private
      */
     function createPointFromEvent(drawingEvent) {
         var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
@@ -135,8 +192,12 @@ function InputListener() {
         return currentPoint;
     }
 
-    // Creates a time stamp for every point.
+    /**
+     * Creates and returns a time stamp every time this function is called.
+     *
+     * @returns {Number} - The time stamp.
+     */
     function createTimeStamp() {
         return new Date().getTime();
-    };
+    }
 }

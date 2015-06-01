@@ -4,9 +4,10 @@
  * when a problem/assignment/course in assignment view is changed all the parts are notify via a callback at which point they can poll
  * different parts of the system.
  * Callbacks are not guaranteed in any order.
- * @param assignmentId {UUID} the id that the problem is created with.
- * @param loop {Boolean} true if the problems should loop, false otherwise.
- * @param preferredIndex {Number} The starting index to start problems at.
+ * @param {UUID} assignmentId the id that the problem is created with.
+ * @param {Boolean} loop true if the problems should loop, false otherwise.
+ * @param  {Number}preferredIndex The starting index to start problems at.
+ * @class ProblemNavigator
  */
 function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var currentAssignmentId = assignmentId;
@@ -15,64 +16,99 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var currentProblem;
     var callbackList = [];
     var currentIndex = 0;
-    var navScope = this;
+    var localScope = this;
     var eventMappingCallback = {};
     var dataLoaded = false;
     var uiLoaded = false;
 
     /**
-     * @param index {Number} the problem that we want to switch to.
+     * Changes the index to point at this new problem.
+     *
+     * @param {Number} index {Number} the problem that we want to switch to.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.goToProblem = function goToProblem(index) {
-        changeProblem(index)
+        changeProblem(index);
     };
 
     /**
-     * @param index {Number} attempts to change to the next problem.
+     * Attempts to change to the next problem.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.gotoNext = function() {
         changeProblem(currentIndex + 1);
     };
 
     /**
-     * @param index {Number} attempts to change to the previous problem.
+     * Attempts to change to the previous problem.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.gotoPrevious = function() {
         changeProblem(currentIndex - 1);
     };
 
-    // sets the current index.
+    /**
+     * @return {Number} assignment type of the current problem.
+     */
+    this.getAssignmentType = function getAssignmentType() {
+        return currentAssignment.assignmentType;
+    };
+
+    // Sets the current index.
     if (!isUndefined(preferredIndex)) {
         try {
-            currentIndex = parseInt(preferredIndex);
+            currentIndex = parseInt(preferredIndex, 10);
         } catch (exception) {
-            console.error("could not parse preferredIndex using 0 instead");
+            console.error('could not parse preferredIndex using 0 instead');
         }
     }
 
     /**
-     * changes the problem to the current index.
+     * Changes the problem to the current index.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.refresh = function() {
         changeProblem(currentIndex);
     };
 
     /**
-     * @return {Boolean} true if the data has been loaded.
+     * @return {Boolean} true if the problems have been loaded into memory.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.isDataLoaded = function() {
         return dataLoaded;
     };
 
     /**
-     * @param {Boolean} true if the ui has been loaded.
+     * Sets the knowledge of if the navigator ui has been loaded.
+     *
+     * @param {Boolean} value true if the ui has been loaded.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.setUiLoaded = function(value) {
         uiLoaded = value;
     };
 
     /**
-     * Returns the information of the current problem.
+     * @returns {Number} the number of problems in the list.
+     * @memberof ProblemNavigator
+     */
+    this.getProblemListSize = function getProblemListSize() {
+        return problemList.size();
+    };
+
+    /**
+     * @returns {BankProblem} The entire set of data that is in the bank problem.
+     * @memberof ProblemNavigator
      */
     function getProblemInfo() {
         return currentProblem.problemInfo;
@@ -80,32 +116,52 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Scopes the index for the callbackList.
-     * this way the browser is not locked up by callbacks.
+     *
+     * This way the browser is not locked up by callbacks.
+     * @instance
+     * @access private
+     * @memberof ProblemNavigator
      */
     function callBacker(scopedIndex) {
-        setTimeout(function() {callbackList[scopedIndex](navScope);},20);
+        setTimeout(function() {
+            callbackList[scopedIndex](localScope);
+        }, 20);
     }
 
     /**
      * Changes the problem to the given index.
      *
-     * @param index {Number} the index we want to switch to.
+     * @param {Number} index the index we want to switch to.
      * If looping is set to false then if given an index out of bounds this function returns immediately.
      * Otherwise the index is set to either 0 or the end of the list depending on how it is out of bounds.
      * After changing the index all of the set callbacks are called.
      * Order of the callbacks is not guaranteed.
+     * @instance
+     * @access private
+     * @memberof ProblemNavigator
      */
     function changeProblem(index) {
-        if (index < 0 || index >= problemList.length && !loop) {
-            return;
-        } else if(loop) {
-            if (index < 0) {
-                index = problemList.length - 1;
+        // If assignment is random, ignore the index and choose a random assignment.
+        var type = currentAssignment.assignmentType;
+        if (type !== CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.GAME) {
+            if (index < 0 || index >= problemList.length && !loop) {
+                return;
+            } else if (loop) {
+                if (index < 0) {
+                    index = problemList.length - 1;
+                }
+                if (index >= problemList.length) {
+                    index = 0;
+                }
             }
-            if (index >= problemList.length) {
-                index = 0;
-            }
+        } else {
+            //Pull problems at random for Game
+            var numberOfQuestions = getProblemListSize();
+            var randomNumber = Math.random();
+
+            index = randomNumber % numberOfQuestions;
         }
+
         if ((index >= 0 && index < problemList.length)) {
             currentIndex = index;
             currentProblem = problemList[index];
@@ -116,50 +172,73 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     }
 
     /**
-     * adds a callback that is called when changing problem index.
+     * Adds a callback that is called when changing problem index.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.addCallback = function(callback) {
         callbackList.push(callback);
     };
 
     /**
-     * Returns true if there is a previous problem that can be navigated to.
+     * @returns {Boolean} true if there is a previous problem that can be navigated to.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.hasPrevious = function() {
         return loop || currentIndex > 0;
     };
 
     /**
-     * Returns true if there is a next problem that can be navigated to.
+     * @returns {Boolean} true if there is a next problem that can be navigated to.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.hasNext = function() {
         return loop || currentIndex < problemList.length;
     };
 
     /**
-     * Returns the current problem number in a human readable format.
+     * @returns {Number} the current problem number in a human readable format.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.getCurrentNumber = function() {
         return currentIndex + 1;
     };
 
     /**
-     * Returns the number of problems seen by this problem Navigator.
+     * @returns {Number} the number of problems seen by this problem Navigator.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.getLength = function() {
         return problemList.length;
     };
 
     /**
-     * Returns the problem text of the current problem.
+     * @returns {String} the problem text of the current problem.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.getProblemText = function() {
         return getProblemInfo().questionText;
     };
 
     /**
-     * sets the information about a specific submission.
-     * @param submissionWrapper {SrlExperiment | SrlSolution} this is either an experiment or solution this is NOT a submission object.
+     * @return {String} the problem script of the current problem.
+     */
+    this.getProblemScript = function() {
+        return getProblemInfo().script;
+    };
+
+    /**
+     * Sets the information about a specific submission.
+     *
+     * @param {SrlExperiment | SrlSolution} submissionWrapper this is either an experiment or solution this is NOT a submission object.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.setSubmissionInformation = function(submissionWrapper, isExperiment) {
         if (isExperiment) {
@@ -172,14 +251,18 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Returns the Id of the current problem.
+     * @returns {String} the Id of the current problem.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.getCurrentProblemId = function() {
         return currentProblem.id;
     };
 
     /**
-     * @return the type of the base problem.
+     * @return {String} the type of the base problem.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.getProblemType = function() {
         var type = getProblemInfo().questionType;
@@ -188,16 +271,24 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Sets the new Id for the assignment, this does not refresh the navigator.
-     * That can be done by calling {@link #reloadProblems}.
-     * @param currentAssignmentId The new assignmentid.
+     *
+     * Refreshing the navigator can be done by calling {@link #reloadProblems}.
+     * @param {String} currentAssignmentId The new assignmentid.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.setAssignmentId = function(currentAssignmentId) {
         assignmentId = currentAssignmentId;
     };
 
     /**
-     * @param sets the preferred index to start the problem at.
-     * This does not change what the current index is.
+     * Sets the preferred index to start navigation at.
+     *
+     * This does not change what the current index is.  This function is only useful when first creating the problem navigator.
+     *
+     * @param {Number} selectedIndex sets the preferred index to start the problem at.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.setPreferredIndex = function(selectedIndex) {
         preferredIndex = selectedIndex;
@@ -205,21 +296,38 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Reloads the assignment from the id and assigns it to the currentAssignment.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.reloadAssignment = function() {
         CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
-                currentAssignment = assignment;
+            currentAssignment = assignment;
         });
     };
 
     /**
-     * Loads all of the problems given an assignment.
+     * @return {SrlAssignment} the current assignment stored in this navigator..
+     * @instance
+     * @memberof ProblemNavigator
+     */
+    this.getCurrentAssignment = function() {
+        return currentAssignment;
+    };
+
+    /**
+     * ReLoads all of the problems given an assignment.
+     *
+     * This also will refresh the navigator.
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.reloadProblems = function() {
         currentIndex = preferredIndex;
         dataLoaded = false;
         var refresh = this.refresh;
         if (!isUndefined(assignmentId)) {
+            this.reloadAssignment();
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
                 problemList = [];
                 for (var i = 0; i < problems.length; i++) {
@@ -230,16 +338,15 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
                 }
                 dataLoaded = true; // this one will take longer so we do this one second.
             });
-
-            CourseSketch.dataManager.getAssignment(assignmentId, function(assignment) {
-                currentAssignment = assignment;
-            });
         }
     };
     this.reloadProblems();
 
     /**
      * Add an event mapping for a specific callback.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.addEventMapping = function(key, funct) {
         if (isUndefined(eventMappingCallback[key])) {
@@ -253,6 +360,9 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
 
     /**
      * Attempts to remove the event from the current event map.
+     *
+     * @instance
+     * @memberof ProblemNavigator
      */
     this.removeEventMapping = function(key, funct) {
         if (isUndefined(eventMappingCallback[key])) {
@@ -261,6 +371,12 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         removeObjectFromArray(eventMappingCallback[key], funct);
     };
 
+    /**
+     * Clears all mappings of event callbacks.
+     *
+     * @instance
+     * @memberof ProblemNavigator
+     */
     this.clearAllMappings = function(key) {
         eventMappingCallback[key] = undefined;
     };
@@ -270,21 +386,23 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      *
      * The failure of one event should not affect the other events.
      * The order of events firing is not guaranteed.
+     * @instance
+     * @memberof ProblemNavigator
      */
-    this.executeEvent = function(key, arguments) {
+    this.executeEvent = function(key, funcArgs) {
         var list = eventMappingCallback[key];
         if (isUndefined(eventMappingCallback[key])) {
             return;
         }
-        for (var i = 0; i <list.length; i++) {
+        for (var i = 0; i < list.length; i++) {
             (function(funct, args) {
                 setTimeout(function() {
                     funct(args);
                 }, 10);
-            })(list[i], arguments);
+            })(list[i], funcArgs);
         }
     };
 
-    this.SUBMIT_EVENT = "submit";
-    this.COMPLETED_PROBLEM_EVENT = "completion";
+    this.SUBMIT_EVENT = 'submit';
+    this.COMPLETED_PROBLEM_EVENT = 'completion';
 }

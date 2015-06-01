@@ -1,8 +1,18 @@
 validateFirstRun(document.currentScript);
 
+/**
+ * @namespace courseManagement
+ */
+
+/**
+ * The element that handles the waiting icon.
+ *
+ * [TODO change docs to custom element]
+ * @memberof courseManagement
+ */
 CourseSketch.courseManagement.waitingIcon = (function() {
     var manage = new WaitScreenManager();
-    manage.waitIconText = "loading data";
+    manage.waitIconText = 'loading data';
     return manage.setWaitType(manage.TYPE_WAITING_ICON).build();
 })();
 (function() {
@@ -15,6 +25,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      *
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
+     * @name initializeCourseManagment
+     * @memberof courseManagement
      */
     CourseSketch.courseManagement.initializeCourseManagment = function() {
         if (!document.querySelector('#class_list_column')) {
@@ -23,6 +35,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         document.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
+        /**
+         * Helper function to stop the waiting icon and show the courses once that database is ready.
+         * @memberof courseManagement
+         */
         var loadCourses = function(courseList) {
             if (waitingIcon.isRunning()) {
                 waitingIcon.finishWaiting();
@@ -46,8 +62,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     };
 
     /**
-     * Given a list of {@link SrlCourse} a bunch of school items are built then
-     * added to the clss_list_column div.
+     * Given a list of {@link SrlCourse} a bunch of school items are built then added to the class_list_column div.
+     *
+     * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
         var builder = new SchoolItemBuilder();
@@ -59,7 +76,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             courseManagement.courseClicked(course);
         });
 
-        if (courseList instanceof CourseSketch.DatabaseException || courseList.length == 0) {
+        if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
             if (CourseSketch.connection.isInstructor) {
                 builder.setEmptyListMessage('Please Create a new course to get started!');
             } else {
@@ -75,7 +92,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a user clicks on a course school item.
-     * This loads the assignments from the database then calls "showAssignments" to display them.
+     *
+     * This loads the assignments from the database then calls 'showAssignments' to display them.
+     * @memberof courseManagement
      */
     courseManagement.courseClicked = function(course) {
         var classColumn = document.querySelector('#class_list_column');
@@ -100,20 +119,21 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 // waiting icon
             }
         });
-    }
+    };
 
     /**
      * Called to show a specific set of assignments with the given list.
+     *
+     * @memberof courseManagement
      */
     courseManagement.showAssignments = function(assignmentList, course) {
-        console.log(assignmentList);
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            if (!isUndefined(course) && course.getState() != null &&!(course.getState().accessible)) {
+            if (!isUndefined(course) && course.getState() !== null &&!(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
             assignmentList = [];
@@ -127,11 +147,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         });
         builder.build(document.querySelector('#assignment_list_column'));
         document.querySelector('#assignment_list_column').appendChild(waitingIcon); // because it was probably removed
-    }
+    };
 
 
     /**
      * Called when an assignment is clicked.
+     *
+     * @memberof courseManagement
      */
     courseManagement.assignmentClicked = function(assignment) {
         var assignmentColumn = document.querySelector('#assignment_list_column');
@@ -150,12 +172,14 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 // waiting icon
             }
         });
-    }
+    };
 
     /**
      * Displays the list of problems for the user to pick from.
-     * @param problemList The list of problems that are wanting to be showed
-     * @param assignment (optional) The assignment that created this problem list
+     *
+     * @param {list} problemList The list of problems that are wanting to be showed
+     * @param {assignment} assignment (optional) The assignment that created this problem list
+     * @memberof courseManagement
      */
     courseManagement.showProblems = function(problemList, assignment) {
         var builder = new SchoolItemBuilder();
@@ -165,9 +189,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
             problemList = [];
-            if (!isUndefined(assignment) && assignment.getState() != null && !assignment.getState().accessible) {
-                builder.setEmptyListMessage('This assignment is currently not available. '
-                    + 'Please contact the instructor to let you view the problems');
+            if (!isUndefined(assignment) && assignment.getState() !== null && !assignment.getState().accessible) {
+                builder.setEmptyListMessage('This assignment is currently not available. ' +
+                        'Please contact the instructor to let you view the problems');
             }
         }
         builder.setList(problemList);
@@ -178,6 +202,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a problem is displayed.
+     *
+     * @memberof courseManagement
      */
     courseManagement.problemClicked = function(problem) {
         var problemColumn = document.querySelector('#problem_list_column');
@@ -185,15 +211,15 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
         if (problemSelectionManager.isItemSelected(clickedElement)) {
             var itemNumber = clickedElement.dataset.item_number;
-            CourseSketch.dataManager.addState("currentProblemIndex", itemNumber);
-            CourseSketch.dataManager.addState("currentAssignment", problem.assignmentId);
-            CourseSketch.dataManager.addState("CURRENT_QUESTION", problem.id);
+            CourseSketch.dataManager.addState('currentProblemIndex', itemNumber);
+            CourseSketch.dataManager.addState('currentAssignment', problem.assignmentId);
+            CourseSketch.dataManager.addState('CURRENT_QUESTION', problem.id);
             // change source to the problem page! and load problem
             if (CourseSketch.connection.isInstructor) {
                 // solution editor page!
-                CourseSketch.redirectContent("/src/instructor/review/multiviewGrading.html", "Grading problems!");
+                CourseSketch.redirectContent('/src/instructor/review/multiviewGrading.html', 'Grading problems!');
             } else {
-                CourseSketch.redirectContent("/src/student/experiment/experiment.html", "Starting Problem");
+                CourseSketch.redirectContent('/src/student/experiment/experiment.html', 'Starting Problem');
             }
         } else {
             // TODO: find a more lightweight popup library
@@ -201,17 +227,17 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             var element = document.getElementById(id);
             var myOpenTip = new Opentip(element, {
                 target : element,
-                tipJoint : "bottom"
+                tipJoint : 'bottom'
             });
             myOpenTip.prepareToShow(); // Shows the tooltip after the given
             // delays. This could get interrupted
 
-            if (CourseSketch.dataManager.getState("isInstructor")) {
-                myOpenTip.setContent("Click again to edit the solution"); // Updates
+            if (CourseSketch.dataManager.getState('isInstructor')) {
+                myOpenTip.setContent('Click again to edit the solution'); // Updates
                 // Opentips
                 // content
             } else {
-                myOpenTip.setContent("Click again to open up a problem"); // Updates
+                myOpenTip.setContent('Click again to open up a problem'); // Updates
                 // Opentips
                 // content
             }
@@ -225,8 +251,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             // note that queryselector is not allowed on these types of ids
             changeSelection(clickedElement, problemSelectionManager);
         }
-    }
+    };
 
+    /**
+     * Sets the message to hint that the previous column is selectable and gives prompts to action.
+     *
+     * @memberof courseManagement
+     */
     function setNotSelectedMessage(number) {
         var builder = new SchoolItemBuilder();
 
@@ -241,59 +272,18 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     }
 
+    /**
+     * A helper method to simplify the code for changing the selection.
+     *
+     * Clears the existing selection then selects the given id.
+     * @memberof courseManagement
+     */
     function changeSelection(id, selectionManager) {
         selectionManager.clearAllSelectedItems();
         selectionManager.addSelectedItem(id);
     }
 
-    function manageHeight() {
-        var iframe = document.getElementById('edit_frame_id');
-        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        // Gets the visual height.
-        if (innerDoc) {
-            var iFrameElement = innerDoc.getElementById('iframeBody') || innerDoc.getElementsByTagName('body')[0];
-            if (!iFrameElement) {
-                return;
-            }
-            var height = iFrameElement.scrollHeight;
-            iframe.height = height;
-        }
-    }
-
-    /**
-     * Given the source this will create an iframe that will manage its own
-     * height. TODO: make this more general.
-     */
-    function replaceEditContent(src) {
-
-        function onload(event) {
-            var toReplace = document.getElementById('editable_unit');
-            removeAllChildren(toReplace);
-            var link = event.srcElement;
-            var content = link.import.querySelector("#iframeBody");
-            if (src && content) {
-                toReplace.appendChild(content.cloneNode(true));
-            } else {
-                toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>'
-                        + '<h2 style = "text-align:center">Click an item to edit</h2>';
-            }
-        }
-
-        function onerror(event) {
-            var toReplace = document.getElementById('editable_unit');
-            removeAllChildren(toReplace);
-            toReplace.innerHTML = '<h2 style = "text-align:center">Nothing is selected yet</h2>'
-                    + '<h2 style = "text-align:center">Click an item to edit</h2>';
-        }
-
-        try {
-            loader.replaceFile(false, src, "html", onload, onerror, 'editable_import', 'editable_import');
-        } catch (exception) {
-            loader.loadFile(src, "html", onload, onerror, 'editable_import');
-        }
-    }
-
-    var courseSelectionManager = new clickSelectionManager();
-    var assignmentSelectionManager = new clickSelectionManager();
-    var problemSelectionManager = new clickSelectionManager();
+    var courseSelectionManager = new ClickSelectionManager();
+    var assignmentSelectionManager = new ClickSelectionManager();
+    var problemSelectionManager = new ClickSelectionManager();
 })();
