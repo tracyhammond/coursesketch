@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 /**
  * This class creates the highlightText dialog
  * The dialog is moveable with a color selector and checkbox for turning highlight mode on and off
@@ -13,13 +14,13 @@ function HighlightText() {
      * It also ignores click and drag from textareas and buttons within the dialog
      */
     function enableDragging() {
-        interact(shadowRoot.querySelector("#highlightTextDialog"))
-            .ignoreFrom("button")
+        interact(shadowRoot.querySelector('#highlightTextDialog'))
+            .ignoreFrom('button')
             .draggable({
-                onmove: function (event) {
-                    var target = event.target,
-                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                onmove: function(event) {
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
                     target.style.transform =
@@ -32,21 +33,21 @@ function HighlightText() {
             })
             .inertia(false)
             .restrict({
-                drag: "parent",
+                drag: 'parent',
                 endOnly: true,
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-        });
+            });
     }
 
     /**
-     * @param children {array} represents the childNodes in the selected text.
-     * @return {boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
+     * @param {Array} children represents the childNodes in the selected text.
+     * @return {Boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
      * If false then the text selected will not be highlighted
      * It will not be highlighted because it contains node types such as H2 and adding span tags will ruin the formatting of the text
      */
     function checkChildrenNodes(children) {
         for (i = 0; i < children.length; i++) {
-            if (children[i].nodeName !== "#text" && children[i].nodeName !== "SPAN") {
+            if (children[i].nodeName !== '#text' && children[i].nodeName !== 'SPAN') {
                 return false;
             }
         }
@@ -59,9 +60,9 @@ function HighlightText() {
      * The selection must also contain characters (no alert for this)
      */
     function highlightText() {
-        if (window.getSelection().type !== "None") {
+        if (window.getSelection().type !== 'None') {
             var myText = window.getSelection();
-            var range = myText.getRangeAt();
+            var range = myText.getRangeAt(0);
             children = range.cloneContents().childNodes;
             if (myText.toString().length > 0) { // Makes sure the selection contains characters so blank span tags are not added
                 if (checkChildrenNodes(children)) { // Makes sure adding span tags will not ruin the selected text formatting
@@ -79,16 +80,16 @@ function HighlightText() {
                     range.insertNode(newNode); // Inserts the new node to where the old range was
                     this.saveData();
                 } else {
-                    alert("Please make a valid selection."); // Message for invalid selections
+                    alert('Please make a valid selection.'); // Message for invalid selections
                 }
             }
         }
     }
 
     /**
-     * @param node {node} is the node whose path we are getting
-     * @param currentPath {string} is used within the function to append the previous sibling to the path
-     * @return currentPath {string} is the XML Path of the input node
+     * @param {Node} node is the node whose path we are getting
+     * @param {String} currentPath is used within the function to append the previous sibling to the path
+     * @return {String} currentPath is the XML Path of the input node
      */
     function getXPath (node, currentPath) {
         currentPath = currentPath || '';
@@ -108,7 +109,7 @@ function HighlightText() {
     }
 
     /**
-     * @param {node} is a clone of the custom HTML template for highlighting text
+     * @param {Node} templateClone is a clone of the custom HTML template for highlighting text
      * This creates the element in the shadowRoot and turns highlight mode on by default
      * It tracks changes to the color selector and to the highlight mode checkbox
      * When color selector is changed, the color variable updates.
@@ -120,10 +121,10 @@ function HighlightText() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
         if (isUndefined(this.backgroundColor)) {
-            this.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+            this.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
         }
         if (isUndefined(this.textColor)) {
-            this.textColor = shadowRoot.querySelector("#textColor").value;
+            this.textColor = shadowRoot.querySelector('#textColor').value;
         }
         this.startPath = undefined;
         this.startOffset = undefined;
@@ -132,30 +133,30 @@ function HighlightText() {
         this.highlightProto = undefined;
 
         // Binds or unbinds mouseup and the highlightText function based on the state of the highlightMode checkbox
-        shadowRoot.querySelector("#highlightMode").onchange = function() {
-            if (shadowRoot.querySelector("#highlightMode").checked) {
-                $(document).on("mouseup", highlightText.bind(this));
+        shadowRoot.querySelector('#highlightMode').onchange = function() {
+            if (shadowRoot.querySelector('#highlightMode').checked) {
+                $(document).on('mouseup', highlightText.bind(this));
             } else {
-                $(document).off("mouseup", highlightText.bind(this));
+                $(document).off('mouseup', highlightText.bind(this));
             }
         }.bind(this); // Binds this so the highlightText function can write to variables (this is to define the correct scope)
 
-        // Click action for the "X" that closes the dialog
-        shadowRoot.querySelector("#closeButton").onclick = function() {
-            if (confirm("You are about to permanently remove the highlighting from this step.")) {
-                $(document).off("mouseup", highlightText); // Removes the bound mouseup event
+        // Click action for the 'X' that closes the dialog
+        shadowRoot.querySelector('#closeButton').onclick = function() {
+            if (confirm('You are about to permanently remove the highlighting from this step.')) {
+                $(document).off('mouseup', highlightText); // Removes the bound mouseup event
                 localScope.getFinishedCallback()(localScope.command, event, localScope.currentUpdate); // Gets and calls finishedCallback
             }
         };
 
         // Updates value of backgroundColor when the color selector value is changed by the user
-        shadowRoot.querySelector("#backgroundColor").onchange = function() {
-            localScope.backgroundColor = shadowRoot.querySelector("#backgroundColor").value;
+        shadowRoot.querySelector('#backgroundColor').onchange = function() {
+            localScope.backgroundColor = shadowRoot.querySelector('#backgroundColor').value;
         };
 
         // Updates value of textColor when the color selecor value is changed by the user
-        shadowRoot.querySelector("#textColor").onchange = function() {
-            localScope.textColor = shadowRoot.querySelector("#textColor").value;
+        shadowRoot.querySelector('#textColor').onchange = function() {
+            localScope.textColor = shadowRoot.querySelector('#textColor').value;
         };
 
         enableDragging();
@@ -173,9 +174,9 @@ function HighlightText() {
      * nodePathProto is the data needed to define a selection with its highlighted color. There can be multiple per tutorial step
      */
     this.saveData = function() {
-        var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
+        var nodePathProto = CourseSketch.prutil.SelectedNodePath();
         if (isUndefined(this.highlightProto)) { // Defines highlightProto if it does not already exist
-            this.highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            this.highlightProto = CourseSketch.prutil.ActionCreateHighlightText();
         }
         if (!isUndefined(this.startPath)) { // If startPath is defined, then saving will occur
             nodePathProto.setStartPath(this.startPath);
@@ -188,8 +189,8 @@ function HighlightText() {
         }
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
-        if ((isUndefined(this.id) || this.id == null || this.id == "")) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
+        if ((isUndefined(this.id) || this.id === null || this.id === '')) {
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -199,10 +200,10 @@ function HighlightText() {
 
     /**
      * This function loads data by recreating the node and then insert it into the webpage
-     * @param protoData {protoCommand} is the CommandData to be loaded
+     * @param {ProtoCommand} protoData is the CommandData to be loaded
      */
     this.loadData = function(protoData) {
-        if (isUndefined(this.shadowRoot) || this.shadowRoot == null) {
+        if (isUndefined(this.shadowRoot) || this.shadowRoot === null) {
             this.loadedData = protoData;
             return;
         }
@@ -210,15 +211,17 @@ function HighlightText() {
             return;
         }
         var nodes = protoData.getSelectedNodePath(); // This is a list of all the nodes to recreate
+        var backgroundColor;
+        var textColor;
         this.highlightProto = protoData; // This sets highlightProto to the previous list so that you can add new selections in edit mode
-        for (var i=0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
+        for (var i = 0; i < nodes.length; i++) { // Goes through the list of nodes to recreate and recreates them
             var loadNode = nodes[i]; // The current node to be loaded
             var rangeStartNode = loadNode.getStartPath();
             var rangeStartOffset = loadNode.getStartOffset();
             var rangeEndNode = loadNode.getEndPath();
             var rangeEndOffset = loadNode.getEndOffset();
-            var backgroundColor = loadNode.getBackgroundColor();
-            var textColor = loadNode.getTextColor();
+            backgroundColor = loadNode.getBackgroundColor();
+            textColor = loadNode.getTextColor();
 
             // This recreates the node based on selection start/end node/offset and text/background colors
             if (!isUndefined(window.getSelection)) {

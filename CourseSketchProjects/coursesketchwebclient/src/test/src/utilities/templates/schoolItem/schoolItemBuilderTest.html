@@ -117,7 +117,7 @@
             var s = new SchoolItemBuilder();
             var customMessage = "my message!";
             s.setListTitle(customMessage);
-            s.setList([ CourseSketch.PROTOBUF_UTIL.SrlCourse() ]);
+            s.setList([ CourseSketch.prutil.SrlCourse() ]);
             s.build(this.schoolElement);
             assert.equal(this.schoolElement.childNodes.length, 2, "There should be a single item built into the child list");
             assert.equal(this.schoolElement.childNodes[0].textContent, customMessage, "The custome message has built correctly");
@@ -137,7 +137,7 @@
         test("box call back", function(assert) {
             expect(3);
             var s = new SchoolItemBuilder();
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
             s.setBoxClickFunction(function(item) {
                 assert.ok(true, "box callbock called");
                 assert.equal(schoolItem, item, "Callback is called with correct value");
@@ -148,19 +148,23 @@
             simulate(this.schoolElement.childNodes[0], 'click');
         });
 
-        test("edit call back", function(assert) {
+        test("edit call back with no value change", function(assert) {
             expect(6);
             var s = new SchoolItemBuilder();
             var oldValue = "old";
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
 
             schoolItem.name = oldValue;
 
             s.setEditCallback(function(type, oldV, newV, item) {
+                console.log(type);
+                console.log(oldV);
+                console.log(newV);
+                console.log(item);
                 assert.ok(true, "edit callbock called");
                 assert.equal(type, 'name', "function is called with correct type");
-                assert.equal(oldV, oldValue, "function is called with the old value");
-                assert.equal(newV, oldValue, "called with the new value (which happens to be equal to the old value)");
+                assert.equal(oldV.get(type), oldValue, "function is called with the old value");
+                assert.equal(newV.get(type), oldValue, "called with the new value (which happens to be equal to the old value)");
                 assert.equal(item, schoolItem, "Callback is called with correct school item");
             });
             s.setList([ schoolItem ]);
@@ -180,7 +184,7 @@
             var box = document.createElement("school-item");
             var s = new SchoolItemBuilder();
             s.setShowState(false);
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
             s.setBoxState(box, schoolItem);
             assert.equal(box.dataset.state, undefined);
             // create school item.
@@ -189,8 +193,8 @@
         test("closed", function(assert) {
             var box = document.createElement("school-item");
             var s = new SchoolItemBuilder();
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
+            schoolItem.state = CourseSketch.prutil.State();
             schoolItem.state.pastDue = true;
             s.setBoxState(box, schoolItem);
             assert.equal(box.dataset.state, "closed");
@@ -200,8 +204,8 @@
         test("notOpen", function(assert) {
             var box = document.createElement("school-item");
             var s = new SchoolItemBuilder();
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
+            schoolItem.state = CourseSketch.prutil.State();
             s.setBoxState(box, schoolItem);
             assert.equal(box.dataset.state, "notOpen");
             // create school item.
@@ -210,8 +214,8 @@
         test("completed", function(assert) {
             var box = document.createElement("school-item");
             var s = new SchoolItemBuilder();
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
+            schoolItem.state = CourseSketch.prutil.State();
             schoolItem.state.completed = true;
             s.setBoxState(box, schoolItem);
             assert.equal(box.dataset.state, "completed");
@@ -221,8 +225,8 @@
         test("inProgress", function(assert) {
             var box = document.createElement("school-item");
             var s = new SchoolItemBuilder();
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
+            schoolItem.state = CourseSketch.prutil.State();
             schoolItem.state.started = true;
             s.setBoxState(box, schoolItem);
             assert.equal(box.dataset.state, "inProgress");
@@ -232,8 +236,8 @@
         test("graded", function(assert) {
             var box = document.createElement("school-item");
             var s = new SchoolItemBuilder();
-            var schoolItem = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-            schoolItem.state = CourseSketch.PROTOBUF_UTIL.State();
+            var schoolItem = CourseSketch.prutil.SrlCourse();
+            schoolItem.state = CourseSketch.prutil.State();
             schoolItem.state.graded = true;
             s.setBoxState(box, schoolItem);
             assert.equal(box.dataset.state, "graded");
@@ -255,7 +259,7 @@
             var s = new SchoolItemBuilder();
             var customMessage = "my message!";
             s.setListTitle(customMessage);
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var assignment = CourseSketch.prutil.SrlAssignment();
             assignment.description = customMessage;
             s.setList([ assignment ]);
             s.build(this.schoolElement);
@@ -273,8 +277,8 @@
             var time = date.getTime();
 
             s.setShowDate(true);
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            var assignment = CourseSketch.prutil.SrlAssignment();
+            var date = CourseSketch.prutil.DateTime();
             date.millisecond = dcodeIO.Long.fromNumber(time);
 
             assignment.accessDate = date;
@@ -294,8 +298,8 @@
             var time = date.getTime();
 
             s.setShowDate(true);
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            var assignment = CourseSketch.prutil.SrlAssignment();
+            var date = CourseSketch.prutil.DateTime();
             date.millisecond = dcodeIO.Long.fromNumber(time);
 
             assignment.dueDate = date;
@@ -315,8 +319,8 @@
             var time = date.getTime();
 
             s.setShowDate(true);
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            var assignment = CourseSketch.prutil.SrlAssignment();
+            var date = CourseSketch.prutil.DateTime();
             date.millisecond = dcodeIO.Long.fromNumber(time);
 
             assignment.closeDate = date;
@@ -336,8 +340,8 @@
             var time = date.getTime();
 
             s.setShowDate(true);
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
-            var date = CourseSketch.PROTOBUF_UTIL.DateTime();
+            var assignment = CourseSketch.prutil.SrlAssignment();
+            var date = CourseSketch.prutil.DateTime();
             date.millisecond = dcodeIO.Long.fromNumber(time);
 
             assignment.closeDate = date;
@@ -362,7 +366,7 @@
         test("course type", function(assert) {
             expect(0);
             var s = new SchoolItemBuilder();
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+            var assignment = CourseSketch.prutil.SrlCourse();
             s.setList([ assignment ]);
             s.build(this.schoolElement);
         });
@@ -370,7 +374,7 @@
         test("assignment type", function(assert) {
             expect(0);
             var s = new SchoolItemBuilder();
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+            var assignment = CourseSketch.prutil.SrlAssignment();
             s.setList([ assignment ]);
             s.build(this.schoolElement);
         });
@@ -378,7 +382,7 @@
         test("problem type", function(assert) {
             expect(0);
             var s = new SchoolItemBuilder();
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+            var assignment = CourseSketch.prutil.SrlProblem();
             s.setList([ assignment ]);
             s.build(this.schoolElement);
         });
@@ -386,7 +390,7 @@
         test("bank problem type", function(assert) {
             expect(0);
             var s = new SchoolItemBuilder();
-            var assignment = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            var assignment = CourseSketch.prutil.SrlBankProblem();
             s.setList([ assignment ]);
             s.build(this.schoolElement);
         });

@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>CourseSketch</groupId>
+
 	<artifactId>ProtoFiles</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<name>ProtoFiles</name>
 	<profiles>
 		<profile>
+			<id>proto-windows</id>
 			<activation>
 				<os>
 					<family>Windows</family>
@@ -34,6 +35,7 @@
 
 	<properties>
 	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+		<clientProtoDir>coursesketchwebclient/src/main/resources/other/protobuf</clientProtoDir>
 	</properties>
 	<build>
 		<plugins>
@@ -69,15 +71,32 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${resourcePluginVersion}</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/../${clientProtoDir}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/proto</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>2.3.0</version>
-        </dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>

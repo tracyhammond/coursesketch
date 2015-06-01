@@ -1,6 +1,7 @@
 /**
- * @Class Handles the window state.
- * 
+ * @class Redirector
+ * Handles the window state.
+ *
  * Right now this is missing a couple of items but ill describe them here.
  * <ol>
  * <li>A way to add and pop off states (you can not undo redo though so dont
@@ -25,39 +26,55 @@
  * </ol>
  */
 function Redirector(scope, affectedWindow) {
-    var scope = scope;
     var activeState = false;
-    var STARTING_URL = "src";
-    var FILE_ENDINGS = "html";
+    var STARTING_URL = 'src';
+    var FILE_ENDINGS = 'html';
     /**
      * Sets the hash url to the file location.
-     * 
+     *
      * This allows us to find the url if something were to happen.
      */
     this.setRedirect = function setRedirect(url) {
-        var shortUrl = replaceAll(FILE_ENDINGS, '', url); // Remove html from file
-        shortUrl = replaceAll('/' + STARTING_URL, '', shortUrl); // Remove html from file
+        var shortUrl = replaceAll(url, FILE_ENDINGS, ''); // Remove html from file
+        shortUrl = replaceAll(shortUrl, '/' + STARTING_URL, ''); // Remove html from file
         // ending
-        var hashUrl = replaceAll('/', '.', shortUrl);
+        var hashUrl = replaceAll(shortUrl, '/', '.');
         var trimmedHash = hashUrl.substring(1, hashUrl.length - 1); // Trim
         // ending
         var replacedHash = ('' + window.location).split('#')[0] + '#' + trimmedHash;
         scope.location.replace(replacedHash);
-    }
+    };
 
-    function replaceAll(find, replace, str) {
+    /**
+     * Replaces all strings with a different value.
+     *
+     * @param {String} str The string that the replace is happening in.
+     * @param {RegularExpression} find the expression that is being looked for.
+     * @param {String} replace what is being replaced with.
+     *
+     * @returns {String} A string with the replaced values.
+     */
+    function replaceAll(str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);
     }
 
+    /**
+     * Gets the redirection url of the page from the hash.
+     * @returns {String}
+     */
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
-        var addedSlashes = STARTING_URL + '/' + replaceAll('\\.', '/', starting) + '.' + FILE_ENDINGS;
+        var addedSlashes = STARTING_URL + '/' + replaceAll(starting, '\\.', '/') + '.' + FILE_ENDINGS;
         return addedSlashes;
-    }
+    };
 
+    /**
+     * Changes the window address and adds a browser event.
+     * @param {String} url
+     */
     this.moveWindow = function(url) {
         affectedWindow.src = url;
-    }
+    };
 
     /**
      * Redirects the window but does not actually add an event.
@@ -67,5 +84,5 @@ function Redirector(scope, affectedWindow) {
         docWindow.location.replace(url); // it allows the url to change
         // without adding an event to the
         // history!
-    }
+    };
 }

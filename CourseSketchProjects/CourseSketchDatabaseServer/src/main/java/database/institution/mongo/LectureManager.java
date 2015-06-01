@@ -12,9 +12,12 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.school.School;
+import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +40,6 @@ import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDES;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages lectures for mongo.
@@ -187,7 +187,7 @@ public final class LectureManager {
         // FUTURE: maybe not make this necessarry if the insertion of lecture prevents this.
         final Authenticator.AuthType auth = new Authenticator.AuthType();
         auth.setCheckDate(true);
-        auth.setUser(true);
+        auth.setCheckUser(true);
         if (isUsers && !authenticator.isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
@@ -240,7 +240,7 @@ public final class LectureManager {
 
         exactLecture.setState(stateBuilder);
 
-        final School.SrlPermission.Builder permissions = School.SrlPermission.newBuilder();
+        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (isAdmin) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
@@ -349,7 +349,7 @@ public final class LectureManager {
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (lecture.hasAccessPermission()) {
-                final School.SrlPermission permissions = lecture.getAccessPermission();
+                final SrlPermission permissions = lecture.getAccessPermission();
                 if (isAdmin) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
@@ -389,8 +389,11 @@ public final class LectureManager {
      * @param unlocked
      *         a boolean that is true if the object is unlocked
      * @return true if the assignment was inserted correctly.
+     * @throws AuthenticationException The user does not have permission to update the lecture.
+     * @throws DatabaseAccessException The lecture does not exist.
      */
-    static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {
+    static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked)
+            throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
         final DBObject cursor = myDbRef.fetch();
         DBObject updateObj = null;
