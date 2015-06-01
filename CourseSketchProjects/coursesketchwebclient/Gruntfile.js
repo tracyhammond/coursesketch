@@ -7,13 +7,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-connect-rewrite');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-webdriver');
 
     /******************************************
      * GRUNT INIT
@@ -99,12 +99,19 @@ module.exports = function(grunt) {
                 }
             }
         },
-        qunit: {
+        webdriver: {
             options: {
-                httpBase: 'http://localhost:9001',
-                timeout: 2000
+                output: 'target/unitTest',
+                ui: 'qunit',
+                host: 'localhost',
+                port: 9001,
+                desiredCapabilities: {
+                    browserName: 'chrome'
+                }
             },
-            all: [ 'src/test/src/**/*Test.html' ]
+            unit: {
+                tests: [ 'src/test/src/**/*Test.html' ],
+            }
         },
         jsdoc: {
             dist: {
@@ -337,7 +344,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', function() {
         grunt.task.run([
             'server',
-            'qunit'
+            'webdriver:unit'
         ]);
     });
 
@@ -409,5 +416,5 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'build' ]);
+    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'test', 'build' ]);
 };
