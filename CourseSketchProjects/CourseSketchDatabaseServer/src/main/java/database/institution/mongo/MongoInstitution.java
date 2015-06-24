@@ -486,7 +486,7 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page) throws AuthenticationException {
+    public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page)
             throws AuthenticationException, DatabaseAccessException {
         return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
     }
