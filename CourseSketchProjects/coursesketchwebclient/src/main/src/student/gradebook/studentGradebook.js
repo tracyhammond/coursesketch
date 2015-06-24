@@ -37,10 +37,10 @@
         table.innerHTML = '';
 
         var assignmentMap = new Map();
-        var categorytMap = new Map();
+        var categoryMap = new Map();
 
-        createCategoryHeader(categoryList, categorytMap, table);
-        createAssignmentHeader(assignmentList, assignmentMap, categorytMap, table);
+        createCategoryHeader(categoryList, categoryMap, table);
+        createAssignmentHeader(assignmentList, assignmentMap, categoryMap, table);
         CourseSketch.gradeBook.populateGrades(gradeList, assignmentMap, table);
 
         $('.collapsible').collapsible({
