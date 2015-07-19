@@ -211,6 +211,7 @@ public final class DataRequestHandler {
                             idChain.addAllIdChain(userList);
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, idChain.build()));
                         }
+                        break;
                         default:
                             break;
                     }
