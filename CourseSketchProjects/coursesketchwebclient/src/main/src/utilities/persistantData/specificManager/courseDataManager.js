@@ -366,8 +366,8 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
 
     /**
      * Gets the course roster.
-     * @param courseId
-     * @param {Functon} callback A callback is called with a list of userIds
+     * @param {String} courseId
+     * @param {Function} callback A callback is called with a list of userIds
      */
     function getCourseRoster(courseId, callback) {
         if (isUndefined(callback)) {
