@@ -74,6 +74,11 @@ function ProtobufSetup() {
         assignValues(utilBuilder);
     }
 
+    /**
+     * Builds the Grade protobuf files.
+     *
+     * This is the base for storing and retrieving grades.
+     */
     function buildGrade() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'grading.proto');
         var gradingBuilder = builder.build(PROTOBUF_PACKAGE).srl.grading;

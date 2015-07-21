@@ -28,7 +28,7 @@ public final class GradingUpsertHandler {
      * @param institution The database interface.
      * @param itemSet The upsert object being sent.
      * @param userId The id of the user upserting the grade.
-     * @param gradedTime
+     * @param gradedTime The time of the grade submission.
      * @throws AuthenticationException Thrown if user does not have correct permission to upsert grade.
      * @throws DatabaseAccessException Thrown if there is something not found in the database.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
