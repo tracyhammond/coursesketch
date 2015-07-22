@@ -345,8 +345,7 @@ public final class GradeManager {
         if (!cursor.hasNext()) {
             // FUTURE: do not let this code merge into master without a refactor for timeouts when getting data from the database.
             // and then this method will still throw an error.
-            // throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
-            return grades;
+            throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
         }
 
         while (cursor.hasNext()) {
