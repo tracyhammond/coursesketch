@@ -9,6 +9,11 @@
         });
     });
 
+    /**
+     * Loads grades for a given course.
+     *
+     * @param {String} courseId The ID of the course to load grades for.
+     */
     CourseSketch.gradeBook.loadGrades = function(courseId) {
         CourseSketch.dataManager.getCourse(courseId, function(course) {
             CourseSketch.gradeBook.course = course;
@@ -28,10 +33,10 @@
     /**
      * Initializes a table from the given values.
      *
-     * @param asignmentList
-     * @param gradeList
-     * @param studentList
-     * @param table
+     * @param {List<String>} categoryList List of category names.
+     * @param {List<String>} assignmentList List of assignment IDs.
+     * @param {List<ProtoGrade>} gradeList List of grades from the server.
+     * @param {HTMLTable} table The grade table on the webpage.
      */
     CourseSketch.gradeBook.initializeTable = function(categoryList, assignmentList, gradeList, table) {
         table.innerHTML = '';
@@ -51,9 +56,10 @@
     /**
      * This populates the map of grades for each student and, calls student adding function if student has not been added yet.
      *
-     * @param {List<String>} assignmentList The list of assignment IDs.
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
-     * @return {List<ProtoGrade>} grades that were not displayed.   This is because the users do not exist anymore in the course roster.
+     * @param {Map<String, Element>} assignmentMap Map of assignmentIDs to table row.
+     * @param {HTMLTable} table The grade table on the webpage.
+     * @return {List<ProtoGrade>} grades that were not displayed. This is because the users do not exist anymore in the course roster.
      */
     CourseSketch.gradeBook.populateGrades = function(listGrades, assignmentMap, table) {
         var gradesNotShown = [];
@@ -72,9 +78,9 @@
     /**
      * Creates the assignment header while populating the assignment map.
      *
-     * @param {List<String>} assignmentList
-     * @param {Element} table
-     * @param {Map<String, Element>} assignmentMap
+     * @param {List<String>} categoryList List of category names.
+     * @param {Map<String, Element>} categoryMap Map of category names to corresponding table element.
+     * @param {HTMLTable} table The grade table on the webpage.
      */
     function createCategoryHeader(categoryList, categoryMap, table) {
         var template = document.querySelector('#expandableTemplate');
@@ -94,9 +100,10 @@
     /**
      * Creates the assignment header while populating the assignment map.
      *
-     * @param {List<SrlAssignment>} assignmentList
-     * @param {Element} table
-     * @param {Map<String, Element>} assignmentMap
+     * @param {List<SrlAssignment>} assignmentList List of assignments.
+     * @param {Map<String, Element>} assignmentMap Map of assignmentIDs to corresponding table element.
+     * @param {Map<String, Element>} categoryMap Map of category names to corresponding table element.
+     * @param {Element} table The grade table on the webpage.
      */
     function createAssignmentHeader(assignmentList, assignmentMap, categoryMap, table) {
         var template = document.querySelector('#expandableTemplate');
