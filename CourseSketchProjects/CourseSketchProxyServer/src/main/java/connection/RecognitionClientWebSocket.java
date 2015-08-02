@@ -1,4 +1,4 @@
-package internalconnections;
+package connection;
 
 import java.net.URI;
 

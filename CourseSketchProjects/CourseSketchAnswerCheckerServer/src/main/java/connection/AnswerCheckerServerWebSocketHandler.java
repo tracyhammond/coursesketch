@@ -6,6 +6,8 @@ import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message;
@@ -15,10 +17,8 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A simple WebSocketServer implementation.
@@ -65,7 +65,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }
@@ -80,18 +80,18 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 } catch (ConnectionException e1) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
                 // actually retrieve answer.
-                final Request.Builder builder = Request.newBuilder();
-                builder.setRequestType(MessageType.DATA_REQUEST);
-                builder.setSessionInfo(req.getSessionInfo() + "+"
-                        + state.getKey());
+                final Request.Builder builder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, null,
+                        req.getSessionInfo() + "+" + state.getKey());
+
                 final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
                 itemRequest.setQuery(ItemQuery.SOLUTION);
                 itemRequest.addItemId(student.getProblemId());
+                builder.setOtherData(itemRequest.build().toByteString());
                 // FIXME this needs to change probably to make this work
                 // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
                 // state.getKey(), SubmissionConnection.class);
@@ -102,7 +102,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 } catch (ConnectionException e) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 }
             }
         }

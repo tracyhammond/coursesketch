@@ -8,6 +8,7 @@ import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.request.Message;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
@@ -434,7 +435,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if there is an issue accessing data.
      */
-    void getExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections)
+    void getExperimentAsUser(String userId, String problemId, Message.Request sessionInfo, MultiConnectionManager internalConnections)
             throws DatabaseAccessException;
 
     /**
@@ -455,7 +456,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the instructor does not have authentication to the experiments.
      */
-    void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
+    void getExperimentAsInstructor(String userId, String problemId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
