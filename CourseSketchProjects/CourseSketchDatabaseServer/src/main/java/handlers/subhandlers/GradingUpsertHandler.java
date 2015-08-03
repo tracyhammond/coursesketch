@@ -11,7 +11,7 @@ import protobuf.srl.utils.Util;
 import java.util.List;
 
 /**
- * Used to handle grade and grading policy data upserts to the server.
+ * Used to handle grade data upserts to the server.
  *
  * Created by matt on 4/22/15.
  */
