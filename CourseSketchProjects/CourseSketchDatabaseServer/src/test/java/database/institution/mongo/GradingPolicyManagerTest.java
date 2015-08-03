@@ -200,7 +200,7 @@ public class GradingPolicyManagerTest {
     }
 
     @Test
-    public void insertGradingPolicyTest() throws Exception {
+    public void firstInsertGradingPolicyTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
@@ -209,6 +209,23 @@ public class GradingPolicyManagerTest {
 
         fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
         Assert.assertEquals(fakeMongoPolicy, testPolicy);
+    }
+
+    @Test
+    public void updateGradingPolicyTest() throws Exception {
+        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
+        fakeProtoPolicy.setCourseId(courseId);
+
+        GradingPolicyManager.upsertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+
+        fakeProtoPolicy.clearDroppedAssignments();
+        GradingPolicyManager.upsertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        DBObject testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).findOne(new ObjectId(courseId));
+
+        fakeMongoPolicy.remove(DROPPED_ASSIGNMENTS);
+        fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
+        Assert.assertEquals(fakeMongoPolicy, testPolicy);
+        Assert.assertEquals(db.getCollection(GRADING_POLICY_COLLECTION).count(), 1); // Only 1 document in the collection
     }
 
     @Test
