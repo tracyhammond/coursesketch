@@ -472,7 +472,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    void insertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
+    void upsertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets the grading policy for a course from the mongoDb.

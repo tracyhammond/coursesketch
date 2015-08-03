@@ -86,7 +86,7 @@ public final class GradingPolicyManager {
     }
 
     /**
-     * This method will insert the gradingPolicy in Mongo based on the proto object passed in.
+     * This method will upsert the gradingPolicy in Mongo based on the proto object passed in.
      *
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
@@ -103,7 +103,7 @@ public final class GradingPolicyManager {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    public static void insertGradingPolicy(final Authenticator authenticator, final DB dbs, final String userId, final ProtoGradingPolicy policy)
+    public static void upsertGradingPolicy(final Authenticator authenticator, final DB dbs, final String userId, final ProtoGradingPolicy policy)
             throws AuthenticationException, DatabaseAccessException {
         final AuthType auth = new AuthType();
         auth.setCheckAdminOrMod(true);
@@ -141,7 +141,11 @@ public final class GradingPolicyManager {
             policyObject.append(DROPPED_ASSIGNMENTS, droppedAssignments);
         }
 
-        policyCollection.insert(policyObject);
+        // Query for an existing policy for the course.
+        final BasicDBObject query = new BasicDBObject(SELF_ID, new ObjectId(policy.getCourseId()));
+
+        // Query, update, upsert (true), multi object (false)
+        policyCollection.update(query, policyObject, true, false);
     }
 
     /**

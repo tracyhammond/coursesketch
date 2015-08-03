@@ -204,7 +204,7 @@ public class GradingPolicyManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
         DBObject testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).findOne(new ObjectId(courseId));
 
         fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
@@ -215,7 +215,7 @@ public class GradingPolicyManagerTest {
     public void getGradingPolicyTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(fauth, db, courseId, FAKE_USER_ID);
         Assert.assertEquals(fakeProtoPolicy.build(), testPolicy);
@@ -225,7 +225,7 @@ public class GradingPolicyManagerTest {
     public void unauthenticatedAddGradingPolicy() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_USER_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(fauth, db, FAKE_USER_ID, fakeProtoPolicy.build());
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -237,7 +237,7 @@ public class GradingPolicyManagerTest {
     public void userNotInCourseGetPolicy() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(fauth, db, courseId, "notInCourse");
     }
