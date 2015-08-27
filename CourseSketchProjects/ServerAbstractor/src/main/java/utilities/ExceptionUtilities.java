@@ -45,18 +45,18 @@ public final class ExceptionUtilities {
      *         The request that was sent to this server.
      * @param exception
      *         the exception to be sent back to the client.
-     * @param string
+     * @param responseText
      *          sets the Response Text to the string and not the exception's message.
      * @return A request that warps around the exception.
      */
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     public static Message.Request createExceptionRequest(final Message.Request inputRequest, final Message.ProtoException exception,
-            final String string) {
+            final String responseText) {
         final Message.Request.Builder builder = ProtobufUtilities.createBaseResponse(inputRequest);
         builder.setRequestType(Message.Request.MessageType.ERROR);
         builder.setOtherData(exception.toByteString());
-        if (string != null) {
-            builder.setResponseText(string);
+        if (responseText != null) {
+            builder.setResponseText(responseText);
         } else {
             builder.setResponseText(exception.getMssg());
         }
