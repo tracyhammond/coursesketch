@@ -149,13 +149,8 @@ function RegisterSystem() {
             loginInfo.email = email;
             loginInfo.isRegistering = true;
             loginInfo.isInstructor = isInstructor;
-            var request = CourseSketch.prutil.Request();
+            var request = CourseSketch.prutil.createRequestFromData(loginInfo, CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
 
-            if (!isUndefined(request.setLogin)) {
-                request.login = loginInfo;
-            }
-
-            request.otherData = loginInfo.toArrayBuffer();
             connection.sendRequest(request);
             console.log('Sending register information');
         }

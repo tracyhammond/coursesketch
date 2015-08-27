@@ -266,13 +266,21 @@ function ProtobufSetup() {
      *              An uncompiled protobuf object.
      * @param {MessageType} requestType
      *              The message type of the request.
+     * @param {String} [requestId]
+     *              An id that is required for every request.
      * @return {Request}
      */
-    this.createRequestFromData = function(data, requestType) {
+    this.createRequestFromData = function(data, requestType, requestId) {
         var request = this.Request();
         request.requestType = requestType;
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
+
+        if (!isUndefined(requestId)) {
+            request.requestId = requestId;
+        } else {
+            request.requestId = generateUUID();
+        }
         return request;
     };
 
@@ -284,7 +292,8 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass())) {
+        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass()) &&
+            !(exception instanceof CourseSketch.BaseException)) {
             return this.errorToProtoException(exception);
         }
         var pException = CourseSketch.prutil.ProtoException();
@@ -383,11 +392,7 @@ function ProtobufSetup() {
             throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
         }
 
-        var request = this.Request();
-        request.requestType = requestType;
-        var buffer = update.toArrayBuffer();
-        request.setOtherData(buffer);
-        return request;
+        return createRequestFromData(update, requestType);
     };
 
     /**
@@ -410,7 +415,29 @@ function ProtobufSetup() {
     };
 
     /**
+     * Creates an itemRequest from the given data.
+     *
+     * @param {ItemQuery} queryType The query type of the object.
+     * @param {String | List<String>} [idList] A list of ids used for retrieving data from the database.
+     * @param {ByteArray} [advanceQuery] A protobuf object used to represent more complex queries.
+     * @returns {ItemRequest} An item request from the data.
+     */
+    this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
+        var itemRequest = CourseSketch.prutil.ItemRequest();
+        itemRequest.setQuery(queryType);
+
+        if (!isUndefined(idList)) {
+            itemRequest.setItemId(idList);
+        }
+        if (!isUndefined(advanceQuery)) {
+            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+        }
+        return itemRequest;
+    };
+
+    /**
      * Creates a protobuf date time object.
+     *
      * @param {Number|Date|Long} inputDateTime representing the time that this object should be created with.
      * @return {DateTime} A protobuf date time objct that can be used for date stuff.
      */
@@ -488,12 +515,16 @@ function ProtobufSetup() {
      *            The protobuf object that is being decoded.
      *            This can be grabbed by using CourseSketch.prutil.get<objectName>Class();
      * @param {Function} [onError]
-     *            A callback that is called when an error occurs
+     *            A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
-     *            and may be called up to two times.
-     * @return {ProtobufObject} decoded protobuf object.
+     *
+     * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
+     * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {
+        if (isUndefined(data) || data === null || typeof data !== 'object') {
+            throw new ProtobufException('Data type is not supported:' + typeof data);
+        }
         try {
             data.mark();
         } catch (exception) {
@@ -501,10 +532,15 @@ function ProtobufSetup() {
                 onError(exception);
             }
         }
-        if (isUndefined(data) || data === null || typeof data !== 'object') {
-            throw new ProtobufException('Data type is not supported:' + typeof data);
+        var decoded = undefined;
+        try {
+            decoded = proto.decode(data);
+        } catch (exception) {
+            throw new ProtobufException('data was not decoded successfully');
         }
-        var decoded = proto.decode(data);
+        if (isUndefined(decoded)) {
+            throw new ProtobufException('data was not decoded successfully or input was empty');
+        }
         try {
             data.reset();
         } catch (exception) {
@@ -513,6 +549,22 @@ function ProtobufSetup() {
             }
         }
         return decoded;
+    };
+
+    /**
+     * Returns a "clean" version of the protobuf files that can be considered a clone.
+     *
+     * "clean" means that the protobuf object is compiled into a byteArray then immediately decompiled.
+     * The purpose of cleaning is in case you want to prototype a protobuf object but the object was created on an old version of objects.
+     * Then the protubf would not correctly apply to this new object.
+     *
+     * @param {ProtobufObject} protobuf An object that we want to "clean".
+     * @param {ProtobufMessage} protobufType A class representing the object we want to "clean".
+     * @returns {ProyobufObject} A clean version of the object we sent in.
+     */
+    this.cleanProtobuf = function(protobuf, protobufType) {
+        // TODO: check to see if we can extract the type from the protobuf object.
+        return CourseSketch.prutil.decodeProtobuf(protobuf.toArrayBuffer(), protobufType);
     };
 
     // makes all of the methods read only
