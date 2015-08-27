@@ -365,6 +365,39 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
     parent.insertCourse = insertCourse;
 
     /**
+     * Gets the course roster.
+     * @param {String} courseId
+     * @param {Function} callback A callback is called with a list of userIds
+     */
+    function getCourseRoster(courseId, callback) {
+        if (isUndefined(callback)) {
+            throw new DatabaseException('Calling getGrade with an undefined callback');
+        }
+
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, [ courseId ]);
+
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId, item));
+                return;
+            }
+            // after listener is removed
+            if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                // not calling the state callback because this should skip that step.
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId));
+                return;
+            }
+
+            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getIdChainClass());
+            callback(decodedRoster.idChain);
+        });
+
+    }
+    parent.getCourseRoster = getCourseRoster;
+
+    /**
      * gets the id's of all of the courses in the user's local client.
      */
     database.getFromCourses(COURSE_LIST, function(e, request, result) {
