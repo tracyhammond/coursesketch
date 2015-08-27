@@ -242,13 +242,13 @@ public final class GradeManager {
      * @param requesterId
      *         The id of the user requesting the grade. This is required.
      * @param userId
-     *         The id of the user that the grade is for. This is required.
+     *         The id of the user that the grade is for. This is required. This value is at itemId(3).
      * @param courseId
-     *         The id of the course that the grade is for. This is required.
+     *         The id of the course that the grade is for. This is required. This value is at itemId(0).
      * @param assignmentId
-     *         The id of the assignment that the grade is for. This is optional.
+     *         The id of the assignment that the grade is for. This is optional. This value is at itemId(1).
      * @param problemId
-     *         The id of the problem that the grade is for. This is optional.
+     *         The id of the problem that the grade is for. This is optional. This value is at itemId(2).
      * @return ProtoGrade object representing the grade requested.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
@@ -438,7 +438,9 @@ public final class GradeManager {
         }
 
         if (grade.containsField(CURRENT_GRADE)) {
-            protoGrade.setCurrentGrade((float) grade.get(CURRENT_GRADE));
+            // The reason appears that some instances are returing a double and others return a float.
+            // So we convert it to a string and parse it.
+            protoGrade.setCurrentGrade(Float.parseFloat(grade.get(CURRENT_GRADE).toString()));
         }
 
         if (grade.containsField(GRADE_HISTORY)) {
@@ -469,7 +471,9 @@ public final class GradeManager {
     static GradeHistory buildProtoGradeHistory(final DBObject history) throws DatabaseAccessException {
         final GradeHistory.Builder protoHistory = GradeHistory.newBuilder();
         if (history.containsField(GRADE_VALUE)) {
-            protoHistory.setGradeValue((float) history.get(GRADE_VALUE));
+            // The reason appears that some instances are returing a double and others return a float.
+            // So we convert it to a string and parse it.
+            protoHistory.setGradeValue(Float.parseFloat(history.get(GRADE_VALUE).toString()));
         }
 
         if (history.containsField(COMMENT)) {

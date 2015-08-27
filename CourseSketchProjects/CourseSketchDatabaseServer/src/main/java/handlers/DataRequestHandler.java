@@ -9,8 +9,10 @@ import database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data;
@@ -24,6 +26,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.utils.Util;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
@@ -197,6 +200,17 @@ public final class DataRequestHandler {
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURESLIDE, lectureSlideLoop));
                         }
                         break;
+                        case GRADE: {
+                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.GRADE, gradeList));
+                        }
+                        break;
+                        case COURSE_ROSTER: {
+                            final List<String> userList = instance.getCourseRoster(userId, itemRequest.getItemId(0));
+                            final Util.IdChain.Builder idChain = Util.IdChain.newBuilder();
+                            idChain.addAllIdChain(userList);
+                            results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, idChain.build()));
+                        }
                         default:
                             break;
                     }

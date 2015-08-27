@@ -568,13 +568,13 @@ public interface Institution {
      * @param requesterId
      *         The id of the user requesting the grade. This is required.
      * @param userId
-     *         The id of the user that the grade is for. This is required.
+     *         The id of the user that the grade is for. This is required. This value is at itemId(3).
      * @param courseId
-     *         The id of the course that the grade is for. This is required.
+     *         The id of the course that the grade is for. This is required. This value is at itemId(0).
      * @param assignmentId
-     *         The id of the assignment that the grade is for. This is optional.
+     *         The id of the assignment that the grade is for. This is optional. This value is at itemId(1).
      * @param problemId
-     *         The id of the problem that the grade is for. This is optional.
+     *         The id of the problem that the grade is for. This is optional. This value is at itemId(2).
      * @return ProtoGrade object representing the grade requested.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
@@ -583,4 +583,18 @@ public interface Institution {
      */
     ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException;
+
+    /**
+     * @param userId
+     *         The id of the user requesting the courseRoster
+     * @param courseId
+     *         The id of what courseRoster is being grabbed
+     * @return a list of users in the course
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems accessing the database.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the course.
+     */
+    List<String> getCourseRoster(final String userId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException;
 }
