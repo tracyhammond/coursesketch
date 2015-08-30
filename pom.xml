@@ -541,6 +541,12 @@
 			<version>${puppyVersion}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.pjklauser</groupId>
+			<artifactId>protobuf-rpc-pro</artifactId>
+			<version>57efac2b9f25f5163409606161cef17ba86c3330</version>
+		</dependency>
+
 		<!-- Test dependencies -->
 
 		<dependency>
