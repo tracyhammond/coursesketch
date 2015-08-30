@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 function WaitScreenManager() {
     /**
      * resets the values in the school builder so that the same build object can be used again.
@@ -165,28 +166,7 @@ function WaitScreenManager() {
         inner1.appendChild(inner2);
         outer.appendChild(inner1);
 
-        /*<div class="preloader-wrapper big active">
-            <div class="spinner-layer spinner-blue-only">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
-        </div>
 
-        var img = document.createElement('img');
-        img.setAttribute('class', 'waitingIcon');
-        if (this.customIcon) {
-            img.src = customIcon;
-        } else {
-            img.src = '/images/loading/000000_large_loader.gif';
-        }
-        outer.appendChild(img);*/
         element.appendChild(outer);
         if (this.waitIconText) {
             var text = document.createElement('h4');

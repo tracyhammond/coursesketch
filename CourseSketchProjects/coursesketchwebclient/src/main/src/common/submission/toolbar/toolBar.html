@@ -25,12 +25,15 @@
                 |   red  |
                 |--------|
                  -->
-                <div id="constantButtons" class="" style="display:inline-flex;">
-                    <ul style="display:inline-flex;">
-                        <li><a id="submission" class="btn-floating red z-depth-2"><i class="large mdi-editor-insert-chart"></i></a></li>
-                        <li><a id="save" class="btn-floating yellow darken-1 z-depth-2"><i class="large mdi-content-save"></i></a></li>
-                        <li><a id="undo" class="btn-floating green z-depth-2"><i class="large mdi-content-undo"></i></a></li>
-                        <li><a id="redo" class="btn-floating blue z-depth-2"><i class="large mdi-content-redo"></i></a></li>
+                <div id="constantButtons" class="fixed-action-btn">
+                    <a class="btn-floating btn-large red">
+                        <i class="material-icons">mode_edit</i>
+                    </a>
+                    <ul>
+                        <li><a id="submission" class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
+                        <li><a id="save" class="btn-floating yellow darken-1"><i class="large mdi-content-save"></i></a></li>
+                        <li><a id="undo" class="btn-floating green"><i class="large mdi-content-undo"></i></a></li>
+                        <li><a id="redo" class="btn-floating blue"><i class="large mdi-content-redo"></i></a></li>
                         <content id = "specific_buttons" select=".specific_button"></content>
                     </ul>
                 </div>
