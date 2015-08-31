@@ -1,30 +1,25 @@
 package coursesketch.server.base;
 
+import com.googlecode.protobuf.pro.duplex.PeerInfo;
+import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
+import com.googlecode.protobuf.pro.duplex.client.DuplexTcpClientPipelineFactory;
+import com.googlecode.protobuf.pro.duplex.execute.RpcServerCallExecutor;
+import com.googlecode.protobuf.pro.duplex.execute.ThreadPoolCallExecutor;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.DefaultHttpHeaders;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
-import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.ssl.SslContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Created by gigemjt on 10/22/14.
@@ -39,7 +34,32 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     /**
      * The code that is used by the Html aggregator.
      */
-    private static final int OBJECT_AGGREGATOR_CODE = 8192;
+    private static final int TIME_OUT_MILLIS = 10000;
+
+    /**
+     * Size of the send buffer
+     */
+    private static final int SIZE_OF_SEND_BUFFER = 100048576;
+
+    /**
+     * Size of the recieving buffer
+     */
+    private static final int SIZE_OF_RCV_BUFFER = 100048576;
+
+    /**
+     * Max number of threads for the client
+     */
+    private static final int MAX_THREAD_POOL_SIZE = 100;
+
+    /**
+     * core number of threads for the client
+     */
+    private static final int CORE_THREAD_POOL_SIZE = 3;
+
+    /**
+     * MThe offset from the host port for the client port.
+     */
+    private static final int CLIENT_PORT_OFFSET = 100;
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -78,41 +98,38 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         if (remoteAddress.isUnresolved()) {
             throw new ConnectionException("Remote address does not exist " + remoteAddress.getHostString());
         }
-        final EventLoopGroup group = new NioEventLoopGroup();
-        try {
-            // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
-            // If you change it to V00, ping is not supported and remember to change
-            // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
-            final ClientWebSocketWrapper handler =
-                    new ClientWebSocketWrapper(
-                            WebSocketClientHandshakerFactory.newHandshaker(
-                                    getURI(), WebSocketVersion.V13, null, false, new DefaultHttpHeaders()), this);
+        final PeerInfo client = new PeerInfo(this.getParentServer().getName(), getURI().getPort() + CLIENT_PORT_OFFSET);
+        final PeerInfo server = new PeerInfo(remoteAddress);
 
-            final Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @SuppressWarnings("PMD.CommentRequired")
-                        @Override
-                        protected void initChannel(final SocketChannel channel) {
-                            final ChannelPipeline pipeline = channel.pipeline();
-                            if (sslCtx != null) {
-                                pipeline.addFirst(sslCtx.newHandler(channel.alloc(), getURI().getHost(), getURI().getPort()));
-                            }
-                            pipeline.addLast(
-                                    new HttpClientCodec(),
-                                    new HttpObjectAggregator(OBJECT_AGGREGATOR_CODE),
-                                    //new WebSocketClientCompressionHandler(),
-                                    handler);
-                        }
-                    });
-            LOG.info("{} connecting to[ {} ]", this.getClass().getSimpleName() , getURI());
-            bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
-            handler.handshakeFuture().sync();
-        } catch (InterruptedException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            group.shutdownGracefully();
+        final DuplexTcpClientPipelineFactory clientFactory = new DuplexTcpClientPipelineFactory();
+        clientFactory.setClientInfo(client);
+
+        final RpcServerCallExecutor executor = new ThreadPoolCallExecutor(CORE_THREAD_POOL_SIZE, MAX_THREAD_POOL_SIZE);
+        clientFactory.setRpcServerCallExecutor(executor);
+
+        clientFactory.setConnectResponseTimeoutMillis(TIME_OUT_MILLIS);
+        clientFactory.setCompression(true);
+
+        final Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(new NioEventLoopGroup());
+        bootstrap.handler(clientFactory);
+        bootstrap.channel(NioSocketChannel.class);
+        bootstrap.option(ChannelOption.TCP_NODELAY, true);
+        bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIME_OUT_MILLIS);
+        bootstrap.option(ChannelOption.SO_SNDBUF, SIZE_OF_SEND_BUFFER);
+        bootstrap.option(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
+
+        RpcClientChannel channel = null;
+        try {
+            channel = clientFactory.peerWith(server, bootstrap);
+        } catch (IOException e) {
+            LOG.error("Unable to connect to server", e);
+            throw new ConnectionException("Unable to connect to server" + remoteAddress.getHostString());
         }
+
+        final ClientWebSocketWrapper wrapper = new ClientWebSocketWrapper(channel, this);
+        clientFactory.getRpcServiceRegistry().registerService(wrapper);
+        clientFactory.registerConnectionEventListener(wrapper);
     }
 
     /**
@@ -124,33 +141,5 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
 
-    }
-
-    /**
-     * @param ctx
-     *         the context for the channel.
-     */
-    final void nettyOnOpen(final ChannelHandlerContext ctx) {
-        onOpen(new NettySession(ctx));
-    }
-
-    /**
-     * @param ctx
-     *         The context of the socket
-     * @param cause
-     *         The error that was thrown
-     */
-    final void nettyOnError(final ChannelHandlerContext ctx, final Throwable cause) {
-        onError(new NettySession(ctx), cause);
-    }
-
-    /**
-     * @param ctx
-     *         The context of the socket.
-     * @param wrap
-     *         The binary data of the message.
-     */
-    final void nettyOnMessage(final ChannelHandlerContext ctx, final ByteBuffer wrap) {
-        onMessage(wrap);
     }
 }
