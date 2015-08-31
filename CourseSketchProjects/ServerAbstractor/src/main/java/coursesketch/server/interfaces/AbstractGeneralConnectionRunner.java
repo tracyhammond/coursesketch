@@ -1,16 +1,17 @@
 package coursesketch.server.interfaces;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Sets up the server and manages calling the methods needed to start the server.
@@ -65,6 +66,11 @@ public abstract class AbstractGeneralConnectionRunner {
      * The port of the server.
      */
     private int port = DEFAULT_PORT;
+
+    /**
+     * The hostname of the server.
+     */
+    private String hostName = null;
 
     /**
      * The timeoutTime of a connection.
@@ -140,7 +146,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * The order that the subclass methods are called is:
      * <ol>
      *     <li>{@link #loadConfigurations()}</li>
-     *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoveEnvironment()}</li>
+     *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoteEnvironment()}</li>
      *     <li>{@link #createServer()}</li>
      *     <li>if the server is running securely then {@link #configureSSL(String, String)}</li>
      *     <li>{@link #createSocketInitializer(long, boolean, boolean)}</li>
@@ -152,9 +158,11 @@ public abstract class AbstractGeneralConnectionRunner {
     protected final void start() {
         loadConfigurations();
         if (local) {
+            privateLocalEnvironment();
             executeLocalEnvironment();
         } else {
-            executeRemoveEnvironment();
+            privateRemoteEnvironment();
+            executeRemoteEnvironment();
         }
         createServer();
 
@@ -183,7 +191,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * Called to setup the system for if it is being run to connect to remote compters.
      */
-    protected abstract void executeRemoveEnvironment();
+    protected abstract void executeRemoteEnvironment();
 
     /**
      * Called to create an actual server.
@@ -210,6 +218,24 @@ public abstract class AbstractGeneralConnectionRunner {
      * @see #start()
      */
     protected abstract void startServer();
+
+    /**
+     * Sets up some global variables for the local configuration.
+     */
+    private void privateLocalEnvironment() {
+        hostName = "localhost";
+    }
+
+    /**
+     * Sets up some global variables for the remote configuration.
+     */
+    private void privateRemoteEnvironment() {
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOG.error("Error grabbing host name for remote environment", e);
+        }
+    }
 
     /**
      * Handles commands that can be used to perform certain functionality.
@@ -430,6 +456,13 @@ public abstract class AbstractGeneralConnectionRunner {
      * @return true if the server has not been started (basically run most has not been called yet)
      */
     protected abstract boolean notServerStarted();
+
+    /**
+     * @return The host name of the server as found by DNS resolving if the server is remote.
+     */
+    public final String getHostName() {
+        return hostName;
+    }
 
     /**
      * @return The port number that this server is connected to.

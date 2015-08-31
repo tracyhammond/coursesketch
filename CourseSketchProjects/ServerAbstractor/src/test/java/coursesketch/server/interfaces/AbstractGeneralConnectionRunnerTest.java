@@ -58,7 +58,7 @@ public class AbstractGeneralConnectionRunnerTest {
         doNothing().when(run).loadConfigurations();
         Whitebox.setInternalState(run, "local", false);
         run.start();
-        verify(run, times(1)).executeRemoveEnvironment();
+        verify(run, times(1)).executeRemoteEnvironment();
     }
 
     @Test(timeout=1000)
