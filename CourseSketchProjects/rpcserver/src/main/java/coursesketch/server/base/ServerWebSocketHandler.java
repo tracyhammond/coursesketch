@@ -1,17 +1,14 @@
 package coursesketch.server.base;
 
+import com.google.protobuf.RpcController;
+import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
-import protobuf.srl.request.Message;
-
-import java.nio.ByteBuffer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -35,11 +32,11 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * Called when this server connects to a client.
-     * @param ctx The context of the socket itself.
+     * @param controller The context of the socket itself.
      * @param req The request that contains data about the upgrade request.
      */
-    final void nettyOnConnect(final ChannelHandlerContext ctx, final FullHttpRequest req) {
-        onOpen(new NettySession(ctx));
+    final void rpcOnConnect(final RpcSession controller, final Message.Request req) {
+        onOpen(controller);
     }
 
     /**
@@ -58,8 +55,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param session The socket context of the error.
      * @param cause The cause of the error.
      */
-    final void nettyOnError(final ChannelHandlerContext session, final Throwable cause) {
-        onError(new NettySession(session), cause);
+    final void rpcOnError(final RpcController session, final Throwable cause) {
+        onError(new RpcSession((ClientRpcController) session), cause);
     }
 
     /**
@@ -78,10 +75,10 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * Called when the server receives a message.
      * @param session The socket context.
-     * @param buf The binary message data.
+     * @param req The protobuf request object that represents what was sent to the server.
      */
-    final void nettyOnMessage(final ChannelHandlerContext session, final ByteBuffer buf) {
-        onMessage(new NettySession(session), buf);
+    final void rpcOnMessage(final RpcController session, final Message.Request req) {
+        onMessage(new RpcSession((ClientRpcController) session), req);
     }
 
     /**
@@ -104,8 +101,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param statusCode The code number that represents the reason for closing.
      * @param reason The human readable message that defines why the socket closed.
      */
-    final void nettyOnClose(final ChannelHandlerContext session, final int statusCode, final String reason) {
-        super.onClose(new NettySession(session), statusCode, reason);
+    final void rpcOnClose(final RpcSession session, final int statusCode, final String reason) {
+        super.onClose(session, statusCode, reason);
     }
 
     /**
