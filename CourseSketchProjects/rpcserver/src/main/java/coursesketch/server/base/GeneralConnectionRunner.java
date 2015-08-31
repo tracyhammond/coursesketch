@@ -1,25 +1,28 @@
 package coursesketch.server.base;
 
+import com.googlecode.protobuf.pro.duplex.PeerInfo;
+import com.googlecode.protobuf.pro.duplex.execute.RpcServerCallExecutor;
+import com.googlecode.protobuf.pro.duplex.execute.ThreadPoolCallExecutor;
+import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
+import com.googlecode.protobuf.pro.duplex.util.RenamingThreadFactoryProxy;
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import javax.net.ssl.SSLException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
+import java.util.concurrent.Executors;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -47,15 +50,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     private ServerBootstrap server;
 
-    /**
-     * The group in charge of managing other groups.
-     */
-    private EventLoopGroup bossGroup;
+    private DuplexTcpServerPipelineFactory serverFactory;
 
-    /**
-     * Performs actual work on the server.
-     */
-    private EventLoopGroup workerGroup;
+    private PeerInfo serverInfo;
 
     /**
      * Parses the arguments from the server. This only expects a single argument
@@ -98,10 +95,10 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system for if it is being run to connect to remote compters.
+     * Called to setup the system for if it is being run to connect to remote computers.
      */
     @Override
-    protected void executeRemoveEnvironment() {
+    protected void executeRemoteEnvironment() {
 
     }
 
@@ -110,9 +107,13 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void createServer() {
+        PeerInfo serverInfo = new PeerInfo(this.getHostName(), 8080);
+
+        RpcServerCallExecutor executor = new ThreadPoolCallExecutor(3, 200);
+
+        DuplexTcpServerPipelineFactory serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
+        serverFactory.setRpcServerCallExecutor(executor);
         server = new ServerBootstrap();
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
     }
 
     /**
@@ -147,10 +148,23 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @Override
     protected final void addConnections() {
         ((ServerWebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslCtx);
-        server.group(bossGroup, workerGroup)
+
+        server.group(new NioEventLoopGroup(0, new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory())),
+                        new NioEventLoopGroup(0, new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory())))
                 .channel(NioServerSocketChannel.class)
-                .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler((ServerWebSocketInitializer) getSocketInitailizerInstance());
+                .handler(new LoggingHandler(LogLevel.INFO));
+        server.childHandler(serverFactory);
+        server.localAddress(serverInfo.getPort());
+
+        // TCP/IP settings
+        server.option(ChannelOption.SO_SNDBUF, 1048576);
+        server.option(ChannelOption.SO_RCVBUF, 1048576);
+        server.childOption(ChannelOption.SO_RCVBUF, 1048576);
+        server.childOption(ChannelOption.SO_SNDBUF, 1048576);
+        server.option(ChannelOption.TCP_NODELAY, true);
+
+        ServerWebSocketInitializer socketIntializer = (ServerWebSocketInitializer) this.getSocketInitailizerInstance();
+        socketIntializer.initChannel(serverFactory);
     }
 
     /**
@@ -163,23 +177,13 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             @Override
             @SuppressWarnings({ "PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
             public void run() {
-                try {
-                    final ChannelFuture strap = server.bind(getPort());
-                    final Channel channel = strap.sync().channel();
-                    channel.closeFuture().sync();
-                } catch (InterruptedException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                } finally {
-                    bossGroup.shutdownGracefully();
-                    workerGroup.shutdownGracefully();
-                }
+                server.bind();
             }
         };
         serverThread.start();
         try {
             Thread.sleep(ONE_SECOND);
-            final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
-            LOG.info("Server is running hopefully = {}", assumedRunning);
+            LOG.info("Server is running hopefully");
             getSocketInitailizerInstance().reconnect();
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

@@ -1,22 +1,17 @@
 package coursesketch.server.base;
 
+import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.ssl.SslContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by gigemjt on 10/19/14.
  */
-public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel> implements ISocketInitializer {
+public class ServerWebSocketInitializer implements ISocketInitializer {
 
     /**
      * Declaration/Definition of Logger.
@@ -140,28 +135,6 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     }
 
     /**
-     * This method will be called once the {@link io.netty.channel.Channel} was registered. After the method returns this instance
-     * will be removed from the {@link ChannelPipeline} of the {@link io.netty.channel.Channel}.
-     *
-     * @param channel
-     *         the {@link io.netty.channel.Channel} which was registered.
-     */
-    @Override
-    protected final void initChannel(final SocketChannel channel) {
-        final ChannelPipeline pipeline = channel.pipeline();
-        if (sslContext != null) {
-            pipeline.addFirst("ssl", sslContext.newHandler(channel.alloc()));
-        }
-        pipeline.addLast(new HttpServerCodec());
-        pipeline.addLast(new HttpObjectAggregator(MAX_SIZE));
-        // TODO change this to the double locking check thingy
-        if (singleWrapper == null) {
-            singleWrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
-        }
-        pipeline.addLast(singleWrapper);
-    }
-
-    /**
      * Called after reconnecting the connections.
      */
     protected void onReconnect() {
@@ -179,5 +152,11 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     protected final AbstractServerWebSocketHandler getServer() {
         return connectionServer;
+    }
+
+    public void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
+        ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
+        serverFactory.getRpcServiceRegistry().registerService(wrapper);
+        serverFactory.registerConnectionEventListener(wrapper);
     }
 }
