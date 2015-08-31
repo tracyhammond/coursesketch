@@ -12,6 +12,7 @@ function ProblemToolBar() {
     this.initializeElement = function(templateClone) {
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
+        this.initializeFixedActionButton();
     };
 
     /**
@@ -74,10 +75,9 @@ function ProblemToolBar() {
     this.createButton = function(imgLocation, onclickFunction, onloadFunction) {
         var element = document.createElement('img');
         element.src = imgLocation;
-        element.className = 'btn-floating';
         element.onclick = onclickFunction;
         element.onload = onloadFunction;
-        element.className = 'specific_button btn-floating';
+        element.className = 'specific_button';
         return element;
     };
 
