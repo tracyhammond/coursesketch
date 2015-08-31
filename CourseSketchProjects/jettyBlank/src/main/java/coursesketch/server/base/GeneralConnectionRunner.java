@@ -20,15 +20,14 @@ import org.eclipse.jetty.server.handler.StatisticsHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Runs and sets up the server.
@@ -130,7 +129,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Called to setup the system for if it is being run to connect to remote compters.
      */
     @Override
-    public void executeRemoveEnvironment() {
+    public void executeRemoteEnvironment() {
         // does nothing by default.
     }
 
