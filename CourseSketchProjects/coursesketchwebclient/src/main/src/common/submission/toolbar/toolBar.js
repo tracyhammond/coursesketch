@@ -14,6 +14,20 @@ function ProblemToolBar() {
         this.shadowRoot.appendChild(templateClone);
     };
 
+    /**
+     * Sets the event listeners for the toolbar fixed action button
+     */
+    this.initializeFixedActionButton = function() {
+        //$('body /deep/ .fixed-action-btn').openFAB();
+        var fab = this.shadowRoot.querySelector('#toolbarFAB');
+        fab.addEventListener('click', function() {
+            if(this.classList.contains('active')){
+                $(this).closeFAB();
+            } else {
+                $(this).openFAB();
+            }
+        });
+    };
 
     /**
      * Sets the callback for the submit button.
@@ -60,9 +74,10 @@ function ProblemToolBar() {
     this.createButton = function(imgLocation, onclickFunction, onloadFunction) {
         var element = document.createElement('img');
         element.src = imgLocation;
+        element.className = 'btn-floating';
         element.onclick = onclickFunction;
         element.onload = onloadFunction;
-        element.className = 'specific_button';
+        element.className = 'specific_button btn-floating';
         return element;
     };
 

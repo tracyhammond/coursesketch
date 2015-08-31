@@ -28,6 +28,7 @@
              */
             newElement.attachedCallback = function() {
                 this.initializeElement(clone.cloneNode(true));
+                this.initializeFixedActionButton();
             };
 
             newElement.detachedCallback = function() {
