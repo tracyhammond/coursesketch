@@ -7,6 +7,10 @@
 *.html~
 *.css~
 *.java~
+*.sh~
+*.txt~
+*.json~
+*branchNames~
 
 #end edit files
 
