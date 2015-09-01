@@ -1,6 +1,6 @@
 package integration.connections;
 
-import coursesketch.server.base.ClientWebSocket;
+import coursesketch.server.base.coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
