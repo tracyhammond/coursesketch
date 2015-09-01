@@ -64,7 +64,7 @@ public final class UserClient {
      * A private constructor that creates a client.
      */
     private UserClient() {
-        this("goldberglinux.tamu.edu");
+        this("localhost");
     }
 
     /**
