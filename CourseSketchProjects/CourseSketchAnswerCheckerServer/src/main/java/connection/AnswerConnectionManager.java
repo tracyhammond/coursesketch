@@ -21,9 +21,15 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AnswerConnectionManager.class);
 
     /**
+     * IP address.
+     */
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+    private static final String SUBMISSION_ADDRESS = "192.168.56.202";
+
+    /**
      * Port number.
      */
-    private static final int PORT = 8883;
+    private static final int SUBMISSION_PORT = 8883;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
@@ -44,8 +50,8 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler parent) {
         try {
-            createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
-                    PORT, this.isSecure(), SubmissionClientWebSocket.class);
+            createAndAddConnection(parent, isConnectionLocal(), SUBMISSION_ADDRESS,
+                    SUBMISSION_PORT, this.isSecure(), SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
