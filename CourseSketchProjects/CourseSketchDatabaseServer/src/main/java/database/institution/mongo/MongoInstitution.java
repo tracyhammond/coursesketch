@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.request.Message;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
@@ -453,7 +454,7 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public void getExperimentAsUser(final String userId, final String problemId, final String sessionInfo,
+    public void getExperimentAsUser(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
@@ -461,7 +462,7 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public void getExperimentAsInstructor(final String userId, final String problemId, final String sessionInfo,
+    public void getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
                 internalConnections, review);

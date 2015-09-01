@@ -3,7 +3,10 @@ package coursesketch.server.interfaces;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
+import utilities.ExceptionUtilities;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
@@ -227,14 +230,9 @@ public abstract class AbstractServerWebSocketHandler {
      * @return {@link Request} with a message explaining what happened.
      */
     public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientWebSocket> connectionType) {
-        final Request.Builder response = Request.newBuilder();
-        if (req == null) {
-            response.setRequestType(Request.MessageType.ERROR);
-        } else {
-            response.setRequestType(req.getRequestType());
-        }
-        response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
-        return response.build();
+        final Message.ProtoException exception = ExceptionUtilities.createProtoException(new Exception("A server with connection type: "
+                + connectionType.getSimpleName() + " Is not connected correctly"));
+        return ExceptionUtilities.createExceptionRequest(req, exception);
     }
 
     /**
@@ -344,13 +342,18 @@ public abstract class AbstractServerWebSocketHandler {
             if (sessionInfo == null) {
                 return req;
             }
-            final Request.Builder breq = Request.newBuilder();
-            breq.mergeFrom(req);
-            breq.setSessionInfo(sessionInfo);
-            if (!breq.hasMessageTime()) {
-                breq.setMessageTime(TimeManager.getSystemTime());
+
+            // why do the work if they are the same?
+            if (sessionInfo.equals(req.getSessionInfo())) {
+                return req;
             }
-            return breq.build();
+
+            final Request.Builder sessionInfoReplacement = ProtobufUtilities.createBaseResponse(req, true);
+            sessionInfoReplacement.setSessionInfo(sessionInfo);
+            if (!sessionInfoReplacement.hasMessageTime()) {
+                sessionInfoReplacement.setMessageTime(TimeManager.getSystemTime());
+            }
+            return sessionInfoReplacement.build();
         }
 
         /**

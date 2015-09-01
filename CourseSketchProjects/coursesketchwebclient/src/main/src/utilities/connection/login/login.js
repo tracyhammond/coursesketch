@@ -7,6 +7,7 @@
  * @class LoginSystem
  */
 function LoginSystem() {
+    // note these are shared accross all instances of the login element.
     var connection = undefined;
     var shadowRoot = undefined;
     var successLoginCallback = undefined;
@@ -20,8 +21,14 @@ function LoginSystem() {
         return connection;
     };
 
-    this.createConnection = function(location, encrytped, attemptReconnections) {
-        connection = new Connection(location, encrytped, attemptReconnections);
+    /**
+     * Creates a new connection object and stores it locally.
+     * @param {String} location Url to connect to.
+     * @param {Boolean} encrypted True if the connection should occur over ssl
+     * @param {Boolean} attemptReconnections True if the connection should be reattempted till success.
+     */
+    this.createConnection = function(location, encrypted, attemptReconnections) {
+        connection = new Connection(location, encrypted, attemptReconnections);
         connection.setOnCloseListener(function(evt, attemptingToReconnect) {
             if (isUndefined(connection)) {
                 // If this became undefined then we should stop trying to connect.
@@ -67,6 +74,11 @@ function LoginSystem() {
      * login.
      */
     function setupLoginScript() {
+        /**
+         * Called when the server responds to an attempt to login.
+         * @param {Event} evt the event that caused the successful login
+         * @param {Message} message The protobuf message sent from the server.
+         */
         function onLogin(evt, message) {
             var userId = undefined;
             var isInstructor = undefined;
@@ -78,7 +90,7 @@ function LoginSystem() {
                 }
             } else {
                 if (message.otherData) {
-                    var loginInfo = CourseSketch.PROTOBUF_UTIL.getLoginInformationClass().decode(message.otherData);
+                    var loginInfo = CourseSketch.prutil.getLoginInformationClass().decode(message.otherData);
                     console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
                         console.log('successfully login!');
@@ -115,6 +127,11 @@ function LoginSystem() {
      */
     function formSubmit() {
         console.log('Submitting something?');
+        /**
+         * Called to send the login.
+         * @param {String} arg1 username
+         * @param {String} arg2 hashed password
+         */
         function sendLogin(arg1, arg2) {
             if (!connection.isConnected()) {
                 alert('You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using' +
@@ -122,17 +139,12 @@ function LoginSystem() {
                         ' \n server@coursesketch.com with your device, and web browser');
                 return;
             }
-            var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
+            var loginInfo = CourseSketch.prutil.LoginInformation();
 
             loginInfo.username = arg1;
             loginInfo.password = '' + arg2;
 
-            var request = CourseSketch.PROTOBUF_UTIL.Request();
-            request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
-            if (!isUndefined(request.setLogin)) {
-                request.login = loginInfo;
-            }
-            request.otherData = loginInfo.toArrayBuffer();
+            var request = CourseSketch.prutil.createRequestFromData(loginInfo, CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
             console.log('Sending login information');
             connection.sendRequest(request);
             console.log('login information sent successfully');
@@ -156,6 +168,9 @@ function LoginSystem() {
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
+        /**
+         * Called when the register button is clicked.
+         */
         shadowRoot.querySelector('#registerButton').onclick = function() {
             if (registerCallback) {
                 registerCallback();
@@ -172,6 +187,9 @@ function LoginSystem() {
         successLoginCallback = callback;
     };
 
+    /**
+     * @returns {Function} the function that occurs on form submit.
+     */
     this.getFormSubmitFunction = function() {
         return formSubmitFunction;
     };

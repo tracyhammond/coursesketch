@@ -36,10 +36,10 @@ validateFirstRun(document.currentScript);
         if (oldElement instanceof Node) {
             parentPanel.removeChild(oldElement);
         }
-        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+        if (problemType === CourseSketch.prutil.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(navigator);
         }
@@ -51,7 +51,7 @@ validateFirstRun(document.currentScript);
         parentPanel.isGrader = false;
 
         parentPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+            var studentExperiment = CourseSketch.prutil.SrlExperiment();
             navigator.setSubmissionInformation(studentExperiment, true);
             console.log('student experiment data set', studentExperiment);
             studentExperiment.submission = submission;
@@ -100,15 +100,17 @@ validateFirstRun(document.currentScript);
         });
     }
 
-    /**
-    * Saves script in order to display it on the problem when opened. Saves
-    * to problem navigator.
-    */
+
     var saveScript = document.querySelector('button.save');
+
+    /**
+     * Saves script in order to display it on the problem when opened.
+     *
+     * Saves to problem navigator.
+     */
     saveScript.onclick = function() {
-        console.log('Entered');
         //Create bank problem (proto object)
-        var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
 
         //Get problem ID
         bankProblem.id = navigator.getCurrentProblemId();
@@ -125,6 +127,12 @@ validateFirstRun(document.currentScript);
     };
 
     var exitButton = document.querySelector('button.exit');
+
+    /**
+     * Called to leave the script editor.
+     *
+     * TODO: implement exiting the script editor.
+     */
     exitButton.onclick = function() {
         alert('Not yet implemented!');
     };
@@ -146,6 +154,9 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+        /**
+         * Called when the sketch is done loading.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();
