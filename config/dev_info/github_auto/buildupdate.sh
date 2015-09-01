@@ -8,13 +8,13 @@ success=$?
 cd $CS_HOME
 echo "Setting permisions back to able to be read"
 sudo find \( -type f -execdir chmod 644 {} \; \) \
-                  -o \( -type d -execdir chmod 771 {} \; \)
+                  -o \( -type d -execdir chmod 777 {} \; \)
 
 echo "Setting permisions back to able to execute scripts"
 cd $CS_HOME
 cd "config/dev_info/github_auto"
 sudo find \( -type f -execdir chmod 755 {} \; \) \
-                  -o \( -type d -execdir chmod 771 {} \; \)
+                  -o \( -type d -execdir chmod 777 {} \; \)
 
 if [[ $success -eq 0 ]];
 then
