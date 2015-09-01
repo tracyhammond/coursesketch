@@ -1,4 +1,4 @@
-CS_HOME="/home/sketchlab/VirtualBox VMs/Shared/coursesketch"
+CS_HOME="/home/sketchlab/VirtualBox\\ VMs/Shared/coursesketch"
 
 cd $CS_HOME
 cd "config/dev_info/github_auto"
