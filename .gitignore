@@ -58,3 +58,5 @@ bower_components/
 
 CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
 *.ini
+
+config/local/*
