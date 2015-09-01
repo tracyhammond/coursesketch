@@ -78,6 +78,20 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<!-- PROPERTY FILE PROFILES -->
+		<profile>
+			<id>ip_prop_file</id>
+			<activation>
+				<file>
+					<!-- use the non default if it exists -->
+					<exists>${basedir}/config/local/ips.prop</exists>
+				</file>
+			</activation>
+			<properties>
+				<ipPropFile>${basedir}/config/local/ips.prop</ipPropFile>
+			</properties>
+		</profile>
 	</profiles>
 
 	<reporting>
