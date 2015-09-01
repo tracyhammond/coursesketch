@@ -200,6 +200,45 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>${replacerVersion}</version>
+                <executions>
+                    <execution>
+                        <id>Replace</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${basedir}/target/website/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION_NUMBER</token>
+                                    <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Reverse</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${basedir}/target/website/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION_NUMBER</token>
+                                    <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
