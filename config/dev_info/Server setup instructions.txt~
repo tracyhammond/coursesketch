@@ -16,9 +16,6 @@ mkdir -p "/home/sketchlab/VirtualBox VMs/Shared"
 ln -s "/home/sketchlab/VirtualBox VMs/Shared" "/home/sketchlab/link_to_shared"
 ln -s "/home/sketchlab/VirtualBox VMs/Shared" "/home/sketchlab/Link to Shared"
 
-mkdir -p "/home/sketchlab/VirtualBox VMs/Shared/coursesketch/config/dev_info/github_auto"
-ln -s "/home/sketchlab/VirtualBox VMs/Shared/coursesketch/config/dev_info/github_auto" "/home/sketchlab/github_auto"
-
 
 sudo apt-get update
 echo "setting up maven"
