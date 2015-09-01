@@ -387,6 +387,8 @@
 						<version>1.9.7</version>
 					</configuration>
 				</plugin>
+
+				<!-- meta build plugins -->
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
@@ -422,6 +424,41 @@
 										<value>DEBUG</value>
 									</replacement>
 								</replacements>
+							</configuration>
+						</execution>
+						<!-- local config based replacements -->
+						<execution>
+							<id>Reverse</id>
+							<phase>install</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+							<configuration>
+								<file>${basedir}/src/main/resources/logback.xml</file>
+								<replacements>
+									<replacement>
+										<token>INFO</token>
+										<value>DEBUG</value>
+									</replacement>
+								</replacements>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>properties-maven-plugin</artifactId>
+					<version>1.0-alpha-2</version>
+					<executions>
+						<execution>
+							<phase>initialize</phase>
+							<goals>
+								<goal>read-project-properties</goal>
+							</goals>
+							<configuration>
+								<files>
+									<file>${ipPropFile}</file>
+								</files>
 							</configuration>
 						</execution>
 					</executions>
