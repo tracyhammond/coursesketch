@@ -11,6 +11,11 @@ import utilities.LoggingConstants;
  * Creates a connection to the submission server.
  */
 public class DatabaseConnectionManager extends MultiConnectionManager {
+    /**
+     * IP address for submission server.
+     */
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+    private static final String SUBMISSION_ADDRESS = "192.168.56.202";
 
     /**
      *  Declaration and Definition of Logger.
@@ -37,9 +42,10 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      * @param serv The current server that the connections will be made from.
      */
     @Override
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(),
+            createAndAddConnection(serv, this.isConnectionLocal(), SUBMISSION_ADDRESS, SUBMISSION_PORT, this.isSecure(),
                     SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
