@@ -7,13 +7,13 @@ cd "config/dev_info/github_auto"
 success=$?
 cd $CS_HOME
 echo "Setting permisions back to able to be read"
-sudo find \( -type f -execdir chmod 644 {} \; \) \
+sudo find \( -type f -execdir chmod 775 {} \; \) \
                   -o \( -type d -execdir chmod 777 {} \; \)
 
 echo "Setting permisions back to able to execute scripts"
 cd $CS_HOME
 cd "config/dev_info/github_auto"
-sudo find \( -type f -execdir chmod 755 {} \; \) \
+sudo find \( -type f -execdir chmod 775 {} \; \) \
                   -o \( -type d -execdir chmod 777 {} \; \)
 
 if [[ $success -eq 0 ]];
