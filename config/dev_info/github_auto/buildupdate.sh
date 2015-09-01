@@ -37,10 +37,13 @@ cd config
 
 /bin/bash copyjars.sh <<< "/home/sketchlab/VirtualBox VMs/Shared/"
 
+echo "Moving website code"
 mv "${CS_HOME}/CourseSketchProjects/coursesketchwebclient/target/website" "${CS_HOME}/CourseSketchProjects/coursesketchwebclient/target/coursesketchwebclient"
 
+echo "copying website code"
 cp -r "${CS_HOME}/CourseSketchProjects/coursesketchwebclient/target/coursesketchwebclient/" "/home/sketchlab/coursesketch/"
 
+echo "changing website code permissions"
 cd "/home/sketchlab/coursesketch/"
 sudo find \( -type f -execdir chmod 644 {} \; \) \
                   -o \( -type d -execdir chmod 771 {} \; \)
