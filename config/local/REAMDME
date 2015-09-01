@@ -1,0 +1,7 @@
+Contains files that are data for the local config these are referenced by maven.
+
+It will look for the following files:
+
+
+It looks for the default version first which is under filename_default
+all other files are ignored in this directory.
