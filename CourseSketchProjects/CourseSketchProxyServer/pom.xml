@@ -64,7 +64,7 @@
                     <execution>
                         <id>ip_prop_replace</id>
                         <configuration>
-                            <file>${basedir}/target/classes/connection/ProxyConnectionManager.class</file>
+                            <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
                         </configuration>
                     </execution>
                 </executions>
