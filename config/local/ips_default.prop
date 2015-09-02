@@ -1,5 +1,3 @@
-<properties>
-    <login_ip>192.168.56.200</login_ip>
-    <database_ip>192.168.56.201</database_ip>
-    <answer_ip>192.168.56.203</answer_ip>
-</properties>
+login_ip=192.168.56.200
+database_ip=192.168.56.201
+answer_ip=192.168.56.203
