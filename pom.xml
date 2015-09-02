@@ -163,7 +163,7 @@
             <extension><!-- Maven Build Extension: my Special Service -->
                 <groupId>com.github.dtracers</groupId>
                 <artifactId>external-properties-reader</artifactId>
-                <version>0.0.3</version>
+                <version>1.0.0</version>
             </extension>
         </extensions>
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
@@ -452,12 +452,12 @@
                         <!-- local config based replacements -->
                         <execution>
                             <id>ip_prop_replace</id>
-                            <phase>compile</phase>
+                            <phase>process-resources</phase>
                             <goals>
                                 <goal>replace</goal>
                             </goals>
                             <configuration>
-                                <!-- implemented by sub projects -->
+                                <!-- file implemented by sub projects -->
                                 <replacements>
                                     <replacement>
                                         <token>ANSWER_IP_PROP</token>
@@ -470,6 +470,30 @@
                                     <replacement>
                                         <token>LOGIN_IP_PROP</token>
                                         <value>${login_ip}</value>
+                                    </replacement>
+                                </replacements>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>ip_prop_reverse</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                            <configuration>
+                                <!-- file implemented by sub projects -->
+                                <replacements>
+                                    <replacement>
+                                        <token>${answer_ip}</token>
+                                        <value>ANSWER_IP_PROP</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>${database_ip}</token>
+                                        <value>DATABASE_IP_PROP</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>${login_ip}</token>
+                                        <value>LOGIN_IP_PROP</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
