@@ -20,6 +20,19 @@
         <module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <issueManagement>
         <url>https://github.com/${githubLocation}/issues</url>
         <system>GitHub Issues</system>
@@ -89,7 +102,8 @@
                 </file>
             </activation>
             <properties>
-                <ipPropFile>${basedir}/config/local/ips.prop</ipPropFile>
+                <param>${ipPropFile}</param>
+                <ipPropFile>${parentConfigLocationDir}/config/local/ips.prop</ipPropFile>
             </properties>
         </profile>
     </profiles>
@@ -145,20 +159,13 @@
     <!-- possible plugins https://code.google.com/p/maven-replacer-plugin/ -->
 
     <build>
-        <resources>
-            <resource>
-                <filters>
-                    <filter>${}</filter>
-                </filters>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/*.xml</exclude>
-                </excludes>
-            </resource>
-        </resources>
+        <extensions>
+            <extension><!-- Maven Build Extension: my Special Service -->
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>external-properties-reader</artifactId>
+                <version>0.0.3</version>
+            </extension>
+        </extensions>
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
@@ -469,24 +476,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.kuali.maven.plugins</groupId>
-                    <artifactId>properties-maven-plugin</artifactId>
-                    <version>2.0.1</version>
-                    <executions>
-                        <execution>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>read-project-properties</goal>
-                            </goals>
-                            <configuration>
-                                <files>
-                                    <file>${ipPropFile}</file>
-                                </files>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -548,7 +537,7 @@
         <parentConfigLocationDir>${basedir}</parentConfigLocationDir>
 
         <!-- Property files in local config -->
-        <ipPropFile>ips_default.prop</ipPropFile>
+        <ipPropFile>${parentConfigLocationDir}/config/local/ips_default.prop</ipPropFile>
     </properties>
 
     <dependencies>
