@@ -25,9 +25,8 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
      * @param connectLocally
      *         True if the server is connecting locally.
      */
-    public AnswerCheckerServlet(final long timeoutTime, final boolean secure,
-            final boolean connectLocally) {
-        super(timeoutTime, secure, connectLocally);
+    public AnswerCheckerServlet(ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
@@ -44,6 +43,6 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
      */
     @Override
     public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new AnswerConnectionManager(this.getServer(), connectLocally, secure);
+        return new AnswerConnectionManager(this.getServer(), serverInfo.isLocal(), serverInfo.isSecure());
     }
 }

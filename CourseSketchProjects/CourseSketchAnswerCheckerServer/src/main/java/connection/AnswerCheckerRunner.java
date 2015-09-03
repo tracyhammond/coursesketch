@@ -54,6 +54,6 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      */
     @Override
     public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new AnswerCheckerServlet(time, secure, local);
+        return new AnswerCheckerServlet(serverInfo);
     }
 }

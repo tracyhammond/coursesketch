@@ -51,6 +51,6 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      */
     @Override
     public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new SubmissionServlet(time, secure, local);
+        return new SubmissionServlet(serverInfo);
     }
 }
