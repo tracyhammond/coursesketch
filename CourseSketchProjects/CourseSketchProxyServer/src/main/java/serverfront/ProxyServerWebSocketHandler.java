@@ -75,7 +75,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      *            The servlet made for this server.
      */
     public ProxyServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
         final ActionListener listener = new ActionListener() {
             /**
              * Sends a message that sets up time sync to all connecting clients when the time is synced for this server.

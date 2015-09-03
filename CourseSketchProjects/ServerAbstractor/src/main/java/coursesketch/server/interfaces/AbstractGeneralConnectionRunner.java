@@ -149,7 +149,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoteEnvironment()}</li>
      *     <li>{@link #createServer()}</li>
      *     <li>if the server is running securely then {@link #configureSSL(String, String)}</li>
-     *     <li>{@link #createSocketInitializer(long, boolean, boolean)}</li>
+     *     <li>{@link #createSocketInitializer(ServerInfo)}</li>
      *     <li>{@link #addConnections()}</li>
      *     <li>{@link #startServer()}</li>
      *     <li>{@link #startInput()}</li>
@@ -169,7 +169,8 @@ public abstract class AbstractGeneralConnectionRunner {
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = createSocketInitializer(new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal()));
+        socketInitializerInstance = createSocketInitializer(
+                new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal()));
 
         addConnections();
 
@@ -414,19 +415,17 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
-     *
-     * @param serverInfo
-     *            length of specified timeout, in miliseconds
-     * @param isSecure
+     *  @param isSecure
      *            <code>true</code> if the servlet should be secure,
      *            <code>false</code> otherwise
      * @param isLocal
      *            <code>true</code> if the server is running locally,
      *            <code>false</code> otherwise
-     *
-     * @return a new connection servlet for this server
-     */
-    protected abstract ISocketInitializer createSocketInitializer(ServerInfo serverInfo);
+     *@param time
+     * @param local @return a new connection servlet for this server
+     * @param serverInfo
+     * */
+    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
 
     /**
      * Sets the password for the SSL keystore.

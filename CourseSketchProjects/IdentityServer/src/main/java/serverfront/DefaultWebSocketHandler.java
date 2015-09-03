@@ -1,6 +1,7 @@
 package serverfront;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
@@ -19,8 +20,8 @@ public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
      * @param parent
      *            The servlet made for this server.
      */
-    public DefaultWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+    public DefaultWebSocketHandler(final ServerWebSocketInitializer parent, ServerInfo info) {
+        super(parent, info);
     }
 
     /**

@@ -1,5 +1,6 @@
 package serverfront;
 
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.GeneralConnectionRunner;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 
@@ -48,9 +49,12 @@ public class IdentityServerRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
+     * @param time
+     * @param local
+     * @param serverInfo
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new IdentityServiceInitializer(time, secure, local);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new IdentityServiceInitializer(info);
     }
 }

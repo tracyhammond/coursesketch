@@ -2,8 +2,8 @@ package connection;
 
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseClient;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,9 +55,12 @@ public class LoginRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
+     * @param time
+     * @param local
+     * @param serverInfo
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new LoginServlet(time, secure, local);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new LoginServlet(info);
     }
 }

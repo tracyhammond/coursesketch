@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -39,9 +40,10 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
+     * @param serverInfo
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
         return new AnswerConnectionManager(this.getServer(), connectLocally, secure);
     }
 }
