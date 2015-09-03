@@ -1,4 +1,4 @@
-package coursesketch.server.base.coursesketch.server.compat;
+package coursesketch.server.compat;
 
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;

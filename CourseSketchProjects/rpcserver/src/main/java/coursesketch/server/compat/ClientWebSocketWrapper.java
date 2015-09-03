@@ -1,10 +1,10 @@
-package coursesketch.server.base.coursesketch.server.compat;
+package coursesketch.server.compat;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
-import coursesketch.server.base.RpcSession;
+import coursesketch.server.rpc.RpcSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;

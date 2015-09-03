@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.rpc;
 
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.ClientRpcController;
@@ -13,12 +13,12 @@ import protobuf.srl.request.Message;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
+public class DefaultRpcHandler extends AbstractServerWebSocketHandler {
 
     /**
      * Declaration/Definition of Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultRpcHandler.class);
 
     /**
      * A constructor that accepts a servlet.
@@ -26,7 +26,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param parent
      *         The parent servlet of this server.
      */
-    protected ServerWebSocketHandler(final ISocketInitializer parent) {
+    protected DefaultRpcHandler(final ISocketInitializer parent) {
         super(parent);
     }
 

@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.rpc;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.pro.duplex.ClientRpcController;
