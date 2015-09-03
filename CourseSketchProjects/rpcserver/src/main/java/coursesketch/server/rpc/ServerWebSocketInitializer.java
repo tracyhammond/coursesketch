@@ -160,19 +160,20 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
-        List<Service> services = getRpcServices();
+        List<CourseSketchRpcService> services = getRpcServices();
         if (services == null) {
             throw new NullPointerException("getRpcServices can not return null");
         }
         ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);
-        for (Service service: services) {
+        for (CourseSketchRpcService service: services) {
+            service.setSocketInitializer(this);
             serverFactory.getRpcServiceRegistry().registerService(service);
         }
         serverFactory.registerConnectionEventListener(wrapper);
     }
 
-    protected List<Service> getRpcServices() {
-        return new ArrayList<Service>();
+    protected List<CourseSketchRpcService> getRpcServices() {
+        return new ArrayList<CourseSketchRpcService>();
     }
 }

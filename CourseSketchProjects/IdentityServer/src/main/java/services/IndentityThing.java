@@ -2,6 +2,8 @@ package services;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
+import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.rpc.CourseSketchRpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.services.identity.Identity;
@@ -9,7 +11,9 @@ import protobuf.srl.services.identity.Identity;
 /**
  * Created by gigemjt on 9/3/15.
  */
-public class IndentityThing extends Identity.IdentityService {
+public class IndentityThing extends Identity.IdentityService implements CourseSketchRpcService {
+
+    private ISocketInitializer socketInitializer;
 
     /**
      * Declaration and Definition of Logger.
@@ -26,5 +30,16 @@ public class IndentityThing extends Identity.IdentityService {
     @Override public void requestUserNames(final RpcController controller, final Identity.UserNameRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
         LOG.info("REQUESTING IDENTITY {}", request);
+    }
+
+    /**
+     * Sets the object that initializes this service.
+     *
+     * @param socketInitializer
+     */
+    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
+        if (socketInitializer != null) {
+            this.socketInitializer = socketInitializer;
+        }
     }
 }

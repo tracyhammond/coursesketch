@@ -5,6 +5,7 @@ import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ISocketInitializer;
 import io.netty.channel.ChannelHandler;
 import protobuf.srl.request.Message;
 import utilities.TimeManager;
@@ -16,7 +17,7 @@ import utilities.TimeManager;
  */
 @ChannelHandler.Sharable
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-/* package private! */ class ServerSocketWrapper extends Message.RequestService implements TcpConnectionEventListener {
+/* package private! */ class ServerSocketWrapper extends Message.RequestService implements TcpConnectionEventListener, CourseSketchRpcService {
 
     /**
      * The path at which you connect to the websocket.
@@ -75,5 +76,14 @@ import utilities.TimeManager;
 
     @Override public void connectionOpened(final RpcClientChannel rpcClientChannel) {
         socketHandler.rpcOnConnect(new RpcSession(rpcClientChannel), null);
+    }
+
+    /**
+     * Sets the object that initializes this service.
+     *
+     * @param socketInitializer
+     */
+    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
+        // This can be ignored because this is a wrapper and the actual handler actually does contain a socket initializer.
     }
 }
