@@ -20,19 +20,19 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * IP address for login server.
      */
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String LOGIN_ADDRESS = "LOGIN_IP_PROP";
+    private static final String LOGIN_ADDRESS = "";
 
     /**
      * IP address for database server.
      */
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
+    private static final String DATABASE_ADDRESS = "";
 
     /**
      * IP address for answer checker server.
      */
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String ANSWER_ADDRESS = "ANSWER_IP_PROP";
+    private static final String ANSWER_ADDRESS = "";
 
     /**
      * Declaration and Definition of Logger.

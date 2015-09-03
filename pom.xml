@@ -464,6 +464,14 @@
                                         <token>LOGIN_IP_PROP</token>
                                         <value>${login_ip}</value>
                                     </replacement>
+                                    <replacement>
+                                        <token>PROXY_IP_PROP</token>
+                                        <value>${proxy_ip}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>SUBMISSION_IP_PROP</token>
+                                        <value>${submission_ip}</value>
+                                    </replacement>
                                 </replacements>
                             </configuration>
                         </execution>
@@ -487,6 +495,14 @@
                                     <replacement>
                                         <token>${login_ip}</token>
                                         <value>LOGIN_IP_PROP</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>${proxy_ip}</token>
+                                        <value>PROXY_IP_PROP</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>${submission_ip}</token>
+                                        <value>SUBMISSION_IP_PROP</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
