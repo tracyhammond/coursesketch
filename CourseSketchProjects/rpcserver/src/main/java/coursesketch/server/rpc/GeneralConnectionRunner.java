@@ -1,12 +1,19 @@
 package coursesketch.server.rpc;
 
+import com.googlecode.protobuf.pro.duplex.CleanShutdownHandler;
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
+import com.googlecode.protobuf.pro.duplex.RpcConnectionEventNotifier;
 import com.googlecode.protobuf.pro.duplex.execute.RpcServerCallExecutor;
 import com.googlecode.protobuf.pro.duplex.execute.ThreadPoolCallExecutor;
 import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
+import com.googlecode.protobuf.pro.duplex.timeout.RpcTimeoutChecker;
+import com.googlecode.protobuf.pro.duplex.timeout.RpcTimeoutExecutor;
+import com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker;
+import com.googlecode.protobuf.pro.duplex.timeout.TimeoutExecutor;
 import com.googlecode.protobuf.pro.duplex.util.RenamingThreadFactoryProxy;
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,6 +29,7 @@ import javax.net.ssl.SSLException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 /**
@@ -53,6 +61,18 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     private DuplexTcpServerPipelineFactory serverFactory;
 
     private PeerInfo serverInfo;
+
+    private NioEventLoopGroup boss;
+
+    private NioEventLoopGroup workers;
+
+    private RpcServerCallExecutor executor;
+
+    private RpcTimeoutExecutor timeoutExecutor;
+
+    private RpcTimeoutChecker timeoutChecker;
+
+    private RpcConnectionEventNotifier localRpcEventLogger;
 
     /**
      * Parses the arguments from the server. This only expects a single argument
@@ -91,7 +111,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeLocalEnvironment() {
-
+        localRpcEventLogger = LocalRpcEventLoggerFactory.createLocalEventLogger(LOG);
     }
 
     /**
@@ -107,11 +127,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void createServer() {
-        PeerInfo serverInfo = new PeerInfo(this.getHostName(), 8080);
+        final InetSocketAddress remoteAddress = new InetSocketAddress(this.getHostName(), this.getPort());
+        serverInfo = new PeerInfo("127.0.0.1", this.getPort());
 
-        RpcServerCallExecutor executor = new ThreadPoolCallExecutor(3, 200);
+        executor = new ThreadPoolCallExecutor(3, 200);
 
-        DuplexTcpServerPipelineFactory serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
+        serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
         serverFactory.setRpcServerCallExecutor(executor);
         server = new ServerBootstrap();
     }
@@ -149,12 +170,11 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     protected final void addConnections() {
         ((ServerWebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslCtx);
 
-        server.group(new NioEventLoopGroup(0, new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory())),
-                        new NioEventLoopGroup(0, new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory())))
-                .channel(NioServerSocketChannel.class)
-                .handler(new LoggingHandler(LogLevel.INFO));
-        server.childHandler(serverFactory);
-        server.localAddress(serverInfo.getPort());
+        boss = new NioEventLoopGroup(2,new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory()));
+        workers = new NioEventLoopGroup(16,new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory()));
+        server.group(boss, workers);
+        server.channel(NioServerSocketChannel.class);
+        server.handler(new LoggingHandler(LogLevel.INFO));
 
         // TCP/IP settings
         server.option(ChannelOption.SO_SNDBUF, 1048576);
@@ -163,8 +183,20 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         server.childOption(ChannelOption.SO_SNDBUF, 1048576);
         server.option(ChannelOption.TCP_NODELAY, true);
 
-        ServerWebSocketInitializer socketIntializer = (ServerWebSocketInitializer) this.getSocketInitailizerInstance();
-        socketIntializer.initChannel(serverFactory);
+        final ServerWebSocketInitializer socketInitializer = (ServerWebSocketInitializer) this.getSocketInitailizerInstance();
+        socketInitializer.initChannel(serverFactory);
+
+        timeoutExecutor = new TimeoutExecutor(1,5);
+        timeoutChecker = new TimeoutChecker();
+        timeoutChecker.setTimeoutExecutor(timeoutExecutor);
+        timeoutChecker.startChecking(serverFactory.getRpcClientRegistry());
+
+        if (this.isLocal()) {
+            serverFactory.registerConnectionEventListener(localRpcEventLogger);
+        }
+
+        server.childHandler(serverFactory);
+        server.localAddress(serverInfo.getPort());
     }
 
     /**
@@ -177,7 +209,16 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             @Override
             @SuppressWarnings({ "PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
             public void run() {
+                CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
+                shutdownHandler.addResource(boss);
+                shutdownHandler.addResource(workers);
+                shutdownHandler.addResource(executor);
+                shutdownHandler.addResource(timeoutChecker);
+                shutdownHandler.addResource(timeoutExecutor);
+
                 server.bind();
+                LOG.info("Server started at http://" + getHostName() + ":" + getPort());
+                LOG.info("Server is named {} ", serverInfo.getName());
             }
         };
         serverThread.start();
@@ -243,8 +284,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
+    protected ISocketInitializer createSocketInitializer(ServerInfo info) {
+        return new ServerWebSocketInitializer(info);
     }
 
     /**

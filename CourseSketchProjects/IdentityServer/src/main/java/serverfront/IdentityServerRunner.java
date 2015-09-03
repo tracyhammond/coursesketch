@@ -1,26 +1,26 @@
 package serverfront;
 
-import coursesketch.server.base.GeneralConnectionRunner;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.rpc.GeneralConnectionRunner;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
 
 /**
  * A subclass of the runner and sets up some special information for running the
  * environment.
  */
-public class ProxyRunner extends GeneralConnectionRunner {
+public class IdentityServerRunner extends GeneralConnectionRunner {
 
     /** 30 minutes * 60 seconds * 1000 milliseconds. */
     private static final long TIMEOUT_TIME = 30 * 60 * 1000;
 
     /** port of the proxy server. */
-    private static final int PROXY_PORT = 8888;
+    private static final int PROXY_PORT = 8890;
 
     /**
      * @param args
      *            arguments from the command line.
      */
     public static void main(final String... args) {
-        final ProxyRunner run = new ProxyRunner(args);
+        final IdentityServerRunner run = new IdentityServerRunner(args);
         run.start();
     }
 
@@ -40,7 +40,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * @param args
      *            arguments from the command line.
      */
-    public ProxyRunner(final String... args) {
+    public IdentityServerRunner(final String... args) {
         super(args);
         super.setPort(PROXY_PORT);
         super.setTimeoutTime(TIMEOUT_TIME);
@@ -51,6 +51,6 @@ public class ProxyRunner extends GeneralConnectionRunner {
      */
     @Override
     public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new ProxyServlet(time, secure, local);
+        return new IdentityServiceInitializer(time, secure, local);
     }
 }

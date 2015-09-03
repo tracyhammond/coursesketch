@@ -7,6 +7,7 @@ package coursesketch.server.base;
  */
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
+import coursesketch.server.interfaces.ServerInfo;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -215,11 +216,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * @return a new connection servlet for this server
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public ServerWebSocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        if (!isSecure && isProduction()) {
+    @Override
+    public ServerWebSocketInitializer createSocketInitializer(ServerInfo serverInfo) {
+        if (!serverInfo.isSecure() && isProduction()) {
             LOG.info("Running an insecure server");
         }
-        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
+        return new ServerWebSocketInitializer(serverInfo);
     }
 
     /**

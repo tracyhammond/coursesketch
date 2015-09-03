@@ -7,6 +7,7 @@ import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.channel.ChannelHandler;
 import protobuf.srl.request.Message;
+import utilities.TimeManager;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -30,14 +31,14 @@ import protobuf.srl.request.Message;
     /**
      * An actual socket handler that is just wrapped by the.
      */
-    private final DefaultRpcHandler socketHandler;
+    private final ServerWebSocketHandler socketHandler;
 
     /**
      * @param handler The handler for the server side of the socket.
      * @param secure True if the socket should use SSL.
      */
     ServerSocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
-        socketHandler = (DefaultRpcHandler) handler;
+        socketHandler = (ServerWebSocketHandler) handler;
         isSecure = secure;
     }
 
@@ -54,6 +55,18 @@ import protobuf.srl.request.Message;
         } else {
             socketHandler.rpcOnMessage(controller, request);
         }
+    }
+
+    /**
+     * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
+     *
+     * Parses the time request and then sends one right back.
+     * @param controller
+     * @param request
+     * @param done
+     */
+    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
+        done.run(TimeManager.decodeRequest(request));
     }
 
     @Override public void connectionClosed(final RpcClientChannel rpcClientChannel) {

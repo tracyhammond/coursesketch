@@ -2,6 +2,7 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -238,8 +239,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
+    protected ISocketInitializer createSocketInitializer(ServerInfo info) {
+        return new ServerWebSocketInitializer(info);
     }
 
     /**

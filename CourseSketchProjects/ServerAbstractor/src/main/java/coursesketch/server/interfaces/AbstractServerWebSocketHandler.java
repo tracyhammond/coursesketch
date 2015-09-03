@@ -82,11 +82,17 @@ public abstract class AbstractServerWebSocketHandler {
     private final ISocketInitializer parentServer;
 
     /**
+     * The parent servlet for this server.
+     */
+    private final ServerInfo hostInfo;
+
+    /**
      * A constructor that accepts a servlet.
      * @param parent The parent servlet of this server.
      */
-    protected AbstractServerWebSocketHandler(final ISocketInitializer parent) {
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, ServerInfo hostInfo) {
         parentServer = parent;
+        this.hostInfo = hostInfo;
     }
 
     /**
@@ -203,6 +209,22 @@ public abstract class AbstractServerWebSocketHandler {
     @SuppressWarnings("static-method")
     public final String getName() {
         return NAME;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final String getHostName() {
+        return hostInfo.getHostName();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final int getHostPort() {
+        return hostInfo.getPort();
     }
 
     /**

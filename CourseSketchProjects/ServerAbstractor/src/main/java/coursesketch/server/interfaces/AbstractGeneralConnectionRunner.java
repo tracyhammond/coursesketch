@@ -169,7 +169,7 @@ public abstract class AbstractGeneralConnectionRunner {
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = createSocketInitializer(getTimeoutTime(), secure, isLocal());
+        socketInitializerInstance = createSocketInitializer(new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal()));
 
         addConnections();
 
@@ -415,7 +415,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
      *
-     * @param timeOut
+     * @param serverInfo
      *            length of specified timeout, in miliseconds
      * @param isSecure
      *            <code>true</code> if the servlet should be secure,
@@ -426,7 +426,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @return a new connection servlet for this server
      */
-    protected abstract ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal);
+    protected abstract ISocketInitializer createSocketInitializer(ServerInfo serverInfo);
 
     /**
      * Sets the password for the SSL keystore.

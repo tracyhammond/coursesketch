@@ -3,6 +3,7 @@ package coursesketch.server.base;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -36,11 +37,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * connections.
      */
     private final MultiConnectionManager manager;
-
-    /**
-     * True if the server is allowing secure connections.
-     */
-    private final boolean secure;
+    private final ServerInfo serverInfo;
 
     /**
      * The context needed for a SSL connection.
@@ -63,11 +60,11 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      *         True if the server is connecting locally.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
-        LOG.info("Currently time out time is not used " + iTimeoutTime);
-        this.secure = iSecure;
+    public ServerWebSocketInitializer(ServerInfo info) {
+        LOG.info("Currently time out time is not used " + info.getTimeOut());
+        this.serverInfo = info;
         connectionServer = createServerSocket();
-        manager = createConnectionManager(connectLocally, secure);
+        manager = createConnectionManager(getServerInfo());
     }
 
     /**
@@ -106,16 +103,13 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     * @param connectLocally
-     *         True if the connection is acting as if it is on a local computer (used for testing)
-     * @param iSecure
-     *         True if the connection is using SSL.
-     * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
+     *
+     * @param serverInfo@return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
-        return new MultiConnectionManager(connectionServer, connectLocally, iSecure);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new MultiConnectionManager(connectionServer, serverInfo.isLocal(), serverInfo.isSecure());
     }
 
     /**
@@ -126,7 +120,14 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     @SuppressWarnings("checkstyle:designforextension")
     @Override
     public AbstractServerWebSocketHandler createServerSocket() {
-        return new ServerWebSocketHandler(this);
+        return new ServerWebSocketHandler(this, this.getServerInfo());
+    }
+
+    /**
+     * @return {@link ServerInfo} contains all of the data about the server.
+     */
+    @Override public ServerInfo getServerInfo() {
+        return this.serverInfo;
     }
 
     /**
@@ -156,7 +157,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(MAX_SIZE));
         // TODO change this to the double locking check thingy
         if (singleWrapper == null) {
-            singleWrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
+            singleWrapper = new ServerSocketWrapper(createServerSocket(), this.getServerInfo().isSecure());
         }
         pipeline.addLast(singleWrapper);
     }
