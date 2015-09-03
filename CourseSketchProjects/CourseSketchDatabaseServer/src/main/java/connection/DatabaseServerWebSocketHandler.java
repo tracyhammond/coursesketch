@@ -30,7 +30,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      * @param parent Passes it up to super constructor.
      */
     public DatabaseServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
     }
 
     /**

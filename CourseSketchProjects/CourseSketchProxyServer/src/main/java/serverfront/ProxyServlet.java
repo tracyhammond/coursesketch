@@ -1,9 +1,10 @@
 package serverfront;
 
+import connection.ProxyConnectionManager;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
-import connection.ProxyConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  *
@@ -19,8 +20,8 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
      * @param connectLocally
      *            True if the server is connecting locally.
      */
-    public ProxyServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
-        super(timeoutTime, secure, connectLocally);
+    public ProxyServlet(ServerInfo info) {
+        super(info);
     }
 
     /**
@@ -40,8 +41,8 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
      * @return {@link internalconnections.ProxyConnectionManager}
      */
     @Override
-    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
-        return new ProxyConnectionManager(getServer(), connectLocally, secure);
+    public MultiConnectionManager createConnectionManager(ServerInfo info) {
+        return new ProxyConnectionManager(getServer(), info.isLocal(), info.isSecure());
     }
 
     /**

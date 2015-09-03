@@ -148,11 +148,11 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      * Override this method to create a subclass of the MultiConnectionManager.
      *
      *
-     * @param serverInfo@return An instance of the {@link MultiConnectionManager}
+     * @param serverInfo @return An instance of the {@link MultiConnectionManager}
      */
     @SuppressWarnings("checkstyle:designforextension")
     public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new MultiConnectionManager(connectionServer, serverInfo.isLocal(), serverInfo.isSecure());
+        return new MultiConnectionManager(connectionServer, this.serverInfo.isLocal(), this.serverInfo.isSecure());
     }
 
     /**

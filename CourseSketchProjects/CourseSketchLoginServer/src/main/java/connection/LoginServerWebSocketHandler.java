@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseClient;
 import database.LoginException;
@@ -83,8 +84,8 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * @param parent
      *            {@link connection.LoginServlet}
      */
-    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent, ServerInfo info) {
+        super(parent, info);
     }
 
     /**

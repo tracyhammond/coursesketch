@@ -25,8 +25,8 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
      * @param connectLocally
      *            True if the server is connecting locally.
      */
-    public IdentityServiceInitializer(final long timeoutTime, final boolean secure, final boolean connectLocally) {
-        super(timeoutTime, secure, connectLocally);
+    public IdentityServiceInitializer(ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
@@ -34,7 +34,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
      */
     @Override
     public ServerWebSocketHandler createServerSocket() {
-        return new DefaultWebSocketHandler(this);
+        return new DefaultWebSocketHandler(this, this.getServerInfo());
     }
 
     /**
@@ -45,7 +45,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
      */
     @Override
     public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new IdentityConnectionManager(getServer(), connectLocally, secure);
+        return new IdentityConnectionManager(getServer(), serverInfo.isLocal(), serverInfo.isSecure());
     }
 
     @Override

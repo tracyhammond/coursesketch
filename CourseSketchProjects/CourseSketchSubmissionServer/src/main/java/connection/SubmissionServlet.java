@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -42,9 +43,10 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
      *
      * <br>
      * We do not need to manage multiple connections so we might as well just make it return null.
+     * @param serverInfo
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
         return new SubmissionConnectionManager(this.getServer(), connectLocally, secure);
     }
 }

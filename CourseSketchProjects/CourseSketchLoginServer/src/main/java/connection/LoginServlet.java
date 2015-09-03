@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * Creates a servlet specific to the login server.
@@ -20,8 +21,8 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      * @param connectLocally
      *            True if the server is connecting locally.
      */
-    public LoginServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
-        super(timeoutTime, secure, connectLocally);
+    public LoginServlet(ServerInfo info) {
+        super(info);
     }
 
     /**
@@ -29,7 +30,7 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      */
     @Override
     public ServerWebSocketHandler createServerSocket() {
-        return new LoginServerWebSocketHandler(this);
+        return new LoginServerWebSocketHandler(this, this.getServerInfo());
     }
 
     /**
@@ -46,7 +47,7 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      * @return a new connection manager object
      */
     @Override
-    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
+    public MultiConnectionManager createConnectionManager(ServerInfo info) {
         return null;
     }
 }
