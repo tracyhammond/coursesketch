@@ -26,8 +26,8 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
      * @param connectLocally
      *         True if the server is connecting locally.
      */
-    public SubmissionServlet(final long timeoutTime, final boolean isSecure, final boolean connectLocally) {
-        super(timeoutTime, isSecure, connectLocally);
+    public SubmissionServlet(ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
@@ -47,6 +47,6 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
      */
     @Override
     public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new SubmissionConnectionManager(this.getServer(), connectLocally, secure);
+        return new SubmissionConnectionManager(this.getServer(), serverInfo.isLocal(), serverInfo.isSecure());
     }
 }

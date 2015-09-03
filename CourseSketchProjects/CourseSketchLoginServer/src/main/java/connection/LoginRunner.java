@@ -61,6 +61,6 @@ public class LoginRunner extends GeneralConnectionRunner {
      */
     @Override
     public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new LoginServlet(info);
+        return new LoginServlet(serverInfo);
     }
 }
