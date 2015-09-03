@@ -5,6 +5,7 @@ import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import io.netty.handler.ssl.SslContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +38,6 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     private final MultiConnectionManager manager;
 
     /**
-     * True if the server is allowing secure connections.
-     */
-    private final boolean secure;
-
-    /**
      * The context needed for a SSL connection.
      */
     private SslContext sslContext;
@@ -50,6 +46,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      * The wrapper for the server socket.
      */
     private ServerSocketWrapper singleWrapper;
+    private final ServerInfo serverInfo;
 
     /**
      * Creates a GeneralConnectionServlet.
@@ -62,11 +59,11 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      *         True if the server is connecting locally.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
-        LOG.info("Currently time out time is not used " + iTimeoutTime);
-        this.secure = iSecure;
+    public ServerWebSocketInitializer(ServerInfo serverInfo) {
+        LOG.info("Currently time out time is not used " + serverInfo.getTimeOut());
+        this.serverInfo = serverInfo;
         connectionServer = createServerSocket();
-        manager = createConnectionManager(connectLocally, secure);
+        manager = createConnectionManager(getServerInfo());
     }
 
     /**
@@ -105,16 +102,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     /**
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     * @param connectLocally
-     *         True if the connection is acting as if it is on a local computer (used for testing)
-     * @param iSecure
-     *         True if the connection is using SSL.
-     * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
+     *
+     * @param serverInfo@return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
-        return new MultiConnectionManager(connectionServer, connectLocally, iSecure);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new MultiConnectionManager(connectionServer, serverInfo.isLocal(), serverInfo.isSecure());
     }
 
     /**
@@ -125,7 +119,14 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     @SuppressWarnings("checkstyle:designforextension")
     @Override
     public AbstractServerWebSocketHandler createServerSocket() {
-        return new DefaultRpcHandler(this);
+        return new ServerWebSocketHandler(this, getServerInfo());
+    }
+
+    /**
+     * @return {@link ServerInfo} contains all of the data about the server.
+     */
+    @Override public ServerInfo getServerInfo() {
+        return serverInfo;
     }
 
     /**
@@ -163,7 +164,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         if (services == null) {
             throw new NullPointerException("getRpcServices can not return null");
         }
-        ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
+        ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);
         for (Service service: services) {
             serverFactory.getRpcServiceRegistry().registerService(service);

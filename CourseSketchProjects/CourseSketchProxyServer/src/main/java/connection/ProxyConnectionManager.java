@@ -36,6 +36,8 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      */
     private static final int ANSWER_PORT = 8884;
 
+    private static final int IDENTITY_PORT = 9003;
+
     /**
      * Creates a manager for the proxy connections.
      *
@@ -80,6 +82,14 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         LOG.info("Open Answer...");
         try {
             createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
+        } catch (ConnectionException e) {
+            // TODO Auto-generated catch block
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+
+        LOG.info("Open Identity...");
+        try {
+            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", IDENTITY_PORT, isSecure(), IdentityClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

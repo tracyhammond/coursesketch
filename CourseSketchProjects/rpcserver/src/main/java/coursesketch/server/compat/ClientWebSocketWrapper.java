@@ -8,6 +8,7 @@ import coursesketch.server.rpc.RpcSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
+import utilities.TimeManager;
 
 /**
  * Created by gigemjt on 10/23/14.
@@ -40,7 +41,6 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
         socketHandler = clientWebSocket;
     }
 
-
     /**
      * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
      *
@@ -50,6 +50,17 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      */
     @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
         socketHandler.onMessage(request.toByteString().asReadOnlyByteBuffer());
+    }
+
+    /**
+     * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
+     *
+     * @param controller
+     * @param request
+     * @param done
+     */
+    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
+        done.run(TimeManager.decodeRequest(request));
     }
 
     /**

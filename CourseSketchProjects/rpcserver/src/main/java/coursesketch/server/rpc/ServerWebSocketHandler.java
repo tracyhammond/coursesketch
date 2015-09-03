@@ -5,6 +5,7 @@ import com.googlecode.protobuf.pro.duplex.ClientRpcController;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,12 @@ import protobuf.srl.request.Message;
 /**
  * Created by gigemjt on 10/19/14.
  */
-public class DefaultRpcHandler extends AbstractServerWebSocketHandler {
+public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * Declaration/Definition of Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultRpcHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketHandler.class);
 
     /**
      * A constructor that accepts a servlet.
@@ -26,8 +27,8 @@ public class DefaultRpcHandler extends AbstractServerWebSocketHandler {
      * @param parent
      *         The parent servlet of this server.
      */
-    protected DefaultRpcHandler(final ISocketInitializer parent) {
-        super(parent);
+    protected ServerWebSocketHandler(final ISocketInitializer parent, ServerInfo info) {
+        super(parent, info);
     }
 
     /**

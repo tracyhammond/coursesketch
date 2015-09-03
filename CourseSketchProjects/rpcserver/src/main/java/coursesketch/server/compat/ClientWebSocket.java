@@ -1,12 +1,20 @@
 package coursesketch.server.compat;
 
+import com.google.protobuf.RpcController;
+import com.googlecode.protobuf.pro.duplex.CleanShutdownHandler;
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.client.DuplexTcpClientPipelineFactory;
 import com.googlecode.protobuf.pro.duplex.execute.RpcServerCallExecutor;
 import com.googlecode.protobuf.pro.duplex.execute.ThreadPoolCallExecutor;
+import com.googlecode.protobuf.pro.duplex.logging.CategoryPerServiceLogger;
+import com.googlecode.protobuf.pro.duplex.timeout.RpcTimeoutChecker;
+import com.googlecode.protobuf.pro.duplex.timeout.RpcTimeoutExecutor;
+import com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker;
+import com.googlecode.protobuf.pro.duplex.timeout.TimeoutExecutor;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.rpc.LocalRpcEventLoggerFactory;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -39,12 +47,12 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     /**
      * Size of the send buffer
      */
-    private static final int SIZE_OF_SEND_BUFFER = 100048576;
+    private static final int SIZE_OF_SEND_BUFFER = 1048576;
 
     /**
      * Size of the recieving buffer
      */
-    private static final int SIZE_OF_RCV_BUFFER = 100048576;
+    private static final int SIZE_OF_RCV_BUFFER = 1048576;
 
     /**
      * Max number of threads for the client
@@ -60,6 +68,11 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * MThe offset from the host port for the client port.
      */
     private static final int CLIENT_PORT_OFFSET = 100;
+
+    /**
+     * An Rpc Client channel
+     */
+    private RpcClientChannel channel = null;
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -98,8 +111,9 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         if (remoteAddress.isUnresolved()) {
             throw new ConnectionException("Remote address does not exist " + remoteAddress.getHostString());
         }
-        final PeerInfo client = new PeerInfo(this.getParentServer().getName(), getURI().getPort() + CLIENT_PORT_OFFSET);
-        final PeerInfo server = new PeerInfo(remoteAddress);
+        final PeerInfo client = new PeerInfo(this.getParentServer().getHostName());
+        LOG.info("Resolved address {}", remoteAddress.getAddress());
+        final PeerInfo server = new PeerInfo(remoteAddress.getHostName(), remoteAddress.getPort());
 
         final DuplexTcpClientPipelineFactory clientFactory = new DuplexTcpClientPipelineFactory();
         clientFactory.setClientInfo(client);
@@ -108,23 +122,39 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         clientFactory.setRpcServerCallExecutor(executor);
 
         clientFactory.setConnectResponseTimeoutMillis(TIME_OUT_MILLIS);
-        clientFactory.setCompression(true);
+        clientFactory.setCompression(false);
+
+        clientFactory.setRpcLogger(new CategoryPerServiceLogger());
+
+        RpcTimeoutExecutor timeoutExecutor = new TimeoutExecutor(1,5);
+        RpcTimeoutChecker checker = new TimeoutChecker();
+        checker.setTimeoutExecutor(timeoutExecutor);
+        checker.startChecking(clientFactory.getRpcClientRegistry());
+
+        CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
+        shutdownHandler.addResource(executor);
+        shutdownHandler.addResource(checker);
+        shutdownHandler.addResource(timeoutExecutor);
+
+        clientFactory.registerConnectionEventListener(LocalRpcEventLoggerFactory.createLocalEventLogger(LOG));
 
         final Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(new NioEventLoopGroup());
         bootstrap.handler(clientFactory);
         bootstrap.channel(NioSocketChannel.class);
-        bootstrap.option(ChannelOption.TCP_NODELAY, true);
+        bootstrap.option(ChannelOption.TCP_NODELAY, false);
         bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIME_OUT_MILLIS);
         bootstrap.option(ChannelOption.SO_SNDBUF, SIZE_OF_SEND_BUFFER);
         bootstrap.option(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
 
-        RpcClientChannel channel = null;
+        shutdownHandler.addResource(bootstrap.group());
+
+        channel = null;
         try {
             channel = clientFactory.peerWith(server, bootstrap);
         } catch (IOException e) {
             LOG.error("Unable to connect to server", e);
-            throw new ConnectionException("Unable to connect to server" + remoteAddress.getHostString());
+            throw new ConnectionException("Unable to connect to server " + server.getName());
         }
 
         final ClientWebSocketWrapper wrapper = new ClientWebSocketWrapper(channel, this);
@@ -141,5 +171,19 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
 
+    }
+
+    /**
+     * @return A {@link RpcClientChannel} so that protobuf can send messages.
+     */
+    public RpcClientChannel getRpcChannel() {
+        return channel;
+    }
+
+    /**
+     * @return A new instance of{@link RpcController}.
+     */
+    public RpcController getnewRpcController() {
+        return channel.newRpcController();
     }
 }

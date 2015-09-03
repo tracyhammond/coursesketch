@@ -19,6 +19,7 @@
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
 		<module>CourseSketchProjects/CourseSketchSubmissionServer</module>
 		<module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+		<module>CourseSketchProjects/IdentityServer</module>
 	</modules>
 
 	<issueManagement>

@@ -54,4 +54,5 @@ message ProtoException {
 
 service RequestService {
     rpc sendMessage(Request) returns (Request);
+    rpc sendTimeRequest(Request) returns (Request);
 }

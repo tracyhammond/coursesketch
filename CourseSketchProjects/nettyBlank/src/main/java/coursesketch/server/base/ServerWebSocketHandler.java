@@ -3,15 +3,15 @@ package coursesketch.server.base;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -29,8 +29,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @param parent
      *         The parent servlet of this server.
      */
-    protected ServerWebSocketHandler(final ISocketInitializer parent) {
-        super(parent);
+    protected ServerWebSocketHandler(final ISocketInitializer parent, ServerInfo info) {
+        super(parent, info);
     }
 
     /**
