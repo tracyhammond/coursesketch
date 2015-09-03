@@ -55,6 +55,20 @@
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
 				<artifactId>replacer</artifactId>
+				<executions>
+					<execution>
+						<id>ip_prop_replace</id>
+						<configuration>
+							<file>${basedir}/src/main/java/connection/SubmissionConnectionManager.java</file>
+						</configuration>
+					</execution>
+					<execution>
+						<id>ip_prop_reverse</id>
+						<configuration>
+							<file>${basedir}/src/main/java/connection/SubmissionConnectionManager.java</file>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
