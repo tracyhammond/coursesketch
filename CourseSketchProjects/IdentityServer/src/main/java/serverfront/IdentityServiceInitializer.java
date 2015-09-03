@@ -4,6 +4,7 @@ import com.google.protobuf.Service;
 import connection.IdentityConnectionManager;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import services.IndentityThing;
@@ -49,8 +50,8 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     }
 
     @Override
-    protected List<Service> getRpcServices() {
-        List<Service> services = new ArrayList<Service>();
+    protected List<CourseSketchRpcService> getRpcServices() {
+        List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
         services.add(new IndentityThing());
         return services;
     }
