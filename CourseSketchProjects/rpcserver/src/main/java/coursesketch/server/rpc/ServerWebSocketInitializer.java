@@ -1,5 +1,6 @@
-package coursesketch.server.base;
+package coursesketch.server.rpc;
 
+import com.google.protobuf.Service;
 import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
@@ -7,6 +8,9 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import io.netty.handler.ssl.SslContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -121,7 +125,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     @SuppressWarnings("checkstyle:designforextension")
     @Override
     public AbstractServerWebSocketHandler createServerSocket() {
-        return new ServerWebSocketHandler(this);
+        return new DefaultRpcHandler(this);
     }
 
     /**
@@ -154,9 +158,20 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         return connectionServer;
     }
 
-    public void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
+    public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
+        List<Service> services = getRpcServices();
+        if (services == null) {
+            throw new NullPointerException("getRpcServices can not return null");
+        }
         ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
-        serverFactory.getRpcServiceRegistry().registerService(wrapper);
+        services.add(wrapper);
+        for (Service service: services) {
+            serverFactory.getRpcServiceRegistry().registerService(service);
+        }
         serverFactory.registerConnectionEventListener(wrapper);
+    }
+
+    protected List<Service> getRpcServices() {
+        return new ArrayList<Service>();
     }
 }

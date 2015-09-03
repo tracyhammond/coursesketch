@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.rpc;
 
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
 import com.googlecode.protobuf.pro.duplex.execute.RpcServerCallExecutor;

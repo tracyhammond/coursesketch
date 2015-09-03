@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.rpc;
 
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
@@ -30,14 +30,14 @@ import protobuf.srl.request.Message;
     /**
      * An actual socket handler that is just wrapped by the.
      */
-    private final ServerWebSocketHandler socketHandler;
+    private final DefaultRpcHandler socketHandler;
 
     /**
      * @param handler The handler for the server side of the socket.
      * @param secure True if the socket should use SSL.
      */
     ServerSocketWrapper(final AbstractServerWebSocketHandler handler, final boolean secure) {
-        socketHandler = (ServerWebSocketHandler) handler;
+        socketHandler = (DefaultRpcHandler) handler;
         isSecure = secure;
     }
 
