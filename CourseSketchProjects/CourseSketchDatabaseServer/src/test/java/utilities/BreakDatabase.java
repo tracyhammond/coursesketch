@@ -30,7 +30,7 @@ public final class BreakDatabase {
     private UserClient userClient;
 
     public BreakDatabase(final DB db) {
-        mongoDatabase = new MongoInstitution(true, db);
+        mongoDatabase = new MongoInstitution(true, db, null);
         database = db;
         userClient = new UserClient(true, db);
     }
@@ -124,7 +124,7 @@ public final class BreakDatabase {
 
             // testing inserting course
             System.out.println("INSERTING COURSE");
-            String courseId = MongoInstitution.getInstance().insertCourse(instructionID, testBuilder.buildPartial());
+            String courseId = MongoInstitution.getInstance(null).insertCourse(instructionID, testBuilder.buildPartial());
             System.out.println("INSERTING COURSE SUCCESSFUL");
             System.out.println(courseId);
             LocalAddAssignments.testAssignments(courseId, instructionID);

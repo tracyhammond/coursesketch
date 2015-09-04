@@ -63,7 +63,7 @@ public class DataRequestHandlerTest {
             }
         });
 
-        DataRequestHandler.handleRequest(request, session, "sessionId", mock(MultiConnectionManager.class));
+        DataRequestHandler.handleRequest(request, session, instance, "sessionId", mock(MultiConnectionManager.class));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class DataRequestHandlerTest {
             }
         });
 
-        DataRequestHandler.handleRequest(request, session, "sessionId", mock(MultiConnectionManager.class));
+        DataRequestHandler.handleRequest(request, session, instance, "sessionId", mock(MultiConnectionManager.class));
     }
 
     public Message.Request createRequest(String userID, long messageTime, Data.ItemRequest... requests) {

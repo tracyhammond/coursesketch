@@ -30,12 +30,12 @@ public final class Authenticator {
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
     private final AuthenticationChecker checker;
-    private final AuthenticationDateChecker dateChecker;
+    private final AuthenticationOptionChecker dateChecker;
 
     /**
      * @param authenticationChecker Implements where the data actually comes from.
      */
-    public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationDateChecker dateChecker) {
+    public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationOptionChecker dateChecker) {
         if (authenticationChecker == null) {
             throw new IllegalArgumentException("The AuthenticationChecker can not be null.");
         }
@@ -71,11 +71,19 @@ public final class Authenticator {
      */
     public static boolean validRequest(Authentication.AuthType authType) {
         return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
-                || authType.getCheckDate() || authType.getCheckAdminOrMod() || authType.getCheckAccess();
+                || authType.getCheckDate() || authType.getCheckingPeerTeacher() || authType.getCheckAccess();
     }
 
     /**
-     * 
+     * @return True if one of the values in AuthType is true. (Excluded is dateChecking)
+     */
+    public static boolean validAccessRequest(Authentication.AuthType authType) {
+        return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
+                || authType.getCheckingPeerTeacher() || authType.getCheckAccess();
+    }
+
+    /**
+     *
      * @param collectionType
      * @param itemId
      * @param userId
@@ -117,16 +125,31 @@ public final class Authenticator {
 
         final ExceptionUtilities.ExceptionHolder dateCheckerException = ExceptionUtilities.getExceptionHolder();
         // Date checking
-        if (checkType.getCheckDate()) {
+        if (checkType.getCheckDate() || checkType.getCheckAccess()) {
             new Thread() {
                 public void run() {
-                    boolean validDate = dateChecker.authenticateDate(collectionType, itemId, checkTime);
+                    boolean validDate = false;
+                    if (checkType.getCheckDate()) {
+                        validDate = dateChecker.authenticateDate(collectionType, itemId, checkTime);
+                    }
+                    boolean registrationRequired = true;
+                    boolean itemPublished = false;
+                    if (checkType.getCheckAccess()) {
+                        registrationRequired = dateChecker.isItemRegistrationRequired(collectionType, itemId);
+                        itemPublished = dateChecker.isItemPublished(collectionType, itemId);
+                    }
                     try {
                         checkLatch.await();
                     } catch (InterruptedException e) {
                         LOG.error("Await was interrupted while authenticating date", e);
                     }
-                    authBuilder.setIsItemOpen(validDate);
+                    if (checkType.getCheckDate()) {
+                        authBuilder.setIsItemOpen(validDate);
+                    }
+                    if (checkType.getCheckAccess()) {
+                        authBuilder.setIsRegistrationRequired(registrationRequired);
+                        authBuilder.setIsItemPublished(itemPublished);
+                    }
                     totalLatch.countDown();
                 }
             }.start();
@@ -139,6 +162,12 @@ public final class Authenticator {
             totalLatch.await();
         } catch (InterruptedException e) {
             throw new AuthenticationException(e);
+        }
+
+        // hasAccess will be true if they have a permission level that is not above
+        if (checkType.getCheckAccess()) {
+            authBuilder.setHasAccess(authBuilder.getHasAccess()
+                    || (authBuilder.getIsItemPublished() && !authBuilder.getIsRegistrationRequired()));
         }
 
         if (checkerException.exception != null) {

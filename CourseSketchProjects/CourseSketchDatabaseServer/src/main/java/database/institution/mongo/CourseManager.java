@@ -10,12 +10,15 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
+import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.State;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
 
@@ -112,21 +115,17 @@ public final class CourseManager {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
         }
 
-        final ArrayList adminList = (ArrayList<Object>) cursor.get(ADMIN); // convert
-        // to
-        // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) cursor.get(MOD); // convert
-        // to
-        // ArrayList<String>
-        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
-        // to
-        // ArrayList<String>
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-        isUsers = authenticator.checkAuthentication(userId, usersList);
+        Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckingUser(true)
+                .setCheckingMod(true)
+                .setCheckingAdmin(true)
+                .setCheckDate(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, checkTime, authType);
 
-        if (!isAdmin && !isMod && !isUsers) {
+        if (!responder.hasAccess()) {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
@@ -147,28 +146,20 @@ public final class CourseManager {
             stateBuilder.setPastDue(true);
         }
 
-        // FUTURE: add this to all fields!
-        // A course is only publishable after a certain criteria is met
-        if (cursor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) cursor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific course is not published yet: " + courseId, true);
-                } else {
-                    stateBuilder.setPublished(false);
-                }
-            }
+        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+            throw new DatabaseAccessException("The specific course is not published yet: " + courseId, true);
         }
+
+        // Post this point either item is published OR responder is at least responder.
+        stateBuilder.setPublished(responder.isItemPublished());
 
         if (cursor.get(IMAGE) != null) {
             exactCourse.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the course must be open to view the assignments
-        if (isAdmin || isMod
-                || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
+        if ((responder.hasAccess() && responder.isItemOpen())
+                || responder.hasPeerTeacherPermission()) {
             final Object assignmentList = cursor.get(ASSIGNMENT_LIST);
             final Object lectureList = cursor.get(LECTURE_LIST);
             if (assignmentList != null) {
@@ -178,7 +169,7 @@ public final class CourseManager {
                 exactCourse.addAllLectureList((List) lectureList);
             }
             stateBuilder.setAccessible(true);
-        } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
+        } else if (responder.hasAccess() && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
             LOG.info("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactCourse.getAccessDate().getMillisecond(), checkTime,
                     exactCourse.getCloseDate().getMillisecond());
@@ -187,7 +178,7 @@ public final class CourseManager {
 
         exactCourse.setState(stateBuilder);
 
-        if (isAdmin) {
+        if (responder.hasTeacherPermission()) {
             try {
                 exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             } catch (ClassCastException exception) {
