@@ -1,7 +1,11 @@
 package database.auth;
 
+import database.DatabaseAccessException;
+import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.DateTime;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * A class that performs authentication.
@@ -18,15 +22,20 @@ public final class Authenticator {
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
     private final AuthenticationChecker checker;
+    private final AuthenticationDateChecker dateChecker;
 
     /**
      * @param authenticationChecker Implements where the data actually comes from.
      */
-    public Authenticator(final AuthenticationChecker authenticationChecker) {
-        checker = authenticationChecker;
+    public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationDateChecker dateChecker) {
         if (authenticationChecker == null) {
             throw new IllegalArgumentException("The AuthenticationChecker can not be null.");
         }
+        if (dateChecker == null) {
+            throw new IllegalArgumentException("The AuthenticationDateChecker can not be null.");
+        }
+        checker = authenticationChecker;
+        this.dateChecker = dateChecker;
     }
 
     /**
@@ -55,5 +64,9 @@ public final class Authenticator {
     public static boolean validRequest(Authentication.AuthType authType) {
         return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
                 || authType.getCheckDate() || authType.getCheckAdminOrMod() || authType.getCheckAccess();
+    }
+
+    public AuthenticationResponder checkAuthentication(final School.ItemType collectionType, final String itemId,
+            final String userId, final long checkTime, final Authentication.AuthType checkType) {
     }
 }

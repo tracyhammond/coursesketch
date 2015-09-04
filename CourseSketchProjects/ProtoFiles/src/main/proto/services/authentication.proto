@@ -53,14 +53,23 @@ message AuthRequest {
 /**
  * Returns the result of the authentication request.
  * NOTE: values are only returned true for data that is checked.
- * For example if you do not ask to check if they are an admin then that will always return false.
+ * For example if you do not ask to check if they are a student and nothing else they will only return that they are a student
  */
 message AuthResponse {
-    optional bool isUser = 1;
-    optional bool isMod = 2;
-    optional bool isAdmin = 3;
-    // This is true if any of the above is true (or if the course is open!)
-    optional bool hasAccess = 4;
+    // This is true if they have a value greater than NO_PERMISSION or if the course is open
+    optional bool hasAccess = 1;
+    optional PermissionLevel permissionLevel = 2;
+    // True if the item is currently open during the time the check was performed.
+    optional bool isItemOpen = 3;
+
+    // ASSUMPTION LARGER PERMISSIONS HAVE LARGER NUMBERS
+    enum PermissionLevel {
+        NO_PERMISSION = 0;
+        STUDENT = 100;
+        PEER_TEACHER = 200;
+        MODERATOR = 300;
+        TEACHER = 400;
+    }
 }
 
 service AuthenticationService {
