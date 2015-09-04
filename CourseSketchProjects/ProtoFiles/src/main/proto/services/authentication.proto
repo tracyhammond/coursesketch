@@ -1,0 +1,68 @@
+package protobuf.srl.services.authentication;
+
+import "school.proto";
+
+option java_generic_services = true;
+
+
+/**
+ * A list of Authentication options.
+ * Compares against values in {@link AuthenticationData}.
+ * @author gigemjt
+ */
+message AuthType {
+    /**
+     * If true then it checks against the userList in {@link AuthenticationData}.
+     */
+    optional bool checkingUser = 1;
+
+    /**
+     * If true then it checks against the modlist in {@link AuthenticationData}.
+     */
+    optional bool checkingMod = 2;
+
+    /**
+     * If true then it checks against the adminlist in {@link AuthenticationData}.
+     */
+    optional bool checkingAdmin = 3;
+
+    /**
+     * If true then it checks that the dates in {@link AuthenticationData}.
+     */
+    optional bool checkDate = 4;
+
+    /**
+     * If true then it passes if either mod or admin exist. {@link AuthenticationData}.
+     */
+    optional bool checkAdminOrMod = 5;
+
+    /**
+     * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
+     */
+    optional bool checkAccess = 6;
+
+}
+
+message AuthRequest {
+    required string authId = 1;
+    required string itemId = 2;
+    required protobuf.srl.school.ItemType itemType = 3;
+    required AuthType authParams = 4;
+}
+
+/**
+ * Returns the result of the authentication request.
+ * NOTE: values are only returned true for data that is checked.
+ * For example if you do not ask to check if they are an admin then that will always return false.
+ */
+message AuthResponse {
+    optional bool isUser = 1;
+    optional bool isMod = 2;
+    optional bool isAdmin = 3;
+    // This is true if any of the above is true (or if the course is open!)
+    optional bool hasAccess = 4;
+}
+
+service AuthenticationService {
+    rpc authorizeUser(AuthRequest) returns (AuthResponse);
+}
