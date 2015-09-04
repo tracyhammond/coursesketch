@@ -65,15 +65,15 @@ public final class DataInsertHandler {
      *
      * decode request and pull correct information from {@link Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     *
+     * @param auth
      * @param req
      *         The request that has data being inserted.
      * @param conn
-     *         The connection where the result is sent to.
+     * @param instance
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
-    public static void handleData(final Request req, final SocketSession conn) {
+    public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Recieving DATA SEND Request...");
 
@@ -84,7 +84,7 @@ public final class DataInsertHandler {
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
 
-            final Institution instance = MongoInstitution.getInstance();
+            final Institution instance = MongoInstitution.getInstance(null);
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {

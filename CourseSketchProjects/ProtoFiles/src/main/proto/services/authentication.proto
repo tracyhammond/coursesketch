@@ -17,24 +17,24 @@ message AuthType {
     optional bool checkingUser = 1;
 
     /**
+     * If true then it checks against the userList in {@link AuthenticationData}.
+     */
+    optional bool checkingPeerTeacher = 2;
+
+    /**
      * If true then it checks against the modlist in {@link AuthenticationData}.
      */
-    optional bool checkingMod = 2;
+    optional bool checkingMod = 3;
 
     /**
      * If true then it checks against the adminlist in {@link AuthenticationData}.
      */
-    optional bool checkingAdmin = 3;
+    optional bool checkingAdmin = 4;
 
     /**
      * If true then it checks that the dates in {@link AuthenticationData}.
      */
-    optional bool checkDate = 4;
-
-    /**
-     * If true then it passes if either mod or admin exist. {@link AuthenticationData}.
-     */
-    optional bool checkAdminOrMod = 5;
+    optional bool checkDate = 5;
 
     /**
      * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
@@ -56,11 +56,22 @@ message AuthRequest {
  * For example if you do not ask to check if they are a student and nothing else they will only return that they are a student
  */
 message AuthResponse {
-    // This is true if they have a value greater than NO_PERMISSION or if the course is open
+    // This is true if they have a value greater than NO_PERMISSION
+    // or if the item is published and registration is not required.
+    // dates are handled separately from having access.
     optional bool hasAccess = 1;
-    optional PermissionLevel permissionLevel = 2;
+
+    optional PermissionLevel permissionLevel = 2 [default = NO_PERMISSION];
+
     // True if the item is currently open during the time the check was performed.
     optional bool isItemOpen = 3;
+
+    // true if the item requires registration to access
+    // if explicitly set to false then hasAccess will almost always be true even if they have NO_PERMISSION
+    optional bool isRegistrationRequired = 4 [default=true];
+
+    // true if the item is published, false otherwise
+    optional bool isItemPublished = 5;
 
     // ASSUMPTION LARGER PERMISSIONS HAVE LARGER NUMBERS
     enum PermissionLevel {

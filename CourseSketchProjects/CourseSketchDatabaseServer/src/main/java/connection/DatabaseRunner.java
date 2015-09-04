@@ -41,7 +41,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      */
     @Override
     public final void executeLocalEnvironment() {
-        new MongoInstitution(false, null); // makes the database point locally
+        new MongoInstitution(false, null, null); // makes the database point locally
         new UserClient(false, null); // makes the database point locally
     }
 
