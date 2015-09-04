@@ -1,9 +1,12 @@
 package database.auth;
 
 import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.DateTime;
+import utilities.ExceptionUtilities;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -16,6 +19,11 @@ import java.util.concurrent.CountDownLatch;
  * @author gigemjt
  */
 public final class Authenticator {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     /**
      * An implementation of the {@link AuthenticationDataCreator}.
@@ -66,7 +74,80 @@ public final class Authenticator {
                 || authType.getCheckDate() || authType.getCheckAdminOrMod() || authType.getCheckAccess();
     }
 
+    /**
+     * 
+     * @param collectionType
+     * @param itemId
+     * @param userId
+     * @param checkTime
+     * @param checkType
+     * @return
+     * @throws AuthenticationException
+     */
     public AuthenticationResponder checkAuthentication(final School.ItemType collectionType, final String itemId,
-            final String userId, final long checkTime, final Authentication.AuthType checkType) {
+            final String userId, final long checkTime, final Authentication.AuthType checkType) throws AuthenticationException {
+        if (!validRequest(checkType)) {
+            throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
+        }
+
+        final Authentication.AuthResponse.Builder authBuilder = Authentication.AuthResponse.newBuilder();
+        final CountDownLatch totalLatch = new CountDownLatch(2);
+        final CountDownLatch checkLatch = new CountDownLatch(1);
+
+        final ExceptionUtilities.ExceptionHolder checkerException = ExceptionUtilities.getExceptionHolder();
+        // Auth checking checking
+        new Thread() {
+            public void run() {
+                try {
+                    Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
+                    synchronized (authBuilder) {
+                        authBuilder.mergeFrom(result);
+                    }
+                } catch (DatabaseAccessException e) {
+                    checkerException.exception = e;
+                    LOG.error("Exception was thrown while accessing database", e);
+                } catch (AuthenticationException e) {
+                    checkerException.exception = e;
+                    LOG.error("Exception was thrown while authenticating person", e);
+                }
+                checkLatch.countDown();
+                totalLatch.countDown();
+            }
+        }.start();
+
+        final ExceptionUtilities.ExceptionHolder dateCheckerException = ExceptionUtilities.getExceptionHolder();
+        // Date checking
+        if (checkType.getCheckDate()) {
+            new Thread() {
+                public void run() {
+                    boolean validDate = dateChecker.authenticateDate(collectionType, itemId, checkTime);
+                    try {
+                        checkLatch.await();
+                    } catch (InterruptedException e) {
+                        LOG.error("Await was interrupted while authenticating date", e);
+                    }
+                    authBuilder.setIsItemOpen(validDate);
+                    totalLatch.countDown();
+                }
+            }.start();
+        } else {
+            // this is one of the two
+            totalLatch.countDown();
+        }
+
+        try {
+            totalLatch.await();
+        } catch (InterruptedException e) {
+            throw new AuthenticationException(e);
+        }
+
+        if (checkerException.exception != null) {
+            throw new AuthenticationException(checkerException.exception);
+        }
+        if (dateCheckerException.exception != null) {
+            throw new AuthenticationException(dateCheckerException.exception);
+        }
+
+        return new AuthenticationResponder(authBuilder.build());
     }
 }

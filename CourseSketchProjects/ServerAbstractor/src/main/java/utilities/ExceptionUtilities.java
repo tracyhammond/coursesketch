@@ -76,4 +76,15 @@ public final class ExceptionUtilities {
     public static Message.Request createExceptionRequest(final Message.Request inputRequest, final Message.ProtoException exception) {
         return createExceptionRequest(inputRequest, exception, null);
     }
+
+    /**
+     * Holds an exception (in the case that one is needed
+     */
+    public static final class ExceptionHolder {
+        public Exception exception;
+    }
+
+    public static ExceptionHolder getExceptionHolder() {
+        return new ExceptionHolder();
+    }
 }
