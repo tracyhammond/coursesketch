@@ -43,7 +43,6 @@ import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
-import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
 
@@ -117,8 +116,6 @@ public final class CourseManager {
 
         Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
-                .setCheckingUser(true)
-                .setCheckingMod(true)
                 .setCheckingAdmin(true)
                 .setCheckDate(true)
                 .build();
@@ -218,15 +215,17 @@ public final class CourseManager {
         DBObject updateObj = null;
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
 
-        boolean isAdmin, isMod;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(MOD));
+        Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, 0, authType);
 
-        if (!isAdmin && !isMod) {
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (isAdmin) {
+        if (responder.hasTeacherPermission()) {
             if (course.hasSemester()) {
                 updateObj = new BasicDBObject(COURSE_SEMESTER, course.getSemester());
                 courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
@@ -285,7 +284,7 @@ public final class CourseManager {
                 }
             }
         }
-        if (isAdmin || isMod && course.getAssignmentListList() != null) {
+        if (responder.hasModeratorPermission() && course.getAssignmentListList() != null) {
             updateObj = new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList());
             courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             update = true;

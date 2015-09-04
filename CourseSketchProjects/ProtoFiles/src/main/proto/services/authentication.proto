@@ -8,6 +8,9 @@ option java_generic_services = true;
 /**
  * A list of Authentication options.
  * Compares against values in {@link AuthenticationData}.
+ *
+ * Works on the principle of accumalitive permissions.  So if you check for admin it will checker for all permissions below it.
+ * but if you check for user it will not checker for any permissions above it.
  * @author gigemjt
  */
 message AuthType {
@@ -53,7 +56,7 @@ message AuthRequest {
 /**
  * Returns the result of the authentication request.
  * NOTE: values are only returned true for data that is checked.
- * For example if you do not ask to check if they are a student and nothing else they will only return that they are a student
+ * For example if you do not ask to check if they are a student and nothing else they will only return that they are a student.
  */
 message AuthResponse {
     // This is true if they have a value greater than NO_PERMISSION
