@@ -12,6 +12,11 @@ public class AuthenticationResponder {
         this.response = response;
     }
 
+    /**
+     * This is mainly if the person has access to the item itself in any way.
+     * This does NOT mean access to everything.
+     * @return
+     */
     public boolean hasAccess() {
         return response.getHasAccess();
     }
