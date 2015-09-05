@@ -15,8 +15,8 @@ public class AuthenticationResponder {
     }
 
     /**
-     * This is mainly if the person has access to the item itself in any way.
-     * This does NOT mean access to everything.
+     * This returns true IFF registration is not required OR the user has a permission level greater than student
+     * OR the auth checker detirmines the user has access
      * @return
      */
     public boolean hasAccess() {

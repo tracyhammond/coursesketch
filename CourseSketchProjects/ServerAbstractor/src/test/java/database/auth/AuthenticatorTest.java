@@ -212,6 +212,42 @@ public class AuthenticatorTest {
         verifyNoMoreInteractions(authChecker);
     }
 
+    // Authentication exception handling
+    @Test(expected = AuthenticationException.class)
+    public void authenticatorThrowsWhenAuthCheckThrowsAuthExcep() throws Exception {
+
+        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenThrow(AuthenticationException.class);
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void authenticatorThrowsWhenAuthCheckThrowsDBExcep() throws Exception {
+
+        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenThrow(DatabaseAccessException.class);
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void authenticatorThrowsWhenOptionCheckThrowsDBExcep() throws Exception {
+        when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
+                .thenThrow(DatabaseAccessException.class);
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+    }
+
     // Authenticator Result Tests
 
     @Test
@@ -287,5 +323,59 @@ public class AuthenticatorTest {
         assertFalse(responder.hasTeacherPermission());
         assertFalse(responder.isItemOpen());
         assertFalse(responder.isItemPublished());
+    }
+
+    @Test
+    public void authenticatorPermissionIfAdminPermissionIsSet() throws Exception {
+
+        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+
+        // Specific value being tested
+        assertTrue(responder.hasAccess());
+        assertTrue(responder.hasStudentPermission());
+        assertTrue(responder.hasPeerTeacherPermission());
+        assertTrue(responder.hasModeratorPermission());
+        assertTrue(responder.hasTeacherPermission());
+
+        // other values that are not the highlight of the test
+        assertFalse(responder.isItemOpen());
+        assertFalse(responder.isItemPublished());
+        // remember this is the reverse
+        assertTrue(responder.isRegistrationRequired());
+    }
+
+    @Test
+    public void authenticatorPermissionIfStudentPermissionIsSet() throws Exception {
+
+        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
+                        .build());
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+
+        // Specific value being tested
+        assertTrue(responder.hasAccess());
+        assertTrue(responder.hasStudentPermission());
+        assertFalse(responder.hasPeerTeacherPermission());
+        assertFalse(responder.hasModeratorPermission());
+        assertFalse(responder.hasTeacherPermission());
+
+        // other values that are not the highlight of the test
+        assertFalse(responder.isItemOpen());
+        assertFalse(responder.isItemPublished());
+        // remember this is the reverse
+        assertTrue(responder.isRegistrationRequired());
     }
 }

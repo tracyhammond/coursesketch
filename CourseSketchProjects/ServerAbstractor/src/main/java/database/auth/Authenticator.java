@@ -129,33 +129,38 @@ public final class Authenticator {
             totalLatch.countDown();
         }
 
-        final ExceptionUtilities.ExceptionHolder dateCheckerException = ExceptionUtilities.getExceptionHolder();
+        final ExceptionUtilities.ExceptionHolder optionCheckerException = ExceptionUtilities.getExceptionHolder();
         // Date checking
         if (checkType.getCheckDate() || checkType.getCheckAccess()) {
             new Thread() {
                 public void run() {
                     boolean validDate = false;
-                    final AuthenticationDataCreator dataCreator = optionChecker.createDataGrabber(collectionType, itemId);
-                    if (checkType.getCheckDate()) {
-                        validDate = optionChecker.authenticateDate(dataCreator, checkTime);
-                    }
-                    boolean registrationRequired = true;
-                    boolean itemPublished = false;
-                    if (checkType.getCheckAccess()) {
-                        registrationRequired = optionChecker.isItemRegistrationRequired(dataCreator);
-                        itemPublished = optionChecker.isItemPublished(dataCreator);
-                    }
                     try {
-                        checkLatch.await();
-                    } catch (InterruptedException e) {
-                        LOG.error("Await was interrupted while authenticating date", e);
-                    }
-                    if (checkType.getCheckDate()) {
-                        authBuilder.setIsItemOpen(validDate);
-                    }
-                    if (checkType.getCheckAccess()) {
-                        authBuilder.setIsRegistrationRequired(registrationRequired);
-                        authBuilder.setIsItemPublished(itemPublished);
+                        final AuthenticationDataCreator dataCreator = optionChecker.createDataGrabber(collectionType, itemId);
+                        if (checkType.getCheckDate()) {
+                            validDate = optionChecker.authenticateDate(dataCreator, checkTime);
+                        }
+                        boolean registrationRequired = true;
+                        boolean itemPublished = false;
+                        if (checkType.getCheckAccess()) {
+                            registrationRequired = optionChecker.isItemRegistrationRequired(dataCreator);
+                            itemPublished = optionChecker.isItemPublished(dataCreator);
+                        }
+                        try {
+                            checkLatch.await();
+                        } catch (InterruptedException e) {
+                            LOG.error("Await was interrupted while authenticating date", e);
+                        }
+                        if (checkType.getCheckDate()) {
+                            authBuilder.setIsItemOpen(validDate);
+                        }
+                        if (checkType.getCheckAccess()) {
+                            authBuilder.setIsRegistrationRequired(registrationRequired);
+                            authBuilder.setIsItemPublished(itemPublished);
+                        }
+                    } catch (DatabaseAccessException e) {
+                        optionCheckerException.exception = e;
+                        LOG.error("Exception was thrown while accessing database", e);
                     }
                     totalLatch.countDown();
                 }
@@ -171,6 +176,12 @@ public final class Authenticator {
             throw new AuthenticationException(e);
         }
 
+        if (checkType.getCheckingAdmin() || checkType.getCheckingMod() || checkType.getCheckingPeerTeacher() || checkType.getCheckingUser()
+                || checkType.getCheckAccess()) {
+            authBuilder.setHasAccess(authBuilder.getHasAccess() ||
+                    authBuilder.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE);
+        }
+
         // hasAccess will be true if they have a permission level that is not above
         if (checkType.getCheckAccess()) {
             authBuilder.setHasAccess(authBuilder.getHasAccess()
@@ -180,8 +191,8 @@ public final class Authenticator {
         if (checkerException.exception != null) {
             throw new AuthenticationException(checkerException.exception);
         }
-        if (dateCheckerException.exception != null) {
-            throw new AuthenticationException(dateCheckerException.exception);
+        if (optionCheckerException.exception != null) {
+            throw new AuthenticationException(optionCheckerException.exception);
         }
 
         return new AuthenticationResponder(authBuilder.build());
