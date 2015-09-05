@@ -9,15 +9,17 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
+import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
-import database.auth.Authenticator.AuthType;
 import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.LatePolicy;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.State;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
@@ -30,7 +32,6 @@ import static database.DatabaseStringConstants.ASSIGNMENT_OTHER_TYPE;
 import static database.DatabaseStringConstants.ASSIGNMENT_RESOURCES;
 import static database.DatabaseStringConstants.ASSIGNMENT_TYPE;
 import static database.DatabaseStringConstants.CLOSE_DATE;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.DUE_DATE;
@@ -46,7 +47,6 @@ import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
-import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
 /**
@@ -89,9 +89,12 @@ public final class AssignmentManager {
     public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String userId, final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection newUser = dbs.getCollection(ASSIGNMENT_COLLECTION);
-        final AuthType auth = new AuthType();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
+        Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, assignment.getCourseId().trim(), userId, 0, courseAuthType);
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For course: " + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
         }
 
@@ -159,42 +162,42 @@ public final class AssignmentManager {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
 
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, userId, checkTime, authType);
 
-        if (!isAdmin && !isMod && !isUsers) {
+        if (!responder.hasAccess()) {
             throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
         // check to make sure the assignment is within the time period that the
         // course is open and the user is in the course
         // FUTURE: maybe not make this necessarry if the insertion of assignments prevents this.
-        final AuthType auth = new AuthType();
-        auth.setCheckDate(true);
-        auth.setCheckUser(true);
+
+        final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+                .setCheckDate(true)
+                .build();
+        final AuthenticationResponder courseResponder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, (String) corsor.get(COURSE_ID), userId, checkTime, authType);
 
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
-        if (isUsers && !isAdmin && !isMod && !authenticator
-                .isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
+        if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !courseResponder.isItemOpen()) {
             throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_DATE);
         }
 
         final State.Builder stateBuilder = State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
-        if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific assignment is not published yet: " + assignmentId, true);
-                }
-                stateBuilder.setPublished(false);
-            }
+        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+            throw new DatabaseAccessException("The specific course is not published yet: " + assignmentId, true);
         }
+
+        // Post this point either item is published OR responder is at least responder.
+        stateBuilder.setPublished(responder.isItemPublished());
 
         // now all possible exceptions have already been thrown.
         final SrlAssignment.Builder exactAssignment = SrlAssignment.newBuilder();
@@ -204,21 +207,22 @@ public final class AssignmentManager {
         // sets the majority of the assignment data
         setAssignmentData(exactAssignment, corsor);
 
-        setAssignmentStateAndDate(exactAssignment, stateBuilder, corsor, isAdmin, isMod, checkTime);
+        setAssignmentStateAndDate(exactAssignment, stateBuilder, corsor,
+                responder.hasTeacherPermission(), responder.hasModeratorPermission(), checkTime);
 
         if (corsor.get(IMAGE) != null) {
             exactAssignment.setImageUrl((String) corsor.get(IMAGE));
         }
 
         // if you are a user, the assignment must be open to view the problems
-        if (isAdmin || isMod || (isUsers
+        if (responder.hasPeerTeacherPermission() || (responder.hasAccess()
                 && Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))) {
             if (corsor.get(PROBLEM_LIST) != null) {
                 exactAssignment.addAllProblemList((List) corsor.get(PROBLEM_LIST));
             }
 
             stateBuilder.setAccessible(true);
-        } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
+        } else if (responder.hasAccess() && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
             stateBuilder.setAccessible(false);
             LOG.info("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
@@ -229,11 +233,11 @@ public final class AssignmentManager {
         exactAssignment.setState(stateBuilder);
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (isAdmin) {
+        if (responder.hasTeacherPermission()) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
         }
-        if (isAdmin || isMod) {
+        if (responder.hasModeratorPermission()) {
             permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // mod
             exactAssignment.setAccessPermission(permissions.build());
         }
@@ -363,17 +367,18 @@ public final class AssignmentManager {
         DBObject updateObj = null;
         final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
-        final ArrayList adminList = (ArrayList<Object>) cursor.get("Admin");
-        final ArrayList modList = (ArrayList<Object>) cursor.get("Mod");
-        boolean isAdmin, isMod;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
 
-        if (!isAdmin && !isMod) {
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, userId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (isAdmin || isMod) {
+        if (responder.hasModeratorPermission()) {
             if (assignment.hasName()) {
                 updateObj = new BasicDBObject(NAME, assignment.getName());
                 assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
@@ -446,7 +451,7 @@ public final class AssignmentManager {
             // array and pushing values to an array
             if (assignment.hasAccessPermission()) {
                 final SrlPermission permissions = assignment.getAccessPermission();
-                if (isAdmin) {
+                if (responder.hasTeacherPermission()) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
                         updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
