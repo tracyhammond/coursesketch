@@ -423,11 +423,13 @@ public final class MongoInstitution implements Institution {
 
         // FIXME: when mongo version 2.5.5 java client comes out please change
         // this!
+        /*
         final ArrayList<String> hack = new ArrayList<String>();
         hack.add(GROUP_PREFIX + userGroupId);
         if (getInstance(null).auth.checkAuthentication(userId, hack)) {
             return false;
         }
+        */
         // DO NOT USE THIS CODE ANY WHERE ESLE
         final DBRef myDbRef = new DBRef(getInstance(null).database, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
         final DBObject corsor = myDbRef.fetch();
