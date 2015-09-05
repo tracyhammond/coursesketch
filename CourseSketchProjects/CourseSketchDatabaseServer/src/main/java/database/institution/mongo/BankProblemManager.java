@@ -10,11 +10,13 @@ import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
+import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
 
@@ -24,7 +26,6 @@ import java.util.List;
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.BASE_SKETCH;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
@@ -116,16 +117,19 @@ public final class BankProblemManager {
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
 
-        boolean isAdmin, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(ADMIN));
-        isUsers = authenticator.checkAuthentication(userId, (ArrayList) mongoBankProblem.get(USERS));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, userId, userId, 0, authType);
 
-
-        if (!isAdmin && !isUsers) {
+        // if registration is not required for bank problem any course can use it!
+        if (!responder.hasStudentPermission() && responder.isRegistrationRequired()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        return extractBankProblem(mongoBankProblem, problemBankId, isAdmin);
+        return extractBankProblem(mongoBankProblem, problemBankId, responder.hasTeacherPermission());
 
     }
 
@@ -207,11 +211,14 @@ public final class BankProblemManager {
             throw new DatabaseAccessException("Bank Problem was not found with the following ID: " + problemBankId);
         }
 
-        boolean isAdmin;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(ADMIN));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, userId, userId, 0, authType);
         final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
-        if (!isAdmin) {
+        if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
@@ -262,7 +269,7 @@ public final class BankProblemManager {
         // array and pushing values to an array
         if (problem.hasAccessPermission()) {
             final SrlPermission permissions = problem.getAccessPermission();
-            if (isAdmin) {
+            if (responder.hasTeacherPermission()) {
                 // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                 if (permissions.getAdminPermissionCount() > 0) {
                     updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
@@ -304,9 +311,13 @@ public final class BankProblemManager {
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
             final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
-        auth.setCheckAdmin(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, userId, userId, 0, authType);
+        if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
         final DBCollection problemCollection = database.getCollection(PROBLEM_BANK_COLLECTION);

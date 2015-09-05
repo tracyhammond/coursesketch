@@ -193,7 +193,7 @@ public final class AssignmentManager {
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
         if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
-            throw new DatabaseAccessException("The specific course is not published yet: " + assignmentId, true);
+            throw new DatabaseAccessException("The specific assignment is not published yet: " + assignmentId, true);
         }
 
         // Post this point either item is published OR responder is at least responder.
