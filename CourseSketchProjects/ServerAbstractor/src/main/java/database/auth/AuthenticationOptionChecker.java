@@ -8,9 +8,14 @@ import protobuf.srl.school.School;
  * Created by gigemjt on 9/4/15.
  */
 public interface AuthenticationOptionChecker {
-    boolean authenticateDate(final School.ItemType collectionType, final String itemId, long checkTime);
+    boolean authenticateDate(final AuthenticationDataCreator dataCreator, long checkTime);
 
-    boolean isItemRegistrationRequired(final School.ItemType collectionType, final String itemId);
+    boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator);
 
-    boolean isItemPublished(final School.ItemType collectionType, final String itemId);
+    boolean isItemPublished(final AuthenticationDataCreator dataCreator);
+
+    /**
+     * @return a data creator that grabs the data for any other uses by the option checker.
+     */
+    AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId);
 }

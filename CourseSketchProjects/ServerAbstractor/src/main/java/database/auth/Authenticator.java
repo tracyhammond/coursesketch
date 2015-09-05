@@ -10,6 +10,8 @@ import utilities.ExceptionUtilities;
 
 import java.util.concurrent.CountDownLatch;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A class that performs authentication.
  *
@@ -30,20 +32,14 @@ public final class Authenticator {
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
     private final AuthenticationChecker checker;
-    private final AuthenticationOptionChecker dateChecker;
+    private final AuthenticationOptionChecker optionChecker;
 
     /**
      * @param authenticationChecker Implements where the data actually comes from.
      */
-    public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationOptionChecker dateChecker) {
-        if (authenticationChecker == null) {
-            throw new IllegalArgumentException("The AuthenticationChecker can not be null.");
-        }
-        if (dateChecker == null) {
-            throw new IllegalArgumentException("The AuthenticationDateChecker can not be null.");
-        }
-        checker = authenticationChecker;
-        this.dateChecker = dateChecker;
+    public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationOptionChecker optionChecker) {
+        checker = checkNotNull(authenticationChecker, "authenticationChecker");
+        this.optionChecker = checkNotNull(optionChecker, "optionChecker");
     }
 
     /**
@@ -94,6 +90,11 @@ public final class Authenticator {
      */
     public AuthenticationResponder checkAuthentication(final School.ItemType collectionType, final String itemId,
             final String userId, final long checkTime, final Authentication.AuthType checkType) throws AuthenticationException {
+        checkNotNull(collectionType, "collectionType");
+        checkNotNull(itemId, "itemId");
+        checkNotNull(userId, "userId");
+        checkNotNull(checkType, "checkType");
+
         if (!validRequest(checkType)) {
             throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
         }
@@ -134,14 +135,15 @@ public final class Authenticator {
             new Thread() {
                 public void run() {
                     boolean validDate = false;
+                    final AuthenticationDataCreator dataCreator = optionChecker.createDataGrabber(collectionType, itemId);
                     if (checkType.getCheckDate()) {
-                        validDate = dateChecker.authenticateDate(collectionType, itemId, checkTime);
+                        validDate = optionChecker.authenticateDate(dataCreator, checkTime);
                     }
                     boolean registrationRequired = true;
                     boolean itemPublished = false;
                     if (checkType.getCheckAccess()) {
-                        registrationRequired = dateChecker.isItemRegistrationRequired(collectionType, itemId);
-                        itemPublished = dateChecker.isItemPublished(collectionType, itemId);
+                        registrationRequired = optionChecker.isItemRegistrationRequired(dataCreator);
+                        itemPublished = optionChecker.isItemPublished(dataCreator);
                     }
                     try {
                         checkLatch.await();
@@ -172,7 +174,7 @@ public final class Authenticator {
         // hasAccess will be true if they have a permission level that is not above
         if (checkType.getCheckAccess()) {
             authBuilder.setHasAccess(authBuilder.getHasAccess()
-                    || (authBuilder.getIsItemPublished() && !authBuilder.getIsRegistrationRequired()));
+                    || (!authBuilder.getIsRegistrationRequired()));
         }
 
         if (checkerException.exception != null) {

@@ -1,9 +1,6 @@
 package database.auth;
 
 import database.DatabaseAccessException;
-import protobuf.srl.school.School;
-
-import java.util.List;
 
 /**
  * An interface that implements where data for authentication actually comes from.
@@ -22,7 +19,7 @@ public interface AuthenticationDataCreator {
      * @return an {@link AuthenticationData}
      * @throws DatabaseAccessException Thrown if the itemId is not found in collection.
      */
-    AuthenticationData getAuthGroups(School.ItemType collection, String itemId) throws DatabaseAccessException;
+    //AuthenticationData getAuthGroups(School.ItemType collection, String itemId) throws DatabaseAccessException;
 
     /**
      * Grabs the user list using some method.
@@ -31,5 +28,5 @@ public interface AuthenticationDataCreator {
      *            The group Id
      * @return A list that represents the group found at id.
      */
-    List<String> getUserList(final String groupId);
+    //List<String> getUserList(final String groupId);
 }
