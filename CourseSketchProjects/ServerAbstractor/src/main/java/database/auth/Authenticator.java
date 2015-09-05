@@ -104,24 +104,29 @@ public final class Authenticator {
 
         final ExceptionUtilities.ExceptionHolder checkerException = ExceptionUtilities.getExceptionHolder();
         // Auth checking checking
-        new Thread() {
-            public void run() {
-                try {
-                    Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
-                    synchronized (authBuilder) {
-                        authBuilder.mergeFrom(result);
+        if (validAccessRequest(checkType)) {
+            new Thread() {
+                public void run() {
+                    try {
+                        Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
+                        synchronized (authBuilder) {
+                            authBuilder.mergeFrom(result);
+                        }
+                    } catch (DatabaseAccessException e) {
+                        checkerException.exception = e;
+                        LOG.error("Exception was thrown while accessing database", e);
+                    } catch (AuthenticationException e) {
+                        checkerException.exception = e;
+                        LOG.error("Exception was thrown while authenticating person", e);
                     }
-                } catch (DatabaseAccessException e) {
-                    checkerException.exception = e;
-                    LOG.error("Exception was thrown while accessing database", e);
-                } catch (AuthenticationException e) {
-                    checkerException.exception = e;
-                    LOG.error("Exception was thrown while authenticating person", e);
+                    checkLatch.countDown();
+                    totalLatch.countDown();
                 }
-                checkLatch.countDown();
-                totalLatch.countDown();
-            }
-        }.start();
+            }.start();
+        } else {
+            checkLatch.countDown();
+            totalLatch.countDown();
+        }
 
         final ExceptionUtilities.ExceptionHolder dateCheckerException = ExceptionUtilities.getExceptionHolder();
         // Date checking
