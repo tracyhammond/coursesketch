@@ -84,7 +84,6 @@ public final class DataInsertHandler {
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
 
-            final Institution instance = MongoInstitution.getInstance(null);
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {

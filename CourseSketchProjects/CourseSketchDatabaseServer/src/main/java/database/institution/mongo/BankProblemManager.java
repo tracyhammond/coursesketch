@@ -122,7 +122,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, userId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, userId, 0, authType);
 
         // if registration is not required for bank problem any course can use it!
         if (!responder.hasStudentPermission() && responder.isRegistrationRequired()) {
@@ -316,7 +316,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, userId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE, courseId, userId, 0, authType);
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
