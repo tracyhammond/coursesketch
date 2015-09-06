@@ -2,6 +2,7 @@ package com.coursesketch.test.utilities;
 
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.GeneratedMessage;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,8 @@ public class ProtobufComparison {
 
     public void equals(GeneratedMessage expected, GeneratedMessage actual) {
         if (!expected.getDescriptorForType().equals(actual.getDescriptorForType())) {
-            Assert.assertEqual(expected.getDescriptorForType());
+            Assert.fail("Exepcted Message " + expected.getDescriptorForType().getFullName()
+                    + " but got Message " + actual.getDescriptorForType().getFullName());
         }
         final Map<Descriptors.FieldDescriptor, Object> expectedAllFields = expected.getAllFields();
         final Map<Descriptors.FieldDescriptor, Object> actualAllFields = actual.getAllFields();
