@@ -326,12 +326,12 @@ public class BankProblemManagerTest {
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-        permissionBuilder.addUserPermission(USER_USER);
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, problemBankId, ADMIN_USER, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
         SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
         Assert.assertEquals(FAKE_SCRIPT, testString);
@@ -344,6 +344,10 @@ public class BankProblemManagerTest {
         bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, problemBankId, ADMIN_USER, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
         SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
         Commands.SrlUpdateList testUpdateList = getProblem.getBaseSketch();
         Assert.assertEquals(FAKE_UPDATELIST.build(), testUpdateList);
@@ -359,16 +363,44 @@ public class BankProblemManagerTest {
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-        permissionBuilder.addUserPermission(USER_USER);
-        bankProblem.setAccessPermission(permissionBuilder);
+
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
 
         String newFakeScript = "Faker Script";
         School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
         updateBankProblem.setId(FAKE_ID);
         updateBankProblem.setScript(newFakeScript);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, problemBankId, ADMIN_USER, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        boolean isUpdated = mongoUpdateBankProblem(authenticator, db, problemBankId, ADMIN_USER, updateBankProblem.build());
+        Assert.assertEquals(true, isUpdated);
+        final SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
+        String testString = getProblem.getScript().toString();
+        Assert.assertEquals(newFakeScript, testString);
+    }
+
+    /*
+     * testUpdateScript tests updateScript member function by inserting, updating,
+     * and then getting the value that was inserted.
+     */
+    @Test(expected = AuthenticationException.class)
+    public void testUpdateScriptFailsWithInvalidPermission() throws Exception {
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId(FAKE_ID);
+        bankProblem.setScript(FAKE_SCRIPT);
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+
+        String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
+
+        String newFakeScript = "Faker Script";
+        School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
+        updateBankProblem.setId(FAKE_ID);
+        updateBankProblem.setScript(newFakeScript);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, problemBankId, ADMIN_USER, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         boolean isUpdated = mongoUpdateBankProblem(authenticator, db, problemBankId, ADMIN_USER, updateBankProblem.build());
         Assert.assertEquals(true, isUpdated);
