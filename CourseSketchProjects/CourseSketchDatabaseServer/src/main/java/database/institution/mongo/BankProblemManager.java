@@ -39,6 +39,7 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
+import static database.utilities.MongoUtilities.createId;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -113,8 +114,8 @@ public final class BankProblemManager {
      *         thrown if the user does not have access to the permissions.
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
-            throws AuthenticationException {
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
+            throws AuthenticationException, DatabaseAccessException {
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, createId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()

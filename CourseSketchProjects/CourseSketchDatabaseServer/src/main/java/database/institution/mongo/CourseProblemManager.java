@@ -35,6 +35,7 @@ import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
+import static database.utilities.MongoUtilities.createId;
 
 /**
  * Manages course problems for the mongo database.
@@ -127,7 +128,7 @@ public final class CourseProblemManager {
      */
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, createId(problemId));
         final DBObject corsor = myDbRef.fetch();
         if (corsor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
@@ -178,8 +179,17 @@ public final class CourseProblemManager {
         exactProblem.setProblemNumber((Integer) corsor.get(PROBLEM_NUMBER));
 
         // problem manager get problem from bank (as a user!)
-        final SrlBankProblem problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
-                (String) exactProblem.getCourseId()); // problem bank look up
+        SrlBankProblem problemBank = null;
+        try {
+            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
+                    (String) exactProblem.getCourseId());
+        } catch (DatabaseAccessException e) {
+            // only a student can't view a problem with no problem info.
+            // TODO: check to see if this is the best option!
+            if (!responder.hasModeratorPermission() && responder.isItemPublished()) {
+                throw new DatabaseAccessException(e, false);
+            }
+        }
         if (problemBank != null) {
             exactProblem.setProblemInfo(problemBank);
         }

@@ -82,7 +82,7 @@ public interface Institution {
      * @return A list of course problems given a list of Ids for the course problems.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
      */
-    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException;
+    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * @return A list of courses that are public (used when registering problems)
