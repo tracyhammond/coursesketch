@@ -1,4 +1,6 @@
 package database.institution.mongo;
+
+import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
@@ -23,7 +25,6 @@ import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
-import utilities.AuthenticationHelper;
 
 import java.util.List;
 

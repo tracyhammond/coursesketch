@@ -266,7 +266,8 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public ArrayList<SrlBankProblem> getProblem(final List<String> problemID, final String userId) throws AuthenticationException {
+    public ArrayList<SrlBankProblem> getProblem(final List<String> problemID, final String userId)
+            throws AuthenticationException, DatabaseAccessException {
         final ArrayList<SrlBankProblem> allProblems = new ArrayList<>();
         for (int problem = problemID.size() - 1; problem >= 0; problem--) {
             allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance(null).auth, getInstance(null).database, problemID.get(problem), userId));

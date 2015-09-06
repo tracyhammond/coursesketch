@@ -54,6 +54,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>CourseSketch</groupId>
+			<artifactId>ProtobufComparison</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
@@ -64,5 +71,10 @@
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.6</version>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+	</dependencies>
 </project>
