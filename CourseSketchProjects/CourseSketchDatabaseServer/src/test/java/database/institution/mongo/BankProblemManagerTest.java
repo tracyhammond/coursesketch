@@ -5,22 +5,28 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
+import database.auth.AuthenticationChecker;
+import database.auth.AuthenticationDataCreator;
 import database.auth.AuthenticationException;
+import database.auth.AuthenticationOptionChecker;
 import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
+import utilities.AuthenticationHelper;
 
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
@@ -31,15 +37,21 @@ import static database.DatabaseStringConstants.USERS;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class BankProblemManagerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
+    @Mock AuthenticationChecker authChecker;
+    @Mock AuthenticationOptionChecker optionChecker;
 
     public DB db;
-    public Authenticator fauth;
+    public Authenticator authenticator;
     public static final String FAKE_ID = "507f1f77bcf86cd799439011";
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
     public static final String FAKE_SCRIPT = "fake script";
@@ -51,7 +63,26 @@ public class BankProblemManagerTest {
     @Before
     public void before() {
         db = fongo.getDB();
-        fauth = new Authenticator(new MongoAuthenticator(fongo.getDB()));
+
+        try {
+            // general results
+            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
+
+            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
+                    .thenReturn(false);
+
+            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
+                    .thenReturn(false);
+
+            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
+                    .thenReturn(true);
+
+        } catch (DatabaseAccessException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        authenticator = new Authenticator(authChecker, optionChecker);
     }
 
     @Test
@@ -63,9 +94,6 @@ public class BankProblemManagerTest {
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
         bankProblem.setQuestionType(FAKE_QUESTION_TYPE);
         bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
-
-        // checks it does not exist.
-        Assert.assertFalse(bankProblem.hasAccessPermission());
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
@@ -79,24 +107,18 @@ public class BankProblemManagerTest {
                 FAKE_UPDATELIST.build());
     }
 
+    // TODO: test insertion of permissions
     @Test
     public void insertBankProblemPermissions() throws Exception {
 
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-        permissionBuilder.addUserPermission(USER_USER);
-
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
         final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
 
-        Assert.assertEquals(mongoBankProblem.get(USERS), permissionBuilder.getUserPermissionList());
-        Assert.assertEquals(mongoBankProblem.get(ADMIN), permissionBuilder.getAdminPermissionList());
     }
 
     @Test(expected = AuthenticationException.class)
@@ -108,12 +130,9 @@ public class BankProblemManagerTest {
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
         bankProblem.setQuestionType(FAKE_QUESTION_TYPE);
 
-        // checks it does not exist.
-        Assert.assertFalse(bankProblem.hasAccessPermission());
-
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        BankProblemManager.mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        BankProblemManager.mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
     }
 
     @Test
@@ -122,19 +141,15 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-        permissionBuilder.addUserPermission(USER_USER);
-
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        Assert.assertTrue(resultBankProblem.hasAccessPermission());
-        Assert.assertEquals(resultBankProblem.getAccessPermission().getUserPermissionList(), permissionBuilder.getUserPermissionList());
-        Assert.assertEquals(resultBankProblem.getAccessPermission().getAdminPermissionList(), permissionBuilder.getAdminPermissionList());
+        School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
+
+        Assert.assertEquals(resultBankProblem.getQuestionText(), FAKE_QUESTION_TEXT);
     }
 
     @Test
@@ -143,15 +158,14 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-        permissionBuilder.addUserPermission(USER_USER);
-
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+        when(authChecker.isAuthenticated(eq(School.ItemType.BANK_PROBLEM), eq(problemBankId), eq(USER_USER), any(Authentication.AuthType.class)))
+                .thenReturn(Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
+                        .build());
 
-        School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(fauth, db, problemBankId, USER_USER);
+        School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, problemBankId, USER_USER);
 
         Assert.assertFalse(resultBankProblem.hasAccessPermission());
     }
@@ -163,11 +177,6 @@ public class BankProblemManagerTest {
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-
-        bankProblem.setAccessPermission(permissionBuilder);
-
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
         bankProblem.setId("NOT REAL ID2");
@@ -176,10 +185,12 @@ public class BankProblemManagerTest {
 
         School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
         course.setId("ID");
-        course.setAccessPermission(permissionBuilder);
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(fauth, db, ADMIN_USER, courseId, 0);
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 0);
         Assert.assertEquals(2, resultBankProblem.size());
     }
 
@@ -206,7 +217,7 @@ public class BankProblemManagerTest {
         course.setAccessPermission(permissionBuilder);
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(fauth, db, USER_USER, courseId, 0);
+        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, USER_USER, courseId, 0);
     }
 
     @Test
@@ -215,11 +226,6 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-
-
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
@@ -229,10 +235,11 @@ public class BankProblemManagerTest {
 
         School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
         course.setId("ID");
-        course.setAccessPermission(permissionBuilder);
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(fauth, db, ADMIN_USER, courseId, 1);
+        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 1);
         Assert.assertEquals(0, resultBankProblem.size());
     }
 
@@ -242,16 +249,11 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
         School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
         course.setId("ID");
-        course.setAccessPermission(permissionBuilder);
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
         School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
@@ -259,7 +261,7 @@ public class BankProblemManagerTest {
         problem.setCourseId(courseId);
         problem.setProblemBankId(problemBankId);
 
-        BankProblemManager.mongoRegisterCourseProblem(fauth, db, USER_USER, problem.build());
+        BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
         final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
@@ -273,7 +275,7 @@ public class BankProblemManagerTest {
         problem.setId("ID");
         problem.setCourseId("Course id");
 
-        BankProblemManager.mongoRegisterCourseProblem(fauth, db, USER_USER, problem.build());
+        BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
     }
 
@@ -283,7 +285,7 @@ public class BankProblemManagerTest {
         problem.setId("ID");
         problem.setProblemBankId("Bank id");
 
-        BankProblemManager.mongoRegisterCourseProblem(fauth, db, USER_USER, problem.build());
+        BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
     }
 
@@ -314,6 +316,7 @@ public class BankProblemManagerTest {
         Commands.SrlUpdateList UpdateList = Commands.SrlUpdateList.parseFrom((byte[]) obj.get(BASE_SKETCH));
         Assert.assertEquals(FAKE_UPDATELIST.build(), UpdateList);
     }
+
     /*
      * testGetScript tests getScript member function by inserting and then getting the value that was inserted.
      */
@@ -329,7 +332,7 @@ public class BankProblemManagerTest {
         bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
-        SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
         Assert.assertEquals(FAKE_SCRIPT, testString);
     }
@@ -339,13 +342,9 @@ public class BankProblemManagerTest {
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
-        Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
-        permissionBuilder.addAdminPermission(ADMIN_USER);
-        permissionBuilder.addUserPermission(USER_USER);
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
-        SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
         Commands.SrlUpdateList testUpdateList = getProblem.getBaseSketch();
         Assert.assertEquals(FAKE_UPDATELIST.build(), testUpdateList);
     }
@@ -371,9 +370,9 @@ public class BankProblemManagerTest {
         updateBankProblem.setId(FAKE_ID);
         updateBankProblem.setScript(newFakeScript);
 
-        boolean isUpdated = mongoUpdateBankProblem(fauth, db, problemBankId, ADMIN_USER, updateBankProblem.build());
+        boolean isUpdated = mongoUpdateBankProblem(authenticator, db, problemBankId, ADMIN_USER, updateBankProblem.build());
         Assert.assertEquals(true, isUpdated);
-        final SrlBankProblem getProblem = mongoGetBankProblem(fauth, db, problemBankId, ADMIN_USER);
+        final SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
         String testString = getProblem.getScript().toString();
         Assert.assertEquals(newFakeScript, testString);
     }

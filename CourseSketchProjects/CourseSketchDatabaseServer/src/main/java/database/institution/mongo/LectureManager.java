@@ -11,7 +11,6 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,10 +141,12 @@ public final class LectureManager {
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
 
+        /*
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: {}", updateQuery);
         lectures.update(cursor, updateQuery);
+        */
     }
 
     /**

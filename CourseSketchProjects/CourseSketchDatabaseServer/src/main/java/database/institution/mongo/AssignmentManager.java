@@ -11,7 +11,6 @@ import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
 import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -523,10 +522,12 @@ public final class AssignmentManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
+        /*
         final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: ", updateQuery);
         assignments.update(corsor, updateQuery);
+        */
     }
 
     /**

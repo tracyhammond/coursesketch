@@ -73,7 +73,6 @@ public final class DataUpdateHandler {
             }
             final ArrayList<ItemResult> results = new ArrayList<>();
 
-            final Institution instance = MongoInstitution.getInstance(null);
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {
