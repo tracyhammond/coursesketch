@@ -215,7 +215,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, userId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, userId, 0, authType);
         final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!responder.hasTeacherPermission()) {
