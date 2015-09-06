@@ -47,6 +47,7 @@ import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
+import static database.utilities.MongoUtilities.createId;
 
 /**
  * Manages assignments for mongo.
@@ -491,15 +492,15 @@ public final class AssignmentManager {
      */
     static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, createId(assignmentId));
 
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = myDbRef.fetch();
 
         final DBCollection courses = dbs.getCollection(ASSIGNMENT_COLLECTION);
         final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
-        courses.update(corsor, new BasicDBObject("$addToSet", updateObj));
+        courses.update(cursor, new BasicDBObject("$addToSet", updateObj));
 
-        UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
+        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         return true;
     }
 
