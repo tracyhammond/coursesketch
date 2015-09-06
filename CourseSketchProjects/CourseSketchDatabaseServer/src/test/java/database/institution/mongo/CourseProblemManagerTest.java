@@ -1,6 +1,7 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
@@ -248,14 +249,17 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
+        defaultProblem.clearProblemBankId();
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_VALID_DATE);
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_VALID_DATE);
+        new ProtobufComparisonBuilder().build().equals(defaultProblem.build(), problem);
     }
 
     /**
