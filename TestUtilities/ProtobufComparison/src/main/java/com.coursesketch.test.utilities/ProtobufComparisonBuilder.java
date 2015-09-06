@@ -11,6 +11,8 @@ import java.util.List;
 public class ProtobufComparisonBuilder {
     private final List<Descriptors.FieldDescriptor> ignoredFields;
     private final List<Descriptors.Descriptor> ignoredMessages;
+    private boolean isDeepEquals = true;
+    private boolean ignoreNonSetFields = false;
 
     public ProtobufComparisonBuilder() {
         ignoredFields = new ArrayList<>();
@@ -36,6 +38,6 @@ public class ProtobufComparisonBuilder {
     }
 
     public ProtobufComparison build() {
-        return new ProtobufComparison(ignoredFields, ignoredMessages);
+        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields);
     }
 }
