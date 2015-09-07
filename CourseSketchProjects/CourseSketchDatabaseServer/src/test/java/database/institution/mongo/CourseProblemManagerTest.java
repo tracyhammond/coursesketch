@@ -64,9 +64,7 @@ public class CourseProblemManagerTest {
     private School.SrlBankProblem.Builder bankProblem;
 
     // TODO TESTS
-    // test that throws exception if someone without permission attempts to update course problem
-    // test that grabs problem correctly if user is accessing within valid timeframe
-    // test that updates problem correctly if has valid permission
+    // To be done in second refactor
     // test that ensures that when inserting course problem permissions are copied over correctly
     //          this can be done by having someone who only has permission to a certain part and check that now new permissions are added.
 
@@ -270,6 +268,69 @@ public class CourseProblemManagerTest {
         new ProtobufComparisonBuilder()
                 //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
                 .build().equals(defaultProblem.build(), problem);
+    }
+
+    @Test
+    public void getCourseProblemAsInstructorWithWrongDateAndNotPublishedShouldWork() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+        defaultProblem.setProblemInfo(bankProblem);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        new ProtobufComparisonBuilder()
+                //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
+                .build().equals(defaultProblem.build(), problem);
+    }
+
+    @Test
+    public void updateCourseProblemAsInstructor() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+        defaultProblem.setProblemInfo(bankProblem);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        new ProtobufComparisonBuilder()
+                .build().equals(defaultProblem.build(), problem);
+
+        School.SrlProblem updatedProblem = School.SrlProblem.newBuilder(defaultProblem.build())
+                .setGradeWeight("NEW GRADE WEIGHT")
+                .build();
+
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, updatedProblem);
+
+        School.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
+                courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        new ProtobufComparisonBuilder()
+                .build().equals(updatedProblem, updatedProblemResult);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void updateCourseProblemAsStudentFails() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+
+        School.SrlProblem updatedProblem = School.SrlProblem.newBuilder(defaultProblem.build())
+                .setGradeWeight("NEW GRADE WEIGHT")
+                .build();
+
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, USER_USER, updatedProblem);
     }
 
     /**
