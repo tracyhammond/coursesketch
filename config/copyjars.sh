@@ -3,6 +3,10 @@ print "navigator to $current_path to start grabbing jars"
 
 serverName=('Database' 'Login' 'Submission' 'AnswerChecker' 'Recognition' 'Proxy')
 cd ../CourseSketchProjects
+
+echo "Removing existing jars"
+rm *-run.jar
+
 length=$(expr ${#serverName[@]} - 1)
 echo $length
 for (( i=0; i<=$length; i++ ))
@@ -13,7 +17,7 @@ do
 	if [ -n "$result" ]; then
 		fullPath="$result"
 		echo "copying jar $fullPath to $result_path"
-                cp $fullPath "$result_path" 
+                cp $fullPath "$result_path"
 	fi
 done
 
