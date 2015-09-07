@@ -80,12 +80,10 @@ public class AuthenticatorTest {
         authenticator.checkAuthentication(null, null, null, 0, null);
     }
 
-
     @Test(expected = NullPointerException.class)
     public void authenticatorThrowsExceptionIfInvalidItemId() throws Exception {
         authenticator.checkAuthentication(School.ItemType.COURSE, null, null, 0, null);
     }
-
 
     @Test(expected = NullPointerException.class)
     public void authenticatorThrowsExceptionIfInvalidUserId() throws Exception {
@@ -167,13 +165,24 @@ public class AuthenticatorTest {
     }
 
     @Test
+    public void authenticatorDoesNotCheckDateAndRegistration() throws Exception {
+
+        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+                .setCheckIsPublished(true)
+                .build());
+
+        verify(optionChecker, atLeastOnce()).createDataGrabber(any(School.ItemType.class), anyString());
+        verify(optionChecker, atLeastOnce()).isItemPublished(any(AuthenticationDataCreator.class));
+        verifyNoMoreInteractions(optionChecker);
+    }
+
+    @Test
     public void authenticatorOnlyChecksPublishedAndRegistration() throws Exception {
 
         authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .build());
 
-        verify(optionChecker, atLeastOnce()).isItemPublished(any(AuthenticationDataCreator.class));
         verify(optionChecker, atLeastOnce()).isItemRegistrationRequired(any(AuthenticationDataCreator.class));
         verify(optionChecker, atLeastOnce()).createDataGrabber(any(School.ItemType.class), anyString());
         verifyNoMoreInteractions(optionChecker);
@@ -377,5 +386,52 @@ public class AuthenticatorTest {
         assertFalse(responder.isItemPublished());
         // remember this is the reverse
         assertTrue(responder.isRegistrationRequired());
+    }
+
+    @Test
+    public void authenticatorHasAccessIfItemIsPublished() throws Exception {
+
+        when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class))).thenReturn(true);
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsPublished(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+
+        // Specific value being tested
+        assertTrue(responder.isItemPublished());
+
+        // other values that are not the highlight of the test
+        assertFalse(responder.hasStudentPermission());
+        assertFalse(responder.hasPeerTeacherPermission());
+        assertFalse(responder.hasModeratorPermission());
+        assertFalse(responder.hasTeacherPermission());
+        assertFalse(responder.isItemOpen());
+        assertFalse(responder.hasAccess());
+        // remember this is the reverse
+        assertTrue(responder.isRegistrationRequired());
+    }
+
+    @Test
+    public void authenticatorHasAccessIfItemRequiresRegistration() throws Exception {
+
+        when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class))).thenReturn(false);
+
+        final Authentication.AuthType type = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .build();
+        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+
+        // Specific value being tested
+        assertFalse(responder.isRegistrationRequired());
+
+        // other values that are not the highlight of the test
+        assertFalse(responder.hasStudentPermission());
+        assertFalse(responder.hasPeerTeacherPermission());
+        assertFalse(responder.hasModeratorPermission());
+        assertFalse(responder.hasTeacherPermission());
+        assertFalse(responder.isItemOpen());
+        assertFalse(responder.hasAccess());
+        assertFalse(responder.isItemPublished());
     }
 }

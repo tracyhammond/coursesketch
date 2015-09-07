@@ -41,8 +41,19 @@ message AuthType {
 
     /**
      * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
+     * Or if the class does not require registration
      */
     optional bool checkAccess = 6;
+
+    /**
+     * If true then it checks if the course is published.
+     */
+    optional bool checkIsPublished = 7;
+
+    /**
+     * If true then it checks if the course requires registration.
+     */
+    optional bool checkIsRegistrationRequired = 8;
 
 }
 

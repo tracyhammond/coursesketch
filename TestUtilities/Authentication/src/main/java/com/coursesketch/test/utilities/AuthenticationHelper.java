@@ -69,7 +69,7 @@ public class AuthenticationHelper {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
-            mock(AuthenticationDataCreator.class);
+            tempCreator = mock(AuthenticationDataCreator.class);
         }
         when(option.createDataGrabber(
                 createAnyEqMatcher(type, School.ItemType.class),
@@ -94,7 +94,7 @@ public class AuthenticationHelper {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
-            mock(AuthenticationDataCreator.class);
+            tempCreator = mock(AuthenticationDataCreator.class);
         }
         when(option.createDataGrabber(
                 createAnyEqMatcher(type, School.ItemType.class),
@@ -119,7 +119,7 @@ public class AuthenticationHelper {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
-            mock(AuthenticationDataCreator.class);
+            tempCreator = mock(AuthenticationDataCreator.class);
         }
         when(option.createDataGrabber(
                 createAnyEqMatcher(type, School.ItemType.class),
