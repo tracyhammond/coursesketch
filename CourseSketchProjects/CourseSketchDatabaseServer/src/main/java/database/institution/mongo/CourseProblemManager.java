@@ -129,14 +129,13 @@ public final class CourseProblemManager {
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, createId(problemId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
         }
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
-                .setCheckDate(true)
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
@@ -149,11 +148,12 @@ public final class CourseProblemManager {
         // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
         final Authentication.AuthType assignmentAuthType = Authentication.AuthType.newBuilder()
                 .setCheckDate(true)
+                .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) corsor.get(ASSIGNMENT_ID), userId, checkTime, authType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), userId, checkTime, assignmentAuthType);
 
-        // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
+        // Throws an exception if a user (only) is trying to get an problem when the assignment is closed.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_DATE);
         }
@@ -162,7 +162,9 @@ public final class CourseProblemManager {
         final State.Builder stateBuilder = State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
-        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+
+        // NOTE: we are assuming that only assignments as a whole can be published not specific problems.
+        if (!assignmentResponder.isItemPublished() && !responder.hasModeratorPermission()) {
             throw new DatabaseAccessException("The specific problem is not published yet: " + problemId, true);
         }
 
@@ -170,23 +172,18 @@ public final class CourseProblemManager {
         stateBuilder.setPublished(responder.isItemPublished());
 
         final SrlProblem.Builder exactProblem = SrlProblem.newBuilder();
-
         exactProblem.setId(problemId);
-        exactProblem.setCourseId((String) corsor.get(COURSE_ID));
-        exactProblem.setAssignmentId((String) corsor.get(ASSIGNMENT_ID));
-        exactProblem.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
-        exactProblem.setName((String) corsor.get(NAME));
-        exactProblem.setProblemNumber((Integer) corsor.get(PROBLEM_NUMBER));
+        extractProblemData(exactProblem, cursor);
 
         // problem manager get problem from bank (as a user!)
         SrlBankProblem problemBank = null;
         try {
-            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) corsor.get(PROBLEM_BANK_ID),
+            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) cursor.get(PROBLEM_BANK_ID),
                     (String) exactProblem.getCourseId());
         } catch (DatabaseAccessException e) {
             // only a student can't view a problem with no problem info.
             // TODO: check to see if this is the best option!
-            if (!responder.hasModeratorPermission() && responder.isItemPublished()) {
+            if (!responder.hasModeratorPermission() && assignmentResponder.isItemPublished()) {
                 throw new DatabaseAccessException(e, false);
             }
         }
@@ -196,15 +193,24 @@ public final class CourseProblemManager {
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin can change this
-            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin can change this
+            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin can change this
+            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin can change this
         }
         if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // mod can change this
+            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // mod can change this
             exactProblem.setAccessPermission(permissions.build());
         }
         return exactProblem.build();
 
+    }
+
+    private static void extractProblemData(SrlProblem.Builder problem, DBObject dbProblem) {
+        problem.setCourseId((String) dbProblem.get(COURSE_ID));
+        problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
+        problem.setProblemBankId((String) dbProblem.get(PROBLEM_BANK_ID));
+        problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
+        problem.setName((String) dbProblem.get(NAME));
+        problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
     }
 
     /**

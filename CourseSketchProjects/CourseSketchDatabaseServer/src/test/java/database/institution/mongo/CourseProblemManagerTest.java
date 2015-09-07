@@ -47,7 +47,7 @@ public class CourseProblemManagerTest {
     public Authenticator authenticator;
 
     public static final long FAKE_VALID_DATE = 1000;
-    public static final long FAKE_INVALID_DATE = 1000;
+    public static final long FAKE_INVALID_DATE = 1001;
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
@@ -60,6 +60,8 @@ public class CourseProblemManagerTest {
 
     private School.SrlProblem.Builder defaultProblem;
     private AuthenticationDataCreator dataCreator;
+
+    private School.SrlBankProblem.Builder bankProblem;
 
     // TODO TESTS
     // test that throws exception if someone without permission attempts to update course problem
@@ -103,11 +105,12 @@ public class CourseProblemManagerTest {
     public void insertCourseAndAssignment() throws DatabaseAccessException, AuthenticationException {
 
         // creating bank problem
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
         bankProblemId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+        bankProblem.setId(bankProblemId);
 
         // creating the course
         final School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
@@ -232,13 +235,18 @@ public class CourseProblemManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, FAKE_VALID_DATE);
+        defaultProblem.setProblemInfo(bankProblem);
+
+        final School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, FAKE_VALID_DATE);
+        new ProtobufComparisonBuilder()
+                .build().equals(defaultProblem.build(), problem);
     }
 
     // Teacher grabbing permissions
@@ -259,7 +267,9 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
         School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_VALID_DATE);
-        new ProtobufComparisonBuilder().build().equals(defaultProblem.build(), problem);
+        new ProtobufComparisonBuilder()
+                //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
+                .build().equals(defaultProblem.build(), problem);
     }
 
     /**

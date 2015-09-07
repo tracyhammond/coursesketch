@@ -67,7 +67,8 @@ public final class Authenticator {
      */
     public static boolean validRequest(Authentication.AuthType authType) {
         return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
-                || authType.getCheckDate() || authType.getCheckingPeerTeacher() || authType.getCheckAccess();
+                || authType.getCheckDate() || authType.getCheckingPeerTeacher() || authType.getCheckAccess()
+                || authType.getCheckIsPublished() || authType.getCheckIsRegistrationRequired();
     }
 
     /**
@@ -131,7 +132,7 @@ public final class Authenticator {
 
         final ExceptionUtilities.ExceptionHolder optionCheckerException = ExceptionUtilities.getExceptionHolder();
         // Date checking
-        if (checkType.getCheckDate() || checkType.getCheckAccess()) {
+        if (checkType.getCheckDate() || checkType.getCheckAccess() || checkType.getCheckIsPublished() || checkType.getCheckIsRegistrationRequired()) {
             new Thread() {
                 public void run() {
                     boolean validDate = false;
@@ -142,8 +143,10 @@ public final class Authenticator {
                         }
                         boolean registrationRequired = true;
                         boolean itemPublished = false;
-                        if (checkType.getCheckAccess()) {
+                        if (checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired()) {
                             registrationRequired = optionChecker.isItemRegistrationRequired(dataCreator);
+                        }
+                        if (checkType.getCheckIsPublished()) {
                             itemPublished = optionChecker.isItemPublished(dataCreator);
                         }
                         try {
@@ -154,8 +157,10 @@ public final class Authenticator {
                         if (checkType.getCheckDate()) {
                             authBuilder.setIsItemOpen(validDate);
                         }
-                        if (checkType.getCheckAccess()) {
+                        if (checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired()) {
                             authBuilder.setIsRegistrationRequired(registrationRequired);
+                        }
+                        if (checkType.getCheckIsPublished()) {
                             authBuilder.setIsItemPublished(itemPublished);
                         }
                     } catch (DatabaseAccessException e) {

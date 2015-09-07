@@ -13,6 +13,10 @@ public class ProtobufComparisonBuilder {
     private final List<Descriptors.Descriptor> ignoredMessages;
     private boolean isDeepEquals = true;
     private boolean ignoreNonSetFields = false;
+    /**
+     * Basically this ignores fields that are set on the actual but not the expected if they are equal to the default value
+     */
+    private boolean ignoreSetDefaultFields = true;
 
     public ProtobufComparisonBuilder() {
         ignoredFields = new ArrayList<>();
@@ -38,6 +42,6 @@ public class ProtobufComparisonBuilder {
     }
 
     public ProtobufComparison build() {
-        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields);
+        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields);
     }
 }

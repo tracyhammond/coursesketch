@@ -17,6 +17,13 @@
             <artifactId>ServerAbstractor</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtoFiles</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
