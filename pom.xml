@@ -91,21 +91,6 @@
                 </plugins>
             </build>
         </profile>
-
-        <!-- PROPERTY FILE PROFILES -->
-        <profile>
-            <id>ip_prop_file</id>
-            <activation>
-                <file>
-                    <!-- use the non default if it exists -->
-                    <exists>${basedir}/config/local/ips.prop</exists>
-                </file>
-            </activation>
-            <properties>
-                <param>${ipPropFile}</param>
-                <ipPropFile>${parentConfigLocationDir}/config/local/ips.prop</ipPropFile>
-            </properties>
-        </profile>
     </profiles>
 
     <reporting>
@@ -444,8 +429,11 @@
                             </goals>
                             <configuration>
                                 <propertyFiles>
-                                    <propertyFile>${ipPropFile}</propertyFile>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                </backupPropertyFiles>
                             </configuration>
                         </execution>
                         <execution>
@@ -457,8 +445,11 @@
                             <configuration>
                                 <reverseProperties>true</reverseProperties>
                                 <propertyFiles>
-                                    <propertyFile>${ipPropFile}</propertyFile>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                </backupPropertyFiles>
                             </configuration>
                         </execution>
                     </executions>
@@ -489,7 +480,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
-        <replacerVersion>1.5.10</replacerVersion>
+        <replacerVersion>1.6.2</replacerVersion>
         <resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
