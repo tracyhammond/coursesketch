@@ -1,6 +1,7 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
@@ -248,6 +249,20 @@ public class CourseProblemManagerTest {
     }
 
     // Teacher grabbing permissions
+
+    @Test
+    public void getCourseProblemWithInvalidObjectId() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        defaultProblem.clearProblemBankId();
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db,
+                DatabaseHelper.createNonExistentObjectId(courseProblemId), ADMIN_USER, FAKE_VALID_DATE);
+    }
 
     @Test
     public void getCourseProblemAsInstructorWithNoBankProblemIdShouldWork() throws Exception {

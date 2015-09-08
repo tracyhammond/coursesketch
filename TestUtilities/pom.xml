@@ -15,6 +15,7 @@
     <modules>
         <module>ProtobufComparison</module>
         <module>AuthenticationTestHelper</module>
+        <module>DatabaseTestHelper</module>
     </modules>
 
     <dependencies>
