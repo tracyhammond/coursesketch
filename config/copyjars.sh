@@ -1,11 +1,10 @@
+#!/usr/bin/env bash
 read -p "enter the directory to put the servers: " -i "$HOME/" -e result_path
 print "navigator to $current_path to start grabbing jars"
 
 serverName=('Database' 'Login' 'Submission' 'AnswerChecker' 'Recognition' 'Proxy')
 cd ../CourseSketchProjects
 
-echo "Removing existing jars"
-rm *-run.jar
 
 length=$(expr ${#serverName[@]} - 1)
 echo $length
