@@ -17,6 +17,24 @@ import utilities.ProtobufUtilities;
 public final class ProxyConnectionManager extends MultiConnectionManager {
 
     /**
+     * IP address for login server.
+     */
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+    private static final String LOGIN_ADDRESS = "192.168.56.200";
+
+    /**
+     * IP address for database server.
+     */
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+    private static final String DATABASE_ADDRESS = "192.168.56.201";
+
+    /**
+     * IP address for answer checker server.
+     */
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+    private static final String ANSWER_ADDRESS = "192.168.56.203";
+
+    /**
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ProxyConnectionManager.class);
@@ -66,14 +84,14 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         LOG.info("Is Connection Local? {}", isConnectionLocal());
         LOG.info("Is Secure? {}", isSecure());
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), LOGIN_ADDRESS, LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Data...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -81,7 +99,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
         LOG.info("Open Answer...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), ANSWER_ADDRESS, ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
