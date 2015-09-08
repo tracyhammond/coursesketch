@@ -104,7 +104,14 @@
 
 		<dependency>
 			<groupId>CourseSketch</groupId>
-			<artifactId>Authentication</artifactId>
+			<artifactId>AuthenticationTestHelper</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>CourseSketch</groupId>
+			<artifactId>DatabaseTestHelper</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
