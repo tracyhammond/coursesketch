@@ -444,7 +444,7 @@
                             </goals>
                             <configuration>
                                 <propertyFiles>
-                                    <propertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</propertyFile>
+                                    <propertyFile>${ipPropFile}</propertyFile>
                                 </propertyFiles>
                             </configuration>
                         </execution>
@@ -457,7 +457,7 @@
                             <configuration>
                                 <reverseProperties>true</reverseProperties>
                                 <propertyFiles>
-                                    <propertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</propertyFile>
+                                    <propertyFile>${ipPropFile}</propertyFile>
                                 </propertyFiles>
                             </configuration>
                         </execution>
