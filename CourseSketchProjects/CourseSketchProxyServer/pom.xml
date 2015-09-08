@@ -58,8 +58,8 @@
                 <artifactId>replacer</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>ip_prop_replace</id>

@@ -159,13 +159,6 @@
     <!-- possible plugins https://code.google.com/p/maven-replacer-plugin/ -->
 
     <build>
-        <extensions>
-            <extension><!-- Maven Build Extension: my Special Service -->
-                <groupId>com.github.dtracers</groupId>
-                <artifactId>external-properties-reader</artifactId>
-                <version>1.0.0</version>
-            </extension>
-        </extensions>
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
@@ -406,8 +399,8 @@
 
                 <!-- meta build plugins -->
                 <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
+                    <groupId>com.github.dtracers</groupId>
+                    <artifactId>maven-replacer-plugin</artifactId>
                     <version>${replacerVersion}</version>
                     <executions>
                         <execution>
@@ -450,29 +443,9 @@
                                 <goal>replace</goal>
                             </goals>
                             <configuration>
-                                <!-- file implemented by sub projects -->
-                                <replacements>
-                                    <replacement>
-                                        <token>ANSWER_IP_PROP</token>
-                                        <value>${answer_ip}</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>DATABASE_IP_PROP</token>
-                                        <value>${database_ip}</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>LOGIN_IP_PROP</token>
-                                        <value>${login_ip}</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>PROXY_IP_PROP</token>
-                                        <value>${proxy_ip}</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>SUBMISSION_IP_PROP</token>
-                                        <value>${submission_ip}</value>
-                                    </replacement>
-                                </replacements>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</propertyFile>
+                                </propertyFiles>
                             </configuration>
                         </execution>
                         <execution>
@@ -482,29 +455,10 @@
                                 <goal>replace</goal>
                             </goals>
                             <configuration>
-                                <!-- file implemented by sub projects -->
-                                <replacements>
-                                    <replacement>
-                                        <token>${answer_ip}</token>
-                                        <value>ANSWER_IP_PROP</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>${database_ip}</token>
-                                        <value>DATABASE_IP_PROP</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>${login_ip}</token>
-                                        <value>LOGIN_IP_PROP</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>${proxy_ip}</token>
-                                        <value>PROXY_IP_PROP</value>
-                                    </replacement>
-                                    <replacement>
-                                        <token>${submission_ip}</token>
-                                        <value>SUBMISSION_IP_PROP</value>
-                                    </replacement>
-                                </replacements>
+                                <reverseProperties>true</reverseProperties>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</propertyFile>
+                                </propertyFiles>
                             </configuration>
                         </execution>
                     </executions>
@@ -535,7 +489,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
-        <replacerVersion>1.5.3</replacerVersion>
+        <replacerVersion>1.5.10</replacerVersion>
         <resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
