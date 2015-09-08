@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Authentication</artifactId>
+    <name>AuthenticationTestHelper</name>
+    <artifactId>AuthenticationTestHelper</artifactId>
 
     <dependencies>
         <dependency>

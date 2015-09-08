@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ProtobufComparison</module>
-        <module>Authentication</module>
+        <module>AuthenticationTestHelper</module>
     </modules>
 
     <dependencies>
