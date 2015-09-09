@@ -360,6 +360,10 @@ public final class BankProblemManager {
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problem.getProblemBankId()));
         final DBObject dbObject = myDbRef.fetch();
 
+        if (dbObject == null) {
+            throw new DatabaseAccessException("Unable to register the course problem: invalid bank problem id [" + problem.getProblemBankId() + "]");
+        }
+
         dbs.getCollection(PROBLEM_BANK_COLLECTION).update(dbObject, new BasicDBObject(ADD_SET_COMMAND,
                 new BasicDBObject(USERS, problem.getCourseId())));
     }

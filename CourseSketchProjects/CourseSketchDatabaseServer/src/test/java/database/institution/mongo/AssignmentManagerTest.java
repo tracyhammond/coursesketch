@@ -159,7 +159,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, assignmentId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         AssignmentManager.mongoGetAssignment(authenticator, db, assignmentId, USER_USER, FAKE_INVALID_DATE);
