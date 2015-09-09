@@ -172,7 +172,8 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     /**
      * @return The list of rpc services that are run by the server.
      */
-    protected final List<CourseSketchRpcService> getRpcServices() {
+    @SuppressWarnings("checkstyle:designforextension")
+    protected List<CourseSketchRpcService> getRpcServices() {
         return new ArrayList<CourseSketchRpcService>();
     }
 }

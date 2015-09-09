@@ -55,6 +55,9 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      */
     private static final int ANSWER_PORT = 8884;
 
+    /**
+     * Port for the identity server.
+     */
     private static final int IDENTITY_PORT = 8890;
 
     /**

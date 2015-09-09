@@ -19,8 +19,9 @@ public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
     /**
      * @param parent
      *            The servlet made for this server.
+     * @param info {@link ServerInfo} Contains all of the information about the server.
      */
-    public DefaultWebSocketHandler(final ServerWebSocketInitializer parent, ServerInfo info) {
+    public DefaultWebSocketHandler(final ServerWebSocketInitializer parent, final ServerInfo info) {
         super(parent, info);
     }
 

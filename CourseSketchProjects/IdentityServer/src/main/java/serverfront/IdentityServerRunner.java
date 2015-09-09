@@ -49,9 +49,8 @@ public class IdentityServerRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * @param time
-     * @param local
-     * @param serverInformation
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return {@link IdentityServiceInitializer}.
      */
     @Override
     public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
