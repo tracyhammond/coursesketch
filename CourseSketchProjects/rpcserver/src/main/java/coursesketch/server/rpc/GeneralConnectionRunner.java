@@ -29,7 +29,6 @@ import javax.net.ssl.SSLException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 /**
@@ -47,11 +46,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * 1000ms = 1s.
      */
     private static final int ONE_SECOND = 1000;
-
-    /**
-     * The code that is used by the Html aggregator.
-     */
-    private static final int TIME_OUT_MILLIS = 10000;
 
     /**
      * Size of the send buffer.
@@ -190,7 +184,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void createServer() {
-        final InetSocketAddress remoteAddress = new InetSocketAddress(this.getHostName(), this.getPort());
         serverInfo = new PeerInfo(this.getHostName(), this.getPort());
 
         executor = new ThreadPoolCallExecutor(CORE_THREAD_POOL_SIZE, MAX_THREAD_POOL_SIZE);

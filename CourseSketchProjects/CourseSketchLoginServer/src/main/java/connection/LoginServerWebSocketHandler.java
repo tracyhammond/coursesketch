@@ -83,8 +83,9 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *
      * @param parent
      *            {@link connection.LoginServlet}
+     * @param info {@link ServerInfo} Contains all of the information about the server.
      */
-    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent, ServerInfo info) {
+    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent, final ServerInfo info) {
         super(parent, info);
     }
 

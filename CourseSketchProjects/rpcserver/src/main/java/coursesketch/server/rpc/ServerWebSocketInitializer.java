@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Initializes the websocket for RPC use.
+ *
  * Created by gigemjt on 10/19/14.
  */
 public class ServerWebSocketInitializer implements ISocketInitializer {
@@ -22,10 +24,6 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ServerWebSocketInitializer.class);
 
-    /**
-     * Max size used in aggregating http request.  which is 2^16.
-     */
-    private static final int MAX_SIZE = 65536;
     /**
      * The server that the servlet is connected to.
      */
@@ -41,10 +39,6 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     private SslContext sslContext;
 
-    /**
-     * The wrapper for the server socket.
-     */
-    private ServerSocketWrapper singleWrapper;
     /**
      * {@link ServerInfo} Contains all of the information about the server.
      */
@@ -161,9 +155,10 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      * @param serverFactory the server that the services are being added to.
      */
     public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
+        LOG.debug("SslContext {}", sslContext);
         final List<CourseSketchRpcService> services = getRpcServices();
         if (services == null) {
-            throw new NullPointerException("getRpcServices can not return null");
+            throw new IllegalStateException("getRpcServices can not return null");
         }
         final ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);

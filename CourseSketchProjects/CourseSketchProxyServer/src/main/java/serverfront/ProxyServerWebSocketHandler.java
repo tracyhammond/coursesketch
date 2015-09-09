@@ -101,11 +101,11 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                     final Message.RequestService.BlockingInterface timeService = Message.RequestService.newBlockingStub(socket.getRpcChannel());
 
                     LOG.info("Sending Time Request to Identity \n{}", TimeManager.serverSendTimeToClient());
-                    final Request resp = timeService.sendTimeRequest(socket.getnewRpcController(), TimeManager.serverSendTimeToClient());
+                    final Request resp = timeService.sendTimeRequest(socket.getNewRpcController(), TimeManager.serverSendTimeToClient());
                     LOG.info("Timer Service Response \n{}", resp);
                     final Request nextRequest = TimeManager.decodeRequest(resp);
                     LOG.info("OUR Response \n{}", nextRequest);
-                    final Request nullRequest =  timeService.sendTimeRequest(socket.getnewRpcController(), nextRequest);
+                    final Request nullRequest =  timeService.sendTimeRequest(socket.getNewRpcController(), nextRequest);
                     LOG.info("Should Be Null \n{}", nullRequest);
 
                 } catch (ServiceException e) {

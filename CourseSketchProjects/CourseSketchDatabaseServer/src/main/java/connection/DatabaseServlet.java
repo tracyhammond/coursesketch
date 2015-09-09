@@ -17,15 +17,10 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
     /**
      * Constructor for DatabaseServlet.
      *
-     * @param timeoutTime
-     *            The time before a stale connection times out.
-     * @param secure
-     *            True if the connection should use SSL
-     * @param connectLocally
-     *            True if the connection is a local connection.
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
      */
-    public DatabaseServlet(ServerInfo serverInfo) {
-        super(serverInfo);
+    public DatabaseServlet(final ServerInfo serverInformation) {
+        super(serverInformation);
     }
 
     /**
@@ -38,10 +33,11 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
-     * @param serverInformation
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return {@link DatabaseConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(ServerInfo serverInformation) {
-        return new DatabaseConnectionManager(getServer(), , serverInformation.isLocal());
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new DatabaseConnectionManager(getServer(), serverInformation);
     }
 }
