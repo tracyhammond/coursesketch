@@ -17,6 +17,7 @@ public class ProtobufComparisonBuilder {
      * Basically this ignores fields that are set on the actual but not the expected if they are equal to the default value
      */
     private boolean ignoreSetDefaultFields = true;
+    private boolean failAtFirstMisMatch = true;
 
     public ProtobufComparisonBuilder() {
         ignoredFields = new ArrayList<>();
@@ -42,6 +43,23 @@ public class ProtobufComparisonBuilder {
     }
 
     public ProtobufComparison build() {
-        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields);
+        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields, failAtFirstMisMatch);
+    }
+
+    public ProtobufComparisonBuilder setIsDeepEquals(final boolean isDeepEquals) {
+        this.isDeepEquals = isDeepEquals;
+        return this;
+    }
+
+    /**
+     * Fails at the first mismatch of fields if true.
+     *
+     * NOTE: if the values sent in are different message types that will still fail immediately even if this is false.
+     * @param failAtFirstMisMatch Default is true.
+     * @return
+     */
+    public ProtobufComparisonBuilder setFailAtFirstMisMatch(final boolean failAtFirstMisMatch) {
+        this.failAtFirstMisMatch = failAtFirstMisMatch;
+        return this;
     }
 }
