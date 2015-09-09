@@ -1,6 +1,7 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
@@ -288,6 +289,74 @@ public class BankProblemManagerTest {
 
         BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
+    }
+
+    @Test
+    public void updateBankProblemAsInstructor() throws Exception {
+        SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+
+        String bankProblemId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+        bankProblem.setId(bankProblemId);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        School.SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, db, bankProblemId, ADMIN_USER);
+        new ProtobufComparisonBuilder()
+                .setIsDeepEquals(false)
+                .build().equals(bankProblem.build(), problem);
+
+        School.SrlBankProblem updatedProblem = School.SrlBankProblem.newBuilder(bankProblem.build())
+                .setQuestionText("New QuestionText")
+                .setCourseTopic("New course topic")
+                .setImage("image")
+                .addOtherKeywords("Keywords")
+                .setSubTopic("Topic")
+                .setSource("New source")
+                .setSolutionId("New solutionId")
+                .setQuestionType(Util.QuestionType.CHECK_BOX)
+                .build();
+
+        BankProblemManager.mongoUpdateBankProblem(authenticator, db, bankProblemId, ADMIN_USER, updatedProblem);
+
+        School.SrlBankProblem updatedBankProblemResult = BankProblemManager.mongoGetBankProblem(authenticator, db,
+                bankProblemId, ADMIN_USER);
+        new ProtobufComparisonBuilder()
+                .setIsDeepEquals(false)
+                .setFailAtFirstMisMatch(false)
+                .build().equals(updatedProblem, updatedBankProblemResult);
+    }
+
+    @Test
+    public void updateBankProblemAsInstructorButNothingChanges() throws Exception {
+        SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+
+        String bankProblemId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+        bankProblem.setId(bankProblemId);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        School.SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, db, bankProblemId, ADMIN_USER);
+        new ProtobufComparisonBuilder()
+                .setIsDeepEquals(false)
+                .build().equals(bankProblem.build(), problem);
+
+        School.SrlBankProblem updatedProblem = School.SrlBankProblem.newBuilder(bankProblem.build())
+                .build();
+
+        BankProblemManager.mongoUpdateBankProblem(authenticator, db, bankProblemId, ADMIN_USER, updatedProblem);
+
+        School.SrlBankProblem updatedBankProblemResult = BankProblemManager.mongoGetBankProblem(authenticator, db,
+                bankProblemId, ADMIN_USER);
+        new ProtobufComparisonBuilder()
+                .setIsDeepEquals(false)
+                .setFailAtFirstMisMatch(false)
+                .build().equals(updatedProblem, updatedBankProblemResult);
     }
 
     @Test

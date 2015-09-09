@@ -222,48 +222,46 @@ public final class BankProblemManager {
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
-
-        final BasicDBObject updated = new BasicDBObject();
+        final BasicDBObject updateObj = new BasicDBObject();
         if (problem.hasQuestionText()) {
-            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())));
-            updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TEXT, problem.getQuestionText()));
+            updateObj.append(QUESTION_TEXT, problem.getQuestionText());
             update = true;
         }
         if (problem.hasImage()) {
-            updated.append(SET_COMMAND, new BasicDBObject(IMAGE, problem.getImage()));
+            updateObj.append(IMAGE, problem.getImage());
             update = true;
         }
         // Optimization: have something to do with pulling values of an
         // array and pushing values to an array
         if (problem.hasSolutionId()) {
-            updated.append(SET_COMMAND, new BasicDBObject(SOLUTION_ID, problem.getSolutionId()));
+            updateObj.append(SOLUTION_ID, problem.getSolutionId());
             update = true;
         }
         if (problem.hasCourseTopic()) {
-            updated.append(SET_COMMAND, new BasicDBObject(COURSE_TOPIC, problem.getCourseTopic()));
+            updateObj.append(COURSE_TOPIC, problem.getCourseTopic());
             update = true;
         }
         if (problem.hasSubTopic()) {
-            updated.append(SET_COMMAND, new BasicDBObject(SUB_TOPIC, problem.getSubTopic()));
+            updateObj.append(SUB_TOPIC, problem.getSubTopic());
             update = true;
         }
         if (problem.hasSource()) {
-            updated.append(SET_COMMAND, new BasicDBObject(SOURCE, problem.getSource()));
+            updateObj.append(SOURCE, problem.getSource());
             update = true;
         }
         if (problem.hasQuestionType()) {
-            updated.append(SET_COMMAND, new BasicDBObject(QUESTION_TYPE, problem.getQuestionType().getNumber()));
+            updateObj.append(QUESTION_TYPE, problem.getQuestionType().getNumber());
             update = true;
         }
         if (problem.hasScript()) {
-            updated.append(SET_COMMAND, new BasicDBObject(SCRIPT, problem.getScript()));
+            updateObj.append(SCRIPT, problem.getScript());
             update = true;
         }
         if (problem.hasBaseSketch()) {
-            updated.append(SET_COMMAND, new BasicDBObject(BASE_SKETCH, problem.getBaseSketch().toByteArray()));
+            updateObj.append(BASE_SKETCH, problem.getBaseSketch().toByteArray());
         }
         if (problem.getOtherKeywordsCount() > 0) {
-            updated.append(SET_COMMAND, new BasicDBObject(KEYWORDS, problem.getOtherKeywordsList()));
+            updateObj.append(KEYWORDS, problem.getOtherKeywordsList());
             update = true;
         }
         // Optimization: have something to do with pulling values of an
@@ -273,16 +271,16 @@ public final class BankProblemManager {
             if (responder.hasTeacherPermission()) {
                 // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                 if (permissions.getAdminPermissionCount() > 0) {
-                    updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
+                    updateObj.append(ADMIN, permissions.getAdminPermissionList());
                 }
                 if (permissions.getUserPermissionCount() > 0) {
-                    updated.append(SET_COMMAND, new BasicDBObject(USERS, permissions.getUserPermissionList()));
+                    updateObj.append(USERS, permissions.getUserPermissionList());
                 }
             }
         }
 
         if (update) {
-            problemCollection.update(cursor, updated);
+            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             final List<String> users = (List) cursor.get(USERS);
             for (int i = 0; i < users.size(); i++) {
                 UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
