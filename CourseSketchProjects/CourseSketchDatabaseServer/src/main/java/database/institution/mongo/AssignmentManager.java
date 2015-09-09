@@ -365,9 +365,9 @@ public final class AssignmentManager {
             throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
 
-        DBObject updateObj = null;
         final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
+        final BasicDBObject updateObj = new BasicDBObject();
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -381,31 +381,26 @@ public final class AssignmentManager {
 
         if (responder.hasModeratorPermission()) {
             if (assignment.hasName()) {
-                updateObj = new BasicDBObject(NAME, assignment.getName());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(NAME, assignment.getName());
                 update = true;
             }
 
             if (assignment.hasAssignmentType()) {
                 update = true;
-                updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
             }
             if (assignment.hasOther()) {
-                updateObj = new BasicDBObject(ASSIGNMENT_OTHER_TYPE, assignment.getOther());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(ASSIGNMENT_OTHER_TYPE, assignment.getOther());
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (assignment.hasDescription()) {
-                updateObj = new BasicDBObject(DESCRIPTION, assignment.getDescription());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(DESCRIPTION, assignment.getDescription());
                 update = true;
             }
             if (assignment.getLinksList() != null) {
-                updateObj = new BasicDBObject(ASSIGNMENT_RESOURCES, assignment.getLinksList());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(ASSIGNMENT_RESOURCES, assignment.getLinksList());
                 update = true;
             }
             if (assignment.hasLatePolicy()) {
@@ -418,28 +413,23 @@ public final class AssignmentManager {
                  */
             }
             if (assignment.hasGradeWeight()) {
-                updateObj = new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(GRADE_WEIGHT, assignment.getGradeWeight());
                 update = true;
             }
             if (assignment.hasAccessDate()) {
-                updateObj = new BasicDBObject(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
                 update = true;
             }
             if (assignment.hasDueDate()) {
-                updateObj = new BasicDBObject(DUE_DATE, assignment.getDueDate().getMillisecond());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(DUE_DATE, assignment.getDueDate().getMillisecond());
                 update = true;
             }
             if (assignment.hasCloseDate()) {
-                updateObj = new BasicDBObject(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
                 update = true;
             }
             if (assignment.hasImageUrl()) {
-                updateObj = new BasicDBObject(IMAGE, assignment.getImageUrl());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(IMAGE, assignment.getImageUrl());
                 update = true;
             }
 
@@ -450,21 +440,19 @@ public final class AssignmentManager {
                 if (responder.hasTeacherPermission()) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                        assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                        updateObj.append(ADMIN, permissions.getAdminPermissionList());
                     }
                     if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                        assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                        updateObj.append(MOD, permissions.getModeratorPermissionList());
                     }
                 }
                 if (permissions.getUserPermissionCount() > 0) {
-                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                    updateObj.append(USERS, permissions.getUserPermissionList());
                 }
             }
         }
         if (update) {
+            assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
         return true;
