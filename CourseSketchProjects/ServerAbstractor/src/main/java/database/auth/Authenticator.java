@@ -110,7 +110,7 @@ public final class Authenticator {
             new Thread() {
                 public void run() {
                     try {
-                        Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
+                        final Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
                         synchronized (authBuilder) {
                             authBuilder.mergeFrom(result);
                         }

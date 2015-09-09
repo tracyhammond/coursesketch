@@ -61,7 +61,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
         }
 
-        Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
                 .setAuthId(userId)
                 .setItemId(itemId)
                 .setItemType(collectionType)
@@ -69,7 +69,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
                 .build();
         Authentication.AuthResponse response = null;
         try {
-            response = authService.authorizeUser(getnewRpcController(), request);
+            response = authService.authorizeUser(getNewRpcController(), request);
         } catch (ServiceException e) {
             e.printStackTrace();
             throw new AuthenticationException(e);

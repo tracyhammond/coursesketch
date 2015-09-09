@@ -24,11 +24,11 @@ public class AuthenticationResponder {
     }
 
     /**
-     * This is true if it is in the valid dates OR the instructor has said access is allowed even after those dates!
+     * This is true iff it is in the valid dates
      * @return
      */
     public boolean isItemOpen() {
-        return response.hasIsItemPublished() && response.getIsItemOpen();
+        return response.getIsItemOpen();
     }
 
     public boolean isItemPublished() {
