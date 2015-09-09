@@ -240,7 +240,7 @@ public final class CourseProblemManager {
             throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
         }
 
-        DBObject updateObj = null;
+        final BasicDBObject updateObj = new BasicDBObject();
         final DBCollection problemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
@@ -253,21 +253,17 @@ public final class CourseProblemManager {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        final BasicDBObject updated = new BasicDBObject();
         if (responder.hasModeratorPermission()) {
             if (problem.hasName()) {
-                updateObj = new BasicDBObject(NAME, problem.getName());
-                problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(NAME, problem.getName());
                 update = true;
             }
             if (problem.hasGradeWeight()) {
-                updateObj = new BasicDBObject(GRADE_WEIGHT, problem.getGradeWeight());
-                problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(GRADE_WEIGHT, problem.getGradeWeight());
                 update = true;
             }
             if (problem.hasProblemBankId()) {
-                updateObj = new BasicDBObject(PROBLEM_BANK_ID, problem.getProblemBankId());
-                problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
 
                 // updates the bank problem associated with this course problem
                 LOG.warn("Changing the bank problem id. This feature may be removed in the future");
@@ -282,22 +278,19 @@ public final class CourseProblemManager {
                 if (responder.hasTeacherPermission()) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                        problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                        updateObj.append(ADMIN, permissions.getAdminPermissionList());
                     }
                     if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                        problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                        updateObj.append(MOD, permissions.getModeratorPermissionList());
                     }
                 }
                 if (permissions.getUserPermissionCount() > 0) {
-                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                    updateObj.append(USERS, permissions.getUserPermissionList());
                 }
             }
         }
         if (update) {
-            problemCollection.update(cursor, updated);
+            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
         return true;
