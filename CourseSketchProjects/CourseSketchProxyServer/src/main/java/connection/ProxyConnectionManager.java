@@ -56,11 +56,6 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     private static final int ANSWER_PORT = 8884;
 
     /**
-     * Port for the identity server.
-     */
-    private static final int IDENTITY_PORT = 8890;
-
-    /**
      * Creates a manager for the proxy connections.
      *  @param parent
      *            {@link serverfront.ProxyServerWebSocketHandler}
@@ -104,16 +99,6 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
-
-        LOG.info("Open Identity...");
-        try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", IDENTITY_PORT, isSecure(), IdentityClientWebSocket.class);
-        } catch (ConnectionException e) {
-            // TODO Auto-generated catch block
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        // System.out.println("Open Answer Checker Server...");
-        // createAndAddConnection(serv, true, 8884, AnswerConnection.class);
     }
 
     /**
