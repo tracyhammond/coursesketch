@@ -45,22 +45,22 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     private static final int TIME_OUT_MILLIS = 10000;
 
     /**
-     * Size of the send buffer
+     * Size of the send buffer.
      */
     private static final int SIZE_OF_SEND_BUFFER = 1048576;
 
     /**
-     * Size of the recieving buffer
+     * Size of the receiving buffer.
      */
     private static final int SIZE_OF_RCV_BUFFER = 1048576;
 
     /**
-     * Max number of threads for the client
+     * Max number of threads for the client.
      */
     private static final int MAX_THREAD_POOL_SIZE = 100;
 
     /**
-     * core number of threads for the client
+     * core number of threads for the client.
      */
     private static final int CORE_THREAD_POOL_SIZE = 3;
 
@@ -68,9 +68,13 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      * MThe offset from the host port for the client port.
      */
     private static final int CLIENT_PORT_OFFSET = 100;
+    /**
+     * The max number of threads for the timeout executor.
+     */
+    private static final int MAX_TIMEOUT_POOL_SIZE = 5;
 
     /**
-     * An Rpc Client channel
+     * An Rpc Client channel.
      */
     private RpcClientChannel channel = null;
 
@@ -126,12 +130,12 @@ public class ClientWebSocket extends AbstractClientWebSocket {
 
         clientFactory.setRpcLogger(new CategoryPerServiceLogger());
 
-        RpcTimeoutExecutor timeoutExecutor = new TimeoutExecutor(1,5);
-        RpcTimeoutChecker checker = new TimeoutChecker();
+        final RpcTimeoutExecutor timeoutExecutor = new TimeoutExecutor(1, MAX_TIMEOUT_POOL_SIZE);
+        final RpcTimeoutChecker checker = new TimeoutChecker();
         checker.setTimeoutExecutor(timeoutExecutor);
         checker.startChecking(clientFactory.getRpcClientRegistry());
 
-        CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
+        final CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
         shutdownHandler.addResource(executor);
         shutdownHandler.addResource(checker);
         shutdownHandler.addResource(timeoutExecutor);
@@ -176,14 +180,14 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     /**
      * @return A {@link RpcClientChannel} so that protobuf can send messages.
      */
-    public RpcClientChannel getRpcChannel() {
+    public final RpcClientChannel getRpcChannel() {
         return channel;
     }
 
     /**
      * @return A new instance of{@link RpcController}.
      */
-    public RpcController getnewRpcController() {
+    public final RpcController getnewRpcController() {
         return channel.newRpcController();
     }
 }

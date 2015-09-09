@@ -34,8 +34,9 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * A constructor that accepts a servlet.
      * @param parent The parent servlet of this server.
+     * @param info  {@link ServerInfo} Contains all of the information about the server.
      */
-    public ServerWebSocketHandler(final ISocketInitializer parent, ServerInfo info) {
+    public ServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo info) {
         super(parent, info);
     }
 

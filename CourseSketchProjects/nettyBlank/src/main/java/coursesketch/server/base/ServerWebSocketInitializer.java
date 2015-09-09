@@ -37,6 +37,9 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * connections.
      */
     private final MultiConnectionManager manager;
+    /**
+     *  {@link ServerInfo} Contains all of the information about the server.
+     */
     private final ServerInfo serverInfo;
 
     /**
@@ -52,15 +55,10 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Creates a GeneralConnectionServlet.
      *
-     * @param iTimeoutTime
-     *         The time it takes before a connection times out.
-     * @param iSecure
-     *         True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *         True if the server is connecting locally.
+     * @param info {@link ServerInfo} Contains all of the information about the server.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(ServerInfo info) {
+    public ServerWebSocketInitializer(final ServerInfo info) {
         LOG.info("Currently time out time is not used " + info.getTimeOut());
         this.serverInfo = info;
         connectionServer = createServerSocket();
@@ -104,12 +102,13 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * Override this method to create a subclass of the MultiConnectionManager.
      *
      *
-     * @param serverInfo@return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new MultiConnectionManager(connectionServer, serverInfo.isLocal(), serverInfo.isSecure());
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new MultiConnectionManager(connectionServer, serverInformation);
     }
 
     /**
@@ -126,7 +125,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * @return {@link ServerInfo} contains all of the data about the server.
      */
-    @Override public ServerInfo getServerInfo() {
+    @Override public final ServerInfo getServerInfo() {
         return this.serverInfo;
     }
 

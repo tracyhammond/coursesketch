@@ -27,10 +27,10 @@ public interface ISocketInitializer {
     /**
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     *
-     * @param serverInfo@return An instance of the {@link MultiConnectionManager}
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return An instance of the {@link MultiConnectionManager}
      */
-    MultiConnectionManager createConnectionManager(final ServerInfo serverInfo);
+    MultiConnectionManager createConnectionManager(final ServerInfo serverInformation);
 
     /**
      * Override this method to create a subclass of GeneralConnectionServer.

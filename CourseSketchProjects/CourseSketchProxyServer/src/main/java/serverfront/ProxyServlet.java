@@ -38,11 +38,12 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
      *            computer (used for testing)
      * @param secure
      *            True if the connection is using SSL.
+     * @param info
      * @return {@link internalconnections.ProxyConnectionManager}
      */
     @Override
     public MultiConnectionManager createConnectionManager(ServerInfo info) {
-        return new ProxyConnectionManager(getServer(), info.isLocal(), info.isSecure());
+        return new ProxyConnectionManager(getServer(), , info.isLocal());
     }
 
     /**

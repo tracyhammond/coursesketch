@@ -51,10 +51,10 @@ public class IdentityServerRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      * @param time
      * @param local
-     * @param serverInfo
+     * @param serverInformation
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new IdentityServiceInitializer(serverInfo);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new IdentityServiceInitializer(serverInformation);
     }
 }
