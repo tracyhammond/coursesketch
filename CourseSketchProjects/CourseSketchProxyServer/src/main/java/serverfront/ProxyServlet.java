@@ -13,14 +13,9 @@ import coursesketch.server.interfaces.ServerInfo;
 public final class ProxyServlet extends ServerWebSocketInitializer {
 
     /**
-     * @param timeoutTime
-     *            The time it takes before a connection times out.
-     * @param secure
-     *            True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *            True if the server is connecting locally.
+     * @param info {@link ServerInfo} Contains all of the information about the server.
      */
-    public ProxyServlet(ServerInfo info) {
+    public ProxyServlet(final ServerInfo info) {
         super(info);
     }
 
@@ -33,16 +28,12 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
     }
 
     /**
-     * @param connectLocally
-     *            True if the connection is acting as if it is on a local
-     *            computer (used for testing)
-     * @param secure
-     *            True if the connection is using SSL.
-     * @return {@link internalconnections.ProxyConnectionManager}
+     * @param info {@link ServerInfo} Contains all of the information about the server.
+     * @return {@link ProxyConnectionManager}
      */
     @Override
-    public MultiConnectionManager createConnectionManager(ServerInfo info) {
-        return new ProxyConnectionManager(getServer(), info.isLocal(), info.isSecure());
+    public MultiConnectionManager createConnectionManager(final ServerInfo info) {
+        return new ProxyConnectionManager(getServer(), info);
     }
 
     /**

@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -54,20 +55,14 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      */
     private static final int ANSWER_PORT = 8884;
 
-    private static final int IDENTITY_PORT = 8890;
-
     /**
      * Creates a manager for the proxy connections.
-     *
-     * @param parent
+     *  @param parent
      *            {@link serverfront.ProxyServerWebSocketHandler}
-     * @param connectType
-     *            true if connection is local.
-     * @param secure
-     *            true if all connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -104,16 +99,6 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
-
-        LOG.info("Open Identity...");
-        try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", IDENTITY_PORT, isSecure(), IdentityClientWebSocket.class);
-        } catch (ConnectionException e) {
-            // TODO Auto-generated catch block
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        // System.out.println("Open Answer Checker Server...");
-        // createAndAddConnection(serv, true, 8884, AnswerConnection.class);
     }
 
     /**

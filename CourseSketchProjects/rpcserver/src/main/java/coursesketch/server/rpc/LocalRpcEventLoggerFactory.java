@@ -6,31 +6,47 @@ import com.googlecode.protobuf.pro.duplex.listener.RpcConnectionEventListener;
 import org.slf4j.Logger;
 
 /**
+ * A factory for creating A logger for RpcEvents.
+ *
  * Created by gigemjt on 9/3/15.
  */
-public class LocalRpcEventLoggerFactory {
+public final class LocalRpcEventLoggerFactory {
+
+    /**
+     * private constructor.
+     */
+    private LocalRpcEventLoggerFactory() {
+    }
+
+    /**
+     * A local event logger.
+     *
+     * @param log The logger that will be logging the information.
+     * @return An RpcConnectionEventNotifier that will notify of an event.
+     */
     public static RpcConnectionEventNotifier createLocalEventLogger(final Logger log) {
         // setup a RPC event listener - it just logs what happens
-        RpcConnectionEventNotifier rpcEventNotifier = new RpcConnectionEventNotifier();
-        RpcConnectionEventListener listener = new RpcConnectionEventListener() {
+        final RpcConnectionEventNotifier rpcEventNotifier = new RpcConnectionEventNotifier();
+        @SuppressWarnings("PMD.CommentRequired")
+        final RpcConnectionEventListener listener = new RpcConnectionEventListener() {
 
             @Override
-            public void connectionReestablished(RpcClientChannel clientChannel) {
+            public void connectionReestablished(final RpcClientChannel clientChannel) {
                 log.info("connectionReestablished " + clientChannel);
             }
 
             @Override
-            public void connectionOpened(RpcClientChannel clientChannel) {
+            public void connectionOpened(final RpcClientChannel clientChannel) {
                 log.info("connectionOpened " + clientChannel);
             }
 
             @Override
-            public void connectionLost(RpcClientChannel clientChannel) {
+            public void connectionLost(final RpcClientChannel clientChannel) {
                 log.info("connectionLost " + clientChannel);
             }
 
             @Override
-            public void connectionChanged(RpcClientChannel clientChannel) {
+            public void connectionChanged(final RpcClientChannel clientChannel) {
                 log.info("connectionChanged " + clientChannel);
             }
         };

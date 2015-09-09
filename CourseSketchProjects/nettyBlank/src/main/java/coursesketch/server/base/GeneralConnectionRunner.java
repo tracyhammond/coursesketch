@@ -222,26 +222,18 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a new instance of a {@link coursesketch.server.interfaces.ISocketInitializer}.
+     * Returns a new instance of a {@link ServerWebSocketInitializer}.
      * <p/>
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
-     *  @param timeOut
-     *         length of specified timeout, in miliseconds
-     * @param isSecure
-     *         <code>true</code> if the servlet should be secure,
-     *         <code>false</code> otherwise
-     * @param isLocal
- *         <code>true</code> if the server is running locally,
- *         <code>false</code> otherwise
-     * @param time
-     * @param local @return a new connection servlet for this server
-     * @param serverInfo
-     * */
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     *
+     * @return  a new instance of a {@link ServerWebSocketInitializer}.
+     **/
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new ServerWebSocketInitializer(info);
+    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new ServerWebSocketInitializer(serverInformation);
     }
 
     /**

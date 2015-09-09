@@ -12,16 +12,11 @@ import coursesketch.server.interfaces.ServerInfo;
 public final class LoginServlet extends ServerWebSocketInitializer {
 
     /**
-     * Creates a GeneralConnectionServlet.
+     * Creates a LoginServlet.
      *
-     * @param timeoutTime
-     *            The time it takes before a connection times out.
-     * @param secure
-     *            True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *            True if the server is connecting locally.
+     * @param info {@link ServerInfo} Contains all of the information about the server.
      */
-    public LoginServlet(ServerInfo info) {
+    public LoginServlet(final ServerInfo info) {
         super(info);
     }
 
@@ -37,17 +32,11 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      * We do not need to manage multiple connections so we might as well just
      * make it return null.
      *
-     * @param connectLocally
-     *            <code>true</code> if the connection manager should use local
-     *            connections, <code>false</code> otherwise
-     * @param secure
-     *            <code>true</code> if the connections should be secured,
-     *            <code>false</code> otherwise
-     *
-     * @return a new connection manager object
+     * @param info {@link ServerInfo} Contains all of the information about the server.
+     * @return a null
      */
     @Override
-    public MultiConnectionManager createConnectionManager(ServerInfo info) {
+    public MultiConnectionManager createConnectionManager(final ServerInfo info) {
         return null;
     }
 }
