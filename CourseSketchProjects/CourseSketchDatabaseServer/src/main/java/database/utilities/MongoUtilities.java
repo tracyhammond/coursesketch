@@ -9,9 +9,12 @@ import org.bson.types.ObjectId;
 public class MongoUtilities {
 
     public static ObjectId createId(final String id) throws DatabaseAccessException {
+        if (id == null) {
+            throw new DatabaseAccessException(new NullPointerException("Object Id was given a null parameter"), false);
+        }
         try {
-            return new ObjectId(id);
-        } catch(IllegalArgumentException e) {
+            return new ObjectId(id.trim());
+        } catch (IllegalArgumentException e) {
             throw new DatabaseAccessException(e, false);
         }
     }
