@@ -8,56 +8,83 @@ import protobuf.srl.services.authentication.Authentication;
  * So as you go higher up the list you can not lose permissions.
  */
 public class AuthenticationResponder {
+    /**
+     * The protobuf object backing the responder.
+     */
     private final Authentication.AuthResponse response;
 
-    public AuthenticationResponder(Authentication.AuthResponse response) {
+    /**
+     * Creates an {@code AuthenticationResponder} with the given protobuf object.
+     * @param response The response that was passed in.
+     */
+    public AuthenticationResponder(final Authentication.AuthResponse response) {
         this.response = response;
     }
 
     /**
-     * This returns true IFF registration is not required OR the user has a permission level greater than student
-     * OR the auth checker detirmines the user has access
-     * @return
+     * @return  true IFF registration is not required OR the user has a permission level greater than student
+     * OR the auth checker determines the user has access.  By default this returns false.
      */
-    public boolean hasAccess() {
+    public final boolean hasAccess() {
         return response.getHasAccess();
     }
 
     /**
-     * This is true iff it is in the valid dates
-     * @return
+     * @return true iff if the item is within the open dates.  By default this returns false.
      */
-    public boolean isItemOpen() {
+    public final boolean isItemOpen() {
         return response.getIsItemOpen();
     }
 
-    public boolean isItemPublished() {
+    /**
+     * @return True if the item is published.  By default this returns false.
+     */
+    public final boolean isItemPublished() {
         return response.hasIsItemPublished() && response.getIsItemPublished();
     }
 
-    public boolean isRegistrationRequired() {
+    /**
+     * @return true if registration is required for the item.  By default this returns true.
+     */
+    public final boolean isRegistrationRequired() {
         // if we do not have a value for registration we assume the more restrictive option.
         // this is the opposite of most values so this method is required
         // even though the default is true...
         return !response.hasIsRegistrationRequired() || response.getIsRegistrationRequired();
     }
 
-    public boolean hasStudentPermission() {
+    /**
+     * @return True if the permission level is at least the level of a {@link Authentication.AuthResponse.PermissionLevel#STUDENT}.
+     * By default this returns false.
+     */
+    public final boolean hasStudentPermission() {
         return response.hasPermissionLevel()
                 && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE;
     }
 
-    public boolean hasPeerTeacherPermission() {
+    /**
+     * @return True if the permission level is at least the level of a {@link Authentication.AuthResponse.PermissionLevel#PEER_TEACHER}.
+     *         By default this returns false.
+     */
+    public final boolean hasPeerTeacherPermission() {
         return response.hasPermissionLevel()
                 && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.PEER_TEACHER_VALUE;
     }
 
-    public boolean hasModeratorPermission() {
+    /**
+     * @return True if the permission level is at least the level of a {@link Authentication.AuthResponse.PermissionLevel#MODERATOR}.
+     * By default this returns false.
+     */
+    public final boolean hasModeratorPermission() {
         return response.hasPermissionLevel()
                 && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.MODERATOR_VALUE;
     }
 
-    public boolean hasTeacherPermission() {
+    /**
+     * @return True if the permission level is at least the level of a {@link Authentication.AuthResponse.PermissionLevel#TEACHER}.
+     * By default this returns false.
+     */
+    public final boolean hasTeacherPermission() {
         return response.hasPermissionLevel()
                 && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE;
     }

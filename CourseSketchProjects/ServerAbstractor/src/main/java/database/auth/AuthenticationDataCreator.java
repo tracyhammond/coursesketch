@@ -1,6 +1,5 @@
 package database.auth;
 
-import database.DatabaseAccessException;
 
 /**
  * An interface that implements where data for authentication actually comes from.
