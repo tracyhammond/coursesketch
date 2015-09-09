@@ -6,7 +6,7 @@ import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
-import services.IndentityThing;
+import services.IdentityThing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +18,9 @@ import java.util.List;
 public final class IdentityServiceInitializer extends ServerWebSocketInitializer {
 
     /**
-     * @param timeoutTime
-     *            The time it takes before a connection times out.
-     * @param secure
-     *            True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *            True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public IdentityServiceInitializer(ServerInfo serverInfo) {
+    public IdentityServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
     }
 
@@ -38,20 +33,21 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     }
 
     /**
-     * @param secure
-     *            True if the connection is using SSL.
-     * @param serverInformation
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
      * @return {@link IdentityConnectionManager}
      */
     @Override
     public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new IdentityConnectionManager(getServer(), , serverInformation.isLocal());
+        return new IdentityConnectionManager(getServer(), serverInformation);
     }
 
+    /**
+     * @return The list of rpc services that are run by the server.
+     */
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
-        List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        services.add(new IndentityThing());
+        final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
+        services.add(new IdentityThing());
         return services;
     }
 }
