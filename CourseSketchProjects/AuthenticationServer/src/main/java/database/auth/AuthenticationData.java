@@ -121,9 +121,9 @@ public final class AuthenticationData {
     }
 
     /**
-     * @param registrationRequired sets if the class requires registration
+     * @param isRegistrationRequired sets if the class requires registration
      */
-    public void setRegistrationRequired(boolean registrationRequired) {
-        this.registrationRequired = registrationRequired;
+    public void setRegistrationRequired(final boolean isRegistrationRequired) {
+        this.registrationRequired = isRegistrationRequired;
     }
 }

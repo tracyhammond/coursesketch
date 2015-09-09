@@ -21,6 +21,7 @@ public interface AuthenticationChecker {
      * @param checkType The rules at that give a correct or false response.
      * @return True if all checked values are valid
      * @throws DatabaseAccessException thrown if there are issues grabbing data for the authenticator.
+     * @throws AuthenticationException thrown if there are problems creating the auth response.
      */
     Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId,
             final String userId, final Authentication.AuthType checkType)
