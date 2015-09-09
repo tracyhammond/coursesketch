@@ -204,7 +204,7 @@ public final class CourseProblemManager {
 
     }
 
-    private static void extractProblemData(SrlProblem.Builder problem, DBObject dbProblem) {
+    private static void extractProblemData(final SrlProblem.Builder problem, final DBObject dbProblem) {
         problem.setCourseId((String) dbProblem.get(COURSE_ID));
         problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
         problem.setProblemBankId((String) dbProblem.get(PROBLEM_BANK_ID));

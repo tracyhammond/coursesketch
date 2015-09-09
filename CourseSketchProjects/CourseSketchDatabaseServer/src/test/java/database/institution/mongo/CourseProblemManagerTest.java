@@ -165,8 +165,25 @@ public class CourseProblemManagerTest {
     }
 
     // GETTING TEST
+
+    // Precondition tests
     @Test(expected = DatabaseAccessException.class)
-    public void getCourseProblemThatDoesNotExist() throws Exception {
+    public void getCourseProblemWithInvalidObjectId() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        defaultProblem.clearProblemBankId();
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db,
+                DatabaseHelper.createNonExistentObjectId(courseProblemId), ADMIN_USER, FAKE_VALID_DATE);
+    }
+
+    // Student grabbing test
+    @Test(expected = DatabaseAccessException.class)
+    public void getCourseProblemThatDoesNotExistWithMalformedObjectId() throws Exception {
         CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, 0);
     }
 
@@ -251,20 +268,6 @@ public class CourseProblemManagerTest {
     // Teacher grabbing permissions
 
     @Test
-    public void getCourseProblemWithInvalidObjectId() throws Exception {
-        insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
-                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
-
-        defaultProblem.clearProblemBankId();
-        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
-        defaultProblem.setId(courseProblemId);
-
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db,
-                DatabaseHelper.createNonExistentObjectId(courseProblemId), ADMIN_USER, FAKE_VALID_DATE);
-    }
-
-    @Test
     public void getCourseProblemAsInstructorWithNoBankProblemIdShouldWork() throws Exception {
         insertCourseAndAssignment();
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
@@ -302,6 +305,22 @@ public class CourseProblemManagerTest {
         new ProtobufComparisonBuilder()
                 //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
                 .build().equals(defaultProblem.build(), problem);
+    }
+
+    // UPDATING TESTS
+
+    @Test(expected = DatabaseAccessException.class)
+    public void updateCourseProblemWithInvalidObjectId() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        defaultProblem.clearProblemBankId();
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, DatabaseHelper.createNonExistentObjectId(courseProblemId),
+                ADMIN_USER, defaultProblem.build());
     }
 
     @Test
