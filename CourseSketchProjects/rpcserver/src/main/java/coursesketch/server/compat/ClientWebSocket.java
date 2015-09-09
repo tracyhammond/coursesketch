@@ -19,7 +19,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.ssl.SslContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -65,10 +64,6 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     private static final int CORE_THREAD_POOL_SIZE = 3;
 
     /**
-     * MThe offset from the host port for the client port.
-     */
-    private static final int CLIENT_PORT_OFFSET = 100;
-    /**
      * The max number of threads for the timeout executor.
      */
     private static final int MAX_TIMEOUT_POOL_SIZE = 5;
@@ -103,7 +98,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      */
     @Override
     protected final void connect() throws ConnectionException {
-        final SslContext sslCtx = null;
+        //final SslContext sslCtx = null;
         /*
         if (getParentServer().) {
             sslCtx = SslContext.newClientContext(InsecureTrustManagerFactory.INSTANCE);
@@ -158,10 +153,10 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             channel = clientFactory.peerWith(server, bootstrap);
         } catch (IOException e) {
             LOG.error("Unable to connect to server", e);
-            throw new ConnectionException("Unable to connect to server " + server.getName());
+            throw new ConnectionException("Unable to connect to server " + server.getName(), e);
         }
 
-        final ClientWebSocketWrapper wrapper = new ClientWebSocketWrapper(channel, this);
+        final ClientWebSocketWrapper wrapper = new ClientWebSocketWrapper(this);
         clientFactory.getRpcServiceRegistry().registerService(wrapper);
         clientFactory.registerConnectionEventListener(wrapper);
     }
@@ -187,7 +182,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     /**
      * @return A new instance of{@link RpcController}.
      */
-    public final RpcController getnewRpcController() {
+    public final RpcController getNewRpcController() {
         return channel.newRpcController();
     }
 }

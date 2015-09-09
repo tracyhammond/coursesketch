@@ -126,7 +126,6 @@ public final class RpcSession implements SocketSession {
     @Override
     public boolean equals(final Object other) {
         if (other instanceof RpcSession) {
-            final PeerInfo peerInfo = null;
             return getPeerInfo().equals(((RpcSession) other).getPeerInfo());
         }
         return false;

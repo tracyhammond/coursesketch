@@ -10,7 +10,13 @@ import org.slf4j.Logger;
  *
  * Created by gigemjt on 9/3/15.
  */
-public class LocalRpcEventLoggerFactory {
+public final class LocalRpcEventLoggerFactory {
+
+    /**
+     * private constructor.
+     */
+    private LocalRpcEventLoggerFactory() {
+    }
 
     /**
      * A local event logger.
@@ -21,6 +27,7 @@ public class LocalRpcEventLoggerFactory {
     public static RpcConnectionEventNotifier createLocalEventLogger(final Logger log) {
         // setup a RPC event listener - it just logs what happens
         final RpcConnectionEventNotifier rpcEventNotifier = new RpcConnectionEventNotifier();
+        @SuppressWarnings("PMD.CommentRequired")
         final RpcConnectionEventListener listener = new RpcConnectionEventListener() {
 
             @Override

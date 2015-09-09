@@ -5,21 +5,15 @@ import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import com.googlecode.protobuf.pro.duplex.listener.TcpConnectionEventListener;
 import coursesketch.server.rpc.RpcSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import utilities.TimeManager;
 
 /**
+ * Wraps around the request service to allow for the handler to extend the abstract handler.
+ *
  * Created by gigemjt on 10/23/14.
  */
 class ClientWebSocketWrapper extends Message.RequestService implements TcpConnectionEventListener {
-
-    /**
-     * Declaration/Definition of Logger!
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(ClientWebSocketWrapper.class);
-
 
     /**
      * Handles all messages sent by the socket.
@@ -27,31 +21,21 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
     private final ClientWebSocket socketHandler;
 
     /**
-     * The client rpc channel.
-     *
-     * This is the connection to the server and contains methods used to manage that conneciton
-     */
-    private final RpcClientChannel channel;
-
-    /**
      * Wraps around the {@link ClientWebSocket}.
      *
-     * @param channel
-     *         The handshake that controls the web-socket.
      * @param clientWebSocket
      *         The object that handles the actual socket communication.
      */
-    ClientWebSocketWrapper(final RpcClientChannel channel, final ClientWebSocket clientWebSocket) {
-        this.channel = channel;
+    ClientWebSocketWrapper(final ClientWebSocket clientWebSocket) {
         socketHandler = clientWebSocket;
     }
 
     /**
      * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
-     * @param controller The
-     * @param request
-     * @param done
+     * @param controller The controller that was used to send the message.
+     * @param request The request that was sent.
+     * @param done Where you set the result.
      */
     @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
         socketHandler.onMessage(request.toByteString().asReadOnlyByteBuffer());
@@ -60,9 +44,9 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
     /**
      * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
-     * @param controller
-     * @param request
-     * @param done
+     * @param controller The controller that was used to send the message.
+     * @param request The request that was sent.  In this case it is a request meant for time management.
+     * @param done Where you set the result.
      */
     @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
         done.run(TimeManager.decodeRequest(request));
@@ -76,7 +60,7 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * problem. The underlying reason for RpcClientChannel closure is not
      * discernible.
      *
-     * @param rpcClientChannel
+     * @param rpcClientChannel The client channel tha has closed.
      */
     @Override public void connectionClosed(final RpcClientChannel rpcClientChannel) {
         socketHandler.onClose(-1, "Idk");
@@ -87,7 +71,7 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * happens once a TCP connection is opened and the RPC handshake
      * is successfully completed.
      *
-     * @param rpcClientChannel
+     * @param rpcClientChannel The client channel that has opened.
      */
     @Override public void connectionOpened(final RpcClientChannel rpcClientChannel) {
         socketHandler.onOpen(new RpcSession(rpcClientChannel));

@@ -32,12 +32,12 @@ public class ServerInfo {
     /**
      * <code>true</code> if the servlet should be secure, <code>false</code> otherwise.
      **/
-    private final boolean isSecure;
+    private final boolean isSecureVar;
 
     /**
      * <code>true</code> if the server is running locally, <code>false</code> otherwise.
      **/
-    private final boolean isLocal;
+    private final boolean isLocalVar;
 
     /**
      * Creates a server info with all of the information.
@@ -45,15 +45,15 @@ public class ServerInfo {
      * @param hostName {@link #hostName}.
      * @param port {@link #port}.
      * @param timeOut {@link #timeOut}.
-     * @param isSecure {@link #isSecure}.
-     * @param isLocal {@link #isLocal}.
+     * @param isSecure {@link #isSecureVar}.
+     * @param isLocal {@link #isLocalVar}.
      */
     public ServerInfo(final String hostName, final int port, final long timeOut, final boolean isSecure, final boolean isLocal) {
         this.hostName = hostName;
         this.port = port;
         this.timeOut = timeOut;
-        this.isSecure = isSecure;
-        this.isLocal = isLocal;
+        this.isSecureVar = isSecure;
+        this.isLocalVar = isLocal;
     }
 
     /**
@@ -82,17 +82,17 @@ public class ServerInfo {
 
     /**
      * @return True if the server should be running in secure mode
-     * @see #isSecure
+     * @see #isSecureVar
      */
     public final boolean isSecure() {
-        return isSecure;
+        return isSecureVar;
     }
 
     /**
      * @return True if the server is running on a local dev machine
-     * @see #isLocal
+     * @see #isLocalVar
      */
     public final boolean isLocal() {
-        return isLocal;
+        return isLocalVar;
     }
 }
