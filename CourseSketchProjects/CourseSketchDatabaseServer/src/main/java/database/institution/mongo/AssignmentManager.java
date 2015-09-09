@@ -88,8 +88,8 @@ public final class AssignmentManager {
      */
     public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String userId, final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection newUser = dbs.getCollection(ASSIGNMENT_COLLECTION);
-        Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+        final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
+        final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
@@ -123,13 +123,13 @@ public final class AssignmentManager {
         if (assignment.getProblemListList() != null) {
             query.append(PROBLEM_LIST, assignment.getProblemListList());
         }
-        newUser.insert(query);
-        final DBObject corsor = newUser.findOne(query);
+        assignmentCollection.insert(query);
+        final DBObject cursor = assignmentCollection.findOne(query);
 
         // inserts the id into the previous the course
-        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), corsor.get(SELF_ID).toString());
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), cursor.get(SELF_ID).toString());
 
-        return corsor.get(SELF_ID).toString();
+        return cursor.get(SELF_ID).toString();
     }
 
     /**
@@ -156,9 +156,9 @@ public final class AssignmentManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, createId(assignmentId));
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
 
@@ -166,6 +166,7 @@ public final class AssignmentManager {
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .setCheckingAdmin(true)
+                .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, userId, checkTime, authType);
@@ -182,7 +183,7 @@ public final class AssignmentManager {
                 .setCheckDate(true)
                 .build();
         final AuthenticationResponder courseResponder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, (String) corsor.get(COURSE_ID), userId, checkTime, authType);
+                .checkAuthentication(School.ItemType.COURSE, (String) cursor.get(COURSE_ID), userId, checkTime, courseAuthType);
 
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !courseResponder.isItemOpen()) {
@@ -205,24 +206,24 @@ public final class AssignmentManager {
         exactAssignment.setId(assignmentId);
 
         // sets the majority of the assignment data
-        setAssignmentData(exactAssignment, corsor);
+        setAssignmentData(exactAssignment, cursor);
 
-        setAssignmentStateAndDate(exactAssignment, stateBuilder, corsor,
+        setAssignmentStateAndDate(exactAssignment, stateBuilder, cursor,
                 responder.hasTeacherPermission(), responder.hasModeratorPermission(), checkTime);
 
-        if (corsor.get(IMAGE) != null) {
-            exactAssignment.setImageUrl((String) corsor.get(IMAGE));
+        if (cursor.get(IMAGE) != null) {
+            exactAssignment.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the assignment must be open to view the problems
         if (responder.hasPeerTeacherPermission() || (responder.hasAccess()
-                && Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))) {
-            if (corsor.get(PROBLEM_LIST) != null) {
-                exactAssignment.addAllProblemList((List) corsor.get(PROBLEM_LIST));
+                && responder.isItemOpen())) {
+            if (cursor.get(PROBLEM_LIST) != null) {
+                exactAssignment.addAllProblemList((List) cursor.get(PROBLEM_LIST));
             }
 
             stateBuilder.setAccessible(true);
-        } else if (responder.hasAccess() && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
+        } else if (responder.hasAccess() && !responder.isItemOpen()) {
             stateBuilder.setAccessible(false);
             LOG.info("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
@@ -234,11 +235,11 @@ public final class AssignmentManager {
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
+            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
+            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
         }
         if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // mod
+            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // mod
             exactAssignment.setAccessPermission(permissions.build());
         }
         return exactAssignment.build();
@@ -438,11 +439,6 @@ public final class AssignmentManager {
             }
             if (assignment.hasImageUrl()) {
                 updateObj = new BasicDBObject(IMAGE, assignment.getImageUrl());
-                assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.getProblemListCount() > 0) {
-                updateObj = new BasicDBObject(PROBLEM_LIST, assignment.getProblemListList());
                 assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
