@@ -89,8 +89,9 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * A constructor that accepts a servlet.
      * @param parent The parent servlet of this server.
+     * @param hostInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, ServerInfo hostInfo) {
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo hostInfo) {
         parentServer = parent;
         this.hostInfo = hostInfo;
     }
@@ -212,16 +213,16 @@ public abstract class AbstractServerWebSocketHandler {
     }
 
     /**
-     *
-     * @return
+     * @return The name that the server is running on.
+     * @see ServerInfo#hostName
      */
     public final String getHostName() {
         return hostInfo.getHostName();
     }
 
     /**
-     *
-     * @return
+     * @return The port that the server is running on.
+     * @see ServerInfo#port
      */
     public final int getHostPort() {
         return hostInfo.getPort();

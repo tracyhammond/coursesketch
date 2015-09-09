@@ -50,10 +50,10 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * {@inheritDoc}.<br>
      *
      * @return an {@link connection.AnswerCheckerServlet}.
-     * @param serverInfo
+     * @param serverInformation
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new AnswerCheckerServlet(serverInfo);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new AnswerCheckerServlet(serverInformation);
     }
 }

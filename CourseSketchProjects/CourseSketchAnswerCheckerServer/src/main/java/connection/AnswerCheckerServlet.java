@@ -18,14 +18,9 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
     /**
      * Creates a AnswerCheckerServlet.
      *
-     * @param timeoutTime
-     *         The time it takes before a connection times out.
-     * @param secure
-     *         True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *         True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public AnswerCheckerServlet(ServerInfo serverInfo) {
+    public AnswerCheckerServlet(final ServerInfo serverInfo) {
         super(serverInfo);
     }
 
@@ -39,10 +34,11 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
-     * @param serverInfo
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return {@link AnswerConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new AnswerConnectionManager(this.getServer(), serverInfo.isLocal(), serverInfo.isSecure());
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new AnswerConnectionManager(this.getServer(), serverInformation);
     }
 }

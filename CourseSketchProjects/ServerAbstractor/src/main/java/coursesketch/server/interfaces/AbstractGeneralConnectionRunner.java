@@ -411,21 +411,16 @@ public abstract class AbstractGeneralConnectionRunner {
     protected abstract void reconnect();
 
     /**
-     * Returns a new instance of a {@link ISocketInitializer}.
+     * Creates and returns a new instance of a {@link ISocketInitializer}.
      *
      * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet
-     *  @param isSecure
-     *            <code>true</code> if the servlet should be secure,
-     *            <code>false</code> otherwise
-     * @param isLocal
-     *            <code>true</code> if the server is running locally,
-     *            <code>false</code> otherwise
-     *@param time
-     * @param local @return a new connection servlet for this server
-     * @param serverInfo
-     * */
-    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
+     * GeneralConnectionServlet.
+     *
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     *
+     * @return  a new instance of a {@link ISocketInitializer}.
+     **/
+    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInformation);
 
     /**
      * Sets the password for the SSL keystore.

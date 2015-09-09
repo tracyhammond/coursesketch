@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -31,14 +32,11 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     *
-     * @param parent  The server that is using this object.
-     * @param isLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param isSecure  True if the connections should be isSecure.
+     *  @param parent  The server that is using this object.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public SubmissionConnectionManager(final AbstractServerWebSocketHandler parent, final boolean isLocal, final boolean isSecure) {
-        super(parent, isLocal, isSecure);
+    public SubmissionConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**

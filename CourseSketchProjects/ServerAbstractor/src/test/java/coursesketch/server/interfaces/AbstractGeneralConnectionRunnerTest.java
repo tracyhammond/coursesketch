@@ -1,10 +1,7 @@
 package coursesketch.server.interfaces;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.mockito.Mockito.*;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -13,6 +10,17 @@ import org.powermock.reflect.Whitebox;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by gigemjt on 10/21/14.
  */
@@ -20,7 +28,7 @@ import java.io.IOException;
 @PrepareForTest(AbstractGeneralConnectionRunner.class)
 public class AbstractGeneralConnectionRunnerTest {
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testSSLIsConfigureIsCalledWhenSecureIsTrue() {
         //createPartialMockAndInvokeDefaultConstructor
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
@@ -31,7 +39,7 @@ public class AbstractGeneralConnectionRunnerTest {
         verify(run, times(1)).configureSSL(anyString(), anyString());
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testSSLIsConfigureIsNOTCalledWhenSecureIsFalse() {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         doCallRealMethod().when(run).start();
@@ -41,7 +49,7 @@ public class AbstractGeneralConnectionRunnerTest {
         verify(run, times(0)).configureSSL(anyString(), anyString());
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void executeLocalEnviromentIsCalledWhenLocalIsTrue() {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         doCallRealMethod().when(run).start();
@@ -51,7 +59,7 @@ public class AbstractGeneralConnectionRunnerTest {
         verify(run, times(1)).executeLocalEnvironment();
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void executeRemoveEnviromentIsCalledWhenLocalIsFalse() {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         doCallRealMethod().when(run).start();
@@ -61,14 +69,14 @@ public class AbstractGeneralConnectionRunnerTest {
         verify(run, times(1)).executeRemoteEnvironment();
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testParseCommandReturnsTrueGivenNoCommand() throws IOException, InterruptedException {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
         assertTrue(run.parseCommand(null, null));
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testExitCommandCalledWithExitValue() throws Exception {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
@@ -79,7 +87,7 @@ public class AbstractGeneralConnectionRunnerTest {
         PowerMockito.verifyPrivate(run).invoke("exitCommand", reader);
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testRestartCommandCalledWithRestartValue() throws Exception {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
@@ -90,7 +98,7 @@ public class AbstractGeneralConnectionRunnerTest {
         PowerMockito.verifyPrivate(run).invoke("restartCommand", reader);
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testReconnectCalledWithReconnectValue() throws Exception {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
@@ -101,7 +109,7 @@ public class AbstractGeneralConnectionRunnerTest {
         verify(run, times(1)).reconnect();
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testStopCommandCalledWithStopValue() throws Exception {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
@@ -113,7 +121,7 @@ public class AbstractGeneralConnectionRunnerTest {
         PowerMockito.verifyPrivate(run).invoke("stopCommand", reader);
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testStartCommandCalledWithStartValue() throws Exception {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
@@ -124,7 +132,7 @@ public class AbstractGeneralConnectionRunnerTest {
         PowerMockito.verifyPrivate(run).invoke("startCommand");
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testToggleLogginCalledWithToggleValue() throws Exception {
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);
         when(run.parseCommand(anyString(), any(BufferedReader.class))).thenCallRealMethod();
@@ -135,7 +143,7 @@ public class AbstractGeneralConnectionRunnerTest {
         PowerMockito.verifyPrivate(run).invoke("toggleLoggingCommand", reader);
     }
 
-    @Test(timeout=1000)
+    @Test(timeout=2000)
     public void testParseUtilityCommandCalledWithUnknownValue() throws Exception {
         String command = "NOKNOWNVALUE";
         AbstractGeneralConnectionRunner run = PowerMockito.mock(AbstractGeneralConnectionRunner.class);

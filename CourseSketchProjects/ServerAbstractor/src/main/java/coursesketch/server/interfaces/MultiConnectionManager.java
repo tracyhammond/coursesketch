@@ -61,22 +61,20 @@ public class MultiConnectionManager {
      * Creates a default {@link MultiConnectionManager}.
      *
      * @param iParent  The server that is using this object.
-     * @param iIsLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param iSecure  True if the connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public MultiConnectionManager(final AbstractServerWebSocketHandler iParent, final boolean iIsLocal, final boolean iSecure) {
+    public MultiConnectionManager(final AbstractServerWebSocketHandler iParent, final ServerInfo serverInfo) {
         this.parent = iParent;
-        this.connectLocally = iIsLocal;
-        this.secure = iSecure;
+        this.connectLocally = serverInfo.isLocal();
+        this.secure = serverInfo.isSecure();
     }
 
     /**
      * Creates a connection given the different information.
      *
-     * @param serv           The server that is connected to this connection manager.
+     * @param server           The server that is connected to this connection manager.
      * @param isLocal        If the connection that is being created is local or remote.
-     * @param remoteAdress   The location to connect to if it is connecting remotely.
+     * @param remoteAddress   The location to connect to if it is connecting remotely.
      * @param port           The port that this connection is created at. (Has to be unique
      *                       to this computer)
      * @param isSecure       True if using SSL false otherwise.
@@ -85,21 +83,21 @@ public class MultiConnectionManager {
      * @return a completed {@link AbstractClientWebSocket}.
      * @throws ConnectionException If a connection has failed to be made.
      */
-    public static AbstractClientWebSocket createConnection(final AbstractServerWebSocketHandler serv, final boolean isLocal,
-            final String remoteAdress,
+    public static AbstractClientWebSocket createConnection(final AbstractServerWebSocketHandler server, final boolean isLocal,
+            final String remoteAddress,
             final int port, final boolean isSecure, final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
-        if (serv == null) {
+        if (server == null) {
             throw new ConnectionException("Can't create connection with a null parent server");
         }
-        if (remoteAdress == null && !isLocal) {
+        if (remoteAddress == null && !isLocal) {
             throw new ConnectionException("Attempting to connect to null address");
         }
 
         final String start = isSecure ? "wss://" : "ws://";
 
-        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port) + SOCKET_PATH;
+        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAddress + ":" + port) + SOCKET_PATH;
         LOG.info("Creating a client connecting to: {}", location);
-        return initializeConnection(location, connectionType, serv);
+        return initializeConnection(location, connectionType, server);
     }
 
     /**
@@ -168,7 +166,7 @@ public class MultiConnectionManager {
      * @param connectionType The class that will be made (should be a subclass of
      *                       ConnectionWrapper)
      * @throws ConnectionException If a connection has failed to be made.
-     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int,
+     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int, boolean
      * Class)
      * @see #addConnection(AbstractClientWebSocket, Class)
      */
