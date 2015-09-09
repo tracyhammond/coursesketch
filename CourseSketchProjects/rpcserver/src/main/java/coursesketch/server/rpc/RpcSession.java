@@ -28,7 +28,7 @@ public final class RpcSession implements SocketSession {
     private final RpcClientChannel session;
 
     /**
-     * The controller for the socket
+     * The controller for the socket.
      */
     private ClientRpcController controller;
 
@@ -41,6 +41,10 @@ public final class RpcSession implements SocketSession {
         session = null;
     }
 
+    /**
+     * Creates a wrapper around the rpcClientChannel.
+     * @param rpcClientChannel {@link RpcClientChannel}.  Used for information about the socket created.
+     */
     public RpcSession(final RpcClientChannel rpcClientChannel) {
         this.session = rpcClientChannel;
     }
@@ -122,16 +126,20 @@ public final class RpcSession implements SocketSession {
     @Override
     public boolean equals(final Object other) {
         if (other instanceof RpcSession) {
-            PeerInfo peerInfo = null;
+            final PeerInfo peerInfo = null;
             return getPeerInfo().equals(((RpcSession) other).getPeerInfo());
         }
         return false;
     }
 
+    /**
+     * @return Information about the connected peer.  (Whats on the other end)
+     */
     private PeerInfo getPeerInfo() {
         if (controller != null) {
             return controller.getRpcClient().getPeerInfo();
-        } if (session != null) {
+        }
+        if (session != null) {
             return session.getPeerInfo();
         }
         return new PeerInfo();

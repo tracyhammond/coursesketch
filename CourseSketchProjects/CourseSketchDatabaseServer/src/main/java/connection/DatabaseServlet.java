@@ -38,9 +38,10 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
+     * @param serverInformation
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(ServerInfo serverInfo) {
-        return new DatabaseConnectionManager(getServer(), serverInfo.isLocal(), serverInfo.isSecure());
+    public final MultiConnectionManager createConnectionManager(ServerInfo serverInformation) {
+        return new DatabaseConnectionManager(getServer(), , serverInformation.isLocal());
     }
 }

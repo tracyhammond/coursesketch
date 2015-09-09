@@ -44,6 +44,7 @@ public final class LoginServlet extends ServerWebSocketInitializer {
      *            <code>true</code> if the connections should be secured,
      *            <code>false</code> otherwise
      *
+     * @param info
      * @return a new connection manager object
      */
     @Override

@@ -44,7 +44,7 @@ import utilities.TimeManager;
     }
 
     /**
-     * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
+     * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
      * @param controller
      * @param request
@@ -59,7 +59,7 @@ import utilities.TimeManager;
     }
 
     /**
-     * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
+     * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
      * Parses the time request and then sends one right back.
      * @param controller

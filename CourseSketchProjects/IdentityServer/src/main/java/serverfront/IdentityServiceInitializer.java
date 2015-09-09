@@ -1,6 +1,5 @@
 package serverfront;
 
-import com.google.protobuf.Service;
 import connection.IdentityConnectionManager;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -41,12 +40,12 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     /**
      * @param secure
      *            True if the connection is using SSL.
-     * @param serverInfo
+     * @param serverInformation
      * @return {@link IdentityConnectionManager}
      */
     @Override
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new IdentityConnectionManager(getServer(), serverInfo.isLocal(), serverInfo.isSecure());
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new IdentityConnectionManager(getServer(), , serverInformation.isLocal());
     }
 
     @Override

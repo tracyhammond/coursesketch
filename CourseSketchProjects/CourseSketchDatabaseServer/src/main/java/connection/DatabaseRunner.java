@@ -49,10 +49,10 @@ public class DatabaseRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      * @param time
      * @param local
-     * @param serverInfo
+     * @param serverInformation
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new DatabaseServlet(serverInfo);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new DatabaseServlet(serverInformation);
     }
 }

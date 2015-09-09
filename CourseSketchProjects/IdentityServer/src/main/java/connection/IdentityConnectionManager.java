@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import serverfront.DefaultWebSocketHandler;
@@ -34,16 +35,12 @@ public final class IdentityConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a manager for the proxy connections.
-     *
-     * @param parent
+     *  @param parent
      *            {@link DefaultWebSocketHandler}
-     * @param connectType
-     *            true if connection is local.
-     * @param secure
-     *            true if all connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public IdentityConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public IdentityConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**

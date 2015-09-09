@@ -49,6 +49,41 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     private static final int ONE_SECOND = 1000;
 
     /**
+     * The code that is used by the Html aggregator.
+     */
+    private static final int TIME_OUT_MILLIS = 10000;
+
+    /**
+     * Size of the send buffer.
+     */
+    private static final int SIZE_OF_SEND_BUFFER = 1048576;
+
+    /**
+     * Size of the receiving buffer.
+     */
+    private static final int SIZE_OF_RCV_BUFFER = 1048576;
+
+    /**
+     * Max number of threads for the client.
+     */
+    private static final int MAX_THREAD_POOL_SIZE = 200;
+
+    /**
+     * core number of threads for the client.
+     */
+    private static final int CORE_THREAD_POOL_SIZE = 3;
+
+    /**
+     * number of workers.
+     */
+    private static final int NUMBER_EVENT_WORKERS = 16;
+
+    /**
+     * The max number of threads for the timeout executor.
+     */
+    private static final int MAX_TIMEOUT_POOL_SIZE = 5;
+
+    /**
      * Context for SSL to take place.
      */
     private SslContext sslCtx;
@@ -58,20 +93,46 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     private ServerBootstrap server;
 
+    /**
+     * A factory used to set details about the connection.
+     *
+     * Also allows for duplex connections (both ways).
+     */
     private DuplexTcpServerPipelineFactory serverFactory;
 
+    /**
+     * Contains information about the server, mainly the hostname and the port.
+     */
     private PeerInfo serverInfo;
 
+    /**
+     * This is the boss event loop group.
+     */
     private NioEventLoopGroup boss;
 
+    /**
+     * This is the worker event loop group.
+     */
     private NioEventLoopGroup workers;
 
+    /**
+     * Handles thread management for the Rpc Class.
+     */
     private RpcServerCallExecutor executor;
 
+    /**
+     * Handles thread management for the timeout of calls.
+     */
     private RpcTimeoutExecutor timeoutExecutor;
 
+    /**
+     * Checks to see if a call is timing out.
+     */
     private RpcTimeoutChecker timeoutChecker;
 
+    /**
+     * Logs rpc events locally.
+     */
     private RpcConnectionEventNotifier localRpcEventLogger;
 
     /**
@@ -110,6 +171,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Called to setup the system if it is being run on a local computer with a local host.
      */
     @Override
+    @SuppressWarnings("checkstyle:designforextension")
     protected void executeLocalEnvironment() {
         localRpcEventLogger = LocalRpcEventLoggerFactory.createLocalEventLogger(LOG);
     }
@@ -118,6 +180,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Called to setup the system for if it is being run to connect to remote computers.
      */
     @Override
+    @SuppressWarnings("checkstyle:designforextension")
     protected void executeRemoteEnvironment() {
 
     }
@@ -128,9 +191,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     @Override
     protected final void createServer() {
         final InetSocketAddress remoteAddress = new InetSocketAddress(this.getHostName(), this.getPort());
-        serverInfo = new PeerInfo("127.0.0.1", this.getPort());
+        serverInfo = new PeerInfo(this.getHostName(), this.getPort());
 
-        executor = new ThreadPoolCallExecutor(3, 200);
+        executor = new ThreadPoolCallExecutor(CORE_THREAD_POOL_SIZE, MAX_THREAD_POOL_SIZE);
 
         serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
         serverFactory.setRpcServerCallExecutor(executor);
@@ -170,23 +233,23 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     protected final void addConnections() {
         ((ServerWebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslCtx);
 
-        boss = new NioEventLoopGroup(2,new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory()));
-        workers = new NioEventLoopGroup(16,new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory()));
+        boss = new NioEventLoopGroup(2, new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory()));
+        workers = new NioEventLoopGroup(NUMBER_EVENT_WORKERS, new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory()));
         server.group(boss, workers);
         server.channel(NioServerSocketChannel.class);
         server.handler(new LoggingHandler(LogLevel.INFO));
 
         // TCP/IP settings
-        server.option(ChannelOption.SO_SNDBUF, 1048576);
-        server.option(ChannelOption.SO_RCVBUF, 1048576);
-        server.childOption(ChannelOption.SO_RCVBUF, 1048576);
-        server.childOption(ChannelOption.SO_SNDBUF, 1048576);
+        server.option(ChannelOption.SO_SNDBUF, SIZE_OF_SEND_BUFFER);
+        server.option(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
+        server.childOption(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
+        server.childOption(ChannelOption.SO_SNDBUF, SIZE_OF_SEND_BUFFER);
         server.option(ChannelOption.TCP_NODELAY, true);
 
         final ServerWebSocketInitializer socketInitializer = (ServerWebSocketInitializer) this.getSocketInitailizerInstance();
         socketInitializer.initChannel(serverFactory);
 
-        timeoutExecutor = new TimeoutExecutor(1,5);
+        timeoutExecutor = new TimeoutExecutor(1, MAX_TIMEOUT_POOL_SIZE);
         timeoutChecker = new TimeoutChecker();
         timeoutChecker.setTimeoutExecutor(timeoutExecutor);
         timeoutChecker.startChecking(serverFactory.getRpcClientRegistry());
@@ -209,7 +272,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             @Override
             @SuppressWarnings({ "PMD.CommentRequired", "PMD.AvoidCatchingGenericException" })
             public void run() {
-                CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
+                final CleanShutdownHandler shutdownHandler = new CleanShutdownHandler();
                 shutdownHandler.addResource(boss);
                 shutdownHandler.addResource(workers);
                 shutdownHandler.addResource(executor);
@@ -271,22 +334,15 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * <p/>
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
-     *  @param timeOut
-     *         length of specified timeout, in miliseconds
-     * @param isSecure
-     *         <code>true</code> if the servlet should be secure,
-     *         <code>false</code> otherwise
-     * @param isLocal
- *         <code>true</code> if the server is running locally,
- *         <code>false</code> otherwise
-     * @param time
-     * @param local @return a new connection servlet for this server
-     * @param serverInfo
+     *
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     *
+     * @return  a new instance of a {@link ISocketInitializer}.
      * */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new ServerWebSocketInitializer(serverInfo);
+    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new ServerWebSocketInitializer(serverInformation);
     }
 
     /**

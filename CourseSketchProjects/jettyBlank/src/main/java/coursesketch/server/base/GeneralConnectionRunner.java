@@ -203,25 +203,24 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      *
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
-     *  @param timeOut
+     * @param timeOut
      *            length of specified timeout, in miliseconds
      * @param isSecure
      *            <code>true</code> if the servlet should be secure,
      *            <code>false</code> otherwise
      * @param isLocal
- *            <code>true</code> if the server is running locally,
- *            <code>false</code> otherwise
- *@param time
+*            <code>true</code> if the server is running locally,
+     * @param time
      * @param local @return a new connection servlet for this server
-     * @param serverInfo
+     * @param serverInformation
      * */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        if (!serverInfo.isSecure() && isProduction()) {
+    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        if (!serverInformation.isSecure() && isProduction()) {
             LOG.info("Running an insecure server");
         }
-        return new ServerWebSocketInitializer(serverInfo);
+        return new ServerWebSocketInitializer(serverInformation);
     }
 
     /**

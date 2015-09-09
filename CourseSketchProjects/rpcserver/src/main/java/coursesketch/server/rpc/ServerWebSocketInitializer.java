@@ -1,6 +1,5 @@
 package coursesketch.server.rpc;
 
-import com.google.protobuf.Service;
 import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
@@ -46,20 +45,18 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      * The wrapper for the server socket.
      */
     private ServerSocketWrapper singleWrapper;
+    /**
+     * {@link ServerInfo} Contains all of the information about the server.
+     */
     private final ServerInfo serverInfo;
 
     /**
      * Creates a GeneralConnectionServlet.
      *
-     * @param iTimeoutTime
-     *         The time it takes before a connection times out.
-     * @param iSecure
-     *         True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *         True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(ServerInfo serverInfo) {
+    public ServerWebSocketInitializer(final ServerInfo serverInfo) {
         LOG.info("Currently time out time is not used " + serverInfo.getTimeOut());
         this.serverInfo = serverInfo;
         connectionServer = createServerSocket();
@@ -102,13 +99,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     /**
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     *
-     * @param serverInfo@return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}.
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new MultiConnectionManager(connectionServer, serverInfo.isLocal(), serverInfo.isSecure());
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new MultiConnectionManager(connectionServer, serverInformation);
     }
 
     /**
@@ -125,7 +122,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     /**
      * @return {@link ServerInfo} contains all of the data about the server.
      */
-    @Override public ServerInfo getServerInfo() {
+    @Override public final ServerInfo getServerInfo() {
         return serverInfo;
     }
 
@@ -159,12 +156,16 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         return connectionServer;
     }
 
+    /**
+     * Initializes the channel with the server factory adding the services to the factory.
+     * @param serverFactory the server that the services are being added to.
+     */
     public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
-        List<CourseSketchRpcService> services = getRpcServices();
+        final List<CourseSketchRpcService> services = getRpcServices();
         if (services == null) {
             throw new NullPointerException("getRpcServices can not return null");
         }
-        ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
+        final ServerSocketWrapper wrapper = new ServerSocketWrapper(createServerSocket(), getServerInfo().isSecure());
         services.add(wrapper);
         for (CourseSketchRpcService service: services) {
             service.setSocketInitializer(this);
@@ -173,7 +174,10 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         serverFactory.registerConnectionEventListener(wrapper);
     }
 
-    protected List<CourseSketchRpcService> getRpcServices() {
+    /**
+     * @return The list of rpc services that are run by the server.
+     */
+    protected final List<CourseSketchRpcService> getRpcServices() {
         return new ArrayList<CourseSketchRpcService>();
     }
 }

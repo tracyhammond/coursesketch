@@ -43,10 +43,10 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
      *
      * <br>
      * We do not need to manage multiple connections so we might as well just make it return null.
-     * @param serverInfo
+     * @param serverInformation
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new SubmissionConnectionManager(this.getServer(), serverInfo.isLocal(), serverInfo.isSecure());
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new SubmissionConnectionManager(this.getServer(), , serverInformation.isLocal());
     }
 }

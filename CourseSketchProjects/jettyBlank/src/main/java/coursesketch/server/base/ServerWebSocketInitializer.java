@@ -44,16 +44,18 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      * connections.
      */
     private final MultiConnectionManager manager;
+
+    /**
+     * {@link ServerInfo} Contains all of the information about the server.
+     */
     private final ServerInfo serverInfo;
 
     /**
      * Creates a GeneralConnectionServlet.
-     * @param iTimeoutTime The time it takes before a connection times out.
-     * @param iSecure True if the connection is allowing SSL connections.
-     * @param connectLocally True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(ServerInfo serverInfo) {
+    public ServerWebSocketInitializer(final ServerInfo serverInfo) {
         this.serverInfo = serverInfo;
         LOG.info("Creating a new connectionServer");
         connectionServer = createServerSocket();
@@ -140,7 +142,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * @return {@link ServerInfo} contains all of the data about the server.
      */
-    @Override public ServerInfo getServerInfo() {
+    @Override public final ServerInfo getServerInfo() {
         return this.serverInfo;
     }
 
@@ -148,11 +150,12 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      * Override this method to create a subclass of the MultiConnectionManager.
      *
      *
-     * @param serverInfo @return An instance of the {@link MultiConnectionManager}
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return An instance of the {@link MultiConnectionManager}.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return new MultiConnectionManager(connectionServer, this.serverInfo.isLocal(), this.serverInfo.isSecure());
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new MultiConnectionManager(connectionServer, serverInformation);
     }
 
     /**

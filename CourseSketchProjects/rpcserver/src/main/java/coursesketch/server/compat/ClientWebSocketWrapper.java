@@ -26,6 +26,11 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      */
     private final ClientWebSocket socketHandler;
 
+    /**
+     * The client rpc channel.
+     *
+     * This is the connection to the server and contains methods used to manage that conneciton
+     */
     private final RpcClientChannel channel;
 
     /**
@@ -36,15 +41,15 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * @param clientWebSocket
      *         The object that handles the actual socket communication.
      */
-    public ClientWebSocketWrapper(final RpcClientChannel channel, final ClientWebSocket clientWebSocket) {
+    ClientWebSocketWrapper(final RpcClientChannel channel, final ClientWebSocket clientWebSocket) {
         this.channel = channel;
         socketHandler = clientWebSocket;
     }
 
     /**
-     * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
+     * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
-     * @param controller
+     * @param controller The
      * @param request
      * @param done
      */
@@ -53,7 +58,7 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
     }
 
     /**
-     * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>
+     * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
      * @param controller
      * @param request

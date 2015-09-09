@@ -57,10 +57,10 @@ public class LoginRunner extends GeneralConnectionRunner {
      * {@inheritDoc}
      * @param time
      * @param local
-     * @param serverInfo
+     * @param serverInformation
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new LoginServlet(serverInfo);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new LoginServlet(serverInformation);
     }
 }
