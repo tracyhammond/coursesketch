@@ -1,10 +1,8 @@
 package serverfront;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.ServiceException;
 import connection.AnswerClientWebSocket;
 import connection.DataClientWebSocket;
-import connection.IdentityClientWebSocket;
 import connection.LoginClientWebSocket;
 import connection.LoginConnectionState;
 import connection.ProxyConnectionManager;
@@ -18,7 +16,6 @@ import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
@@ -93,23 +90,6 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                     getConnectionManager().send(TimeManager.serverSendTimeToClient(), null, AnswerClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
-                }
-
-                try {
-                    final IdentityClientWebSocket socket = (IdentityClientWebSocket)
-                            getConnectionManager().getBestConnection(IdentityClientWebSocket.class);
-                    final Message.RequestService.BlockingInterface timeService = Message.RequestService.newBlockingStub(socket.getRpcChannel());
-
-                    LOG.info("Sending Time Request to Identity \n{}", TimeManager.serverSendTimeToClient());
-                    final Request resp = timeService.sendTimeRequest(socket.getNewRpcController(), TimeManager.serverSendTimeToClient());
-                    LOG.info("Timer Service Response \n{}", resp);
-                    final Request nextRequest = TimeManager.decodeRequest(resp);
-                    LOG.info("OUR Response \n{}", nextRequest);
-                    final Request nullRequest =  timeService.sendTimeRequest(socket.getNewRpcController(), nextRequest);
-                    LOG.info("Should Be Null \n{}", nullRequest);
-
-                } catch (ServiceException e) {
-                    e.printStackTrace();
                 }
 
                 final Set<SocketSession> conns = getConnectionToId().keySet();
