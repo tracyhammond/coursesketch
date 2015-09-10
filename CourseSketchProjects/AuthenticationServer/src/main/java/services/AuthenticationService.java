@@ -21,7 +21,7 @@ import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
 /**
  * Created by gigemjt on 9/3/15.
  */
-public class AuthenticationService extends Authentication.AuthenticationService implements CourseSketchRpcService {
+public final class AuthenticationService extends Authentication.AuthenticationService implements CourseSketchRpcService {
 
     private ISocketInitializer socketInitializer;
 
@@ -59,7 +59,7 @@ public class AuthenticationService extends Authentication.AuthenticationService 
         }
     }
 
-    private Authentication.AuthResponse checkAuthentication(Authentication.AuthRequest request) throws AuthenticationException {
+    private Authentication.AuthResponse checkAuthentication(final Authentication.AuthRequest request) throws AuthenticationException {
         if (!Authenticator.validRequest(request.getAuthParams())) {
             throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
         }
