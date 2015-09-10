@@ -82,7 +82,7 @@ public final class LectureManager {
         final DBCollection newUser = dbs.getCollection(LECTURE_COLLECTION);
 
         // make sure person is mod or admin for the assignment
-        Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+        final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator

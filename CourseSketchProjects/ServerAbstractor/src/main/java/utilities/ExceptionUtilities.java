@@ -78,12 +78,18 @@ public final class ExceptionUtilities {
     }
 
     /**
-     * Holds an exception (in the case that one is needed
+     * Holds an exception for multi threaded applications that need to pass up exceptions.
      */
     public static final class ExceptionHolder {
+        /**
+         * The exception that is being passed up.
+         */
         public Exception exception;
     }
 
+    /**
+     * @return A new instance of an {@link ExceptionHolder}.
+     */
     public static ExceptionHolder getExceptionHolder() {
         return new ExceptionHolder();
     }

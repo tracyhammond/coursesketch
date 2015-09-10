@@ -62,7 +62,7 @@ public final class GroupManager {
         final DBObject corsor = courses.findOne(query);
 
         final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
-        boolean isAdmin = true;
+        final boolean isAdmin = true;
         if (!isAdmin) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
@@ -94,7 +94,7 @@ public final class GroupManager {
         final DBObject corsor = courses.findOne(query);
 
         final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
-        boolean isAdmin = true;
+        final boolean isAdmin = true;
         // isAdmin = authenticator.checkAuthentication(userId, adminList);
 
         if (!isAdmin) {

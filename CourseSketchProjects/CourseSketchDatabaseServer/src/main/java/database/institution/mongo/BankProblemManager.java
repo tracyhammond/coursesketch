@@ -112,11 +112,15 @@ public final class BankProblemManager {
      * @return the SrlBank problem data if it past all tests.
      * @throws AuthenticationException
      *         thrown if the user does not have access to the permissions.
+     * @throws DatabaseAccessException thrown if there is a problem finding the bank problem in the database.
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, createId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
+        if (mongoBankProblem == null) {
+            throw new DatabaseAccessException("bank problem can not be found with id " + problemBankId);
+        }
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)

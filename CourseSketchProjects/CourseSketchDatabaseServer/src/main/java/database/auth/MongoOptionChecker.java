@@ -4,9 +4,10 @@ import database.DatabaseAccessException;
 import protobuf.srl.school.School;
 
 /**
+ * Checks different data for
  * Created by gigemjt on 9/4/15.
  */
-public class MongoOptionChecker implements AuthenticationOptionChecker {
+public final class MongoOptionChecker implements AuthenticationOptionChecker {
 
     @Override public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime) {
         return false;
