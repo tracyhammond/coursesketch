@@ -31,6 +31,9 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseServerWebSocketHandler.class);
 
+    /**
+     * Used to authenticate users in the server.
+     */
     private Authenticator auth;
 
     /**
@@ -59,7 +62,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
         if (auth == null) {
             getAuthInstance();
         }
-        Institution instance = MongoInstitution.getInstance(auth);
+        final Institution instance = MongoInstitution.getInstance(auth);
         if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
             DataRequestHandler.handleRequest(req, conn, instance, super.getConnectionToId().get(conn).getKey(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {

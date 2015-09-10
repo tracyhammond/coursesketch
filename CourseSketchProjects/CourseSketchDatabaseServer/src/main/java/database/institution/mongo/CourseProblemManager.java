@@ -182,7 +182,7 @@ public final class CourseProblemManager {
                     (String) exactProblem.getCourseId());
         } catch (DatabaseAccessException e) {
             // only a student can't view a problem with no problem info.
-            // TODO: check to see if this is the best option!
+            // FUTURE: check to see if this is the best option!
             if (!responder.hasModeratorPermission() && assignmentResponder.isItemPublished()) {
                 throw new DatabaseAccessException(e, false);
             }
@@ -204,6 +204,11 @@ public final class CourseProblemManager {
 
     }
 
+    /**
+     * Extracts the problem data from the {@link DBObject} into the {@link SrlProblem}.
+     * @param problem The problem that is being filled with the data.
+     * @param dbProblem Contains the data from the database.
+     */
     private static void extractProblemData(final SrlProblem.Builder problem, final DBObject dbProblem) {
         problem.setCourseId((String) dbProblem.get(COURSE_ID));
         problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));

@@ -75,10 +75,10 @@ public final class DataRequestHandler {
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
-     * @param instance
+     * @param instance The database backer.
      * @param sessionId
 *         the id of this particular session which is used if another server is talked to.
-     * @param internalConnections
+     * @param internalConnections Connections to other clients.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount",

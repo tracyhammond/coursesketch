@@ -4,7 +4,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,11 +64,11 @@ public final class DataInsertHandler {
      *
      * decode request and pull correct information from {@link Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     * @param auth
      * @param req
      *         The request that has data being inserted.
      * @param conn
-     * @param instance
+     *         The connection where the result is sent to.
+     * @param instance The database backer.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })

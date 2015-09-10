@@ -9,6 +9,8 @@ import protobuf.srl.utils.Util.DateTime;
 import utilities.ExceptionUtilities;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,6 +30,11 @@ public final class Authenticator {
     private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
 
     /**
+     * Manages the execution of threads.
+     */
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(100);
+
+    /**
      * An implementation of the {@link AuthenticationDataCreator}.
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
@@ -40,7 +47,7 @@ public final class Authenticator {
 
     /**
      * @param authenticationChecker Checks if the user is in the system with their authenticationId.
-     *                              @param optionChecker
+     * @param optionChecker Checks data that does not require a userId.  Instead it grabs data about the course.
      */
     public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationOptionChecker optionChecker) {
         checker = checkNotNull(authenticationChecker, "authenticationChecker");
@@ -68,31 +75,34 @@ public final class Authenticator {
     }
 
     /**
+     * @param authType The parameters used for an authentication check.
      * @return True if one of the values in AuthType is true.
      */
-    public static boolean validRequest(Authentication.AuthType authType) {
+    public static boolean validRequest(final Authentication.AuthType authType) {
         return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
                 || authType.getCheckDate() || authType.getCheckingPeerTeacher() || authType.getCheckAccess()
                 || authType.getCheckIsPublished() || authType.getCheckIsRegistrationRequired();
     }
 
     /**
-     * @return True if one of the values in AuthType is true. (Excluded is dateChecking)
+     * @param authType The parameters used for an authentication check.
+     * @return True if one of the values in AuthType is true.
+     *          Excluded is anything that the {@link AuthenticationOptionChecker} looks at.
      */
-    public static boolean validAccessRequest(Authentication.AuthType authType) {
+    public static boolean validUserAccessRequest(final Authentication.AuthType authType) {
         return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
                 || authType.getCheckingPeerTeacher() || authType.getCheckAccess();
     }
 
     /**
-     *
-     * @param collectionType
-     * @param itemId
-     * @param userId
-     * @param checkTime
-     * @param checkType
-     * @return
-     * @throws AuthenticationException
+     * Creates an {@link AuthenticationResponder} when checking authentication.
+     * @param collectionType The type of item it is. Ex: A course or an assignment
+     * @param itemId The id for the item that the authentication is being checked.
+     * @param userId The user who wants to authenticate.
+     * @param checkTime The time that the user wants access to the item.
+     * @param checkType The type of checks that are wanted to be returned.
+     * @return An {@link AuthenticationResponder} that contains the information about the authentication response.
+     * @throws AuthenticationException Thrown if there are problems creating the {@link AuthenticationResponder}.
      */
     public AuthenticationResponder checkAuthentication(final School.ItemType collectionType, final String itemId,
             final String userId, final long checkTime, final Authentication.AuthType checkType) throws AuthenticationException {
@@ -111,8 +121,8 @@ public final class Authenticator {
 
         final ExceptionUtilities.ExceptionHolder checkerException = ExceptionUtilities.getExceptionHolder();
         // Auth checking checking
-        if (validAccessRequest(checkType)) {
-            new Thread() {
+        if (validUserAccessRequest(checkType)) {
+            EXECUTOR_SERVICE.execute(new Runnable() {
                 public void run() {
                     try {
                         final Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
@@ -129,7 +139,7 @@ public final class Authenticator {
                     checkLatch.countDown();
                     totalLatch.countDown();
                 }
-            }.start();
+            });
         } else {
             checkLatch.countDown();
             totalLatch.countDown();
@@ -138,7 +148,7 @@ public final class Authenticator {
         final ExceptionUtilities.ExceptionHolder optionCheckerException = ExceptionUtilities.getExceptionHolder();
         // Date checking
         if (checkType.getCheckDate() || checkType.getCheckAccess() || checkType.getCheckIsPublished() || checkType.getCheckIsRegistrationRequired()) {
-            new Thread() {
+            EXECUTOR_SERVICE.execute(new Runnable() {
                 public void run() {
                     boolean validDate = false;
                     try {
@@ -174,7 +184,7 @@ public final class Authenticator {
                     }
                     totalLatch.countDown();
                 }
-            }.start();
+            });
         } else {
             // this is one of the two
             totalLatch.countDown();
@@ -188,8 +198,8 @@ public final class Authenticator {
 
         if (checkType.getCheckingAdmin() || checkType.getCheckingMod() || checkType.getCheckingPeerTeacher() || checkType.getCheckingUser()
                 || checkType.getCheckAccess()) {
-            authBuilder.setHasAccess(authBuilder.getHasAccess() ||
-                    authBuilder.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE);
+            authBuilder.setHasAccess(authBuilder.getHasAccess()
+                    || authBuilder.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE);
         }
 
         // hasAccess will be true if they have a permission level that is not above
