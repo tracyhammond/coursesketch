@@ -15,7 +15,6 @@
 		<module>CourseSketchProjects/jettyBlank</module>
 		<module>CourseSketchProjects/nettyBlank</module>
 		<module>CourseSketchProjects/rpcserver</module>
-		<module>CourseSketchProjects/AuthenticationServer</module>
 		<module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
 		<module>CourseSketchProjects/CourseSketchProxyServer</module>
