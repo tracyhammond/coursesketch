@@ -32,10 +32,15 @@ public final class Authenticator {
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
     private final AuthenticationChecker checker;
+
+    /**
+     * Checks for other details relevent to authentication that do not require a userId to check.
+     */
     private final AuthenticationOptionChecker optionChecker;
 
     /**
-     * @param authenticationChecker Implements where the data actually comes from.
+     * @param authenticationChecker Checks if the user is in the system with their authenticationId.
+     *                              @param optionChecker
      */
     public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationOptionChecker optionChecker) {
         checker = checkNotNull(authenticationChecker, "authenticationChecker");

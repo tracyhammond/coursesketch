@@ -2,9 +2,7 @@ package coursesketch.auth;
 
 import com.google.protobuf.ServiceException;
 import coursesketch.server.compat.ClientWebSocket;
-import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import database.DatabaseAccessException;
 import database.auth.AuthenticationChecker;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
@@ -14,22 +12,28 @@ import protobuf.srl.services.authentication.Authentication;
 import java.net.URI;
 
 /**
+ * A Websocket that connects to the Authentication server and abstracts the RPC method of sending request to the authentication server.
+ *
+ * This is also a valid {@link AuthenticationChecker} that can be passed to an authentication system.
+ *
  * Created by gigemjt on 9/4/15.
  */
 public class AuthenticationWebSocketClient extends ClientWebSocket implements AuthenticationChecker {
 
+    /**
+     * The blocker service that is used to communicate.
+     */
     private Authentication.AuthenticationService.BlockingInterface authService;
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
      * <p/>
      * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link AbstractClientWebSocket#connect()} or call
-     * {@link AbstractClientWebSocket#send(ByteBuffer)}.
+     * either explicitly call {@link coursesketch.server.interfaces.AbstractClientWebSocket#connect()}.
      *
      * @param iDestination
      *         The location the server is going as a URI. ex:
      *         http://example.com:1234
-     * @param iParentServer
+     * @param iParentServer The server that created the websocket.
      */
     protected AuthenticationWebSocketClient(final URI iDestination,
             final AbstractServerWebSocketHandler iParentServer) {
@@ -49,10 +53,9 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
      * @param checkType
      *         The rules at that give a correct or false response.
      * @return True if all checked values are valid
-     * @throws DatabaseAccessException
      *         thrown if there are issues grabbing data for the authenticator.
      */
-    @Override public Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId,
+    @Override public final Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId,
             final String userId, final Authentication.AuthType checkType) throws AuthenticationException {
         if (!Authenticator.validRequest(checkType)) {
             throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
