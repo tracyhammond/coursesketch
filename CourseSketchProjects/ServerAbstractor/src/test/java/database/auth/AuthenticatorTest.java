@@ -247,7 +247,7 @@ public class AuthenticatorTest {
     }
 
     @Test(expected = AuthenticationException.class)
-    public void authenticatorThrowsWhenOptionCheckThrowsDBExcep() throws Exception {
+    public void authenticatorThrowsWhenOptionCheckThrowsDBException() throws Exception {
         when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
                 .thenThrow(DatabaseAccessException.class);
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
