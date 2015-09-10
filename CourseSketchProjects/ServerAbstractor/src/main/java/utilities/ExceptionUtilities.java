@@ -84,6 +84,7 @@ public final class ExceptionUtilities {
         /**
          * The exception that is being passed up.
          */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public Exception exception;
     }
 
