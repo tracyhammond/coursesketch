@@ -25,8 +25,8 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlGroup;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
@@ -106,8 +106,8 @@ public final class MongoInstitution implements Institution {
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
-     * @param fakeDB
-     * @param authenticator
+     * @param fakeDB The fake database.
+     * @param authenticator What is used to authenticate access to the different resources.
      */
     public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator) {
         if (testOnly && fakeDB != null) {
@@ -137,7 +137,7 @@ public final class MongoInstitution implements Institution {
      * @return An instance of the mongo client. Creates it if it does not exist.
      *
      * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
-     * @param authenticator
+     * @param authenticator What is used to authenticate access to the different resources.
      */
     @SuppressWarnings("checkstyle:innerassignment")
     public static MongoInstitution getInstance(final Authenticator authenticator) {
@@ -179,8 +179,8 @@ public final class MongoInstitution implements Institution {
         final ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
         for (int index = 0; index < problemID.size(); index++) {
             try {
-                allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance(null).auth, getInstance(null).database, problemID.get(index), userId,
-                        currentTime));
+                allCourses.add(CourseProblemManager.mongoGetCourseProblem(
+                        getInstance(null).auth, getInstance(null).database, problemID.get(index), userId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -202,8 +202,8 @@ public final class MongoInstitution implements Institution {
         final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
         for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
-                allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance(null).auth, getInstance(null).database, assignmentID.get(assignments),
-                        userId, currentTime));
+                allAssignments.add(AssignmentManager.mongoGetAssignment(
+                        getInstance(null).auth, getInstance(null).database, assignmentID.get(assignments), userId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -271,7 +271,8 @@ public final class MongoInstitution implements Institution {
             throws AuthenticationException, DatabaseAccessException {
         final ArrayList<SrlBankProblem> allProblems = new ArrayList<>();
         for (int problem = problemID.size() - 1; problem >= 0; problem--) {
-            allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance(null).auth, getInstance(null).database, problemID.get(problem), userId));
+            allProblems.add(BankProblemManager.mongoGetBankProblem(
+                    getInstance(null).auth, getInstance(null).database, problemID.get(problem), userId));
         }
         return allProblems;
     }
