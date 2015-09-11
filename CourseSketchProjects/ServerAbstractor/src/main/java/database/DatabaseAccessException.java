@@ -10,7 +10,7 @@ public class DatabaseAccessException extends Exception {
     /**
      * True if the exception is recoverable.
      */
-    private boolean recoverable = false;
+    private boolean recoverable;
 
     /**
      * Accepts a message and if it is recoverable error.

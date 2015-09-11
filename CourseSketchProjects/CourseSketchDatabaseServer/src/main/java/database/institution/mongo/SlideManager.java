@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ELEMENT_LIST;
-import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.LECTURE_ID;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
@@ -185,8 +184,6 @@ public final class SlideManager {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
 
-        // states
-        final School.State.Builder stateBuilder = School.State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
         if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
@@ -230,10 +227,6 @@ public final class SlideManager {
         final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(lectureSlideId));
         final DBObject corsor = myDbRef.fetch();
         final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
-
-        final DBRef parentLecture = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureSlide.getLectureId()));
-        final DBObject lectureCursor = parentLecture.fetch();
-
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)

@@ -130,7 +130,7 @@ public final class MongoInstitution implements Institution {
             }
         }
         instance = this;
-        instance.auth = auth;
+        instance.auth = authenticator;
     }
 
     /**
