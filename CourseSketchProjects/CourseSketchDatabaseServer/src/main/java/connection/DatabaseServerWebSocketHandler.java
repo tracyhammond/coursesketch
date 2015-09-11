@@ -9,6 +9,7 @@ import database.auth.Authenticator;
 import database.auth.MongoOptionChecker;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
 import handlers.DataUpdateHandler;
@@ -59,10 +60,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     public final void onMessage(final SocketSession conn, final Request req) {
-        if (auth == null) {
-            getAuthInstance();
-        }
-        final Institution instance = MongoInstitution.getInstance(auth);
+        final Institution instance = MongoInstitution.getInstance(getAuthInstance());
         if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
             DataRequestHandler.handleRequest(req, conn, instance, super.getConnectionToId().get(conn).getKey(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
@@ -84,6 +82,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      */
     @SuppressWarnings("checkstyle:innerassignment")
+    @SuppressFBWarnings("NP_LOAD_OF_KNOWN_NULL_VALUE")
     private Authenticator getAuthInstance() {
         Authenticator result = auth;
         if (result == null) {

@@ -319,11 +319,9 @@ public final class CourseProblemManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection problems = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
-        /*
-        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+        final BasicDBObject updateQuery = new BasicDBObject(); //MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: ", updateQuery);
         problems.update(corsor, updateQuery);
-        */
     }
 }
