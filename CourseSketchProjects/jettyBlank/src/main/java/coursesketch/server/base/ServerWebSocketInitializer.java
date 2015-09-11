@@ -3,6 +3,7 @@ package coursesketch.server.base;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -45,29 +46,21 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     private final MultiConnectionManager manager;
 
     /**
-     * The amount of time it takes before a connection times out.
+     * {@link ServerInfo} Contains all of the information about the server.
      */
-    private final long timeoutTime;
-
-    /**
-     * True if the server is allowing secure connections.
-     */
-    private final boolean secure;
+    private final ServerInfo serverInfo;
 
     /**
      * Creates a GeneralConnectionServlet.
-     * @param iTimeoutTime The time it takes before a connection times out.
-     * @param iSecure True if the connection is allowing SSL connections.
-     * @param connectLocally True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(final long iTimeoutTime, final boolean iSecure, final boolean connectLocally) {
-        this.timeoutTime = iTimeoutTime;
-        this.secure = iSecure;
+    public ServerWebSocketInitializer(final ServerInfo serverInfo) {
+        this.serverInfo = serverInfo;
         LOG.info("Creating a new connectionServer");
         connectionServer = createServerSocket();
         LOG.info("Creating a new connectionManager");
-        manager = createConnectionManager(connectLocally, secure);
+        manager = createConnectionManager(getServerInfo());
     }
 
     /**
@@ -80,9 +73,9 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         LOG.info("Configuring servlet");
         factory.getPolicy().setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
         factory.getPolicy().setMaxBinaryMessageSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
-        if (timeoutTime > 0) {
-            LOG.info("Adding a timeout to the socket: {}", timeoutTime);
-            factory.getPolicy().setIdleTimeout(timeoutTime);
+        if (serverInfo.getTimeOut() > 0) {
+            LOG.info("Adding a timeout to the socket: {}", serverInfo.getTimeOut());
+            factory.getPolicy().setIdleTimeout(serverInfo.getTimeOut());
         }
         factory.setCreator(new SocketCreator());
     }
@@ -114,7 +107,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         @Override
         public final Object createWebSocket(final ServletUpgradeRequest req, final ServletUpgradeResponse resp) {
             LOG.info("Recieved Upgrade request");
-            if (secure && !req.isSecure()) {
+            if (serverInfo.isSecure() && !req.isSecure()) {
                 LOG.info("Refusing an insecure connection");
                 return null;
             }
@@ -143,19 +136,26 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     @SuppressWarnings("checkstyle:designforextension")
     public AbstractServerWebSocketHandler createServerSocket() {
-        return new ServerWebSocketHandler(this);
+        return new ServerWebSocketHandler(this, this.getServerInfo());
+    }
+
+    /**
+     * @return {@link ServerInfo} contains all of the data about the server.
+     */
+    @Override public final ServerInfo getServerInfo() {
+        return this.serverInfo;
     }
 
     /**
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
-     * @param iSecure True if the connection is using SSL.
-     * @return An instance of the {@link MultiConnectionManager}
+     *
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return An instance of the {@link MultiConnectionManager}.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure) {
-        return new MultiConnectionManager(connectionServer, connectLocally, iSecure);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new MultiConnectionManager(connectionServer, serverInformation);
     }
 
     /**

@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import utilities.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +31,10 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     /**
      * A constructor for the multi connection manager.
      * @param parent The parent server
-     * @param connectType If the connection is local or if it is remote
-     * @param secure If ssl should be used.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**

@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseClient;
 
 /**
@@ -46,9 +47,10 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
+     * @param serverInformation
      */
     @Override
-    public ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new SubmissionServlet(time, secure, local);
+    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new SubmissionServlet(serverInformation);
     }
 }

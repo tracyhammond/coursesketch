@@ -2,6 +2,7 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,15 +12,14 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import javax.net.ssl.SSLException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -101,7 +101,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Called to setup the system for if it is being run to connect to remote compters.
      */
     @Override
-    protected void executeRemoveEnvironment() {
+    protected void executeRemoteEnvironment() {
 
     }
 
@@ -222,25 +222,18 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a new instance of a {@link coursesketch.server.interfaces.ISocketInitializer}.
+     * Returns a new instance of a {@link ServerWebSocketInitializer}.
      * <p/>
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
      *
-     * @param timeOut
-     *         length of specified timeout, in miliseconds
-     * @param isSecure
-     *         <code>true</code> if the servlet should be secure,
-     *         <code>false</code> otherwise
-     * @param isLocal
-     *         <code>true</code> if the server is running locally,
-     *         <code>false</code> otherwise
-     * @return a new connection servlet for this server
-     */
+     * @return  a new instance of a {@link ServerWebSocketInitializer}.
+     **/
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
+    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
+        return new ServerWebSocketInitializer(serverInformation);
     }
 
     /**

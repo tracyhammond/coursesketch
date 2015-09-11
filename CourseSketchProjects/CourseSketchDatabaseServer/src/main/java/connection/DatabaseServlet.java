@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * A database specific servlet that creates a new Database server and Database
@@ -16,15 +17,10 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
     /**
      * Constructor for DatabaseServlet.
      *
-     * @param timeoutTime
-     *            The time before a stale connection times out.
-     * @param secure
-     *            True if the connection should use SSL
-     * @param connectLocally
-     *            True if the connection is a local connection.
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
      */
-    public DatabaseServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
-        super(timeoutTime, secure, connectLocally);
+    public DatabaseServlet(final ServerInfo serverInformation) {
+        super(serverInformation);
     }
 
     /**
@@ -37,9 +33,11 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
+     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @return {@link DatabaseConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
-        return new DatabaseConnectionManager(getServer(), connectLocally, secure);
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
+        return new DatabaseConnectionManager(getServer(), serverInformation);
     }
 }

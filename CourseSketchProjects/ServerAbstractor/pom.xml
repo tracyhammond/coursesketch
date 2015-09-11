@@ -17,8 +17,8 @@
 		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
-		<projectBranchLevel>6</projectBranchLevel>
-		<projectLineLevel>9</projectLineLevel>
+		<projectBranchLevel>43</projectBranchLevel>
+		<projectLineLevel>34</projectLineLevel>
 	</properties>
 	<build>
 		<plugins>
@@ -54,6 +54,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>CourseSketch</groupId>
+			<artifactId>ProtobufComparison</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
@@ -64,5 +71,5 @@
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.6</version>
         </dependency>
-    </dependencies>
+	</dependencies>
 </project>
