@@ -13,18 +13,37 @@ function Question() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        /**
+         * Called when the actions event has been clicked.
+         * @param {Event} event On Click event.
+         */
         shadowRoot.getElementById('actions').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = true;
         };
+
+        /**
+         * Called to closed the question dialog.
+         * @param {Event} event On Click event.
+         */
         shadowRoot.getElementById('dialog-close').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = false;
         };
+
+        /**
+         * Called when the correct button has been pressed.
+         * @param {Event} event On Change event.
+         */
         shadowRoot.getElementById('correct-lecture').onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById('correct-slide'));
         };
+
+        /**
+         * Called when the incorrect button has been pressed.
+         * @param {Event} event On Change event.
+         */
         shadowRoot.getElementById('incorrect-lecture').onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
@@ -39,6 +58,10 @@ function Question() {
      */
     this.loadLectures = function(lectureIds) {
         var localScope = this;
+        /**
+         * Called after lectures have been loaded.
+         * @param {List<SrlLecture>} lectures
+         */
         var callback = function(lectures) {
             shadowRoot.getElementById('correct-lecture').innerHTML = '';
             shadowRoot.getElementById('incorrect-lecture').innerHTML = '';
@@ -70,6 +93,10 @@ function Question() {
      * @param {Element} slideSelect select element to load the slides into
      */
     this.loadSlides = function(idList, slideSelect) {
+        /**
+         * Called when lecture slides have been loaded.
+         * @param {List<SrlSlide>} slides Slides that have been loaded from the server.
+         */
         var callback = function(slides) {
             slideSelect.innerHTML = '';
             for (var i = 0; i < slides.length; ++i) {
@@ -105,7 +132,7 @@ function Question() {
      * @return {SrlQuestion} the created protobuf object.
      */
     this.saveData = function(event) {
-        var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
+        var questionProto = CourseSketch.prutil.SrlQuestion();
 
         // Populate data in the proto object
         questionProto.id = generateUUID();
@@ -139,8 +166,8 @@ function Question() {
             if (!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) &&
                     !isUndefined(incorrectSlideStr) && correctLectureId !== '' && correctSlideStr !== '' && incorrectLectureId !== '' &&
                     incorrectSlideStr !== '') {
-                var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-                var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+                var correctNav = CourseSketch.prutil.LectureNavigator();
+                var incorrectNav = CourseSketch.prutil.LectureNavigator();
                 correctNav.nextLectureId = correctLectureId;
                 correctNav.nextSlide = parseInt(correctSlideStr, 10);
                 incorrectNav.nextLectureId = incorrectLectureId;
@@ -152,7 +179,7 @@ function Question() {
 
         // If the textbox does not have an id, then a command has not been created for the question
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_QUESTION, true);
         }
         this.command.setCommandData(questionProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -204,6 +231,10 @@ function Question() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener
+     * @param {Function} listener called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

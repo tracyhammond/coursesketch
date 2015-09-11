@@ -15,7 +15,7 @@
     "grunt-lib-phantomjs" : ">=0.7.0",
     "grunt-connect-rewrite" : "~0.2.1",
     "jscs-jsdoc" : "~0.4.5",
-    "grunt-jsdoc" : "0.6.3",
+    "grunt-jsdoc" : "0.6.8",
     "grunt-contrib-copy": "0.8.0 ",
     "grunt-wiredep": "2.0.0",
     "grunt-text-replace": "0.4.0",
@@ -25,3 +25,4 @@
     "babel-core": ">=5.0.0"
   }
 }
+

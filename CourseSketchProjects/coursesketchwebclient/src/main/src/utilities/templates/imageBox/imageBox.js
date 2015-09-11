@@ -12,6 +12,10 @@ function ImageBox() {
         shadowRoot.appendChild(templateClone);
     };
 
+    /**
+     * Sets the source of the image.
+     * @param {String} src The source data of the image (or url).
+     */
     this.setSrc = function(src) {
         this.shadowRoot.querySelector('.image').src = src;
     };
@@ -23,14 +27,14 @@ function ImageBox() {
      * @return {ImageProto} the created protobuf object
      */
     this.saveData = function(event) {
-        var imageProto = CourseSketch.PROTOBUF_UTIL.Image();
+        var imageProto = CourseSketch.prutil.Image();
 
         // Populate data in the proto object
         imageProto.src = this.shadowRoot.querySelector('.image').src;
 
         // If the image does not have an id, then a command has not been created for the image
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_IMAGE, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_IMAGE, true);
         }
         this.command.setCommandData(imageProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -62,6 +66,10 @@ function ImageBox() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets a listener.
+     * @param {Function} listener Called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

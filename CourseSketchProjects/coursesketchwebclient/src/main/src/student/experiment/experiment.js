@@ -33,10 +33,10 @@ validateFirstRun(document.currentScript);
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
         parentPanel.emptyPanel();
-        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+        if (problemType === CourseSketch.prutil.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(navigator);
         }
@@ -48,7 +48,7 @@ validateFirstRun(document.currentScript);
         parentPanel.isGrader = false;
 
         parentPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+            var studentExperiment = CourseSketch.prutil.SrlExperiment();
             navigator.setSubmissionInformation(studentExperiment, true);
             console.log('student experiment data set', studentExperiment);
             studentExperiment.submission = submission;
@@ -86,7 +86,10 @@ validateFirstRun(document.currentScript);
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException ||isUndefined(submission.getTextAnswer())) {
+            if (isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            if (isUndefined(submission) || CourseSketch.isException(submission) ||isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }
@@ -114,6 +117,10 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+
+        /**
+         * Called when the sketch surface is done loading to remove the overlay.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();
@@ -127,7 +134,10 @@ validateFirstRun(document.currentScript);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             var problemScript = navigator.getProblemScript();
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
+            if (CourseSketch.isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            if (isUndefined(submission) || CourseSketch.isException(submission) || isUndefined(submission.getUpdateList())) {
                 executeScript(problemScript, document.getElementById('problemPanel'), function() {
                     console.log('script executed - worker disconnect');
                     if (element.isRunning()) {
@@ -148,13 +158,10 @@ validateFirstRun(document.currentScript);
             //loads and runs the script
             executeScript(problemScript, document.getElementById('problemPanel'), function() {
                 console.log('script executed - worker disconnect');
-                console.log(submission);
                 var updateList = submission.getUpdateList();
-                //console.log(updateList);
                 sketchSurface.loadUpdateList(updateList.getList(), element);
                 updateList = null;
                 element = null;
-                //console.log(submission);
             });
         });
         //end of getSubmission

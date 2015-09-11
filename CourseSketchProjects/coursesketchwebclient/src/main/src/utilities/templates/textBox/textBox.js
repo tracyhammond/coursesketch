@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed
@@ -120,7 +121,7 @@ function TextBox() {
     // Saves Data for the proto message based on the position, height, width, and value of the text box
     this.saveData = function(event) {
         /*jshint maxcomplexity:13 */
-        var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+        var textBoxProto = CourseSketch.prutil.ActionCreateTextBox();
         textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
         var x = '' + dialog.style.left; // Makes sure x is a string for following check function
@@ -160,9 +161,9 @@ function TextBox() {
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
             if (this.shadowRoot.querySelector('#speakText') === null) {
-                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, true);
+                this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, true);
             } else {
-                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
+                this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_TTSBOX, true);
             }
         }
         this.command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist

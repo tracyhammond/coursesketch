@@ -41,6 +41,7 @@ function NavigationPanel() {
      */
     function setUpButtons(nav) {
         var button = this.shadowRoot.querySelector('#buttonNext');
+        /* jscs:disable jsDoc */
         button.onclick = function() {
             nav.gotoNext();
         };
@@ -58,6 +59,7 @@ function NavigationPanel() {
         } else {
             button.disabled = true;
         }
+        /* jscs:enable jsDoc */
     }
 
     /*

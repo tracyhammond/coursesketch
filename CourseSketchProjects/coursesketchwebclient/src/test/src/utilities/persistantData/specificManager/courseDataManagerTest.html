@@ -18,7 +18,7 @@
             QUnit.module("course creation", {
                 teardown: function() {
                     var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                        CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                        CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                     QUnit.stop();
                     waitForDatabase(dataManager, function() {
                         dataManager.clearCourses(function() {
@@ -33,7 +33,7 @@
             test("create new database", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 if (!isUndefined(dataManager)) {
                     assert.ok(true, "The datamanager was successfully created.");
                 }
@@ -41,12 +41,12 @@
             asyncTest("insert course local", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = generateUUID();
                 waitForDatabase(dataManager, function() {
                     dataManager.setCourse(course, function() {
-                        var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                        var course = CourseSketch.prutil.SrlCourse();
                         course.id = generateUUID();
                         course.courseId = course.id;
                         course.name= "I AM TEST";
@@ -63,15 +63,15 @@
             asyncTest("create new course server", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
-                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
-                var req = CourseSketch.PROTOBUF_UTIL.Request();
-                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
-                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+                var dataResult = CourseSketch.prutil.DataResult();
+                var itemResult = CourseSketch.prutil.ItemResult();
+                var req = CourseSketch.prutil.Request();
+                req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
+                itemResult.query = CourseSketch.prutil.ItemQuery.COURSE;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = generateUUID();
                 course.name = "I AM TEST";
                 var returnId = "returnId";
@@ -96,16 +96,16 @@
             asyncTest("insert course into remote database", function(assert) {
                 expect(4);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var req = CourseSketch.PROTOBUF_UTIL.Request();
-                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
-                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
-                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
-                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.prutil.Request();
+                req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
+                var dataResult = CourseSketch.prutil.DataResult();
+                var itemResult = CourseSketch.prutil.ItemResult();
+                itemResult.query = CourseSketch.prutil.ItemQuery.COURSE;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                var course1 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course1 = CourseSketch.prutil.SrlCourse();
+                var course2 = CourseSketch.prutil.SrlCourse();
                 course1.id = "firstcourse";
                 course2.id = "secondcourse";
                 course1.name = "I am a test!";
@@ -144,22 +144,20 @@
 
             asyncTest("get course server response from course part 2 testing DB local callback", function(assert) {
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var req = CourseSketch.PROTOBUF_UTIL.Request();
-                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
-                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.prutil.Request();
+                req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST;
+                var dataResult = CourseSketch.prutil.DataResult();
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = generateUUID();
-                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
-                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var itemResult = CourseSketch.prutil.ItemResult();
+                itemResult.query = CourseSketch.prutil.ItemQuery.COURSE;
+                var course = CourseSketch.prutil.SrlCourse();
+                var course2 = CourseSketch.prutil.SrlCourse();
                 course.id = fakeID;
                 course.courseId = course.id;
-                SrlCoursedata.courses = [ course];
-                itemResult.data =  SrlCoursedata.toArrayBuffer();
+                itemResult.data =  [course.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 expect(1);
@@ -184,16 +182,16 @@
             asyncTest("get courses from course part 2 testing DB server callback", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                    CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var req = CourseSketch.PROTOBUF_UTIL.Request();
-                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT;
-                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
-                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
-                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
+                    CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.prutil.Request();
+                req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
+                var dataResult = CourseSketch.prutil.DataResult();
+                var itemResult = CourseSketch.prutil.ItemResult();
+                itemResult.query = CourseSketch.prutil.ItemQuery.COURSE;
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
-                var course1 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course1 = CourseSketch.prutil.SrlCourse();
+                var course2 = CourseSketch.prutil.SrlCourse();
                 course1.id = "firstcourse";
                 course2.id = "secondcourse";
                 course1.name = "I am a test!";
@@ -229,12 +227,12 @@
             asyncTest("test connection send request", function(assert) {
                 var fakeID = generateUUID();
                 CourseSketch.connection.sendRequest = function(message) {
-                    assert.equal(message.requestType, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+                    assert.equal(message.requestType, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
                         "Message type is valid.");
                     QUnit.start();
                 };
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                    CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                    CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
@@ -245,16 +243,14 @@
             asyncTest("Testing Delete ", function(assert) {
                 expect(2);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = generateUUID();
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = fakeID;
                 course.courseId = course.id;
-                course.name = "Preupdated"
-                SrlCoursedata.courses = [course];
+                course.name = "Preupdated";
                 var waitfor = 0;
 
                 // TEST STARTING
@@ -262,9 +258,9 @@
                     dataManager.setCourse(course,  function() {
                         dataManager.deleteCourse(course.id, function() {
                             CourseSketch.connection.sendRequest = function(message) {
-                                assert.equal(message.requestType, CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
+                                assert.equal(message.requestType, CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
                                     "Message type is valid.");
-                                var dataQuery = CourseSketch.PROTOBUF_UTIL.getDataRequestClass().decode(message.getOtherData());
+                                var dataQuery = CourseSketch.prutil.getDataRequestClass().decode(message.getOtherData());
                                 var itemQuery = dataQuery.items[0];
                                 var id = itemQuery.itemId[0];
                                 assert.equal(id, course.id, "The course is not found locally so instead we search in the server.");
@@ -279,26 +275,24 @@
             asyncTest("update course server callback", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
-                var req = CourseSketch.PROTOBUF_UTIL.Request();
-                req.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_UPDATE;
-                var dataResult = CourseSketch.PROTOBUF_UTIL.DataResult();
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
+                var req = CourseSketch.prutil.Request();
+                req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_UPDATE;
+                var dataResult = CourseSketch.prutil.DataResult();
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = generateUUID();
-                var itemResult = CourseSketch.PROTOBUF_UTIL.ItemResult();
-                itemResult.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE;
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var itemResult = CourseSketch.prutil.ItemResult();
+                itemResult.query = CourseSketch.prutil.ItemQuery.COURSE;
+                var course = CourseSketch.prutil.SrlCourse();
+                var course2 = CourseSketch.prutil.SrlCourse();
                 course.id = fakeID;
                 course.courseId = course.id;
                 course.name ='preupdate';
                 course2.id = course.id;
                 course2.courseId = course.id;
-                course2.name = "Update complete!"
-                SrlCoursedata.courses = [ course];
-                itemResult.data =  SrlCoursedata.toArrayBuffer();
+                course2.name = "Update complete!";
+                itemResult.data =  [course.toArrayBuffer()];
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
@@ -324,20 +318,18 @@
             asyncTest("update course local callback", function(assert) {
                 expect(1);
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
-                    CourseSketch.connection, CourseSketch.PROTOBUF_UTIL.getRequestClass(), dcodeIO.ByteBuffer);
+                    CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var fakeID = generateUUID();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
                 course.id = generateUUID();
-                var SrlCoursedata =  CourseSketch.PROTOBUF_UTIL.SrlSchool();
-                var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
-                var course2 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+                var course = CourseSketch.prutil.SrlCourse();
+                var course2 = CourseSketch.prutil.SrlCourse();
                 course.id = fakeID;
                 course.courseId = course.id;
                 course.name = "Preupdated"
                 course2.id = course.id;
                 course2.courseId = course.id;
-                course2.name = "Update complete!"
-                SrlCoursedata.courses = [ course];
+                course2.name = "Update complete!";
                 var waitfor = 0;
 
                 // TEST STARTING
