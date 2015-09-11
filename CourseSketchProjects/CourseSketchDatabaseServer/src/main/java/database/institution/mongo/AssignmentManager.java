@@ -507,12 +507,10 @@ public final class AssignmentManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
-        /*
-        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+        final BasicDBObject updateQuery = new BasicDBObject(); // MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: ", updateQuery);
         assignments.update(corsor, updateQuery);
-        */
     }
 
     /**

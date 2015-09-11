@@ -141,12 +141,10 @@ public final class LectureManager {
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
 
-        /*
-        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+        final BasicDBObject updateQuery = new BasicDBObject(); // MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: {}", updateQuery);
         lectures.update(cursor, updateQuery);
-        */
     }
 
     /**
@@ -197,7 +195,7 @@ public final class LectureManager {
                 .setCheckDate(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, (String) corsor.get(COURSE_ID), userId, checkTime, authType);
+                .checkAuthentication(School.ItemType.COURSE, (String) corsor.get(COURSE_ID), userId, checkTime, assignmentAuthType);
 
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {

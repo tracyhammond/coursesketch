@@ -17,8 +17,8 @@
 		<parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<testLevel>0</testLevel>
 		<averageTestLevel>0</averageTestLevel>
-		<projectBranchLevel>100</projectBranchLevel>
-		<projectLineLevel>100</projectLineLevel>
+		<projectBranchLevel>43</projectBranchLevel>
+		<projectLineLevel>34</projectLineLevel>
 	</properties>
 	<build>
 		<plugins>
@@ -71,10 +71,5 @@
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.6</version>
         </dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>
 	</dependencies>
 </project>
