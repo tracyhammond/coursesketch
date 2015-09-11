@@ -1,10 +1,11 @@
-/*
- * The MvSketch function handles all the action that can take place
- * in the multiview units.
+/**
+ * The MvSketch function handles all the action that can take place in the multiview units.
+ *
  * Attributes:
  * data-binary: if set then the button will be disabled.
  * data-max_points: if set then this is the max number of points that can be input
  * data-max_percent: if set then this is the max percent of score that can be used
+ * @class MvSketch
  */
 function MvSketch() {
     this.maxValue = 100;
@@ -12,8 +13,11 @@ function MvSketch() {
 
     /**
      * Sets the update list.
-     * after the update list is done loading
-     * @param {SrlUpdateList} updateList  a list that contains all the changes made in sketch.
+     *
+     * After the update list is done loading this attempts to resize the sketch surface so that it fills the canvas correctly.
+     * @param {SrlUpdateList} updateList a list that contains all the changes made in sketch.
+     * @instance
+     * @memberof MvSketch
      */
     this.setUpdateList = function(updateList)  {
         this.shadowRoot.querySelector('sketch-surface').loadUpdateList(updateList, undefined, function() {
@@ -25,7 +29,7 @@ function MvSketch() {
     /**
      * Sets the user id for display purposes.
      *
-     * @param {String} userId - the name that shows up for instructors to find the user name of.
+     * @param {String} userId the name that shows up for instructors to find the user name of.
      */
     this.setUserId = function(userId) {
         // Uses only the first 7 characters to ensure that they are easy to read by a human and do not take up much space on the screen.
@@ -33,8 +37,12 @@ function MvSketch() {
         this.shadowRoot.querySelector('#userName').textContent = userId.substring(0, 7);
     };
 
-    /*
+    /**
      * This creates the shadow root and attaches it to the object in question.
+     *
+     * @param {Element} templateClone A clone of the shadow dom.
+     * @instance
+     * @memberof MvSketch
      */
     this.initializeElement = function(templateClone) {
         this.createShadowRoot();
@@ -51,6 +59,9 @@ function MvSketch() {
 
     /**
      * Looks at the data attributes of this element and configures the element appropriately.
+     *
+     * @instance
+     * @memberof MvSketch
      */
     this.setupAttributes = function() {
         if (!isUndefined(this.dataset) && this.dataset.binary === 'true' || this.dataset.binary === '') {
@@ -67,8 +78,13 @@ function MvSketch() {
         }
     };
 
-    /*
+    /**
      * Marks the sketch at correct and changes the background to outercorrect.
+     *
+     * @param {Event} event The event propagation is stopped.
+     * @instance
+     * @memberof MvSketch
+     * @access private
      */
     function correct(event) {
         event.stopPropagation();
@@ -77,8 +93,13 @@ function MvSketch() {
         this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
 
-    /*
+    /**
      * Marks the sketch as wrong and changes the background to outerwrong.
+     *
+     * @param {Event} event The event propagation is stopped.
+     * @instance
+     * @memberof MvSketch
+     * @access private
      */
     function wrong(event) {
         event.stopPropagation();
@@ -89,6 +110,10 @@ function MvSketch() {
 
     /**
      * Sets the callback that is called when the sketch is clicked.
+     *
+     * @param {Function} sketchClickedFunction A function called when the sketch is clicked.
+     * @instance
+     * @memberof MvSketch
      */
     this.setSketchClickedFunction = function(sketchClickedFunction) {
         this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;

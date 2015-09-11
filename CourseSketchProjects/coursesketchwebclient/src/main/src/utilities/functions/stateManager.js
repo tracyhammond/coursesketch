@@ -35,26 +35,43 @@ function Redirector(scope, affectedWindow) {
      * This allows us to find the url if something were to happen.
      */
     this.setRedirect = function setRedirect(url) {
-        var shortUrl = replaceAll(FILE_ENDINGS, '', url); // Remove html from file
-        shortUrl = replaceAll('/' + STARTING_URL, '', shortUrl); // Remove html from file
+        var shortUrl = replaceAll(url, FILE_ENDINGS, ''); // Remove html from file
+        shortUrl = replaceAll(shortUrl, '/' + STARTING_URL, ''); // Remove html from file
         // ending
-        var hashUrl = replaceAll('/', '.', shortUrl);
+        var hashUrl = replaceAll(shortUrl, '/', '.');
         var trimmedHash = hashUrl.substring(1, hashUrl.length - 1); // Trim
         // ending
         var replacedHash = ('' + window.location).split('#')[0] + '#' + trimmedHash;
         scope.location.replace(replacedHash);
     };
 
-    function replaceAll(find, replace, str) {
+    /**
+     * Replaces all strings with a different value.
+     *
+     * @param {String} str The string that the replace is happening in.
+     * @param {RegularExpression} find the expression that is being looked for.
+     * @param {String} replace what is being replaced with.
+     *
+     * @returns {String} A string with the replaced values.
+     */
+    function replaceAll(str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);
     }
 
+    /**
+     * Gets the redirection url of the page from the hash.
+     * @returns {String}
+     */
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
-        var addedSlashes = STARTING_URL + '/' + replaceAll('\\.', '/', starting) + '.' + FILE_ENDINGS;
+        var addedSlashes = STARTING_URL + '/' + replaceAll(starting, '\\.', '/') + '.' + FILE_ENDINGS;
         return addedSlashes;
     };
 
+    /**
+     * Changes the window address and adds a browser event.
+     * @param {String} url
+     */
     this.moveWindow = function(url) {
         affectedWindow.src = url;
     };

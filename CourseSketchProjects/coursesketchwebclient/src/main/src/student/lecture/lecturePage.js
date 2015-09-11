@@ -1,30 +1,24 @@
 validateFirstRun(document.currentScript);
 
+/**
+ * @namespace "lecturePage/student"
+ */
+
 (function() {
     $(document).ready(function() {
-
-        CourseSketch.lecturePage.doResize = function(event) {
-            var target = event.target;
-
-            // Add the change in coords to the previous width of the target element
-            var newWidth  = parseFloat($(target).width()) + event.dx;
-            var newHeight = parseFloat($(target).height()) + event.dy;
-
-            // Update the element's style
-            target.style.width  = newWidth + 'px';
-            target.style.height = newHeight + 'px';
-
-            target.textContent = newWidth + '×' + newHeight;
-        };
 
         /**
          * Selects a specific lecture slide.
          *
-         * @param { int } slideIndex
+         * @param {Integer} slideIndex
          *            index of the slide in the current lecture's protobuf
          *            object.
+         * @memberof "lecturePage/student"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
+            /**
+             * Called when a user is changing slide.
+             */
             var completionHandler = function() {
                 $('.slide-thumb').each(function() {
                     $(this).removeClass('selected');

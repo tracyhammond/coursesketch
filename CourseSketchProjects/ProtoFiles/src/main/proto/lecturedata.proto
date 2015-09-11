@@ -3,12 +3,6 @@ import "tutorial.proto";
 import "util.proto";
 package protobuf.srl.lecturedata;
 
-message SrlLectureDataHolder {
-    repeated Lecture lectures = 1;
-    repeated LectureSlide slides = 2;
-    repeated LectureElement elements = 3;
-}
-
 message Lecture {
     required string courseId = 1;
     //id of this lecture

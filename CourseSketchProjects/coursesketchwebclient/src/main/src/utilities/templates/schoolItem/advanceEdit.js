@@ -199,6 +199,14 @@
         return undefined;
     };
 
+    /**
+     * Loads the data from the school item into the edit panel.
+     *
+     * @param {Element} schoolItemElement the school Item that is currently being edited.
+     * @param {Map} schoolItemData A mpa containing the school item.
+     * @param {Element} editPanel a panel that displays the editable material.
+     * @returns {Map} A map that contains the field of the school proto boject and the loaded value of the proto object.
+     */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
         var inputList = editPanel.querySelectorAll('.need-loading');
         var mappedInput = new Map();
@@ -224,6 +232,7 @@
 
     /**
      * Sets up the advance edit panel for editing advance data.
+     *
      * @param {Element} element The edit button that opens up the panel when clicked.
      * @param {SchoolItem} localScope  The school item that this advance panel is associated with.
      * @param {Node} parentNode The node that is a parent to the button.  This is used to get the school item after saving.
@@ -249,9 +258,26 @@
 
             // add our loaded element to the page.
             document.body.appendChild(host);
+            /**
+             * Opens scripting window on click.
+             *
+             * open scripting window and sketch saving/loading
+             */
+            var scriptButton = shadow.querySelector('button.scripting');
+            /**
+             * Called to open a script editor.
+             */
+            scriptButton.onclick = function() {
+                var data = getInput(shadow);
+                location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
+            };
 
             // save data
+            //NOT WORKING, NEEDS TO BE MODIFIED
             var saveButton = shadow.querySelector('button.save');
+            /**
+             * Called to save all of the input.
+             */
             saveButton.onclick = function() {
                 var newData = getInput(shadow);
                 var schoolItem = getHostElement(parentNode);
@@ -262,6 +288,12 @@
             };
 
             // cancel!
+            /**
+             * Called to cancel the editing process.
+             *
+             * @param {Element} event  On Click event.
+             * @returns {Boolean} false if the element clicked is the host dialog.
+             */
             function close(event) {
                 if (event.toElement === host) {
                     return false;

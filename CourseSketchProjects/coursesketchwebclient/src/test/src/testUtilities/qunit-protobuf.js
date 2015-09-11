@@ -2,7 +2,7 @@
  * Returns a cleaned version of the update that is ready for comparison.
  */
 function cleanUpdateForComparison(update) {
-    return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
+    return CourseSketch.prutil.decodeProtobuf(update.toArrayBuffer(), CourseSketch.prutil.getSrlUpdateClass());
 }
 
 /**
