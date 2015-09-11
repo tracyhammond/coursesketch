@@ -201,9 +201,8 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>${replacerVersion}</version>
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>Replace</id>
@@ -223,10 +222,6 @@
                     </execution>
                     <execution>
                         <id>Reverse</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
                         <configuration>
                             <file>${basedir}/target/website/index.html</file>
                             <replacements>
@@ -235,6 +230,15 @@
                                     <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
                                 </replacement>
                             </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ip_prop_replace</id>
+                        <configuration>
+                            <includes>
+                                <include>${basedir}/target/website/src/main/src/utilities/connection/login/loginInclude.html</include>
+                                <include>${basedir}/target/website/src/main/src/utilities/connection/register/registerInclude.html</include>
+                            </includes>
                         </configuration>
                     </execution>
                 </executions>

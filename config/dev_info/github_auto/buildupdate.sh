@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 CS_HOME="/home/sketchlab/link_to_shared/coursesketch"
 
 cd $CS_HOME
@@ -33,9 +34,21 @@ else
     exit 1
 fi
 
+cd $CS_HOME
+cd ../
+
+echo "Removing existing jars"
+rm *-run.jar
+
+cd $CS_HOME
 cd config
 
 /bin/bash copyjars.sh <<< "/home/sketchlab/VirtualBox VMs/Shared/"
+
+cd $CS_HOME
+cd config
+
+/bin/bash setup_ssh.sh
 
 echo "Moving website code"
 mv "${CS_HOME}/CourseSketchProjects/coursesketchwebclient/target/website" "${CS_HOME}/CourseSketchProjects/coursesketchwebclient/target/coursesketchwebclient"
