@@ -61,7 +61,6 @@ public final class GroupManager {
         final BasicDBObject query = new BasicDBObject("_id", groupId);
         final DBObject corsor = courses.findOne(query);
 
-        final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
         final boolean isAdmin = true;
         if (!isAdmin) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -89,11 +88,7 @@ public final class GroupManager {
      */
     public static boolean mongoUpdateGroup(final Authenticator authenticator, final DB dbs, final String groupID, final String userId,
             final SrlGroup group) throws AuthenticationException {
-        final DBCollection courses = dbs.getCollection(USER_GROUP_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(SELF_ID, groupID);
-        final DBObject corsor = courses.findOne(query);
 
-        final ArrayList<String> adminList = (ArrayList) corsor.get("Admin");
         final boolean isAdmin = true;
         // isAdmin = authenticator.checkAuthentication(userId, adminList);
 

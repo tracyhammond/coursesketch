@@ -7,6 +7,7 @@ import protobuf.srl.school.School;
  * Checks different data for
  * Created by gigemjt on 9/4/15.
  */
+@SuppressWarnings("PMD.CommentRequired")
 public final class MongoOptionChecker implements AuthenticationOptionChecker {
 
     @Override public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime) {
@@ -22,8 +23,8 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
     }
 
     /**
-     * @param collectionType
-     * @param itemId
+     * @param collectionType The type of collection that is being checked.
+     * @param itemId The id of the tiem that is being checked.
      * @return a data creator that grabs the data for any other uses by the option checker.
      */
     @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId) {

@@ -54,6 +54,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
      *         The rules at that give a correct or false response.
      * @return True if all checked values are valid
      *         thrown if there are issues grabbing data for the authenticator.
+     * @throws AuthenticationException Thrown if there is a problem creating the auth response.
      */
     @Override public final Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId,
             final String userId, final Authentication.AuthType checkType) throws AuthenticationException {
