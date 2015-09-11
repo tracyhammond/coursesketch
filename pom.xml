@@ -484,7 +484,6 @@
                         </excludes>
                     </configuration>
                 </plugin>
-                <plugin>
                 <!-- meta build plugins -->
                 <plugin>
                     <groupId>com.github.dtracers</groupId>
