@@ -16,7 +16,6 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
     /**
      * IP address for database server.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
 
     /**
@@ -45,7 +44,6 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
      * {@inheritDoc}.
      */
     @Override
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
             createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);

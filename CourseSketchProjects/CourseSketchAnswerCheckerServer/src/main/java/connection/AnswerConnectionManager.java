@@ -23,7 +23,6 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     /**
      * IP address.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
 
     /**
