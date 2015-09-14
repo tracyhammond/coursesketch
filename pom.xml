@@ -271,7 +271,6 @@
                     <version>${checkstyleVersion}</version>
                     <executions>
                         <execution>
-                            <id>checkstyle-report</id>
                             <id>checkstyle</id>
                             <phase>validate</phase>
                             <configuration>
@@ -289,26 +288,6 @@
                             </configuration>
                             <goals>
                                 <goal>checkstyle</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>checkstyle-check</id>
-                            <phase>validate</phase>
-                            <configuration>
-                                <configLocation>${absoluteCheckstyleLocation}</configLocation>
-                                <suppressionsLocation>${checkstyleSuppressionLocation}</suppressionsLocation>
-                                <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
-                                <encoding>UTF-8</encoding>
-                                <consoleOutput>true</consoleOutput>
-                                <checkstyle>
-                                    <failsOnError>false</failsOnError>
-                                </checkstyle>
-                                <check>
-                                    <failsOnError>true</failsOnError>
-                                </check>
-                            </configuration>
-                            <goals>
-                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>
