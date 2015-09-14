@@ -57,6 +57,24 @@
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
             </plugin>
+            <plugin>
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>ip_prop_replace</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ip_prop_reverse</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
