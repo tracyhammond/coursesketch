@@ -19,4 +19,3 @@ do
                 cp $fullPath "$result_path"
 	fi
 done
-
