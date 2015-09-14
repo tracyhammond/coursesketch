@@ -428,13 +428,14 @@
                                 <goal>start</goal>
                             </goals>
                             <configuration>
+                                <!-- link to github repo -->
                                 <!-- https://github.com/joelittlejohn/embedmongo-maven-plugin -->
 
-                                <logging>file</logging>
                                 <!-- optional (file|console|none), default console -->
+                                <logging>file</logging>
 
-                                <logFile>${basedir}/target/embedmongo.log</logFile>
                                 <!-- optional, can be used when logging=file, default is ./embedmongo.log -->
+                                <logFile>${basedir}/target/embedmongo.log</logFile>
                             </configuration>
                         </execution>
                         <execution>
