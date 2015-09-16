@@ -24,8 +24,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     /**
      * IP address.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String SUBMISSION_ADDRESS = "192.168.56.202";
+    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
 
     /**
      * Port number.
