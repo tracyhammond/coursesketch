@@ -58,7 +58,9 @@ message SrlAssignment {
 }
 
 /**
- * Specifies the type of item something is
+ * Specifies the type of item something is.
+ *
+ * NOTE: the names are used for the collection name for some databases.
  */
 enum ItemType {
     COURSE = 0;

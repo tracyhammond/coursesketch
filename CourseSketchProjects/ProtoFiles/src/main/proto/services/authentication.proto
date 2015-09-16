@@ -1,6 +1,7 @@
 package protobuf.srl.services.authentication;
 
 import "school.proto";
+import "message.proto";
 
 option java_generic_services = true;
 
@@ -57,11 +58,21 @@ message AuthType {
 
 }
 
+/**
+ * Used when creating a new group
+ */
+message AuthCreationRequest {
+    // contains all of the information about the item being created
+    required AuthRequest itemRequest = 1;
+    // contains the id of the parent of this item.
+    required string parentItemId = 2;
+}
+
 message AuthRequest {
     required string authId = 1;
     required string itemId = 2;
     required protobuf.srl.school.ItemType itemType = 3;
-    required AuthType authParams = 4;
+    optional AuthType authParams = 4;
 }
 
 /**
@@ -99,4 +110,5 @@ message AuthResponse {
 
 service AuthenticationService {
     rpc authorizeUser(AuthRequest) returns (AuthResponse);
+    rpc createNewItem(AuthCreationRequest) returns (protobuf.srl.request.DefaultResponse);
 }
