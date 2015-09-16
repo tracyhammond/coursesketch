@@ -64,7 +64,7 @@ public class AuthenticationResponder {
      */
     public final boolean hasStudentPermission() {
         return response.hasPermissionLevel()
-                &&  STUDENT.compareTo(response.getPermissionLevel()) >= 0;
+                && response.getPermissionLevel().compareTo(STUDENT) >= 0;
     }
 
     /**
@@ -73,7 +73,7 @@ public class AuthenticationResponder {
      */
     public final boolean hasPeerTeacherPermission() {
         return response.hasPermissionLevel()
-                && PEER_TEACHER.compareTo(response.getPermissionLevel()) >= 0;
+                && response.getPermissionLevel().compareTo(PEER_TEACHER) >= 0;
     }
 
     /**
@@ -82,7 +82,7 @@ public class AuthenticationResponder {
      */
     public final boolean hasModeratorPermission() {
         return response.hasPermissionLevel()
-                && MODERATOR.compareTo(response.getPermissionLevel()) >= 0;
+                && response.getPermissionLevel().compareTo(MODERATOR) >= 0;
     }
 
     /**
@@ -91,6 +91,6 @@ public class AuthenticationResponder {
      */
     public final boolean hasTeacherPermission() {
         return response.hasPermissionLevel()
-                && TEACHER.compareTo(response.getPermissionLevel()) >= 0;
+                && response.getPermissionLevel().compareTo(TEACHER) >= 0;
     }
 }
