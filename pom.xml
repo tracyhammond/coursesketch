@@ -23,6 +23,19 @@
         <module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <issueManagement>
         <url>https://github.com/${githubLocation}/issues</url>
         <system>GitHub Issues</system>
@@ -137,13 +150,6 @@
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -403,9 +409,11 @@
                         <version>1.9.7</version>
                     </configuration>
                 </plugin>
+
+                <!-- meta build plugins -->
                 <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
+                    <groupId>com.github.dtracers</groupId>
+                    <artifactId>maven-replacer-plugin</artifactId>
                     <version>${replacerVersion}</version>
                     <executions>
                         <execution>
@@ -440,6 +448,38 @@
                                 </replacements>
                             </configuration>
                         </execution>
+                        <!-- local config based replacements -->
+                        <execution>
+                            <id>ip_prop_replace</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                            <configuration>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
+                                </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                </backupPropertyFiles>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>ip_prop_reverse</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                            <configuration>
+                                <reverseProperties>true</reverseProperties>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
+                                </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                </backupPropertyFiles>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
             </plugins>
@@ -468,7 +508,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
-        <replacerVersion>1.5.3</replacerVersion>
+        <replacerVersion>1.6.2</replacerVersion>
         <resourcePluginVersion>2.7</resourcePluginVersion>
 
         <!-- testing -->
@@ -501,14 +541,11 @@
         <!-- This needs to be overwritten in child poms -->
         <mainClass>fully.qualified.MainClass</mainClass>
         <parentConfigLocationDir>${basedir}</parentConfigLocationDir>
-    </properties>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
+
+        <!-- Property files in local config -->
+        <ipPropFile>${parentConfigLocationDir}/config/local/ips_default.prop</ipPropFile>
+    </properties>
 
     <dependencies>
         <dependency>
