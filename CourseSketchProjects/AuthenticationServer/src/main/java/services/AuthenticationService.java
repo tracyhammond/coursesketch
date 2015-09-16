@@ -11,6 +11,7 @@ import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
 
     /**
      * <code>rpc authorizeUser(.protobuf.srl.services.authentication.AuthRequest) returns (.protobuf.srl.services.authentication.AuthResponse);</code>
+     * Authorizes the user to have access to the data.
      *
      * @param controller
      * @param request
@@ -57,6 +59,18 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
         } catch (AuthenticationException e) {
             controller.setFailed(e.toString());
         }
+    }
+
+    /**
+     * <code>rpc createNewItem(.protobuf.srl.services.authentication.AuthCreationRequest) returns (.protobuf.srl.request.DefaultResponse);</code>
+     *
+     * @param controller
+     * @param request
+     * @param done
+     */
+    @Override public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
+            final RpcCallback<Message.DefaultResponse> done) {
+
     }
 
     private Authentication.AuthResponse checkAuthentication(final Authentication.AuthRequest request) throws AuthenticationException {
