@@ -2,6 +2,11 @@ package database.auth;
 
 import protobuf.srl.services.authentication.Authentication;
 
+import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.MODERATOR;
+import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.PEER_TEACHER;
+import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
+import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.TEACHER;
+
 /**
  * Created by gigemjt on 9/4/15.
  * This works on the assumption of accumulative permissions.
@@ -59,7 +64,7 @@ public class AuthenticationResponder {
      */
     public final boolean hasStudentPermission() {
         return response.hasPermissionLevel()
-                && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE;
+                && response.getPermissionLevel().compareTo(STUDENT) >= 0;
     }
 
     /**
@@ -68,7 +73,7 @@ public class AuthenticationResponder {
      */
     public final boolean hasPeerTeacherPermission() {
         return response.hasPermissionLevel()
-                && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.PEER_TEACHER_VALUE;
+                && response.getPermissionLevel().compareTo(PEER_TEACHER) >= 0;
     }
 
     /**
@@ -77,7 +82,7 @@ public class AuthenticationResponder {
      */
     public final boolean hasModeratorPermission() {
         return response.hasPermissionLevel()
-                && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.MODERATOR_VALUE;
+                && response.getPermissionLevel().compareTo(MODERATOR) >= 0;
     }
 
     /**
@@ -86,6 +91,6 @@ public class AuthenticationResponder {
      */
     public final boolean hasTeacherPermission() {
         return response.hasPermissionLevel()
-                && response.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE;
+                && response.getPermissionLevel().compareTo(TEACHER) >= 0;
     }
 }
