@@ -420,6 +420,7 @@
                                 <goal>start</goal>
                             </goals>
                             <configuration>
+                                <port>37017</port>
                                 <!-- link to github repo -->
                                 <!-- https://github.com/joelittlejohn/embedmongo-maven-plugin -->
 
