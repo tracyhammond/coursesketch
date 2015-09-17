@@ -33,16 +33,16 @@ public final class AuthUtilities {
      * @return
      */
     public static Authentication.AuthResponse.PermissionLevel largestAllowedLevel(final Authentication.AuthType checkType) {
-        if (cumulativeCheckType.getCheckingAdmin()) {
+        if (checkType.getCheckingAdmin()) {
             return Authentication.AuthResponse.PermissionLevel.TEACHER;
         }
-        if (cumulativeCheckType.getCheckingMod()) {
+        if (checkType.getCheckingMod()) {
             return Authentication.AuthResponse.PermissionLevel.MODERATOR;
         }
-        if (cumulativeCheckType.getCheckingPeerTeacher()) {
+        if (checkType.getCheckingPeerTeacher()) {
             return Authentication.AuthResponse.PermissionLevel.PEER_TEACHER;
         }
-        if (cumulativeCheckType.getCheckingUser()) {
+        if (checkType.getCheckingUser()) {
             return Authentication.AuthResponse.PermissionLevel.STUDENT;
         }
         return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;
