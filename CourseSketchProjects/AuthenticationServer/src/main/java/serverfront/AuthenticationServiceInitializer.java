@@ -1,9 +1,11 @@
 package serverfront;
 
+import com.mongodb.MongoClient;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
+import database.auth.DbAuthChecker;
 import services.AuthenticationService;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public final class AuthenticationServiceInitializer extends ServerWebSocketInitializer {
 
+    private MongoClient mongoClient;
     /**
      * @param timeoutTime
      *            The time it takes before a connection times out.
@@ -23,8 +26,9 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
      * @param connectLocally
      *            True if the server is connecting locally.
      */
-    public AuthenticationServiceInitializer(ServerInfo serverInfo) {
+    public AuthenticationServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
+        mongoClient = new MongoClient(serverInfo.getDatabaseUrl());
     }
 
     /**
@@ -38,7 +42,7 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        services.add(new AuthenticationService(dataGrabber));
+        services.add(new AuthenticationService(new DbAuthChecker(mongoClient.getDB(this.getServerInfo().getDatabaseName()))));
         return services;
     }
 }

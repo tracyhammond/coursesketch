@@ -1,5 +1,9 @@
 package coursesketch.server.interfaces;
 
+import com.mongodb.ServerAddress;
+
+import java.util.List;
+
 /**
  * Contains information about the sever.
  *
@@ -38,6 +42,8 @@ public class ServerInfo {
      * <code>true</code> if the server is running locally, <code>false</code> otherwise.
      **/
     private final boolean isLocalVar;
+    private List<ServerAddress> databaseUrl;
+    private String databaseName;
 
     /**
      * Creates a server info with all of the information.
@@ -94,5 +100,21 @@ public class ServerInfo {
      */
     public final boolean isLocal() {
         return isLocalVar;
+    }
+
+    public List<ServerAddress> getDatabaseUrl() {
+        return databaseUrl;
+    }
+
+    public void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(final String databaseName) {
+        this.databaseName = databaseName;
     }
 }

@@ -96,8 +96,8 @@ public final class MongoInstitution implements Institution {
      */
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     private MongoInstitution() {
-        this("192.168.56.201");
-        // this("localhost");
+        // this("192.168.56.201");
+        this("localhost");
     }
 
     /**
