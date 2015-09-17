@@ -9,6 +9,7 @@ import database.auth.AuthenticationData;
 import database.auth.AuthenticationDataCreator;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
+import database.auth.DbAuthChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -26,12 +27,17 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
 
     private ISocketInitializer socketInitializer;
 
-    private AuthenticationDataCreator dataGrabber;
+
+    private final DbAuthChecker authChecker;
 
     /**
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationService.class);
+
+    public AuthenticationService(final DbAuthChecker authChecker) {
+        this.authChecker = authChecker;
+    }
 
     /**
      * Sets the object that initializes this service.
@@ -55,9 +61,13 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     @Override public void authorizeUser(final RpcController controller, final Authentication.AuthRequest request,
             final RpcCallback<Authentication.AuthResponse> done) {
         try {
-            done.run(checkAuthentication(request));
+            done.run(authChecker.isAuthenticated(request.getItemType(), request.getItemId(), request.getAuthId(), request.getAuthParams()));
+        } catch (DatabaseAccessException e) {
+            controller.setFailed(e.toString());
+            LOG.error("Failed to authenticate", e);
         } catch (AuthenticationException e) {
             controller.setFailed(e.toString());
+            LOG.error("Failed to authenticate", e);
         }
     }
 
@@ -71,44 +81,6 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     @Override public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
 
-    }
-
-    private Authentication.AuthResponse checkAuthentication(final Authentication.AuthRequest request) throws AuthenticationException {
-        if (!Authenticator.validRequest(request.getAuthParams())) {
-            throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
-        }
-        Authentication.AuthType checkType = request.getAuthParams();
-
-        final AuthenticationData result;
-        try {
-            result = dataGrabber.getAuthGroups(request.getItemType(), request.getItemId());
-        } catch (DatabaseAccessException e) {
-            throw new AuthenticationException(e);
-        }
-        Authentication.AuthResponse.Builder response = Authentication.AuthResponse.newBuilder();
-
-        boolean validAccess = authenticateUser(request.getAuthId(), result, request.getAuthParams());
-
-        final boolean validUser = checkType.getCheckingUser() && validAccess;
-        response.setIsUser(validUser);
-
-        final boolean validMod = authenticateModerator(request.getAuthId(), result, checkType);
-        // checking for access before we change
-        validAccess |= validMod;
-
-        // only return true if we are checking it is a mod.
-        response.setIsMod(validMod && (checkType.getCheckingMod() || checkType.getCheckAdminOrMod()));
-
-        final boolean validAdmin = authenticateAdmin(request.getAuthId(), result, checkType);
-        validAccess |= validAdmin;
-
-        response.setIsAdmin(validAdmin && (checkType.getCheckingAdmin() || checkType.getCheckAdminOrMod()));
-
-        // access is granted to everyone if registration is not required.
-        validAccess |= !result.isRegistrationRequired();
-        response.setHasAccess(validAccess && checkType.getCheckAccess());
-
-        return response.build();
     }
 
     /**

@@ -13,6 +13,7 @@ import utilities.AuthUtilities;
 import java.util.List;
 
 import static database.DbSchoolUtility.getCollectionFromType;
+import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
 /**
  * Created by David Windows on 9/16/2015.
@@ -70,9 +71,16 @@ public final class DbAuthChecker implements AuthenticationChecker {
 
         final Authentication.AuthResponse.Builder responseBuilder = Authentication.AuthResponse.newBuilder();
         if (checkType.getCheckAccess()) {
-            responseBuilder.setHasAccess(permissionLevel.compareTo())
+            responseBuilder.setHasAccess(permissionLevel.compareTo(STUDENT) >= 0);
         }
-        return null;
+        final Authentication.AuthResponse.PermissionLevel largestAllowedLevel = AuthUtilities.largestAllowedLevel(checkType);
+        // left - right
+        if (permissionLevel.compareTo(largestAllowedLevel) >= 0) {
+            responseBuilder.setPermissionLevel(largestAllowedLevel);
+        } else {
+            responseBuilder.setPermissionLevel(permissionLevel);
+        }
+        return responseBuilder.build();
     }
 
     private Authentication.AuthResponse.PermissionLevel checkGroupPermission(final DBCollection collection, final String groupId,
@@ -84,7 +92,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
 
         final Object permissionLevel = group.get(userId);
         if (permissionLevel == null) {
-            return null;
+            return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;
         }
         return Authentication.AuthResponse.PermissionLevel.valueOf((Integer) permissionLevel);
     }

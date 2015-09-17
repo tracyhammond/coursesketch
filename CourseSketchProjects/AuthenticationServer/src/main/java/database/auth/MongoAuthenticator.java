@@ -6,7 +6,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.Authenticator.AuthenticationData;
 import org.bson.types.ObjectId;
 
 import java.util.List;
