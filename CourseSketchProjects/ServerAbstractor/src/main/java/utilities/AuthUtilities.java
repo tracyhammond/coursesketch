@@ -25,6 +25,28 @@ public final class AuthUtilities {
         return builder.build();
     }
 
+    /**
+     * Converts the checktype to make it a cumulative permission check.
+     * <p/>
+     * only returns the most restrictive permission level allowed
+     * @param cumulativeCheckType
+     * @return
+     */
+    public static Authentication.AuthResponse.PermissionLevel largestAllowedLevel(final Authentication.AuthType checkType) {
+        if (cumulativeCheckType.getCheckingAdmin()) {
+            return Authentication.AuthResponse.PermissionLevel.TEACHER;
+        }
+        if (cumulativeCheckType.getCheckingMod()) {
+            return Authentication.AuthResponse.PermissionLevel.MODERATOR;
+        }
+        if (cumulativeCheckType.getCheckingPeerTeacher()) {
+            return Authentication.AuthResponse.PermissionLevel.PEER_TEACHER;
+        }
+        if (cumulativeCheckType.getCheckingUser()) {
+            return Authentication.AuthResponse.PermissionLevel.STUDENT;
+        }
+        return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;
+    }
 
     private static long mergeCheckTypes(final Authentication.AuthType preFixedCheckType) {
         return createAccessValue(preFixedCheckType.getCheckAccess())
