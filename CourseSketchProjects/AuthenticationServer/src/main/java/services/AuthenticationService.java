@@ -5,20 +5,12 @@ import com.google.protobuf.RpcController;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationData;
-import database.auth.AuthenticationDataCreator;
 import database.auth.AuthenticationException;
-import database.auth.Authenticator;
 import database.auth.DbAuthChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.authentication.Authentication;
-
-import java.util.List;
-
-import static database.DatabaseStringConstants.GROUP_PREFIX;
-import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
 
 /**
  * Created by gigemjt on 9/3/15.
