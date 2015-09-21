@@ -1,5 +1,6 @@
 package database.auth;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -48,7 +49,8 @@ public final class DbAuthChecker implements AuthenticationChecker {
             final Authentication.AuthType preFixedCheckType) throws DatabaseAccessException, AuthenticationException {
         final Authentication.AuthType checkType = AuthUtilities.fixCheckType(preFixedCheckType);
         final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
-        final DBObject result = collection.findOne(new ObjectId(itemId));
+        ObjectId id = new ObjectId(itemId);
+        final DBObject result = collection.findOne(new BasicDBObject(DatabaseStringConstants.SELF_ID, id));
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }
