@@ -38,11 +38,11 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
      *
      * <br>
      * We do not need to manage multiple connections so we might as well just make it return null.
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return {@link SubmissionConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new SubmissionConnectionManager(this.getServer(), serverInformation);
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new SubmissionConnectionManager(this.getServer(), serverInfo);
     }
 }

@@ -46,13 +46,12 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * {@inheritDoc}
-     * @param time
-     * @param local
-     * @param serverInformation
+     * {@inheritDoc}<br>
+     *
+     * @return new instance of {@link DatabaseServlet}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new DatabaseServlet(serverInformation);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new DatabaseServlet(serverInfo);
     }
 }

@@ -54,7 +54,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a manager for the proxy connections.
-     *  @param parent
+     * @param parent
      *            {@link serverfront.ProxyServerWebSocketHandler}
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */

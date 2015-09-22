@@ -34,11 +34,10 @@ public class AnswerCheckerServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
      * @return {@link AnswerConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new AnswerConnectionManager(this.getServer(), serverInformation);
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new AnswerConnectionManager(this.getServer(), serverInfo);
     }
 }

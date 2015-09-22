@@ -97,7 +97,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     /**
      * Contains information about the server, mainly the hostname and the port.
      */
-    private PeerInfo serverInfo;
+    private PeerInfo peerInfo;
 
     /**
      * This is the boss event loop group.
@@ -184,11 +184,11 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void createServer() {
-        serverInfo = new PeerInfo(this.getHostName(), this.getPort());
+        peerInfo = new PeerInfo(this.getHostName(), this.getPort());
 
         executor = new ThreadPoolCallExecutor(CORE_THREAD_POOL_SIZE, MAX_THREAD_POOL_SIZE);
 
-        serverFactory = new DuplexTcpServerPipelineFactory(serverInfo);
+        serverFactory = new DuplexTcpServerPipelineFactory(peerInfo);
         serverFactory.setRpcServerCallExecutor(executor);
         server = new ServerBootstrap();
     }
@@ -252,7 +252,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         }
 
         server.childHandler(serverFactory);
-        server.localAddress(serverInfo.getPort());
+        server.localAddress(peerInfo.getPort());
     }
 
     /**
@@ -274,7 +274,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
 
                 server.bind();
                 LOG.info("Server started at http://" + getHostName() + ":" + getPort());
-                LOG.info("Server is named {} ", serverInfo.getName());
+                LOG.info("Server is named {} ", peerInfo.getName());
             }
         };
         serverThread.start();
@@ -328,14 +328,14 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
      *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      *
      * @return  a new instance of a {@link ISocketInitializer}.
      * */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new ServerWebSocketInitializer(serverInformation);
+    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new ServerWebSocketInitializer(serverInfo);
     }
 
     /**

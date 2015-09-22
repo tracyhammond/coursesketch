@@ -9,14 +9,13 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -147,15 +146,17 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     }
 
     /**
+     * {@inheritDoc}
+     * <p/>
      * Override this method to create a subclass of the MultiConnectionManager.
      *
      *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link MultiConnectionManager}.
      */
-    @SuppressWarnings("checkstyle:designforextension")
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new MultiConnectionManager(connectionServer, serverInformation);
+    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:hiddenfield" })
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new MultiConnectionManager(connectionServer, serverInfo);
     }
 
     /**

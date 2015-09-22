@@ -226,14 +226,14 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * <p/>
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      *
      * @return  a new instance of a {@link ServerWebSocketInitializer}.
      **/
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new ServerWebSocketInitializer(serverInformation);
+    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new ServerWebSocketInitializer(serverInfo);
     }
 
     /**
