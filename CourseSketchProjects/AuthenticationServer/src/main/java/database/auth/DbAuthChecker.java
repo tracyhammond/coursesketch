@@ -3,6 +3,7 @@ package database.auth;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
@@ -13,16 +14,26 @@ import utilities.AuthUtilities;
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static database.DbSchoolUtility.getCollectionFromType;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
 /**
- * Created by David Windows on 9/16/2015.
+ * Checks The local database for access to certain items.
+ *
+ * Created by dtracers
  */
 public final class DbAuthChecker implements AuthenticationChecker {
 
+    /**
+     * The database that the auth checker grabs data from.
+     */
     private final DB database;
 
+    /**
+     *
+     * @param database
+     */
     public DbAuthChecker(final DB database) {
         this.database = database;
     }
@@ -37,7 +48,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
      *         The Id of the object we are checking against.
      * @param userId
      *         The user we are checking is valid
-     * @param checkType
+     * @param preFixedCheckType
      *         The rules at that give a correct or false response.
      * @return True if all checked values are valid
      * @throws DatabaseAccessException
@@ -47,10 +58,19 @@ public final class DbAuthChecker implements AuthenticationChecker {
      */
     @Override public Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId, final String userId,
             final Authentication.AuthType preFixedCheckType) throws DatabaseAccessException, AuthenticationException {
+
+        checkNotNull(collectionType, "collectionType");
+        checkNotNull(itemId, "itemId");
+        checkNotNull(userId, "userId");
+
         final Authentication.AuthType checkType = AuthUtilities.fixCheckType(preFixedCheckType);
+        if (!Authenticator.validUserAccessRequest(checkType)) {
+            throw new AuthenticationException("Invalid Authentication Request: No options to check were filled out",
+                    AuthenticationException.NO_AUTH_SENT);
+        }
+
         final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
-        ObjectId id = new ObjectId(itemId);
-        final DBObject result = collection.findOne(new BasicDBObject(DatabaseStringConstants.SELF_ID, id));
+        final DBObject result = collection.findOne(new ObjectId(itemId));
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }

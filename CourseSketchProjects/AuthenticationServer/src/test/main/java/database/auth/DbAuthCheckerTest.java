@@ -36,7 +36,7 @@ public class DbAuthCheckerTest {
     public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
 
     public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
-    public static final String VALID_ITEM_ID = new ObjectId().toString();
+    public static final String VALID_ITEM_ID = new ObjectId().toHexString();
 
     public static final String VALID_GROUP_ID = new ObjectId().toHexString();
     public static final String INVALID_GROUP_ID = new ObjectId().toHexString();
@@ -68,40 +68,51 @@ public class DbAuthCheckerTest {
         List<Object> list = new BasicDBList();
         Collections.addAll(list, groupId);
         db.getCollection(getCollectionFromType(itemType)).insert(
-                new BasicDBObject(DatabaseStringConstants.SELF_ID, itemId)
-                        .append(DatabaseStringConstants.USER_GROUP_COLLECTION, list));
+                new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId))
+                        .append(DatabaseStringConstants.USER_LIST, list));
     }
 
     public void insertValidGroup(String groupId, String courseId, BasicDBObject... permissions) {
         List<Object> list = new BasicDBList();
-        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID, groupId)
+        BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID,  new ObjectId(groupId))
                 .append(DatabaseStringConstants.COURSE_ID, courseId);
         for (BasicDBObject obj: permissions) {
             // grabs the first key and value in the object
             group.append(obj.keySet().iterator().next(), obj.values().iterator().next());
         }
-        db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insert(group);
     }
 
     public BasicDBObject createPermission(String authId, Authentication.AuthResponse.PermissionLevel level) {
         return new BasicDBObject(authId, level.getNumber());
     }
 
-    @Test(expected = DatabaseAccessException.class)
-    public void databaseExceptionThrownWhenWrongTypeGiven() throws DatabaseAccessException, AuthenticationException {
-        authChecker.isAuthenticated(INVALID_ITEM_TYPE, INVALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.getDefaultInstance());
+    @Test(expected = AuthenticationException.class)
+    public void authExceptionThrownWhenNoAuthDataIsSent() throws DatabaseAccessException, AuthenticationException {
+        authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.getDefaultInstance());
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void databaseExceptionThrownWhenNoDataExists() throws DatabaseAccessException, AuthenticationException {
-        authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.getDefaultInstance());
+    public void databaseExceptionThrownWhenWrongTypeGiven() throws DatabaseAccessException, AuthenticationException {
+        authChecker.isAuthenticated(INVALID_ITEM_TYPE, INVALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .build());
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void databaseExceptionThrownWhenGivenWrongIdExists() throws DatabaseAccessException, AuthenticationException {
+        authChecker.isAuthenticated(VALID_ITEM_TYPE, INVALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .build());
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void databaseExceptionThrownWhenGroupDoesNotExist() throws DatabaseAccessException, AuthenticationException {
         final String newId = createNonExistentObjectId(VALID_ITEM_ID);
-        insertValidObject(VALID_ITEM_TYPE, newId, VALID_GROUP_ID);
-        authChecker.isAuthenticated(VALID_ITEM_TYPE, newId, TEACHER_ID, Authentication.AuthType.getDefaultInstance());
+        insertValidObject(VALID_ITEM_TYPE, newId, INVALID_GROUP_ID);
+        authChecker.isAuthenticated(VALID_ITEM_TYPE, newId, TEACHER_ID, Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .build());
     }
 
     @Test
@@ -109,14 +120,82 @@ public class DbAuthCheckerTest {
         final String newId = createNonExistentObjectId(VALID_ITEM_ID);
         insertValidObject(VALID_ITEM_TYPE, newId, new String[]{});
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, newId, TEACHER_ID,
-                Authentication.AuthType.getDefaultInstance());
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .build());
         new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(Authentication.AuthResponse.getDefaultInstance(), response);
     }
 
     @Test
-    public void defaultResponseIsReturnedWhenPersonDoesNotExist() throws DatabaseAccessException, AuthenticationException {
+    public void noPermissionIsReturnedWhenPersonDoesNotExistWithFilledCheckType() throws DatabaseAccessException, AuthenticationException {
+        Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, NO_ACCESS_ID,
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.NO_PERMISSION)
+                        .setHasAccess(false)
+                        .build(),
+                response);
+    }
+
+    @Test
+    public void noPermissionIsReturnedWithDefaultCheckType() throws DatabaseAccessException, AuthenticationException {
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
-                Authentication.AuthType.getDefaultInstance());
-        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(Authentication.AuthResponse.getDefaultInstance(), response);
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.NO_PERMISSION)
+                        .setHasAccess(true)
+                        .build(),
+                response);
+    }
+
+    @Test
+    public void permissionIsLimitedToWhatIsBeingChecked() throws DatabaseAccessException, AuthenticationException {
+        Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .setCheckingUser(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
+                        .setHasAccess(true)
+                        .build(),
+                response);
+    }
+
+    @Test
+    public void permissionReturnsMaxLevelWhenBeingChecked() throws DatabaseAccessException, AuthenticationException {
+        Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .setCheckingAdmin(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
+                        .setHasAccess(true)
+                        .build(),
+                response);
+    }
+
+    @Test
+    public void permissionReturnsStudentLevelEvenWhenAskedIfAdmin() throws DatabaseAccessException, AuthenticationException {
+        Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_ID,
+                Authentication.AuthType.newBuilder()
+                        .setCheckAccess(true)
+                        .setCheckingAdmin(true)
+                        .build());
+        new ProtobufComparisonBuilder().setIgnoreSetDefaultFields(false).build().equals(
+                Authentication.AuthResponse.newBuilder()
+                        .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
+                        .setHasAccess(true)
+                        .build(),
+                response);
     }
 }
