@@ -13,10 +13,10 @@ import coursesketch.server.interfaces.ServerInfo;
 public final class ProxyServlet extends ServerWebSocketInitializer {
 
     /**
-     * @param info {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ProxyServlet(final ServerInfo info) {
-        super(info);
+    public ProxyServlet(final ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
@@ -28,12 +28,12 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
     }
 
     /**
-     * @param info {@link ServerInfo} Contains all of the information about the server.
+     * {@inheritDoc}
      * @return {@link ProxyConnectionManager}
      */
     @Override
-    public MultiConnectionManager createConnectionManager(final ServerInfo info) {
-        return new ProxyConnectionManager(getServer(), info);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new ProxyConnectionManager(getServer(), serverInfo);
     }
 
     /**

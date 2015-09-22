@@ -416,11 +416,11 @@ public abstract class AbstractGeneralConnectionRunner {
      * Override this method if you want to return a subclass of
      * GeneralConnectionServlet.
      *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      *
      * @return  a new instance of a {@link ISocketInitializer}.
      **/
-    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInformation);
+    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
 
     /**
      * Sets the password for the SSL keystore.

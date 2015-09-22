@@ -99,16 +99,17 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     }
 
     /**
+     * {@inheritDoc}
+     * <p/>
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
      */
-    @SuppressWarnings("checkstyle:designforextension")
+    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:hiddenfield" })
     @Override
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new MultiConnectionManager(connectionServer, serverInformation);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new MultiConnectionManager(connectionServer, serverInfo);
     }
 
     /**
