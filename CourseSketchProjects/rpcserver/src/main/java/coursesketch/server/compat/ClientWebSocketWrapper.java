@@ -9,7 +9,7 @@ import protobuf.srl.request.Message;
 import utilities.TimeManager;
 
 /**
- * Wraps around the request service to allow for the handler to extend the abstract handler.
+ * Wraps around the request service to allow the handler to extend the abstract handler.
  *
  * Created by gigemjt on 10/23/14.
  */
@@ -35,9 +35,9 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      *
      * @param controller The controller that was used to send the message.
      * @param request The request that was sent.
-     * @param done Where you set the result.
+     * @param rpcCallback Call {@link RpcCallback#run(Object)} to send back the result.
      */
-    @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
+    @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> rpcCallback) {
         socketHandler.onMessage(request.toByteString().asReadOnlyByteBuffer());
     }
 
@@ -46,10 +46,10 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      *
      * @param controller The controller that was used to send the message.
      * @param request The request that was sent.  In this case it is a request meant for time management.
-     * @param done Where you set the result.
+     * @param rpcCallback Call {@link RpcCallback#run(Object)} to send back the result.
      */
-    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
-        done.run(TimeManager.decodeRequest(request));
+    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> rpcCallback) {
+        rpcCallback.run(TimeManager.decodeRequest(request));
     }
 
     /**
@@ -60,7 +60,7 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * problem. The underlying reason for RpcClientChannel closure is not
      * discernible.
      *
-     * @param rpcClientChannel The client channel tha has closed.
+     * @param rpcClientChannel The client channel that has closed.
      */
     @Override public void connectionClosed(final RpcClientChannel rpcClientChannel) {
         socketHandler.onClose(-1, "Idk");

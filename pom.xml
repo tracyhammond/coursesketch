@@ -21,6 +21,7 @@
         <module>CourseSketchProjects/CourseSketchProxyServer</module>
         <module>CourseSketchProjects/CourseSketchSubmissionServer</module>
         <module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+        <module>TestUtilities/Integration</module>
     </modules>
 
     <repositories>
@@ -70,6 +71,9 @@
                     <name>makeSites</name>
                 </property>
             </activation>
+            <properties>
+                <sitepluginVersion>3.4</sitepluginVersion>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -150,6 +154,26 @@
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
         <defaultGoal>clean install</defaultGoal>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the source directory of our integration tests -->
+                            <sources>
+                                <source>${basedir}/src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -285,7 +309,6 @@
                             </configuration>
                             <goals>
                                 <goal>checkstyle</goal>
-                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -344,7 +367,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.17</version>
+                    <version>${surefireVersion}</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>${basedir}/src/integration-test/**</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -409,7 +437,54 @@
                         <version>1.9.7</version>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>com.github.joelittlejohn.embedmongo</groupId>
+                    <artifactId>embedmongo-maven-plugin</artifactId>
+                    <version>${embeddedMongoVersion}</version>
+                    <executions>
+                        <execution>
+                            <id>start</id>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                            <configuration>
+                                <port>37017</port>
+                                <!-- link to github repo -->
+                                <!-- https://github.com/joelittlejohn/embedmongo-maven-plugin -->
 
+                                <!-- optional (file|console|none), default console -->
+                                <logging>file</logging>
+
+                                <!-- optional, can be used when logging=file, default is ./embedmongo.log -->
+                                <logFile>${basedir}/target/embedmongo.log</logFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>stop</id>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${failSafeVersion}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <excludes>
+                            <exclude>${basedir}/src/test/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
                 <!-- meta build plugins -->
                 <plugin>
                     <groupId>com.github.dtracers</groupId>
@@ -508,6 +583,9 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
+        <embeddedMongoVersion>0.1.12</embeddedMongoVersion>
+        <failSafeVersion>2.18.1</failSafeVersion>
+        <surefireVersion>2.17</surefireVersion>
         <replacerVersion>1.6.2</replacerVersion>
         <resourcePluginVersion>2.7</resourcePluginVersion>
 

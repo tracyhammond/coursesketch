@@ -55,12 +55,11 @@ public class LoginRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * @param time
-     * @param local
-     * @param serverInformation
+     *
+     * @return {@link LoginServlet}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new LoginServlet(serverInformation);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new LoginServlet(serverInfo);
     }
 }

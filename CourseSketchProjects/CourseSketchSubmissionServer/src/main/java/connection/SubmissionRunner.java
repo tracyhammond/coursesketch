@@ -47,10 +47,10 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * @param serverInformation
+     * @param serverInfo
      */
     @Override
-    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new SubmissionServlet(serverInformation);
+    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new SubmissionServlet(serverInfo);
     }
 }

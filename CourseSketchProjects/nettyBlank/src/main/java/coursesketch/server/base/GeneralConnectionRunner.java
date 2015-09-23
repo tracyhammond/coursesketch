@@ -82,7 +82,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to load the configuration data it can be overwritten to load specific data for each server.
+     * {@inheritDoc}
      */
     @Override
     protected void loadConfigurations() {
@@ -90,7 +90,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system if it is being run on a local computer with a local host.
+     * {@inheritDoc}
      */
     @Override
     protected void executeLocalEnvironment() {
@@ -98,7 +98,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system for if it is being run to connect to remote compters.
+     * {@inheritDoc}
      */
     @Override
     protected void executeRemoteEnvironment() {
@@ -106,7 +106,9 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to create an actual server.
+     * {@inheritDoc}
+     *
+     * Creates a server bootstrap and some event loops.
      */
     @Override
     protected final void createServer() {
@@ -222,25 +224,23 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a new instance of a {@link ServerWebSocketInitializer}.
-     * <p/>
-     * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * {@inheritDoc}
      *
-     * @return  a new instance of a {@link ServerWebSocketInitializer}.
+     * @return a new instance of a {@link ServerWebSocketInitializer}.
      **/
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new ServerWebSocketInitializer(serverInformation);
+    protected ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new ServerWebSocketInitializer(serverInfo);
     }
 
     /**
-     * @return true if the server has not been started (basically run most has not been called yet)
+     * {@inheritDoc}
+     *
+     * @return false
      */
     @Override
-    protected final boolean notServerStarted() {
-        return false;
+    protected final boolean serverStarted() {
+        return true;
     }
 }

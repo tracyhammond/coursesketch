@@ -49,10 +49,10 @@ public class ProxyRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * @param serverInformation
+     * @return {@link ProxyServlet}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInformation) {
-        return new ProxyServlet(serverInformation);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new ProxyServlet(serverInfo);
     }
 }
