@@ -2,21 +2,23 @@ package protobuf.srl.services.identity;
 
 option java_generic_services = true;
 
-// NEXT_ID: 5
+
 message UserNameRequest {
-    // userid of the person making the request
+    // UserId of the person making the request.
     optional string requesterId = 1;
-    // the auth id of the person making the request
+    // The authId of the person making the request.
     optional string requesterAuth = 2;
-    // course id
+    // Id of the course the users belong to.
     optional string courseId = 3;
-    // list of userIds we want to trade out for usernames
+    // List of userIds for which we want to find corresponding usernames in the course.
     repeated string userIds = 4;
+
+    // NEXT_ID: 5
 }
 
 message UserNameResponse {
-    // a map of userIds to userNames
-    // map<string, string> userNames = 1;
+    // A map with key userIds and value userNames.
+    // when protobuf 3.0 works map<string, string> userNames = 1;
     message MapFieldEntry {
         optional string key = 1;
         optional string value = 2;
