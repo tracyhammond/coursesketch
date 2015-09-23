@@ -38,7 +38,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     private final MultiConnectionManager manager;
     /**
-     *  {@link ServerInfo} Contains all of the information about the server.
+     * {@link ServerInfo} Contains all of the information about the server.
      */
     private final ServerInfo serverInfo;
 
@@ -55,12 +55,13 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Creates a GeneralConnectionServlet.
      *
-     * @param info {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
-    public ServerWebSocketInitializer(final ServerInfo info) {
-        LOG.info("Currently time out time is not used " + info.getTimeOut());
-        this.serverInfo = info;
+    public ServerWebSocketInitializer(final ServerInfo serverInfo) {
+        // Netty does not natively support timeout times.
+        LOG.info("Currently time out is ignored by a netty backing " + serverInfo.getTimeOut());
+        this.serverInfo = serverInfo;
         connectionServer = createServerSocket();
         manager = createConnectionManager(getServerInfo());
     }
@@ -99,22 +100,18 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     }
 
     /**
-     * Override this method to create a subclass of the MultiConnectionManager.
-     *
-     *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
-     * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}
+     * {@inheritDoc}
      */
-    @SuppressWarnings("checkstyle:designforextension")
+    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:hiddenfield" })
     @Override
-    public MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new MultiConnectionManager(connectionServer, serverInformation);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new MultiConnectionManager(connectionServer, serverInfo);
     }
 
     /**
-     * Override this method to create a subclass of GeneralConnectionServer.
+     * {@inheritDoc}
      *
-     * @return An instance of the {@link coursesketch.server.interfaces.AbstractServerWebSocketHandler}
+     * @return An instance of the {@link ServerWebSocketHandler}
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
@@ -123,7 +120,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     }
 
     /**
-     * @return {@link ServerInfo} contains all of the data about the server.
+     * {@inheritDoc}
      */
     @Override public final ServerInfo getServerInfo() {
         return this.serverInfo;

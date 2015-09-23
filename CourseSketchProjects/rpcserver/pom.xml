@@ -13,7 +13,6 @@
     </parent>
 
     <properties>
-        <!-- This may be removed and a later solution will need to be worked on -->
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
