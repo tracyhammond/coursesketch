@@ -42,7 +42,7 @@ public interface ISocketInitializer {
     AbstractServerWebSocketHandler createServerSocket();
 
     /**
-     * @return {@link ServerInfo} contains all of the data about the server.
+     * @return {@link ServerInfo}. Contains all of the data about the server.
      */
     ServerInfo getServerInfo();
 

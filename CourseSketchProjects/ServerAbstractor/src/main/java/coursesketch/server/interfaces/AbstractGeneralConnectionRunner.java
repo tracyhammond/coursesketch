@@ -70,7 +70,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * The hostname of the server.
      */
-    private String hostName = null;
+    private String hostName;
 
     /**
      * The timeoutTime of a connection.
@@ -400,12 +400,14 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Stops the server.
+     *
      * Input is not stopped by the method.
      */
     protected abstract void stop();
 
     /**
-     * Stops the server.
+     * Reestablishes connections to other servers.
+     *
      * Input is not stopped by the method.
      */
     protected abstract void reconnect();
@@ -413,12 +415,11 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * Creates and returns a new instance of a {@link ISocketInitializer}.
      *
-     * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet.
+     * Override this method if you want to return a subclass of GeneralConnectionServlet.
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      *
-     * @return  a new instance of a {@link ISocketInitializer}.
+     * @return a new instance of an {@link ISocketInitializer}.
      **/
     protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
 
@@ -452,7 +453,9 @@ public abstract class AbstractGeneralConnectionRunner {
     protected abstract boolean notServerStarted();
 
     /**
-     * @return The host name of the server as found by DNS resolving if the server is remote.
+     * If in a remote server environment, gets host name by DNS resolving.
+     *
+     * @return The host name of the server.
      */
     public final String getHostName() {
         return hostName;
