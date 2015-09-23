@@ -51,7 +51,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
     public ServerWebSocketInitializer(final ServerInfo serverInfo) {
-        LOG.info("Currently time out time is not used " + serverInfo.getTimeOut());
+        LOG.info("Currently time out time is not used: " + serverInfo.getTimeOut());
         this.serverInfo = serverInfo;
         connectionServer = createServerSocket();
         manager = createConnectionManager(getServerInfo());
@@ -62,7 +62,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     @Override
     public void stop() {
-
+        // does nothing by default
     }
 
     /**
@@ -83,7 +83,9 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
-     * @return The current number of current connections.
+     * Returns The number of current connections.
+     *
+     * @return The number of current connections.
      */
     @Override
     public final int getCurrentConnectionNumber() {
@@ -92,10 +94,6 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
 
     /**
      * {@inheritDoc}
-     * <p/>
-     * Override this method to create a subclass of the MultiConnectionManager.
-     *
-     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link coursesketch.server.interfaces.MultiConnectionManager}.
      */
     @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:hiddenfield" })
@@ -105,9 +103,9 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
-     * Override this method to create a subclass of GeneralConnectionServer.
+     * {@inheritDoc}
      *
-     * @return An instance of the {@link coursesketch.server.interfaces.AbstractServerWebSocketHandler}
+     * @return An instance of the {@link ServerWebSocketHandler}.
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
@@ -116,7 +114,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
-     * @return {@link ServerInfo} contains all of the data about the server.
+     * {@inheritDoc}
      */
     @Override public final ServerInfo getServerInfo() {
         return serverInfo;
@@ -125,28 +123,35 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     /**
      * Sets the context for ssl.
      *
-     * @param iSslContext
-     *         The Ssl context
+     * @param sslContext
+     *         The SSL context
      */
-    final void setSslContext(final SslContext iSslContext) {
-        this.sslContext = iSslContext;
+    final void setSslContext(final SslContext sslContext) {
+        this.sslContext = sslContext;
     }
 
     /**
      * Called after reconnecting the connections.
      */
     protected void onReconnect() {
+        // does nothing by default.
     }
 
     /**
-     * @return the multiConnectionManager.  This is only used within this package.
+     * Returns the {@link MultiConnectionManager}.
+     *
+     * This is only used within this package.
+     *
+     * @return the {@link MultiConnectionManager}.
      */
     /* package-private */ final MultiConnectionManager getManager() {
         return manager;
     }
 
     /**
-     * @return the GeneralConnectionServer.
+     * Returns The {@link ServerWebSocketHandler}.
+     *
+     * @return The {@link ServerWebSocketHandler}.
      */
     protected final AbstractServerWebSocketHandler getServer() {
         return connectionServer;
@@ -154,7 +159,8 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
 
     /**
      * Initializes the channel with the server factory adding the services to the factory.
-     * @param serverFactory the server that the services are being added to.
+     *
+     * @param serverFactory The server that the services are being added to.
      */
     public final void initChannel(final DuplexTcpServerPipelineFactory serverFactory) {
         LOG.debug("SslContext {}", sslContext);
@@ -172,6 +178,10 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
+     * Returns The list of rpc services that are run by the server.
+     *
+     * This should never return null.
+     *
      * @return The list of rpc services that are run by the server.
      */
     @SuppressWarnings("checkstyle:designforextension")

@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 
 /**
- * Created by gigemjt on 10/19/14.
+ * The general connection runner for starting a server based on an rpc system.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
@@ -63,12 +63,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     private static final int MAX_THREAD_POOL_SIZE = 200;
 
     /**
-     * core number of threads for the client.
+     * Core number of threads for the client.
      */
     private static final int CORE_THREAD_POOL_SIZE = 3;
 
     /**
-     * number of workers.
+     * Number of workers.
      */
     private static final int NUMBER_EVENT_WORKERS = 16;
 
@@ -80,7 +80,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     /**
      * Context for SSL to take place.
      */
-    private SslContext sslCtx;
+    private SslContext sslContext;
 
     /**
      * The Netty server that handles communication.
@@ -130,11 +130,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     private RpcConnectionEventNotifier localRpcEventLogger;
 
     /**
-     * Parses the arguments from the server. This only expects a single argument
-     * which is if it is local.
+     * Parses the arguments from the server.
+     *
+     * This only expects a single argument indicating if the server is local.
      *
      * @param arguments
-     *         the arguments from the server are then parsed.
+     *         The arguments from the server are then parsed.
      */
     protected GeneralConnectionRunner(final String... arguments) {
         super(arguments);
@@ -154,15 +155,17 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to load the configuration data it can be overwritten to load specific data for each server.
+     * {@inheritDoc}
      */
     @Override
     protected void loadConfigurations() {
-
+        // does nothing by default
     }
 
     /**
-     * Called to setup the system if it is being run on a local computer with a local host.
+     * {@inheritDoc}
+     * <p/>
+     * The RpcServer Sets up a logger that logs every rpc event for extra debugging.
      */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
@@ -171,12 +174,12 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system for if it is being run to connect to remote computers.
+     * {@inheritDoc}
      */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     protected void executeRemoteEnvironment() {
-
+        // does nothing by default
     }
 
     /**
@@ -196,13 +199,13 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     /**
      * Configures the SSL for the server.
      *
-     * @param iKeystorePath
-     *         the location of the keystore.
-     * @param iCertificatePath
-     *         the password for the keystore.
+     * @param keystorePath
+     *         The location of the keystore.
+     * @param certificatePath
+     *         The password for the keystore.
      */
     @Override
-    protected final void configureSSL(final String iKeystorePath, final String iCertificatePath) {
+    protected final void configureSSL(final String keystorePath, final String certificatePath) {
         // TO GENERATE NEEDED FILES FOR SSL.
         /*
             openssl genrsa -des3 -out server.key 1024
@@ -213,7 +216,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             openssl pkcs8 -topk8 -nocrypt -in server.key -out serverpk8.key
         */
         try {
-            sslCtx = SslContext.newServerContext(new File(iCertificatePath), new File(iKeystorePath));
+            sslContext = SslContext.newServerContext(new File(certificatePath), new File(keystorePath));
         } catch (SSLException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
@@ -224,7 +227,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected final void addConnections() {
-        ((ServerWebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslCtx);
+        ((ServerWebSocketInitializer) getSocketInitailizerInstance()).setSslContext(sslContext);
 
         boss = new NioEventLoopGroup(2, new RenamingThreadFactoryProxy("boss", Executors.defaultThreadFactory()));
         workers = new NioEventLoopGroup(NUMBER_EVENT_WORKERS, new RenamingThreadFactoryProxy("worker", Executors.defaultThreadFactory()));
@@ -235,8 +238,8 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         // TCP/IP settings
         server.option(ChannelOption.SO_SNDBUF, SIZE_OF_SEND_BUFFER);
         server.option(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
-        server.childOption(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
         server.childOption(ChannelOption.SO_SNDBUF, SIZE_OF_SEND_BUFFER);
+        server.childOption(ChannelOption.SO_RCVBUF, SIZE_OF_RCV_BUFFER);
         server.option(ChannelOption.TCP_NODELAY, true);
 
         final ServerWebSocketInitializer socketInitializer = (ServerWebSocketInitializer) this.getSocketInitailizerInstance();
@@ -292,7 +295,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      *
      * @param command
      *         The command that is being processed.
-     * @param sysin
+     * @param systemIn
      *         Used for additional input.
      * @return True if the message command is processed.
      * @throws IOException
@@ -300,37 +303,31 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    protected boolean parseUtilityCommand(final String command, final BufferedReader sysin) throws IOException {
+    protected boolean parseUtilityCommand(final String command, final BufferedReader systemIn) throws IOException {
+        // processes no messages so false is returned.
         return false;
     }
 
     /**
-     * Stops the server.
-     * Input is not stopped by the method.
+     * {@inheritDoc}
      */
     @Override
     protected void stop() {
-
+        // does nothing by default
     }
 
     /**
-     * Stops the server.
-     * Input is not stopped by the method.
+     * {@inheritDoc}
      */
     @Override
     protected void reconnect() {
-
+        // does nothing by default
     }
 
     /**
-     * Returns a new instance of a {@link coursesketch.server.interfaces.ISocketInitializer}.
-     * <p/>
-     * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet
+     * {@inheritDoc}
      *
-     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
-     *
-     * @return  a new instance of a {@link ISocketInitializer}.
+     * @return A new instance of a {@link ISocketInitializer}.
      * */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
@@ -339,10 +336,13 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * @return true if the server has not been started (basically run most has not been called yet)
+     * {@inheritDoc}
+     *
+     * @return false.
      */
     @Override
-    protected final boolean notServerStarted() {
-        return false;
+    protected final boolean serverStarted() {
+        // returns false by default.
+        return true;
     }
 }

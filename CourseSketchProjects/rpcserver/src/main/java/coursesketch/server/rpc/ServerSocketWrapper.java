@@ -14,13 +14,15 @@ import utilities.ConnectionException;
 import utilities.TimeManager;
 
 /**
+ * A wrapper around a {@link ServerWebSocketHandler}.
+ *
  * Created by gigemjt on 10/19/14.
  *
  * This channel should be shareable!
  */
 @ChannelHandler.Sharable
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-/* package private! */ class ServerSocketWrapper extends Message.RequestService implements TcpConnectionEventListener, CourseSketchRpcService {
+/* package-private */ class ServerSocketWrapper extends Message.RequestService implements TcpConnectionEventListener, CourseSketchRpcService {
 
 
     /**
@@ -29,11 +31,12 @@ import utilities.TimeManager;
     private static final Logger LOG = LoggerFactory.getLogger(ServerSocketWrapper.class);
 
     /**
-     * An actual socket handler that is just wrapped by the.
+     * The actual socket handler that this object wraps around
      */
     private final ServerWebSocketHandler socketHandler;
 
     /**
+     * Constructor for {@ServerSocketWrapper}
      * @param handler The handler for the server side of the socket.
      * @param secure True if the socket should use SSL.
      */
@@ -45,11 +48,13 @@ import utilities.TimeManager;
     /**
      * <code>rpc sendMessage(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
+     * Default part of this service.
+     *
      * @param controller The controller that was used to send the message.
      * @param request The request that was sent.  In this case it is a request meant for time management.
-     * @param done Where you set the result.
+     * @param rpcCallback Where you set the result.
      */
-    @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
+    @Override public void sendMessage(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> rpcCallback) {
         if (controller.failed() || controller.isCanceled()) {
             socketHandler.rpcOnError(controller, new ConnectionException(controller.errorText()));
         } else {
@@ -61,12 +66,14 @@ import utilities.TimeManager;
      * <code>rpc sendTimeRequest(.protobuf.srl.request.Request) returns (.protobuf.srl.request.Request);</code>.
      *
      * Parses the time request and then sends one right back.
+     *
      * @param controller The controller that was used to send the message.
      * @param request The request that was sent.
-     * @param done Where you set the result.
+     * @param rpcCallback Where you set the result.
      */
-    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> done) {
-        done.run(TimeManager.decodeRequest(request));
+    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request,
+            final RpcCallback<Message.Request> rpcCallback) {
+        rpcCallback.run(TimeManager.decodeRequest(request));
     }
 
     /**
@@ -77,10 +84,10 @@ import utilities.TimeManager;
      * problem. The underlying reason for RpcClientChannel closure is not
      * discernible.
      *
-     * @param rpcClientChannel The client channel tha has closed.
+     * @param rpcClientChannel The client channel that has closed.
      */
     @Override public void connectionClosed(final RpcClientChannel rpcClientChannel) {
-        socketHandler.rpcOnClose(new RpcSession(rpcClientChannel), -1, "Idk");
+        socketHandler.rpcOnClose(new RpcSession(rpcClientChannel), -1, "for an unknown reason");
     }
 
     /**
@@ -97,9 +104,9 @@ import utilities.TimeManager;
     /**
      * Sets the object that initializes this service.
      *
-     * @param socketInitializer The Initializer that created this service.  (It is ignored in the wrapper).
+     * @param socketInitializer The Initializer that created this service. (It is ignored in the wrapper).
      */
     @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        // This can be ignored because this is a wrapper and the actual handler actually does contain a socket initializer.
+        // This is left blank because this class is a wrapper. The actual handler contains a socket initializer
     }
 }

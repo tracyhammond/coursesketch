@@ -111,7 +111,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to load the configuration data it can be overwritten to load specific data for each server.
+     * {@inheritDoc}
      */
     @Override
     public final void loadConfigurations() {
@@ -119,7 +119,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system if it is being run on a local computer with a local host.
+     * {@inheritDoc}
      */
     @Override
     public void executeLocalEnvironment() {
@@ -127,7 +127,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system for if it is being run to connect to remote compters.
+     * {@inheritDoc}
      */
     @Override
     public void executeRemoteEnvironment() {
@@ -213,10 +213,10 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * @return true if the server has not started accepting connections yet.
+     * {@inheritDoc}
      */
     @Override
-    protected final boolean notServerStarted() {
+    protected final boolean serverStarted() {
         return this.server == null || !this.server.isRunning();
     }
 
