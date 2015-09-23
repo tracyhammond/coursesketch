@@ -6,14 +6,14 @@ import com.googlecode.protobuf.pro.duplex.listener.RpcConnectionEventListener;
 import org.slf4j.Logger;
 
 /**
- * A factory for creating A logger for RpcEvents.
+ * A factory for creating a logger for RpcEvents.
  *
  * Created by gigemjt on 9/3/15.
  */
 public final class LocalRpcEventLoggerFactory {
 
     /**
-     * private constructor.
+     * Private constructor.
      */
     private LocalRpcEventLoggerFactory() {
     }
@@ -32,22 +32,22 @@ public final class LocalRpcEventLoggerFactory {
 
             @Override
             public void connectionReestablished(final RpcClientChannel clientChannel) {
-                log.info("connectionReestablished " + clientChannel);
+                log.info("connectionReestablished: " + clientChannel);
             }
 
             @Override
             public void connectionOpened(final RpcClientChannel clientChannel) {
-                log.info("connectionOpened " + clientChannel);
+                log.info("connectionOpened: " + clientChannel);
             }
 
             @Override
             public void connectionLost(final RpcClientChannel clientChannel) {
-                log.info("connectionLost " + clientChannel);
+                log.info("connectionLost: " + clientChannel);
             }
 
             @Override
             public void connectionChanged(final RpcClientChannel clientChannel) {
-                log.info("connectionChanged " + clientChannel);
+                log.info("connectionChanged: " + clientChannel);
             }
         };
         rpcEventNotifier.setEventListener(listener);

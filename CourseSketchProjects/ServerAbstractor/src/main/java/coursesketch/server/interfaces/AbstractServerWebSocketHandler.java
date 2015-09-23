@@ -82,22 +82,24 @@ public abstract class AbstractServerWebSocketHandler {
     private final ISocketInitializer parentServer;
 
     /**
-     * The parent servlet for this server.
+     * Information about the server.
      */
-    private final ServerInfo hostInfo;
+    private final ServerInfo serverInfo;
 
     /**
      * A constructor that accepts a servlet.
+     *
      * @param parent The parent servlet of this server.
-     * @param hostInfo {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo hostInfo) {
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
         parentServer = parent;
-        this.hostInfo = hostInfo;
+        this.serverInfo = serverInfo;
     }
 
     /**
      * Called when the connection is closed.
+     *
      * @param conn The connection that closed the websocket
      * @param statusCode The reason that the connection was closed.
      * @param reason The human readable reason that the connection was closed.
@@ -207,17 +209,16 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * @return The {@link AbstractServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
      */
-    @SuppressWarnings("static-method")
     public final String getName() {
         return NAME;
     }
 
     /**
-     * @return The name that the server is running on.
+     * @return The hostName of the server.
      * @see ServerInfo#hostName
      */
     public final String getHostName() {
-        return hostInfo.getHostName();
+        return serverInfo.getHostName();
     }
 
     /**
@@ -225,7 +226,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @see ServerInfo#port
      */
     public final int getHostPort() {
-        return hostInfo.getPort();
+        return serverInfo.getPort();
     }
 
     /**

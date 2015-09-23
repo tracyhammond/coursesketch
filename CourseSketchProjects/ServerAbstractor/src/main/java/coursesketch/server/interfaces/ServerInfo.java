@@ -65,7 +65,7 @@ public class ServerInfo {
     }
 
     /**
-     * @return The port that the server is running on
+     * @return The port that the server is running on.
      * @see #port
      */
     public final int getPort() {
@@ -81,7 +81,7 @@ public class ServerInfo {
     }
 
     /**
-     * @return True if the server should be running in secure mode
+     * @return True if the server should be running in secure mode.
      * @see #isSecureVar
      */
     public final boolean isSecure() {
@@ -89,7 +89,7 @@ public class ServerInfo {
     }
 
     /**
-     * @return True if the server is running on a local dev machine
+     * @return True if the server is running on a local dev .
      * @see #isLocalVar
      */
     public final boolean isLocal() {

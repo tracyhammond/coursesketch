@@ -1,5 +1,10 @@
 package coursesketch.server.interfaces;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message.Request;
+import utilities.ConnectionException;
+
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,11 +14,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.ConnectionException;
-import protobuf.srl.request.Message.Request;
 
 /**
  * A manager for holding all of the connections that were created.
@@ -60,11 +60,11 @@ public class MultiConnectionManager {
     /**
      * Creates a default {@link MultiConnectionManager}.
      *
-     * @param iParent  The server that is using this object.
+     * @param parent  The server that is using this object.
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public MultiConnectionManager(final AbstractServerWebSocketHandler iParent, final ServerInfo serverInfo) {
-        this.parent = iParent;
+    public MultiConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        this.parent = parent;
         this.connectLocally = serverInfo.isLocal();
         this.secure = serverInfo.isSecure();
     }
@@ -72,9 +72,9 @@ public class MultiConnectionManager {
     /**
      * Creates a connection given the different information.
      *
-     * @param server           The server that is connected to this connection manager.
+     * @param server         The server that is connected to this connection manager.
      * @param isLocal        If the connection that is being created is local or remote.
-     * @param remoteAddress   The location to connect to if it is connecting remotely.
+     * @param remoteAddress  The location to connect to if it is connecting remotely.
      * @param port           The port that this connection is created at. (Has to be unique
      *                       to this computer)
      * @param isSecure       True if using SSL false otherwise.
@@ -84,8 +84,8 @@ public class MultiConnectionManager {
      * @throws ConnectionException If a connection has failed to be made.
      */
     public static AbstractClientWebSocket createConnection(final AbstractServerWebSocketHandler server, final boolean isLocal,
-            final String remoteAddress,
-            final int port, final boolean isSecure, final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
+            final String remoteAddress, final int port, final boolean isSecure,
+            final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
         if (server == null) {
             throw new ConnectionException("Can't create connection with a null parent server");
         }
@@ -104,7 +104,7 @@ public class MultiConnectionManager {
      * Initializes the connection given certain parameters.
      *
      * @param location       The location of the server as a URI
-     * @param connectionType a class that represents the connection.
+     * @param connectionType A class that represents the connection.
      * @param serv           The server that is managing the connection.
      * @return A connection wrapper.
      * @throws ConnectionException Thrown if there are problems initializing the connection.
@@ -159,21 +159,20 @@ public class MultiConnectionManager {
      *
      * @param serv           The server that is connected to this connection manager.
      * @param isLocal        If the connection that is being created is local or remote.
-     * @param remoteAdress   The location to connect to if it is connecting remotely.
+     * @param remoteAddress   The location to connect to if it is connecting remotely.
      * @param port           The port that this connection is created at. (Has to be unique
      *                       to this computer)
      * @param isSecure       True if using SSL false otherwise.
      * @param connectionType The class that will be made (should be a subclass of
      *                       ConnectionWrapper)
      * @throws ConnectionException If a connection has failed to be made.
-     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int, boolean
-     * Class)
+     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int, boolean, Class)
      * @see #addConnection(AbstractClientWebSocket, Class)
      */
     public final void createAndAddConnection(final AbstractServerWebSocketHandler serv, final boolean isLocal,
-            final String remoteAdress, final int port, final boolean isSecure,
+            final String remoteAddress, final int port, final boolean isSecure,
             final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
-        final AbstractClientWebSocket connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
+        final AbstractClientWebSocket connection = createConnection(serv, isLocal, remoteAddress, port, isSecure, connectionType);
         addConnection(connection, connectionType);
     }
 

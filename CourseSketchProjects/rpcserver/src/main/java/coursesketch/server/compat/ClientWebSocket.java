@@ -29,7 +29,15 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 /**
- * Created by gigemjt on 10/22/14.
+ * Used for compatibility with existing websockets this can be used with the {@link coursesketch.server.interfaces.MultiConnectionManager}.
+ *
+ * <pre>
+ * It is used by grabbing the websocket from the {@link coursesketch.server.interfaces.MultiConnectionManager} and converting it and grabbing the
+ * rpc channel and rpc controller.
+ *     <code>
+ *
+ *     </code>
+ * </pre>
  */
 public class ClientWebSocket extends AbstractClientWebSocket {
 
@@ -59,7 +67,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     private static final int MAX_THREAD_POOL_SIZE = 100;
 
     /**
-     * core number of threads for the client.
+     * Core number of threads for the client.
      */
     private static final int CORE_THREAD_POOL_SIZE = 3;
 
@@ -76,28 +84,29 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
      * <p/>
-     * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link coursesketch.server.interfaces.AbstractClientWebSocket#connect()} or call
-     * {@link coursesketch.server.interfaces.AbstractClientWebSocket#send(ByteBuffer)}.
+     * Note that this does not actually try to connect the wrapper.<br>
+     * you have to either explicitly call {@link coursesketch.server.interfaces.AbstractClientWebSocket#connect()}
+     * or call {@link coursesketch.server.interfaces.AbstractClientWebSocket#send(ByteBuffer)}.
      *
-     * @param iDestination
+     * @param destination
      *         The location the server is going as a URI. ex:
      *         http://example.com:1234
-     * @param iParentServer
+     * @param parentServer
      *         The server that is using this connection wrapper.
      */
-    protected ClientWebSocket(final URI iDestination, final AbstractServerWebSocketHandler iParentServer) {
-        super(iDestination, iParentServer);
+    protected ClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parentServer) {
+        super(destination, parentServer);
     }
 
     /**
      * Attempts to connect to the server at URI with a webSocket Client.
      *
      * @throws ConnectionException
-     *         Throws an exception if an error occurs during the connection attempt.
+     *         Thrown if an error occurs during the connection attempt.
      */
     @Override
     protected final void connect() throws ConnectionException {
+        // Uncomment these lines to use ssl.
         //final SslContext sslCtx = null;
         /*
         if (getParentServer().) {
@@ -108,7 +117,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         */
         final InetSocketAddress remoteAddress = new InetSocketAddress(getURI().getHost(), getURI().getPort());
         if (remoteAddress.isUnresolved()) {
-            throw new ConnectionException("Remote address does not exist " + remoteAddress.getHostString());
+            throw new ConnectionException("Remote address does not exist: " + remoteAddress.getHostString());
         }
         final PeerInfo client = new PeerInfo(this.getParentServer().getHostName());
         LOG.info("Resolved address {}", remoteAddress.getAddress());
@@ -153,7 +162,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
             channel = clientFactory.peerWith(server, bootstrap);
         } catch (IOException e) {
             LOG.error("Unable to connect to server", e);
-            throw new ConnectionException("Unable to connect to server " + server.getName(), e);
+            throw new ConnectionException("Unable to connect to server: " + server.getName(), e);
         }
 
         final ClientWebSocketWrapper wrapper = new ClientWebSocketWrapper(this);
@@ -162,24 +171,27 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     }
 
     /**
-     * Accepts messages and sends the request to the correct server and holds
-     * minimum client state.
+     * Accepts messages, sends the request to the correct server, and holds minimum client state.
      *
      * @param buffer
      *         The message that is received by this object.
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
-
+        // This is intentionally left blank and is meant to be overwritten.
     }
 
     /**
-     * @return A {@link RpcClientChannel} so that protobuf can send messages.
+     * Returns the {@link RpcClientChannel} so that you can send messages using special services.
+     *
+     * @return A {@link RpcClientChannel}
      */
     public final RpcClientChannel getRpcChannel() {
         return channel;
     }
 
     /**
+     * Creates a new {@link RpcController} and returns the new controller.
+     *
      * @return A new instance of{@link RpcController}.
      */
     public final RpcController getNewRpcController() {

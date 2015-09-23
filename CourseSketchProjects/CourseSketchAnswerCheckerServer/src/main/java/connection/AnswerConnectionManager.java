@@ -33,7 +33,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     *  @param parent  The server that is using this object.
+     * @param parent  The server that is using this object.
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     public AnswerConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
