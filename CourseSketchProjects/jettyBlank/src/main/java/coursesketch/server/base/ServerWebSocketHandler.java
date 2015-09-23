@@ -33,11 +33,12 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * A constructor that accepts a servlet.
+     *
      * @param parent The parent servlet of this server.
-     * @param info  {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo info) {
-        super(parent, info);
+    public ServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -134,8 +135,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     }
 
     /**
-     * @return The {@link MultiConnectionManager} or subclass so it can be used
-     * in this instance.
+     * {@inheritDoc}
      */
     protected final MultiConnectionManager getConnectionManager() {
         return ((ServerWebSocketInitializer) getParentServer()).getManager();
