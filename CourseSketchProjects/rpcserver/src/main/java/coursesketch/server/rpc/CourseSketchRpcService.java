@@ -11,6 +11,7 @@ import coursesketch.server.interfaces.ISocketInitializer;
 public interface CourseSketchRpcService extends Service {
     /**
      * Sets the object that initializes this service.
+     *
      * @param socketInitializer The {@link ISocketInitializer} that contains useful data for any RpcService used by CourseSketch.
      */
     void setSocketInitializer(final ISocketInitializer socketInitializer);

@@ -180,17 +180,19 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to load the configuration data it can be overwritten to load specific data for each server.
+     * Called to load the configuration data.
+     *
+     * It can be overwritten to load specific data for each server.
      */
     protected abstract void loadConfigurations();
 
     /**
-     * Called to setup the system if it is being run on a local computer with a local host.
+     * Called to setup the system when it is being run on a local computer with a local host.
      */
     protected abstract void executeLocalEnvironment();
 
     /**
-     * Called to setup the system for if it is being run to connect to remote compters.
+     * Called to setup the system if it is being run on a remote host.
      */
     protected abstract void executeRemoteEnvironment();
 
@@ -201,8 +203,11 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Configures the SSL for the server.
-     * @param iCertificatePath the password for the keystore.
-     * @param iKeystorePath the location of the keystore.
+     *
+     * @param iKeystorePath
+     *         The location of the keystore.
+     * @param iCertificatePath
+     *         The password for the keystore.
      */
     protected abstract void configureSSL(String iKeystorePath, String iCertificatePath);
 
@@ -329,7 +334,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
      */
     private void startCommand() throws IOException {
-        if (this.notServerStarted()) {
+        if (!this.serverStarted()) {
             this.start();
         } else {
             LOG.info("you can not start the because it is already running.");
@@ -448,9 +453,11 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * @return true if the server has not been started (basically run most has not been called yet)
+     * False if the server has not been started (basically {@link #startServer()} has not been called yet)
+     *
+     * @return False if the server has not been started.
      */
-    protected abstract boolean notServerStarted();
+    protected abstract boolean serverStarted();
 
     /**
      * If in a remote server environment, gets host name by DNS resolving.
