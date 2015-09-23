@@ -150,8 +150,6 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      * <p/>
      * Override this method to create a subclass of the MultiConnectionManager.
      *
-     *
-     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link MultiConnectionManager}.
      */
     @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:hiddenfield" })

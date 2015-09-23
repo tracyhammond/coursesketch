@@ -26,16 +26,16 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * A constructor that accepts a servlet.
      *
-     * @param parent
-     *         The parent servlet of this server.
-     * @param info {@link ServerInfo} Contains all of the information about the server.
+     * @param parent The parent servlet of this server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    protected ServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo info) {
-        super(parent, info);
+    protected ServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
      * Called when this server connects to a client.
+     *
      * @param ctx The context of the socket itself.
      * @param req The request that contains data about the upgrade request.
      */
@@ -47,7 +47,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * Called after onOpen Finished. Can be over written.
      *
      * @param conn
-     *         the connection that is being opened.
+     *         The connection that is being opened.
      */
     @Override
     protected void openSession(final SocketSession conn) {
@@ -56,6 +56,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * Called if an error occurs.
+     *
      * @param session The socket context of the error.
      * @param cause The cause of the error.
      */
@@ -66,10 +67,8 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     /**
      * Called when an error occurs with the connection.
      *
-     * @param session
-     *         The session that has an error.
-     * @param cause
-     *         The actual error.
+     * @param session The session that has an error.
+     * @param cause The actual error.
      */
     @Override
     protected void onError(final SocketSession session, final Throwable cause) {
@@ -89,8 +88,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * Takes a request and allows overriding so that subclass servers can handle
      * messages.
      *
-     * @param session
-     *         the session object that created the message
+     * @param session The session object that created the message.
      * @param req The protobuf request object that represents what was sent to the server
      */
     @Override
@@ -118,8 +116,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     }
 
     /**
-     * @return The {@link coursesketch.server.interfaces.MultiConnectionManager} or subclass so it can be used
-     * in this instance.
+     * {@inheritDoc}
      */
     protected final MultiConnectionManager getConnectionManager() {
         return ((ServerWebSocketInitializer) getParentServer()).getManager();

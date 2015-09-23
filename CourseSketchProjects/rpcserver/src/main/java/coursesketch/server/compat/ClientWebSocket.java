@@ -29,7 +29,15 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 /**
- * Created by gigemjt on 10/22/14.
+ * Used for compatibility with existing websockets this can be used with the {@link coursesketch.server.interfaces.MultiConnectionManager}.
+ *
+ * <pre>
+ * It is used by grabbing the websocket from the {@link coursesketch.server.interfaces.MultiConnectionManager} and converting it and grabbing the
+ * rpc channel and rpc controller.
+ *     <code>
+ *
+ *     </code>
+ * </pre>
  */
 public class ClientWebSocket extends AbstractClientWebSocket {
 
