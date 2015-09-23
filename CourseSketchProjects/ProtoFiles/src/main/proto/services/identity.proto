@@ -27,6 +27,9 @@ message UserNameResponse {
     repeated MapFieldEntry userNames = 1;
 }
 
+/**
+ * A service that deals with the conversion of userIds to userNames.
+ */
 service IdentityService {
     rpc requestUserNames(UserNameRequest) returns (UserNameResponse);
 }
