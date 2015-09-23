@@ -17,10 +17,10 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
     /**
      * Constructor for DatabaseServlet.
      *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public DatabaseServlet(final ServerInfo serverInformation) {
-        super(serverInformation);
+    public DatabaseServlet(final ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
@@ -33,11 +33,10 @@ public class DatabaseServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
      * @return {@link DatabaseConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInformation) {
-        return new DatabaseConnectionManager(getServer(), serverInformation);
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new DatabaseConnectionManager(getServer(), serverInfo);
     }
 }

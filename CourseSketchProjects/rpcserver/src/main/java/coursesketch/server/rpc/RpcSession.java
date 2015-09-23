@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
 /**
+ * A subclass of socket session that handles Rpc data.
+ *
  * Created by gigemjt on 10/19/14.
  */
 public final class RpcSession implements SocketSession {
@@ -33,16 +35,17 @@ public final class RpcSession implements SocketSession {
     private ClientRpcController controller;
 
     /**
-     * Creates a wrapper around the RpcController.
+     * Creates a wrapper around the {@link ClientRpcController}.
      * @param controller The context of the session (the socket itself).
      */
     public RpcSession(final ClientRpcController controller) {
         this.controller = controller;
+        // This is null because it is required to be set to a value.
         session = null;
     }
 
     /**
-     * Creates a wrapper around the rpcClientChannel.
+     * Creates a wrapper around the {@link RpcClientChannel}.
      * @param rpcClientChannel {@link RpcClientChannel}.  Used for information about the socket created.
      */
     public RpcSession(final RpcClientChannel rpcClientChannel) {
@@ -62,7 +65,7 @@ public final class RpcSession implements SocketSession {
     /**
      * Request a close of the current conversation with a normal status code and no reason phrase.
      * <p/>
-     * This will enqueue a graceful close to the remote endpoint.
+     * This will ensure a graceful close to the remote endpoint.
      *
      * @see #close(int, String)
      */
@@ -73,14 +76,13 @@ public final class RpcSession implements SocketSession {
 
     /**
      * {@inheritDoc}
+     *
+     * @return {@code null}.
      */
     @Override
     public Future<Void> send(final Message.Request req) {
         session.callMethod(Message.RequestService.getDescriptor().findMethodByName("sendMessage"),
-                session.newRpcController(),
-                req,
-                req,
-                null);
+                session.newRpcController(), req, req, null);
         return null;
     }
 
@@ -89,7 +91,7 @@ public final class RpcSession implements SocketSession {
      * Developers may use the returned Future object to track progress of the transmission.
      *
      * @param buffer
-     *         the data being sent
+     *         The data being sent.
      * @return the Future object representing the send operation.
      */
     @Override
@@ -105,23 +107,26 @@ public final class RpcSession implements SocketSession {
     /**
      * Send a websocket Close frame, with status code.
      * <p/>
-     * This will enqueue a graceful close to the remote endpoint.
+     * This will ensure a graceful close to the remote endpoint.
      *
      * @param statusCode
-     *         the status code
+     *         The status code.
      * @param reason
-     *         the (optional) reason. (can be null for no reason)
+     *         The (optional) reason. (can be null for no reason)
      * @see #close()
      */
     @Override
     public void close(final int statusCode, final String reason) {
+        // rpc do not have status codes or reasons so we can call close.
         close();
     }
 
     /**
+     * Checks if two {@RpcSessions} are equal.
+     *
      * @param other
-     *         a different RpcSession.
-     * @return true if the {@link org.eclipse.jetty.websocket.api.Session} are equal.
+     *         A different RpcSession.
+     * @return True if the {@link org.eclipse.jetty.websocket.api.Session} are equal.
      */
     @Override
     public boolean equals(final Object other) {
@@ -132,7 +137,7 @@ public final class RpcSession implements SocketSession {
     }
 
     /**
-     * @return Information about the connected peer.  (Whats on the other end)
+     * @return Information about the connected peer.  (What's on the other end)
      */
     private PeerInfo getPeerInfo() {
         if (controller != null) {
@@ -145,7 +150,7 @@ public final class RpcSession implements SocketSession {
     }
 
     /**
-     * @return the hash code of the {@link org.eclipse.jetty.websocket.api.Session}.
+     * @return The hash code of the {@link org.eclipse.jetty.websocket.api.Session}.
      */
     @Override
     public int hashCode() {

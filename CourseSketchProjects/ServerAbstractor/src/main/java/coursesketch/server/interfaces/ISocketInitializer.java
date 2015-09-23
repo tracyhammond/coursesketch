@@ -25,12 +25,14 @@ public interface ISocketInitializer {
     int getCurrentConnectionNumber();
 
     /**
-     * Override this method to create a subclass of the MultiConnectionManager.
+     * Creates and returns a manager that can be used to connect to other servers.
      *
-     * @param serverInformation {@link ServerInfo} Contains all of the information about the server.
+     * This server will act as a client when connecting to those other server.
+     *
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link MultiConnectionManager}
      */
-    MultiConnectionManager createConnectionManager(final ServerInfo serverInformation);
+    MultiConnectionManager createConnectionManager(final ServerInfo serverInfo);
 
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
@@ -40,7 +42,7 @@ public interface ISocketInitializer {
     AbstractServerWebSocketHandler createServerSocket();
 
     /**
-     * @return {@link ServerInfo} contains all of the data about the server.
+     * @return {@link ServerInfo}. Contains all of the data about the server.
      */
     ServerInfo getServerInfo();
 
