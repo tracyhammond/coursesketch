@@ -13,6 +13,10 @@ import utilities.LoggingConstants;
  * @author gigemjt
  */
 public final class SubmissionConnectionManager extends MultiConnectionManager {
+    /**
+     * IP address for database server.
+     */
+    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
 
     /**
      * Declaration and Definition of Logger.
@@ -22,7 +26,7 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
     /**
      * Port number.
      */
-    private static final int PORT = 8885;
+    private static final int DATABASE_PORT = 8885;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
@@ -42,7 +46,7 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

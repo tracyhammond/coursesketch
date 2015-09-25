@@ -91,7 +91,7 @@ public class DatabaseClient {
      * location.
      */
     private DatabaseClient() {
-        this("goldberglinux.tamu.edu");
+        this("localhost");
         //this("localhost");
     }
 
