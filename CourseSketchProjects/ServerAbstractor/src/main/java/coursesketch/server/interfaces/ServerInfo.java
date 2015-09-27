@@ -102,8 +102,21 @@ public class ServerInfo {
         return isLocalVar;
     }
 
+    /**
+     * List of {@link ServerAddress} to connect to database.
+     *
+     * @return List of {@link ServerAddress} ot connect to database.
+     */
     public List<ServerAddress> getDatabaseUrl() {
         return databaseUrl;
+    }
+
+    /**
+     * Adds a url that can be used to reach the database.
+     * @param address An address that is used to connect to the mongoclient.
+     */
+    /* package-private */ void addDatabaseUrl(final ServerAddress address) {
+        databaseUrl.add(address);
     }
 
     public void setDatabaseUrl(final List<ServerAddress> databaseUrl) {

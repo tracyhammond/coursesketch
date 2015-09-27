@@ -18,13 +18,11 @@ import java.util.List;
 public final class AuthenticationServiceInitializer extends ServerWebSocketInitializer {
 
     private MongoClient mongoClient;
+
     /**
-     * @param timeoutTime
-     *            The time it takes before a connection times out.
-     * @param secure
-     *            True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *            True if the server is connecting locally.
+     * Constructor for AuthenticationServiceInitializer.
+     *
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     public AuthenticationServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
