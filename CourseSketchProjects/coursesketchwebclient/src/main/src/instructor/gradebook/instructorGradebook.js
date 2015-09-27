@@ -1,5 +1,4 @@
 (function() {
-
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
@@ -315,7 +314,7 @@
 
             if (oldGrade !== newGrade) {
                 console.log('SAVING GRADE: [', newGrade, ', ', comment, ']');
-                var protoGrade = buildProtoGrade(cell, newGrade, comment);
+                var protoGrade = CourseSketch.gradeBook.buildProtoGrade(cell, newGrade, comment);
                 CourseSketch.dataManager.setGrade(protoGrade);
             }
 
@@ -431,13 +430,14 @@
      * Builds a ProtoGrade for a selected cell to send to the server.
      *
      * @param {HTMLTableCell} cell The cell the grade is coming from.
-     * @param {String} grade The value of the grade.
+     * @param {String} grade The value of the grade. String because input.value returns a string.
      * @param {String} comment The comment for the grade.
      * @returns {ProtoGrade} The ProtoGrade from the selected cell.
      */
-    function buildProtoGrade(cell, grade, comment) {
+    CourseSketch.gradeBook.buildProtoGrade = function(cell, grade, comment) {
         grade = parseFloat(grade); // Sent in is a string. Proto requires a float.
-        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        var protoGrade = CourseSketch.prutil.ProtoGrade();
+        var gradeHistory = CourseSketch.prutil.GradeHistory();
         protoGrade.setCourseId(CourseSketch.gradeBook.course.id);
         protoGrade.setUserId(cell.dataset.student);
         if (!isUndefined(cell.dataset.assignment)) {
@@ -448,9 +448,6 @@
         }
         if (!isNaN(grade)) {
             protoGrade.setCurrentGrade(grade);
-        }
-        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
-        if (!isNaN(grade)) {
             gradeHistory.setGradeValue(grade);
         }
         if (!isUndefined(comment)) {
@@ -458,7 +455,7 @@
         }
         protoGrade.setGradeHistory(gradeHistory); // Don't need to add to list since there is only one gradeHistory value
         return protoGrade;
-    }
+    };
 
     /**
      * Returns the index of an element in reference to its parent element.
