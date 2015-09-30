@@ -40,11 +40,11 @@
              * Called when the html5 notification is clicked.
              * @param {Event} event On Click event.
              */
-            notification.onclick = function (event) {
+            notification.onclick = function(event) {
                 console.log(event);
                 createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
             };
-            setTimeout(function () {
+            setTimeout(function() {
                 notification.close();
             }, 5501);
         }, 10);
