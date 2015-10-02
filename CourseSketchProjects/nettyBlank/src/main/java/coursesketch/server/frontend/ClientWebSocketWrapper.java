@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.frontend;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

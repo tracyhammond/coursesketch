@@ -1,8 +1,8 @@
 package serverfront;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import coursesketch.server.base.ServerWebSocketHandler;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.frontend.ServerWebSocketHandler;
+import coursesketch.server.frontend.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;

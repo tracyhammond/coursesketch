@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.frontend;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.buffer.ByteBuf;

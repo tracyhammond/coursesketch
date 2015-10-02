@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.frontend;
 
 import coursesketch.server.interfaces.SocketSession;
 import io.netty.buffer.Unpooled;
@@ -85,7 +85,10 @@ public final class NettySession implements SocketSession {
         final ChannelFuture future = session.channel().write(frame);
         future.addListener(new GenericFutureListener<DefaultChannelPromise>() {
 
-            /** {@inheritDoc} */
+            /**
+             * {@inheritDoc}
+             **/
+            @SuppressWarnings("PMD.CommentRequired")
             @Override public void operationComplete(final DefaultChannelPromise future) {
                 LOG.debug("Message sent successfully");
             }
