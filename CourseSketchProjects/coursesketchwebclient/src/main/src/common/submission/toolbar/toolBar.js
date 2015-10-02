@@ -20,8 +20,8 @@ function ProblemToolBar() {
      */
     this.initializeFixedActionButton = function() {
         var fab = this.shadowRoot.querySelector('#toolbarFAB');
-        fab.addEventListener('click', function() {
-            if (this.classList.contains('active')){
+        fab.addEventListener('click', function(event) {
+            if (this.classList.contains('active')) {
                 $(this).closeFAB();
             } else {
                 $(this).openFAB();
@@ -47,14 +47,20 @@ function ProblemToolBar() {
      * Sets the callback for the undo button.
      */
     this.setUndoCallback = function(undoCallback) {
-        this.shadowRoot.querySelector('#undo').onclick = undoCallback;
+        this.shadowRoot.querySelector('#undo').onclick = function(event) {
+            event.stopPropagation();
+            (undoCallback.bind(this))(event);
+        };
     };
 
     /**
      * Sets the callback for the redo button.
      */
     this.setRedoCallback = function(redoCallback) {
-        this.shadowRoot.querySelector('#redo').onclick = redoCallback;
+        this.shadowRoot.querySelector('#redo').onclick = function(event) {
+            event.stopPropagation();
+            (redoCallback.bind(this))(event);
+        };
     };
 
     /**
