@@ -1,8 +1,6 @@
 package handlers;
 
 import com.github.fakemongo.junit.FongoRule;
-import com.google.common.collect.Lists;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
@@ -10,7 +8,6 @@ import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.Authenticator;
 import database.auth.MongoAuthenticator;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,13 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
-import protobuf.srl.utils.Util;
 import utilities.BreakDatabase;
+import utilities.ProtobufUtilities;
 import utilities.SocketMocker;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -95,11 +90,9 @@ public class DataRequestHandlerTest {
         Data.DataRequest.Builder dataRequest = Data.DataRequest.newBuilder();
         dataRequest.addAllItems(Arrays.asList(requests));
 
-        Message.Request.Builder request = Message.Request.newBuilder();
+        Message.Request.Builder request = ProtobufUtilities.createRequestFromData(Message.Request.MessageType.DATA_REQUEST, dataRequest.build());
         request.setServersideId(userID);
         request.setMessageTime(messageTime);
-        request.setOtherData(dataRequest.build().toByteString());
-        request.setRequestType(Message.Request.MessageType.DATA_REQUEST);
         return request.build();
     }
 }

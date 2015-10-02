@@ -13,6 +13,11 @@ import utilities.LoggingConstants;
 public class DatabaseConnectionManager extends MultiConnectionManager {
 
     /**
+     * IP address for submission server.
+     */
+    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
+
+    /**
      *  Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnectionManager.class);
@@ -39,7 +44,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(),
+            createAndAddConnection(serv, this.isConnectionLocal(), SUBMISSION_ADDRESS, SUBMISSION_PORT, this.isSecure(),
                     SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

@@ -53,7 +53,7 @@ validateFirstRun(document.currentScript);
         courseColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
         // by instructors
-        var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        var course = CourseSketch.prutil.SrlCourse();
         // course.id = "Course_01";
         course.name = 'Insert name';
         course.description = 'Insert description';
@@ -142,7 +142,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         // by instructors
-        var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+        var assignment = CourseSketch.prutil.SrlAssignment();
         assignment.name = 'Insert name';
         assignment.courseId = courseId;
         alert(courseId);
@@ -268,16 +268,16 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
 
-        var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+        var courseProblem = CourseSketch.prutil.SrlProblem();
         courseProblem.courseId = courseId;
         courseProblem.name = 'Insert Problem Name';
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
 
         if (isUndefined(existingBankProblem)) {
-            var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            var bankProblem = CourseSketch.prutil.SrlBankProblem();
             bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-            var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
+            var permissions = CourseSketch.prutil.SrlPermission();
             permissions.userPermission = [ courseId ];
             bankProblem.accessPermission = permissions;
             courseProblem.setProblemInfo(bankProblem);

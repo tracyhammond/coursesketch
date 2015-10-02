@@ -4,14 +4,14 @@ import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
+import utilities.ProtobufUtilities;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -65,13 +65,13 @@ public final class SubmissionClientWebSocket extends ClientWebSocket {
             // this could take a very very long time!
 
             // we need to this at least
-            final Request.Builder builder = Request.newBuilder(req);
+            final Request.Builder builder = ProtobufUtilities.createBaseResponse(req, true);
             builder.setSessionInfo(sessionInfo[0]);
             this.getParentServer().send(getConnectionFromState(state),
                     builder.build());
         } else if (req.getRequestType() == MessageType.SUBMISSION) {
             // pass up the Id to the client
-            final Request.Builder builder = Request.newBuilder(req);
+            final Request.Builder builder = ProtobufUtilities.createBaseResponse(req, true);
             builder.setSessionInfo(sessionInfo[0]);
             final SocketSession connection = getConnectionFromState(state);
             if (connection == null) {
