@@ -26,6 +26,7 @@ import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,19 +151,25 @@ public final class DataRequestHandler {
                                 for (String itemId : itemRequest.getItemIdList()) {
                                     LOG.info("Trying to retrieve an experiment from a user!");
                                     try {
-                                        instance.getExperimentAsUser(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections);
+                                        final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                                        build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                                        instance.getExperimentAsUser(userId, itemId, build.build(), internalConnections);
                                         results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
                                     } catch (DatabaseAccessException e) {
                                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                                        conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                                         results.add(ResultBuilder.buildResult(e.getLocalizedMessage(), ItemQuery.EXPERIMENT,
                                                 (GeneratedMessage[]) null));
                                         break;
                                     }
                                 }
                             } else {
+                                final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                                build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                                final Request baseRequest = build.build();
                                 for (String itemId : itemRequest.getItemIdList()) {
-                                    instance.getExperimentAsInstructor(userId, itemId, req.getSessionInfo() + "+" + sessionId, internalConnections,
+
+                                    instance.getExperimentAsInstructor(userId, itemId, baseRequest, internalConnections,
                                             itemRequest.getAdvanceQuery());
                                 }
                                 results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
@@ -197,7 +204,7 @@ public final class DataRequestHandler {
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         // If
                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                        conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                         final ItemResult.Builder result = ItemResult.newBuilder();
                         result.setQuery(itemRequest.getQuery());
                         results.add(ResultBuilder.buildResult("The item is not valid for access during the specified time range. " + e.getMessage(),
@@ -215,15 +222,15 @@ public final class DataRequestHandler {
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
         } catch (AuthenticationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }  catch (DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }

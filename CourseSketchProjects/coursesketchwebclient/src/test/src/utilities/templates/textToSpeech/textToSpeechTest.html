@@ -85,7 +85,7 @@
             document.getElementById('textbox').appendChild(real);
             real.initializeElement(template.cloneNode(true));
             real.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_TTSBOX,
                         'Expecting command type CREATE_TTSBOX from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
             });
@@ -94,7 +94,7 @@
 
         asyncTest("Tts viewing mode test", function(assert) {
             expect(2);
-            var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+            var textBoxProto = CourseSketch.prutil.ActionCreateTextBox();
             textBoxProto.setText("Goodbye");
             var real = document.createElement('test-tts-viewing');
             document.getElementById('textbox').appendChild(real);

@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>CourseSketch</groupId>
-	<artifactId>LoginServer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>LoginServer</name>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>CourseSketch</groupId>
+    <artifactId>LoginServer</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>LoginServer</name>
 
-	<parent>
-		<groupId>CourseSketch</groupId>
-		<artifactId>CourseSketch-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../</relativePath>
-	</parent>
+    <parent>
+        <groupId>CourseSketch</groupId>
+        <artifactId>CourseSketch-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
+    </parent>
 
-	<properties>
+    <properties>
         <!-- This may be removed and a later solution will need to be worked on -->
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <mainClass>connection.LoginRunner</mainClass>
@@ -22,7 +22,7 @@
         <averageTestLevel>0</averageTestLevel>
         <projectBranchLevel>0</projectBranchLevel>
         <projectLineLevel>0</projectLineLevel>
-	</properties>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -54,8 +54,16 @@
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
+                <groupId>com.github.joelittlejohn.embedmongo</groupId>
+                <artifactId>embedmongo-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

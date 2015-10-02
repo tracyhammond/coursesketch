@@ -1,4 +1,4 @@
-package internalconnections;
+package connection;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -8,12 +8,28 @@ import utilities.ConnectionException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
 public final class ProxyConnectionManager extends MultiConnectionManager {
+
+    /**
+     * IP address for login server.
+     */
+    private static final String LOGIN_ADDRESS = "LOGIN_IP_PROP";
+
+    /**
+     * IP address for database server.
+     */
+    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
+
+    /**
+     * IP address for answer checker server.
+     */
+    private static final String ANSWER_ADDRESS = "ANSWER_IP_PROP";
 
     /**
      * Declaration and Definition of Logger.
@@ -63,14 +79,14 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         LOG.info("Is Connection Local? {}", isConnectionLocal());
         LOG.info("Is Secure? {}", isSecure());
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), LOGIN_ADDRESS, LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Data...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -78,7 +94,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
         LOG.info("Open Answer...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), ANSWER_ADDRESS, ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -96,7 +112,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      * @return A clean version of this request.
      */
     public static Request createClientRequest(final Request request) {
-        final Request.Builder build = Request.newBuilder(request);
+        final Request.Builder build = ProtobufUtilities.createBaseResponse(request, true);
         build.clearServersideId();
         build.clearSessionInfo();
         return build.build();
@@ -119,7 +135,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      */
     public void send(final Request req, final String sessionId, final Class<? extends AbstractClientWebSocket> connectionType, final String userId)
             throws ConnectionException {
-        final Request.Builder builder = Request.newBuilder(req);
+        final Request.Builder builder = ProtobufUtilities.createBaseResponse(req, true);
         builder.clearServersideId();
         builder.setServersideId(userId);
         super.send(builder.build(), sessionId, connectionType);

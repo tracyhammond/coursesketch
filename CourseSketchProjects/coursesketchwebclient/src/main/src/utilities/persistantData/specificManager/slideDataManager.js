@@ -35,9 +35,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      * @param {Function} slideCallback function to be called after the slide setting is done
      */
     function insertSlideServer(slide, slideCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURESLIDE, function(evt, item) {
             console.log('RESPONSE PLEASE!!!!');
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURESLIDE);
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -56,7 +56,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
+        sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
 
     /**
@@ -71,11 +71,11 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      */
     function updateSlide(slide, localCallback, serverCallback) {
         setSlide(slide, localCallback);
-        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.LECTURESLIDE, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.LECTURESLIDE, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.LECTURESLIDE);
             serverCallback(item);
         });
-        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
+        sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
     parent.updateSlide = updateSlide;
 
@@ -101,7 +101,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                 console.log('SLIDE IS UPADTED FROM SERVER! ' + slideUpdated.id);
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
-                    var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+                    var idInLecture = CourseSketch.prutil.IdsInLecture();
                     idInLecture.id = slideUpdated.id;
                     idInLecture.isSlide = true;
                     console.log('SLIDE IS STUFF! ' + idInLecture);
@@ -151,7 +151,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
                 if (!isUndefined(slideCallback)) {
-                    slideCallback(CourseSketch.PROTOBUF_UTIL.getLectureSlideClass().decode(bytes));
+                    slideCallback(CourseSketch.prutil.getLectureSlideClass().decode(bytes));
                 }
             }// end else
         });
@@ -207,15 +207,15 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                     if (barrier === 0) {
                         if (slideIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
-                                var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
+                                    CourseSketch.prutil.ItemQuery.LECTURESLIDE, function(evt, item) {
+                                var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
                                 var slide = school.slides[0];
                                 if (isUndefined(slide) || slide instanceof DatabaseException) {
                                     if (!isUndefined(serverCallback)) {
                                         serverCallback(slide);
                                     }
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                            CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+                                            CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                                     return;
                                 }  // end if
                                 for (var i = 0; i < school.slides.length; i++) {
@@ -226,9 +226,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                                     serverCallback(slidesFound);
                                 } // end if serverCallback
                                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                        CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+                                        CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                             }); // setListener
-                            sendData.sendDataRequest (CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slideIdsNotFound);
+                            sendData.sendDataRequest (CourseSketch.prutil.ItemQuery.LECTURESLIDE, slideIdsNotFound);
                         } // end if lectureIdsNotFound
                         if (slidesFound.length > 0 && !isUndefined(localCallback)) {
                             localCallback (slidesFound);

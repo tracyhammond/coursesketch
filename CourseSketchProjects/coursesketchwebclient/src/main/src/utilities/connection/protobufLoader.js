@@ -188,12 +188,12 @@ function ProtobufSetup() {
      * It creates two method:
      * <ul>
      * <li>The first method is the name of the message.  This creates an instance of the message.
-     * An example is Request calling <code>PROTOBUF_UTIL.Request()</code> creates an instance of the Request class.
-     * If the message is an enum then you can call it without the () an example is: <code>PROTOBUF_UTIL.CommandType.ADD_STROKE</code>
+     * An example is Request calling <code>prutil.Request()</code> creates an instance of the Request class.
+     * If the message is an enum then you can call it without the () an example is: <code>prutil.CommandType.ADD_STROKE</code>
      * </li>
      * <li> The second method is the class of the message.  This can be useful to get access to messages inside messages.
      * This second method only exist for messages and does not exist for enums.
-     * an example is: <code>PROTOBUF_UTIL.getRequestClass()</code></li>
+     * an example is: <code>prutil.getRequestClass()</code></li>
      *
      * @param {Function|Enum} ClassType the actual data that represents the protobuf data.
      * If the classType is not a function then we treat it like an enum.
@@ -266,13 +266,21 @@ function ProtobufSetup() {
      *              An uncompiled protobuf object.
      * @param {MessageType} requestType
      *              The message type of the request.
+     * @param {String} [requestId]
+     *              An id that is required for every request.
      * @return {Request}
      */
-    this.createRequestFromData = function(data, requestType) {
+    this.createRequestFromData = function(data, requestType, requestId) {
         var request = this.Request();
         request.requestType = requestType;
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
+
+        if (!isUndefined(requestId)) {
+            request.requestId = requestId;
+        } else {
+            request.requestId = generateUUID();
+        }
         return request;
     };
 
@@ -284,10 +292,11 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.createProtoException = function(exception) {
-        if (exception instanceof Error) {
+        if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass()) &&
+            !(exception instanceof CourseSketch.BaseException)) {
             return this.errorToProtoException(exception);
         }
-        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        var pException = CourseSketch.prutil.ProtoException();
         pException.setMssg(exception.specificMessage);
 
         pException.stackTrace = exception.getStackTrace();
@@ -307,10 +316,21 @@ function ProtobufSetup() {
      * @return {ProtoException}
      */
     this.errorToProtoException = function(anError) {
-        var pException = CourseSketch.PROTOBUF_UTIL.ProtoException();
+        var pException = CourseSketch.prutil.ProtoException();
+        if (typeof anError === 'string') {
+            pException.setMssg(anError);
+            pException.setExceptionType('String');
+            pException.setName('String Error');
+            return pException;
+        }
         pException.setMssg(anError.message);
 
-        pException.stackTrace = anError.stack;
+        var stack = anError.stack;
+        if (!isArray(stack)) {
+            pException.stackTrace = [ stack ];
+        } else {
+            pException.stackTrace = anError.stack;
+        }
 
         pException.setExceptionType('Error');
         return pException;
@@ -372,11 +392,7 @@ function ProtobufSetup() {
             throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
         }
 
-        var request = this.Request();
-        request.requestType = requestType;
-        var buffer = update.toArrayBuffer();
-        request.setOtherData(buffer);
-        return request;
+        return createRequestFromData(update, requestType);
     };
 
     /**
@@ -384,7 +400,7 @@ function ProtobufSetup() {
      *
      * @param {CommandType} commandType
      *            the enum object of the commandType (found at
-     *            CourseSketch.PROTOBUF_UTIL.CommandType).
+     *            CourseSketch.prutil.CommandType).
      * @param {Boolean} userCreated
      *            true if the user created this command, false if the
      *            command is system created.
@@ -399,7 +415,29 @@ function ProtobufSetup() {
     };
 
     /**
+     * Creates an itemRequest from the given data.
+     *
+     * @param {ItemQuery} queryType The query type of the object.
+     * @param {String | List<String>} [idList] A list of ids used for retrieving data from the database.
+     * @param {ByteArray} [advanceQuery] A protobuf object used to represent more complex queries.
+     * @returns {ItemRequest} An item request from the data.
+     */
+    this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
+        var itemRequest = CourseSketch.prutil.ItemRequest();
+        itemRequest.setQuery(queryType);
+
+        if (!isUndefined(idList)) {
+            itemRequest.setItemId(idList);
+        }
+        if (!isUndefined(advanceQuery)) {
+            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
+        }
+        return itemRequest;
+    };
+
+    /**
      * Creates a protobuf date time object.
+     *
      * @param {Number|Date|Long} inputDateTime representing the time that this object should be created with.
      * @return {DateTime} A protobuf date time objct that can be used for date stuff.
      */
@@ -432,14 +470,14 @@ function ProtobufSetup() {
      * @return {SrlCommand} a create sketch command
      */
     this.createNewSketch = function createNewSketch(id, x, y, width, height) {
-        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH, false);
-        var idChain = CourseSketch.PROTOBUF_UTIL.IdChain();
+        var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_SKETCH, false);
+        var idChain = CourseSketch.prutil.IdChain();
         if (!isUndefined(id)) {
             idChain.idChain = [ id ];
         } else {
             idChain.idChain = [ generateUUID() ];
         }
-        var createSketchAction = CourseSketch.PROTOBUF_UTIL.ActionCreateSketch();
+        var createSketchAction = CourseSketch.prutil.ActionCreateSketch();
         createSketchAction.sketchId = idChain;
         createSketchAction.x = x || (x === 0 ? 0 : -1);
         createSketchAction.y = y || (y === 0 ? 0 : -1);
@@ -475,14 +513,18 @@ function ProtobufSetup() {
      *            a compiled set of data in the protobuf object.
      * @param {ProtobufClass} proto
      *            The protobuf object that is being decoded.
-     *            This can be grabbed by using CourseSketch.PROTOBUF_UTIL.get<objectName>Class();
+     *            This can be grabbed by using CourseSketch.prutil.get<objectName>Class();
      * @param {Function} [onError]
-     *            A callback that is called when an error occurs
+     *            A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
-     *            and may be called up to two times.
-     * @return {ProtobufObject} decoded protobuf object.
+     *
+     * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
+     * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {
+        if (isUndefined(data) || data === null || typeof data !== 'object') {
+            throw new ProtobufException('Data type is not supported:' + typeof data);
+        }
         try {
             data.mark();
         } catch (exception) {
@@ -490,10 +532,15 @@ function ProtobufSetup() {
                 onError(exception);
             }
         }
-        if (isUndefined(data) || data === null || typeof data !== 'object') {
-            throw new ProtobufException('Data type is not supported:' + typeof data);
+        var decoded = undefined;
+        try {
+            decoded = proto.decode(data);
+        } catch (exception) {
+            throw new ProtobufException('data was not decoded successfully');
         }
-        var decoded = proto.decode(data);
+        if (isUndefined(decoded)) {
+            throw new ProtobufException('data was not decoded successfully or input was empty');
+        }
         try {
             data.reset();
         } catch (exception) {
@@ -504,6 +551,22 @@ function ProtobufSetup() {
         return decoded;
     };
 
+    /**
+     * Returns a "clean" version of the protobuf files that can be considered a clone.
+     *
+     * "clean" means that the protobuf object is compiled into a byteArray then immediately decompiled.
+     * The purpose of cleaning is in case you want to prototype a protobuf object but the object was created on an old version of objects.
+     * Then the protubf would not correctly apply to this new object.
+     *
+     * @param {ProtobufObject} protobuf An object that we want to "clean".
+     * @param {ProtobufMessage} protobufType A class representing the object we want to "clean".
+     * @returns {ProyobufObject} A clean version of the object we sent in.
+     */
+    this.cleanProtobuf = function(protobuf, protobufType) {
+        // TODO: check to see if we can extract the type from the protobuf object.
+        return CourseSketch.prutil.decodeProtobuf(protobuf.toArrayBuffer(), protobufType);
+    };
+
     // makes all of the methods read only
     for (var obj in localScope) {
         if (localScope.hasOwnProperty(obj)) {
@@ -512,15 +575,31 @@ function ProtobufSetup() {
     }
     // making ProtobufException read only
     makeValueReadOnly(localScope, 'ProtobufException', ProtobufException);
+
 }
 
 (function(scope) {
     if (isUndefined(scope.CourseSketch)) {
         makeValueReadOnly(scope, 'CourseSketch', {});
     }
-    if (!isUndefined(scope.CourseSketch.PROTOBUF_UTIL)) {
+    if (!isUndefined(scope.CourseSketch.prutil)) {
         return;
     }
     makeValueReadOnly(scope, 'dcodeIO', dcodeIO);
-    makeValueReadOnly(scope.CourseSketch, 'PROTOBUF_UTIL', new ProtobufSetup().initializeBuf());
+    var protobuf = new ProtobufSetup().initializeBuf();
+    makeValueReadOnly(scope.CourseSketch, 'prutil', protobuf);
+
+    // For old existing code that has not mage the switch.
+    Object.defineProperty(scope.CourseSketch, 'PROTOBUF_UTIL', {
+        /**
+         * @returns {Enum} An existing protobuf
+         */
+        get: function() {
+            // prints stack trace
+            console.warn('USING OLD TYPE OF PROTOBUF USE prutil INSTEAD [trace of possible use below]');
+            console.trace();
+            console.warn('USING OLD TYPE OF PROTOBUF USE prutil INSTEAD [trace of possible use above]');
+            return protobuf;
+        }
+    });
 })(window);

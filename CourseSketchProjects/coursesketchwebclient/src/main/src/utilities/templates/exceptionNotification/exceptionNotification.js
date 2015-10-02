@@ -29,23 +29,25 @@
      * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
      */
     function createShallowNotification(protoEx) {
-        var imageUrl = 'http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg';
-        var notification = new Notification(protoEx.getExceptionType(), {
-            body: protoEx.getMssg(),
-            icon: imageUrl
-        });
-
-        /**
-         * Called when the html5 notification is clicked.
-         * @param {Event} event On Click event.
-         */
-        notification.onclick = function(event) {
-            console.log(event);
-            createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
-        };
         setTimeout(function() {
-            notification.close();
-        }, 5501);
+            var imageUrl = 'http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg';
+            var notification = new Notification(protoEx.getExceptionType(), {
+                body: protoEx.getMssg(),
+                icon: imageUrl
+            });
+
+            /**
+             * Called when the html5 notification is clicked.
+             * @param {Event} event On Click event.
+             */
+            notification.onclick = function(event) {
+                console.log(event);
+                createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
+            };
+            setTimeout(function() {
+                notification.close();
+            }, 5501);
+        }, 10);
     }
 
     /**
@@ -60,6 +62,27 @@
         var detailedNotification = document.createElement('exception-notification');
         parentElement.appendChild(detailedNotification);
         detailedNotification.loadProtoException(protoEx);
+    }
+
+    if (!window.errorListenerSet) {
+        if (isUndefined(CourseSketch.clientException)) {
+            /**
+             * Handles an exception or error then shows it on the client.
+             *
+             * @param {BaseException|Error} exception The exception that was thrown.
+             */
+            function showClientSideException(exception) {
+                console.log(exception);
+                var protoException = CourseSketch.prutil.createProtoException(exception);
+                createShallowNotification(protoException);
+            }
+
+            CourseSketch.clientException = showClientSideException;
+        }
+        window.addEventListener('error', function(evt) {
+            showClientSideException(evt.error);
+        });
+        window.errorListenerSet = true;
     }
 })();
 
