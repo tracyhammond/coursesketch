@@ -22,7 +22,7 @@ function ProblemToolBar() {
         //$('body /deep/ .fixed-action-btn').openFAB();
         var fab = this.shadowRoot.querySelector('#toolbarFAB');
         fab.addEventListener('click', function() {
-            if(this.classList.contains('active')){
+            if (this.classList.contains('active')){
                 $(this).closeFAB();
             } else {
                 $(this).openFAB();
