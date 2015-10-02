@@ -19,7 +19,6 @@ function ProblemToolBar() {
      * Sets the event listeners for the toolbar fixed action button
      */
     this.initializeFixedActionButton = function() {
-        //$('body /deep/ .fixed-action-btn').openFAB();
         var fab = this.shadowRoot.querySelector('#toolbarFAB');
         fab.addEventListener('click', function() {
             if (this.classList.contains('active')){
