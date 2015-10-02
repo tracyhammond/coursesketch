@@ -19,6 +19,7 @@
 		<averageTestLevel>0</averageTestLevel>
 		<projectBranchLevel>0</projectBranchLevel>
 		<projectLineLevel>0</projectLineLevel>
+		<jettyWebSockerVersion>9.3.4.RC0</jettyWebSockerVersion>
 	</properties>
 	<build>
 		<plugins>
@@ -47,48 +48,48 @@
 
 	<dependencies>
 
+		<!--
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-server</artifactId>
-			<version>[9.3.3)</version>
+			<version>${jettyWebSockerVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-servlet</artifactId>
-			<version>[9.3.3)</version>
+			<version>${jettyWebSockerVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-client</artifactId>
-			<version>[9.3.3)</version>
+			<version>${jettyWebSockerVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-api</artifactId>
-			<version>[9.3.3)</version>
+			<version>${jettyWebSockerVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-common</artifactId>
-			<version>[9.3.3)</version>
+			<version>${jettyWebSockerVersion}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-parent</artifactId>
-			<version>[9.3.3)</version>
-		</dependency>
-
-		<!--
+		-->
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
             <version>${jettyVersion}</version>
         </dependency>
+		<!--
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-websocket</artifactId>
+			<version>8.1.17.v20150415</version>
+		</dependency>
 		-->
 
         <dependency>

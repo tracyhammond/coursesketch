@@ -1,7 +1,7 @@
 package serverfront;
 
-import coursesketch.server.base.ServerWebSocketHandler;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.frontend.ServerWebSocketHandler;
+import coursesketch.server.frontend.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import connection.ProxyConnectionManager;
 
