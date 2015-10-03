@@ -3,24 +3,20 @@
 </head>
 <body>
 <template id = "tool-bar">
-    <!--
-    |-----|
-    | sub |
-    | sav |
-    | und |
-    | red |
-    | spe |
-    |  |  |
-    |  v  |
-    |-----|
-     -->
     <style>
-        @import "/src/common/submission/toolbar/toolBar.css";
+        @import "/bower_components/materialize/bin/materialize.css";
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
-    <div id = "panelWrapper" class = "panelWrapper" style = "width:50px;">
+    <div id = "panelWrapper" class = "panelWrapper noselect">
         <div id = "toolPanel">
             <div class = "transBox">
-                <h1></h1>
                 <!--
                 |--------|
                 |   sub  |
@@ -29,18 +25,22 @@
                 |   red  |
                 |--------|
                  -->
-                <div id ="constantButtons">
-                    <img id = "submission" src="/images/toolbar/submission_button.svg" title = "Click to submit the problem">
-                    <img id = "save" src="/images/toolbar/save_button.svg" title = "Click to save the problem">
-                    <img id = "undo" src="/images/toolbar/undo_button.svg" title = "Click to undo">
-                    <img id = "redo" src="/images/toolbar/redo_button.svg" title = "Click to redo">
+                <div id="toolbarFAB" class="fixed-action-btn">
+                    <a class="btn-floating btn-large red">
+                        <i class="large mdi-image-color-lens"></i>
+                    </a>
+                    <ul>
+                        <li><a id="submission" class="btn-floating green"><i class="large mdi-action-done"></i></a></li>
+                        <li><a id="save" class="btn-floating yellow darken-1"><i class="large mdi-content-save"></i></a></li>
+                        <li><a id="undo" class="btn-floating red"><i class="large mdi-content-undo"></i></a></li>
+                        <li><a id="redo" class="btn-floating blue"><i class="large mdi-content-redo"></i></a></li>
+                        <li><a class="btn-floating"><content id="specific_buttons" select=".specific_button"></content></a></li>
+                    </ul>
                 </div>
                 <!--
                 Shows buttons that are specific to the current content
                  -->
-                <content id = "specific_buttons" select=".specific_button">
-                </content>
-                <h1></h1>
+
             </div>
         </div>
     </div>
