@@ -265,14 +265,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Attempts to reconnect all clients.
-     */
-    @Override
-    protected final void reconnect() {
-        getSocketInitailizerInstance().reconnect();
-    }
-
-    /**
      * @return The server that has been created by this runner.
      */
     public final Server getServer() {
