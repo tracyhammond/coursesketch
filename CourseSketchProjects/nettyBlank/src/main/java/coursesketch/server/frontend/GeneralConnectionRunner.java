@@ -212,15 +212,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Stops the server.
-     * Input is not stopped by the method.
-     */
-    @Override
-    protected void reconnect() {
-
-    }
-
-    /**
      * Returns a new instance of a {@link coursesketch.server.interfaces.ISocketInitializer}.
      * <p/>
      * Override this method if you want to return a subclass of

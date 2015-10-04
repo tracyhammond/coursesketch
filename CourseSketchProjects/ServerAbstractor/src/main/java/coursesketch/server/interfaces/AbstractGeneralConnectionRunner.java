@@ -1,16 +1,15 @@
 package coursesketch.server.interfaces;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Sets up the server and manages calling the methods needed to start the server.
@@ -378,10 +377,11 @@ public abstract class AbstractGeneralConnectionRunner {
     protected abstract void stop();
 
     /**
-     * Stops the server.
-     * Input is not stopped by the method.
+     * Attempts to reconnect to all clients.
      */
-    protected abstract void reconnect();
+    protected final void reconnect() {
+        getSocketInitailizerInstance().reconnect();
+    }
 
     /**
      * Returns a new instance of a {@link ISocketInitializer}.
