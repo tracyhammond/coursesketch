@@ -156,7 +156,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(MAX_SIZE));
         // TODO change this to the double locking check thingy
         if (singleWrapper == null) {
-            singleWrapper = new ServerSocketWrapper(createServerSocket(), this.secure);
+            singleWrapper = new ServerSocketWrapper(getServer(), this.secure);
         }
         pipeline.addLast(singleWrapper);
     }
