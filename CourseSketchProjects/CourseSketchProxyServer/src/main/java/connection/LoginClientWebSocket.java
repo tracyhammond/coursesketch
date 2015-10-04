@@ -23,6 +23,8 @@ import protobuf.srl.school.School.SrlUser;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import static utilities.ExceptionUtilities.createExceptionRequest;
+
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
@@ -82,13 +84,20 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             } catch (InvalidProtocolBufferException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 this.getParentServer().send(getConnectionFromState(getStateFromId(request.getSessionInfo())),
-                        ExceptionUtilities.createExceptionRequest(request, protoEx));
+                        createExceptionRequest(request, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
+
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             if (state == null) {
-                LOG.error("NO STATE WAS GRABBED FOR SESSION {}", request.getSessionInfo());
-                // I let it throw the null pointer exception.
+                final Exception e = new NullPointerException("No State was grabbed for session:[ " + request.getSessionInfo() + "]");
+                LOG.error("Unable to create a state object for the given session", e);
+
+                final Request result = createExceptionRequest(ProxyConnectionManager.createClientRequest(request),
+                        ExceptionUtilities.createProtoException(e));
+
+                this.getParentServer().send(getConnectionFromState(state), result);
+                return;
             }
             state.addTry();
             if (login == null) {
