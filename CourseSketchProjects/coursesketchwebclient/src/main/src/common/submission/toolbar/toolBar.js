@@ -47,6 +47,11 @@ function ProblemToolBar() {
      * Sets the callback for the undo button.
      */
     this.setUndoCallback = function(undoCallback) {
+        /**
+         * Wraps the undo callback so that the panel does not close when it is clicked.
+         *
+         * @param {Event} event The click event
+         */
         this.shadowRoot.querySelector('#undo').onclick = function(event) {
             event.stopPropagation();
             (undoCallback.bind(this))(event);
@@ -57,6 +62,11 @@ function ProblemToolBar() {
      * Sets the callback for the redo button.
      */
     this.setRedoCallback = function(redoCallback) {
+        /**
+         * Wraps the redo callback so that the panel does not close when it is clicked.
+         *
+         * @param {Event} event The click event
+         */
         this.shadowRoot.querySelector('#redo').onclick = function(event) {
             event.stopPropagation();
             (redoCallback.bind(this))(event);
