@@ -61,6 +61,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
+        LOG.info("RECOVERED INFO FROM THE LOGIN SERVER");
         final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
@@ -83,9 +84,12 @@ public final class LoginClientWebSocket extends ClientWebSocket {
                 this.getParentServer().send(getConnectionFromState(getStateFromId(request.getSessionInfo())),
                         ExceptionUtilities.createExceptionRequest(request, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-
             }
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
+            if (state == null) {
+                LOG.error("NO STATE WAS GRABBED FOR SESSION {}", request.getSessionInfo());
+                // I let it throw the null pointer exception.
+            }
             state.addTry();
             if (login == null) {
                 LOG.error("Login failed to get to the client");
