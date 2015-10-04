@@ -130,7 +130,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
                 return;
             }
-            final String sessionID = state.getKey();
+            final String sessionID = state.getSessionId();
             LOG.info("Request type is {}", req.getRequestType().name());
             try {
                 this.getConnectionManager().send(req, sessionID, LoginClientWebSocket.class);
@@ -164,7 +164,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             LOG.error("Request that did not contain type: {}", req);
             send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
         }
-        final String sessionID = state.getKey();
+        final String sessionID = state.getSessionId();
         if (req.getRequestType() == MessageType.RECOGNITION) {
             LOG.info("REQUEST TYPE = RECOGNITION");
             try {

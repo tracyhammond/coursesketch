@@ -101,7 +101,7 @@ public abstract class AbstractServerWebSocketHandler {
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
-            idToState.remove(stateId.getKey());
+            idToState.remove(stateId.getSessionId());
         } else {
             LOG.error("Connection Id can not be found");
         }
@@ -123,8 +123,8 @@ public abstract class AbstractServerWebSocketHandler {
         // uses actual variables as get methods produce unmodifiable maps
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
-        LOG.debug("Session Key {}", uniqueState.getKey());
-        idToState.put(uniqueState.getKey(), uniqueState);
+        LOG.debug("Session Key {}", uniqueState.getSessionId());
+        idToState.put(uniqueState.getSessionId(), uniqueState);
         LOG.info("ID ASSIGNED");
 
         LOG.info("Recieving connection {}", getConnectionToId().size());
