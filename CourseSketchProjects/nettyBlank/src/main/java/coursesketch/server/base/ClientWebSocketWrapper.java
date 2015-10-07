@@ -12,11 +12,10 @@ import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.util.CharsetUtil;
-
-import java.nio.ByteBuffer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
 
 /**
  * Created by gigemjt on 10/23/14.
@@ -51,7 +50,7 @@ class ClientWebSocketWrapper extends SimpleChannelInboundHandler<Object> {
      * @param clientWebSocket
      *         The object that handles the actual socket communication.
      */
-    public ClientWebSocketWrapper(final WebSocketClientHandshaker webSocketClientHandshaker, final ClientWebSocket clientWebSocket) {
+    ClientWebSocketWrapper(final WebSocketClientHandshaker webSocketClientHandshaker, final ClientWebSocket clientWebSocket) {
         handshaker = webSocketClientHandshaker;
         socketHandler = clientWebSocket;
     }

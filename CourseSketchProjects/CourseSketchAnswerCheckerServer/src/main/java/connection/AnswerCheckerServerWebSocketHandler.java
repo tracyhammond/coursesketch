@@ -40,7 +40,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
      *         The parent servlet of this server.
      */
     public AnswerCheckerServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
     }
 
     /**

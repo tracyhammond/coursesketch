@@ -1,18 +1,18 @@
 package serverfront;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import coursesketch.server.base.ServerWebSocketHandler;
-import coursesketch.server.base.ServerWebSocketInitializer;
-import coursesketch.server.interfaces.AbstractClientWebSocket;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import coursesketch.server.interfaces.MultiConnectionState;
-import coursesketch.server.interfaces.SocketSession;
 import connection.AnswerClientWebSocket;
 import connection.DataClientWebSocket;
 import connection.LoginClientWebSocket;
 import connection.LoginConnectionState;
 import connection.ProxyConnectionManager;
 import connection.RecognitionClientWebSocket;
+import coursesketch.server.base.ServerWebSocketHandler;
+import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.AbstractClientWebSocket;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
      *            The servlet made for this server.
      */
     public ProxyServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
         final ActionListener listener = new ActionListener() {
             /**
              * Sends a message that sets up time sync to all connecting clients when the time is synced for this server.
