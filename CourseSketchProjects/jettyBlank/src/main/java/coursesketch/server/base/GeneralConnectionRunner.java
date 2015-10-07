@@ -8,6 +8,7 @@ package coursesketch.server.base;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -111,7 +112,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to load the configuration data it can be overwritten to load specific data for each server.
+     * {@inheritDoc}
      */
     @Override
     public final void loadConfigurations() {
@@ -119,7 +120,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system if it is being run on a local computer with a local host.
+     * {@inheritDoc}
      */
     @Override
     public void executeLocalEnvironment() {
@@ -127,10 +128,10 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to setup the system for if it is being run to connect to remote compters.
+     * {@inheritDoc}
      */
     @Override
-    public void executeRemoveEnvironment() {
+    public void executeRemoteEnvironment() {
         // does nothing by default.
     }
 
@@ -199,35 +200,24 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a new instance of a {@link ServerWebSocketInitializer}.
+     * {@inheritDoc}
      *
-     * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet
-     *
-     * @param timeOut
-     *            length of specified timeout, in miliseconds
-     * @param isSecure
-     *            <code>true</code> if the servlet should be secure,
-     *            <code>false</code> otherwise
-     * @param isLocal
-     *            <code>true</code> if the server is running locally,
-     *            <code>false</code> otherwise
-     *
-     * @return a new connection servlet for this server
-     */
+     * @return a new instance of a {@link ServerWebSocketInitializer}.
+     **/
     @SuppressWarnings("checkstyle:designforextension")
-    public ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal) {
-        if (!isSecure && isProduction()) {
+    @Override
+    public ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        if (!serverInfo.isSecure() && isProduction()) {
             LOG.info("Running an insecure server");
         }
-        return new ServerWebSocketInitializer(timeOut, isSecure, isLocal);
+        return new ServerWebSocketInitializer(serverInfo);
     }
 
     /**
-     * @return true if the server has not started accepting connections yet.
+     * {@inheritDoc}
      */
     @Override
-    protected final boolean notServerStarted() {
+    protected final boolean serverStarted() {
         return this.server == null || !this.server.isRunning();
     }
 
