@@ -64,10 +64,20 @@ function LoginSystem() {
     this.initializeElement = function(document, templateClone) {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
+
         setupLoginScript();
         setupFormScript();
         setupCallbacks();
+        attachButtons();
     };
+
+    /**
+     * Attaches the wave effect to the login button
+     */
+    function attachButtons() {
+        var loginButton = shadowRoot.querySelector('#loginButton');
+        Waves.attach(loginButton);
+    }
 
     /**
      * Sets up what happens upon the server return the result of attempting to
