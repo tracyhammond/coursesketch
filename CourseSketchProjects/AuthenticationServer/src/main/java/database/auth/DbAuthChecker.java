@@ -1,10 +1,9 @@
 package database.auth;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
@@ -12,6 +11,8 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import utilities.AuthUtilities;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -79,6 +80,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
         Authentication.AuthResponse.PermissionLevel permissionLevel = null;
 
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+
         for (String groupId : groupList) {
             final Authentication.AuthResponse.PermissionLevel permLevel = checkGroupPermission(groupCollection, groupId, userId);
             if (permLevel != null) {
@@ -106,13 +108,19 @@ public final class DbAuthChecker implements AuthenticationChecker {
     }
 
     private Authentication.AuthResponse.PermissionLevel checkGroupPermission(final DBCollection collection, final String groupId,
-            final String userId) throws DatabaseAccessException {
+            final String userId) throws DatabaseAccessException, AuthenticationException {
         final DBObject group = collection.findOne(new ObjectId(groupId));
         if (group == null) {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }
 
-        final Object permissionLevel = group.get(userId);
+        String hash = null;
+        try {
+            hash = HashManager.createHash(group.get(DatabaseStringConstants.COURSE_ID) + userId);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new AuthenticationException(e);
+        }
+        final Object permissionLevel = group.get(hash);
         if (permissionLevel == null) {
             return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;
         }
