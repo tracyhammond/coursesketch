@@ -18,6 +18,7 @@ public final class DatabaseStringConstants {
     public static final String EXPERIMENT_ID = "ExperimentId";
     public static final String USER_ID = "UserId";
     public static final String SCHOOLITEMID = "SchoolItemID";
+    public static final String OWNER_ID = "OWNER";
 
     // collections
     public static final String COURSE_COLLECTION = "Courses";
