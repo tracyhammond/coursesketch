@@ -1,4 +1,4 @@
-package database;
+package coursesketch.server.authentication;
 
 /*
  * Password Hashing With PBKDF2 (http://crackstation.net/hashing-security.htm).
@@ -27,6 +27,9 @@ package database;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
@@ -34,15 +37,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * PBKDF2 salted password hashing. Author: havoc AT defuse.ca www:
  * http://crackstation.net/hashing-security.htm
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.ShortVariable", "PMD.UselessParentheses", "PMD.AvoidCatchingGenericException",
         "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.UseVarargs" })
+@Deprecated
 public final class PasswordHash {
 
     /**

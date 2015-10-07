@@ -2,7 +2,10 @@ package database;
 
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
+import coursesketch.server.authentication.HashManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -152,15 +155,42 @@ public class DatabaseClient {
             throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
         }
         try {
-            if (PasswordHash.validatePassword(password.toCharArray(), cursor.get(PASSWORD).toString())) {
+            final String hash = cursor.get(PASSWORD).toString();
+            if (HashManager.validateHash(password, hash)) {
                 return getUserInfo(cursor, loginAsDefault, loginAsInstructor);
             } else {
-                throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
+                if (!HashManager.CURRENT_HASH.equals(HashManager.getAlgorithmFromHash(hash))) {
+                    final String newHash = HashManager.upgradeHash(password, hash);
+                    if (newHash != null) {
+                        updatePassword(table, cursor, password);
+                        return getUserInfo(cursor, loginAsDefault, loginAsInstructor);
+                    } else {
+                        throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
+                    }
+                } else {
+                    throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
+                }
             }
         } catch (GeneralSecurityException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new LoginException("An error occured while comparing passwords", e);
         }
+    }
+
+    /**
+     * Updates the password to the new value.
+     *
+     * This method is private on purpose please leave it that way.
+     * @param table The collection that the password is being updated in.
+     * @param query The user that the password is being updated for.
+     * @param newPassword The new password.
+     * @throws InvalidKeySpecException Thrown if an invalid key is set
+     * @throws NoSuchAlgorithmException Thrown if the specified algorithm does not exist.
+     */
+    private static void updatePassword(final DBCollection table, final DBObject query, final String newPassword)
+            throws InvalidKeySpecException, NoSuchAlgorithmException {
+        final String newHash = HashManager.createHash(newPassword);
+        table.update(query, new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
     }
 
     /**
