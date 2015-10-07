@@ -46,7 +46,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * Called after onOpen Finished. Can be over written.
      *
      * @param conn
-     *         the connection that is being opened.
+     *         The connection that is being opened.
      */
     @Override
     protected void openSession(final SocketSession conn) {
