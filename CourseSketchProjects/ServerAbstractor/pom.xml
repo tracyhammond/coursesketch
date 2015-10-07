@@ -71,5 +71,12 @@
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.jeremyh</groupId>
+            <artifactId>jBCrypt</artifactId>
+            <version>jbcrypt-0.4</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
