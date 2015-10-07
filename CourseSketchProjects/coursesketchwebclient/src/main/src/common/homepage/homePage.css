@@ -1,18 +1,33 @@
-.fullScreenColumn {
-	height:calc(100vh - 3.75em - 5px);
+.colHolder > div {
+    height: 100%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.homePageHeader {
+    flex: 0 0 auto;
+    text-align: center;
+    color: white;
+}
+
+.scrollColumn {
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    flex: 1 1 auto;
+    background: white;
+    padding: 15px;
 }
 
 h2 {
-	margin-top:0.5em;
-	margin-bottom:0.5em;
-	font-size:1.5em;
-	line-height: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
+    line-height: 1.5em;
 }
 
-.wide_centre > div {
-	height:100vh;
-}
-
-.columnContainer {
-	display:flex;
+p {
+    margin: 0;
 }

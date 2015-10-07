@@ -122,7 +122,6 @@ function() {
         element.appendChild(register);
     }
     createLogin(createRegister);
-    element.style.display = 'flex';
 
     /**
      * Creates and loads the menu.
@@ -139,64 +138,11 @@ function() {
             template = content.querySelector('#studentMenu');
         }
         var clone = document.importNode(template.content, true);
-        document.querySelector('#menuBar').appendChild(clone);
-        startMenuSliding();
-    }
+        document.querySelector('.nav-wrapper').appendChild(clone);
 
-    /**
-     * Sets up the sliding for the menu.
-     *
-     * TODO look up the Header.js and see what is happening there.
-     * @memberof Index
-     */
-    function startMenuSliding() {
-        var menuStatus = false;
-
-        $('#menu').find('a').click(function() {
-            animateMenu(true); // close menu if a link has been
-            // clicked.
+        $('.button-collapse').sideNav({
+            closeOnClick: true // Closes side-nav on <a> clicks
         });
-
-        /**
-         * Shows the menu sliding.
-         * @param {Boolean} value true to close the menu false to open the menu.
-         * @returns {Boolean} returns false.
-         */
-        function animateMenu(value) {
-            if (value) { // close menu
-                $('#content').animate({
-                    marginLeft: '0px'
-                }, 300, function() {
-                    menuStatus = false;
-                });
-                return false;
-            } else { // open menu
-                $('#content').animate({
-                    marginLeft: '200px'
-                }, 300, function() {
-                    menuStatus = true;
-                });
-                return false;
-            }
-        }
-
-        // Show menu
-        $('a.showMenu').click(function() {
-            return animateMenu(menuStatus);
-        });
-
-        $(document).on('swipeleft', '#menu, .pages', function() {
-            if (menuStatus && CourseSketch.isMenuSwipeable) {
-                animateMenu(menuStatus);
-            }
-        });
-
-        $(document).on('swiperight', '.pages', function() {
-            if (!menuStatus && CourseSketch.isMenuSwipeable) {
-                animateMenu(menuStatus);
-            }
-        });
-        // Menu behaviour
     }
 
     /**
@@ -221,19 +167,3 @@ function() {
         CourseSketch.DatabaseException = DatabaseException;
     }
 });
-
-CourseSketch.isMenuSwipeable = true;
-/**
- * Turns on menu swiping.
- * @memberof CourseSketch
- */
-CourseSketch.enableMenuSwiping = function() {
-    CourseSketch.isMenuSwipeable = true;
-};
-/**
- * Turns off menu swiping.
- * @memberof CourseSketch
- */
-CourseSketch.disableMenuSwiping = function() {
-    CourseSketch.isMenuSwipeable = false;
-};

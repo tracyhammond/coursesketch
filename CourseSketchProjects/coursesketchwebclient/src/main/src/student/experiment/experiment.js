@@ -62,7 +62,6 @@ validateFirstRun(document.currentScript);
     CourseSketch.studentExperiment.addWaitOverlay = function() {
         CourseSketch.studentExperiment.waitScreenManager.buildOverlay(document.querySelector('body'));
         CourseSketch.studentExperiment.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**
@@ -79,9 +78,7 @@ validateFirstRun(document.currentScript);
      */
     function loadTyping(navigator) {
         var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel';
-        typingSurface.style.width = '100%';
-        typingSurface.style.height = 'calc(100% - 110px)';
+        typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
@@ -105,9 +102,9 @@ validateFirstRun(document.currentScript);
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel submittable';
+        sketchSurface.className = 'sub-panel submittable';
         sketchSurface.style.width = '100%';
-        sketchSurface.style.height = 'calc(100% - 110px)';
+        sketchSurface.style.height = '100%';
         sketchSurface.setErrorListener(function(exception) {
             console.log(exception);
             alert(exception);
