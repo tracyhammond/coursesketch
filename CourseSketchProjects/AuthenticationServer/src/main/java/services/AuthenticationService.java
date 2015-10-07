@@ -7,16 +7,19 @@ import coursesketch.server.rpc.CourseSketchRpcService;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
 import database.auth.DbAuthChecker;
+import database.auth.DbAuthManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.authentication.Authentication;
+import utilities.ExceptionUtilities;
 
 /**
  * Created by gigemjt on 9/3/15.
  */
 public final class AuthenticationService extends Authentication.AuthenticationService implements CourseSketchRpcService {
 
+    private final DbAuthManager authManager;
     private ISocketInitializer socketInitializer;
 
 
@@ -27,8 +30,9 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      */
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public AuthenticationService(final DbAuthChecker authChecker) {
+    public AuthenticationService(final DbAuthChecker authChecker, final DbAuthManager authManager) {
         this.authChecker = authChecker;
+        this.authManager = authManager;
     }
 
     /**
@@ -73,5 +77,17 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     @Override public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
 
+        final Authentication.AuthRequest authRequest = request.getItemRequest();
+        try {
+            authManager.insertNewItem(authRequest.getAuthId(), authRequest.getItemId(), authRequest.getItemType(), request.getParentItemId(),
+                    authChecker);
+            done.run(Message.DefaultResponse.getDefaultInstance());
+        } catch (DatabaseAccessException e) {
+            done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
+            LOG.error("Failed to access data while inserting new auth data", e);
+        } catch (AuthenticationException e) {
+            done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
+            LOG.error("Failed to authenticate user while inserting new auth data", e);
+        }
     }
 }
