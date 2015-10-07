@@ -61,6 +61,15 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
@@ -77,6 +86,7 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>2.12.3</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- test -->
