@@ -34,7 +34,8 @@ public class DbAuthManager {
         this.database = database;
     }
 
-    public void insertNewItem(String authId, String itemId, School.ItemType itemType, String parentId, DbAuthChecker authChecker)
+    public void insertNewItem(final String authId, final String itemId, final School.ItemType itemType,
+            final String parentId, final DbAuthChecker authChecker)
             throws DatabaseAccessException, AuthenticationException {
         final School.ItemType parentType = getParentItemType(itemType);
         if (!parentType.equals(itemType)) {
@@ -73,6 +74,8 @@ public class DbAuthManager {
         }
         final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
                 .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
+
+        // TODO: insert data! yeah yo!
         return itemId;
     }
 
