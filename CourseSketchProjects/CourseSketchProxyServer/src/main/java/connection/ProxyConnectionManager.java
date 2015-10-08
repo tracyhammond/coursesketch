@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.serverfront.ProxyServerWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -55,7 +56,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     /**
      * Creates a manager for the proxy connections.
      * @param parent
-     *            {@link serverfront.ProxyServerWebSocketHandler}
+     *            {@link ProxyServerWebSocketHandler}
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
@@ -67,7 +68,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *
      * @param serv
      *            an instance of the local server (
-     *            {@link serverfront.ProxyServerWebSocketHandler}) in this case.
+     *            {@link ProxyServerWebSocketHandler}) in this case.
      */
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {

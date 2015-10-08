@@ -3,10 +3,8 @@ package test;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 
-import com.mongodb.DB;
-
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.CourseProblemManager;
 import database.institution.Institution;
 
