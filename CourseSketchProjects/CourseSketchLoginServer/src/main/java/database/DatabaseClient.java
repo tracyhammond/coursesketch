@@ -1,34 +1,32 @@
 package database;
 
-import java.net.UnknownHostException;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
-import coursesketch.server.authentication.HashManager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-
-import static database.DatabaseStringConstants.PASSWORD;
-import static database.DatabaseStringConstants.USER_NAME;
-import static database.DatabaseStringConstants.LOGIN_COLLECTION;
-import static database.DatabaseStringConstants.STUDENT_ID;
-import static database.DatabaseStringConstants.STUDENT_CLIENT_ID;
-import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
-import static database.DatabaseStringConstants.INSTRUCTOR_ID;
-import static database.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
-import static database.DatabaseStringConstants.EMAIL;
-import static database.DatabaseStringConstants.LOGIN_DATABASE;
-
 import connection.LoginServerWebSocketHandler;
+import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
+
+import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import static database.DatabaseStringConstants.EMAIL;
+import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
+import static database.DatabaseStringConstants.INSTRUCTOR_ID;
+import static database.DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR;
+import static database.DatabaseStringConstants.LOGIN_COLLECTION;
+import static database.DatabaseStringConstants.LOGIN_DATABASE;
+import static database.DatabaseStringConstants.PASSWORD;
+import static database.DatabaseStringConstants.STUDENT_CLIENT_ID;
+import static database.DatabaseStringConstants.STUDENT_ID;
+import static database.DatabaseStringConstants.USER_NAME;
 
 /**
  * A client for the login database.
@@ -245,7 +243,7 @@ public class DatabaseClient {
         BasicDBObject query = new BasicDBObject(USER_NAME, user);
         final DBObject cursor = loginCollection.findOne(query);
         if (cursor == null) {
-            query = new BasicDBObject(USER_NAME, user).append(PASSWORD, PasswordHash.createHash(password)).append(EMAIL, email)
+            query = new BasicDBObject(USER_NAME, user).append(PASSWORD, HashManager.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
                     .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
                     .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString());
