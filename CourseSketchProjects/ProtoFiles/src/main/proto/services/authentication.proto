@@ -66,6 +66,17 @@ message AuthCreationRequest {
     required AuthRequest itemRequest = 1;
     // contains the id of the parent of this item.
     required string parentItemId = 2;
+    optional string registrationKey = 3;
+}
+
+/**
+ * Used when creating adding a user to a course.
+ */
+message UserRegistration {
+    // contains all of the information about the item being created
+    required AuthRequest itemRequest = 1;
+    // contains the id of the parent of this item.
+    optional string registrationKey = 3;
 }
 
 message AuthRequest {
@@ -111,4 +122,5 @@ message AuthResponse {
 service AuthenticationService {
     rpc authorizeUser(AuthRequest) returns (AuthResponse);
     rpc createNewItem(AuthCreationRequest) returns (protobuf.srl.request.DefaultResponse);
+    rpc registerUser(UserRegistration) returns (protobuf.srl.request.DefaultResponse);
 }
