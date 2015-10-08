@@ -5,7 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 import org.slf4j.Logger;

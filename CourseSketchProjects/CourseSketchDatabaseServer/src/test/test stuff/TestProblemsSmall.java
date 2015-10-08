@@ -1,7 +1,5 @@
 package test;
 
-import java.util.Date;
-
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlAssignment.LatePolicy;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -9,8 +7,7 @@ import protobuf.srl.school.School.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class TestProblemsSmall {

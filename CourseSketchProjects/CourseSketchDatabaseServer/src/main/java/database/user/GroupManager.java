@@ -4,8 +4,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.Authenticator;
 import protobuf.srl.school.School.SrlGroup;
 
 import java.util.ArrayList;
