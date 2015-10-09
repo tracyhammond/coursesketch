@@ -65,7 +65,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void connect() throws ConnectionException {
         try {
-            final CloseableWebSocketClient client = new CloseableWebSocketClient();
+            final CloseableWebsocketClient client = new CloseableWebsocketClient();
             client.start();
             final ClientUpgradeRequest request = new ClientUpgradeRequest();
             client.setMaxBinaryMessageBufferSize(AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE);
