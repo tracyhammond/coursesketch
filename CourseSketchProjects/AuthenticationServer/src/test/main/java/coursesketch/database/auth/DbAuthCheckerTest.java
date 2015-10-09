@@ -5,6 +5,7 @@ import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
@@ -17,6 +18,8 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,10 +61,16 @@ public class DbAuthCheckerTest {
         db = fongo.getDB(); // new MongoClient("localhost").getDB("test");
         authChecker = new DbAuthChecker(db);
         insertValidObject(VALID_ITEM_TYPE, VALID_ITEM_ID, VALID_GROUP_ID);
-        insertValidGroup(VALID_GROUP_ID, VALID_ITEM_ID,
-                createPermission(TEACHER_ID, Authentication.AuthResponse.PermissionLevel.TEACHER),
-                createPermission(STUDENT_ID, Authentication.AuthResponse.PermissionLevel.STUDENT),
-                createPermission(MOD_ID, Authentication.AuthResponse.PermissionLevel.MODERATOR));
+        String salt = null;
+        try {
+            salt = HashManager.generateSalt();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        insertValidGroup(VALID_GROUP_ID, VALID_ITEM_ID, salt,
+                createPermission(salt, TEACHER_ID, Authentication.AuthResponse.PermissionLevel.TEACHER),
+                createPermission(salt, STUDENT_ID, Authentication.AuthResponse.PermissionLevel.STUDENT),
+                createPermission(salt, MOD_ID, Authentication.AuthResponse.PermissionLevel.MODERATOR));
     }
 
     public void insertValidObject(School.ItemType itemType, String itemId, String... groupId) {
@@ -72,10 +81,11 @@ public class DbAuthCheckerTest {
                         .append(DatabaseStringConstants.USER_LIST, list));
     }
 
-    public void insertValidGroup(String groupId, String courseId, BasicDBObject... permissions) {
+    public void insertValidGroup(String groupId, String courseId, String salt, BasicDBObject... permissions) {
         List<Object> list = new BasicDBList();
         BasicDBObject group = new BasicDBObject(DatabaseStringConstants.SELF_ID,  new ObjectId(groupId))
-                .append(DatabaseStringConstants.COURSE_ID, courseId);
+                .append(DatabaseStringConstants.COURSE_ID, courseId)
+                .append(DatabaseStringConstants.SALT, salt);
         for (BasicDBObject obj: permissions) {
             // grabs the first key and value in the object
             group.append(obj.keySet().iterator().next(), obj.values().iterator().next());
@@ -83,8 +93,17 @@ public class DbAuthCheckerTest {
         db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insert(group);
     }
 
-    public BasicDBObject createPermission(String authId, Authentication.AuthResponse.PermissionLevel level) {
-        return new BasicDBObject(authId, level.getNumber());
+    public BasicDBObject createPermission(String salt, String authId, Authentication.AuthResponse.PermissionLevel level) {
+        String hash = null;
+        try {
+            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
+            System.out.println("HASH FOR ID: " + authId + "+ SALT: " + salt + " IS [" + hash + "]");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return new BasicDBObject(hash, level.getNumber());
     }
 
     @Test(expected = AuthenticationException.class)
