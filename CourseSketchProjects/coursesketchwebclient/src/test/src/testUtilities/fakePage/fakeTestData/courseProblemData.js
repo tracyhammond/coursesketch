@@ -47,7 +47,7 @@
     problem1.problemInfo = bankProblem1;
     bankProblem1.id = problem1.id;
     bankProblem1.questionText = "Please write your name." +
-        "\left [ – \frac{\hbar^2}{2 m} \frac{\partial^2}{\partial x^2} + V \right ] \Psi = i \hbar \frac{\partial}{\partial t} \Psi";
+        " $\\left [ – \\frac{\\hbar^2}{2 m} \\frac{\\partial^2}{\\partial x^2} + V \\right ] \\Psi = i \\hbar \\frac{\\partial}{\\partial t} \\Psi$";
     CourseSketch.fakeProblems.push(problem1);
     CourseSketch.fakeBankProblems.push(bankProblem1);
 

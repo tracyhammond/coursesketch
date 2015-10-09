@@ -34,20 +34,28 @@ function ProblemTextPanel() {
      * @function setNavigator
      */
     this.setProblemText = function(questionText) {
-        var textBuffer = this.shadowRoot.querySelector(bufferQuery);
+        this.textBuffer = document.createElement("p");
+        this.textBuffer.id = "mathBuffer";
+        this.textBuffer.style.display="none";
+        document.body.appendChild(this.textBuffer);
+        var textBuffer = this.textBuffer;
         var actualText = this.shadowRoot.querySelector(textViewQuery);
-        textBuffer.textContent = questionText;
-        actualText.textContent = questionText;
-        MathJax.Hub.Typeset(textBuffer, ["swapBuffer", this]);
+        textBuffer.innerHTML = questionText;
+        actualText.innerHTML = questionText;
+        MathJax.Hub.Queue(
+            ["Typeset", MathJax.Hub, textBuffer], ["swapBuffer", this]
+        );
     };
 
     /**
      * Renders the textBuffer onto the actual Text
      */
     this.swapBuffer = function() {
-        var textBuffer = this.shadowRoot.querySelector(bufferQuery);
+        var textBuffer = this.textBuffer;
         var actualText = this.shadowRoot.querySelector(textViewQuery);
         actualText.innerHTML = textBuffer.innerHTML;
+
+        textBuffer.parentNode.removeChild(textBuffer);
     }
 }
 
