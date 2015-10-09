@@ -1,9 +1,10 @@
 package serverfront;
 
+import connection.ProxyConnectionManager;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
-import connection.ProxyConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  *
@@ -12,15 +13,10 @@ import connection.ProxyConnectionManager;
 public final class ProxyServlet extends ServerWebSocketInitializer {
 
     /**
-     * @param timeoutTime
-     *            The time it takes before a connection times out.
-     * @param secure
-     *            True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *            True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ProxyServlet(final long timeoutTime, final boolean secure, final boolean connectLocally) {
-        super(timeoutTime, secure, connectLocally);
+    public ProxyServlet(final ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
@@ -32,16 +28,12 @@ public final class ProxyServlet extends ServerWebSocketInitializer {
     }
 
     /**
-     * @param connectLocally
-     *            True if the connection is acting as if it is on a local
-     *            computer (used for testing)
-     * @param secure
-     *            True if the connection is using SSL.
-     * @return {@link internalconnections.ProxyConnectionManager}
+     * {@inheritDoc}
+     * @return {@link ProxyConnectionManager}
      */
     @Override
-    public MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
-        return new ProxyConnectionManager(getServer(), connectLocally, secure);
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new ProxyConnectionManager(getServer(), serverInfo);
     }
 
     /**
