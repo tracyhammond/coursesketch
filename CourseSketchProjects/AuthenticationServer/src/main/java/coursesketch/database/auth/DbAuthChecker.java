@@ -115,11 +115,13 @@ public final class DbAuthChecker implements AuthenticationChecker {
         }
 
         String hash = null;
+        final String salt = group.get(DatabaseStringConstants.SALT).toString();
         try {
-            hash = HashManager.createHash(group.get(DatabaseStringConstants.COURSE_ID) + userId);
+            hash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new AuthenticationException(e);
         }
+        System.out.println("HASH FOR ID: " + userId + "+ SALT: " + salt + " IS [" + hash + "]");
         final Object permissionLevel = group.get(hash);
         if (permissionLevel == null) {
             return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;

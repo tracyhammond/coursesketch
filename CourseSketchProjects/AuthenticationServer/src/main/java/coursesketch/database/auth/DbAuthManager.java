@@ -75,15 +75,17 @@ public class DbAuthManager {
      */
     public String createNewGroup(final String courseId, final School.ItemType itemType, final String authId) throws AuthenticationException {
         String hash;
+        String salt;
         try {
-            hash = HashManager.createHash(courseId + authId);
+            salt = HashManager.generateSalt();
+            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new AuthenticationException(e);
         }
         final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
+                .append(DatabaseStringConstants.SALT, salt)
                 .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
 
-        // TODO: insert data! yeah yo!
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         collection.insert(groupQuery);
         return groupQuery.get(DatabaseStringConstants.SELF_ID).toString();
