@@ -123,13 +123,15 @@ public final class AssignmentManager {
         if (assignment.getProblemListList() != null) {
             query.append(PROBLEM_LIST, assignment.getProblemListList());
         }
+
         assignmentCollection.insert(query);
-        final DBObject cursor = assignmentCollection.findOne(query);
+        final String selfId = query.get(SELF_ID).toString();
+        // final DBObject cursor = assignmentCollection.findOne(query);
 
         // inserts the id into the previous the course
-        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), cursor.get(SELF_ID).toString());
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), selfId);
 
-        return cursor.get(SELF_ID).toString();
+        return selfId;
     }
 
     /**
