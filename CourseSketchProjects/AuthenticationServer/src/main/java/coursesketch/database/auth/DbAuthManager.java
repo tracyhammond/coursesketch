@@ -34,7 +34,7 @@ public class DbAuthManager {
     }
 
     public void insertNewItem(final String authId, final String itemId, final School.ItemType itemType,
-            final String parentId, final DbAuthChecker authChecker)
+            final String parentId, final String registrationKey, final DbAuthChecker authChecker)
             throws DatabaseAccessException, AuthenticationException {
         final School.ItemType parentType = getParentItemType(itemType);
         if (!parentType.equals(itemType)) {
@@ -47,7 +47,7 @@ public class DbAuthManager {
             }
         }
 
-        final BasicDBObject insertQuery = createInsertQuery(itemId, itemType, authId);
+        final BasicDBObject insertQuery = createInsertQuery(itemId, itemType, authId, registrationKey);
         if (!parentType.equals(itemType)) {
             copyParentDetails(insertQuery, itemId, itemType, parentId);
         }
@@ -105,7 +105,7 @@ public class DbAuthManager {
         insertQuery.putAll(result);
     }
 
-    private BasicDBObject createInsertQuery(final String itemId, final School.ItemType itemType, final String authId) {
+    private BasicDBObject createInsertQuery(final String itemId, final School.ItemType itemType, final String authId, final String registrationKey) {
         final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
         if (School.ItemType.COURSE.equals(itemType)) {
             query.append(DatabaseStringConstants.COURSE_ID, itemId)
@@ -114,6 +114,9 @@ public class DbAuthManager {
         if (School.ItemType.BANK_PROBLEM.equals(itemType)) {
             query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
                     .append(DatabaseStringConstants.OWNER_ID, authId);
+        }
+        if (registrationKey != null) {
+            query.append(DatabaseStringConstants.REGISTRATION_KEY, registrationKey);
         }
         return query;
     }

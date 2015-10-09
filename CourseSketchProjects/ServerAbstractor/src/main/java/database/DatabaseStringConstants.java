@@ -140,6 +140,7 @@ public final class DatabaseStringConstants {
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
     public static final String SALT = "Salt";
+    public static final String REGISTRATION_KEY = "RegistrationKey";
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
@@ -160,4 +161,5 @@ public final class DatabaseStringConstants {
     public static final String Y_DIMENSION = "YDIM";
     public static final String SLIDE_BLOB_TYPE = "TYPE";
     public static final String SLIDE_BLOB = "BLOB";
+
 }

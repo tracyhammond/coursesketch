@@ -7,6 +7,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import coursesketch.server.authentication.HashManager;
+import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -32,6 +33,7 @@ import static database.DbSchoolUtility.getCollectionFromType;
 @RunWith(MockitoJUnitRunner.class)
 public class DbAuthManagerTest {
 
+    private static final String VALID_REGISTRATION_KEY = "VALID KEY YO";
     @Rule
     public FongoRule fongo = new FongoRule();
 
@@ -91,7 +93,7 @@ public class DbAuthManagerTest {
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.COURSE_ID), VALID_ITEM_ID);
+        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
         String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
         String hash = null;
         try {
@@ -103,5 +105,36 @@ public class DbAuthManagerTest {
         }
         Assert.assertTrue(dbObject.containsField(hash));
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
+    }
+
+    @Test
+    public void testInsertingCourseItem() throws AuthenticationException, DatabaseAccessException {
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        // Looks for group data
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+        String hash = null;
+        try {
+            hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(hash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
+
+        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
     }
 }
