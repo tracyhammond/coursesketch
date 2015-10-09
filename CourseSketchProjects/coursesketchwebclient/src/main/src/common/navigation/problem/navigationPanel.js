@@ -80,8 +80,7 @@ function NavigationPanel() {
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
-        localScope = this; // This sets the variable to the level of the custom element tag
-        shadowRoot = this.createShadowRoot();
+        var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
         if (isUndefined(this.itemNavigator)) {
