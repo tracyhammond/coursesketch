@@ -38,15 +38,15 @@ function ProblemTextPanel() {
         var actualText = this.shadowRoot.querySelector(textViewQuery);
         textBuffer.textContent = questionText;
         actualText.textContent = questionText;
-        MathJax.hub.Typeset(textBuffer, ["swapBuffer"], this);
+        MathJax.Hub.Typeset(textBuffer, ["swapBuffer", this]);
     };
 
     /**
      * Renders the textBuffer onto the actual Text
      */
     this.swapBuffer = function() {
-        var textBuffer = this.shadowRoot.querySelection(bufferQuery);
-        var actualText = this.shadowRoot.querySelection(textViewQuery);
+        var textBuffer = this.shadowRoot.querySelector(bufferQuery);
+        var actualText = this.shadowRoot.querySelector(textViewQuery);
         actualText.innerHTML = textBuffer.innerHTML;
     }
 }
