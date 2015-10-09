@@ -2,6 +2,7 @@ package coursesketch.server.interfaces;
 
 import com.mongodb.ServerAddress;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +61,10 @@ public class ServerInfo {
         this.timeOut = timeOut;
         this.isSecureVar = isSecure;
         this.isLocalVar = isLocal;
+        if (databaseUrl == null) {
+            databaseUrl = new ArrayList<>();
+            databaseUrl.add(new ServerAddress());
+        }
     }
 
     /**
