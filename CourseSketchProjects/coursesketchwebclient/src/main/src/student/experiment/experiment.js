@@ -42,7 +42,7 @@ validateFirstRun(document.currentScript);
         }
 
         var questionText = document.querySelector('problem-text-panel');
-        questionText.setQuestionText(navigator);
+        questionText.setProblemText(navigator);
         console.log(navigator.getProblemText());
 
         parentPanel.problemIndex = navigator.getCurrentNumber();

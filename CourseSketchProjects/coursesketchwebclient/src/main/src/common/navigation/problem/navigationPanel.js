@@ -21,7 +21,7 @@ function NavigationPanel() {
         this.itemNavigator.addCallback(function(nav) {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
-            setUpButtons(nav);
+            this.setUpButtons(nav);
             var totalNumber = nav.getLength();
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;

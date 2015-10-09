@@ -34,8 +34,8 @@ function ProblemTextPanel() {
      * @function setNavigator
      */
     this.setProblemText = function(questionText) {
-        var textBuffer = this.shadowRoot.querySelection(bufferQuery);
-        var actualText = this.shadowRoot.querySelection(textViewQuery);
+        var textBuffer = this.shadowRoot.querySelector(bufferQuery);
+        var actualText = this.shadowRoot.querySelector(textViewQuery);
         textBuffer.setTextContent(questionText);
         actualText.setTextContet(actualText);
         MathJax.hub.Typeset(textBuffer, ["swapBuffer"], this);
@@ -51,4 +51,4 @@ function ProblemTextPanel() {
     }
 }
 
-NavigationPanel.prototype = Object.create(HTMLElement.prototype);
+ProblemTextPanel.prototype = Object.create(HTMLElement.prototype);
