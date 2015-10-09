@@ -92,8 +92,7 @@ public final class CourseManager {
             query.append(ASSIGNMENT_LIST, course.getAssignmentListList());
         }
         courseCollection.insert(query);
-        final DBObject cursor = courseCollection.findOne(query);
-        return cursor.get(SELF_ID).toString();
+        return query.get(SELF_ID).toString();
     }
 
     /**

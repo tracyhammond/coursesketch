@@ -94,8 +94,7 @@ public final class BankProblemManager {
         }
 
         problemBankCollection.insert(insertObject);
-        final DBObject cursor = problemBankCollection.findOne(insertObject);
-        return cursor.get(SELF_ID).toString();
+        return insertObject.get(SELF_ID).toString();
     }
 
     /**

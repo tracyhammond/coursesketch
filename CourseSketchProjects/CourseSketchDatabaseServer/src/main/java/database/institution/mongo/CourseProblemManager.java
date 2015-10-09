@@ -93,16 +93,16 @@ public final class CourseProblemManager {
                 .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(NAME, problem.getName())
                 .append(PROBLEM_NUMBER, problem.getProblemNumber());
         courseProblemCollection.insert(query);
-        final DBObject cursor = courseProblemCollection.findOne(query);
+        final String selfId = query.get(SELF_ID).toString();
 
         // inserts the id into the previous the course
-        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), cursor.get(SELF_ID).toString());
+        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), selfId);
 
         if (problem.hasProblemBankId()) {
             BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
         }
 
-        return cursor.get(SELF_ID).toString();
+        return selfId;
     }
 
     /**
