@@ -4,16 +4,23 @@ import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import coursesketch.server.authentication.HashManager;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,18 +53,13 @@ public class DbAuthManagerTest {
 
     public DB db;
 
-    public DbAuthChecker authChecker;
+    public DbAuthManager dbAuthManager;
 
     @Before
     public void before() throws UnknownHostException {
 
         db = fongo.getDB(); // new MongoClient("localhost").getDB("test");
-        authChecker = new DbAuthChecker(db);
-        insertValidObject(VALID_ITEM_TYPE, VALID_ITEM_ID, VALID_GROUP_ID);
-        insertValidGroup(VALID_GROUP_ID, VALID_ITEM_ID,
-                createPermission(TEACHER_ID, Authentication.AuthResponse.PermissionLevel.TEACHER),
-                createPermission(STUDENT_ID, Authentication.AuthResponse.PermissionLevel.STUDENT),
-                createPermission(MOD_ID, Authentication.AuthResponse.PermissionLevel.MODERATOR));
+        dbAuthManager = new DbAuthManager(db);
     }
 
     public void insertValidObject(School.ItemType itemType, String itemId, String... groupId) {
@@ -83,4 +85,23 @@ public class DbAuthManagerTest {
         return new BasicDBObject(authId, level.getNumber());
     }
 
+    @Test
+    public void testGroupCreation() throws AuthenticationException {
+        dbAuthManager.createNewGroup(VALID_ITEM_ID, VALID_ITEM_TYPE, TEACHER_ID);
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.COURSE_ID), VALID_ITEM_ID);
+        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+        String hash = null;
+        try {
+            hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(hash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
+    }
 }

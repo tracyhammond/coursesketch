@@ -25,6 +25,21 @@ public class HashManagerTest {
     }
 
     @Test(timeout=2000)
+    public void twoHashesDoNotHashToSameNumber() throws Exception {
+        String hash = HashManager.createHash(CORRECT_PASSWORD);
+        String hash2 = HashManager.createHash(CORRECT_PASSWORD);
+        Assert.assertNotEquals(hash, hash2);
+    }
+
+    @Test(timeout=2000)
+    public void twoHashesWithSameSaltToSameNumber() throws Exception {
+        String salt = HashManager.generateSalt();
+        String hash = HashManager.createHash(CORRECT_PASSWORD, salt);
+        String hash2 = HashManager.createHash(CORRECT_PASSWORD, salt);
+        Assert.assertEquals(hash, hash2);
+    }
+
+    @Test(timeout=2000)
     public void incorrectPasswordFailsToValidate() throws Exception {
         String hash = HashManager.createHash(CORRECT_PASSWORD);
         System.out.println(hash);
