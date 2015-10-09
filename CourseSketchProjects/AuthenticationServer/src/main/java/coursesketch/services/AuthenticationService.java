@@ -76,11 +76,10 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      */
     @Override public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
-
         final Authentication.AuthRequest authRequest = request.getItemRequest();
         try {
             authManager.insertNewItem(authRequest.getAuthId(), authRequest.getItemId(), authRequest.getItemType(), request.getParentItemId(),
-                    authChecker);
+                    request.getRegistrationKey(), authChecker);
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
