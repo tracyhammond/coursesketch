@@ -65,6 +65,13 @@ public final class PasswordHash {
     public static final int SALT_INDEX = 1;
     public static final int PBKDF2_INDEX = 2;
 
+    public static String createSalt() {
+        final SecureRandom random = new SecureRandom();
+        final byte[] salt = new byte[SALT_BYTE_SIZE];
+        random.nextBytes(salt);
+        return new String(salt);
+    }
+
     /**
      * Returns a salted PBKDF2 hash of the password.
      *
@@ -81,13 +88,33 @@ public final class PasswordHash {
      *
      * @param password
      *            the password to hash
+     * @param salt
+     *            A salt that can be given
+     * @return a salted PBKDF2 hash of the password
+     */
+    public static String createHash(final String password, final String salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return createHash(password.toCharArray(), salt.getBytes());
+    }
+
+    /**
+     * Returns a salted PBKDF2 hash of the password.
+     *
+     * @param password
+     *            the password to hash
      * @return a salted PBKDF2 hash of the password
      */
     public static String createHash(final char[] password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        // Generate a random salt
-        final SecureRandom random = new SecureRandom();
-        final byte[] salt = new byte[SALT_BYTE_SIZE];
-        random.nextBytes(salt);
+        return createHash(password, createSalt().getBytes());
+    }
+
+    /**
+     * Returns a salted PBKDF2 hash of the password.
+     *
+     * @param password
+     *            the password to hash
+     * @return a salted PBKDF2 hash of the password
+     */
+    private static String createHash(final char[] password, final byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         // Hash the password
         final byte[] hash = pbkdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);

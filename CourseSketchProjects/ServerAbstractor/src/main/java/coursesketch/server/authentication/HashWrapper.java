@@ -11,5 +11,9 @@ public interface HashWrapper {
 
     String hash(String string) throws InvalidKeySpecException, NoSuchAlgorithmException;
 
+    String hash(String string, String salt) throws InvalidKeySpecException, NoSuchAlgorithmException;
+
     boolean validateHash(String candidate, String hashedValue) throws InvalidKeySpecException, NoSuchAlgorithmException;
+
+    String generateSalt();
 }
