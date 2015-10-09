@@ -36,8 +36,8 @@ function ProblemTextPanel() {
     this.setProblemText = function(questionText) {
         var textBuffer = this.shadowRoot.querySelector(bufferQuery);
         var actualText = this.shadowRoot.querySelector(textViewQuery);
-        textBuffer.setTextContent(questionText);
-        actualText.setTextContet(actualText);
+        textBuffer.textContent = questionText;
+        actualText.textContent = questionText;
         MathJax.hub.Typeset(textBuffer, ["swapBuffer"], this);
     };
 
