@@ -7,7 +7,10 @@
  * @attribute index {Number} if the value exist then this is the number used to define the current index.
  *
  */
-function ProblemPanel() {
+function ProblemTextPanel() {
+
+    var bufferQuery = "#buffer";
+    var textViewQuery = "#visual";
 
     /**
      * @param {node} templateClone is a clone of the custom HTML Element for the text box
@@ -17,22 +20,35 @@ function ProblemPanel() {
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
-        var shadowRoot = this.createShadowRoot();
-        shadowRoot.appendChild(templateClone);
+        this.shadowRoot = this.createShadowRoot();
+        this.shadowRoot.appendChild(templateClone);
     };
 
     /**
      * Sets the question text if one it exists.
      *
-     * TODO: run question text
+     * TODO: run question text through math jax
      * @param {ProblemNavigator} navPanel the nav panel that is being used.
      * @instance
      * @memberof NavigationPanel
      * @function setNavigator
      */
-    this.setQuestionText = function(navPanel) {
-        this.itemNavigator = navPanel;
+    this.setProblemText = function(questionText) {
+        var textBuffer = this.shadowRoot.querySelection(bufferQuery);
+        var actualText = this.shadowRoot.querySelection(textViewQuery);
+        textBuffer.setTextContent(questionText);
+        actualText.setTextContet(actualText);
+        MathJax.hub.Typeset(textBuffer, ["swapBuffer"], this);
     };
+
+    /**
+     * Renders the textBuffer onto the actual Text
+     */
+    this.swapBuffer = function() {
+        var textBuffer = this.shadowRoot.querySelection(bufferQuery);
+        var actualText = this.shadowRoot.querySelection(textViewQuery);
+        actualText.innerHTML = textBuffer.innerHTML;
+    }
 }
 
 NavigationPanel.prototype = Object.create(HTMLElement.prototype);
