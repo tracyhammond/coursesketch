@@ -90,4 +90,16 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
             LOG.error("Failed to authenticate user while inserting new auth data", e);
         }
     }
+
+    /**
+     * <code>rpc registerUser(.protobuf.srl.services.authentication.UserRegistration) returns (.protobuf.srl.request.DefaultResponse);</code>
+     *
+     * @param controller
+     * @param request
+     * @param done
+     */
+    @Override public void registerUser(final RpcController controller, final Authentication.UserRegistration request,
+            final RpcCallback<Message.DefaultResponse> done) {
+
+    }
 }

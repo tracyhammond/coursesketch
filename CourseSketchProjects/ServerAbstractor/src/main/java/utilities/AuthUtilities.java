@@ -7,6 +7,7 @@ import protobuf.srl.services.authentication.Authentication;
  */
 @SuppressWarnings("checkstyle:magicnumber")
 public final class AuthUtilities {
+
     /**
      * Converts the checktype to make it cumulative.
      * <p/>
