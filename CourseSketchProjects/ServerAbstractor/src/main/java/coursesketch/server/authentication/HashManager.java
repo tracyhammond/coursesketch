@@ -2,6 +2,7 @@ package coursesketch.server.authentication;
 
 import com.google.common.collect.ImmutableMap;
 import org.mindrot.BCrypt;
+import utilities.AuthUtilities;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -11,6 +12,9 @@ import java.util.Map;
  * Created by dtracers on 10/7/2015.
  */
 public class HashManager {
+
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
     /**
      * The current hash algorithm that is being used by course sketch.
      */
@@ -29,6 +33,14 @@ public class HashManager {
             throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
         }
         return CURRENT_HASH + SPLIT_CHAR + function.hash(password);
+    }
+
+    public static String createHash(final String password, final String salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
+        if (function == null) {
+            throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
+        }
+        return CURRENT_HASH + SPLIT_CHAR + function.hash(password, salt);
     }
 
     public static boolean validateHash(final String candidate, final String hash) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -57,6 +69,44 @@ public class HashManager {
         return PRE_HASH_STORAGE_HASH;
     }
 
+    public static String generateSalt() throws NoSuchAlgorithmException {
+        final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
+        if (function == null) {
+            throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
+        }
+        return function.generateSalt();
+    }
+
+    /**
+     * Converts A byte array into a hexadecimal string.
+     * @param bytes
+     * @return
+     */
+    public static String toHex(final byte[] bytes) {
+        final char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    /**
+     * Converts a hex string into a binary array.
+     * @param s
+     * @return
+     */
+    public static byte[] fromHex(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
     private static String unwrapHash(final String hash) {
         if (hash.charAt(HASH_NAME_LENGTH) == SPLIT_CHAR) {
             return  hash.substring(HASH_NAME_LENGTH + 1);
@@ -72,7 +122,11 @@ public class HashManager {
         }
 
         @Override public String hash(final String password)throws InvalidKeySpecException, NoSuchAlgorithmException {
-            return BCrypt.hashpw(password, BCrypt.gensalt(LOG_ROUNDS));
+            return BCrypt.hashpw(password, generateSalt());
+        }
+
+        @Override public String hash(final String string, final String salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+            return BCrypt.hashpw(string, salt);
         }
 
         @Override public boolean validateHash(final String candidate, final String hashedValue) {
@@ -81,6 +135,10 @@ public class HashManager {
             } catch (IllegalArgumentException e) {
                 return false;
             }
+        }
+
+        @Override public String generateSalt() {
+            return BCrypt.gensalt(LOG_ROUNDS);
         }
     }
 
@@ -95,9 +153,17 @@ public class HashManager {
             return PasswordHash.createHash(password);
         }
 
+        @Override public String hash(final String string, final String salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+            return PasswordHash.createHash(string + salt);
+        }
+
         @Override public boolean validateHash(final String candidate, final String hashedValue)
                 throws InvalidKeySpecException, NoSuchAlgorithmException {
             return PasswordHash.validatePassword(candidate, hashedValue);
+        }
+
+        @Override public String generateSalt() {
+            return PasswordHash.createSalt();
         }
     }
 
