@@ -29,7 +29,7 @@ function NavigationPanel() {
 
         }.bind(this));
 
-        setUpButtons(this.itemNavigator);
+        this.setUpButtons(this.itemNavigator);
     };
 
     /**
@@ -38,7 +38,7 @@ function NavigationPanel() {
      * @memberof NavigationPanel
      * @function setUpButtons
      */
-    function setUpButtons(nav) {
+    this.setUpButtons = function(nav) {
         var button = this.shadowRoot.querySelector('#buttonNext');
 
         /* jscs:disable jsDoc */
@@ -80,8 +80,8 @@ function NavigationPanel() {
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
-        var shadowRoot = this.createShadowRoot();
-        shadowRoot.appendChild(templateClone);
+        this.shadowRoot = this.createShadowRoot();
+        this.shadowRoot.appendChild(templateClone);
 
         if (isUndefined(this.itemNavigator)) {
             this.itemNavigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);
