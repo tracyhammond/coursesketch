@@ -95,20 +95,23 @@ public class DbAuthManager {
             throws DatabaseAccessException {
         final School.ItemType collectionType = getParentItemType(itemType);
         final DBCollection collection = database.getCollection(getCollectionFromType(collectionType));
-        final DBObject result = collection.findOne(new ObjectId(itemId),
+        final DBObject result = collection.findOne(new ObjectId(parentId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
                         .append(DatabaseStringConstants.COURSE_ID, true)
                         .append(DatabaseStringConstants.OWNER_ID, true));
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }
+
+        // This would overwrite existing id but there is already a valid id in here.
+        result.removeField(DatabaseStringConstants.SELF_ID);
         insertQuery.putAll(result);
     }
 
     private BasicDBObject createInsertQuery(final String itemId, final School.ItemType itemType, final String authId, final String registrationKey) {
         final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
         if (School.ItemType.COURSE.equals(itemType)) {
-            query.append(DatabaseStringConstants.COURSE_ID, itemId)
+            query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, authId);
         }
         if (School.ItemType.BANK_PROBLEM.equals(itemType)) {
