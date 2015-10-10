@@ -99,6 +99,17 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      */
     @Override public void registerUser(final RpcController controller, final Authentication.UserRegistration request,
             final RpcCallback<Message.DefaultResponse> done) {
-
+        final Authentication.AuthRequest authRequest = request.getItemRequest();
+        try {
+            authManager.registerSelf(authRequest.getAuthId(), authRequest.getItemId(), authRequest.getItemType(),
+                    request.getRegistrationKey(), authChecker);
+            done.run(Message.DefaultResponse.getDefaultInstance());
+        } catch (DatabaseAccessException e) {
+            done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
+            LOG.error("Failed to access data while inserting new auth data", e);
+        } catch (AuthenticationException e) {
+            done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
+            LOG.error("Failed to authenticate user while inserting new auth data", e);
+        }
     }
 }

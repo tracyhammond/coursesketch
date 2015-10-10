@@ -22,7 +22,6 @@ import protobuf.srl.services.authentication.Authentication;
 
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 import java.util.List;
 
@@ -110,7 +109,7 @@ public class DbAuthManagerTest {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (AuthenticationException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(hash));
@@ -138,7 +137,7 @@ public class DbAuthManagerTest {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (AuthenticationException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(hash));
@@ -175,7 +174,7 @@ public class DbAuthManagerTest {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (AuthenticationException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(hash));
@@ -230,7 +229,7 @@ public class DbAuthManagerTest {
             hash = HashManager.toHex(HashManager.createHash(MOD_ID, groupToModify.get(DatabaseStringConstants.SALT).toString()).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (AuthenticationException e) {
             e.printStackTrace();
         }
         BasicDBObject update = new BasicDBObject(hash, Authentication.AuthResponse.PermissionLevel.MODERATOR_VALUE);
@@ -255,7 +254,7 @@ public class DbAuthManagerTest {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+        } catch (AuthenticationException e) {
             e.printStackTrace();
         }
         Assert.assertTrue(dbObject.containsField(teacherHash));
