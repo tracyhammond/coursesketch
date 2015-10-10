@@ -38,9 +38,11 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(DbAuthChecker.class)
 public class DbAuthManagerTest {
 
-    private static final String VALID_REGISTRATION_KEY = "VALID KEY YO";
     @Rule
     public FongoRule fongo = new FongoRule();
+
+    private static final String VALID_REGISTRATION_KEY = "VALID KEY YO";
+    private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
 
     public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
     public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
@@ -320,5 +322,100 @@ public class DbAuthManagerTest {
         Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
 
         dbAuthManager.insertNewItem(STUDENT_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, null, dbAuthChecker);
+    }
+
+    @Test
+    public void testRegisteringUserInCourse() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, VALID_REGISTRATION_KEY, dbAuthChecker);
+
+        // Looks for group data
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+
+
+        String teacherHash = null;
+        try {
+            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(teacherHash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
+
+        String userHash = null;
+        try {
+            userHash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(userHash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(userHash));
+
+        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testRegisteringUserInCourseInvalidKey() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, INVALID_REGISTRATION_KEY, dbAuthChecker);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testRegisteringUserInCourseInvalidItemId() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.registerSelf(userId, INVALID_ITEM_ID, VALID_ITEM_TYPE, VALID_REGISTRATION_KEY, dbAuthChecker);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void testRegisteringUserInCourseInvalidGroupId() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // Remove group from the database
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).remove(dbObject);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, VALID_REGISTRATION_KEY, dbAuthChecker);
     }
 }

@@ -81,11 +81,13 @@ public class AuthenticationException extends Exception {
     public static String getMessageFromValue(final int value) {
         switch (value) {
             case INVALID_DATE:
-                return "Can only access during valid times:";
+                return "Can only access during valid times: ";
             case INVALID_PERMISSION:
-                return "Can only perform task with valid permission";
+                return "Can only perform task with valid permission: ";
             case NO_AUTH_SENT:
-                return "No Authentication Information was received";
+                return "No Authentication Information was received: ";
+            case INSUFFICIENT_HASH:
+                return "A problem occurred so a hash of sufficient strength could not be created: ";
             default:
                 return null;
         }
