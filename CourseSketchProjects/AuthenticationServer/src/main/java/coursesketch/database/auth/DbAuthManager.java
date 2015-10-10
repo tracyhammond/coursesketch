@@ -71,14 +71,14 @@ public class DbAuthManager {
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
         }
 
-        if (itemType.equals(School.ItemType.BANK_PROBLEM )) {
+        if (itemType.equals(School.ItemType.BANK_PROBLEM)) {
             final String groupId = createNewGroup(itemId, itemType, authId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
 
             if (parentId != null) {
-                // register course in the group!
+                insertUserIntoGroup(parentId, groupId, Authentication.AuthResponse.PermissionLevel.STUDENT);
             }
         }
 
@@ -168,8 +168,10 @@ public class DbAuthManager {
      * Allows the insertion of a user into a group with the designaed permission.
      * @param authId
      * @param groupId
+     * @param permissionLevel
+     * @throws AuthenticationException
      */
-    private void insertUserIntoGroup(final String authId, String groupId, Authentication.AuthResponse.PermissionLevel permissionLevel)
+    private void insertUserIntoGroup(final String authId, final String groupId, final Authentication.AuthResponse.PermissionLevel permissionLevel)
             throws AuthenticationException {
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         final DBObject group = collection.findOne(new ObjectId(groupId));
@@ -184,6 +186,11 @@ public class DbAuthManager {
         if (hash == null) {
             throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
         }
+
+        final BasicDBObject update = new BasicDBObject(hash, permissionLevel.getNumber());
+        database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
+                new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(groupId)),
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, update));
     }
 
     public void registerSelf(final String authId, final String itemId, final School.ItemType itemType, final String registrationKey,
