@@ -17,9 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
-import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,7 +54,7 @@ public class DbAuthCheckerTest {
     public DbAuthChecker authChecker;
 
     @Before
-    public void before() throws UnknownHostException {
+    public void before() throws Exception {
 
         db = fongo.getDB(); // new MongoClient("localhost").getDB("test");
         authChecker = new DbAuthChecker(db);
@@ -93,40 +91,34 @@ public class DbAuthCheckerTest {
         db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).insert(group);
     }
 
-    public BasicDBObject createPermission(String salt, String authId, Authentication.AuthResponse.PermissionLevel level) {
+    public BasicDBObject createPermission(String salt, String authId, Authentication.AuthResponse.PermissionLevel level) throws Exception {
         String hash = null;
-        try {
             hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
             System.out.println("HASH FOR ID: " + authId + "+ SALT: " + salt + " IS [" + hash + "]");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
         return new BasicDBObject(hash, level.getNumber());
     }
 
     @Test(expected = AuthenticationException.class)
-    public void authExceptionThrownWhenNoAuthDataIsSent() throws DatabaseAccessException, AuthenticationException {
+    public void authExceptionThrownWhenNoAuthDataIsSent() throws Exception {
         authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.getDefaultInstance());
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void databaseExceptionThrownWhenWrongTypeGiven() throws DatabaseAccessException, AuthenticationException {
+    public void databaseExceptionThrownWhenWrongTypeGiven() throws Exception {
         authChecker.isAuthenticated(INVALID_ITEM_TYPE, INVALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .build());
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void databaseExceptionThrownWhenGivenWrongIdExists() throws DatabaseAccessException, AuthenticationException {
+    public void databaseExceptionThrownWhenGivenWrongIdExists() throws Exception {
         authChecker.isAuthenticated(VALID_ITEM_TYPE, INVALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .build());
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void databaseExceptionThrownWhenGroupDoesNotExist() throws DatabaseAccessException, AuthenticationException {
+    public void databaseExceptionThrownWhenGroupDoesNotExist() throws Exception {
         final String newId = createNonExistentObjectId(VALID_ITEM_ID);
         insertValidObject(VALID_ITEM_TYPE, newId, INVALID_GROUP_ID);
         authChecker.isAuthenticated(VALID_ITEM_TYPE, newId, TEACHER_ID, Authentication.AuthType.newBuilder()
@@ -135,7 +127,7 @@ public class DbAuthCheckerTest {
     }
 
     @Test
-    public void defaultResponseIsReturnedWhenNoGroupsExist() throws DatabaseAccessException, AuthenticationException {
+    public void defaultResponseIsReturnedWhenNoGroupsExist() throws Exception {
         final String newId = createNonExistentObjectId(VALID_ITEM_ID);
         insertValidObject(VALID_ITEM_TYPE, newId, new String[]{});
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, newId, TEACHER_ID,
@@ -146,7 +138,7 @@ public class DbAuthCheckerTest {
     }
 
     @Test
-    public void noPermissionIsReturnedWhenPersonDoesNotExistWithFilledCheckType() throws DatabaseAccessException, AuthenticationException {
+    public void noPermissionIsReturnedWhenPersonDoesNotExistWithFilledCheckType() throws Exception {
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, NO_ACCESS_ID,
                 Authentication.AuthType.newBuilder()
                         .setCheckAccess(true)
@@ -160,7 +152,7 @@ public class DbAuthCheckerTest {
     }
 
     @Test
-    public void noPermissionIsReturnedWithDefaultCheckType() throws DatabaseAccessException, AuthenticationException {
+    public void noPermissionIsReturnedWithDefaultCheckType() throws Exception {
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
                 Authentication.AuthType.newBuilder()
                         .setCheckAccess(true)
@@ -174,7 +166,7 @@ public class DbAuthCheckerTest {
     }
 
     @Test
-    public void permissionIsLimitedToWhatIsBeingChecked() throws DatabaseAccessException, AuthenticationException {
+    public void permissionIsLimitedToWhatIsBeingChecked() throws Exception {
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
                 Authentication.AuthType.newBuilder()
                         .setCheckAccess(true)
@@ -189,7 +181,7 @@ public class DbAuthCheckerTest {
     }
 
     @Test
-    public void permissionReturnsMaxLevelWhenBeingChecked() throws DatabaseAccessException, AuthenticationException {
+    public void permissionReturnsMaxLevelWhenBeingChecked() throws Exception {
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID,
                 Authentication.AuthType.newBuilder()
                         .setCheckAccess(true)
@@ -204,7 +196,7 @@ public class DbAuthCheckerTest {
     }
 
     @Test
-    public void permissionReturnsStudentLevelEvenWhenAskedIfAdmin() throws DatabaseAccessException, AuthenticationException {
+    public void permissionReturnsStudentLevelEvenWhenAskedIfAdmin() throws Exception {
         Authentication.AuthResponse response = authChecker.isAuthenticated(VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_ID,
                 Authentication.AuthType.newBuilder()
                         .setCheckAccess(true)

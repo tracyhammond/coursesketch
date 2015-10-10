@@ -118,10 +118,12 @@ public final class DbAuthChecker implements AuthenticationChecker {
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
         try {
             hash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes());
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
-        System.out.println("HASH FOR ID: " + userId + "+ SALT: " + salt + " IS [" + hash + "]");
+        if (hash == null) {
+            throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
+        }
         final Object permissionLevel = group.get(hash);
         if (permissionLevel == null) {
             return Authentication.AuthResponse.PermissionLevel.NO_PERMISSION;

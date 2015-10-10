@@ -33,6 +33,17 @@ public class DbAuthManager {
         this.database = database;
     }
 
+    /**
+     *
+     * @param authId
+     * @param itemId
+     * @param itemType
+     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
+     * @param registrationKey
+     * @param authChecker
+     * @throws DatabaseAccessException
+     * @throws AuthenticationException
+     */
     public void insertNewItem(final String authId, final String itemId, final School.ItemType itemType,
             final String parentId, final String registrationKey, final DbAuthChecker authChecker)
             throws DatabaseAccessException, AuthenticationException {
@@ -47,7 +58,7 @@ public class DbAuthManager {
             }
         }
 
-        final BasicDBObject insertQuery = createInsertQuery(itemId, itemType, authId, registrationKey);
+        final BasicDBObject insertQuery = createItemInsertQuery(itemId, itemType, authId, registrationKey);
         if (!parentType.equals(itemType)) {
             copyParentDetails(insertQuery, itemId, itemType, parentId);
         }
@@ -59,38 +70,56 @@ public class DbAuthManager {
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
         }
+
+        if (itemType.equals(School.ItemType.BANK_PROBLEM )) {
+            final String groupId = createNewGroup(itemId, itemType, authId);
+            final List<String> groupList = new ArrayList<>();
+            groupList.add(groupId);
+            insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
+
+            if (parentId != null) {
+                // register course in the group!
+            }
+        }
+
         final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
         collection.insert(insertQuery);
 
     }
 
     /**
-     * Creates a new group in the database.
-     *
-     * @param courseId The course that the group belongs to
+     * Creates a basic query for inserting items into the database.
+     * @param itemId
      * @param itemType
      * @param authId
+     * @param registrationKey
      * @return
-     * @throws AuthenticationException
      */
-    public String createNewGroup(final String courseId, final School.ItemType itemType, final String authId) throws AuthenticationException {
-        String hash;
-        String salt;
-        try {
-            salt = HashManager.generateSalt();
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AuthenticationException(e);
+    private BasicDBObject createItemInsertQuery(final String itemId, final School.ItemType itemType, final String authId,
+            final String registrationKey) {
+        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
+        if (School.ItemType.COURSE.equals(itemType)) {
+            query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
+                    .append(DatabaseStringConstants.OWNER_ID, authId);
         }
-        final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
-                .append(DatabaseStringConstants.SALT, salt)
-                .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
-
-        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
-        collection.insert(groupQuery);
-        return groupQuery.get(DatabaseStringConstants.SELF_ID).toString();
+        if (School.ItemType.BANK_PROBLEM.equals(itemType)) {
+            query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
+                    .append(DatabaseStringConstants.OWNER_ID, authId);
+        }
+        if (registrationKey != null) {
+            query.append(DatabaseStringConstants.REGISTRATION_KEY, registrationKey);
+        }
+        return query;
     }
 
+    /**
+     * Copies the details of the parent item (mainly groups and CourseId) into the current item.
+     * @param insertQuery
+     * @param itemId
+     * @param itemType
+     * @param parentId
+     * @throws DatabaseAccessException
+     */
     private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final School.ItemType itemType, final String parentId)
             throws DatabaseAccessException {
         final School.ItemType collectionType = getParentItemType(itemType);
@@ -108,19 +137,59 @@ public class DbAuthManager {
         insertQuery.putAll(result);
     }
 
-    private BasicDBObject createInsertQuery(final String itemId, final School.ItemType itemType, final String authId, final String registrationKey) {
-        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
-        if (School.ItemType.COURSE.equals(itemType)) {
-            query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
-                    .append(DatabaseStringConstants.OWNER_ID, authId);
+    /**
+     * Creates a new group in the database.
+     *
+     * @param courseId The course that the group belongs to
+     * @param itemType
+     * @param authId
+     * @return
+     * @throws AuthenticationException
+     */
+    public String createNewGroup(final String courseId, final School.ItemType itemType, final String authId) throws AuthenticationException {
+        String hash;
+        String salt;
+        try {
+            salt = HashManager.generateSalt();
+            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
         }
-        if (School.ItemType.BANK_PROBLEM.equals(itemType)) {
-            query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
-                    .append(DatabaseStringConstants.OWNER_ID, authId);
+        final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
+                .append(DatabaseStringConstants.SALT, salt)
+                .append(hash, Authentication.AuthResponse.PermissionLevel.TEACHER.getNumber());
+
+        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        collection.insert(groupQuery);
+        return groupQuery.get(DatabaseStringConstants.SELF_ID).toString();
+    }
+
+    /**
+     * Allows the insertion of a user into a group with the designaed permission.
+     * @param authId
+     * @param groupId
+     */
+    private void insertUserIntoGroup(final String authId, String groupId, Authentication.AuthResponse.PermissionLevel permissionLevel)
+            throws AuthenticationException {
+        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+        final DBObject group = collection.findOne(new ObjectId(groupId));
+        final String salt = group.get(DatabaseStringConstants.SALT).toString();
+        String hash = null;
+        try {
+            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
         }
-        if (registrationKey != null) {
-            query.append(DatabaseStringConstants.REGISTRATION_KEY, registrationKey);
+
+        if (hash == null) {
+            throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
         }
-        return query;
+    }
+
+    public void registerSelf(final String authId, final String itemId, final School.ItemType itemType, final String registrationKey,
+            final DbAuthChecker authChecker) throws AuthenticationException, DatabaseAccessException {
+        if (!School.ItemType.COURSE.equals(itemType)) {
+            throw new AuthenticationException("Can only register users in a course (not a bank problem)", AuthenticationException.OTHER);
+        }
     }
 }
