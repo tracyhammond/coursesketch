@@ -29,6 +29,11 @@ public class AuthenticationException extends Exception {
     public static final int OTHER = 3;
 
     /**
+     * Indicates that something occured to prevent a good hash from being created.
+     */
+    public static final int INSUFFICIENT_HASH = 4;
+
+    /**
      * Contains the type of issue with the authentication.
      */
     private final int exceptionType;

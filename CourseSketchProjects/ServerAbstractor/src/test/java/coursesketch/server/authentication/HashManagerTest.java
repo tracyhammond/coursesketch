@@ -1,5 +1,6 @@
 package coursesketch.server.authentication;
 
+import coursesketch.database.auth.AuthenticationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,20 @@ public class HashManagerTest {
         Assert.assertFalse(HashManager.validateHash(INCORRECT_PASSWORD, hash));
     }
 
+    @Test(timeout=2000, expected = AuthenticationException.class)
+    public void incorrectPasswordFailsToValidateWithInvalidHashTooShort() throws Exception {
+        String hash = "badhash";
+        System.out.println(hash);
+        Assert.assertFalse(HashManager.validateHash(INCORRECT_PASSWORD, hash));
+    }
+
+    @Test(timeout=2000)
+    public void incorrectPasswordFailsToValidateWithInvalidHash() throws Exception {
+        String hash = HashManager.CURRENT_HASH + HashManager.SPLIT_CHAR + "badhash";
+        System.out.println(hash);
+        Assert.assertFalse(HashManager.validateHash(INCORRECT_PASSWORD, hash));
+    }
+
     @Test
     public void upgradingFromOldestPasswordWorks() throws Exception {
         String hash = PasswordHash.createHash(CORRECT_PASSWORD);
@@ -68,5 +83,10 @@ public class HashManagerTest {
     public void invalidAlgThrowsException() throws Exception {
         String hash = INVALID_ALG + HashManager.SPLIT_CHAR + "FAKEHASHFKAEHASK";
         HashManager.upgradeHash(CORRECT_PASSWORD, hash);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void invalidSaltThrowsException() throws Exception {
+        HashManager.createHash("Pass", "badsalt");
     }
 }

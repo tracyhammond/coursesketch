@@ -1,5 +1,7 @@
 package coursesketch.server.authentication;
 
+import coursesketch.database.auth.AuthenticationException;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -9,11 +11,11 @@ import java.security.spec.InvalidKeySpecException;
 public interface HashWrapper {
     String algorithmName();
 
-    String hash(String string) throws InvalidKeySpecException, NoSuchAlgorithmException;
+    String hash(String string) throws AuthenticationException;
 
-    String hash(String string, String salt) throws InvalidKeySpecException, NoSuchAlgorithmException;
+    String hash(String string, String salt) throws AuthenticationException;
 
-    boolean validateHash(String candidate, String hashedValue) throws InvalidKeySpecException, NoSuchAlgorithmException;
+    boolean validateHash(String candidate, String hashedValue) throws AuthenticationException;
 
     String generateSalt();
 }

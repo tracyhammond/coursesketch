@@ -1,8 +1,8 @@
 package coursesketch.server.authentication;
 
 import com.google.common.collect.ImmutableMap;
+import coursesketch.database.auth.AuthenticationException;
 import org.mindrot.BCrypt;
-import utilities.AuthUtilities;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class HashManager {
 
+    private static final int MIN_SALT_LENGTH = 10;
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     /**
@@ -27,7 +28,12 @@ public class HashManager {
      */
     public static final int HASH_NAME_LENGTH = 7;
 
-    public static String createHash(final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    /**
+     * The length that all real hashes must be longer than.
+     */
+    private static final int MIN_HASH_LENGTH = HASH_NAME_LENGTH + 1;
+
+    public static String createHash(final String password) throws NoSuchAlgorithmException, AuthenticationException {
         final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
         if (function == null) {
             throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
@@ -35,7 +41,7 @@ public class HashManager {
         return CURRENT_HASH + SPLIT_CHAR + function.hash(password);
     }
 
-    public static String createHash(final String password, final String salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static String createHash(final String password, final String salt) throws NoSuchAlgorithmException, AuthenticationException {
         final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
         if (function == null) {
             throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
@@ -43,15 +49,18 @@ public class HashManager {
         return CURRENT_HASH + SPLIT_CHAR + function.hash(password, salt);
     }
 
-    public static boolean validateHash(final String candidate, final String hash) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static boolean validateHash(final String candidate, final String hash) throws NoSuchAlgorithmException, AuthenticationException {
         final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
         if (function == null) {
             throw new NoSuchAlgorithmException(getAlgorithmFromHash(hash));
         }
+        if (hash.length() <= MIN_HASH_LENGTH) {
+            throw new AuthenticationException("Candidate Hash is not a valid length", AuthenticationException.INSUFFICIENT_HASH);
+        }
         return function.validateHash(candidate, unwrapHash(hash));
     }
 
-    public static String upgradeHash(final String candidate, final String hash) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static String upgradeHash(final String candidate, final String hash) throws NoSuchAlgorithmException, AuthenticationException {
         final HashWrapper function = HASH_FUNCTION_MAP.get(getAlgorithmFromHash(hash)); // latest hash function
         if (function == null) {
             throw new NoSuchAlgorithmException(getAlgorithmFromHash(hash));
@@ -116,16 +125,21 @@ public class HashManager {
 
     private static class BCryptWrapper implements HashWrapper {
         private static final int LOG_ROUNDS = 12;
+        private static final int SALT_VERSION_CHAR0 = 36;
+        private static final int SALT_VERSION_CHAR1 = 50;
 
         @Override public String algorithmName() {
             return "BYCRYPT";
         }
 
-        @Override public String hash(final String password)throws InvalidKeySpecException, NoSuchAlgorithmException {
+        @Override public String hash(final String password)throws AuthenticationException {
             return BCrypt.hashpw(password, generateSalt());
         }
 
-        @Override public String hash(final String string, final String salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        @Override public String hash(final String string, final String salt) throws AuthenticationException {
+            if (salt.length() < MIN_SALT_LENGTH || salt.charAt(0) != SALT_VERSION_CHAR0 || salt.charAt(1) != SALT_VERSION_CHAR1) {
+                throw new AuthenticationException("Invalid Salt Format", AuthenticationException.INSUFFICIENT_HASH);
+            }
             return BCrypt.hashpw(string, salt);
         }
 
@@ -149,17 +163,32 @@ public class HashManager {
             return "PASHASH";
         }
 
-        @Override public String hash(final String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
-            return PasswordHash.createHash(password);
+        @Override public String hash(final String password) throws AuthenticationException {
+            try {
+                return PasswordHash.createHash(password);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new AuthenticationException(e);
+            }
         }
 
-        @Override public String hash(final String string, final String salt) throws InvalidKeySpecException, NoSuchAlgorithmException {
-            return PasswordHash.createHash(string + salt);
+        @Override public String hash(final String string, final String salt) throws AuthenticationException {
+            if (salt.length() < MIN_SALT_LENGTH) {
+                throw new AuthenticationException("Invalid Salt Format", AuthenticationException.INSUFFICIENT_HASH);
+            }
+            try {
+                return PasswordHash.createHash(string + salt);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new AuthenticationException(e);
+            }
         }
 
         @Override public boolean validateHash(final String candidate, final String hashedValue)
-                throws InvalidKeySpecException, NoSuchAlgorithmException {
-            return PasswordHash.validatePassword(candidate, hashedValue);
+                throws AuthenticationException {
+            try {
+                return PasswordHash.validatePassword(candidate, hashedValue);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new AuthenticationException(e);
+            }
         }
 
         @Override public String generateSalt() {
