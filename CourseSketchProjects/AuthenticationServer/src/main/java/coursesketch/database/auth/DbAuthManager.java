@@ -28,6 +28,10 @@ public final class DbAuthManager {
      */
     private final DB database;
 
+    /**
+     * Creates A DbAuthManager with a database.
+     * @param database The database where all of the data is stored.
+     */
     public DbAuthManager(final DB database) {
         this.database = database;
     }
@@ -67,14 +71,14 @@ public final class DbAuthManager {
 
         // if it is a course
         if (itemType.equals(School.ItemType.COURSE)) {
-            final String groupId = createNewGroup(itemId, itemType, authId);
+            final String groupId = createNewGroup(authId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
         }
 
         if (itemType.equals(School.ItemType.BANK_PROBLEM)) {
-            final String groupId = createNewGroup(itemId, itemType, authId);
+            final String groupId = createNewGroup(authId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
@@ -146,12 +150,12 @@ public final class DbAuthManager {
     /**
      * Creates a new group in the database.
      *
-     * @param courseId The course that the group belongs to.
      * @param authId The id of the owner of the new group.
+     * @param courseId The course that the group belongs to.
      * @return A {@link String} that is the mongo id of the new group.
      * @throws AuthenticationException Thrown if there are problems creating the hash data.
      */
-    public String createNewGroup(final String courseId, final String authId) throws AuthenticationException {
+    public String createNewGroup(final String authId, final String courseId) throws AuthenticationException {
         String hash;
         String salt;
         try {

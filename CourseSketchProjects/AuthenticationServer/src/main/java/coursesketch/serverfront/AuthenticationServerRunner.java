@@ -49,9 +49,7 @@ public class AuthenticationServerRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * @param time
-     * @param local
-     * @param serverInfo
+     * @return {@link AuthenticationServiceInitializer}
      */
     @Override
     public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
