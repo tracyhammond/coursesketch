@@ -301,7 +301,7 @@
                                 <encoding>UTF-8</encoding>
                                 <consoleOutput>true</consoleOutput>
                                 <checkstyle>
-                                    <failsOnError>false</failsOnError>
+                                    <failsOnError>true</failsOnError>
                                 </checkstyle>
                                 <check>
                                     <failsOnError>true</failsOnError>
@@ -309,6 +309,7 @@
                             </configuration>
                             <goals>
                                 <goal>checkstyle</goal>
+                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>
