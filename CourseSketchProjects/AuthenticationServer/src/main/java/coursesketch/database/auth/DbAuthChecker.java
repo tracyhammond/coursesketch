@@ -12,7 +12,6 @@ import protobuf.srl.services.authentication.Authentication;
 import utilities.AuthUtilities;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,8 +31,8 @@ public final class DbAuthChecker implements AuthenticationChecker {
     private final DB database;
 
     /**
-     *
-     * @param database
+     * Creates a DbAuthChecker that takes in the database.
+     * @param database The database.
      */
     public DbAuthChecker(final DB database) {
         this.database = database;
@@ -107,6 +106,16 @@ public final class DbAuthChecker implements AuthenticationChecker {
         return responseBuilder.build();
     }
 
+    /**
+     * Checks the group permission, and returns a permission level.
+     *
+     * @param collection The collection that contains the group.
+     * @param groupId The id of the group that is being checked.
+     * @param userId The id that is being checked
+     * @return A permission level that represents what permission the user has.  This does not return null.
+     * @throws DatabaseAccessException Thrown if the group does not exist.
+     * @throws AuthenticationException Thrown if there are problems comparing the hashes.
+     */
     private Authentication.AuthResponse.PermissionLevel checkGroupPermission(final DBCollection collection, final String groupId,
             final String userId) throws DatabaseAccessException, AuthenticationException {
         final DBObject group = collection.findOne(new ObjectId(groupId));

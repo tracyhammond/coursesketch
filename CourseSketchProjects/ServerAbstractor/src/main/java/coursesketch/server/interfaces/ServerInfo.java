@@ -43,7 +43,15 @@ public class ServerInfo {
      * <code>true</code> if the server is running locally, <code>false</code> otherwise.
      **/
     private final boolean isLocalVar;
+
+    /**
+     * A list of addresses where the database can be found at.
+     */
     private List<ServerAddress> databaseUrl;
+
+    /**
+     * The name of the database
+     */
     private String databaseName;
 
     /**
@@ -54,16 +62,23 @@ public class ServerInfo {
      * @param timeOut {@link #timeOut}.
      * @param isSecure {@link #isSecureVar}.
      * @param isLocal {@link #isLocalVar}.
+     * @param databaseUrl {@link #databaseUrl}.
+     * @param databaseName {@link #databaseName}.
      */
-    public ServerInfo(final String hostName, final int port, final long timeOut, final boolean isSecure, final boolean isLocal) {
+    public ServerInfo(final String hostName, final int port, final long timeOut, final boolean isSecure, final boolean isLocal,
+            final String databaseName, final List<ServerAddress> databaseUrl) {
         this.hostName = hostName;
         this.port = port;
         this.timeOut = timeOut;
         this.isSecureVar = isSecure;
         this.isLocalVar = isLocal;
-        if (databaseUrl == null) {
-            databaseUrl = new ArrayList<>();
-            databaseUrl.add(new ServerAddress());
+        this.databaseName = databaseName;
+        if (databaseUrl == null || databaseUrl.isEmpty()) {
+            // Use of this here is intentional.
+            this.databaseUrl = new ArrayList<>();
+            this.databaseUrl.add(new ServerAddress());
+        } else {
+            this.databaseUrl = databaseUrl;
         }
     }
 
