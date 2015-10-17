@@ -46,7 +46,7 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * {@inheritDoc}<br>
+     * {@inheritDoc}
      *
      * @return new instance of {@link DatabaseServlet}.
      */

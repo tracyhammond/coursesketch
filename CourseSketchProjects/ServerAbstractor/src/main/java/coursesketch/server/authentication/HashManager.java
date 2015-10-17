@@ -154,10 +154,11 @@ public class HashManager {
      * @param bytes The byte array to be converted into a hexadecimal string
      * @return A string that only contains hex characters
      */
+    @SuppressWarnings("checkstyle:magicnumber")
     public static String toHex(final byte[] bytes) {
         final char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
+        for (int j = 0; j < bytes.length; j++) {
+            final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
@@ -169,12 +170,13 @@ public class HashManager {
      * @param s A hex string that is to be converted into bytes.
      * @return A byte that is made from the hex characters
      */
-    public static byte[] fromHex(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
+    @SuppressWarnings("checkstyle:magicnumber")
+    public static byte[] fromHex(final String s) {
+        final int len = s.length();
+        final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
+                    + Character.digit(s.charAt(i + 1), 16));
         }
         return data;
     }
@@ -191,9 +193,21 @@ public class HashManager {
         return hash;
     }
 
+    /**
+     * Implements the BCrypt algorithm.
+     */
     private static class BCryptWrapper implements HashWrapper {
+        /**
+         * Number of rounds used when generating salt.
+         */
         private static final int LOG_ROUNDS = 12;
+        /**
+         * The character that represents the bycrypt verion.
+         */
         private static final int SALT_VERSION_CHAR0 = 36;
+        /**
+         * The character that represents the bycrypt verion.
+         */
         private static final int SALT_VERSION_CHAR1 = 50;
 
         @Override public String algorithmName() {
@@ -224,6 +238,9 @@ public class HashManager {
         }
     }
 
+    /**
+     * Implements Java's Sha1 algorithm using pbdkf2.
+     */
     @Deprecated
     private static class PasswordHashWrapper implements HashWrapper {
 
@@ -264,6 +281,9 @@ public class HashManager {
         }
     }
 
+    /**
+     * @return A map that contains all of the hashes that course sketch have used.
+     */
     private static Map<String, HashWrapper> createHashes() {
         final ImmutableMap.Builder mapBuilder = ImmutableMap.builder();
 
@@ -273,6 +293,12 @@ public class HashManager {
         return mapBuilder.build();
     }
 
+    /**
+     * A helper method that adds a hash to the map.
+     *
+     * @param mapBuilder Contains all of the hashing algorithms.
+     * @param wrapper A specific hash algorithm.
+     */
     private static void addHashToMap(final ImmutableMap.Builder<String, HashWrapper> mapBuilder, final HashWrapper wrapper) {
         if (wrapper.algorithmName().length() != HASH_NAME_LENGTH) {
             throw new AssertionError("All Hash keys must be the same length [" + HASH_NAME_LENGTH + "]");

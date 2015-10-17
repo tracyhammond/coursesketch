@@ -3,14 +3,31 @@ package database;
 import protobuf.srl.school.School;
 
 /**
+ * A set of utility methods to make it easier for dealing with school items.
+ *
  * Created by gigemjt on 9/16/2015.
  */
 public final class DbSchoolUtility {
-    public static String getCollectionFromType(School.ItemType type) {
+    /**
+     * Returns a string representing the type of school item it is based on the enum.
+     *
+     * This method is used to make it easier to handle upgrades or changes to protobuf names.
+     * @param type {@link protobuf.srl.school.School.ItemType}.
+     * @return A string representing the ItemType.
+     */
+    public static String getCollectionFromType(final School.ItemType type) {
         return type.name();
     }
 
-    public static String getCollectionFromType(School.ItemType type, boolean legacy) {
+    /**
+     * Returns a string representing the type of school item it is based on the enum.
+     *
+     * This method is used to make it easier to handle upgrades or changes to protobuf names.
+     * @param type {@link protobuf.srl.school.School.ItemType}.
+     * @param legacy true if the legacy names should be used instead of the new names.
+     * @return A string representing the ItemType.
+     */
+    public static String getCollectionFromType(final School.ItemType type, final boolean legacy) {
         if (!legacy) {
             return getCollectionFromType(type);
         }
@@ -29,10 +46,10 @@ public final class DbSchoolUtility {
      * <p/>
      * A course item type returns itself.
      * A bank problem also returns itself.
-     * @param item
+     * @param item {@link protobuf.srl.school.School.ItemType}.
      * @return The item type that is supposed to be the parent.
      */
-    public static School.ItemType getParentItemType(School.ItemType item) {
+    public static School.ItemType getParentItemType(final School.ItemType item) {
         switch (item) {
             case COURSE: return School.ItemType.COURSE;
             case ASSIGNMENT: return School.ItemType.COURSE;

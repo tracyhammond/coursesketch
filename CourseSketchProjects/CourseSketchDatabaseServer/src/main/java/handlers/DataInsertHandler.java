@@ -71,7 +71,7 @@ public final class DataInsertHandler {
      * @param instance The database backer.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })
     public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Recieving DATA SEND Request...");

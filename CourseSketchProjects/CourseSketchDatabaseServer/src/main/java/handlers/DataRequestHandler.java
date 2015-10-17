@@ -82,7 +82,7 @@ public final class DataRequestHandler {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount",
-            "checkstyle:methodlength" })
+            "checkstyle:methodlength", "checkstyle:avoidnestedblocks" })
     public static void handleRequest(final Request req, final SocketSession conn, final Institution instance,
             final String sessionId,
             final MultiConnectionManager internalConnections) {
