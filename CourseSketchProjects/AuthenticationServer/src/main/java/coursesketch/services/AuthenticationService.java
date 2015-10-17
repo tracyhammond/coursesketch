@@ -19,10 +19,19 @@ import utilities.ExceptionUtilities;
  */
 public final class AuthenticationService extends Authentication.AuthenticationService implements CourseSketchRpcService {
 
+    /**
+     * Manages authentication storage for this service.
+     */
     private final DbAuthManager authManager;
+
+    /**
+     * The socket initializer for this service.
+     */
     private ISocketInitializer socketInitializer;
 
-
+    /**
+     * Used for checking if users have permissions to access certain values.
+     */
     private final DbAuthChecker authChecker;
 
     /**
@@ -30,6 +39,11 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      */
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationService.class);
 
+    /**
+     * Creates an authentication service with an DbAuthManager and a DbAuthChecker.
+     * @param authChecker {@link #authChecker}
+     * @param authManager {@link #authManager}
+     */
     public AuthenticationService(final DbAuthChecker authChecker, final DbAuthManager authManager) {
         this.authChecker = authChecker;
         this.authManager = authManager;
@@ -47,12 +61,11 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     }
 
     /**
-     * <code>rpc authorizeUser(.protobuf.srl.services.authentication.AuthRequest) returns (.protobuf.srl.services.authentication.AuthResponse);</code>
-     * Authorizes the user to have access to the data.
+     * {@inheritDoc}
      *
-     * @param controller
-     * @param request
-     * @param done
+     * Used to check if a user has access to a certain item.
+     *
+     * An item can be a course or an assignment or other parts of a course.
      */
     @Override public void authorizeUser(final RpcController controller, final Authentication.AuthRequest request,
             final RpcCallback<Authentication.AuthResponse> done) {
@@ -68,11 +81,10 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     }
 
     /**
-     * <code>rpc createNewItem(.protobuf.srl.services.authentication.AuthCreationRequest) returns (.protobuf.srl.request.DefaultResponse);</code>
+     * {@inheritDoc}
      *
-     * @param controller
-     * @param request
-     * @param done
+     * Used to create new items.
+     * An item can be a course or an assignment or other parts of a course.
      */
     @Override public void createNewItem(final RpcController controller, final Authentication.AuthCreationRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
@@ -91,11 +103,9 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     }
 
     /**
-     * <code>rpc registerUser(.protobuf.srl.services.authentication.UserRegistration) returns (.protobuf.srl.request.DefaultResponse);</code>
+     * {@inheritDoc}
      *
-     * @param controller
-     * @param request
-     * @param done
+     * Registers user for a course or a bank problem.
      */
     @Override public void registerUser(final RpcController controller, final Authentication.UserRegistration request,
             final RpcCallback<Message.DefaultResponse> done) {

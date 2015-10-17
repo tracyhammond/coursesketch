@@ -19,6 +19,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 public final class AuthenticationServiceInitializer extends ServerWebSocketInitializer {
 
+    /**
+     * A client that connects to the mongo database.
+     */
     private MongoClient mongoClient;
 
     /**
@@ -39,6 +42,9 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
         return new DefaultWebSocketHandler(this, this.getServerInfo());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();

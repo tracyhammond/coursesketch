@@ -42,12 +42,13 @@ import java.security.spec.InvalidKeySpecException;
  * http://crackstation.net/hashing-security.htm
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.ShortVariable", "PMD.UselessParentheses", "PMD.AvoidCatchingGenericException",
-        "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.UseVarargs" })
+        "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.UseVarargs", "checkstyle:javadocvariable", "checkstyle:javadocmethod",
+        "checkstyle:magicnumber"})
 @Deprecated
 public final class PasswordHash {
 
     /**
-     * Declaration and Definition of Logger
+     * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(PasswordHash.class);
 

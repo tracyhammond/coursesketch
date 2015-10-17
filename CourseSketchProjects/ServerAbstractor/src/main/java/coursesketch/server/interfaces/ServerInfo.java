@@ -50,7 +50,7 @@ public class ServerInfo {
     private List<ServerAddress> databaseUrl;
 
     /**
-     * The name of the database
+     * The name of the database.
      */
     private String databaseName;
 
@@ -127,7 +127,7 @@ public class ServerInfo {
      *
      * @return List of {@link ServerAddress} ot connect to database.
      */
-    public List<ServerAddress> getDatabaseUrl() {
+    public final List<ServerAddress> getDatabaseUrl() {
         return databaseUrl;
     }
 
@@ -135,19 +135,29 @@ public class ServerInfo {
      * Adds a url that can be used to reach the database.
      * @param address An address that is used to connect to the mongoclient.
      */
-    /* package-private */ void addDatabaseUrl(final ServerAddress address) {
+    /* package-private */ final void addDatabaseUrl(final ServerAddress address) {
         databaseUrl.add(address);
     }
 
-    public void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+    /**
+     * Sets the list of addresses that the database can be at to.
+     * @param databaseUrl A list of addresses the database could be at.
+     */
+    /* package-private */ final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         this.databaseUrl = databaseUrl;
     }
 
-    public String getDatabaseName() {
+    /**
+     * @return The name of the database.
+     */
+    public final String getDatabaseName() {
         return databaseName;
     }
 
-    public void setDatabaseName(final String databaseName) {
+    /**
+     * @param databaseName Sets the name of the database.
+     */
+    public final void setDatabaseName(final String databaseName) {
         this.databaseName = databaseName;
     }
 }

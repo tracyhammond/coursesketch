@@ -138,7 +138,7 @@ public abstract class AbstractGeneralConnectionRunner {
     private List<ServerAddress> databaseUrl;
 
     /**
-     * The name of the database
+     * The name of the database.
      */
     private String databaseName;
 
@@ -474,7 +474,7 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * False if the server has not been started (basically {@link #startServer()} has not been called yet)
+     * False if the server has not been started (basically {@link #startServer()} has not been called yet).
      *
      * @return False if the server has not been started.
      */
@@ -577,7 +577,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * @return An unmodifiable list that represents the addresses the database can connect to.
      */
-    private final List<ServerAddress> getDatabaseUrl() {
+    private List<ServerAddress> getDatabaseUrl() {
         return Collections.unmodifiableList(databaseUrl);
     }
 
@@ -586,7 +586,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @param databaseUrl The list of addresses the database can connect to.
      */
-    protected final void setDatabaseUrl(List<ServerAddress> databaseUrl) {
+    protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         if (!setup) {
             throw new IllegalStateException("Can only set this variable during valid times");
         }
@@ -596,7 +596,7 @@ public abstract class AbstractGeneralConnectionRunner {
     /**
      * @return Gets the database name.
      */
-    private final String getDatabaseName() {
+    private String getDatabaseName() {
         return databaseName;
     }
 
@@ -605,7 +605,7 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * @param databaseName The name of the database.
      */
-    protected final void setDatabaseName(String databaseName) {
+    protected final void setDatabaseName(final String databaseName) {
         if (!setup) {
             throw new IllegalStateException("Can only set this variable during valid times");
         }

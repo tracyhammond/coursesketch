@@ -82,6 +82,7 @@ public class ProtobufComparisonBuilder {
      * @param isDeepEquals true if a deep equals comparison should happen. False otherwise.
      * @return Itself.
      */
+    @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setIsDeepEquals(final boolean isDeepEquals) {
         this.isDeepEquals = isDeepEquals;
         return this;
@@ -94,6 +95,7 @@ public class ProtobufComparisonBuilder {
      * @param failAtFirstMisMatch Default is true.
      * @return Itself.
      */
+    @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setFailAtFirstMisMatch(final boolean failAtFirstMisMatch) {
         this.failAtFirstMisMatch = failAtFirstMisMatch;
         return this;
@@ -112,6 +114,7 @@ public class ProtobufComparisonBuilder {
      * @param ignoreSetDefaultFields false to throw an assertion if the expected has no value but the actual does.  This is true by default.
      * @return Itself.
      */
+    @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setIgnoreSetDefaultFields(final boolean ignoreSetDefaultFields) {
         this.ignoreSetDefaultFields = ignoreSetDefaultFields;
         return this;
@@ -127,6 +130,7 @@ public class ProtobufComparisonBuilder {
      * @param ignoreNonSetFields True to ignore any field that is not set on the expected protobuf.  This is false by default.
      * @return Itself.
      */
+    @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setIgnoreNonSetFields(final boolean ignoreNonSetFields) {
         this.ignoreNonSetFields = ignoreNonSetFields;
         return this;

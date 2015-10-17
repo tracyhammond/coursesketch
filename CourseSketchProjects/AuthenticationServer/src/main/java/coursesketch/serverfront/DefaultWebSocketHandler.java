@@ -17,10 +17,13 @@ import protobuf.srl.request.Message.Request;
 public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
 
     /**
+     *
      * @param parent
      *            The servlet made for this server.
+     * @param info
+     *            Contains information about the parent.
      */
-    public DefaultWebSocketHandler(final ServerWebSocketInitializer parent, ServerInfo info) {
+    public DefaultWebSocketHandler(final ServerWebSocketInitializer parent, final ServerInfo info) {
         super(parent, info);
     }
 
