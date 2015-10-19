@@ -62,7 +62,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
     public final void onMessage(final SocketSession conn, final Request req) {
         final Institution instance = MongoInstitution.getInstance(getAuthInstance());
         if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-            DataRequestHandler.handleRequest(req, conn, instance, super.getConnectionToId().get(conn).getKey(), getConnectionManager());
+            DataRequestHandler.handleRequest(req, conn, instance, super.getConnectionToId().get(conn).getSessionId(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
             DataInsertHandler.handleData(req, conn, instance);
         } else if (req.getRequestType() == Request.MessageType.DATA_UPDATE) {

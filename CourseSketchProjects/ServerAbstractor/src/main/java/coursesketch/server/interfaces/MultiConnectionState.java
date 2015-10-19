@@ -9,10 +9,10 @@ package coursesketch.server.interfaces;
 public class MultiConnectionState {
 
     /**
-     * The unique key that separates this connection from a different
+     * The unique sessionId that separates this connection from a different
      * connection.
      */
-    private final String key;
+    private final String sessionId;
 
     /**
      * contains the value of if the connection is PENDING.
@@ -29,7 +29,7 @@ public class MultiConnectionState {
      *            Uniquely Identifies this connection from any other connection.
      */
     public MultiConnectionState(final String inputKey) {
-        this.key = inputKey;
+        this.sessionId = inputKey;
     }
 
     /**
@@ -42,22 +42,22 @@ public class MultiConnectionState {
         if (!(obj instanceof MultiConnectionState)) {
             return false;
         }
-        return ((MultiConnectionState) obj).key.equals(this.key);
+        return ((MultiConnectionState) obj).sessionId.equals(this.sessionId);
     }
 
     /**
-     * @return the hashcode of the key.
+     * @return the hashcode of the sessionId.
      */
     @Override
     public final int hashCode() {
-        return key.hashCode();
+        return sessionId.hashCode();
     }
 
     /**
-     * @return the key
+     * @return the sessionId
      */
-    public final String getKey() {
-        return key;
+    public final String getSessionId() {
+        return sessionId;
     }
 
     /**
