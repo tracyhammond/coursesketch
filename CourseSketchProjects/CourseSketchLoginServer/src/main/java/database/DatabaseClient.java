@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import connection.LoginServerWebSocketHandler;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.slf4j.Logger;
@@ -15,7 +16,6 @@ import utilities.LoggingConstants;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
@@ -182,11 +182,11 @@ public class DatabaseClient {
      * @param table The collection that the password is being updated in.
      * @param query The user that the password is being updated for.
      * @param newPassword The new password.
-     * @throws InvalidKeySpecException Thrown if an invalid key is set
+     * @throws AuthenticationException Thrown if an invalid key is set
      * @throws NoSuchAlgorithmException Thrown if the specified algorithm does not exist.
      */
     private static void updatePassword(final DBCollection table, final DBObject query, final String newPassword)
-            throws InvalidKeySpecException, NoSuchAlgorithmException {
+            throws AuthenticationException, NoSuchAlgorithmException {
         final String newHash = HashManager.createHash(newPassword);
         table.update(query, new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
     }
