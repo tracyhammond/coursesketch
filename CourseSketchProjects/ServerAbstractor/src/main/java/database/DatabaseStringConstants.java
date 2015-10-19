@@ -38,6 +38,7 @@ public final class DatabaseStringConstants {
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
+    public static final String AUTH_DATABASE = "auth";
 
     // meta fields
     public static final String NAME = "Name";
@@ -161,5 +162,4 @@ public final class DatabaseStringConstants {
     public static final String Y_DIMENSION = "YDIM";
     public static final String SLIDE_BLOB_TYPE = "TYPE";
     public static final String SLIDE_BLOB = "BLOB";
-
 }

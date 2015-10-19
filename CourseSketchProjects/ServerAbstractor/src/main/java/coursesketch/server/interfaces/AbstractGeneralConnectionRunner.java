@@ -1,5 +1,6 @@
 package coursesketch.server.interfaces;
 
+import com.google.common.collect.Lists;
 import com.mongodb.ServerAddress;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -578,6 +579,9 @@ public abstract class AbstractGeneralConnectionRunner {
      * @return An unmodifiable list that represents the addresses the database can connect to.
      */
     private List<ServerAddress> getDatabaseUrl() {
+        if (databaseUrl == null) {
+            return Collections.unmodifiableList(Lists.newArrayList(new ServerAddress()));
+        }
         return Collections.unmodifiableList(databaseUrl);
     }
 
