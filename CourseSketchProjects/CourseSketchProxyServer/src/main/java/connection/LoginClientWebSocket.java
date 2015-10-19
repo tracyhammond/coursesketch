@@ -62,6 +62,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      *            The message that is received by this object.
      */
     @Override
+    @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
     public void onMessage(final ByteBuffer buffer) {
         LOG.info("RECOVERED INFO FROM THE LOGIN SERVER");
         final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
@@ -90,13 +91,14 @@ public final class LoginClientWebSocket extends ClientWebSocket {
 
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             if (state == null) {
-                final Exception e = new NullPointerException("No State was grabbed for session:[ " + request.getSessionInfo() + "]");
-                LOG.error("Unable to create a state object for the given session", e);
+                final Exception nullPointerException = new NullPointerException("No State was grabbed for session:[ "
+                        + request.getSessionInfo() + "]");
+                LOG.error("Unable to create a state object for the given session", nullPointerException);
 
                 final Request result = createExceptionRequest(ProxyConnectionManager.createClientRequest(request),
-                        ExceptionUtilities.createProtoException(e));
+                        ExceptionUtilities.createProtoException(nullPointerException));
 
-                this.getParentServer().send(getConnectionFromState(state), result);
+                this.getParentServer().send(getConnectionFromState(null), result);
                 return;
             }
             state.addTry();

@@ -1,11 +1,9 @@
 package coursesketch.serverfront;
 
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import protobuf.srl.request.Message.Request;
 
 /**
@@ -13,7 +11,7 @@ import protobuf.srl.request.Message.Request;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-@WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
+// @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
 
     /**
