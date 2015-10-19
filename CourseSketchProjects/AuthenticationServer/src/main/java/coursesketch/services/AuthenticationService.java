@@ -25,11 +25,6 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     private final DbAuthManager authManager;
 
     /**
-     * The socket initializer for this service.
-     */
-    private ISocketInitializer socketInitializer;
-
-    /**
      * Used for checking if users have permissions to access certain values.
      */
     private final DbAuthChecker authChecker;
@@ -52,12 +47,10 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     /**
      * Sets the object that initializes this service.
      *
-     * @param socketInitializer
+     * @param socketInitializer The object used to initialize the sockets.
      */
     @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        if (socketInitializer != null) {
-            this.socketInitializer = socketInitializer;
-        }
+        // Does not set any values.
     }
 
     /**
@@ -116,10 +109,10 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
-            LOG.error("Failed to access data while inserting new auth data", e);
+            LOG.error("Failed to access data while registering user.", e);
         } catch (AuthenticationException e) {
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
-            LOG.error("Failed to authenticate user while inserting new auth data", e);
+            LOG.error("User may not have permission to register for this class.", e);
         }
     }
 }

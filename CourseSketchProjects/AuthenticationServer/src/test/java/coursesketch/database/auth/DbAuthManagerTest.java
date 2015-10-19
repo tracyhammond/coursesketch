@@ -100,7 +100,7 @@ public class DbAuthManagerTest {
 
     @Test
     public void testGroupCreation() throws AuthenticationException {
-        dbAuthManager.createNewGroup(VALID_ITEM_ID, VALID_ITEM_TYPE, TEACHER_ID);
+        dbAuthManager.createNewGroup(TEACHER_ID, VALID_ITEM_ID);
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);

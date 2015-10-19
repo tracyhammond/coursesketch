@@ -48,8 +48,8 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        final DB db = mongoClient.getDB(this.getServerInfo().getDatabaseName());
-        services.add(new AuthenticationService(new DbAuthChecker(db), new DbAuthManager(db)));
+        final DB mongoClientDB = mongoClient.getDB(this.getServerInfo().getDatabaseName());
+        services.add(new AuthenticationService(new DbAuthChecker(mongoClientDB), new DbAuthManager(mongoClientDB)));
         return services;
     }
 }

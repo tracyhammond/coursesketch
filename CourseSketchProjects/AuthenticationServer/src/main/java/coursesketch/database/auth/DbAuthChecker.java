@@ -11,6 +11,7 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import utilities.AuthUtilities;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -126,7 +127,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
         String hash = null;
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
         try {
-            hash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes());
+            hash = HashManager.toHex(HashManager.createHash(userId, salt).getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }

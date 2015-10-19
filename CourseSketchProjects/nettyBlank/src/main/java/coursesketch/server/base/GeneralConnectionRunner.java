@@ -86,7 +86,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -94,7 +94,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeLocalEnvironment() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -102,7 +102,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeRemoteEnvironment() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -211,7 +211,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void stop() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -220,7 +220,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void reconnect() {
-
+        // Does nothing by default.
     }
 
     /**

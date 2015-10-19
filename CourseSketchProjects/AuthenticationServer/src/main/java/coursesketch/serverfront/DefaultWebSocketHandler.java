@@ -35,6 +35,7 @@ public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     public void openSession(final SocketSession conn) {
+        // Does nothing by default.
     }
 
     /**
@@ -42,6 +43,7 @@ public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     public void onMessage(final SocketSession conn, final Request req) {
+        // Does nothing by default.
     }
 
 }
