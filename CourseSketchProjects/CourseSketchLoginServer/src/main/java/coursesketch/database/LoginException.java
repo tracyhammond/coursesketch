@@ -1,4 +1,4 @@
-package database;
+package coursesketch.database;
 
 /**
  * Created by gigemjt on 10/17/14.

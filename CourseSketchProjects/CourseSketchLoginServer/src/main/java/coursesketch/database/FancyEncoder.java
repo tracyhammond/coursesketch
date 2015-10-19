@@ -1,8 +1,8 @@
-package database;
-
-import java.util.UUID;
+package coursesketch.database;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+
+import java.util.UUID;
 
 /**
  * Does a longer version of the normal UUID to make it more unique.
