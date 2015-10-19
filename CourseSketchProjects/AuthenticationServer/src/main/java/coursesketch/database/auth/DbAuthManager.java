@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,7 @@ public final class DbAuthManager {
         String salt;
         try {
             salt = HashManager.generateSalt();
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
+            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
@@ -193,7 +194,7 @@ public final class DbAuthManager {
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
         String hash = null;
         try {
-            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes());
+            hash = HashManager.toHex(HashManager.createHash(authId, salt).getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }

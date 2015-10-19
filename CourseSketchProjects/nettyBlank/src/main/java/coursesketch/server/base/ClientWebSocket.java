@@ -16,15 +16,14 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.ssl.SslContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Created by gigemjt on 10/22/14.
@@ -123,7 +122,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      *         The message that is received by this object.
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
-
+        // Does nothing by default.
     }
 
     /**
