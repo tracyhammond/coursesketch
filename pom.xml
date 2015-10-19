@@ -638,14 +638,12 @@
 
     <dependencies>
 
-        <!--
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
             <version>${jettyVersion}</version>
             <scope>compile</scope>
         </dependency>
-        -->
 
         <dependency>
             <groupId>com.google.protobuf</groupId>
