@@ -1,4 +1,4 @@
-package database;
+package coursesketch.database;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -9,6 +9,7 @@ import connection.LoginServerWebSocketHandler;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import database.DatabaseStringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
