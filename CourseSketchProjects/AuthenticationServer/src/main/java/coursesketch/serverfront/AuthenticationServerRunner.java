@@ -3,12 +3,13 @@ package coursesketch.serverfront;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.GeneralConnectionRunner;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
+import database.DatabaseStringConstants;
 
 /**
  * A subclass of the runner and sets up some special information for running the
  * environment.
  */
-public class AuthenticationServerRunner extends GeneralConnectionRunner {
+public final class AuthenticationServerRunner extends GeneralConnectionRunner {
 
     /** 30 minutes * 60 seconds * 1000 milliseconds. */
     private static final long TIMEOUT_TIME = 30 * 60 * 1000;
@@ -26,11 +27,18 @@ public class AuthenticationServerRunner extends GeneralConnectionRunner {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadConfigurations() {
+        super.setDatabaseName(DatabaseStringConstants.AUTH_DATABASE);
+    }
+    /**
      * sets some SSL information. FUTURE: this should be read from a file
      * instead of listed in code.
      */
     @Override
-    public final void executeRemoteEnvironment() {
+    public void executeRemoteEnvironment() {
         setCertificatePath("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
     }
@@ -52,7 +60,7 @@ public class AuthenticationServerRunner extends GeneralConnectionRunner {
      * @return {@link AuthenticationServiceInitializer}
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
         return new AuthenticationServiceInitializer(serverInfo);
     }
 }
