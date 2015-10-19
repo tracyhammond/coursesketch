@@ -22,7 +22,7 @@ public final class AuthenticationServiceInitializer extends ServerWebSocketIniti
     /**
      * A client that connects to the mongo database.
      */
-    private MongoClient mongoClient;
+    private final MongoClient mongoClient;
 
     /**
      * Constructor for AuthenticationServiceInitializer.

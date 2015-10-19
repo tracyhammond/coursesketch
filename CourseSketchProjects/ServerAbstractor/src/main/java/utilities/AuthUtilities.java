@@ -9,6 +9,12 @@ import protobuf.srl.services.authentication.Authentication;
 public final class AuthUtilities {
 
     /**
+     * Empty constructor.
+     */
+    private AuthUtilities() {
+    }
+
+    /**
      * Converts the checktype to make it cumulative.
      * <p/>
      * So if a checktype with only admin set is passed in the output would contain all of the permission below it.

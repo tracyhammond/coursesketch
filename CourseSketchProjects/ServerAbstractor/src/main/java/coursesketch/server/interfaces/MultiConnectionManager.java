@@ -209,6 +209,7 @@ public class MultiConnectionManager {
      *                     functionality.
      */
     public void connectServers(final AbstractServerWebSocketHandler parentServer) {
+        // overwritten to perform actions.
     }
 
     /**

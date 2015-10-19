@@ -8,6 +8,13 @@ import protobuf.srl.school.School;
  * Created by gigemjt on 9/16/2015.
  */
 public final class DbSchoolUtility {
+
+    /**
+     * Empty constructor.
+     */
+    private DbSchoolUtility() {
+    }
+
     /**
      * Returns a string representing the type of school item it is based on the enum.
      *
