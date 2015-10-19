@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -43,7 +44,7 @@ import java.security.spec.InvalidKeySpecException;
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.ShortVariable", "PMD.UselessParentheses", "PMD.AvoidCatchingGenericException",
         "PMD.FieldDeclarationsShouldBeAtStartOfClass", "PMD.UseVarargs", "checkstyle:javadocvariable", "checkstyle:javadocmethod",
-        "checkstyle:magicnumber"})
+        "checkstyle:magicnumber", "PMD.TooManyMethods"})
 @Deprecated
 public final class PasswordHash {
 
@@ -56,6 +57,7 @@ public final class PasswordHash {
     }
 
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+
 
     // The following constants may be changed without breaking existing hashes.
     public static final int SALT_BYTE_SIZE = 24;
@@ -70,7 +72,7 @@ public final class PasswordHash {
         final SecureRandom random = new SecureRandom();
         final byte[] salt = new byte[SALT_BYTE_SIZE];
         random.nextBytes(salt);
-        return new String(salt);
+        return new String(salt, StandardCharsets.UTF_8);
     }
 
     /**
@@ -94,7 +96,7 @@ public final class PasswordHash {
      * @return a salted PBKDF2 hash of the password
      */
     public static String createHash(final String password, final String salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return createHash(password.toCharArray(), salt.getBytes());
+        return createHash(password.toCharArray(), salt.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -105,7 +107,7 @@ public final class PasswordHash {
      * @return a salted PBKDF2 hash of the password
      */
     public static String createHash(final char[] password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return createHash(password, createSalt().getBytes());
+        return createHash(password, createSalt().getBytes(StandardCharsets.UTF_8));
     }
 
     /**

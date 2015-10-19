@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by dtracers on 10/7/2015.
  */
 @SuppressWarnings({"PMD.SingularField", "PMD.TooManyMethods" })
-public class HashManager {
+public final class HashManager {
 
     /**
      * The minimum salt length we deam to be secure enough.  (Honestly this is problem too short)
@@ -52,6 +52,12 @@ public class HashManager {
      * The length that all real hashes must be longer than.
      */
     private static final int MIN_HASH_LENGTH = HASH_NAME_LENGTH + 1;
+
+    /**
+     * Empty constructor.
+     */
+    private HashManager() {
+    }
 
     /**
      * Creates a hash for the given input.
@@ -154,29 +160,29 @@ public class HashManager {
      * @param bytes The byte array to be converted into a hexadecimal string
      * @return A string that only contains hex characters
      */
-    @SuppressWarnings("checkstyle:magicnumber")
+    @SuppressWarnings({ "checkstyle:magicnumber", "PMD.UseVarargs" })
     public static String toHex(final byte[] bytes) {
         final char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
-            final int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+            final int rawByte = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[rawByte >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[rawByte & 0x0F];
         }
         return new String(hexChars);
     }
 
     /**
      * Converts a hex string into a binary array.
-     * @param s A hex string that is to be converted into bytes.
+     * @param hexString A hex string that is to be converted into bytes.
      * @return A byte that is made from the hex characters
      */
     @SuppressWarnings("checkstyle:magicnumber")
-    public static byte[] fromHex(final String s) {
-        final int len = s.length();
+    public static byte[] fromHex(final String hexString) {
+        final int len = hexString.length();
         final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i + 1), 16));
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                    + Character.digit(hexString.charAt(i + 1), 16));
         }
         return data;
     }
@@ -299,6 +305,7 @@ public class HashManager {
      * @param mapBuilder Contains all of the hashing algorithms.
      * @param wrapper A specific hash algorithm.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private static void addHashToMap(final ImmutableMap.Builder<String, HashWrapper> mapBuilder, final HashWrapper wrapper) {
         if (wrapper.algorithmName().length() != HASH_NAME_LENGTH) {
             throw new AssertionError("All Hash keys must be the same length [" + HASH_NAME_LENGTH + "]");

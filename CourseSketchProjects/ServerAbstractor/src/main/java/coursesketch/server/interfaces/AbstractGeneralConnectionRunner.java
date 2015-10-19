@@ -26,7 +26,7 @@ import java.util.List;
  * @since 10/19/14
  * @version 1
  */
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.TooManyFields" })
 public abstract class AbstractGeneralConnectionRunner {
 
     /**
