@@ -17,7 +17,7 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>40</projectBranchLevel>
+        <projectBranchLevel>39</projectBranchLevel>
         <projectLineLevel>34</projectLineLevel>
     </properties>
     <build>
