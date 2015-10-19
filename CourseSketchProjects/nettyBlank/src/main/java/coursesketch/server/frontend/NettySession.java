@@ -1,19 +1,18 @@
-package coursesketch.server.base;
+package coursesketch.server.frontend;
 
 import coursesketch.server.interfaces.SocketSession;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.DefaultChannelPromise;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
-import io.netty.util.concurrent.GenericProgressiveFutureListener;
-import io.netty.util.concurrent.ProgressiveFuture;
+import io.netty.util.concurrent.GenericFutureListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -84,16 +83,14 @@ public final class NettySession implements SocketSession {
         final BinaryWebSocketFrame frame = new BinaryWebSocketFrame(Unpooled.copiedBuffer(buffer));
         LOG.info("Frame: {}", frame);
         final ChannelFuture future = session.channel().write(frame);
-        future.addListener(new GenericProgressiveFutureListener<ProgressiveFuture<Void>>() {
+        future.addListener(new GenericFutureListener<DefaultChannelPromise>() {
 
+            /**
+             * {@inheritDoc}
+             **/
             @SuppressWarnings("PMD.CommentRequired")
-            @Override public void operationProgressed(final ProgressiveFuture future, final long progress, final long total) {
-                LOG.info("current progress in sending message {}, {}", progress, total);
-            }
-
-            /** {@inheritDoc} */
-            @Override public void operationComplete(final ProgressiveFuture future) {
-                LOG.info("COMPELTE");
+            @Override public void operationComplete(final DefaultChannelPromise future) {
+                LOG.debug("Message sent successfully");
             }
         });
         return future;

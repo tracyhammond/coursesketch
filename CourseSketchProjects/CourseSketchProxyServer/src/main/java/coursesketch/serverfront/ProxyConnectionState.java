@@ -21,6 +21,6 @@ public final class ProxyConnectionState extends LoginConnectionState {
      * @return the user id of this connection.
      */
     /* package-private */String getUserId() {
-        return getSessionId();
+        return getServerUserId();
     }
 }
