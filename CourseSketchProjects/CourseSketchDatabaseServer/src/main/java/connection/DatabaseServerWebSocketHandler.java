@@ -1,9 +1,11 @@
 package connection;
 
 import coursesketch.auth.AuthenticationWebSocketClient;
+import coursesketch.database.interfaces.CourseSketchDatabaseReader;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.auth.MongoOptionChecker;
@@ -60,7 +62,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     public final void onMessage(final SocketSession conn, final Request req) {
-        final Institution instance = MongoInstitution.getInstance(getAuthInstance());
+        final Institution instance = (Institution) super.getDatabaseReader();
         if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
             DataRequestHandler.handleRequest(req, conn, instance, super.getConnectionToId().get(conn).getSessionId(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
@@ -95,5 +97,14 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
             }
         }
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link MongoInstitution}.
+     */
+    @Override protected final CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        return new MongoInstitution(info, getAuthInstance());
     }
 }
