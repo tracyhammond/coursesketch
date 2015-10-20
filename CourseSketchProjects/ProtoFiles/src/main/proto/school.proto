@@ -17,6 +17,7 @@ message SrlCourse {
     optional State state = 11;
     repeated string assignmentList = 12;
     repeated string lectureList = 13;
+    optional string registrationKey = 14;
 
     enum Accessibility {
         SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
