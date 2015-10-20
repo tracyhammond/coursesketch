@@ -60,6 +60,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
         connectionServer = createServerSocket();
         LOG.info("Creating a new connectionManager");
         manager = createConnectionManager(getServerInfo());
+        connectionServer.initialize();
     }
 
     /**

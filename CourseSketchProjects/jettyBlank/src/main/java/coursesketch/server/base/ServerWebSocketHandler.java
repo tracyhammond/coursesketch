@@ -1,5 +1,6 @@
 package coursesketch.server.base;
 
+import coursesketch.database.interfaces.CourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -139,5 +140,21 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     protected final MultiConnectionManager getConnectionManager() {
         return ((ServerWebSocketInitializer) getParentServer()).getManager();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected void onInitialize() {
+        // Does nothing by default.
     }
 }
