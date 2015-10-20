@@ -166,6 +166,13 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     }
 
     /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    @Override public final void onServerStart() {
+        connectionServer.initialize();
+    }
+
+    /**
      * @return the multiConnectionManager.  This is only used within this package.
      */
     /* package-private */ final MultiConnectionManager getManager() {
