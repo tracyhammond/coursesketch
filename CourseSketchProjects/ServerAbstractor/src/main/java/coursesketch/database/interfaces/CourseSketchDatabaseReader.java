@@ -1,6 +1,8 @@
 package coursesketch.database.interfaces;
 
 import coursesketch.server.interfaces.ServerInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An abstract class used when creating software that reads from the database.
@@ -8,6 +10,10 @@ import coursesketch.server.interfaces.ServerInfo;
  * Created by dtracers on 10/19/2015.
  */
 public abstract class CourseSketchDatabaseReader {
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(CourseSketchDatabaseReader.class);
 
     /**
      * Contains Information about the server.
@@ -36,6 +42,7 @@ public abstract class CourseSketchDatabaseReader {
         if (!databaseStarted) {
             synchronized (this) {
                 if (!databaseStarted) {
+                    LOG.debug("Starting a connection to the database");
                     onStartDatabase();
                 }
             }
@@ -53,6 +60,7 @@ public abstract class CourseSketchDatabaseReader {
      * Called when the database has started.
      */
     protected final void databaseStarted() {
+        LOG.debug("The database was successfully started.");
         databaseStarted = true;
     }
 

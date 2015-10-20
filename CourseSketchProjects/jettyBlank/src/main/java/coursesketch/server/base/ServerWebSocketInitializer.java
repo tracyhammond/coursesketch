@@ -148,8 +148,8 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * Called to initialize The {@link AbstractServerWebSocketHandler}.
      */
-    @Override public final void onServerStart() {
-        connectionServer.initialize();
+    @Override public void onServerStart() {
+        // Does nothing by default
     }
 
     /**
@@ -173,10 +173,13 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     @Override
     public final void reconnect() {
-        LOG.info("Reconnecting");
+        LOG.info("Reconnecting to remote servers.");
         if (manager != null) {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
+        }
+        if (connectionServer != null) {
+            connectionServer.initialize();
         }
         onReconnect();
     }

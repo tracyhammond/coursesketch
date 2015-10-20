@@ -77,7 +77,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * This is called when the reconnect command is executed.
      *
-     * By default this drops all connections and then calls
+     * By default this drops all connections then creates new ones for the databases and any remote servers
      *
      * @see coursesketch.server.interfaces.MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
      */
@@ -87,6 +87,9 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
         if (manager != null) {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
+        }
+        if (connectionServer != null) {
+            connectionServer.initialize();
         }
         onReconnect();
     }
@@ -168,8 +171,8 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Called to initialize The {@link AbstractServerWebSocketHandler}.
      */
-    @Override public final void onServerStart() {
-        connectionServer.initialize();
+    @Override public void onServerStart() {
+        // does nothing by default
     }
 
     /**
