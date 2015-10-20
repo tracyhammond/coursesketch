@@ -4,7 +4,6 @@ import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseStringConstants;
-import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 
 /**
@@ -50,7 +49,6 @@ public final class DatabaseRunner extends GeneralConnectionRunner {
      */
     @Override
     public void executeLocalEnvironment() {
-        new MongoInstitution(false, null, null); // makes the database point locally
         new UserClient(false, null); // makes the database point locally
     }
 
