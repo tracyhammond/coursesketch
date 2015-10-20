@@ -3,9 +3,6 @@ package database.institution.mongo;
 import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
@@ -18,7 +15,6 @@ import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
 import database.user.UserClient;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
@@ -40,8 +36,6 @@ import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.UPDATE_COLLECTION;
 import static database.DatabaseStringConstants.USER_COLLECTION;
-import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
-import static database.DatabaseStringConstants.USER_LIST;
 
 /**
  * A Mongo implementation of the Institution it inserts and gets courses as
@@ -300,14 +294,12 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
         try {
             updater.createNewItem(School.ItemType.COURSE, resultId, null, userId, registrationId);
         } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
             throw new DatabaseAccessException("Problem creating authentication data", e);
         }
 
         // adds the course to the users list
-        final boolean success = this.putUserInCourse(resultId, userId);
-        if (!success) {
-            throw new DatabaseAccessException("No success Adding user into course: ", false);
-        }
+        UserClient.addCourseToUser(userId, resultId);
 
         // FUTURE: try to undo what has been done! (and more error handling!)
 
@@ -395,26 +387,8 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
 
     @Override
     public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
-        // this actually requires getting the data from the course itself
-        final String userGroupId = CourseManager.mongoGetDefaultGroupId(database, courseId)[2]; // user
-        // group!
 
-        // FIXME: when mongo version 2.5.5 java client comes out please change
-        // this!
-        /*
-        final ArrayList<String> hack = new ArrayList<String>();
-        hack.add(GROUP_PREFIX + userGroupId);
-        if (getInstance(null).auth.checkAuthentication(userId, hack)) {
-            return false;
-        }
-        */
-        // DO NOT USE THIS CODE ANY WHERE ESLE
-        final DBRef myDbRef = new DBRef(database, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
-        final DBObject corsor = myDbRef.fetch();
-        final DBCollection courses = database.getCollection(USER_GROUP_COLLECTION);
-        final BasicDBObject object = new BasicDBObject("$addToSet", new BasicDBObject(USER_LIST, userId));
-        courses.update(corsor, object);
-
+        // TODO: register user in course!
         UserClient.addCourseToUser(userId, courseId);
         return true;
     }

@@ -107,21 +107,26 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
                 .setItemType(collectionType)
                 .build();
 
-        final Authentication.AuthCreationRequest.Builder creationRequest = Authentication.AuthCreationRequest.newBuilder()
-                .setItemRequest(request)
-                .setParentItemId(parentId);
+        final Authentication.AuthCreationRequest.Builder creationRequestBuilder = Authentication.AuthCreationRequest.newBuilder()
+                .setItemRequest(request);
+        if (parentId == null && School.ItemType.COURSE != collectionType) {
+            throw new AuthenticationException("Parent Id can only be null when inserting a course", AuthenticationException.NO_AUTH_SENT);
+        }
+        if (parentId != null) {
+            creationRequestBuilder.setParentItemId(parentId);
+        }
         if (registrationKey != null) {
-            creationRequest.setRegistrationKey(registrationKey);
+            creationRequestBuilder.setRegistrationKey(registrationKey);
         }
 
         Message.DefaultResponse response = null;
         try {
-            response = authService.createNewItem(getNewRpcController(), creationRequest.build());
+            final Authentication.AuthCreationRequest creationRequest = creationRequestBuilder.build();
+            response = authService.createNewItem(getNewRpcController(), creationRequest);
             if (response.hasException()) {
                 throw new AuthenticationException(response.getException().toString(), AuthenticationException.OTHER);
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
             throw new AuthenticationException(e);
         }
     }
