@@ -138,6 +138,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     }
 
     /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    @Override public final void onServerStart() {
+        connectionServer.initialize();
+    }
+
+    /**
      * Returns the {@link MultiConnectionManager}.
      *
      * This is only used within this package.

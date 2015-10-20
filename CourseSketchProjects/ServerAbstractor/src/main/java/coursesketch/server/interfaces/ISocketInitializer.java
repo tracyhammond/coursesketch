@@ -46,6 +46,11 @@ public interface ISocketInitializer {
      */
     ServerInfo getServerInfo();
 
+    /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    void onServerStart();
+
     // METHODS BELOW NEED TO BE IN ALL CLASSES OF THIS INTERFACE (but they can't be in interface because of scope.
 
     /**

@@ -76,10 +76,35 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     /**
      * Creates a mongo institution based on the server info.
      * @param info Server information.
+     * @param authenticator What is used to authenticate access to the different resources.
      */
     public MongoInstitution(final ServerInfo info, final Authenticator authenticator) {
         super(info);
         auth = authenticator;
+    }
+
+    /**
+     * @return An instance of the mongo client. Creates it if it does not exist.
+     *
+     * This is only used for testing and references the test database not the real database.
+     *
+     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
+     * @param authenticator What is used to authenticate access to the different resources.
+     */
+    @Deprecated
+    @SuppressWarnings("checkstyle:innerassignment")
+    public static MongoInstitution getInstance(final Authenticator authenticator) {
+        MongoInstitution result = instance;
+        if (result == null) {
+            synchronized (MongoInstitution.class) {
+                if (result == null) {
+                    result = instance;
+                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator);
+                    result.auth = authenticator;
+                }
+            }
+        }
+        return result;
     }
 
     /**
