@@ -24,10 +24,10 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
@@ -293,49 +293,15 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
 
     @Override
     public String insertCourse(final String userId, final SrlCourse course) throws DatabaseAccessException {
+        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        // Creates the default permissions for the courses.
-        SrlPermission permission = null;
-        if (course.hasAccessPermission()) {
-            permission = course.getAccessPermission();
+        final String resultId = CourseManager.mongoInsertCourse(database, course);
+
+        try {
+            updater.createNewItem(School.ItemType.COURSE, resultId, null, userId, registrationId);
+        } catch (AuthenticationException e) {
+            throw new DatabaseAccessException("Problem creating authentication data", e);
         }
-
-        final SrlGroup.Builder courseGroup = SrlGroup.newBuilder();
-        courseGroup.addAdmin(userId);
-        courseGroup.setGroupName(course.getName() + "_User");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getUserPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getUserPermissionList());
-        }
-        final String userGroupId = GroupManager.mongoInsertGroup(database, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Mod");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getModeratorPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getModeratorPermissionList());
-        }
-        final String modGroupId = GroupManager.mongoInsertGroup(database, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Admin");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getAdminPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getAdminPermissionList());
-        }
-        courseGroup.addUserId(userId); // an admin will always exist
-        final String adminGroupId = GroupManager.mongoInsertGroup(database, courseGroup.buildPartial());
-
-        // overwrites the existing permissions with the new user specific course
-        // permission
-        final SrlCourse.Builder builder = SrlCourse.newBuilder(course);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        permissions.addAdminPermission(GROUP_PREFIX + adminGroupId);
-        permissions.addModeratorPermission(GROUP_PREFIX + modGroupId);
-        permissions.addUserPermission(GROUP_PREFIX + userGroupId);
-        builder.setAccessPermission(permissions.build());
-        final String resultId = CourseManager.mongoInsertCourse(database, builder.buildPartial());
-
-        // links the course to the group!
-        CourseManager.mongoInsertDefaultGroupId(database, resultId, userGroupId, modGroupId, adminGroupId);
 
         // adds the course to the users list
         final boolean success = this.putUserInCourse(resultId, userId);
