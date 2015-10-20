@@ -30,7 +30,7 @@ public final class BreakDatabase {
     private UserClient userClient;
 
     public BreakDatabase(final DB db) {
-        mongoDatabase = new MongoInstitution(true, db, null);
+        mongoDatabase = new MongoInstitution(null, null, null);
         database = db;
         userClient = new UserClient(true, db);
     }

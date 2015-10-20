@@ -66,7 +66,7 @@ message AuthCreationRequest {
     required AuthRequest itemRequest = 1;
     // contains the id of the parent of this item.
     // NOTE: If the bank problem is being created for use with a course then it will automatically add itself to the list of valid users!
-    required string parentItemId = 2;
+    optional string parentItemId = 2;
     optional string registrationKey = 3;
 }
 
