@@ -3,7 +3,7 @@ package database.institution;
 import com.google.protobuf.ByteString;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
@@ -81,8 +81,9 @@ public interface Institution {
      * @param userId The user requesting these courses.
      * @return A list of course problems given a list of Ids for the course problems.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if there are problems getting the problems.
      */
-    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException;
+    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * @return A list of courses that are public (used when registering problems)

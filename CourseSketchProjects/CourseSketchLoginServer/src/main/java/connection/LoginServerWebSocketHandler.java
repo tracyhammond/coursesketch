@@ -6,9 +6,9 @@ import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseClient;
-import database.LoginException;
-import database.RegistrationException;
+import coursesketch.database.DatabaseClient;
+import coursesketch.database.LoginException;
+import coursesketch.database.RegistrationException;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,6 +174,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
+            LOG.info("Login failed responding to proxy");
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

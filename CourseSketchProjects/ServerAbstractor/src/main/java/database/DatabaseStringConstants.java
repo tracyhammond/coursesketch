@@ -18,6 +18,7 @@ public final class DatabaseStringConstants {
     public static final String EXPERIMENT_ID = "ExperimentId";
     public static final String USER_ID = "UserId";
     public static final String SCHOOLITEMID = "SchoolItemID";
+    public static final String OWNER_ID = "OWNER";
 
     // collections
     public static final String COURSE_COLLECTION = "Courses";
@@ -37,6 +38,7 @@ public final class DatabaseStringConstants {
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
+    public static final String AUTH_DATABASE = "auth";
 
     // meta fields
     public static final String NAME = "Name";
@@ -138,6 +140,8 @@ public final class DatabaseStringConstants {
     public static final String USER_LIST = "UserList";
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
+    public static final String SALT = "Salt";
+    public static final String REGISTRATION_KEY = "RegistrationKey";
 
     // mongo comands
     public static final String SET_COMMAND = "$set";

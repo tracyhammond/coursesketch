@@ -7,6 +7,7 @@ package coursesketch.server.base;
  */
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
+import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -205,7 +206,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      **/
     @SuppressWarnings("checkstyle:designforextension")
     @Override
-    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+    public ISocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
         if (!serverInfo.isSecure() && isProduction()) {
             LOG.info("Running an insecure server");
         }
@@ -251,14 +252,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Attempts to reconnect all clients.
-     */
-    @Override
-    protected final void reconnect() {
-        getSocketInitailizerInstance().reconnect();
     }
 
     /**

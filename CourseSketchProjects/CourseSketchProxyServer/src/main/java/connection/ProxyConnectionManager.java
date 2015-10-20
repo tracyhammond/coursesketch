@@ -55,7 +55,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     /**
      * Creates a manager for the proxy connections.
      * @param parent
-     *            {@link serverfront.ProxyServerWebSocketHandler}
+     *            {@link coursesketch.serverfront.ProxyServerWebSocketHandler}
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
@@ -67,7 +67,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *
      * @param serv
      *            an instance of the local server (
-     *            {@link serverfront.ProxyServerWebSocketHandler}) in this case.
+     *            {@link coursesketch.serverfront.ProxyServerWebSocketHandler}) in this case.
      */
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {

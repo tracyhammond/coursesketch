@@ -1,5 +1,10 @@
 package coursesketch.server.interfaces;
 
+import com.mongodb.ServerAddress;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Contains information about the sever.
  *
@@ -40,6 +45,16 @@ public class ServerInfo {
     private final boolean isLocalVar;
 
     /**
+     * A list of addresses where the database can be found at.
+     */
+    private List<ServerAddress> databaseUrl;
+
+    /**
+     * The name of the database.
+     */
+    private String databaseName;
+
+    /**
      * Creates a server info with all of the information.
      *
      * @param hostName {@link #hostName}.
@@ -47,13 +62,24 @@ public class ServerInfo {
      * @param timeOut {@link #timeOut}.
      * @param isSecure {@link #isSecureVar}.
      * @param isLocal {@link #isLocalVar}.
+     * @param databaseUrl {@link #databaseUrl}.
+     * @param databaseName {@link #databaseName}.
      */
-    public ServerInfo(final String hostName, final int port, final long timeOut, final boolean isSecure, final boolean isLocal) {
+    public ServerInfo(final String hostName, final int port, final long timeOut, final boolean isSecure, final boolean isLocal,
+            final String databaseName, final List<ServerAddress> databaseUrl) {
         this.hostName = hostName;
         this.port = port;
         this.timeOut = timeOut;
         this.isSecureVar = isSecure;
         this.isLocalVar = isLocal;
+        this.databaseName = databaseName;
+        if (databaseUrl == null || databaseUrl.isEmpty()) {
+            // Use of this here is intentional.
+            this.databaseUrl = new ArrayList<>();
+            this.databaseUrl.add(new ServerAddress());
+        } else {
+            this.databaseUrl = databaseUrl;
+        }
     }
 
     /**
@@ -94,5 +120,44 @@ public class ServerInfo {
      */
     public final boolean isLocal() {
         return isLocalVar;
+    }
+
+    /**
+     * List of {@link ServerAddress} to connect to database.
+     *
+     * @return List of {@link ServerAddress} ot connect to database.
+     */
+    public final List<ServerAddress> getDatabaseUrl() {
+        return databaseUrl;
+    }
+
+    /**
+     * Adds a url that can be used to reach the database.
+     * @param address An address that is used to connect to the mongoclient.
+     */
+    /* package-private */ final void addDatabaseUrl(final ServerAddress address) {
+        databaseUrl.add(address);
+    }
+
+    /**
+     * Sets the list of addresses that the database can be at to.
+     * @param databaseUrl A list of addresses the database could be at.
+     */
+    /* package-private */ final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
+
+    /**
+     * @return The name of the database.
+     */
+    public final String getDatabaseName() {
+        return databaseName;
+    }
+
+    /**
+     * @param databaseName Sets the name of the database.
+     */
+    public final void setDatabaseName(final String databaseName) {
+        this.databaseName = databaseName;
     }
 }

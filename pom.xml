@@ -10,10 +10,12 @@
     <modules>
         <module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/coursesketchwebclient</module>
+        <module>TestUtilities</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
         <module>CourseSketchProjects/jettyBlank</module>
         <module>CourseSketchProjects/nettyBlank</module>
         <module>CourseSketchProjects/rpcserver</module>
+        <module>CourseSketchProjects/AuthenticationServer</module>
         <module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
         <module>CourseSketchProjects/CourseSketchProxyServer</module>
@@ -24,11 +26,21 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
         <pluginRepository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -299,7 +311,7 @@
                                 <encoding>UTF-8</encoding>
                                 <consoleOutput>true</consoleOutput>
                                 <checkstyle>
-                                    <failsOnError>false</failsOnError>
+                                    <failsOnError>true</failsOnError>
                                 </checkstyle>
                                 <check>
                                     <failsOnError>true</failsOnError>
@@ -307,6 +319,7 @@
                             </configuration>
                             <goals>
                                 <goal>checkstyle</goal>
+                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -617,16 +630,22 @@
         <!-- This needs to be overwritten in child poms -->
         <mainClass>fully.qualified.MainClass</mainClass>
         <parentConfigLocationDir>${basedir}</parentConfigLocationDir>
+
+
         <!-- Property files in local config -->
         <ipPropFile>${parentConfigLocationDir}/config/local/ips_default.prop</ipPropFile>
     </properties>
 
     <dependencies>
+
+        <!--
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
             <version>${jettyVersion}</version>
+            <scope>compile</scope>
         </dependency>
+        -->
 
         <dependency>
             <groupId>com.google.protobuf</groupId>

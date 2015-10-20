@@ -19,8 +19,8 @@
         <mainClass>connection.DatabaseRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>5</projectBranchLevel>
-        <projectLineLevel>10</projectLineLevel>
+        <projectBranchLevel>31</projectBranchLevel>
+        <projectLineLevel>30</projectLineLevel>
     </properties>
 
     <build>
@@ -52,10 +52,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.github.joelittlejohn.embedmongo</groupId>
-                <artifactId>embedmongo-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -91,6 +87,12 @@
         </dependency>
         <dependency>
             <groupId>CourseSketch</groupId>
+            <artifactId>RpcServer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
             <artifactId>BlankServer</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
@@ -117,5 +119,27 @@
             <version>2.4.3</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>AuthenticationTestHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>DatabaseTestHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtobufComparison</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>

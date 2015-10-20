@@ -46,6 +46,7 @@
 	</build>
 
 	<dependencies>
+
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
