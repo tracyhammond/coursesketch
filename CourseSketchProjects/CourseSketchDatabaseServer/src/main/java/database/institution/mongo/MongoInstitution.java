@@ -172,6 +172,7 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
         for (String courseId : courseIds) {
             allCourses.add(CourseManager.mongoGetCourse(auth, database, courseId, userId, currentTime));
         }
+        LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), userId);
         return allCourses;
     }
 
@@ -310,8 +311,12 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     public String insertAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         final String resultId = AssignmentManager.mongoInsertAssignment(auth, database, userId, assignment);
 
-        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(database, assignment.getCourseId());
-        AssignmentManager.mongoInsertDefaultGroupId(database, resultId, ids);
+        try {
+            updater.createNewItem(School.ItemType.ASSIGNMENT, resultId, assignment.getCourseId(), userId, null);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException(e);
+        }
 
         return resultId;
     }
@@ -335,24 +340,24 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     public String insertCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, userId, problem);
 
-        final List<String>[] ids = AssignmentManager.mongoGetDefaultGroupId(database, problem.getAssignmentId());
-        CourseProblemManager.mongoInsertDefaultGroupId(database, resultId, ids);
+        try {
+            updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getCourseId(), userId, null);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException(e);
+        }
+
         return resultId;
     }
 
     @Override
     public String insertBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException {
-        final SrlBankProblem.Builder builder = SrlBankProblem.newBuilder(problem);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder(problem.getAccessPermission());
 
-        // sanitize admin permissions.
-        permissions.clearAdminPermission();
+        final String resultId = BankProblemManager.mongoInsertBankProblem(database, problem);
 
-        // add the person creating the problem the admin
-        permissions.addAdminPermission(userId);
+        updater.createNewItem(School.ItemType.BANK_PROBLEM, resultId, null, userId, null);
 
-        builder.setAccessPermission(permissions);
-        return BankProblemManager.mongoInsertBankProblem(database, builder.build());
+        return resultId;
     }
 
     @Override

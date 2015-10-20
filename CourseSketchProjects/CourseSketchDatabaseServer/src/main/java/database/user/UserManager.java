@@ -5,22 +5,15 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import coursesketch.database.auth.AuthenticationException;
-import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School.SrlUser;
-import utilities.LoggingConstants;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_LIST;
-import static database.DatabaseStringConstants.CREDENTIALS;
-import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.USER_COLLECTION;
 
@@ -75,23 +68,11 @@ public final class UserManager {
      * @param userId The user id that is associated with the user.
      * @throws DatabaseAccessException Thrown if there was an error when creating a password hash of the id.
      */
-    public static void createUser(final DB dbs, final SrlUser user, final String userId) throws DatabaseAccessException {
+    public static void createUser(final DB dbs, final SrlUser user, final String userId) {
         final DBCollection users = dbs.getCollection(USER_COLLECTION);
-        // NOSHIP: userId must be hashed using the userName as a salt?
-        BasicDBObject query = null;
         LOG.debug("userId: {}", userId);
-        try {
-            query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>())
-                    .append(CREDENTIALS, HashManager.createHash(user.getEmail())).append(EMAIL, user.getEmail())
-                    .append(ADMIN, HashManager.createHash(userId));
-        } catch (NoSuchAlgorithmException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        } catch (AuthenticationException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        if (query == null) {
-            throw new DatabaseAccessException("An error occured creating password hash");
-        }
+        LOG.debug(user.getEmail());
+        final BasicDBObject query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>());
         users.insert(query);
     }
 
@@ -120,12 +101,19 @@ public final class UserManager {
     static void addCourseToUser(final DB database, final String userId, final String courseId) {
         LOG.debug("The users Id {}", userId);
         final DBCollection users = database.getCollection(USER_COLLECTION);
-        final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
+
         final DBRef myDbRef = new DBRef(database, USER_COLLECTION, userId);
-        final DBObject corsor = myDbRef.fetch();
-        LOG.info("query {}", query);
-        LOG.info("courseId {}", courseId);
-        users.update(corsor, query);
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor != null) {
+            final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
+            LOG.info("query {}", query);
+            LOG.info("courseId {}", courseId);
+            users.update(cursor, query);
+        } else {
+            // TODO: add a counter so it does not loop for inifity
+            createUser(database, SrlUser.getDefaultInstance(), userId);
+            addCourseToUser(database, userId, courseId);
+        }
     }
 
     /*
