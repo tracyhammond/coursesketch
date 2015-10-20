@@ -1,6 +1,7 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.interfaces.CourseSketchDatabaseReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -85,6 +86,11 @@ public abstract class AbstractServerWebSocketHandler {
      * Information about the server.
      */
     private final ServerInfo serverInfo;
+
+    /**
+     * An object that reads from the database.
+     */
+    private CourseSketchDatabaseReader databaseReader;
 
     /**
      * A constructor that accepts a servlet.
@@ -286,6 +292,13 @@ public abstract class AbstractServerWebSocketHandler {
     protected abstract MultiConnectionManager getConnectionManager();
 
     /**
+     * Creates a CourseSketchDatabaseReader if it is needed.
+     * @param info Information about the server.
+     * @return {@link CourseSketchDatabaseReader}.
+     */
+    protected abstract CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+
+    /**
      * @return A map representing the Id to state. The returned map is read only.
      */
     protected final Map<String, MultiConnectionState> getIdToState() {
@@ -311,6 +324,29 @@ public abstract class AbstractServerWebSocketHandler {
      */
     protected final Map<SocketSession, MultiConnectionState> getConnectionToId() {
         return connectionToId;
+    }
+
+    /**
+     * Performs some initialization.  This is called before the server is started.
+     */
+    public final void initialize() {
+        databaseReader = createDatabaseReader(this.serverInfo);
+        onInitialize();
+    }
+
+    /**
+     * Performs some initialization.
+     *
+     * This is called before the server is started.
+     * This is called by {@link #initialize()}.
+     */
+    protected abstract void onInitialize();
+
+    /**
+     * @return {@link CourseSketchDatabaseReader}.  This may return null if one is not set.
+     */
+    protected final CourseSketchDatabaseReader getDatabaseReader() {
+        return databaseReader;
     }
 
     /**
