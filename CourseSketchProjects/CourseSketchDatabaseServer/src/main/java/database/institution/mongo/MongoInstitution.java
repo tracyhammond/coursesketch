@@ -7,15 +7,16 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationUpdater;
+import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.CourseSketchDatabaseReader;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
-import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.auth.Authenticator;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
-import database.user.GroupManager;
 import database.user.UserClient;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ import protobuf.srl.request.Message;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlGroup;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.DATABASE;
-import static database.DatabaseStringConstants.GROUP_PREFIX;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.UPDATE_COLLECTION;
 import static database.DatabaseStringConstants.USER_COLLECTION;
@@ -69,6 +69,11 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     private Authenticator auth;
 
     /**
+     * Used to change authentication values.
+     */
+    private final AuthenticationUpdater updater;
+
+    /**
      * A private Database that stores all of the data used by mongo.
      */
     private DB database;
@@ -77,10 +82,12 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
      * Creates a mongo institution based on the server info.
      * @param info Server information.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @param updater Used to change authentication data.
      */
-    public MongoInstitution(final ServerInfo info, final Authenticator authenticator) {
+    public MongoInstitution(final ServerInfo info, final Authenticator authenticator, final AuthenticationUpdater updater) {
         super(info);
         auth = authenticator;
+        this.updater = updater;
     }
 
     /**
@@ -99,7 +106,7 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
             synchronized (MongoInstitution.class) {
                 if (result == null) {
                     result = instance;
-                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator);
+                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator, null);
                     result.auth = authenticator;
                 }
             }
@@ -129,9 +136,10 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
      *         name of the database.
      * @param fakeDB The fake database.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @param updater Used to change authentication data.
      */
-    public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator) {
-        super(null);
+    public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator, final AuthenticationUpdater updater) {
+        this(null, authenticator, updater);
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
@@ -332,7 +340,7 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
         // adds the course to the users list
         final boolean success = this.putUserInCourse(resultId, userId);
         if (!success) {
-            throw new DatabaseAccessException("No success: ", false);
+            throw new DatabaseAccessException("No success Adding user into course: ", false);
         }
 
         // FUTURE: try to undo what has been done! (and more error handling!)
