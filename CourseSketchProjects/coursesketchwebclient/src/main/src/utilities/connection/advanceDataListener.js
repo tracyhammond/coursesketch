@@ -172,7 +172,7 @@ function AdvanceDataListener(connection, Request, defListener) {
     /**
      * Sends a request that will timeout after the server.
      *
-     * @param {Request} request The request being sent to the server.
+     * @param {Request} request The protobuf request being sent to the server.
      * @param {Function} callback The function that is called as a result of listening.
      * @param {Number} [times] The number of times you want the function to be called before it is removed.
      */

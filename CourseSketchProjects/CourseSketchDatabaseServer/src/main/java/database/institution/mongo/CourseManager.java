@@ -362,6 +362,7 @@ public final class CourseManager {
         final DBObject superPublicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber());
         buildCourseForSearching(courseTable.find(superPublicCheck), resultList);
 
+        LOG.debug("Found {} courses in the current search", resultList.size());
         return resultList;
     }
 

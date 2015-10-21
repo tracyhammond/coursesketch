@@ -1,5 +1,6 @@
 package coursesketch.database.auth;
 
+import com.google.common.base.Strings;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -236,8 +237,13 @@ public final class DbAuthManager {
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
         }
-        if (!result.get(DatabaseStringConstants.REGISTRATION_KEY).equals(registrationKey)) {
-            throw new AuthenticationException("Invalid Registration key", AuthenticationException.INVALID_PERMISSION);
+        if (Strings.isNullOrEmpty(registrationKey)) {
+            throw new AuthenticationException("Registration key is required but none is given", AuthenticationException.INVALID_PERMISSION);
+        }
+        final String databaseRegistrationKey = (String) result.get(DatabaseStringConstants.REGISTRATION_KEY);
+        if (!registrationKey.equals(databaseRegistrationKey)) {
+            throw new AuthenticationException("Invalid Registration key [" + registrationKey + "]"
+                    + " is not equal to stored registration key [" + databaseRegistrationKey + "]" , AuthenticationException.INVALID_PERMISSION);
         }
         final List<String> userGroups = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
         insertUserIntoGroup(authId, userGroups.get(0), Authentication.AuthResponse.PermissionLevel.STUDENT);

@@ -39,7 +39,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
         final int access = (int) result.get(DatabaseStringConstants.COURSE_ACCESS);
         final School.SrlCourse.Accessibility accessValue = School.SrlCourse.Accessibility.valueOf(access);
-        return accessValue == School.SrlCourse.Accessibility.PUBLIC || accessValue == School.SrlCourse.Accessibility.SUPER_PUBLIC;
+        return !(accessValue == School.SrlCourse.Accessibility.PUBLIC || accessValue == School.SrlCourse.Accessibility.SUPER_PUBLIC);
     }
 
     @Override public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
