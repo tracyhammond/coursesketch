@@ -109,7 +109,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
 
         final Authentication.AuthCreationRequest.Builder creationRequestBuilder = Authentication.AuthCreationRequest.newBuilder()
                 .setItemRequest(request);
-        if (parentId == null && School.ItemType.COURSE != collectionType) {
+        if (parentId == null && School.ItemType.COURSE != collectionType && School.ItemType.BANK_PROBLEM != collectionType) {
             throw new AuthenticationException("Parent Id can only be null when inserting a course", AuthenticationException.NO_AUTH_SENT);
         }
         if (parentId != null) {
