@@ -1,5 +1,6 @@
 package database.institution.mongo;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -396,10 +397,12 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
             throws DatabaseAccessException, AuthenticationException {
 
         String registrationKey = clientRegistrationKey;
-        if (clientRegistrationKey == null) {
+        if (Strings.isNullOrEmpty(clientRegistrationKey)) {
+            LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
             registrationKey = CourseManager.mongoGetRegistrationKey(auth, database, courseId, userId, false);
         }
         try {
+            LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
             updater.registerUser(School.ItemType.COURSE, courseId, userId, registrationKey);
         } catch (AuthenticationException e) {
             // Revert the adding of the course to the database!

@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
@@ -57,13 +58,13 @@ public final class BreakDatabase {
      *      returns a String[] with the userID & courseID (in this order)
      * @throws DatabaseAccessException
      */
-    public String[] invalidCourse() throws DatabaseAccessException {
+    public String[] invalidCourse() throws DatabaseAccessException, AuthenticationException {
         School.SrlUser user = createRandomUser();
         School.SrlCourse course = createRandomCourse();
 
         userClient.insertUser(user, user.getUsername());
         String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername());
+        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
         collection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
@@ -71,13 +72,13 @@ public final class BreakDatabase {
         return returnID;
     }
 
-    public String[] invalidCourseAuthentication() throws DatabaseAccessException {
+    public String[] invalidCourseAuthentication() throws DatabaseAccessException, AuthenticationException {
         School.SrlUser user = createRandomUser();
         School.SrlCourse course = createRandomCourse();
 
         userClient.insertUser(user, user.getUsername());
         String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername());
+        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
         DBObject dbCourse = collection.findOne();
