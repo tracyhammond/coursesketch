@@ -46,6 +46,7 @@ import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.utilities.MongoUtilities.createId;
 
@@ -103,9 +104,8 @@ public final class AssignmentManager {
                 .append(DESCRIPTION, assignment.getDescription()).append(ASSIGNMENT_RESOURCES, assignment.getLinksList())
                 .append(GRADE_WEIGHT, assignment.getGradeWeight()).append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
                 .append(DUE_DATE, assignment.getDueDate().getMillisecond())
-                .append(IMAGE, assignment.getImageUrl()).append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
-                .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+                .append(IMAGE, assignment.getImageUrl())
+                .append(STATE_PUBLISHED, true);
 
         // Sets a default date in the instance that a date was not given.
         if (!assignment.hasCloseDate()) {

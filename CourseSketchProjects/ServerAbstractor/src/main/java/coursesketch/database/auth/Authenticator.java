@@ -236,7 +236,9 @@ public final class Authenticator {
         if (checkType.getCheckDate()) {
             authBuilder.setIsItemOpen(optionChecker.authenticateDate(dataCreator, checkTime));
         }
-        if (checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired()) {
+        if ((checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired())
+                && (School.ItemType.COURSE == collectionType || School.ItemType.BANK_PROBLEM == collectionType)) {
+            // TODO: unit test assignments dont check registration
             authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
         }
         if (checkType.getCheckIsPublished()) {

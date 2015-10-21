@@ -45,5 +45,5 @@ public interface AuthenticationOptionChecker {
      * @param itemId The id of the item used for looking it up in the database.
      * @return A {@link AuthenticationDataCreator} that grabs the data for any other uses by the option checker.
      */
-    AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId);
+    AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId) throws DatabaseAccessException;
 }
