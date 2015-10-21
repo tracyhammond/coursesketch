@@ -134,7 +134,8 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         }
     }
 
-    @Override public final void registerUser(final School.ItemType collectionType, final String itemId, final String userId, final String registrationKey)
+    @Override public final void registerUser(final School.ItemType collectionType, final String itemId, final String userId,
+            final String registrationKey)
             throws AuthenticationException {
         if (authService == null) {
             authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
