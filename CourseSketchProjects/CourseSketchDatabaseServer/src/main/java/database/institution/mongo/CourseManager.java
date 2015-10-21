@@ -83,6 +83,7 @@ public final class CourseManager {
                 .append(MOD, course.getAccessPermission().getModeratorPermissionList())
                 .append(USERS, course.getAccessPermission().getUserPermissionList())
                 .append(REGISTRATION_KEY, course.getRegistrationKey())
+                .append(DatabaseStringConstants.STATE_PUBLISHED, true);
 
         // Sets a default date in the instance that a date was not given.
         if (!course.hasCloseDate()) {
