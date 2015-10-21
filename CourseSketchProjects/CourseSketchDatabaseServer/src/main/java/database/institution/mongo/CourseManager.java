@@ -7,6 +7,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import database.RequestConverter;
 import database.UserUpdateHandler;
 import coursesketch.database.auth.AuthenticationException;
@@ -41,6 +42,7 @@ import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.MOD_GROUP_ID;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
+import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
@@ -79,7 +81,8 @@ public final class CourseManager {
                 .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
                 .append(IMAGE, course.getImageUrl()).append(ADMIN, course.getAccessPermission().getAdminPermissionList())
                 .append(MOD, course.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, course.getAccessPermission().getUserPermissionList());
+                .append(USERS, course.getAccessPermission().getUserPermissionList())
+                .append(REGISTRATION_KEY, course.getRegistrationKey())
 
         // Sets a default date in the instance that a date was not given.
         if (!course.hasCloseDate()) {
@@ -443,5 +446,39 @@ public final class CourseManager {
         returnValue[1] = corsor.get(MOD_GROUP_ID).toString();
         returnValue[2] = corsor.get(USER_GROUP_ID).toString();
         return returnValue;
+    }
+
+    /**
+     * Returns the registration key of the given course if the constraints are met, null is returned in all other cases.
+     * @param authenticator
+     * @param database
+     * @param courseId
+     * @param userId
+     * @param checkTeacher
+     * @return The registration key of the given course if the constraints are met, null is returned in all other cases.
+     * @throws AuthenticationException
+     * @throws DatabaseAccessException
+     */
+    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String courseId, final String userId,
+            final boolean checkTeacher)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBRef myDbRef = new DBRef(database, COURSE_COLLECTION, createId(courseId));
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
+            throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
+        }
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingAdmin(checkTeacher)
+                .setCheckIsPublished(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, 0, authType);
+
+        if (responder.hasTeacherPermission() || (!responder.isRegistrationRequired() && responder.isItemPublished())) {
+            return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);
+        }
+        return null;
     }
 }

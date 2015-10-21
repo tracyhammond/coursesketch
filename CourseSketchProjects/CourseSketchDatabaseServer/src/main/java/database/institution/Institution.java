@@ -366,6 +366,8 @@ public interface Institution {
      *            The credentials user to be put into the course.
      * @param courseId
      *            The course that the user is being inserted into
+     * @param registrationKey
+     *            Used to ensure that the user has permission to be added to the course.
      * @return The Id of the object that was inserted
      * @throws DatabaseAccessException
      *             Only thrown if the user is already registered for the course.
@@ -373,7 +375,7 @@ public interface Institution {
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to be inserted into the course.
      */
-    boolean putUserInCourse(String courseId, String userId) throws DatabaseAccessException, AuthenticationException;
+    boolean putUserInCourse(String courseId, String userId, String registrationKey) throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Gets all of the courses of a specific user.
