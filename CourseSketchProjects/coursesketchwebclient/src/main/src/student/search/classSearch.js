@@ -17,11 +17,10 @@ validateFirstRun(document.currentScript);
         var courseList = [];
         if (CourseSketch.isException(item)) {
             CourseSketch.clientException(item);
+            localDoc.getElementById('loadingIcon').style.display = 'none';
+            return;
         } else {
-            for (var i = 0; i < item.data.length; i++) {
-                courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
-                    CourseSketch.prutil.getSrlCourseClass()));
-            }
+            courseList = item;
         }
 
         var idList = [];
@@ -96,9 +95,6 @@ validateFirstRun(document.currentScript);
              */
             button.onclick = function() {
                 CourseSketch.classSearch.registerClass(id);
-                setTimeVar = setTimeout(function() {
-                    alert('Your have successfully registered');
-                }, 3000);
             };
             button.textContent = 'Register';
             button.style.position = 'absolute';
@@ -127,18 +123,20 @@ validateFirstRun(document.currentScript);
      * Allows a user to register for a class.
      */
     CourseSketch.classSearch.registerClass = function(id) {
-        var request = CourseSketch.prutil.DataSend();
-        var item = CourseSketch.prutil.ItemSend();
-        item.query = CourseSketch.prutil.ItemQuery.REGISTER;
-        item.data = courseProtoMap[id].toArrayBuffer();
-        request.items = [ item ];
-        CourseSketch.connection.sendRequest(CourseSketch.prutil.createRequestFromData(request,
-            CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT));
-        $('#' + id).animate({
-            marginLeft: '0px'
+
+        CourseSketch.dataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.REGISTER, courseProtoMap[id].toArrayBuffer(), function(evt, item) {
+            if (isException(item)) {
+                var exception = new DatabaseException('registration failed for course parent.getCurrentId()','', item);
+                CourseSketch.clientException(exception);
+            } else {
+                alert("Registration successful");
+            }
+            $('#' + id).animate({
+                marginLeft: '0px'
             }, 300, function() {
                 localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });
+        });
     };
 
     /**

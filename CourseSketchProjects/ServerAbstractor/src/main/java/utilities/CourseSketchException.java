@@ -95,4 +95,13 @@ public class CourseSketchException extends Exception {
     public Message.ProtoException getProtoException() {
         return protoException;
     }
+
+    @Override
+    public final String getMessage() {
+        final String result = super.getMessage();
+        if (getProtoException() != null) {
+            return result + "\n\tCaused by: " + protoException.toString().replace("\n", "\n\t\t") + "\rEnding StackTrace";
+        }
+        return result;
+    }
 }
