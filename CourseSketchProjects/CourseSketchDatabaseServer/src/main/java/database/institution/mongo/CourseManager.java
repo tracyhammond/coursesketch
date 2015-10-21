@@ -79,9 +79,7 @@ public final class CourseManager {
         final BasicDBObject query = new BasicDBObject(DESCRIPTION, course.getDescription()).append(NAME, course.getName())
                 .append(COURSE_ACCESS, course.getAccess().getNumber()).append(COURSE_SEMESTER, course.getSemester())
                 .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
-                .append(IMAGE, course.getImageUrl()).append(ADMIN, course.getAccessPermission().getAdminPermissionList())
-                .append(MOD, course.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, course.getAccessPermission().getUserPermissionList())
+                .append(IMAGE, course.getImageUrl())
                 .append(REGISTRATION_KEY, course.getRegistrationKey())
                 .append(DatabaseStringConstants.STATE_PUBLISHED, true);
 

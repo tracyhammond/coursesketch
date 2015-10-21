@@ -91,7 +91,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
     @Override protected final CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         final AuthenticationWebSocketClient authChecker = (AuthenticationWebSocketClient) getConnectionManager()
                 .getBestConnection(AuthenticationWebSocketClient.class);
-        auth = new Authenticator(authChecker, new MongoOptionChecker());
+        auth = new Authenticator(authChecker, new MongoOptionChecker(info));
         authUpdater = authChecker;
         return new MongoInstitution(info, auth, authUpdater);
     }

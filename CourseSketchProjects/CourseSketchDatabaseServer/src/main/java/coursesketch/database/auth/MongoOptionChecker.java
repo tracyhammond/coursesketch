@@ -30,18 +30,22 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
 
     @Override public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime) {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
-        return false;
+        final long accessDate = (long) result.get(DatabaseStringConstants.ACCESS_DATE);
+        final long closeDate = (long) result.get(DatabaseStringConstants.CLOSE_DATE);
+        return accessDate >= checkTime && checkTime <= closeDate;
     }
 
     @Override public boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
-        return false;
+        final int access = (int) result.get(DatabaseStringConstants.COURSE_ACCESS);
+        final School.SrlCourse.Accessibility accessValue = School.SrlCourse.Accessibility.valueOf(access);
+        return accessValue == School.SrlCourse.Accessibility.PUBLIC || accessValue == School.SrlCourse.Accessibility.SUPER_PUBLIC;
     }
 
     @Override public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
-        final boolean published = result.get(DatabaseStringConstants.STATE_PUBLISHED);
-        return false;
+        final boolean published = (boolean) result.get(DatabaseStringConstants.STATE_PUBLISHED);
+        return published;
     }
 
     /**
@@ -53,7 +57,6 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
         final String collectionName = DbSchoolUtility.getCollectionFromType(collectionType, true);
         final DBObject result = database.getCollection(collectionName).findOne(new ObjectId(itemId));
         return new AuthenticationDataCreator() {
-
             @Override public Object getDatabaseResult() {
                 return result;
             }

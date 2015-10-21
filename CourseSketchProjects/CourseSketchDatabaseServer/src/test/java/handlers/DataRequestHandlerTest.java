@@ -88,7 +88,7 @@ public class DataRequestHandlerTest {
 
     // THESE TEST CURRENTLY DO NOT WORK!
     // WILL BE FIXED IN NEXT REFACTOR
-    public void brokenDbReturnsAuthenticationExceptionRequest() throws DatabaseAccessException {
+    public void brokenDbReturnsAuthenticationExceptionRequest() throws DatabaseAccessException, AuthenticationException {
         String[] values = breakDatabase.invalidCourseAuthentication();
         Data.ItemRequest.Builder itemRequest = Data.ItemRequest.newBuilder();
         itemRequest.setQuery(Data.ItemQuery.COURSE);
@@ -110,7 +110,7 @@ public class DataRequestHandlerTest {
 
     // THESE TEST CURRENTLY DO NOT WORK!
     // WILL BE FIXED IN NEXT REFACTOR
-    public void brokenDbReturnsDatabaseAccessExceptionRequest() throws DatabaseAccessException {
+    public void brokenDbReturnsDatabaseAccessExceptionRequest() throws DatabaseAccessException, AuthenticationException {
         String[] values = breakDatabase.invalidCourse();
         Data.ItemRequest.Builder itemRequest = Data.ItemRequest.newBuilder();
         itemRequest.setQuery(Data.ItemQuery.COURSE);
