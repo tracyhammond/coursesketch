@@ -204,6 +204,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @param req The actual message that is being sent.
      */
     public final void send(final SocketSession session, final Request req) {
+        LOG.debug("Sending Request {}", req.getRequestId());
         session.send(ByteBuffer.wrap(req.toByteArray()));
     }
 
