@@ -1,13 +1,13 @@
 package coursesketch.database.auth;
 
-import java.security.GeneralSecurityException;
+import utilities.CourseSketchException;
 
 /**
  * An exception thrown while authenticating.
  *
  * @author gigemjt
  */
-public class AuthenticationException extends GeneralSecurityException {
+public class AuthenticationException extends CourseSketchException {
 
     /**
      * Indicates that the exception thrown is one of invalid permission.

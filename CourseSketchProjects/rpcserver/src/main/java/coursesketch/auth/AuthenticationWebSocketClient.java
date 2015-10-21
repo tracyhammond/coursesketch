@@ -124,7 +124,10 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             final Authentication.AuthCreationRequest creationRequest = creationRequestBuilder.build();
             response = authService.createNewItem(getNewRpcController(), creationRequest);
             if (response.hasException()) {
-                throw new AuthenticationException(response.getException().toString(), AuthenticationException.OTHER);
+                final AuthenticationException authExcep =
+                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
+                authExcep.setProtoException(response.getException());
+                throw authExcep;
             }
         } catch (ServiceException e) {
             throw new AuthenticationException(e);
@@ -154,7 +157,10 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         try {
             response = authService.registerUser(getNewRpcController(), creationRequest.build());
             if (response.hasException()) {
-                throw new AuthenticationException(response.getException().toString(), AuthenticationException.OTHER);
+                final AuthenticationException authExcep =
+                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
+                authExcep.setProtoException(response.getException());
+                throw authExcep;
             }
         } catch (ServiceException e) {
             e.printStackTrace();
