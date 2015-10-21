@@ -25,7 +25,6 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
@@ -290,7 +289,9 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     public String insertCourse(final String userId, final SrlCourse course) throws DatabaseAccessException {
         final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        final String resultId = CourseManager.mongoInsertCourse(database, course);
+        LOG.debug("Course is being inserted with registration key {}", registrationId);
+        // we first add the registration key before we add it to the database.
+        final String resultId = CourseManager.mongoInsertCourse(database, SrlCourse.newBuilder(course).setRegistrationKey(registrationId).build());
 
         try {
             updater.createNewItem(School.ItemType.COURSE, resultId, null, userId, registrationId);
@@ -391,9 +392,20 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     }
 
     @Override
-    public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
+    public boolean putUserInCourse(final String courseId, final String userId, final String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException {
 
-        // TODO: register user in course!
+        String registrationKey = clientRegistrationKey;
+        if (clientRegistrationKey == null) {
+            registrationKey = CourseManager.mongoGetRegistrationKey(auth, database, courseId, userId, false);
+        }
+        try {
+            updater.registerUser(School.ItemType.COURSE, courseId, userId, registrationKey);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to register the user in the course", e);
+        }
+
         UserClient.addCourseToUser(userId, courseId);
         return true;
     }

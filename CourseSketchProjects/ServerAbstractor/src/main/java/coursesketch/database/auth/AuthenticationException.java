@@ -63,6 +63,19 @@ public class AuthenticationException extends CourseSketchException {
     }
 
     /**
+     * Accepts an authentication type.
+     *
+     * @param message
+     *         A custom message to add more details.
+     * @param exception
+     *         What started an exception.
+     */
+    public AuthenticationException(final String message, final Exception exception) {
+        super(message, exception);
+        exceptionType = OTHER;
+    }
+
+    /**
      * Accepts an authentication type and a message.
      *
      * @param message
