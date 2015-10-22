@@ -377,6 +377,9 @@ public interface Institution {
      */
     boolean putUserInCourse(String courseId, String userId, String registrationKey) throws DatabaseAccessException, AuthenticationException;
 
+    boolean putCourseInBankProblem(String courseId, String bankProblemId, String userId, String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException;
+
     /**
      * Gets all of the courses of a specific user.
      * @param userId The user asking for their courses.

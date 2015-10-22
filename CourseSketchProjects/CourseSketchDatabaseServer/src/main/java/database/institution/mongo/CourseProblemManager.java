@@ -98,10 +98,6 @@ public final class CourseProblemManager {
         // inserts the id into the previous the course
         AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), selfId);
 
-        if (problem.hasProblemBankId()) {
-            BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
-        }
-
         return selfId;
     }
 
@@ -269,29 +265,7 @@ public final class CourseProblemManager {
             }
             if (problem.hasProblemBankId()) {
                 updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
-
-                // updates the bank problem associated with this course problem
-                LOG.warn("Changing the bank problem id. This feature may be removed in the future");
-                BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
                 update = true;
-            }
-
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (problem.hasAccessPermission()) {
-                final SrlPermission permissions = problem.getAccessPermission();
-                if (responder.hasTeacherPermission()) {
-                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                    if (permissions.getAdminPermissionCount() > 0) {
-                        updateObj.append(ADMIN, permissions.getAdminPermissionList());
-                    }
-                    if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj.append(MOD, permissions.getModeratorPermissionList());
-                    }
-                }
-                if (permissions.getUserPermissionCount() > 0) {
-                    updateObj.append(USERS, permissions.getUserPermissionList());
-                }
             }
         }
         if (update) {
