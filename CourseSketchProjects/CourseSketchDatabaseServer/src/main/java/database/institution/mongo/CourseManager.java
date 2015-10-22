@@ -184,11 +184,6 @@ public final class CourseManager {
             } catch (ClassCastException exception) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
             }
-            final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
-            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // admin
-            exactCourse.setAccessPermission(permissions.build());
         }
         return exactCourse.build();
 

@@ -343,7 +343,7 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, userId, problem);
 
         try {
-            updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getCourseId(), userId, null);
+            updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getAssignmentId(), userId, null);
         } catch (AuthenticationException e) {
             // Revert the adding of the course to the database!
             throw new AuthenticationException(e);
