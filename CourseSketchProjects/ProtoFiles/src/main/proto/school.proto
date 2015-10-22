@@ -128,6 +128,7 @@ message SrlBankProblem {
     optional protobuf.srl.utils.SrlPermission accessPermission = 10;
     optional string script = 11; // a script string that is used for custom setups in experiments
     optional protobuf.srl.commands.SrlUpdateList baseSketch = 12; // the base sketch the instructor will make for assignments
+    optional string registrationKey = 13;
 }
 
 message SrlGrade {

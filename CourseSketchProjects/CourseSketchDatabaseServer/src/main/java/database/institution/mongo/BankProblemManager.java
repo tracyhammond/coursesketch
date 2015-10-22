@@ -1,5 +1,6 @@
 package database.institution.mongo;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -8,6 +9,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import database.UserUpdateHandler;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
@@ -26,17 +28,21 @@ import java.util.List;
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.BASE_SKETCH;
+import static database.DatabaseStringConstants.COURSE_ACCESS;
+import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
+import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DatabaseStringConstants.SCRIPT;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
+import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
 import static database.utilities.MongoUtilities.createId;
@@ -81,7 +87,11 @@ public final class BankProblemManager {
                 .append(SOURCE, problem.getSource())
                 .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
-                .append(KEYWORDS, problem.getOtherKeywordsList());
+                .append(KEYWORDS, problem.getOtherKeywordsList())
+                // TODO: fix access issues for bank problems
+                .append(REGISTRATION_KEY, problem.getRegistrationKey())
+                .append(STATE_PUBLISHED, true)
+                .append(COURSE_ACCESS, 0);
 
         if (problem.getBaseSketch() != null) {
             insertObject.append(BASE_SKETCH, problem.getBaseSketch().toByteArray());
@@ -334,38 +344,34 @@ public final class BankProblemManager {
     }
 
     /**
-     * Registers a course problem with a bank problem.
-     *
+     * Returns the registration key of the given course if the constraints are met, null is returned in all other cases.
      * @param authenticator
-     *         the object that is performing authentication.
-     * @param dbs
-     *         The database where the assignment is being stored.
+     * @param database
+     * @param bankProblemId
      * @param userId
-     *         the user asking for the bank problems.
-     * @param problem
-     *         the problem that is being registered as a user of the bank problem.
+     * @return The registration key of the given course if the constraints are met, null is returned in all other cases.
+     * @throws AuthenticationException
      * @throws DatabaseAccessException
-     *         Thrown if there are fields missing that make the problem inaccessible.
-     *
-     *         package-private
      */
-    static void mongoRegisterCourseProblem(final Authenticator authenticator, final DB dbs, final String userId,
-            final School.SrlProblem problem) throws DatabaseAccessException {
-        if (!problem.hasProblemBankId()) {
-            throw new DatabaseAccessException("Unable to register the course problem: missing bank problem id [" + problem.getId() + "]");
-        }
-        if (!problem.hasCourseId()) {
-            throw new DatabaseAccessException("Unable to register the course problem: missing course id [" + problem.getId() + "]");
-        }
-
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problem.getProblemBankId()));
-        final DBObject dbObject = myDbRef.fetch();
-
-        if (dbObject == null) {
-            throw new DatabaseAccessException("Unable to register the course problem: invalid bank problem id [" + problem.getProblemBankId() + "]");
+    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String bankProblemId, final String userId)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBRef myDbRef = new DBRef(database, PROBLEM_BANK_COLLECTION, createId(bankProblemId));
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
+            throw new DatabaseAccessException("BankPRoblem was not found with the following ID " + bankProblemId);
         }
 
-        dbs.getCollection(PROBLEM_BANK_COLLECTION).update(dbObject, new BasicDBObject(ADD_SET_COMMAND,
-                new BasicDBObject(USERS, problem.getCourseId())));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingAdmin(true)
+                .setCheckIsPublished(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, bankProblemId.trim(), userId, 0, authType);
+
+        if (responder.hasTeacherPermission() || (!responder.isRegistrationRequired() && responder.isItemPublished())) {
+            return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);
+        }
+        return null;
     }
 }

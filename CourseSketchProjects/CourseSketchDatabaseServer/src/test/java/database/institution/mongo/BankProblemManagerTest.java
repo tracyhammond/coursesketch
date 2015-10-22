@@ -263,7 +263,6 @@ public class BankProblemManagerTest {
         problem.setCourseId(courseId);
         problem.setProblemBankId(problemBankId);
 
-        BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
         final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
@@ -277,7 +276,6 @@ public class BankProblemManagerTest {
         problem.setId("ID");
         problem.setCourseId("Course id");
 
-        BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
     }
 
@@ -287,7 +285,6 @@ public class BankProblemManagerTest {
         problem.setId("ID");
         problem.setProblemBankId("Bank id");
 
-        BankProblemManager.mongoRegisterCourseProblem(authenticator, db, USER_USER, problem.build());
 
     }
 

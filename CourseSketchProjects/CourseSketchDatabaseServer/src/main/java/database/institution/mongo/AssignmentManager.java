@@ -236,14 +236,6 @@ public final class AssignmentManager {
         exactAssignment.setState(stateBuilder);
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
-        }
-        if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // mod
-            exactAssignment.setAccessPermission(permissions.build());
-        }
         return exactAssignment.build();
     }
 

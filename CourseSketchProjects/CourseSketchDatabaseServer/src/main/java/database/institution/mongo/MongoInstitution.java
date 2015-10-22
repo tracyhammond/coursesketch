@@ -342,6 +342,10 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     public String insertCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, userId, problem);
 
+        if (problem.hasProblemBankId()) {
+            putCourseInBankProblem(problem.getCourseId(), problem.getProblemBankId(), userId, null);
+        }
+
         try {
             updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getAssignmentId(), userId, null);
         } catch (AuthenticationException e) {
@@ -355,9 +359,14 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     @Override
     public String insertBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException {
 
-        final String resultId = BankProblemManager.mongoInsertBankProblem(database, problem);
+        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        updater.createNewItem(School.ItemType.BANK_PROBLEM, resultId, null, userId, null);
+        LOG.debug("Course is being inserted with registration key {}", registrationId);
+        // we first add the registration key before we add it to the database.
+        final String resultId = BankProblemManager.mongoInsertBankProblem(database, SrlBankProblem.newBuilder(problem)
+                .setRegistrationKey(registrationId).build());
+
+        updater.createNewItem(School.ItemType.BANK_PROBLEM, resultId, null, userId, registrationId);
 
         return resultId;
     }
@@ -380,6 +389,10 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     @Override
     public void updateCourseProblem(final String userId, final SrlProblem srlProblem) throws AuthenticationException, DatabaseAccessException {
         CourseProblemManager.mongoUpdateCourseProblem(auth, database, srlProblem.getId(), userId, srlProblem);
+
+        if (srlProblem.hasProblemBankId()) {
+            putCourseInBankProblem(srlProblem.getCourseId(), srlProblem.getProblemBankId(), userId, "NO_KEY");
+        }
     }
 
     @Override
@@ -393,7 +406,7 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     }
 
     @Override
-    public boolean putUserInCourse(final String courseId, final String userId, final String clientRegistrationKey)
+     public boolean putUserInCourse(final String courseId, final String userId, final String clientRegistrationKey)
             throws DatabaseAccessException, AuthenticationException {
 
         String registrationKey = clientRegistrationKey;
@@ -410,6 +423,25 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
         }
 
         UserClient.addCourseToUser(userId, courseId);
+        return true;
+    }
+
+    @Override
+    public boolean putCourseInBankProblem(final String courseId, final String bankProblemId, final String userId, final String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException {
+
+        String registrationKey = clientRegistrationKey;
+        if (Strings.isNullOrEmpty(clientRegistrationKey)) {
+            LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
+            registrationKey = BankProblemManager.mongoGetRegistrationKey(auth, database, bankProblemId, userId);
+        }
+        try {
+            LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
+            updater.registerUser(School.ItemType.BANK_PROBLEM, bankProblemId, courseId, registrationKey);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to register the user in the course", e);
+        }
         return true;
     }
 

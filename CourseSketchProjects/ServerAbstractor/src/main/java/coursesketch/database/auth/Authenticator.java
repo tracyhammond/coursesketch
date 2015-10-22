@@ -241,7 +241,8 @@ public final class Authenticator {
             // TODO: unit test assignments dont check registration
             authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
         }
-        if (checkType.getCheckIsPublished()) {
+        // Course Problems can not be published only assignments!
+        if (checkType.getCheckIsPublished() && School.ItemType.COURSE_PROBLEM != collectionType) {
             authBuilder.setIsItemPublished(optionChecker.isItemPublished(dataCreator));
         }
     }
