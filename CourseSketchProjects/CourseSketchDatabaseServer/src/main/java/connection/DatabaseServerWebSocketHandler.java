@@ -30,7 +30,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      * @param parent Passes it up to super constructor.
      */
     public DatabaseServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
     }
 
     /**
@@ -39,6 +39,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     protected final void openSession(final SocketSession conn) {
+        LOG.info("Sending the connection time to the client");
         send(conn, TimeManager.serverSendTimeToClient());
     }
 
