@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
  *
  * Created by dtracers on 10/19/2015.
  */
-public abstract class CourseSketchDatabaseReader {
+public abstract class AbstractCourseSketchDatabaseReader {
     /**
      * Declaration and Definition of Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(CourseSketchDatabaseReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractCourseSketchDatabaseReader.class);
 
     /**
      * Contains Information about the server.
@@ -29,7 +29,7 @@ public abstract class CourseSketchDatabaseReader {
      * Takes in a list of addressess where the database can be found and a name of the database.
      * @param serverInfo Information about the server.
      */
-    public CourseSketchDatabaseReader(final ServerInfo serverInfo) {
+    public AbstractCourseSketchDatabaseReader(final ServerInfo serverInfo) {
         this.serverInfo = serverInfo;
     }
 
@@ -59,7 +59,7 @@ public abstract class CourseSketchDatabaseReader {
     /**
      * Called when the database has started.
      */
-    protected final void databaseStarted() {
+    protected final void setDatabaseStarted() {
         LOG.debug("The database was successfully started.");
         databaseStarted = true;
     }

@@ -24,10 +24,12 @@ import static database.DatabaseStringConstants.USER_COLLECTION;
  *
  */
 public final class UserManager {
+
     /**
      * Logger declaration/definition.
      */
     private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
+
     /**
      * Private constructor.
      *
@@ -110,18 +112,9 @@ public final class UserManager {
             LOG.info("courseId {}", courseId);
             users.update(cursor, query);
         } else {
-            // TODO: add a counter so it does not loop for inifity
+            // FUTURE: add a counter so it does not loop for infinity
             createUser(database, SrlUser.getDefaultInstance(), userId);
             addCourseToUser(database, userId, courseId);
         }
     }
-
-    /*
-     * public void registerUserForCourse(DB dbs, String userId, String CourseId)
-     * { DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new
-     * ObjectId(userId)); DBObject corsor = myDbRef.fetch(); DBObject updateObj
-     * = null; DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
-     * updateObj = new BasicDBObject(ASSIGNMENT_LIST, assignmentId);
-     * courses.update(corsor, new BasicDBObject ("$addToSet",updateObj)); }
-     */
 }

@@ -40,7 +40,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
     }
 
     /**
-     * Checks to make sure that the user is authenticated for all values that
+     * Checks to make sure that the user is authenticated for all values  in the preFixedCheckType that
      * are true.
      *
      * @param collectionType

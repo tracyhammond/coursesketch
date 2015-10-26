@@ -1,6 +1,5 @@
 package database.institution.mongo;
 
-import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -25,11 +24,9 @@ import protobuf.srl.utils.Util.SrlPermission;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_ACCESS;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
@@ -88,7 +85,7 @@ public final class BankProblemManager {
                 .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList())
-                // TODO: fix access issues for bank problems
+                        // TODO: fix access issues for bank problems
                 .append(REGISTRATION_KEY, problem.getRegistrationKey())
                 .append(STATE_PUBLISHED, true)
                 .append(COURSE_ACCESS, 0);
@@ -121,7 +118,8 @@ public final class BankProblemManager {
      * @return the SrlBank problem data if it past all tests.
      * @throws AuthenticationException
      *         thrown if the user does not have access to the permissions.
-     * @throws DatabaseAccessException thrown if there is a problem finding the bank problem in the database.
+     * @throws DatabaseAccessException
+     *         thrown if there is a problem finding the bank problem in the database.
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
@@ -344,21 +342,29 @@ public final class BankProblemManager {
     }
 
     /**
-     * Returns the registration key of the given course if the constraints are met, null is returned in all other cases.
+     * Returns the registration key of the given bank problem if the constraints are met, null is returned in all other cases.
+     *
      * @param authenticator
+     *         Used to ensure the user has access to the registration key.
      * @param database
+     *         The database that contains the registration key.
      * @param bankProblemId
+     *         The id of the bank problem that contains the registration key.
      * @param userId
+     *         The user wanting to view the registration key.
      * @return The registration key of the given course if the constraints are met, null is returned in all other cases.
      * @throws AuthenticationException
+     *         Thrown if there are problems checking the users authentication.
      * @throws DatabaseAccessException
+     *         Thrown if the bank problem does not exist.
      */
-    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String bankProblemId, final String userId)
+    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
+            final String bankProblemId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(database, PROBLEM_BANK_COLLECTION, createId(bankProblemId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
-            throw new DatabaseAccessException("BankPRoblem was not found with the following ID " + bankProblemId);
+            throw new DatabaseAccessException("BankProblem was not found with the following ID " + bankProblemId);
         }
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()

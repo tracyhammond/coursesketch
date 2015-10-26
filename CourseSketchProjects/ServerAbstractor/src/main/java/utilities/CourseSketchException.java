@@ -7,6 +7,9 @@ import protobuf.srl.request.Message;
  */
 public class CourseSketchException extends Exception {
 
+    /**
+     * An exception that may haven been sent from another server or passed up as a compiled proto object.
+     */
     private Message.ProtoException protoException;
 
     /**
@@ -88,11 +91,18 @@ public class CourseSketchException extends Exception {
         super(cause);
     }
 
-    public void setProtoException(Message.ProtoException protoException) {
+    /**
+     * Sets a proto exception that occued.
+     * @param protoException The protobuf exception.
+     */
+    public final void setProtoException(final Message.ProtoException protoException) {
         this.protoException = protoException;
     }
 
-    public Message.ProtoException getProtoException() {
+    /**
+     * @return A {@link utilities.ProtobufUtilities.ProtobufException} if it exist or null if it does not.
+     */
+    public final Message.ProtoException getProtoException() {
         return protoException;
     }
 
