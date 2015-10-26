@@ -85,7 +85,7 @@ public final class BankProblemManager {
                 .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList())
-                        // TODO: fix access issues for bank problems
+                        // FUTURE: fix access issues for bank problems
                 .append(REGISTRATION_KEY, problem.getRegistrationKey())
                 .append(STATE_PUBLISHED, true)
                 .append(COURSE_ACCESS, 0);
@@ -358,6 +358,7 @@ public final class BankProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if the bank problem does not exist.
      */
+    @SuppressWarnings("PMD.UselessParentheses")
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
             final String bankProblemId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
@@ -375,7 +376,7 @@ public final class BankProblemManager {
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(School.ItemType.BANK_PROBLEM, bankProblemId.trim(), userId, 0, authType);
 
-        if (responder.hasTeacherPermission() || (!responder.isRegistrationRequired() && responder.isItemPublished())) {
+        if ((!responder.isRegistrationRequired() && responder.isItemPublished()) || responder.hasTeacherPermission()) {
             return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);
         }
         return null;

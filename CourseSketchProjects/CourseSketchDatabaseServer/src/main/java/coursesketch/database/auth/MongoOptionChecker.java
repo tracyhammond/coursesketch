@@ -18,6 +18,11 @@ import protobuf.srl.school.School;
 public final class MongoOptionChecker implements AuthenticationOptionChecker {
 
     /**
+     * The message that is returned when a field is missing while checking for authentication.
+     */
+    private static final String MISSING_OBJECT_MESSAGE = "DBObject does not contain value for key ";
+
+    /**
      * The database that needs to look for the option checker.
      */
     private final DB database;
@@ -46,10 +51,10 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
     @Override public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime) throws DatabaseAccessException {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
         if (!result.containsField(DatabaseStringConstants.ACCESS_DATE)) {
-            throw new DatabaseAccessException("DBObject does not contain value for key " + DatabaseStringConstants.ACCESS_DATE);
+            throw new DatabaseAccessException(MISSING_OBJECT_MESSAGE + DatabaseStringConstants.ACCESS_DATE);
         }
         if (!result.containsField(DatabaseStringConstants.CLOSE_DATE)) {
-            throw new DatabaseAccessException("DBObject does not contain value for key " + DatabaseStringConstants.CLOSE_DATE);
+            throw new DatabaseAccessException(MISSING_OBJECT_MESSAGE + DatabaseStringConstants.CLOSE_DATE);
         }
         final long accessDate = (long) result.get(DatabaseStringConstants.ACCESS_DATE);
         final long closeDate = (long) result.get(DatabaseStringConstants.CLOSE_DATE);
@@ -60,7 +65,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
         final Object access = result.get(DatabaseStringConstants.COURSE_ACCESS);
         if (access == null) {
-            throw new DatabaseAccessException("DBObject does not contain value for key " + DatabaseStringConstants.COURSE_ACCESS);
+            throw new DatabaseAccessException(MISSING_OBJECT_MESSAGE + DatabaseStringConstants.COURSE_ACCESS);
         }
         final School.SrlCourse.Accessibility accessValue = School.SrlCourse.Accessibility.valueOf((int) access);
         return !(accessValue == School.SrlCourse.Accessibility.PUBLIC || accessValue == School.SrlCourse.Accessibility.SUPER_PUBLIC);
@@ -70,16 +75,13 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
         final DBObject result = (DBObject) dataCreator.getDatabaseResult();
         final Object published = result.get(DatabaseStringConstants.STATE_PUBLISHED);
         if (published == null) {
-            throw new DatabaseAccessException("DBObject does not contain value for key " + DatabaseStringConstants.STATE_PUBLISHED);
+            throw new DatabaseAccessException(MISSING_OBJECT_MESSAGE + DatabaseStringConstants.STATE_PUBLISHED);
         }
         return (boolean) published;
     }
 
     /**
-     * @param collectionType
-     *         The type of collection that is being checked.
-     * @param itemId
-     *         The id of the tiem that is being checked.
+     * {@inheritDoc}
      * @return a data creator that grabs the data for any other uses by the option checker.
      */
     @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)

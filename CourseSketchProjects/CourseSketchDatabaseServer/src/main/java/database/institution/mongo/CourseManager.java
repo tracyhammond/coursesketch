@@ -54,7 +54,8 @@ import static database.utilities.MongoUtilities.createId;
  *
  * @author gigemjt
  */
-@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses" })
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
+    "PMD.TooManyMethods" })
 public final class CourseManager {
 
     /**
