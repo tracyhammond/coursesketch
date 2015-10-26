@@ -385,6 +385,22 @@ public class DbAuthManagerTest {
         dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, INVALID_REGISTRATION_KEY, dbAuthChecker);
     }
 
+
+    @Test(expected = AuthenticationException.class)
+    public void testRegisteringUserInCourseNullKey() throws AuthenticationException, DatabaseAccessException {
+        String userId = "New User!";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        dbAuthManager.registerSelf(userId, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+    }
+
+
     @Test(expected = DatabaseAccessException.class)
     public void testRegisteringUserInCourseInvalidItemId() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
