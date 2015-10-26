@@ -17,13 +17,28 @@ import protobuf.srl.school.School;
 @SuppressWarnings("PMD.CommentRequired")
 public final class MongoOptionChecker implements AuthenticationOptionChecker {
 
+    /**
+     * The database that needs to look for the option checker.
+     */
     private final DB database;
 
+    /**
+     * Creates a {@link MongoOptionChecker} with {@link ServerInfo}.
+     *
+     * @param info
+     *         The location at where to find the database.
+     */
     public MongoOptionChecker(final ServerInfo info) {
         final MongoClient mongoClient = new MongoClient(info.getDatabaseUrl());
         database = mongoClient.getDB(info.getDatabaseName());
     }
 
+    /**
+     * Creates a {@link MongoOptionChecker} with {@link DB}.
+     *
+     * @param database
+     *         The database that contains information that needs to be checked for the mongo option checker.
+     */
     public MongoOptionChecker(final DB database) {
         this.database = database;
     }
@@ -61,8 +76,10 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
     }
 
     /**
-     * @param collectionType The type of collection that is being checked.
-     * @param itemId The id of the tiem that is being checked.
+     * @param collectionType
+     *         The type of collection that is being checked.
+     * @param itemId
+     *         The id of the tiem that is being checked.
      * @return a data creator that grabs the data for any other uses by the option checker.
      */
     @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
@@ -74,6 +91,9 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
                     + " with id " + itemId);
         }
         return new AuthenticationDataCreator() {
+            /**
+             * @return {@link DBObject} The value that the database found for authentication.
+             */
             @Override public Object getDatabaseResult() {
                 return result;
             }

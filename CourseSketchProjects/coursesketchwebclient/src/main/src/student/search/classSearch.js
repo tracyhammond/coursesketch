@@ -126,10 +126,10 @@ validateFirstRun(document.currentScript);
 
         CourseSketch.dataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.REGISTER, courseProtoMap[id].toArrayBuffer(), function(evt, item) {
             if (isException(item)) {
-                var exception = new DatabaseException('registration failed for course parent.getCurrentId()','', item);
+                var exception = new DatabaseException('registration failed for course parent.getCurrentId()', '', item);
                 CourseSketch.clientException(exception);
             } else {
-                alert("Registration successful");
+                alert('Registration successful');
             }
             $('#' + id).animate({
                 marginLeft: '0px'

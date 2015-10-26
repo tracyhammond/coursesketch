@@ -238,7 +238,6 @@ public final class Authenticator {
         }
         if ((checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired())
                 && (School.ItemType.COURSE == collectionType || School.ItemType.BANK_PROBLEM == collectionType)) {
-            // TODO: unit test assignments dont check registration
             authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
         }
         // Course Problems can not be published only assignments!

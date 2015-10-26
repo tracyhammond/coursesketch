@@ -140,7 +140,6 @@ public class DatabaseClient {
      *            true if the system will log in as the instructor (not used if
      *            loginAsDefault is true).
      * @return The server side userid : the client side user id.
-     * @throws AuthenticationException Thrown if an invalid key is set
      * @throws LoginException
      *             thrown if there is a problem loggin in.
      */

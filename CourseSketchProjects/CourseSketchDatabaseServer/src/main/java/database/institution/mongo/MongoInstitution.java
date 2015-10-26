@@ -8,7 +8,7 @@ import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
-import coursesketch.database.interfaces.CourseSketchDatabaseReader;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -44,7 +44,7 @@ import static database.DatabaseStringConstants.USER_COLLECTION;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.TooManyMethods" })
-public final class MongoInstitution extends CourseSketchDatabaseReader implements Institution {
+public final class MongoInstitution extends AbstractCourseSketchDatabaseReader implements Institution {
 
     /**
      * Declaration and Definition of Logger.
@@ -119,7 +119,7 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
             return;
         }
         database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
-        super.databaseStarted();
+        super.setDatabaseStarted();
     }
 
     /**

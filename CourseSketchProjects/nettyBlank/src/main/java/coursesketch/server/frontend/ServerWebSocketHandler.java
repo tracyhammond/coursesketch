@@ -1,6 +1,6 @@
 package coursesketch.server.frontend;
 
-import coursesketch.database.interfaces.CourseSketchDatabaseReader;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -127,7 +127,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * {@inheritDoc}
      */
     @SuppressWarnings("checkstyle:designforextension")
-    @Override protected CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         return null;
     }
 
