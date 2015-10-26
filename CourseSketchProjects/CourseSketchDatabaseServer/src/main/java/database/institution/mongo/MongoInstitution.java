@@ -115,9 +115,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      */
     @Override protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-        if (mongoClient == null) {
-            return;
-        }
         database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
@@ -317,7 +314,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             updater.createNewItem(School.ItemType.ASSIGNMENT, resultId, assignment.getCourseId(), userId, null);
         } catch (AuthenticationException e) {
             // Revert the adding of the course to the database!
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Failed to create auth data while inserting assignment", e);
         }
 
         return resultId;
@@ -350,7 +347,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getAssignmentId(), userId, null);
         } catch (AuthenticationException e) {
             // Revert the adding of the course to the database!
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Faild to create auth data while inserting course problem", e);
         }
 
         return resultId;

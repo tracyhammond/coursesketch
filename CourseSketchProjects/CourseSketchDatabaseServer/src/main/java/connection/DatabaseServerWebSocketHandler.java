@@ -35,16 +35,6 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseServerWebSocketHandler.class);
 
     /**
-     * Used to authenticate users in the server.
-     */
-    private Authenticator auth;
-
-    /**
-     * An updater for the authentication server.
-     */
-    private AuthenticationUpdater authUpdater;
-
-    /**
      * @param parent Passes it up to super constructor.
      */
     public DatabaseServerWebSocketHandler(final ServerWebSocketInitializer parent) {
@@ -91,8 +81,8 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
     @Override protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         final AuthenticationWebSocketClient authChecker = (AuthenticationWebSocketClient) getConnectionManager()
                 .getBestConnection(AuthenticationWebSocketClient.class);
-        auth = new Authenticator(authChecker, new MongoOptionChecker(info));
-        authUpdater = authChecker;
+        final Authenticator auth = new Authenticator(authChecker, new MongoOptionChecker(info));
+        final AuthenticationUpdater authUpdater = authChecker;
         return new MongoInstitution(info, auth, authUpdater);
     }
 

@@ -68,7 +68,6 @@ public final class UserManager {
      * @param dbs The database where the user is being created.
      * @param user Information about the user.
      * @param userId The user id that is associated with the user.
-     * @throws DatabaseAccessException Thrown if there was an error when creating a password hash of the id.
      */
     public static void createUser(final DB dbs, final SrlUser user, final String userId) {
         final DBCollection users = dbs.getCollection(USER_COLLECTION);

@@ -235,7 +235,6 @@ public final class AssignmentManager {
 
         exactAssignment.setState(stateBuilder);
 
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         return exactAssignment.build();
     }
 
