@@ -149,7 +149,7 @@ public class AuthenticationHelper {
                 createAnyEqMatcher(type, School.ItemType.class),
                 createAnyEqMatcher(itemId, String.class)))
                 .thenReturn(tempCreator);
-        when(option.isItemPublished(tempCreator))
+        when(option.isItemRegistrationRequired(tempCreator))
                 .thenReturn(isRegistraionRequired);
         return tempCreator;
     }
