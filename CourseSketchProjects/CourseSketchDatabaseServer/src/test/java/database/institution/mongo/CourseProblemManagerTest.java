@@ -7,12 +7,14 @@ import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
+import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
+import database.DbSchoolUtility;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,10 +27,6 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
-import java.util.List;
-
-import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
-import static database.DatabaseStringConstants.USERS;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -47,6 +45,7 @@ public class CourseProblemManagerTest {
     public DB db;
     public Authenticator authenticator;
 
+    public static final String VALID_NAME = "Valid course name!";
     public static final long FAKE_VALID_DATE = 1000;
     public static final long FAKE_INVALID_DATE = 1001;
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
@@ -161,7 +160,14 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setName(VALID_NAME);
+
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+
+        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE_PROBLEM, true), new ObjectId(courseProblemId));
+        final DBObject mongoProblem = myDbRef.fetch();
+
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
     }
 
     // GETTING TEST
