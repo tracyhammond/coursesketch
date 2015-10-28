@@ -354,37 +354,6 @@ public class CourseProblemManagerTest {
                 .build().equals(updatedProblem, updatedProblemResult);
     }
 
-    @Test(expected = DatabaseAccessException.class)
-    public void updateCourseProblemAsInstructorFailsWithInvalidBankId() throws Exception {
-        insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
-                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
-
-        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
-        defaultProblem.setId(courseProblemId);
-        defaultProblem.setProblemInfo(bankProblem);
-
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
-                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
-
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                .build().equals(defaultProblem.build(), problem);
-
-        School.SrlProblem updatedProblem = School.SrlProblem.newBuilder(defaultProblem.build())
-                .setGradeWeight("NEW GRADE WEIGHT")
-                .setProblemBankId(DatabaseHelper.createNonExistentObjectId(bankProblemId))
-                .build();
-
-        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, updatedProblem);
-
-        School.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
-                courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                .setFailAtFirstMisMatch(false)
-                .build().equals(updatedProblem, updatedProblemResult);
-    }
-
     @Test
     public void updateCourseProblemAsInstructorWithNewBankId() throws Exception {
         insertCourseAndAssignment();
@@ -443,34 +412,5 @@ public class CourseProblemManagerTest {
         CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, USER_USER, updatedProblem);
     }
 
-    /**
-     * checks that the course is registered for the bank problem when a course problem is inserted.
-     */
-    @Test
-    public void registerBankProblemIfItIsNotRegistered() throws Exception  {
-        insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
-                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
-        bankProblem.setId("NOT REAL ID");
-        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-
-        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
-
-        // creating problem
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setAssignmentId(assignmentId);
-        problem.setCourseId(courseId);
-        problem.setProblemBankId(problemBankId);
-
-        CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, problem.build());
-
-        final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
-
-        // TODO(dtracers): change what is being tested to better reflect what is being asked.
-        Assert.assertEquals(courseId, ((List) mongoBankProblem.get(USERS)).get(0));
-    }
 }

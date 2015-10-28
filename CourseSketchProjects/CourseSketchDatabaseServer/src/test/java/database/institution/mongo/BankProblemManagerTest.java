@@ -7,12 +7,12 @@ import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
+import database.DatabaseAccessException;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,8 +34,8 @@ import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
+import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DatabaseStringConstants.SCRIPT;
-import static database.DatabaseStringConstants.USERS;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
@@ -51,9 +51,11 @@ public class BankProblemManagerTest {
     public FongoRule fongo = new FongoRule();
     @Mock AuthenticationChecker authChecker;
     @Mock AuthenticationOptionChecker optionChecker;
+    @Mock AuthenticationDataCreator dataCreator;
 
     public DB db;
     public Authenticator authenticator;
+    public static final String VALID_REGISTRATION_KEY = "VALID KEY!";
     public static final String FAKE_ID = "507f1f77bcf86cd799439011";
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
     public static final String FAKE_SCRIPT = "fake script";
@@ -92,6 +94,7 @@ public class BankProblemManagerTest {
 
         School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
+        bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
         bankProblem.setQuestionType(FAKE_QUESTION_TYPE);
@@ -102,6 +105,7 @@ public class BankProblemManagerTest {
         final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
 
+        Assert.assertEquals(mongoBankProblem.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(COURSE_TOPIC), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TYPE), FAKE_QUESTION_TYPE.getNumber());
@@ -152,6 +156,111 @@ public class BankProblemManagerTest {
         School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, problemBankId, ADMIN_USER);
 
         Assert.assertEquals(resultBankProblem.getQuestionText(), FAKE_QUESTION_TEXT);
+    }
+
+    @Test
+    public void getBankRegistrationKeyAdminAccessShouldReturnKey() throws Exception {
+
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
+
+        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        String key = BankProblemManager.mongoGetRegistrationKey(authenticator, db, problemBankId, ADMIN_USER);
+
+        Assert.assertEquals(VALID_REGISTRATION_KEY, key);
+    }
+
+    @Test
+    public void getBankRegistrationKeyNoAccessShouldBeNull() throws Exception {
+
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
+
+        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        String key = BankProblemManager.mongoGetRegistrationKey(authenticator, db, problemBankId, USER_USER);
+
+        Assert.assertEquals(null, key);
+    }
+
+    @Test
+    public void getBankRegistrationKeyNoAccessWithNoRegistrationNotPublishedShouldBeNull() throws Exception {
+
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
+
+        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, null, School.ItemType.BANK_PROBLEM,
+                problemBankId, false);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        String key = BankProblemManager.mongoGetRegistrationKey(authenticator, db, problemBankId, USER_USER);
+
+        Assert.assertEquals(null, key);
+    }
+
+    @Test
+    public void getBankRegistrationKeyNoAccessWithRegistrationPublishedShouldBeNull() throws Exception {
+
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
+
+        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, null, School.ItemType.BANK_PROBLEM,
+                problemBankId, true);
+
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.BANK_PROBLEM,
+                problemBankId, true);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        String key = BankProblemManager.mongoGetRegistrationKey(authenticator, db, problemBankId, USER_USER);
+
+        Assert.assertEquals(null, key);
+    }
+
+    @Test
+    public void getBankRegistrationKeyNoAccessWithNoRegistrationIsPublishedShouldBeKey() throws Exception {
+
+        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
+
+        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.BANK_PROBLEM,
+                problemBankId, true);
+
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, dataCreator, School.ItemType.BANK_PROBLEM,
+                problemBankId, false);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        String key = BankProblemManager.mongoGetRegistrationKey(authenticator, db, problemBankId, USER_USER);
+
+        Assert.assertEquals(VALID_REGISTRATION_KEY, key);
     }
 
     @Test
@@ -243,49 +352,6 @@ public class BankProblemManagerTest {
 
         List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 1);
         Assert.assertEquals(0, resultBankProblem.size());
-    }
-
-    @Test
-    public void registerCourseInBankProblem() throws Exception {
-
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
-        bankProblem.setId("NOT REAL ID");
-        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-
-        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
-
-        School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
-        course.setId("ID");
-        String courseId = CourseManager.mongoInsertCourse(db, course.build());
-
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setCourseId(courseId);
-        problem.setProblemBankId(problemBankId);
-
-
-        final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
-
-        Assert.assertEquals(courseId, ((List) mongoBankProblem.get(USERS)).get(0));
-    }
-
-    @Test(expected = DatabaseAccessException.class)
-    public void registerCourseNoBankId() throws Exception {
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setCourseId("Course id");
-
-
-    }
-
-    @Test(expected = DatabaseAccessException.class)
-    public void registerCourseNoCourseId() throws Exception {
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setProblemBankId("Bank id");
-
-
     }
 
     @Test
