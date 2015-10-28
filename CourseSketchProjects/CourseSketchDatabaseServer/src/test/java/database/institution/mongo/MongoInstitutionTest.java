@@ -1,7 +1,10 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.DatabaseHelper;
+import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
+import com.google.common.collect.Lists;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
@@ -28,8 +31,6 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
-import java.util.List;
-
 import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
@@ -39,6 +40,7 @@ import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -50,33 +52,44 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class MongoInstitutionTest {
 
-
-
-    private static final String VALID_REGISTRATION_KEY = "VALID KEY!";
     @Rule
     public FongoRule fongo = new FongoRule();
     @Mock AuthenticationChecker authChecker;
     @Mock AuthenticationOptionChecker optionChecker;
-    @Mock AuthenticationDataCreator creator;
+    @Mock AuthenticationDataCreator dataCreator;
     @Mock AuthenticationUpdater authenticationUpdater;
 
     public DB db;
     public Authenticator authenticator;
     public MongoInstitution institution;
+
+    public static final String VALID_REGISTRATION_KEY = "VALID KEY!";
     public static final String VALID_NAME = "Valid course name!";
     public static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
     public static final String FAKE_ID = "507f1f77bcf86cd799439011";
-    public static final long FAKE_VALID_DATE = 1000;
-    public static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
-    public static final long FAKE_INVALID_DATE = 1001;
     public static final String FAKE_QUESTION_TEXT = "Question Texts";
     public static final String FAKE_SCRIPT = "fake script";
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
+
+    public static final long FAKE_VALID_DATE = 1000;
+    public static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
+    public static final long FAKE_INVALID_DATE = 1001;
+
     public static final Commands.SrlUpdateList.Builder FAKE_UPDATELIST = Commands.SrlUpdateList.newBuilder();
     public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
+    public static final School.SrlAssignment.AssignmentType VALID_ASSIGNMENT_TYPE = School.SrlAssignment.AssignmentType.EXAM;
+    public static final int VALID_ASSIGNMENT_TYPE_VALUE = School.SrlAssignment.AssignmentType.EXAM_VALUE;
+
+    private String courseId;
+    private String assignmentId;
+    private String courseProblemId;
+    private String bankProblemId;
 
     private School.SrlCourse.Builder defaultCourse;
+    private School.SrlAssignment.Builder defaultAssignment;
+    private School.SrlProblem.Builder defaultProblem;
+    private School.SrlBankProblem.Builder bankProblem;
 
     @Before
     public void before() {
@@ -110,6 +123,68 @@ public class MongoInstitutionTest {
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setName(VALID_NAME);
+
+        defaultAssignment = School.SrlAssignment.newBuilder();
+        defaultAssignment.setId(FAKE_ID);
+
+        defaultProblem = School.SrlProblem.newBuilder();
+        defaultProblem.setId(FAKE_ID);
+
+        courseId = null;
+        assignmentId = null;
+        courseProblemId = null;
+        bankProblemId = null;
+    }
+
+    public void insertCourse() throws DatabaseAccessException, AuthenticationException {
+
+        // creating the course
+        final School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
+        course.setId("ID");
+        courseId = CourseManager.mongoInsertCourse(db, course.build());
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        // creating assignment
+        defaultAssignment.setCourseId(courseId);
+
+        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
+    }
+
+
+    public void insertCourseAndAssignment() throws DatabaseAccessException, AuthenticationException {
+
+        // creating bank problem
+        bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+
+        bankProblemId = institution.insertBankProblem(ADMIN_USER, bankProblem.build());
+        bankProblem.setId(bankProblemId);
+
+        // creating the course
+        courseId = institution.insertCourse(ADMIN_USER, defaultCourse.build());
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        // creating assignment
+        defaultAssignment.setCourseId(courseId);
+
+        assignmentId = institution.insertAssignment(ADMIN_USER, defaultAssignment.build());
+        updateProblemIds(courseId, assignmentId, bankProblemId);
+
+        // sets the course able to use the bank problem
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId, courseId,
+                null, Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, true);
+        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
+    }
+
+    public void updateProblemIds(String courseId, String assignmentId, String bankProblemId) {
+        defaultProblem.setCourseId(courseId);
+        defaultProblem.setAssignmentId(assignmentId);
+        defaultProblem.setProblemBankId(bankProblemId);
     }
 
     @Test
@@ -141,7 +216,6 @@ public class MongoInstitutionTest {
                 eq(registrationKey));
     }
 
-
     @Test
     public void insertingCourseCreatesRegistrationKey() throws AuthenticationException, InvalidProtocolBufferException, DatabaseAccessException {
 
@@ -169,65 +243,148 @@ public class MongoInstitutionTest {
                 eq(registrationKey));
     }
 
+
     @Test
-    public void registerCourseInBankProblem() throws Exception {
+    public void insertingAssignmentAlsoCreatesUserGroup() throws Exception {
+        insertCourse();
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
-        bankProblem.setId("NOT REAL ID");
-        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+        defaultAssignment.setDescription(FAKE_DESCRIPTION);
+        defaultAssignment.setAccessDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setCloseDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setDueDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setName(VALID_NAME);
+        defaultAssignment.setAssignmentType(VALID_ASSIGNMENT_TYPE);
 
-        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
+        assignmentId = institution.insertAssignment(ADMIN_USER, defaultAssignment.build());
 
-        School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
-        course.setId("ID");
-        String courseId = CourseManager.mongoInsertCourse(db, course.build());
+        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.ASSIGNMENT, true), new ObjectId(assignmentId));
+        final DBObject mongoAssignment = myDbRef.fetch();
 
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setCourseId(courseId);
-        problem.setProblemBankId(problemBankId);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DUE_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ASSIGNMENT_TYPE), VALID_ASSIGNMENT_TYPE_VALUE);
 
+        verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(School.ItemType.ASSIGNMENT), eq(assignmentId), eq(courseId), eq(ADMIN_USER),
+                (String) isNull());
+    }
 
-        final DBRef myDbRef = new DBRef(db, DatabaseStringConstants.PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
+    @Test
+    public void insertCourseProblemCreatesUserGroup() throws Exception {
+        insertCourseAndAssignment();
 
-        Assert.assertEquals(courseId, ((List) mongoBankProblem.get(DatabaseStringConstants.USERS)).get(0));
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        defaultProblem.setName(VALID_NAME);
+
+        courseProblemId = institution.insertCourseProblem(ADMIN_USER, defaultProblem.build());
+
+        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE_PROBLEM, true), new ObjectId(courseProblemId));
+        final DBObject mongoProblem = myDbRef.fetch();
+
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.PROBLEM_BANK_ID), bankProblemId);
+
+        verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(School.ItemType.COURSE_PROBLEM), eq(courseProblemId), eq(assignmentId),
+                eq(ADMIN_USER),
+                (String) isNull());
+    }
+
+    @Test
+    public void insertCourseProblemInsertsBankProblemPermissions() throws Exception {
+        insertCourseAndAssignment();
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                bankProblemId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        defaultProblem.setName(VALID_NAME);
+
+        courseProblemId = institution.insertCourseProblem(ADMIN_USER, defaultProblem.build());
+
+        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE_PROBLEM, true), new ObjectId(courseProblemId));
+        final DBObject mongoProblem = myDbRef.fetch();
+
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.PROBLEM_BANK_ID), bankProblemId);
+
+        verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(School.ItemType.COURSE_PROBLEM), eq(courseProblemId), eq(assignmentId),
+                eq(ADMIN_USER),
+                (String) isNull());
+
+        verify(authenticationUpdater, atLeastOnce()).registerUser(eq(School.ItemType.BANK_PROBLEM), eq(bankProblemId), eq(courseId),
+                (String) isNotNull());
+    }
+
+    @Test
+    public void registerCourseInBankProblemWorksWithRgistrationKey() throws Exception {
+        institution.putCourseInBankProblem(courseId, bankProblemId, ADMIN_USER, VALID_REGISTRATION_KEY);
+
+        verify(authenticationUpdater, atLeastOnce()).registerUser(eq(School.ItemType.BANK_PROBLEM), eq(bankProblemId), eq(courseId),
+                eq(VALID_REGISTRATION_KEY));
     }
 
     @Test(expected = DatabaseAccessException.class)
-    public void registerCourseNoBankId() throws Exception {
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setCourseId("Course id");
-
-
+    public void registerCourseInBankProblemThrowsExceptionWithInvalidBankId() throws Exception {
+        institution.putCourseInBankProblem(courseId, bankProblemId, ADMIN_USER, null);
     }
 
-    @Test(expected = DatabaseAccessException.class)
-    public void registerCourseNoCourseId() throws Exception {
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setProblemBankId("Bank id");
-
-
-    }
-
-
-    /*
-    @Test(expected = DatabaseAccessException.class)
-    public void updateCourseProblemAsInstructorFailsWithInvalidBankId() throws Exception {
+    @Test
+    public void updateCourseProblemAsInstructorWorksWithValidBankId() throws Exception {
         insertCourseAndAssignment();
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        courseProblemId = institution.insertCourseProblem(ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
         defaultProblem.setProblemInfo(bankProblem);
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        School.SrlProblem problem = institution.getCourseProblem(Lists.newArrayList(courseProblemId), ADMIN_USER).get(0);
+        new ProtobufComparisonBuilder()
+                .build().equals(defaultProblem.build(), problem);
+
+        bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem.setId("NOT REAL ID");
+        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
+
+        String newBankProblemId = institution.insertBankProblem(ADMIN_USER, bankProblem.build());
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
+                newBankProblemId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        School.SrlProblem updatedProblem = School.SrlProblem.newBuilder(defaultProblem.build())
+                .setGradeWeight("NEW GRADE WEIGHT")
+                .setProblemBankId(newBankProblemId)
+                .build();
+
+        institution.updateCourseProblem(ADMIN_USER, updatedProblem);
+
+        verify(authenticationUpdater, atLeastOnce()).registerUser(eq(School.ItemType.BANK_PROBLEM), eq(newBankProblemId), eq(courseId),
+                (String) isNotNull());
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void updateCourseProblemAsInstructorFailsWithInvalidBankId() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        courseProblemId = institution.insertCourseProblem(ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+        defaultProblem.setProblemInfo(bankProblem);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        School.SrlProblem problem = institution.getCourseProblem(Lists.newArrayList(courseProblemId), ADMIN_USER).get(0);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
@@ -236,43 +393,7 @@ public class MongoInstitutionTest {
                 .setProblemBankId(DatabaseHelper.createNonExistentObjectId(bankProblemId))
                 .build();
 
-        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, updatedProblem);
-
-        School.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
-                courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                .setFailAtFirstMisMatch(false)
-                .build().equals(updatedProblem, updatedProblemResult);
+        institution.updateCourseProblem(ADMIN_USER, updatedProblem);
     }
-
-    // checks that the course is registered for the bank problem when a course problem is inserted.
-    @Test
-    public void registerBankProblemIfItIsNotRegistered() throws Exception  {
-        insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
-                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
-
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
-        bankProblem.setId("NOT REAL ID");
-        bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
-
-        String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
-
-        // creating problem
-        School.SrlProblem.Builder problem = School.SrlProblem.newBuilder();
-        problem.setId("ID");
-        problem.setAssignmentId(assignmentId);
-        problem.setCourseId(courseId);
-        problem.setProblemBankId(problemBankId);
-
-        CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, problem.build());
-
-        final DBRef myDbRef = new DBRef(db, DatabaseStringConstants.PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
-
-        // TODO(dtracers): change what is being tested to better reflect what is being asked.
-        Assert.assertEquals(courseId, ((List) mongoBankProblem.get(DatabaseStringConstants.USERS)).get(0));
-    }
-    */
 
 }

@@ -388,7 +388,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         CourseProblemManager.mongoUpdateCourseProblem(auth, database, srlProblem.getId(), userId, srlProblem);
 
         if (srlProblem.hasProblemBankId()) {
-            putCourseInBankProblem(srlProblem.getCourseId(), srlProblem.getProblemBankId(), userId, "NO_KEY");
+            putCourseInBankProblem(srlProblem.getCourseId(), srlProblem.getProblemBankId(), userId, null);
         }
     }
 
