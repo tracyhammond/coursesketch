@@ -24,12 +24,13 @@ public class LoginConnectionState extends MultiConnectionState {
     private int loginTries = 0;
 
     /**
-     * The id of the current session.
+     * The server side id that uniquely identifies this particular user.
+     * (Also called the authentication id)
      */
-    private String sessionId = null;
+    private String serverUserId = null;
 
     /**
-     * creates a login connection state with a certian key.
+     * creates a login connection state with a certain key.
      *
      * @param inputKey
      *            Uniquely Identifies this connection from any other connection.
@@ -56,7 +57,7 @@ public class LoginConnectionState extends MultiConnectionState {
     /* package-private */final void logIn(final boolean instructorFlag, final String iSessionId) {
         loggedIn = true;
         instructor = instructorFlag;
-        this.sessionId = iSessionId;
+        this.serverUserId = iSessionId;
     }
 
     /**
@@ -83,7 +84,7 @@ public class LoginConnectionState extends MultiConnectionState {
     /**
      * @return the session id of the user who logged in (its user id)
      */
-    protected final String getSessionId() {
-        return sessionId;
+    protected final String getServerUserId() {
+        return serverUserId;
     }
 }
