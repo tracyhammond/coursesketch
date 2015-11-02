@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import utilities.ConnectionException;
 
 import org.slf4j.Logger;
@@ -23,8 +24,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     /**
      * IP address.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String SUBMISSION_ADDRESS = "192.168.56.202";
+    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
 
     /**
      * Port number.
@@ -33,15 +33,11 @@ public class AnswerConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     *
      * @param parent  The server that is using this object.
-     * @param isLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param isSecure  True if the connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public AnswerConnectionManager(final AbstractServerWebSocketHandler parent,
-            final boolean isLocal, final boolean isSecure) {
-        super(parent, isLocal, isSecure);
+    public AnswerConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**

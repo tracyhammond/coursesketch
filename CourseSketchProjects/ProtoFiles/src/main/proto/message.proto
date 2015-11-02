@@ -1,5 +1,7 @@
 package protobuf.srl.request;
 
+option java_generic_services = true;
+
 // Always sent and is filled out properly.
 message Request {
     required MessageType requestType = 1 [default=LOGIN];
@@ -48,4 +50,9 @@ message ProtoException {
     repeated string stackTrace = 2; // the stacktrace of the exception.
     optional string exceptionType = 3; // this will be the class name in java.
     optional ProtoException cause = 4; // the stackTrace might have a cause that is another protoException.
+}
+
+service RequestService {
+    rpc sendMessage(Request) returns (Request);
+    rpc sendTimeRequest(Request) returns (Request);
 }
