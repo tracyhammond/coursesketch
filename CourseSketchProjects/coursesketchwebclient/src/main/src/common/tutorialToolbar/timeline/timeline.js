@@ -80,7 +80,6 @@ function Timeline () {
             timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
             shadowRoot.querySelector('.btn').style.display = 'inline-block';
             shadowRoot.querySelector('.savetutorial').style.display = 'initial';
-                        console.log('localScope', localScope);
             setupSaveButton(localScope);
         };
     };
@@ -112,7 +111,10 @@ function Timeline () {
     };
 
     /**
-     * loads a tutorial for viewing
+     * Loads a tutorial for viewing.
+     *
+     * @param {ProtobufTutorial} tutorial The protobuf object representing the tutorial to be loaded.
+     * @param {bool} viewingMode Tells if the tutorial is to be loaded in viewing mode or not.
      */
     this.loadTutorial = function(tutorial, viewingMode) {
         this.viewingMode = viewingMode;
@@ -147,7 +149,7 @@ function Timeline () {
             this.index.switchIndex(1); // Sets indexManager to 1st step as currentStep. Step indexes start from 1. Reason in indexManager.
             this.updateList.list[0].redo();
         }
-    }
+    };
 
     // returns command class of command type
     function getCommandClass(commandType) {
@@ -227,7 +229,7 @@ function Timeline () {
             var textArea = stepTool.shadowRoot.querySelector('textarea');
             marker.setPreviewText(textArea.value);
         }
-    };
+    }
 
     // closes tutorial tool based on passed command
     function closeTutorialTool(command, localScope) {
@@ -474,6 +476,10 @@ function Timeline () {
             }
         });
     }
+
+    /**
+     * Saves a tutorial to the database.
+     */
     this.saveTutorial = function() {
         var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
         tutorial.id = generateUUID();
@@ -485,23 +491,26 @@ function Timeline () {
     };
 
     /**
-     * Inserts a tutorial into the server
+     * Inserts a tutorial into the server.
+     *
+     * @param {HTMLElement} timeline The timeline element in the DOM.
      */
     function setupSaveButton(timeline) {
         var savefd = timeline.shadowRoot.querySelector('.savetutorial');
-                  console.log('timeline', timeline);
         savefd.onclick = function() {
-            console.log('timeline', timeline);
             //save tutorial
             timeline.saveTutorial();
             // reset timeline!
-//            var timeParent = timeline.parentNode;
-//            timeParent.removeChild(timeline);
-//            var timeline = document.createElement('entire-timeline');
-//            timeParent.appendChild(timeline);
+            /*var timeParent = timeline.parentNode;
+            timeParent.removeChild(timeline);
+            var timeline = document.createElement('entire-timeline');
+            timeParent.appendChild(timeline);*/
         };
     }
 
+    /**
+     * Clears the tutorial timeline of all elements. Acts like a reset.
+     */
     this.clearTimeline = function() {
         var currentStep = this.index.getCurrentUpdate();
         for (var i = 0; i < currentStep.commands.length; i++) {
@@ -516,6 +525,13 @@ function Timeline () {
         document.normalize();
     };
 
+    /**
+     * Loads a tutorial.
+     *
+     * @param {HTMLElement} timeline The timeline element in the DOM.
+     * @param {String} tutorialId The id of the tutorial to be loaded.
+     * @param {bool} viewingMode Tells if the tutorial is to be loaded in viewing mode or not.
+     */
     function loadTutorial(timeline, tutorialId, viewingMode) {
         timeline.parentNode.removeChild(timeline);
         timeline = document.createElement('entire-timeline');

@@ -45,7 +45,6 @@ function TutorialDataManager(parent, advanceDataListener, database, sendData, Re
     function insertTutorial(tutorial, tutorialCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.TUTORIAL, function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.TUTORIAL);
-            console.log('got response from server!');
             if (tutorialCallback) {
                 tutorialCallback();
             }
