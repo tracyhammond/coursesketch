@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -19,20 +20,17 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     /**
      * IP address for login server.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String LOGIN_ADDRESS = "192.168.56.200";
+    private static final String LOGIN_ADDRESS = "LOGIN_IP_PROP";
 
     /**
      * IP address for database server.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String DATABASE_ADDRESS = "192.168.56.201";
+    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
 
     /**
      * IP address for answer checker server.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private static final String ANSWER_ADDRESS = "192.168.56.203";
+    private static final String ANSWER_ADDRESS = "ANSWER_IP_PROP";
 
     /**
      * Declaration and Definition of Logger.
@@ -56,16 +54,12 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a manager for the proxy connections.
-     *
      * @param parent
      *            {@link serverfront.ProxyServerWebSocketHandler}
-     * @param connectType
-     *            true if connection is local.
-     * @param secure
-     *            true if all connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -102,8 +96,6 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
-        // System.out.println("Open Answer Checker Server...");
-        // createAndAddConnection(serv, true, 8884, AnswerConnection.class);
     }
 
     /**

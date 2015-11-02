@@ -21,7 +21,7 @@ public final class SubmissionServerWebSocketHandler extends ServerWebSocketHandl
      * @param parent The parent servlet of this server.
      */
     public SubmissionServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
     }
 
     /**

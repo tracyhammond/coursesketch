@@ -1,7 +1,8 @@
 package serverfront;
 
-import coursesketch.server.base.GeneralConnectionRunner;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.frontend.GeneralConnectionRunner;
+import coursesketch.server.frontend.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * A subclass of the runner and sets up some special information for running the
@@ -29,7 +30,7 @@ public class ProxyRunner extends GeneralConnectionRunner {
      * instead of listed in code.
      */
     @Override
-    public final void executeRemoveEnvironment() {
+    public final void executeRemoteEnvironment() {
         setCertificatePath("Challeng3");
         setKeystorePath("srl01_tamu_edu.jks");
     }
@@ -48,9 +49,10 @@ public class ProxyRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
+     * @return {@link ProxyServlet}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new ProxyServlet(time, secure, local);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new ProxyServlet(serverInfo);
     }
 }
