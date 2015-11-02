@@ -50,7 +50,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
     @Override
     public final void onMessage(final SocketSession conn, final Request req) {
         if (req.getRequestType() == Request.MessageType.DATA_REQUEST) {
-            DataRequestHandler.handleRequest(req, conn, super.getConnectionToId().get(conn).getKey(), getConnectionManager());
+            DataRequestHandler.handleRequest(req, conn, super.getConnectionToId().get(conn).getSessionId(), getConnectionManager());
         } else if (req.getRequestType() == Request.MessageType.DATA_INSERT) {
             DataInsertHandler.handleData(req, conn);
         } else if (req.getRequestType() == Request.MessageType.DATA_UPDATE) {

@@ -415,7 +415,9 @@ public abstract class AbstractGeneralConnectionRunner {
      *
      * Input is not stopped by the method.
      */
-    protected abstract void reconnect();
+    protected final void reconnect() {
+        getSocketInitailizerInstance().reconnect();
+    }
 
     /**
      * Creates and returns a new instance of a {@link ISocketInitializer}.
