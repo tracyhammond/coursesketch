@@ -9,7 +9,7 @@ function Timeline () {
 
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        this.updateList = CourseSketch.prutil.SrlUpdateList();
         this.index = new IndexManager(this);
 
         this.addToolArea(shadowRoot.querySelector('.timeline'));
@@ -111,7 +111,10 @@ function Timeline () {
     };
 
     /**
-     * loads a tutorial for viewing
+     * Loads a tutorial for viewing.
+     *
+     * @param {ProtobufTutorial} tutorial The protobuf object representing the tutorial to be loaded.
+     * @param {bool} viewingMode Tells if the tutorial is to be loaded in viewing mode or not.
      */
     this.loadTutorial = function(tutorial, viewingMode) {
         this.viewingMode = viewingMode;
@@ -153,11 +156,11 @@ function Timeline () {
     // returns command class of command type
     function getCommandClass(commandType) {
         var commandClass = '';
-        if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX) {
+        if (commandType === CourseSketch.prutil.CommandType.CREATE_TEXTBOX) {
             commandClass = 'textbox';
-        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX) {
+        } else if (commandType === CourseSketch.prutil.CommandType.CREATE_TTSBOX) {
             commandClass = 'ttsbox';
-        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT) {
+        } else if (commandType === CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT) {
             commandClass = 'highlight';
         }
         return commandClass;
@@ -228,7 +231,7 @@ function Timeline () {
             var textArea = stepTool.shadowRoot.querySelector('textarea');
             marker.setPreviewText(textArea.value);
         }
-    };
+    }
 
     // closes tutorial tool based on passed command
     function closeTutorialTool(command, localScope) {
@@ -373,7 +376,7 @@ function Timeline () {
      */
     function undoCreator() {
         // creates undo for textbox
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -385,7 +388,7 @@ function Timeline () {
             }
         });
         // creates undo for tts box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -397,7 +400,7 @@ function Timeline () {
             }
         });
         // creates undo for highlight box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -415,10 +418,10 @@ function Timeline () {
      */
     function redoCreator() {
         //creates textbox redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var textBox = document.createElement('text-box-creation');
                 } else {
@@ -436,10 +439,10 @@ function Timeline () {
             }
         });
         // creates tts box redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var ttsBox = document.createElement('tts-box-creation');
                 } else {
@@ -457,10 +460,10 @@ function Timeline () {
             }
         });
         // creates highlightText redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateHighlightTextClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var highlightText = document.createElement('highlight-text-creation');
                 } else {
@@ -475,6 +478,10 @@ function Timeline () {
             }
         });
     }
+
+    /**
+     * Saves a tutorial to the database.
+     */
     this.saveTutorial = function() {
         var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
         tutorial.id = generateUUID();
@@ -486,23 +493,26 @@ function Timeline () {
     };
 
     /**
-     * Inserts a tutorial into the server
+     * Inserts a tutorial into the server.
+     *
+     * @param {HTMLElement} timeline The timeline element in the DOM.
      */
     function setupSaveButton(timeline) {
         var savefd = timeline.shadowRoot.querySelector('.savetutorial');
-                  console.log('timeline', timeline);
         savefd.onclick = function() {
-            console.log('timeline', timeline);
             //save tutorial
             timeline.saveTutorial();
             // reset timeline!
-//            var timeParent = timeline.parentNode;
-//            timeParent.removeChild(timeline);
-//            var timeline = document.createElement('entire-timeline');
-//            timeParent.appendChild(timeline);
+            /*var timeParent = timeline.parentNode;
+            timeParent.removeChild(timeline);
+            var timeline = document.createElement('entire-timeline');
+            timeParent.appendChild(timeline);*/
         };
     }
 
+    /**
+     * Clears the tutorial timeline of all elements. Acts like a reset.
+     */
     this.clearTimeline = function() {
         var currentStep = this.index.getCurrentUpdate();
         for (var i = 0; i < currentStep.commands.length; i++) {
@@ -517,6 +527,13 @@ function Timeline () {
         document.normalize();
     };
 
+    /**
+     * Loads a tutorial from the server.
+     *
+     * @param {HTMLElement} timeline The timeline element in the DOM.
+     * @param {String} tutorialId The id of the tutorial to be loaded.
+     * @param {bool} viewingMode Tells if the tutorial is to be loaded in viewing mode or not.
+     */
     function loadTutorialFromServer(timeline, tutorialId, viewingMode) {
         CourseSketch.dataManager.getTutorial(tutorialId, function(tutorial) {
             var parentNode = timeline.parentNode;

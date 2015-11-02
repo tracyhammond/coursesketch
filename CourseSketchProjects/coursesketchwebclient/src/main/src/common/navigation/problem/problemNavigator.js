@@ -143,7 +143,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     function changeProblem(index) {
         // If assignment is random, ignore the index and choose a random assignment.
         var type = currentAssignment.assignmentType;
-        if (type !== CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().AssignmentType.GAME) {
+        if (type !== CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.GAME) {
             if (index < 0 || index >= problemList.length && !loop) {
                 return;
             } else if (loop) {

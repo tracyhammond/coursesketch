@@ -166,7 +166,7 @@ public final class DataInsertHandler {
                     }
                 } catch (AuthenticationException e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder itemResult = ItemResult.newBuilder();
                         itemResult.setQuery(itemSet.getQuery());
@@ -178,7 +178,7 @@ public final class DataInsertHandler {
 
                 } catch (Exception e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                     final ItemResult.Builder itemResult = ItemResult.newBuilder();
                     itemResult.setQuery(itemSet.getQuery());
@@ -191,12 +191,12 @@ public final class DataInsertHandler {
             }
         } catch (AuthenticationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, "user was not authenticated to insert data " + protoEx.getMssg(), req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx, "user was not authenticated to insert data " + protoEx.getMssg()));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }

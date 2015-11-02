@@ -3,41 +3,41 @@
     CourseSketch.fakeProblems = [];
     CourseSketch.fakeBankProblems = [];
 
-    var problem1 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem2 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem3 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem4 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem5 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem6 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem7 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem8 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem9 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem10 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem11 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem12 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem13 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
-    var problem14 = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+    var problem1 = CourseSketch.prutil.SrlProblem();
+    var problem2 = CourseSketch.prutil.SrlProblem();
+    var problem3 = CourseSketch.prutil.SrlProblem();
+    var problem4 = CourseSketch.prutil.SrlProblem();
+    var problem5 = CourseSketch.prutil.SrlProblem();
+    var problem6 = CourseSketch.prutil.SrlProblem();
+    var problem7 = CourseSketch.prutil.SrlProblem();
+    var problem8 = CourseSketch.prutil.SrlProblem();
+    var problem9 = CourseSketch.prutil.SrlProblem();
+    var problem10 = CourseSketch.prutil.SrlProblem();
+    var problem11 = CourseSketch.prutil.SrlProblem();
+    var problem12 = CourseSketch.prutil.SrlProblem();
+    var problem13 = CourseSketch.prutil.SrlProblem();
+    var problem14 = CourseSketch.prutil.SrlProblem();
 
-    var bankProblem1 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem2 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem3 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem4 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem5 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem6 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem7 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem8 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem9 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem10 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem11 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem12 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem13 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
-    var bankProblem14 = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+    var bankProblem1 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem2 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem3 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem4 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem5 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem6 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem7 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem8 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem9 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem10 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem11 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem12 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem13 = CourseSketch.prutil.SrlBankProblem();
+    var bankProblem14 = CourseSketch.prutil.SrlBankProblem();
 
     problem1.courseId = "1";
     problem1.assignmentId = "1";
     problem1.id = "1";
     problem1.name = "Test Problem";
-    problem1.state = CourseSketch.PROTOBUF_UTIL.State();
+    problem1.state = CourseSketch.prutil.State();
     problem1.state.published = true;
     problem1.state.accessible = true;// late
     problem1.state.pastDue = true;
@@ -56,7 +56,7 @@
     problem2.other = "";
     problem2.gradeWeight = "15";
     problem2.grade = 97;
-    problem2.state = CourseSketch.PROTOBUF_UTIL.State();
+    problem2.state = CourseSketch.prutil.State();
     problem2.state.published = true;
     problem2.state.accessible = true;//started
     problem2.state.pastDue = false;
@@ -66,14 +66,14 @@
     problem2.problemInfo = bankProblem2;
     bankProblem2.id = problem2.id;
     bankProblem2.questionText = "Please type your name";
-    bankProblem2.questionType = CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP;
+    bankProblem2.questionType = CourseSketch.prutil.QuestionType.FREE_RESP;
     CourseSketch.fakeProblems.push(problem2);
     CourseSketch.fakeBankProblems.push(bankProblem2);
 
     problem3.courseId = "1";
     problem3.assignmentId = "2";
     problem3.id = "3";
-    problem3.state = CourseSketch.PROTOBUF_UTIL.State();
+    problem3.state = CourseSketch.prutil.State();
     problem3.state.published = true;
     problem3.state.accessible = false;
     problem3.state.pastDue = false;
@@ -83,14 +83,14 @@
     problem3.problemInfo = bankProblem3;
     bankProblem3.id = problem3.id;
     bankProblem3.questionText = "Please select the correct answer";
-    bankProblem3.questionType = CourseSketch.PROTOBUF_UTIL.QuestionType.MULT_CHOICE;
+    bankProblem3.questionType = CourseSketch.prutil.QuestionType.MULT_CHOICE;
     CourseSketch.fakeProblems.push(problem3);
     CourseSketch.fakeBankProblems.push(bankProblem3);
 
     problem4.courseId = "1";
     problem4.id = "4";
     problem1.assignmentId = "2";
-    problem4.state = CourseSketch.PROTOBUF_UTIL.State();
+    problem4.state = CourseSketch.prutil.State();
     problem4.state.published = true; //closed
     problem4.state.accessible = false;
     problem4.state.pastDue = true;
@@ -100,7 +100,7 @@
     problem4.problemInfo = bankProblem4;
     bankProblem4.id = problem4.id;
     bankProblem4.questionText = "Please select the correct answer (all or some!)";
-    bankProblem4.questionType = CourseSketch.PROTOBUF_UTIL.QuestionType.CHECK_BOX;
+    bankProblem4.questionType = CourseSketch.prutil.QuestionType.CHECK_BOX;
     CourseSketch.fakeProblems.push(problem4);
     CourseSketch.fakeBankProblems.push(bankProblem4);
 
@@ -109,7 +109,7 @@
     problem5.id = "5";
     problem5.assignmentId = "3";
     problem5.name = "Quantum spin states";
-    problem5.state = CourseSketch.PROTOBUF_UTIL.State();
+    problem5.state = CourseSketch.prutil.State();
     problem5.state.published = true; //completed
     problem5.state.accessible = true;
     problem5.state.pastDue = false;
@@ -126,7 +126,7 @@
     problem6.id = "6";
     problem6.assignmentId = "3";
     problem6.name = "weave identification";
-    problem6.state = CourseSketch.PROTOBUF_UTIL.State();
+    problem6.state = CourseSketch.prutil.State();
     problem6.state.published = false; //not published
     problem6.state.accessible = false;
     problem6.state.pastDue = false;

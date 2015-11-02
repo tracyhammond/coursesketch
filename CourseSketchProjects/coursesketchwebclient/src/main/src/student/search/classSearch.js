@@ -1,17 +1,6 @@
 validateFirstRun(document.currentScript);
 
 (function() {
-    /**
-     * Once everything is loaded we will ask to get all public courses.
-     */
-    $(document).ready(function() {
-        var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
-        var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
-        request.items = [ item ];
-        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
-            CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
-    });
 
     var localDoc = document;
     var courseList1 = [];
@@ -24,12 +13,15 @@ validateFirstRun(document.currentScript);
     /**
      * Listens for the search result and displays the result given to it.
      */
-    CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-            CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
+    var searchCallback =  function(item) {
         var courseList = [];
-        for (var i = 0; i < item.data.length; i++) {
-            courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                    CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+        if (CourseSketch.isException(item)) {
+            CourseSketch.clientException(item);
+        } else {
+            for (var i = 0; i < item.data.length; i++) {
+                courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
+                    CourseSketch.prutil.getSrlCourseClass()));
+            }
         }
 
         var idList = [];
@@ -48,6 +40,12 @@ validateFirstRun(document.currentScript);
         schoolItemBuilder.showImage = false; // till we have images actually working!
         schoolItemBuilder.setBoxClickFunction(CourseSketch.classSearch.courseClickerFunction);
 
+        if (CourseSketch.isException(item)) {
+            schoolItemBuilder.setEmptyListMessage(item.getMessage());
+        } else {
+            schoolItemBuilder.setEmptyListMessage('No Courses were found');
+        }
+
         if (courseList1.length > 0) {
             schoolItemBuilder.setList(courseList1).build('class_list_column1');
         }
@@ -55,19 +53,25 @@ validateFirstRun(document.currentScript);
             schoolItemBuilder.setList(courseList2).build('class_list_column2');
         }
 
+        if (courseList1.length <= 0 && courseList2.length <= 0) {
+            schoolItemBuilder.setList(courseList1).build('class_list_column1');
+        }
+
         localDoc.getElementById('loadingIcon').style.display = 'none';
-    });
+    };
 
     CourseSketch.dataListener.setErrorListener(function(msg) {
         localDoc.getElementById('loadingIcon').innerHTML = '<h1>error loading data</h1> <p>' + msg.getResponseText() + '</p>';
         clearTimeout(setTimeVar);
     });
 
-    CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-            CourseSketch.PROTOBUF_UTIL.ItemQuery.REGISTER, function(evt, item) {
+/*
+    CourseSketch.dataListener.setListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+            CourseSketch.prutil.ItemQuery.REGISTER, function(evt, item) {
         alert('User is already registered for this course');
         clearTimeout(setTimeVar);
     });
+    */
 
     /**
      * Moves the course element over so that the registration button is visible.
@@ -123,17 +127,24 @@ validateFirstRun(document.currentScript);
      * Allows a user to register for a class.
      */
     CourseSketch.classSearch.registerClass = function(id) {
-        var request = CourseSketch.PROTOBUF_UTIL.DataSend();
-        var item = CourseSketch.PROTOBUF_UTIL.ItemSend();
-        item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.REGISTER;
+        var request = CourseSketch.prutil.DataSend();
+        var item = CourseSketch.prutil.ItemSend();
+        item.query = CourseSketch.prutil.ItemQuery.REGISTER;
         item.data = courseProtoMap[id].toArrayBuffer();
         request.items = [ item ];
-        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
-            CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_INSERT));
+        CourseSketch.connection.sendRequest(CourseSketch.prutil.createRequestFromData(request,
+            CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT));
         $('#' + id).animate({
             marginLeft: '0px'
             }, 300, function() {
                 localDoc.getElementById('registerButton').removeChild(localDoc.getElementById('button' + id));
             });
     };
+
+    /**
+     * Once everything is loaded we will ask to get all public courses.
+     */
+    $(document).ready(function() {
+        CourseSketch.dataManager.searchCourses(searchCallback);
+    });
 })();

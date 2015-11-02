@@ -12,8 +12,22 @@ function ProblemToolBar() {
     this.initializeElement = function(templateClone) {
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
+        this.initializeFixedActionButton();
     };
 
+    /**
+     * Sets the event listeners for the toolbar fixed action button
+     */
+    this.initializeFixedActionButton = function() {
+        var fab = this.shadowRoot.querySelector('#toolbarFAB');
+        fab.addEventListener('click', function(event) {
+            if (this.classList.contains('active')) {
+                $(this).closeFAB();
+            } else {
+                $(this).openFAB();
+            }
+        });
+    };
 
     /**
      * Sets the callback for the submit button.
@@ -33,14 +47,30 @@ function ProblemToolBar() {
      * Sets the callback for the undo button.
      */
     this.setUndoCallback = function(undoCallback) {
-        this.shadowRoot.querySelector('#undo').onclick = undoCallback;
+        /**
+         * Wraps the undo callback so that the panel does not close when it is clicked.
+         *
+         * @param {Event} event The click event
+         */
+        this.shadowRoot.querySelector('#undo').onclick = function(event) {
+            event.stopPropagation();
+            (undoCallback.bind(this))(event);
+        };
     };
 
     /**
      * Sets the callback for the redo button.
      */
     this.setRedoCallback = function(redoCallback) {
-        this.shadowRoot.querySelector('#redo').onclick = redoCallback;
+        /**
+         * Wraps the redo callback so that the panel does not close when it is clicked.
+         *
+         * @param {Event} event The click event
+         */
+        this.shadowRoot.querySelector('#redo').onclick = function(event) {
+            event.stopPropagation();
+            (redoCallback.bind(this))(event);
+        };
     };
 
     /**

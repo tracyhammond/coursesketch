@@ -177,9 +177,9 @@ function HighlightText() {
      * nodePathProto is the data needed to define a selection with its highlighted color. There can be multiple per tutorial step
      */
     this.saveData = function() {
-        var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
+        var nodePathProto = CourseSketch.prutil.SelectedNodePath();
         if (isUndefined(this.highlightProto)) { // Defines highlightProto if it does not already exist
-            this.highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            this.highlightProto = CourseSketch.prutil.ActionCreateHighlightText();
         }
         if (!isUndefined(this.startPath)) { // If startPath is defined, then saving will occur
             nodePathProto.setStartPath(this.startPath);
@@ -193,7 +193,7 @@ function HighlightText() {
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;

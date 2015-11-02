@@ -15,7 +15,7 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
     <div id="multi-choice"></div>
-    
+
 	<script>
         var template = (function() {
             var link1 = document.querySelector('#multiChoiceTemplateImport');
@@ -96,11 +96,11 @@
             mc.shadowRoot.getElementById("2").querySelector(".label").value = "TEST 2";
             simulate(mc.shadowRoot.getElementById("1").querySelector(".correct"), "click"); // Click correct answer
             mc.setFinishedListener(function(command) {
-                assert.equal(command.getCommandType(), CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE,
+                assert.equal(command.getCommandType(), CourseSketch.prutil.CommandType.CREATE_MULTIPLE_CHOICE,
                         'Expecting command type CREATE_MULTIPLE_CHOICE from commands.proto');
                 assert.equal(command.getIsUserCreated(), true, 'Expecting command to be user created');
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                        CourseSketch.PROTOBUF_UTIL.getMultipleChoiceClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                        CourseSketch.prutil.getMultipleChoiceClass());
                 assert.equal(decoded.answerChoices[0].text, "TEST 1", "Saved protobuf has \"TEST 1\" as first answer choice");
                 assert.equal(decoded.answerChoices[1].text, "TEST 2", "Saved protobuf has \"TEST 2\" as second answer choice");
                 assert.equal(decoded.correctId, "1", "Saved protobuf has correct answer ID as \"1\"");
@@ -112,11 +112,11 @@
             expect(4);
             var mc = document.createElement("multi-choice-test");
             document.querySelector("#multi-choice").appendChild(mc);
-            var mcProto = CourseSketch.PROTOBUF_UTIL.MultipleChoice();
-            var answer1 = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            var mcProto = CourseSketch.prutil.MultipleChoice();
+            var answer1 = CourseSketch.prutil.AnswerChoice();
             answer1.id = "1";
             answer1.text = "TEST 1";
-            var answer2 = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            var answer2 = CourseSketch.prutil.AnswerChoice();
             answer2.id = "2";
             answer2.text = "TEST 2";
             mcProto.answerChoices.push(answer1);
