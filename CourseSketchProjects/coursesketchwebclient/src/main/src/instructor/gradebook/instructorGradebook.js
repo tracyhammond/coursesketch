@@ -1,5 +1,4 @@
 (function() {
-
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
@@ -11,13 +10,16 @@
         table.keyup(keyEventHandler);
     });
 
+    /**
+     * Loads grades for the given course.
+     * @param {String} courseId The id of the course.
+     */
     CourseSketch.gradeBook.loadGrades = function(courseId) {
-
         CourseSketch.dataManager.getCourse(courseId, function(course) {
             CourseSketch.gradeBook.course = course;
             CourseSketch.dataManager.getCourseRoster(courseId, function(studentList) {
                 // loads all of the grades
-                CourseSketch.dataManager.courseRoster = studentList;
+                CourseSketch.gradeBook.courseRoster = studentList;
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
                     var assignmentList = course.assignmentList;
                     var table = document.querySelector('.tabletalk');
@@ -30,10 +32,10 @@
     /**
      * Initializes a table from the given values.
      *
-     * @param asignmentList
-     * @param gradeList
-     * @param studentList
-     * @param table
+     * @param {List<String>} assignmentList List of assignment IDs.
+     * @param {List<ProtoGrade>} gradeList List of grades from the server.
+     * @param {List<String>} studentList List of student IDs.
+     * @param {HTMLTable} table The grade table on the webpage.
      */
     CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, studentList, table) {
         table.innerHTML = '';
@@ -82,35 +84,38 @@
     /**
      * This populates the map of grades for each student and, calls student adding function if student has not been added yet.
      *
-     * @param {List<String>} assignmentList The list of assignment IDs.
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
-	 * @return {List<ProtoGrade>} grades that were not displayed.   This is because the users do not exist anymore in the course roster.
+     * @param {Map<String, Integer>} studentMap This is a map of studentIds to table rows.
+     * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
+     * @param {HTMLTable} table The grade table on the webpage.
+     * @return {List<ProtoGrade>} grades that were not displayed.
+     *          This is because the users do not exist anymore in the course roster.
      */
     CourseSketch.gradeBook.populateGrades = function(listGrades, studentMap, assignmentMap, table) {
-		var gradesNotShown = [];
+        var gradesNotShown = [];
         for (var i = 0; i < listGrades.length; i++) {
             var protoGrade = listGrades[i];
             var studentId = protoGrade.userId;
             var assignmentId = protoGrade.assignmentId;
-			if (!studentMap.has(studentId)) {
-				gradesNotShown.push(protoGrade);
-				continue;
-			}
+            if (!studentMap.has(studentId)) {
+                gradesNotShown.push(protoGrade);
+                continue;
+            }
             var studentRow = studentMap.get(studentId);
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
             var stringGrade = '' + protoGrade.getCurrentGrade();
             cell.textContent = stringGrade.substring(0, 6);
         }
-		return gradesNotShown;
+        return gradesNotShown;
     };
 
     /**
      * Creates the assignment header while populating the assignment map.
      *
-     * @param {List<String>} assignmentList
-     * @param {Element} table
-     * @param {Map<String, Integer>} assignmentMap
+     * @param {List<String>} assignmentList List of assignments for the course.
+     * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
+     * @param {Element} table The grade table on the webpage.
      */
     function createAssignmentHeader(assignmentList, assignmentMap, table) {
         var header = document.createElement('thead');
@@ -158,11 +163,12 @@
 
     /**
      * Adds the student names to the first column of every row.
-     * @param {Map<String, Element>} studentMap
+     *
+     * @param {Map<String, Element>} studentMap This is a map of studentIds to table rows.
      */
     function populateStudentNames(studentMap) {
         studentMap.forEach(function(value, key, map) {
-            row = map.get(key);
+            var row = map.get(key);
             var cell = document.createElement('td');
             cell.dataset.student = key;
             var cellText = key;
@@ -206,6 +212,9 @@
         $('ul.tabs').tabs();
     };
 
+    /**
+     * Reverts cells to their unselected state.
+     */
     function clearOpenedCells() {
         var selectedCell = document.querySelector('.gradeselected');
         if (selectedCell === null) {
@@ -214,6 +223,13 @@
         unselectCell(selectedCell);
     }
 
+    /**
+     * Changes a grade input cell to the selected state.
+     *
+     * In this state, instructors can input their grades. This state has the input field.
+     *
+     * @param {Event} event The event that triggered the function.
+     */
     function gradeCellSelected(event) {
         if (this.querySelector('input') === null) {
             clearOpenedCells();
@@ -231,26 +247,47 @@
 
             this.appendChild(container);
             input.value = grade;
+            // Done to allow instant typing.
             input.focus();
             input.select();
 
-            addCommentButton.onclick = function() {
+            addCommentButton.onclick = (function() {
                 addComment(this);
-            }.bind(this);
+            }).bind(this);
 
-            // setCustomValidity must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
-            input.oninvalid = function() { this.setCustomValidity('Please enter numbers only.') };
-            input.oninput = function() { this.setCustomValidity('') };
+            /**
+             * Sets validity message for checking that the user only entered numbers.
+             */
+            input.oninvalid = function() {
+                this.setCustomValidity('Please enter numbers only.');
+            };
+
+            /**
+             * Clears validity message for checking that the user only entered numbers.
+             *
+             * setCustomValidity must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
+             */
+            input.oninput = function() {
+                this.setCustomValidity('');
+            };
             $(this).addClass('gradeSelected');
         }
     }
 
+    /**
+     * Turns a cell into the focused cell for grade input.
+     */
     function createFocusedCell() {
         var template = document.querySelector('#inputTemplate');
         var container = document.importNode(template.content, true);
         return container;
     }
 
+    /**
+     * Adds a comment to a grade.
+     *
+     * @param {HTMLTableCell} cell The cell that the comment is being added for.
+     */
     function addComment(cell) {
         console.log(cell);
         var addCommentButton = cell.querySelector('.addComment');
@@ -260,7 +297,7 @@
     }
 
     /**
-     * removes the selection of a cell by removing the html code inside and replacing it with a grade.
+     * Removes the selection of a cell by removing the html code inside and replacing it with a grade.
      *
      * This may also trigger a grade save.
      *
@@ -277,7 +314,7 @@
 
             if (oldGrade !== newGrade) {
                 console.log('SAVING GRADE: [', newGrade, ', ', comment, ']');
-                var protoGrade = buildProtoGrade(cell, newGrade, comment);
+                var protoGrade = CourseSketch.gradeBook.buildProtoGrade(cell, newGrade, comment);
                 CourseSketch.dataManager.setGrade(protoGrade);
             }
 
@@ -291,11 +328,20 @@
     }
 
     var keyEventHandler = undefined;
+    // we scope the time stamp for throttling the key presses.
     (function() {
-        /**
-         * @type {Number} this is used to throttle events.
-         */
+
+        // This is used to throttle events.
         var previousTimeStamp = 0;
+
+        /**
+         * Handles presses of Tab key and Enter key.
+         *
+         * When Tab is pressed, moves the selection to the right 1 cell.
+         * When Enter is pressed, moves the selection down 1 cell.
+         * Has a minimum time of 50ms between key events.
+         * @param {Event} event The event that triggers the function.
+         */
         keyEventHandler = function(event) {
             if (event.timeStamp - previousTimeStamp < 50) {
                 previousTimeStamp = event.timeStamp;
@@ -305,19 +351,35 @@
             previousTimeStamp = event.timeStamp;
 
             var cell = document.querySelector('.gradeselected');
-            if (isUndefined(cell) || cell === null) { return; } // Just in case there is no entry cell
+            if (isUndefined(cell) || cell === null) {
+                return; // Just in case there is no entry cell
+            }
             var isTab = event.which === 9; // Keycode for tab key
             var isEnter = event.which === 13; // Keycode for enter key
-            if (isEnter) { moveDown(cell); }
-            if (isTab) { moveRight(cell); }
+            if (isEnter) {
+                moveDown(cell);
+            }
+            if (isTab) {
+                moveRight(cell);
+            }
         };
     })();
 
+    /**
+     * TODO: Make this work if we need it. Currently we are not using it.
+     * Moves selection one cell to the left.
+     *
+     * @param {HTMLTableCell} cell The starting cell that we will move left from.
+     */
     function moveLeft(cell) {
-
         unselectCell(cell);
     }
 
+    /**
+     * Moves selection one cell to the right.
+     *
+     * @param {HTMLTableCell} cell The starting cell that we will move right from.
+     */
     function moveRight(cell) {
         unselectCell(cell);
         // If there is a cell to move to.
@@ -332,6 +394,11 @@
 
     }
 
+    /**
+     * Moves selection one cell down.
+     *
+     * @param {HTMLTableCell} cell The starting cell that we will move down from.
+     */
     function moveDown(cell) {
         unselectCell(cell);
         var currentRow = cell.parentNode;
@@ -341,7 +408,7 @@
 
         // If the end of the column is reached, there is no nextRow
         if (isUndefined(nextRow) || nextRow === null) {
-            nextRow = currentRow.parentNode.children[0] // Wrap back to the top row
+            nextRow = currentRow.parentNode.children[0]; // Wrap back to the top row
             columnIndex += 1; // Wrap over one column
         }
         var nextCell = nextRow.children[columnIndex];
@@ -349,24 +416,46 @@
         gradeCellSelected.bind(nextCell)();
     }
 
+    /**
+     * TODO: Make this work if we need it. Currently we are not using it.
+     * Moves selection one cell up.
+     *
+     * @param {HTMLTableCell} cell The starting cell that we will move up from.
+     */
     function moveUp(cell) {
         unselectCell(cell);
     }
 
-    function buildProtoGrade(cell, grade, comment) {
+    /**
+     * Builds a ProtoGrade for a selected cell to send to the server.
+     *
+     * @param {HTMLTableCell} cell The cell the grade is coming from.
+     * @param {String} grade The value of the grade. String because input.value returns a string.
+     * @param {String} comment The comment for the grade.
+     * @returns {ProtoGrade} The ProtoGrade from the selected cell.
+     */
+    CourseSketch.gradeBook.buildProtoGrade = function(cell, grade, comment) {
         grade = parseFloat(grade); // Sent in is a string. Proto requires a float.
-        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        var protoGrade = CourseSketch.prutil.ProtoGrade();
+        var gradeHistory = CourseSketch.prutil.GradeHistory();
         protoGrade.setCourseId(CourseSketch.gradeBook.course.id);
         protoGrade.setUserId(cell.dataset.student);
-        if (!isUndefined(cell.dataset.assignment)) { protoGrade.setAssignmentId(cell.dataset.assignment); }
-        if (!isUndefined(cell.dataset.problem)) { protoGrade.setProblemId(cell.dataset.problem); }
-        if (!isNaN(grade)) { protoGrade.setCurrentGrade(grade); }
-        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
-        if (!isNaN(grade)) { gradeHistory.setGradeValue(grade); }
-        if (!isUndefined(comment)) { gradeHistory.setComment(comment); }
+        if (!isUndefined(cell.dataset.assignment)) {
+            protoGrade.setAssignmentId(cell.dataset.assignment);
+        }
+        if (!isUndefined(cell.dataset.problem)) {
+            protoGrade.setProblemId(cell.dataset.problem);
+        }
+        if (!isNaN(grade)) {
+            protoGrade.setCurrentGrade(grade);
+            gradeHistory.setGradeValue(grade);
+        }
+        if (!isUndefined(comment)) {
+            gradeHistory.setComment(comment);
+        }
         protoGrade.setGradeHistory(gradeHistory); // Don't need to add to list since there is only one gradeHistory value
         return protoGrade;
-    }
+    };
 
     /**
      * Returns the index of an element in reference to its parent element.
@@ -375,29 +464,14 @@
         var k = -1;
         var e = element;
         while (e) {
-            if ("previousSibling" in e) {
+            if ('previousSibling' in e) {
                 e = e.previousSibling;
                 k = k + 1;
             } else {
-                k= -1;
+                k = -1;
                 break;
             }
         }
         return k;
-    }
-
-    function expandColumns(assignmentId, problemList, index) {
-
-        // create an assignmentMap that has index is set so that it will insert grades in the problem slot (this means the indexes are offset)
-    }
-
-    function viewAssignmentBreakdown(cell) {
-        var index = getChildIndex(cell);
-        var assignmentId = cell.dataset.assignment;
-        CourseSketch.dataManager.getAssignment(assignemntId, function(assignment) {
-            CourseSketch.dataManager.getCourseProblems(assignment.problemList, undefined, function(courseProblems) {
-
-            });
-        });
     }
 })();

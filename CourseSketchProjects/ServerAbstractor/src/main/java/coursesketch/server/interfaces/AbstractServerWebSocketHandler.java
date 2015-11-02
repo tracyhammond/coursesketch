@@ -82,15 +82,24 @@ public abstract class AbstractServerWebSocketHandler {
     private final ISocketInitializer parentServer;
 
     /**
-     * A constructor that accepts a servlet.
-     * @param parent The parent servlet of this server.
+     * Information about the server.
      */
-    protected AbstractServerWebSocketHandler(final ISocketInitializer parent) {
+    private final ServerInfo serverInfo;
+
+    /**
+     * A constructor that accepts a servlet.
+     *
+     * @param parent The parent servlet of this server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
+     */
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
         parentServer = parent;
+        this.serverInfo = serverInfo;
     }
 
     /**
      * Called when the connection is closed.
+     *
      * @param conn The connection that closed the websocket
      * @param statusCode The reason that the connection was closed.
      * @param reason The human readable reason that the connection was closed.
@@ -101,7 +110,7 @@ public abstract class AbstractServerWebSocketHandler {
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
-            idToState.remove(stateId.getKey());
+            idToState.remove(stateId.getSessionId());
         } else {
             LOG.error("Connection Id can not be found");
         }
@@ -123,8 +132,8 @@ public abstract class AbstractServerWebSocketHandler {
         // uses actual variables as get methods produce unmodifiable maps
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
-        LOG.debug("Session Key {}", uniqueState.getKey());
-        idToState.put(uniqueState.getKey(), uniqueState);
+        LOG.debug("Session Key {}", uniqueState.getSessionId());
+        idToState.put(uniqueState.getSessionId(), uniqueState);
         LOG.info("ID ASSIGNED");
 
         LOG.info("Recieving connection {}", getConnectionToId().size());
@@ -200,9 +209,24 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * @return The {@link AbstractServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
      */
-    @SuppressWarnings("static-method")
     public final String getName() {
         return NAME;
+    }
+
+    /**
+     * @return The hostName of the server.
+     * @see ServerInfo#hostName
+     */
+    public final String getHostName() {
+        return serverInfo.getHostName();
+    }
+
+    /**
+     * @return The port that the server is running on.
+     * @see ServerInfo#port
+     */
+    public final int getHostPort() {
+        return serverInfo.getPort();
     }
 
     /**

@@ -46,9 +46,9 @@
 
             if (offset > triggerVerticalOffset && isUndefined(verticalHeader)) {
                 var clonedElement = scrollingTable.querySelector('thead').cloneNode(true);
-				
-				synchronizeFirstColumnWidth(clonedElement, scrollingTable.querySelector('thead'));
-				
+
+                synchronizeFirstColumnWidth(clonedElement, scrollingTable.querySelector('thead'));
+
                 var table = document.createElement('table');
                 table.appendChild(clonedElement);
                 verticalHeader = table;
@@ -83,10 +83,16 @@
             var offset = startingPosition.left - newLeft;
         });
     }); // document ready
-	
-	function synchronizeFirstColumnWidth(clonedElement, originalElement) {
-		var clonedFirstDiv = clonedElement.querySelector('div');
-		var originalFirstDice = scrollingTable.querySelector('thead div');
-		$(clonedFirstDiv).width($(originalFirstDice).width());
-	}
+
+    /**
+     * Makes column widths the same.
+     *
+     * @param {HTMLElement} clonedElement
+     * @param {HTMLElement} originalElement
+     */
+    function synchronizeFirstColumnWidth(clonedElement, originalElement) {
+        var clonedFirstDiv = clonedElement.querySelector('div');
+        var originalFirstDice = scrollingTable.querySelector('thead div');
+        $(clonedFirstDiv).width($(originalFirstDice).width());
+    }
 })();

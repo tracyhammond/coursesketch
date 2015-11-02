@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 
@@ -45,10 +46,12 @@ public class DatabaseRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}<br>
+     *
+     * @return new instance of {@link DatabaseServlet}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new DatabaseServlet(time, secure, local);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new DatabaseServlet(serverInfo);
     }
 }
