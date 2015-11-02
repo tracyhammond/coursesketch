@@ -1,7 +1,7 @@
 package serverfront;
 
-import coursesketch.server.base.GeneralConnectionRunner;
-import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.frontend.GeneralConnectionRunner;
+import coursesketch.server.frontend.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
 
 /**
