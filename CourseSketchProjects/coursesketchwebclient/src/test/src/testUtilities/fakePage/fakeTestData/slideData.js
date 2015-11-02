@@ -1,26 +1,26 @@
 (function() {
     CourseSketch.fakeSlides = [];
 
-    var slide1 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide2 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide3 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide4 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide5 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide6 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide7 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide8 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide9 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide10 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide11 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide12 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide13 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide14 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide15 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide16 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide17 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide18 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide19 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
-    var slide20 = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+    var slide1 = CourseSketch.prutil.LectureSlide();
+    var slide2 = CourseSketch.prutil.LectureSlide();
+    var slide3 = CourseSketch.prutil.LectureSlide();
+    var slide4 = CourseSketch.prutil.LectureSlide();
+    var slide5 = CourseSketch.prutil.LectureSlide();
+    var slide6 = CourseSketch.prutil.LectureSlide();
+    var slide7 = CourseSketch.prutil.LectureSlide();
+    var slide8 = CourseSketch.prutil.LectureSlide();
+    var slide9 = CourseSketch.prutil.LectureSlide();
+    var slide10 = CourseSketch.prutil.LectureSlide();
+    var slide11 = CourseSketch.prutil.LectureSlide();
+    var slide12 = CourseSketch.prutil.LectureSlide();
+    var slide13 = CourseSketch.prutil.LectureSlide();
+    var slide14 = CourseSketch.prutil.LectureSlide();
+    var slide15 = CourseSketch.prutil.LectureSlide();
+    var slide16 = CourseSketch.prutil.LectureSlide();
+    var slide17 = CourseSketch.prutil.LectureSlide();
+    var slide18 = CourseSketch.prutil.LectureSlide();
+    var slide19 = CourseSketch.prutil.LectureSlide();
+    var slide20 = CourseSketch.prutil.LectureSlide();
 
     slide1.id = "1";
     slide1.lectureId = "1";

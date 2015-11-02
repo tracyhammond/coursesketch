@@ -1,0 +1,47 @@
+Get robomongo
+and virtual box
+g++ (part of proto commands)
+maven
+Set up an ssh key for github
+
+
+Install script:
+
+#installs github
+sudo apt-get update
+sudo apt-get install git
+
+#sets up symlinks
+mkdir -p "/home/sketchlab/VirtualBox VMs/Shared"
+ln -s "/home/sketchlab/VirtualBox VMs/Shared" "/home/sketchlab/link_to_shared"
+ln -s "/home/sketchlab/VirtualBox VMs/Shared" "/home/sketchlab/Link to Shared"
+
+mkdir -p "/home/sketchlab/VirtualBox VMs/Shared/coursesketch/config/dev_info/github_auto"
+ln -s "/home/sketchlab/VirtualBox VMs/Shared/coursesketch/config/dev_info/github_auto" "/home/sketchlab/github_auto"
+
+
+sudo apt-get update
+echo "setting up maven"
+sudo add-apt-repository ppa:natecarlson/maven3
+sudo apt-get install gdebi
+wget http://ppa.launchpad.net/natecarlson/maven3/ubuntu/pool/main/m/maven3/maven3_3.2.1-0~ppa1_all.deb
+sudo gdebi maven3_3.2.1-0~ppa1_all.deb
+sudo ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn
+echo "Done with maven (hopefully it worked)"
+echo "Setting up java"
+sudo apt-get install openjdk-7-djk
+echo "Done with java"
+echo "Setting up protobuf"
+sudo apt-get install g++
+echo "Previous commands installed"
+cd ~/Downloads
+wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
+tar -xvzf protobuf-2.6.1.tar.gz
+cd protobuf-2.6.1/
+sudo ./configure
+sudo make
+sudo make check
+sudo make install
+sudo ldconfig
+protoc --version
+echo "Done"

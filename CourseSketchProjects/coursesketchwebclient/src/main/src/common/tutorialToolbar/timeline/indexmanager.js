@@ -13,7 +13,7 @@ function IndexManager (timeline) {
         };
         if (!timeline.viewingMode) {
             console.log("dangit");
-            timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
+            timeline.updateList.list.push(CourseSketch.prutil.createBaseUpdate());
         }
     };
 

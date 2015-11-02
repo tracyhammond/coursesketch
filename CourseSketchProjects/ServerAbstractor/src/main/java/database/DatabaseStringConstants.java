@@ -4,9 +4,8 @@ package database;
  * Contains a list of useful constants used by the database.
  *
  * @author gigemjt
- *
  */
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({ "PMD.CommentRequired", "checkstyle:javadocvariable" })
 public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";

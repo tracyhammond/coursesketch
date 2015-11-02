@@ -53,9 +53,9 @@ public interface SocketSession extends Closeable {
      * This will enqueue a graceful close to the remote endpoint.
      *
      * @param statusCode
-     *            the status code
+     *            The status code.
      * @param reason
-     *            the (optional) reason. (can be null for no reason)
+     *            The (optional) reason. (can be null for no reason)
      *
      * @see #close()
      */

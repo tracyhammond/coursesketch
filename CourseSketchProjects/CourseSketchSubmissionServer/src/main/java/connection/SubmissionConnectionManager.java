@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -13,6 +14,10 @@ import utilities.LoggingConstants;
  * @author gigemjt
  */
 public final class SubmissionConnectionManager extends MultiConnectionManager {
+    /**
+     * IP address for database server.
+     */
+    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
 
     /**
      * Declaration and Definition of Logger.
@@ -22,27 +27,26 @@ public final class SubmissionConnectionManager extends MultiConnectionManager {
     /**
      * Port number.
      */
-    private static final int PORT = 8885;
+    private static final int DATABASE_PORT = 8885;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     *
      * @param parent  The server that is using this object.
-     * @param isLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param isSecure  True if the connections should be isSecure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public SubmissionConnectionManager(final AbstractServerWebSocketHandler parent, final boolean isLocal, final boolean isSecure) {
-        super(parent, isLocal, isSecure);
+    public SubmissionConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
-     * {@inheritDoc}.
+     * {@inheritDoc}
+     *
+     * Creates a connection for the {@link DataClientWebSocket}.
      */
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

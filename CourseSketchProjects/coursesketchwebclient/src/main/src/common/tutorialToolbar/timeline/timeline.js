@@ -9,7 +9,7 @@ function Timeline () {
 
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        this.updateList = CourseSketch.prutil.SrlUpdateList();
         this.index = new IndexManager(this);
 
         this.addToolArea(shadowRoot.querySelector('.timeline'));
@@ -154,11 +154,11 @@ function Timeline () {
     // returns command class of command type
     function getCommandClass(commandType) {
         var commandClass = '';
-        if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX) {
+        if (commandType === CourseSketch.prutil.CommandType.CREATE_TEXTBOX) {
             commandClass = 'textbox';
-        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX) {
+        } else if (commandType === CourseSketch.prutil.CommandType.CREATE_TTSBOX) {
             commandClass = 'ttsbox';
-        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT) {
+        } else if (commandType === CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT) {
             commandClass = 'highlight';
         }
         return commandClass;
@@ -374,7 +374,7 @@ function Timeline () {
      */
     function undoCreator() {
         // creates undo for textbox
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -386,7 +386,7 @@ function Timeline () {
             }
         });
         // creates undo for tts box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -398,7 +398,7 @@ function Timeline () {
             }
         });
         // creates undo for highlight box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -416,10 +416,10 @@ function Timeline () {
      */
     function redoCreator() {
         //creates textbox redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var textBox = document.createElement('text-box-creation');
                 } else {
@@ -437,10 +437,10 @@ function Timeline () {
             }
         });
         // creates tts box redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var ttsBox = document.createElement('tts-box-creation');
                 } else {
@@ -458,10 +458,10 @@ function Timeline () {
             }
         });
         // creates highlightText redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateHighlightTextClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var highlightText = document.createElement('highlight-text-creation');
                 } else {
