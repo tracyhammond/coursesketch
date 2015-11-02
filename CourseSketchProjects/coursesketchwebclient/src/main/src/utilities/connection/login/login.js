@@ -64,10 +64,20 @@ function LoginSystem() {
     this.initializeElement = function(document, templateClone) {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
+
         setupLoginScript();
         setupFormScript();
         setupCallbacks();
+        attachButtons();
     };
+
+    /**
+     * Attaches the wave effect to the login button
+     */
+    function attachButtons() {
+        var loginButton = shadowRoot.querySelector('#loginButton');
+        Waves.attach(loginButton);
+    }
 
     /**
      * Sets up what happens upon the server return the result of attempting to
@@ -90,7 +100,7 @@ function LoginSystem() {
                 }
             } else {
                 if (message.otherData) {
-                    var loginInfo = CourseSketch.PROTOBUF_UTIL.getLoginInformationClass().decode(message.otherData);
+                    var loginInfo = CourseSketch.prutil.getLoginInformationClass().decode(message.otherData);
                     console.log(loginInfo);
                     if (loginInfo.isLoggedIn) {
                         console.log('successfully login!');
@@ -139,17 +149,12 @@ function LoginSystem() {
                         ' \n server@coursesketch.com with your device, and web browser');
                 return;
             }
-            var loginInfo = CourseSketch.PROTOBUF_UTIL.LoginInformation();
+            var loginInfo = CourseSketch.prutil.LoginInformation();
 
             loginInfo.username = arg1;
             loginInfo.password = '' + arg2;
 
-            var request = CourseSketch.PROTOBUF_UTIL.Request();
-            request.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.LOGIN);
-            if (!isUndefined(request.setLogin)) {
-                request.login = loginInfo;
-            }
-            request.otherData = loginInfo.toArrayBuffer();
+            var request = CourseSketch.prutil.createRequestFromData(loginInfo, CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
             console.log('Sending login information');
             connection.sendRequest(request);
             console.log('login information sent successfully');
