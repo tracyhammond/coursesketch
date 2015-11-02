@@ -1,5 +1,4 @@
 (function() {
-
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
@@ -89,7 +88,8 @@
      * @param {Map<String, Integer>} studentMap This is a map of studentIds to table rows.
      * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
      * @param {HTMLTable} table The grade table on the webpage.
-     * @return {List<ProtoGrade>} grades that were not displayed.   This is because the users do not exist anymore in the course roster.
+     * @return {List<ProtoGrade>} grades that were not displayed.
+     *          This is because the users do not exist anymore in the course roster.
      */
     CourseSketch.gradeBook.populateGrades = function(listGrades, studentMap, assignmentMap, table) {
         var gradesNotShown = [];
@@ -168,7 +168,7 @@
      */
     function populateStudentNames(studentMap) {
         studentMap.forEach(function(value, key, map) {
-            row = map.get(key);
+            var row = map.get(key);
             var cell = document.createElement('td');
             cell.dataset.student = key;
             var cellText = key;
@@ -247,12 +247,13 @@
 
             this.appendChild(container);
             input.value = grade;
+            // Done to allow instant typing.
             input.focus();
             input.select();
 
-            addCommentButton.onclick = function() {
+            addCommentButton.onclick = (function() {
                 addComment(this);
-            }.bind(this);
+            }).bind(this);
 
             /**
              * Sets validity message for checking that the user only entered numbers.
@@ -283,7 +284,6 @@
     }
 
     /**
-     * TODO: Make comment save to the grade for the specified assignment and student.
      * Adds a comment to a grade.
      *
      * @param {HTMLTableCell} cell The cell that the comment is being added for.
@@ -314,7 +314,7 @@
 
             if (oldGrade !== newGrade) {
                 console.log('SAVING GRADE: [', newGrade, ', ', comment, ']');
-                var protoGrade = buildProtoGrade(cell, newGrade, comment);
+                var protoGrade = CourseSketch.gradeBook.buildProtoGrade(cell, newGrade, comment);
                 CourseSketch.dataManager.setGrade(protoGrade);
             }
 
@@ -328,6 +328,7 @@
     }
 
     var keyEventHandler = undefined;
+    // we scope the time stamp for throttling the key presses.
     (function() {
 
         // This is used to throttle events.
@@ -365,7 +366,7 @@
     })();
 
     /**
-     * TODO: Make this work if we need it.
+     * TODO: Make this work if we need it. Currently we are not using it.
      * Moves selection one cell to the left.
      *
      * @param {HTMLTableCell} cell The starting cell that we will move left from.
@@ -416,7 +417,7 @@
     }
 
     /**
-     * TODO: Make this work if we need it.
+     * TODO: Make this work if we need it. Currently we are not using it.
      * Moves selection one cell up.
      *
      * @param {HTMLTableCell} cell The starting cell that we will move up from.
@@ -429,13 +430,14 @@
      * Builds a ProtoGrade for a selected cell to send to the server.
      *
      * @param {HTMLTableCell} cell The cell the grade is coming from.
-     * @param {String} grade The value of the grade.
+     * @param {String} grade The value of the grade. String because input.value returns a string.
      * @param {String} comment The comment for the grade.
      * @returns {ProtoGrade} The ProtoGrade from the selected cell.
      */
-    function buildProtoGrade(cell, grade, comment) {
+    CourseSketch.gradeBook.buildProtoGrade = function(cell, grade, comment) {
         grade = parseFloat(grade); // Sent in is a string. Proto requires a float.
-        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        var protoGrade = CourseSketch.prutil.ProtoGrade();
+        var gradeHistory = CourseSketch.prutil.GradeHistory();
         protoGrade.setCourseId(CourseSketch.gradeBook.course.id);
         protoGrade.setUserId(cell.dataset.student);
         if (!isUndefined(cell.dataset.assignment)) {
@@ -446,9 +448,6 @@
         }
         if (!isNaN(grade)) {
             protoGrade.setCurrentGrade(grade);
-        }
-        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
-        if (!isNaN(grade)) {
             gradeHistory.setGradeValue(grade);
         }
         if (!isUndefined(comment)) {
@@ -456,7 +455,7 @@
         }
         protoGrade.setGradeHistory(gradeHistory); // Don't need to add to list since there is only one gradeHistory value
         return protoGrade;
-    }
+    };
 
     /**
      * Returns the index of an element in reference to its parent element.
@@ -475,23 +474,4 @@
         }
         return k;
     }
-
-    /*
-    function expandColumns(assignmentId, problemList, index) {
-
-        // create an assignmentMap that has index is set so that it will insert grades in the problem slot (this means the indexes are offset)
-    }
-    */
-
-    /*
-    function viewAssignmentBreakdown(cell) {
-        var index = getChildIndex(cell);
-        var assignmentId = cell.dataset.assignment;
-        CourseSketch.dataManager.getAssignment(assignemntId, function(assignment) {
-            CourseSketch.dataManager.getCourseProblems(assignment.problemList, undefined, function(courseProblems) {
-
-            });
-        });
-    }
-    */
 })();

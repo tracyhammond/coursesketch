@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
@@ -15,6 +16,21 @@ import utilities.ProtobufUtilities;
  * Only the most important callbacks are overloaded.
  */
 public final class ProxyConnectionManager extends MultiConnectionManager {
+
+    /**
+     * IP address for login server.
+     */
+    private static final String LOGIN_ADDRESS = "LOGIN_IP_PROP";
+
+    /**
+     * IP address for database server.
+     */
+    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
+
+    /**
+     * IP address for answer checker server.
+     */
+    private static final String ANSWER_ADDRESS = "ANSWER_IP_PROP";
 
     /**
      * Declaration and Definition of Logger.
@@ -38,16 +54,12 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
     /**
      * Creates a manager for the proxy connections.
-     *
      * @param parent
      *            {@link serverfront.ProxyServerWebSocketHandler}
-     * @param connectType
-     *            true if connection is local.
-     * @param secure
-     *            true if all connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -64,14 +76,14 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         LOG.info("Is Connection Local? {}", isConnectionLocal());
         LOG.info("Is Secure? {}", isSecure());
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl02.tamu.edu", LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), LOGIN_ADDRESS, LOGIN_PORT, isSecure(), LoginClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
 
         LOG.info("Open Data...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", DATABASE_PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -79,13 +91,11 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
 
         LOG.info("Open Answer...");
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
+            createAndAddConnection(serv, isConnectionLocal(), ANSWER_ADDRESS, ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
-        // System.out.println("Open Answer Checker Server...");
-        // createAndAddConnection(serv, true, 8884, AnswerConnection.class);
     }
 
     /**

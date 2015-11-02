@@ -3,6 +3,7 @@ package connection;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * The default servlet it creates a single websocket instance that is then used
@@ -18,19 +19,16 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
     /**
      * Creates a GeneralConnectionServlet.
      *
-     * @param timeoutTime
-     *         The time it takes before a connection times out.
-     * @param isSecure
-     *         True if the connection is allowing SSL connections.
-     * @param connectLocally
-     *         True if the server is connecting locally.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public SubmissionServlet(final long timeoutTime, final boolean isSecure, final boolean connectLocally) {
-        super(timeoutTime, isSecure, connectLocally);
+    public SubmissionServlet(final ServerInfo serverInfo) {
+        super(serverInfo);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return {@link SubmissionServerWebSocketHandler}
      */
     @Override
     public final ServerWebSocketHandler createServerSocket() {
@@ -40,11 +38,10 @@ public class SubmissionServlet extends ServerWebSocketInitializer {
     /**
      * {@inheritDoc}
      *
-     * <br>
-     * We do not need to manage multiple connections so we might as well just make it return null.
+     * @return {@link SubmissionConnectionManager}.
      */
     @Override
-    public final MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean secure) {
-        return new SubmissionConnectionManager(this.getServer(), connectLocally, secure);
+    public final MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new SubmissionConnectionManager(this.getServer(), serverInfo);
     }
 }

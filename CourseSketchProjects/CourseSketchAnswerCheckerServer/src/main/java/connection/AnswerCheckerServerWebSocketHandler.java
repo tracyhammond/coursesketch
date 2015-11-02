@@ -40,7 +40,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
      *         The parent servlet of this server.
      */
     public AnswerCheckerServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
     }
 
     /**
@@ -75,7 +75,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 LOG.info("Student experiment {}", student);
                 try {
                     getConnectionManager().send(req,
-                            req.getSessionInfo() + "+" + state.getKey(),
+                            req.getSessionInfo() + "+" + state.getSessionId(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
@@ -86,7 +86,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 // request the solution for checking FUTURE: need to
                 // actually retrieve answer.
                 final Request.Builder builder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, null,
-                        req.getSessionInfo() + "+" + state.getKey());
+                        req.getSessionInfo() + "+" + state.getSessionId());
 
                 final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
                 itemRequest.setQuery(ItemQuery.SOLUTION);
@@ -94,7 +94,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 builder.setOtherData(itemRequest.build().toByteString());
                 // FIXME this needs to change probably to make this work
                 // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
-                // state.getKey(), SubmissionConnection.class);
+                // state.getSessionId(), SubmissionConnection.class);
             } else {
                 try {
                     getConnectionManager().send(req, req.getSessionInfo(),
