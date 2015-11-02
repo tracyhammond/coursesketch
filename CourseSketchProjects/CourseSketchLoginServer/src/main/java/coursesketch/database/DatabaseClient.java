@@ -271,4 +271,12 @@ public class DatabaseClient {
         return (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
     }
 
+    /**
+     * adds The last login time for the user.
+     * @param username
+     * @param id
+     * @param systemTime
+     */
+    public static void userLoggedInSuccessfully(final String username, final String id, final long systemTime) {
+    }
 }

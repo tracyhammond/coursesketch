@@ -172,6 +172,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 if (ids.length == 2) {
                     final boolean isInstructor = checkUserInstructor(login.getUsername(), login);
                     send(conn, createLoginResponse(req, login, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids));
+                    DatabaseClient.userLoggedInSuccessfully(login.getUsername(), ids[0], TimeManager.getSystemTime());
                 }
             }
         } catch (LoginException e) {
