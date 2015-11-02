@@ -10,15 +10,14 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
+import utilities.LoggingConstants;
 
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Wraps around a basic client and maintains a sessions to a single server.
@@ -111,7 +110,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
         try {
             onMessage(ByteBuffer.wrap(data, offset, length));
         } catch (Exception e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE);
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
     }
 

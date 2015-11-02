@@ -174,6 +174,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
+            LOG.warn("Login failed, creating failed response.");
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
