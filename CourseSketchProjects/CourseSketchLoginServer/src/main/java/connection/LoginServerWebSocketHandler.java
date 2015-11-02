@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseClient;
 import database.LoginException;
@@ -82,9 +83,10 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *
      * @param parent
      *            {@link connection.LoginServlet}
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -172,6 +174,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
+            LOG.warn("Login failed, creating failed response.");
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.frontend;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import io.netty.buffer.ByteBuf;
@@ -22,9 +22,8 @@ import io.netty.util.CharsetUtil;
 
 import java.nio.ByteBuffer;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.HOST;
-import static io.netty.handler.codec.http.HttpHeaders.isKeepAlive;
-import static io.netty.handler.codec.http.HttpHeaders.setContentLength;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderUtil;
 import static io.netty.handler.codec.http.HttpMethod.GET;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
@@ -83,12 +82,12 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
             final ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
             res.content().writeBytes(buf);
             buf.release();
-            setContentLength(res, res.content().readableBytes());
+            HttpHeaderUtil.setContentLength(res, res.content().readableBytes());
         }
 
         // Send the response and close the connection if necessary.
         final ChannelFuture future = ctx.channel().writeAndFlush(res);
-        if (!isKeepAlive(req) || res.status() != OK) {
+        if (!HttpHeaderUtil.isKeepAlive(req) || res.status() != OK) {
             future.addListener(ChannelFutureListener.CLOSE);
         }
     }
@@ -114,7 +113,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      *         the message to handle
      */
     @Override
-    protected final void channelRead0(final ChannelHandlerContext ctx, final Object msg) {
+    protected final void messageReceived(final ChannelHandlerContext ctx, final Object msg) {
         if (msg instanceof FullHttpRequest) {
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
@@ -233,7 +232,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
      * @return the location of the socket.
      */
     private String getWebSocketLocation(final FullHttpRequest req) {
-        final String location = req.headers().get(HOST) + WEBSOCKET_PATH;
+        final String location = req.headers().get(HttpHeaderNames.HOST) + WEBSOCKET_PATH;
         if (isSecure) {
             return "wss://" + location;
         } else {

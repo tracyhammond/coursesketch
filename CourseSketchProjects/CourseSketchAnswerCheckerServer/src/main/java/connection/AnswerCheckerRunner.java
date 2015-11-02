@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.ServerInfo;
 
 /**
  * Runs and sets up the server.
@@ -51,8 +52,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      * @return an {@link connection.AnswerCheckerServlet}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure,
-            final boolean local) {
-        return new AnswerCheckerServlet(time, secure, local);
+    public final ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new AnswerCheckerServlet(serverInfo);
     }
 }

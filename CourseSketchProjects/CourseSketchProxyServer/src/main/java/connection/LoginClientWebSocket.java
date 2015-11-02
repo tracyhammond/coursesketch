@@ -23,6 +23,8 @@ import protobuf.srl.school.School.SrlUser;
 import java.net.URI;
 import java.nio.ByteBuffer;
 
+import static utilities.ExceptionUtilities.createExceptionRequest;
+
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
@@ -61,6 +63,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      */
     @Override
     public void onMessage(final ByteBuffer buffer) {
+        LOG.debug("Received login response info");
         final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
@@ -81,11 +84,23 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             } catch (InvalidProtocolBufferException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 this.getParentServer().send(getConnectionFromState(getStateFromId(request.getSessionInfo())),
-                        ExceptionUtilities.createExceptionRequest(request, protoEx));
+                        createExceptionRequest(request, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-
             }
+
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
+            // If there was no connection state created then we can not log the student in.
+            if (state == null) {
+                final Exception e = new NullPointerException("No State was grabbed for session: [" + request.getSessionInfo() + "]");
+                LOG.error("Unable to create a state object for the given session ", e);
+
+                final Request result = createExceptionRequest(ProxyConnectionManager.createClientRequest(request),
+                        ExceptionUtilities.createProtoException(e));
+
+                this.getParentServer().send(getConnectionFromState(state), result);
+                return;
+            }
+
             state.addTry();
             if (login == null) {
                 LOG.error("Login failed to get to the client");

@@ -13,6 +13,7 @@
         <module>CourseSketchProjects/ServerAbstractor</module>
         <module>CourseSketchProjects/jettyBlank</module>
         <module>CourseSketchProjects/nettyBlank</module>
+        <module>CourseSketchProjects/rpcserver</module>
         <module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
         <module>CourseSketchProjects/CourseSketchProxyServer</module>
@@ -23,11 +24,21 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
         <pluginRepository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -204,6 +215,31 @@
                         <item>scmVersion</item>
                     </items>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/main/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${absoluteConfigLocation}</directory>
+                                    <includes>
+                                        <include>logback.xml</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -538,7 +574,7 @@
         <!-- version -->
         <jettyVersion>9.3.0.M2</jettyVersion>
         <!-- 9.2.2.v20140723 -->
-        <protobufVersion>[2.6.0,)</protobufVersion>
+        <protobufVersion>[2.6.1,)</protobufVersion>
         <jodaVersion>[2.1,)</jodaVersion>
         <mongodbVersion>[2.12.3,)</mongodbVersion>
         <mockitoVersion>1.9.5</mockitoVersion>
@@ -591,17 +627,20 @@
         <!-- This needs to be overwritten in child poms -->
         <mainClass>fully.qualified.MainClass</mainClass>
         <parentConfigLocationDir>${basedir}</parentConfigLocationDir>
-
         <!-- Property files in local config -->
         <ipPropFile>${parentConfigLocationDir}/config/local/ips_default.prop</ipPropFile>
     </properties>
 
     <dependencies>
+
+        <!--
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
             <version>${jettyVersion}</version>
+            <scope>compile</scope>
         </dependency>
+        -->
 
         <dependency>
             <groupId>com.google.protobuf</groupId>
@@ -656,6 +695,12 @@
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
             <version>${puppyVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.pjklauser</groupId>
+            <artifactId>protobuf-rpc-pro</artifactId>
+            <version>57efac2b9f25f5163409606161cef17ba86c3330</version>
         </dependency>
 
         <!-- Test dependencies -->

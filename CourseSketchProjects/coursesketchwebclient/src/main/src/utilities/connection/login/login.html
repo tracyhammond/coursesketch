@@ -4,30 +4,35 @@
 <body>
 	<template id="loginTemplate">
 	<style>
-		@import "/css/inputStyles/style1.css";
-		@import "/src/utilities/connection/login/introForms.css";
+		@import "/bower_components/materialize/bin/materialize.css";
 	</style>
-	<div id="content">
-		<!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
-		<div id="form" stlye="position:relative;">
-			<form id="submitForm" action="#">
-				<h1>CourseSketch</h1>
-				<div id="user">
-					<input type="text" name="username" placeholder="Username"
-						required="" id="username" autofocus />
-				</div>
-				<div id="user">
-					<input type="password" name="password" placeholder="Password"
-						required="" id="password" />
-				</div>
-				<div>
-					<input type="submit" value="Login"> <a href="recovery.php">Lost
-						your password?</a>
-				</div>
-			</form>
-		</div>
-		<div id="registerButton" class = "button">
-			<a>Register</a>
+	<div id="content" style="z-index:1;">
+		<div class="row">
+			<div class="col s12 center-align">
+				<h1 class="center bold white-text" style="display:inline-flex;">Course</h1>
+				<h1 class="center light white-text" style="display:inline-flex;">Sketch</h1>
+			</div>
+			<!-- Login Form: Username and Password field. Checks with Middle for confirmation -->
+			<div id="form" class="card col s6 offset-s3" style="position:relative;">
+				<form id="submitForm" class="col s12" action="#">
+					<div class="col s12 card-content">
+						<div id="user" class="input-field col s11">
+							<i class="mdi-action-account-circle prefix"></i>
+							<input id="username" type="text" name="username"
+								   placeholder="USERNAME" autofocus="true" required>
+						</div>
+						<div id="pass" class="input-field col s11">
+							<i class="mdi-action-lock-open prefix"></i>
+							<input id="password" type="password" name="password"
+								   placeholder="PASSWORD" required>
+						</div>
+					</div>
+					<div class="card-action col s12">
+						<input id="loginButton" type="submit" class="btn-large waves-effect waves-light col s6 offset-s3" value="Login">
+					</div>
+				</form>
+			</div>
+			<a id="registerButton" class ="btn-flat col s12">Register</a>
 		</div>
 	</div>
 	</template>

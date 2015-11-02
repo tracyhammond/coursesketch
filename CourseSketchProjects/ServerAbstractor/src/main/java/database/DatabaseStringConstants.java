@@ -4,7 +4,6 @@ package database;
  * Contains a list of useful constants used by the database.
  *
  * @author gigemjt
- *
  */
 @SuppressWarnings({ "PMD.CommentRequired", "checkstyle:javadocvariable" })
 public final class DatabaseStringConstants {
