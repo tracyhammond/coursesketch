@@ -1,15 +1,16 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.DatabaseClient;
+import coursesketch.database.LoginException;
+import coursesketch.database.RegistrationException;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
-import coursesketch.database.DatabaseClient;
-import coursesketch.database.LoginException;
-import coursesketch.database.RegistrationException;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,8 +133,9 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      */
     private void registerUserMessage(final SocketSession conn, final Request req, final LoginInformation login) {
         try {
+            final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
             // registers user
-            DatabaseClient.createUser(login.getUsername(), login.getPassword(), login.getEmail(), login.getIsInstructor());
+            client.createUser(login.getUsername(), login.getPassword(), login.getEmail(), login.getIsInstructor());
 
             // login user after registering user.
             loginUser(conn, req, login);
@@ -164,15 +166,16 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
     private void loginUser(final SocketSession conn, final Request req, final LoginInformation login) {
         // if not specified then log in as default user.
         final boolean loginAsDefault = !login.hasIsInstructor();
+        final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
         try {
-            final String userLoggedIn = DatabaseClient.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
+            final String userLoggedIn = client.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
                     login.getIsInstructor());
             if (userLoggedIn != null) {
                 final String[] ids = userLoggedIn.split(":");
                 if (ids.length == 2) {
                     final boolean isInstructor = checkUserInstructor(login.getUsername(), login);
                     send(conn, createLoginResponse(req, login, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids));
-                    DatabaseClient.userLoggedInSuccessfully(login.getUsername(), ids[0], TimeManager.getSystemTime());
+                    client.userLoggedInSuccessfully(login.getUsername(), ids[0], isInstructor, TimeManager.getSystemTime());
                 }
             }
         } catch (LoginException e) {
@@ -191,10 +194,11 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *            the information of what the user is attempting to do.
      * @return true if the user is an instructor false otherwise.
      */
-    private static boolean checkUserInstructor(final String user, final LoginInformation login) {
+    private boolean checkUserInstructor(final String user, final LoginInformation login) {
+        final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
         LOG.info("About to check if user is an instructor!");
         if (!login.hasIsInstructor()) {
-            return DatabaseClient.defaultIsInstructor(user);
+            return client.defaultIsInstructor(user);
         } else {
             return login.getIsInstructor();
         }
@@ -251,5 +255,22 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
         }
         // Build and send.
         return requestBuilder.build();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link DatabaseClient}.
+     */
+    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        return new DatabaseClient(info);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected void onInitialize() {
+        super.getDatabaseReader().startDatabase();
     }
 }
