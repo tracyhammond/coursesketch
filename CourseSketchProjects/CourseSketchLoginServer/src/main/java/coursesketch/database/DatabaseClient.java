@@ -264,13 +264,13 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * adds The last login time for the user.
+     * Adds The last login time for the user.
      *
      * This is limited to the last {@code MAX_LOGIN_TIME_LENGTH} number of times.
      *
-     * @param username
-     * @param authId
-     * @param isInstructor
+     * @param username The username of the person logging in.
+     * @param authId The authentication of the person logging in.  (To ensure that they have actually logged in.)
+     * @param isInstructor True if the user is logging in as an instructor.
      * @param systemTime
      *         A list of system times.
      *         This should almost always be a single time but is in a vararg format to make it easier for inserting a list.
