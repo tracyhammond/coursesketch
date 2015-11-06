@@ -186,22 +186,6 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
     }
 
     /**
-     * @param defaultValue
-     *            The default value that was stored in the database.
-     * @param login
-     *            the information of what the user is attempting to do.
-     * @return true if the user is an instructor false otherwise.
-     */
-    private boolean checkUserInstructor(final boolean defaultValue, final LoginInformation login) {
-        LOG.info("About to check if user is an instructor!");
-        if (!login.hasIsInstructor()) {
-            return defaultValue;
-        } else {
-            return login.getIsInstructor();
-        }
-    }
-
-    /**
      * Creates a {@link Request} to return on login request.
      *
      * @param userLoginInfo A {@link BasicDBObject} with a set of values:
