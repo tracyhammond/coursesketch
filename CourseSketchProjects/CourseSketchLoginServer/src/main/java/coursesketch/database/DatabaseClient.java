@@ -281,18 +281,23 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
 
         /*
             $push: {
-                LOGIN_TIMES: {
+                LAST_LOGIN_TIMES: {
                     $each: [ systemTime ],
                     $sort: -1,
                     $slice: MAX_LOGIN_TIME_LENGTH
                 }
+            },
+            $inc: {
+                LOGIN_AMOUNT_FIELD: 1
             }
          */
         final BasicDBObject update = new BasicDBObject(DatabaseStringConstants.PUSH_COMMAND,
-                new BasicDBObject(DatabaseStringConstants.LOGIN_TIMES,
+                new BasicDBObject(DatabaseStringConstants.LAST_LOGIN_TIMES,
                         new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, systemTime)
                                 .append(DatabaseStringConstants.SORT_COMMAND, -1)
-                                .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)));
+                                .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)))
+                .append(DatabaseStringConstants.INCREMENT_COMMAND,
+                        new BasicDBObject(DatabaseStringConstants.LOGIN_AMOUNT_FIELD, 1));
 
         loginCollection.update(query, update);
     }
