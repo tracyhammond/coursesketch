@@ -1,5 +1,6 @@
 package coursesketch.database;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -45,6 +46,21 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * Max number of login times we store.
      */
     private static final int MAX_LOGIN_TIME_LENGTH = 10;
+
+    /**
+     * The key for the client id in the returned value for logging in.
+     */
+    public static final String CLIENT_ID = "ClientId";
+
+    /**
+     * The key for the server id in the returned value for logging in.
+     */
+    public static final String SERVER_ID = "ServerId";
+
+    /**
+     * The key for if the user is logged in as an instructor in the returned value for logging in.
+     */
+    public static final String IS_INSTRUCTOR = "IsInstructor";
 
     /**
      * a private database.
@@ -123,11 +139,16 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @param loginAsInstructor
      *         true if the system will log in as the instructor (not used if
      *         loginAsDefault is true).
-     * @return The server side userid : the client side user id.
+     * @return A basic db object with a set of values:
+     *          {
+     *              CLIENT_ID: clientId,
+     *              SERVER_ID: serverId,
+     *              IS_INSTRUCTOR: boolean
+     *          }
      * @throws LoginException
      *         thrown if there is a problem loggin in.
      */
-    public String mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
+    public BasicDBObject mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
             throws LoginException {
         final DBCollection table = database.getCollection(LOGIN_COLLECTION);
         final BasicDBObject query = new BasicDBObject(USER_NAME, user);
@@ -156,7 +177,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
             }
         } catch (GeneralSecurityException | AuthenticationException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            throw new LoginException("An error occured while comparing passwords", e);
+            throw new LoginException("An error occurred while comparing passwords", e);
         }
     }
 
@@ -193,18 +214,27 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @param loginAsInstructor
      *         true if the system will log in as the instructor (not used if
      *         loginAsDefault is true).
-     * @return A string representing the user id.
+     * @return A {@link BasicDBObject} with a set of values:
+     *          {
+     *              CLIENT_ID: clientId,
+     *              SERVER_ID: serverId,
+     *              IS_INSTRUCTOR: boolean
+     *          }
      * @throws LoginException
      *         Thrown if the user ids are not able to be grabbed.
      */
     @SuppressWarnings("PMD.UselessParentheses")
-    private String getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
-        String result;
+    private BasicDBObject getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
+        final BasicDBObject result =  new BasicDBObject();
         final boolean defaultAccountIsInstructor = (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
+        result.append(DatabaseClient.IS_INSTRUCTOR,
+                (loginAsDefault && defaultAccountIsInstructor) || (!loginAsDefault && loginAsInstructor));
         if ((loginAsDefault && defaultAccountIsInstructor) || (!loginAsDefault && loginAsInstructor)) {
-            result = cursor.get(INSTRUCTOR_ID) + ":" + cursor.get(INSTRUCTOR_CLIENT_ID);
+            result.append(DatabaseClient.CLIENT_ID, cursor.get(INSTRUCTOR_CLIENT_ID));
+            result.append(DatabaseClient.SERVER_ID, cursor.get(INSTRUCTOR_ID));
         } else if ((loginAsDefault && !defaultAccountIsInstructor) || (!loginAsDefault && !loginAsInstructor)) {
-            result = cursor.get(STUDENT_ID) + ":" + cursor.get(STUDENT_CLIENT_ID);
+            result.append(DatabaseClient.CLIENT_ID, cursor.get(STUDENT_CLIENT_ID));
+            result.append(DatabaseClient.SERVER_ID, cursor.get(STUDENT_ID));
         } else {
             throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
@@ -246,27 +276,10 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * @param user
-     *         the username of the account that is being checked.
-     * @return true if the default account for the user is an instructor
-     * account.
-     */
-    public boolean defaultIsInstructor(final String user) {
-        final DBCollection table = database.getCollection(LOGIN_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(USER_NAME, user);
-
-        final DBObject cursor = table.findOne(query);
-        if (cursor == null) {
-            LOG.info("Unable to find user!");
-            return false;
-        }
-        return (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
-    }
-
-    /**
      * Adds The last login time for the user.
      *
      * This is limited to the last {@code MAX_LOGIN_TIME_LENGTH} number of times.
+     * Searches for the user first.
      *
      * @param username The username of the person logging in.
      * @param authId The authentication of the person logging in.  (To ensure that they have actually logged in.)
@@ -278,6 +291,12 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     public void userLoggedInSuccessfully(final String username, final String authId, final boolean isInstructor, final long... systemTime) {
         final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
         final BasicDBObject query = new BasicDBObject(USER_NAME, username).append(isInstructor ? INSTRUCTOR_ID : STUDENT_ID, authId);
+
+        // FUTURE: remove this once https://github.com/fakemongo/fongo/issues/156 is resolved and use systemTime in mongo directly.
+        final BasicDBList timeList = new BasicDBList();
+        for (long time: systemTime) {
+            timeList.add(time);
+        }
 
         /*
             $push: {
@@ -293,7 +312,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
          */
         final BasicDBObject update = new BasicDBObject(DatabaseStringConstants.PUSH_COMMAND,
                 new BasicDBObject(DatabaseStringConstants.LAST_LOGIN_TIMES,
-                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, systemTime)
+                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, timeList)
                                 .append(DatabaseStringConstants.SORT_COMMAND, -1)
                                 .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)))
                 .append(DatabaseStringConstants.INCREMENT_COMMAND,

@@ -1,6 +1,7 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.mongodb.BasicDBObject;
 import coursesketch.database.DatabaseClient;
 import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
@@ -115,7 +116,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, false, null));
+            send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, null));
         }
     }
 
@@ -143,12 +144,12 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
+            send(conn, createLoginResponse(req, login, false, e.getMessage(), null));
         } catch (RegistrationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
+            send(conn, createLoginResponse(req, login, false, e.getMessage(), null));
         }
     }
 
@@ -168,37 +169,33 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
         final boolean loginAsDefault = !login.hasIsInstructor();
         final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
         try {
-            final String userLoggedIn = client.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
+            final BasicDBObject userLoginInfo = client.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
                     login.getIsInstructor());
-            if (userLoggedIn != null) {
-                final String[] ids = userLoggedIn.split(":");
-                if (ids.length == 2) {
-                    final boolean isInstructor = checkUserInstructor(login.getUsername(), login);
-                    send(conn, createLoginResponse(req, login, true, CORRECT_LOGIN_MESSAGE, isInstructor, ids));
-                    client.userLoggedInSuccessfully(login.getUsername(), ids[0], isInstructor, TimeManager.getSystemTime());
-                }
+            if (userLoginInfo != null) {
+                send(conn, createLoginResponse(req, login, true, CORRECT_LOGIN_MESSAGE, userLoginInfo));
+                client.userLoggedInSuccessfully(login.getUsername(), (String) userLoginInfo.get(DatabaseClient.SERVER_ID),
+                        (boolean) userLoginInfo.get(DatabaseClient.IS_INSTRUCTOR), TimeManager.getSystemTime());
             }
         } catch (LoginException e) {
             LOG.info("Login failed responding to proxy");
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
+            send(conn, createLoginResponse(req, login, false, e.getMessage(), null));
         }
     }
 
     /**
-     * @param user
-     *            the user id.
+     * @param defaultValue
+     *            The default value that was stored in the database.
      * @param login
      *            the information of what the user is attempting to do.
      * @return true if the user is an instructor false otherwise.
      */
-    private boolean checkUserInstructor(final String user, final LoginInformation login) {
-        final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
+    private boolean checkUserInstructor(final boolean defaultValue, final LoginInformation login) {
         LOG.info("About to check if user is an instructor!");
         if (!login.hasIsInstructor()) {
-            return client.defaultIsInstructor(user);
+            return defaultValue;
         } else {
             return login.getIsInstructor();
         }
@@ -207,47 +204,46 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
     /**
      * Creates a {@link Request} to return on login request.
      *
+     * @param userLoginInfo A {@link BasicDBObject} with a set of values:
+     *          {
+     *              CLIENT_ID: clientId,
+     *              SERVER_ID: serverId,
+     *              IS_INSTRUCTOR: boolean
+     *          }
      * @param req
      *            Request from which to generate the response.
+     * @param login
+     *            The information sent by the user for logging in.
+     *
      * @param success
      *            <code>true</code> if the login was successful,
      *            <code>false</code> otherwise
      * @param message
      *            Message text to be included in the response.
-     * @param instructorIntent
-     *            <code>true</code> if the user is an instructor,
-     *            <code>false</code> otherwise
-     * @param ids
-     *            List of user IDs.
-     * @param login
-     *            The information sent by the user for logging in.
-     *
+     * @param userLoginInfo
      * @return the request body
      */
     private static Request createLoginResponse(final Request req, final LoginInformation login, final boolean success, final String message,
-            final boolean instructorIntent, final String... ids) {
+            final BasicDBObject userLoginInfo) {
         final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(req);
         requestBuilder.setResponseText(message);
-        if (ids != null && ids.length > 0 && success) {
-            requestBuilder.setServersideId(ids[0]); // TODO encrypt this id
+        if (userLoginInfo != null) {
+            requestBuilder.setServersideId((String) userLoginInfo.get(DatabaseClient.SERVER_ID));
         }
-
         if (login != null) {
             // Create the Login Response.
             final LoginInformation.Builder loginBuilder = LoginInformation.newBuilder();
             loginBuilder.setUsername(login.getUsername());
             loginBuilder.setIsLoggedIn(success);
-            loginBuilder.setIsInstructor(instructorIntent);
-            if (success) {
+            if (success && userLoginInfo != null) {
                 // The reason for this is so the proxy can continue to register
                 // user
                 loginBuilder.setIsRegistering(login.getIsRegistering());
                 if (loginBuilder.getIsRegistering()) {
                     loginBuilder.setEmail(login.getEmail());
                 }
-                if (ids != null && ids.length > 1) {
-                    loginBuilder.setUserId(ids[1]);
-                }
+                loginBuilder.setUserId((String) userLoginInfo.get(DatabaseClient.CLIENT_ID));
+                loginBuilder.setIsInstructor((Boolean) userLoginInfo.get(DatabaseClient.IS_INSTRUCTOR));
             }
 
             // Add login info.
