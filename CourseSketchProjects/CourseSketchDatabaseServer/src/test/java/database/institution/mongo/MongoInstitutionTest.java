@@ -18,6 +18,7 @@ import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import database.DbSchoolUtility;
+import database.user.UserClient;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -95,6 +96,9 @@ public class MongoInstitutionTest {
     public void before() {
         db = fongo.getDB();
 
+        // used to make the user client use the mock database
+        new UserClient(true, db);
+
         try {
             // general results
             AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
@@ -150,7 +154,6 @@ public class MongoInstitutionTest {
 
         dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
     }
-
 
     public void insertCourseAndAssignment() throws DatabaseAccessException, AuthenticationException {
 
