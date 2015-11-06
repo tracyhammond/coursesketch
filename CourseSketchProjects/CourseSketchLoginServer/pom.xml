@@ -20,8 +20,8 @@
         <mainClass>connection.LoginRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>100</projectBranchLevel>
-        <projectLineLevel>100</projectLineLevel>
+        <projectBranchLevel>51</projectBranchLevel>
+        <projectLineLevel>32</projectLineLevel>
     </properties>
     <build>
         <plugins>
