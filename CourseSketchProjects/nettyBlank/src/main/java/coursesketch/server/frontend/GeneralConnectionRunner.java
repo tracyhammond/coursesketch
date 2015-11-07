@@ -215,15 +215,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Stops the server.
-     * Input is not stopped by the method.
-     */
-    @Override
-    protected void reconnect() {
-
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @return a new instance of a {@link ServerWebSocketInitializer}.
