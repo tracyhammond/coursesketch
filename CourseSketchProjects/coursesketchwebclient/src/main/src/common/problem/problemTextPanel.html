@@ -2,21 +2,12 @@
 <head>
 </head>
 <body>
-<template id="problemPanel">
+<template id="problemPanel" style="display: flex; flex: 1 1;">
     <style>
         @import "/bower_components/materialize/bin/materialize.css";
     </style>
-    <!--
-    |---------------------------------|
-    | |-|	|------------------------||
-    | |#|	|Text text info info(PIC)||
-    | |-|	|                        ||
-    |<- ->	|------------------------||
-    |---------------------------------|
-     -->
     <div id="panelWrapper" class="panelWrapper">
-        <div id="navPanel" style="position:absolute; z-index:1;">
-            <div class="card blue-grey lighten-4 z-depth-3" style="overflow:visible; margin:10;">
+            <div class="card blue-grey lighten-4 z-depth-3" style="overflow-y: auto; word-wrap: break-word; margin:10; padding: 15; height:120px">
                 <div id="buffer">
 
                 </div>
@@ -24,7 +15,6 @@
 
                 </div>
             </div>
-        </div>
     </div>
 </template>
 </body>
