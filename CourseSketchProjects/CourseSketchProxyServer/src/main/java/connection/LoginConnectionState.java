@@ -24,12 +24,13 @@ public class LoginConnectionState extends MultiConnectionState {
     private int loginTries = 0;
 
     /**
-     * The id of the current session.
+     * The server side id that uniquely identifies this particular user.
+     * (Also called the authentication id)
      */
     private String serverUserId = null;
 
     /**
-     * creates a login connection state with a certian key.
+     * creates a login connection state with a certain key.
      *
      * @param inputKey
      *            Uniquely Identifies this connection from any other connection.
