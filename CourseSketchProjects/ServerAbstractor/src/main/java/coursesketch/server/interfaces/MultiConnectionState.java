@@ -9,8 +9,7 @@ package coursesketch.server.interfaces;
 public class MultiConnectionState {
 
     /**
-     * The unique sessionId that separates this connection from a different
-     * connection.
+     * The unique sessionId that separates this connection from a different connection.
      */
     private final String sessionId;
 

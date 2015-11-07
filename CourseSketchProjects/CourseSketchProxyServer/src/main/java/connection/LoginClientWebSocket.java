@@ -64,7 +64,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
     @Override
     @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
     public void onMessage(final ByteBuffer buffer) {
-        LOG.info("RECOVERED INFO FROM THE LOGIN SERVER");
+        LOG.debug("Received login response info");
         final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
         if (request.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(request);
@@ -90,6 +90,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             }
 
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
+            // If there was no connection state created then we can not log the student in.
             if (state == null) {
                 final Exception nullPointerException = new NullPointerException("No State was grabbed for session:[ "
                         + request.getSessionInfo() + "]");
@@ -101,6 +102,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
                 this.getParentServer().send(getConnectionFromState(null), result);
                 return;
             }
+
             state.addTry();
             if (login == null) {
                 LOG.error("Login failed to get to the client");
