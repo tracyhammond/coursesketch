@@ -9,6 +9,11 @@ CourseSketch.redirector = {};
  */
 $(document).ready(
 function() {
+    /**
+     * A local instance of the document object used to maintain the correct instance when potentially called from IFrames.
+     * @type {document}
+     */
+    var localDoc = document;
 
     /**
      * @returns {Element} The element that encapsulates the exception.
@@ -80,7 +85,7 @@ function() {
 
             loadHomePage();
         };
-        document.head.appendChild(importPage);
+        localDoc.head.appendChild(importPage);
         element.style.display = 'none';
     };
 
@@ -94,7 +99,7 @@ function() {
      * @memberof Index
      */
     function createLogin(register) {
-        $('#loginLocation').empty();
+        $(element).empty();
         var login = document.createElement('login-system');
         login.setOnSuccessLogin(successLogin);
         login.setRegisterCallback(function() {
@@ -113,7 +118,7 @@ function() {
      * @memberof Index
      */
     function createRegister(login) {
-        $('#loginLocation').empty();
+        $(element).empty();
         var register = document.createElement('register-system');
         register.setOnSuccessLogin(successLogin);
         register.setCancelCallback(function() {
@@ -121,7 +126,27 @@ function() {
         });
         element.appendChild(register);
     }
-    createLogin(createRegister);
+
+
+    /**
+     * A public function that creates a login element.
+     */
+    CourseSketch.createLoginElement = function() {
+        createLogin(createRegister);
+    };
+
+    CourseSketch.createLoginElement();
+
+    /**
+     * A public function that is used to display the login element anywhere.
+     */
+    CourseSketch.createReconnection = function () {
+        CourseSketch.createLoginElement();
+        var loginElement = localDoc.querySelector('login-system');
+        loginElement.setOnSuccessLogin(CourseSketch.successfulReconnection);
+        element.className = "reconnectLogin";
+        element.style.display = "initial";
+    };
 
     /**
      * Creates and loads the menu.
