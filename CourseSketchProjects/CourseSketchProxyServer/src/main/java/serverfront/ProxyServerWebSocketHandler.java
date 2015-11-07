@@ -1,14 +1,18 @@
 package serverfront;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.server.frontend.ServerWebSocketHandler;
+import coursesketch.server.frontend.ServerWebSocketInitializer;
+import coursesketch.server.interfaces.AbstractClientWebSocket;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionState;
+import coursesketch.server.interfaces.SocketSession;
 import connection.AnswerClientWebSocket;
 import connection.DataClientWebSocket;
 import connection.LoginClientWebSocket;
 import connection.LoginConnectionState;
 import connection.ProxyConnectionManager;
 import connection.RecognitionClientWebSocket;
-import coursesketch.server.base.ServerWebSocketHandler;
-import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
@@ -130,7 +134,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 conn.close(STATE_INVALID_LOGIN, INVALID_LOGIN_MESSAGE);
                 return;
             }
-            final String sessionID = state.getKey();
+            final String sessionID = state.getSessionId();
             LOG.info("Request type is {}", req.getRequestType().name());
             try {
                 this.getConnectionManager().send(req, sessionID, LoginClientWebSocket.class);
@@ -164,7 +168,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             LOG.error("Request that did not contain type: {}", req);
             send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
         }
-        final String sessionID = state.getKey();
+        final String sessionID = state.getSessionId();
         if (req.getRequestType() == MessageType.RECOGNITION) {
             LOG.info("REQUEST TYPE = RECOGNITION");
             try {
