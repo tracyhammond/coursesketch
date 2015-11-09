@@ -67,7 +67,7 @@ function() {
      */
     var successLogin = function(loggedInConnection) {
         CourseSketch.connection = loggedInConnection;
-        $('#loginLocation').empty();
+        $(element).empty();
         var importPage = document.createElement('link');
         importPage.rel = 'import';
         importPage.href = '/src/main.html';
@@ -98,12 +98,12 @@ function() {
      * @see {@link Index.createRegister}
      * @memberof Index
      */
-    function createLogin(register) {
+    function createLogin(register, successLoginCallback) {
         $(element).empty();
         var login = document.createElement('login-system');
-        login.setOnSuccessLogin(successLogin);
+        login.setOnSuccessLogin(successLoginCallback);
         login.setRegisterCallback(function() {
-            register(createLogin);
+            register(createLogin, successLoginCallback);
         });
         element.appendChild(login);
     }
@@ -117,12 +117,12 @@ function() {
      * @see {@link Index.createLogin}
      * @memberof Index
      */
-    function createRegister(login) {
+    function createRegister(login, successLoginCallback) {
         $(element).empty();
         var register = document.createElement('register-system');
-        register.setOnSuccessLogin(successLogin);
+        register.setOnSuccessLogin(successLoginCallback);
         register.setCancelCallback(function() {
-            login(createRegister);
+            login(createRegister, successLoginCallback);
         });
         element.appendChild(register);
     }
@@ -132,7 +132,7 @@ function() {
      * A public function that creates a login element.
      */
     CourseSketch.createLoginElement = function() {
-        createLogin(createRegister);
+        createLogin(createRegister, successLogin);
     };
 
     CourseSketch.createLoginElement();
@@ -141,11 +141,23 @@ function() {
      * A public function that is used to display the login element anywhere.
      */
     CourseSketch.createReconnection = function () {
-        CourseSketch.createLoginElement();
-        var loginElement = localDoc.querySelector('login-system');
-        loginElement.setOnSuccessLogin(CourseSketch.successfulReconnection);
+        createLogin(createRegister, CourseSketch.successfulReconnection);
         element.className = "reconnectLogin";
         element.style.display = "initial";
+    };
+
+    /**
+     * Called when a reconnection occurs
+     */
+    CourseSketch.successfulReconnection = function(loggedInConnection) {
+        console.log("The user relogged in correctly");
+        CourseSketch.connection = loggedInConnection;
+        CourseSketch.dataListener.setupConnectionListeners();
+        $(element).empty();
+        element.className = "";
+
+        // Note that this function may be defined dynamically
+        CourseSketch.onSuccessfulReconnection();
     };
 
     /**
@@ -183,7 +195,7 @@ function() {
             CourseSketch.redirectContent('/src/student/homepage/homePage.html', 'Welcome Student');
         }
 
-        CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection,
+        CourseSketch.dataListener = new AdvanceDataListener(
                 CourseSketch.prutil.getRequestClass(), function(evt, item) {
             console.log('default listener');
         });
