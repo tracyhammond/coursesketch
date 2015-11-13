@@ -26,7 +26,7 @@
     "webdriverio" : "3.2.6",
     "grunt-webdriver": "1.0.0",
     "selenium-standalone": "4.7.1",
-    "grunt-selenium-server": "dtracers/grunt-selenium-server#v0.1.3"
+    "grunt-selenium-server": "dtracers/grunt-selenium-server#v0.1.4"
   }
 }
 
