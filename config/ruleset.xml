@@ -29,8 +29,23 @@
     <rule ref="rulesets/java/design.xml">
         <exclude name="GodClass"/>
         <exclude name="ConfusingTernary"/>
+        <!--
         <exclude name="UncommentedEmptyMethod"/>
+        -->
     </rule>
+
+    <rule ref="rulesets/java/comments.xml/CommentRequired">
+        <properties>
+            <property name="publicMethodCommentRequirement" value="Ignored"/>
+            <property name="protectedMethodCommentRequirement" value="Ignored"/>
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/java/comments.xml">
+        <exclude name="CommentRequired"/>
+    </rule>
+
+    <!-- property changes -->
 
     <rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>

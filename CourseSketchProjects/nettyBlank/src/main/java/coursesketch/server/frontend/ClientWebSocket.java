@@ -122,7 +122,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      *         The message that is received by this object.
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
-
+        // Does nothing by default.
     }
 
     /**
