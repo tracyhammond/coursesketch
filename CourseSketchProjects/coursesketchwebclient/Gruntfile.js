@@ -17,6 +17,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-selenium-server');
+    grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadTasks('config/gruntTasks/');
 
     /******************************************
@@ -81,6 +82,16 @@ module.exports = function(grunt) {
             }
         },
         /**
+         * Directory Creation
+         */
+        mkdir: {
+            all: {
+                options: {
+                    create: [ 'target/unitTest' ]
+                }
+            }
+        },
+        /**
          * UNIT TESTS AND SERVER
          */
         connect: {
@@ -123,7 +134,7 @@ module.exports = function(grunt) {
         },
         webdriver: {
             unit: {
-                configFile: 'config/test/wdio.conf.js',
+                configFile: 'config/test/wdio.conf.js'
             }
         },
         'seleniumStandalone': {
@@ -380,6 +391,14 @@ module.exports = function(grunt) {
         ]);
     });
 
+    // sets up tasks related to setting the system for the rests of the tasks
+    grunt.registerTask('setup', function() {
+        printTaskGroup();
+        grunt.task.run([
+            'mkdir'
+        ]);
+    });
+
     // sets up tasks related to checkstyle
     grunt.registerTask('checkstyle', function() {
         printTaskGroup();
@@ -455,31 +474,5 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'documentation', 'test', 'build' ]);
-
-    /******************************************
-     * HOOKS
-     ******************************************/
-
-    // Special handlers
-    var seleniumChildProcesses = {};
-    grunt.event.on('selenium.start', function(target, process) {
-        grunt.log.ok('Saw process for target: ' +  target);
-        seleniumChildProcesses[target] = process;
-    });
-
-    grunt.util.hooker.hook(grunt.fail, function() {
-        // Clean up selenium if we left it running after a failure.
-        grunt.log.writeln('Attempting to clean up running selenium server.');
-        /* jshint -W089 */
-        for (var target in seleniumChildProcesses) {
-            grunt.log.ok('Killing selenium target: ' + target);
-            try {
-                seleniumChildProcesses[target].kill('SIGINT');
-            } catch (e) {
-                grunt.log.warn('Unable to stop selenium target: ' + target);
-            }
-        }
-        grunt.log.writeln('Server Gas been cleaned');
-    });
+    grunt.registerTask('default', [ 'checkstyle', 'documentation', 'setup', 'test', 'build' ]);
 };
