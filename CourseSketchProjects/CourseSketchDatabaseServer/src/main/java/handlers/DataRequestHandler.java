@@ -5,9 +5,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,20 +71,20 @@ public final class DataRequestHandler {
      *
      * decode request and pull correct information from {@link Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     *
      * @param req
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
+     * @param instance The database backer.
      * @param sessionId
-     *         the id of this particular session which is used if another server is talked to.
-     * @param internalConnections
-     *         Connections to other servers that can be used to grab data from them.
+*         the id of this particular session which is used if another server is talked to.
+     * @param internalConnections Connections to other clients.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount",
-            "checkstyle:methodlength" })
-    public static void handleRequest(final Request req, final SocketSession conn, final String sessionId,
+            "checkstyle:methodlength", "checkstyle:avoidnestedblocks" })
+    public static void handleRequest(final Request req, final SocketSession conn, final Institution instance,
+            final String sessionId,
             final MultiConnectionManager internalConnections) {
         try {
             LOG.info("Receiving DATA Request...");
@@ -95,7 +94,6 @@ public final class DataRequestHandler {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
-            final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemRequest itemRequest = request.getItemsList().get(p);
                 try {
