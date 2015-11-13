@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import utilities.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,11 @@ import utilities.LoggingConstants;
  * Creates a connection to the submission server.
  */
 public class DatabaseConnectionManager extends MultiConnectionManager {
+
+    /**
+     * IP address for submission server.
+     */
+    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
 
     /**
      *  Declaration and Definition of Logger.
@@ -25,11 +31,10 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     /**
      * A constructor for the multi connection manager.
      * @param parent The parent server
-     * @param connectType If the connection is local or if it is remote
-     * @param secure If ssl should be used.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -39,7 +44,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(),
+            createAndAddConnection(serv, this.isConnectionLocal(), SUBMISSION_ADDRESS, SUBMISSION_PORT, this.isSecure(),
                     SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

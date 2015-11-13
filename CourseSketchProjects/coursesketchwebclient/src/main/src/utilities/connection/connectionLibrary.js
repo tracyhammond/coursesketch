@@ -344,6 +344,7 @@ function Connection(uri, encrypted, attemptReconnect) {
         rsp.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.TIME);
         rsp.setMessageTime(dcodeIO.Long.fromString('' + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
+        rsp.setRequestId(generateUUID());
         return rsp;
     }
 
