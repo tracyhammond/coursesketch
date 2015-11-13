@@ -5,15 +5,27 @@ module.exports = function(grunt) {
     var seleniumChildProcesses = {};
 
     function kill() {
-        grunt.log.write('Killing child process');
-        for (target in seleniumChildProcesses)
-            seleniumChildProcesses[target].kill('SIGINT');
+        grunt.log.writeln('Killing child process');
+        /* jshint -W089 */
+        for (var target in seleniumChildProcesses)
+            seleniumChildProcesses[target].kill();
     }
+
+    grunt.util.hooker.hook(grunt.fail, function() {
+        // Clean up selenium if we left it running after a failure.
+        grunt.log.writeln('Attempting to clean up running selenium server.');
+        kill();
+        grunt.log.writeln('Server Gas been cleaned');
+    });
 
     grunt.registerMultiTask('seleniumStandalone', 'Run and installs selenium', function() {
         grunt.log.write('Installing chrome driver\n');
         var done = this.async();
         var target = this.target;
+        this.kill = kill;
+        grunt.selenium = {};
+        grunt.selenium.kill = kill;
+
         selenium.install({
             // check for more recent versions of selenium here:
             // http://selenium-release.storage.googleapis.com/index.html
