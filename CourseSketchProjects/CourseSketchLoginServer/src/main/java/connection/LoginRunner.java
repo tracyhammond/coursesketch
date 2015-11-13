@@ -3,7 +3,7 @@ package connection;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
-import database.DatabaseClient;
+import coursesketch.database.DatabaseClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

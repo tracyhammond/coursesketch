@@ -1,5 +1,6 @@
 package connection;
 
+import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -43,6 +44,13 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
      */
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler serv) {
+        try {
+            createAndAddConnection(serv, this.isConnectionLocal(), AuthenticationWebSocketClient.ADDRESS, AuthenticationWebSocketClient.PORT,
+                    this.isSecure(), AuthenticationWebSocketClient.class);
+        } catch (ConnectionException e) {
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+
         try {
             createAndAddConnection(serv, this.isConnectionLocal(), SUBMISSION_ADDRESS, SUBMISSION_PORT, this.isSecure(),
                     SubmissionClientWebSocket.class);
