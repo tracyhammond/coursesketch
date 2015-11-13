@@ -124,7 +124,7 @@ public final class DataUpdateHandler {
                     }
                 } catch (AuthenticationException e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder result = ItemResult.newBuilder();
                         result.setQuery(itemSet.getQuery());
@@ -135,7 +135,7 @@ public final class DataUpdateHandler {
                     }
                 } catch (Exception e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     final ItemResult.Builder result = ItemResult.newBuilder();
                     result.setQuery(itemSet.getQuery());
                     result.addData(itemSet.toByteString());
@@ -148,12 +148,12 @@ public final class DataUpdateHandler {
             }
         } catch (AuthenticationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to update data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }

@@ -1,6 +1,5 @@
 package netty.annotation;
 
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -8,7 +7,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by gigemjt on 10/19/14.
@@ -19,14 +17,15 @@ public class AnnotationLoader {
             isProduction() ? Reflections.collect() : new Reflections("");
 
     public static void main(final String args[]) {
+        /*
         final Reflections reflections =
                 isProduction() ? Reflections.collect() : new Reflections("");
 
         final Set<Class<?>> annotated =
                 reflections.getTypesAnnotatedWith(WebSocket.class);
-
+        */
         // http://stackoverflow.com/questions/19813097/is-it-possible-to-use-reflections-maven-to-scan-for-classes-inside-jars-in-web-i
-        System.out.println(annotated);
+        //System.out.println(annotated);
     }
 
     public static List<Method> getMethodsAnnotatedWith(final Class<?> type, final Class<? extends Annotation> annotation) {

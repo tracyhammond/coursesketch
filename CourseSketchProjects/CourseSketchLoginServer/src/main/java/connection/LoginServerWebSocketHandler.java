@@ -4,23 +4,23 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseClient;
 import database.LoginException;
 import database.RegistrationException;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.LoginInformation;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 
 import java.security.GeneralSecurityException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A simple WebSocketServer implementation.
@@ -83,9 +83,10 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *
      * @param parent
      *            {@link connection.LoginServlet}
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+    public LoginServerWebSocketHandler(final ServerWebSocketInitializer parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -110,7 +111,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             }
         } catch (final InvalidProtocolBufferException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, null, false, INCORRECT_LOGIN_MESSAGE, false, null));
         }
@@ -137,12 +138,12 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             loginUser(conn, req, login);
         } catch (GeneralSecurityException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         } catch (RegistrationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
@@ -173,8 +174,9 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
                 }
             }
         } catch (LoginException e) {
+            LOG.warn("Login failed, creating failed response.");
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(protoEx, req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             send(conn, createLoginResponse(req, login, false, e.getMessage(), false, null));
         }
@@ -218,10 +220,8 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      */
     private static Request createLoginResponse(final Request req, final LoginInformation login, final boolean success, final String message,
             final boolean instructorIntent, final String... ids) {
-        final Request.Builder requestBuilder = Request.newBuilder();
-        requestBuilder.setRequestType(MessageType.LOGIN);
+        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(req);
         requestBuilder.setResponseText(message);
-        requestBuilder.setSessionInfo(req.getSessionInfo());
         if (ids != null && ids.length > 0 && success) {
             requestBuilder.setServersideId(ids[0]); // TODO encrypt this id
         }

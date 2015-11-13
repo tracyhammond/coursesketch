@@ -19,6 +19,7 @@ import protobuf.srl.submission.Submission.SrlSubmission;
 import utilities.ConnectionException;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 /**
  * Handles the request of a submission.
@@ -49,7 +50,7 @@ public final class SubmissionRequestHandler {
         final String sessionInfo = req.getSessionInfo();
         try {
             final ByteString result = handleSubmission(req);
-            final Request.Builder build = Request.newBuilder(req);
+            final Request.Builder build = ProtobufUtilities.createBaseResponse(req, true);
             build.setResponseText("Submission Succesful!");
             build.clearOtherData();
             LOG.info("Session Info: {}", sessionInfo);
@@ -57,7 +58,7 @@ public final class SubmissionRequestHandler {
                 // passes the data to the database for connecting
                 final Data.DataSend send = Data.DataSend.newBuilder().addItems(Data.ItemSend.newBuilder().setData(result).
                         setQuery(Data.ItemQuery.EXPERIMENT)).build();
-                final Request.Builder databaseRequest = Request.newBuilder(req);
+                final Request.Builder databaseRequest = ProtobufUtilities.createBaseResponse(req, true);
                 databaseRequest.setRequestType(Request.MessageType.DATA_INSERT);
                 databaseRequest.setOtherData(send.toByteString());
                 LOG.info("Sending experiment data to database server");
@@ -67,7 +68,7 @@ public final class SubmissionRequestHandler {
             return build.build();
         } catch (SubmissionException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            final Request build = ExceptionUtilities.createExceptionRequest(protoEx, req);
+            final Request build = ExceptionUtilities.createExceptionRequest(req, protoEx);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             return build;
         } catch (ConnectionException e) {

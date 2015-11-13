@@ -41,41 +41,39 @@ public final class ExceptionUtilities {
     /**
      * Creates a request that represents the exception that was caused.
      *
-     * @param exception
-     *         the exception to be sent back to the client.
      * @param inputRequest
      *         The request that was sent to this server.
+     * @param exception
+     *         the exception to be sent back to the client.
+     * @param responseText
+     *          sets the Response Text to the string and not the exception's message.
      * @return A request that warps around the exception.
      */
     @SuppressWarnings("PMD.UnusedPrivateMethod")
-    public static Message.Request createExceptionRequest(final Message.ProtoException exception, final Message.Request inputRequest) {
-        final Message.Request.Builder builder = Message.Request.newBuilder();
+    public static Message.Request createExceptionRequest(final Message.Request inputRequest, final Message.ProtoException exception,
+            final String responseText) {
+        final Message.Request.Builder builder = ProtobufUtilities.createBaseResponse(inputRequest);
         builder.setRequestType(Message.Request.MessageType.ERROR);
         builder.setOtherData(exception.toByteString());
-        if (inputRequest != null) {
-            builder.setSessionInfo(inputRequest.getSessionInfo());
+        if (responseText != null) {
+            builder.setResponseText(responseText);
+        } else {
+            builder.setResponseText(exception.getMssg());
         }
-        builder.setResponseText(exception.getMssg());
         return builder.build();
     }
 
     /**
+     * Creates a request that represents the exception that was caused.
      *
-     * @param exception
-     *          sets to the requests' other data.
-     * @param string
-     *          sets the Response Text to the string and not the exception's message.
      * @param inputRequest
      *          takes the Request type and session info from the inputRequest.
+     * @param exception
+     *          sets to the requests' other data.
+
      * @return A request that warps around the exception and message you pass in.
      */
-    public static Message.Request createExceptionRequest(final Message.ProtoException exception, final String string,
-            final Message.Request inputRequest) {
-        final Message.Request.Builder builder = Message.Request.newBuilder();
-        builder.setRequestType(inputRequest.getRequestType());
-        builder.setSessionInfo(inputRequest.getSessionInfo());
-        builder.setResponseText(string);
-        builder.setOtherData(exception.toByteString());
-        return builder.build();
+    public static Message.Request createExceptionRequest(final Message.Request inputRequest, final Message.ProtoException exception) {
+        return createExceptionRequest(inputRequest, exception, null);
     }
 }

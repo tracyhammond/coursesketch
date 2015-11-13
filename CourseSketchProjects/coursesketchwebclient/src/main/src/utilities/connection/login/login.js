@@ -64,10 +64,20 @@ function LoginSystem() {
     this.initializeElement = function(document, templateClone) {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
+
         setupLoginScript();
         setupFormScript();
         setupCallbacks();
+        attachButtons();
     };
+
+    /**
+     * Attaches the wave effect to the login button
+     */
+    function attachButtons() {
+        var loginButton = shadowRoot.querySelector('#loginButton');
+        Waves.attach(loginButton);
+    }
 
     /**
      * Sets up what happens upon the server return the result of attempting to
@@ -144,12 +154,7 @@ function LoginSystem() {
             loginInfo.username = arg1;
             loginInfo.password = '' + arg2;
 
-            var request = CourseSketch.prutil.Request();
-            request.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
-            if (!isUndefined(request.setLogin)) {
-                request.login = loginInfo;
-            }
-            request.otherData = loginInfo.toArrayBuffer();
+            var request = CourseSketch.prutil.createRequestFromData(loginInfo, CourseSketch.prutil.getRequestClass().MessageType.LOGIN);
             console.log('Sending login information');
             connection.sendRequest(request);
             console.log('login information sent successfully');
