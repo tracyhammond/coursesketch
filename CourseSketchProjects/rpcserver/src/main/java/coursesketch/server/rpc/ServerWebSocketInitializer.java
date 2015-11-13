@@ -79,6 +79,9 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
         }
+        if (connectionServer != null) {
+            connectionServer.initialize();
+        }
         onReconnect();
     }
 
@@ -135,6 +138,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
      */
     protected void onReconnect() {
         // does nothing by default.
+    }
+
+    /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    @Override public void onServerStart() {
+        // Does nothing by default
     }
 
     /**

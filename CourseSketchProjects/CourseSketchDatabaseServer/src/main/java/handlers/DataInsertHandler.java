@@ -2,9 +2,9 @@ package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
+import database.DatabaseAccessException;
 import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,15 +65,15 @@ public final class DataInsertHandler {
      *
      * decode request and pull correct information from {@link Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     *
      * @param req
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
+     * @param instance The database backer.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
-    public static void handleData(final Request req, final SocketSession conn) {
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })
+    public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Recieving DATA SEND Request...");
 
@@ -84,7 +84,6 @@ public final class DataInsertHandler {
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
 
-            final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {
@@ -127,9 +126,11 @@ public final class DataInsertHandler {
                         case REGISTER: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                             final String courseId = course.getId();
-                            final boolean success = instance.putUserInCourse(courseId, userId);
+                            final boolean success = instance.putUserInCourse(courseId, userId, course.getRegistrationKey());
                             if (!success) {
-                                results.add(ResultBuilder.buildResult(itemSet.getQuery(), "User was already registered for course!"));
+                                throw new DatabaseAccessException("User was already registered for course!");
+                            } else {
+                                results.add(ResultBuilder.buildResult(itemSet.getQuery(), SUCCESS_MESSAGE));
                             }
                         }
                         break;

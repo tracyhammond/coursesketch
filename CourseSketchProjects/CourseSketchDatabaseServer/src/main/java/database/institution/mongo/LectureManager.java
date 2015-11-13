@@ -8,15 +8,16 @@ import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import static database.DatabaseStringConstants.ACCESS_DATE;
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.CLOSE_DATE;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.IDS_IN_LECTURE;
@@ -38,7 +38,6 @@ import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDES;
-import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 
 /**
@@ -81,9 +80,14 @@ public final class LectureManager {
     public static String mongoInsertLecture(final Authenticator authenticator, final DB dbs, final String userId, final Lecture lecture)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection newUser = dbs.getCollection(LECTURE_COLLECTION);
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, lecture.getCourseId(), userId, 0, auth)) {
+
+        // make sure person is mod or admin for the assignment
+        final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, lecture.getCourseId(), userId, 0, courseAuthType);
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
         final BasicDBObject query = new BasicDBObject(COURSE_ID, lecture.getCourseId())
@@ -137,7 +141,7 @@ public final class LectureManager {
         final DBObject cursor = myDbRef.fetch();
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
 
-        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+        final BasicDBObject updateQuery = new BasicDBObject(); // MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: {}", updateQuery);
         lectures.update(cursor, updateQuery);
@@ -173,38 +177,37 @@ public final class LectureManager {
             throw new DatabaseAccessException("Lecture was not found with the following ID " + lectureId, true);
         }
 
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.LECTURE, lectureId, userId, checkTime, authType);
 
-        if (!isAdmin && !isMod && !isUsers) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        if (!responder.hasAccess()) {
+            throw new AuthenticationException("For lecture: " + lectureId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        // check to make sure the lecture is within the time period that the
-        // course is open and the user is in the course
-        // FUTURE: maybe not make this necessarry if the insertion of lecture prevents this.
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
-        auth.setCheckDate(true);
-        auth.setCheckUser(true);
-        if (isUsers && !authenticator.isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_DATE);
+
+        // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
+        final Authentication.AuthType assignmentAuthType = Authentication.AuthType.newBuilder()
+                .setCheckDate(true)
+                .build();
+        final AuthenticationResponder assignmentResponder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, (String) corsor.get(COURSE_ID), userId, checkTime, assignmentAuthType);
+
+        // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
+        if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
+            throw new AuthenticationException("For lecture: " + lectureId, AuthenticationException.INVALID_DATE);
         }
 
+        // states
         final School.State.Builder stateBuilder = School.State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
-        if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific lecture is not published yet", true);
-                }
-                stateBuilder.setPublished(false);
-            }
+        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+            throw new DatabaseAccessException("The specific lecture is not published yet: " + lectureId, true);
         }
 
         // now all possible exceptions have already been thrown.
@@ -218,7 +221,7 @@ public final class LectureManager {
         setLectureStateAndDate(exactLecture, corsor);
 
         // if you are a user, the lecture must be open to view the insides
-        if (isAdmin || isMod || (isUsers
+        if (responder.hasModeratorPermission() || (responder.hasAccess()
                 && Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate()))) {
             if (corsor.get(SLIDES) != null) {
                 for (BasicDBObject obj : (List<BasicDBObject>) corsor.get(SLIDES)) {
@@ -231,7 +234,7 @@ public final class LectureManager {
             }
 
             stateBuilder.setAccessible(true);
-        } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate())) {
+        } else if (responder.hasAccess() && !Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate())) {
             stateBuilder.setAccessible(false);
             LOG.info("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactLecture.getAccessDate().getMillisecond(),
@@ -241,11 +244,11 @@ public final class LectureManager {
         exactLecture.setState(stateBuilder);
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (isAdmin) {
+        if (responder.hasTeacherPermission()) {
             permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
             permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
         }
-        if (isAdmin || isMod) {
+        if (responder.hasModeratorPermission()) {
             permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // mod
             exactLecture.setAccessPermission(permissions.build());
         }
@@ -305,44 +308,44 @@ public final class LectureManager {
             final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = myDbRef.fetch();
         DBObject updateObj = null;
         final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
 
-        final ArrayList adminList = (ArrayList<Object>) corsor.get("Admin");
-        final ArrayList modList = (ArrayList<Object>) corsor.get("Mod");
-        boolean isAdmin, isMod;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.LECTURE, lectureId, userId, 0, authType);
 
-        if (!isAdmin && !isMod) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("For lecture: " + lectureId, AuthenticationException.INVALID_PERMISSION);
         }
         final BasicDBObject updated = new BasicDBObject();
-        if (isAdmin || isMod) {
+        if (responder.hasModeratorPermission()) {
             if (lecture.hasName()) {
                 updateObj = new BasicDBObject(NAME, lecture.getName());
-                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (lecture.hasDescription()) {
                 updateObj = new BasicDBObject(DESCRIPTION, lecture.getDescription());
-                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (lecture.getIdListCount() > 0) {
                 updateObj = new BasicDBObject(IDS_IN_LECTURE, lecture.getIdListList());
-                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (lecture.hasAccessDate()) {
                 updateObj = new BasicDBObject(ACCESS_DATE, lecture.getAccessDate().getMillisecond());
-                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
             if (lecture.hasCloseDate()) {
                 updateObj = new BasicDBObject(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
-                lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 update = true;
             }
 
@@ -350,26 +353,26 @@ public final class LectureManager {
             // array and pushing values to an array
             if (lecture.hasAccessPermission()) {
                 final SrlPermission permissions = lecture.getAccessPermission();
-                if (isAdmin) {
+                if (responder.hasTeacherPermission()) {
                     // ONLY ADMIN CAN CHANGE ADMIN OR MOD
                     if (permissions.getAdminPermissionCount() > 0) {
                         updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
                         updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                        lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                        lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                     }
                     if (permissions.getModeratorPermissionCount() > 0) {
                         updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                        lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                        lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                     }
                 }
                 if (permissions.getUserPermissionCount() > 0) {
                     updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    lectures.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                    lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
                 }
             }
         }
         if (update) {
-            UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), lectureId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
+            UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), lectureId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
         return true;
     }
