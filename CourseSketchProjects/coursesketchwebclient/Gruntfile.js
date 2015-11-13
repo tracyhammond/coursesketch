@@ -1,6 +1,8 @@
 //jscs:disable jsDoc
 
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
+var selenium = require('selenium-standalone');
+
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-regex-check');
@@ -15,6 +17,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-selenium-server');
+    grunt.loadTasks('config/gruntTasks/');
 
     /******************************************
      * GRUNT INIT
@@ -26,6 +29,9 @@ module.exports = function(grunt) {
             prodFiles: [ 'target/website/index.html', 'target/website/src/**/*.html', 'target/website/src/**/*.js',
                 '!target/website/src/main/src/utilities/libraries/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.html' ]
         },
+        /**
+         * CHECKSTYLE
+         */
         jshint: {
             options: {
                 jshintrc: 'config/.jshintrc',
@@ -64,7 +70,18 @@ module.exports = function(grunt) {
             }
         },
         /**
-         * WEBDRIVER setup!
+         * JSDOC
+         */
+        jsdoc: {
+            dist: {
+                src: '<%= jshint.files %>',
+                options: {
+                    destination: 'doc'
+                }
+            }
+        },
+        /**
+         * UNIT TESTS AND SERVER
          */
         connect: {
             options: {
@@ -109,27 +126,14 @@ module.exports = function(grunt) {
                 configFile: 'config/test/wdio.conf.js',
             }
         },
-        'start-selenium-server': {
-            dev: {
-                options: {
-                    autostop: false
-                }
+        'seleniumStandalone': {
+            run: {
+
             }
-        },
-        'stop-selenium-server': {
-            dev: {}
         },
         /**
-         * END WEBDRIVER SETUP
+         * BUILDERS
          */
-        jsdoc: {
-            dist: {
-                src: '<%= jshint.files %>',
-                options: {
-                    destination: 'doc'
-                }
-            }
-        },
         babel: {
             options: {
                 sourceMap: true
@@ -353,6 +357,7 @@ module.exports = function(grunt) {
     grunt.registerTask('server', function() {
         printTaskGroup();
         grunt.task.run([
+            'seleniumStandalone:run',
             'configureRewriteRules',
             'connect:development'
         ]);
@@ -362,7 +367,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', function() {
         printTaskGroup();
         grunt.task.run([
-            'start-selenium-server:dev',
             'server',
             'webdriver:unit'
         ]);
