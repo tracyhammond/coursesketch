@@ -14,6 +14,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-wiredep');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-webdriver');
+    grunt.loadNpmTasks('grunt-selenium-server');
 
     /******************************************
      * GRUNT INIT
@@ -62,6 +63,9 @@ module.exports = function(grunt) {
                 }
             }
         },
+        /**
+         * WEBDRIVER setup!
+         */
         connect: {
             options: {
                 port: 9001,
@@ -71,7 +75,8 @@ module.exports = function(grunt) {
             rules: [
                { from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1' },
                { from: '^/test(.*)$', to: '/src/test/src$1', redirect: 'permanent' },
-               { from: '^/other(.*)$', to: 'src/main/resources/other/$1' }
+               { from: '^/other(.*)$', to: 'src/main/resources/other/$1' },
+               { from: '^/bower_components(.*)$', to: 'bower_components$1' }
             ],
             development: {
                 options: {
@@ -100,19 +105,24 @@ module.exports = function(grunt) {
             }
         },
         webdriver: {
-            options: {
-                output: 'target/unitTest',
-                ui: 'qunit',
-                host: 'localhost',
-                port: 9001,
-                desiredCapabilities: {
-                    browserName: 'chrome'
-                }
-            },
             unit: {
+                configFile: '.config/test/wdio.conf.js',
                 tests: [ 'src/test/src/**/*Test.html' ],
             }
         },
+        'start-selenium-server': {
+            dev: {
+                options: {
+                    autostop: false
+                }
+            }
+        },
+        'stop-selenium-server': {
+            dev: {}
+        },
+        /**
+         * END WEBDRIVER SETUP
+         */
         jsdoc: {
             dist: {
                 src: '<%= jshint.files %>',
@@ -342,7 +352,9 @@ module.exports = function(grunt) {
 
     // sets up tasks related to testing
     grunt.registerTask('test', function() {
+        grunt.log.write('Running task test!');
         grunt.task.run([
+            'start-selenium-server:dev',
             'server',
             'webdriver:unit'
         ]);
@@ -350,6 +362,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to checkstyle
     grunt.registerTask('checkstyle', function() {
+        grunt.log.write('Running task checkstyle!');
         grunt.task.run([
             'jscs',
             'jshint',
@@ -359,6 +372,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
+        grunt.log.write('Running task build!');
         grunt.task.run([
             'preBuild',
             'setupProd',
@@ -371,6 +385,7 @@ module.exports = function(grunt) {
     // sets up tasks needed before building.
     // specifically this loads node_modules to bower components
     grunt.registerTask('preBuild', function() {
+        grunt.log.write('Running task preBuild!');
         grunt.task.run([
             'copy:babel'
         ]);
@@ -378,6 +393,7 @@ module.exports = function(grunt) {
 
     // Sets up tasks related to setting up the production website.
     grunt.registerTask('setupProd', function() {
+        grunt.log.write('Running task setupProd!');
         grunt.task.run([
             'copy:main',
             'replace:appEngine'
@@ -386,6 +402,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to loading up bower
     grunt.registerTask('bower', function() {
+        grunt.log.write('Running task bower!');
         grunt.task.run([
             'replace:bowerLoad',
             'wiredep',
@@ -397,6 +414,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to supporting older version of browsers
     grunt.registerTask('polyfill', function() {
+        grunt.log.write('Running task polyfill!');
         grunt.task.run([
             'replace:isUndefined'
             // babel is turned off because it is breaking things.
@@ -406,6 +424,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to minifying the code
     grunt.registerTask('obfuscate', function() {
+        grunt.log.write('Running task obfuscate!');
         grunt.task.run([
             'uglify'
         ]);
@@ -417,4 +436,27 @@ module.exports = function(grunt) {
 
     // 'test'  wait till browsers are better supported
     grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'test', 'build' ]);
+
+
+    // Special handlers
+    var seleniumChildProcesses = {};
+    grunt.event.on('selenium.start', function(target, process) {
+        grunt.log.ok('Saw process for target: ' +  target);
+        seleniumChildProcesses[target] = process;
+    });
+
+    grunt.util.hooker.hook(grunt.fail, function() {
+        // Clean up selenium if we left it running after a failure.
+        grunt.log.writeln('Attempting to clean up running selenium server.');
+        /* jshint -W089 */
+        for (var target in seleniumChildProcesses) {
+            grunt.log.ok('Killing selenium target: ' + target);
+            try {
+                seleniumChildProcesses[target].kill('SIGINT');
+            } catch (e) {
+                grunt.log.warn('Unable to stop selenium target: ' + target);
+            }
+        }
+        grunt.log.writeln('Server Gas been cleaned');
+    });
 };
