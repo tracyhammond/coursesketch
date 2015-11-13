@@ -106,8 +106,7 @@ module.exports = function(grunt) {
         },
         webdriver: {
             unit: {
-                configFile: '.config/test/wdio.conf.js',
-                tests: [ 'src/test/src/**/*Test.html' ],
+                configFile: 'config/test/wdio.conf.js',
             }
         },
         'start-selenium-server': {
@@ -339,11 +338,20 @@ module.exports = function(grunt) {
     });
 
     /******************************************
+     * UTILITIES
+     ******************************************/
+
+    function printTaskGroup() {
+        grunt.log.write('\n===========\n=========== Running task group ' + grunt.task.current.name + ' ===========\n===========\n');
+    }
+
+    /******************************************
      * TASK WORKFLOW SETUP
      ******************************************/
 
     // sets up tasks relating to starting the server
     grunt.registerTask('server', function() {
+        printTaskGroup();
         grunt.task.run([
             'configureRewriteRules',
             'connect:development'
@@ -352,7 +360,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to testing
     grunt.registerTask('test', function() {
-        grunt.log.write('Running task test!');
+        printTaskGroup();
         grunt.task.run([
             'start-selenium-server:dev',
             'server',
@@ -360,9 +368,17 @@ module.exports = function(grunt) {
         ]);
     });
 
+    // sets up tasks related to creating documentation
+    grunt.registerTask('documentation', function() {
+        printTaskGroup();
+        grunt.task.run([
+            'jsdoc'
+        ]);
+    });
+
     // sets up tasks related to checkstyle
     grunt.registerTask('checkstyle', function() {
-        grunt.log.write('Running task checkstyle!');
+        printTaskGroup();
         grunt.task.run([
             'jscs',
             'jshint',
@@ -372,7 +388,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
-        grunt.log.write('Running task build!');
+        printTaskGroup();
         grunt.task.run([
             'preBuild',
             'setupProd',
@@ -385,7 +401,7 @@ module.exports = function(grunt) {
     // sets up tasks needed before building.
     // specifically this loads node_modules to bower components
     grunt.registerTask('preBuild', function() {
-        grunt.log.write('Running task preBuild!');
+        printTaskGroup();
         grunt.task.run([
             'copy:babel'
         ]);
@@ -393,7 +409,7 @@ module.exports = function(grunt) {
 
     // Sets up tasks related to setting up the production website.
     grunt.registerTask('setupProd', function() {
-        grunt.log.write('Running task setupProd!');
+        printTaskGroup();
         grunt.task.run([
             'copy:main',
             'replace:appEngine'
@@ -402,7 +418,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to loading up bower
     grunt.registerTask('bower', function() {
-        grunt.log.write('Running task bower!');
+        printTaskGroup();
         grunt.task.run([
             'replace:bowerLoad',
             'wiredep',
@@ -414,7 +430,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to supporting older version of browsers
     grunt.registerTask('polyfill', function() {
-        grunt.log.write('Running task polyfill!');
+        printTaskGroup();
         grunt.task.run([
             'replace:isUndefined'
             // babel is turned off because it is breaking things.
@@ -424,7 +440,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to minifying the code
     grunt.registerTask('obfuscate', function() {
-        grunt.log.write('Running task obfuscate!');
+        printTaskGroup();
         grunt.task.run([
             'uglify'
         ]);
@@ -435,8 +451,11 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'test', 'build' ]);
+    grunt.registerTask('default', [ 'checkstyle', 'documentation', 'test', 'build' ]);
 
+    /******************************************
+     * HOOKS
+     ******************************************/
 
     // Special handlers
     var seleniumChildProcesses = {};
