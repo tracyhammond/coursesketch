@@ -81,7 +81,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity.
-    // logLevel: 'silent',
+    logLevel: 'silent',
     //
     // Enables colors for log output
     coloredLogs: true,
@@ -128,7 +128,7 @@ exports.config = {
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: 'xunit',
+    reporter: 'dot',
     //
     // Some reporter require additional information which should get defined here
     reporterOptions: {
@@ -186,13 +186,19 @@ exports.config = {
     // variables like `browser`. It is the perfect place to define custom commands.
     before: function() {
         console.log('run the tests');
-        browser.url('/src/test/src/common/navigation/problem/navigationPanelTest.html');
+        browser.getTitle().then(function(title) {
+            console.log(title);
+            // outputs the following:
+            // "WebdriverIO - Selenium 2.0 javascript bindings for nodejs"
+        });
+
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
     // the test.
     after: function(failures, pid) {
         console.log('finish up the tests');
+        console.log(failures);
     },
     //
     // Gets executed after all workers got shut down and the process is about to exit. It is not
