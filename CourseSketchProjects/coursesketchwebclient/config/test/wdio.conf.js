@@ -35,15 +35,15 @@ exports.config = {
     // from which `wdio` was called. Notice that, if you are calling `wdio` from an
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
-    //
     specs: [
-        'src/test/src/**/*Test.html'
+        'src/test/src/**'
         // Test.html
     ],
+    //
     // Patterns to exclude.
     exclude: [
-        'test/spec/multibrowser/**',
-        'test/spec/mobile/**'
+        'src/test/src/testUtilities/**',
+        '**/runOnceExampleScript.js'
     ],
     //
     // ============
@@ -141,7 +141,7 @@ exports.config = {
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'qunit'
+        ui: 'bdd'
     },
     //
     // Options to be passed to Jasmine.
@@ -186,6 +186,7 @@ exports.config = {
     // variables like `browser`. It is the perfect place to define custom commands.
     before: function() {
         console.log('run the tests');
+        browser.url('/src/test/src/common/navigation/problem/navigationPanelTest.html');
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
@@ -198,5 +199,14 @@ exports.config = {
     // possible to defer the end of the process using a promise.
     onComplete: function() {
         console.log('that\'s it');
+        var seleniumChildProcesses = global['seleniumChildProcesses'];
+        console.log('killing the child');
+        if (seleniumChildProcesses && seleniumChildProcesses.kill) {
+            console.log('child is killable');
+            seleniumChildProcesses.kill();
+            console.log('child is dead!');
+        } else {
+            console.log('could not find child');
+        }
     }
 };

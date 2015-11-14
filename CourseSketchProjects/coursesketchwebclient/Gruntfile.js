@@ -87,7 +87,7 @@ module.exports = function(grunt) {
         mkdir: {
             all: {
                 options: {
-                    create: [ 'target/unitTest' ]
+                    create: [ 'target/unitTest', 'target/screenshots' ]
                 }
             }
         },
@@ -134,10 +134,25 @@ module.exports = function(grunt) {
         },
         webdriver: {
             unit: {
+                options: {
+                    specs: [
+                        'src/test/src/**/*Test.html'
+                        // Test.html
+                    ]
+                },
+                specs: [
+                    'src/test/src/**/*Test.html'
+                    // Test.html
+                ],
                 configFile: 'config/test/wdio.conf.js'
             }
         },
         'seleniumStandalone': {
+            run: {
+
+            }
+        },
+        'seleniumKill': {
             run: {
 
             }
@@ -379,7 +394,8 @@ module.exports = function(grunt) {
         printTaskGroup();
         grunt.task.run([
             'server',
-            'webdriver:unit'
+            'webdriver:unit',
+            'seleniumKill:run'
         ]);
     });
 
