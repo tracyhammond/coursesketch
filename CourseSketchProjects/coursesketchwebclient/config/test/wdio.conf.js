@@ -36,7 +36,7 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     specs: [
-        'src/test/src/**'
+        'src/test/src/**/*Test.js'
         // Test.html
     ],
     //
@@ -186,12 +186,7 @@ exports.config = {
     // variables like `browser`. It is the perfect place to define custom commands.
     before: function() {
         console.log('run the tests');
-        browser.getTitle().then(function(title) {
-            console.log(title);
-            // outputs the following:
-            // "WebdriverIO - Selenium 2.0 javascript bindings for nodejs"
-        });
-
+        console.log(global['currentFile']);
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
