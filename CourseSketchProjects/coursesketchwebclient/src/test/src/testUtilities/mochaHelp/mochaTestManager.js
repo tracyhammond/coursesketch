@@ -2,8 +2,12 @@
  * Created by dtracers on 11/14/2015.
  */
 var assert = require('assert');
+var qunitFileParser = require('./qunitFileParser');
 
 var failedElement = 'span.failed';
+var totalTestCases = 'span.total';
+var testResults = '#qunit-tests li';
+var codeCoverage = '#blanket-main';
 
 module.exports = {
 
@@ -27,44 +31,34 @@ module.exports = {
 
         describe(fileName, function (done) {
             var unitTestsRan = false;
-            before(function(done) {
+
+            it('running test for ' + fileUrl, function (done) {
                 browser.url(fileUrl).then(function () {
                     browser.waitForExist(failedElement, timeout).then(function (result) {
                         console.log('done waiting for element to exist was it found? ' + result);
                         unitTestsRan = result;
                         if (result) {
-                            createTests(browser, describe, filePath, fileName);
+                            createTests(browser, describe, filePath, fileName, done);
                         }
-                        done();
+                        assert.equal(true, unitTestsRan, 'the browser was able to unit test');
                     });
                 });
             });
-
-            it('unit tests should be created', function (done) {
-                assert.equal(true, unitTestsRan, 'the browser was able to unit test');
-                done();
-            });
         });
     },
-    createTests: function(browser, descrive, filePath, fileName) {
+    createTests: function(browser, descrive, filePath, fileName, done) {
         console.log('creating tests from failures');
-        return;
         browser.getHTML(failedElement, false).then(function (html) {
-            console.log('the number of failed tests ' + html);
-            /*
-            describe('live test!', function() {
-                it('should have no problem creating this live test', function() {
-                    var failed = parseInt(html);
-                    console.log('number of failed tests ' + failed);
-                    assert.equal(0, failed);
-                    if (failed > 0) {
-                        browser.getHTML('span.failed', false).then(function (html) {
-
-                        });
-                    }
+            // console.log('the number of failed tests ' + html);
+            browser.getHTML(codeCoverage).then(function(codeCoverage) {
+                console.log('getting test results');
+                browser.getHTML(testResults).then(function (results) {
+                    // console.log('the test results', results);
+                    assertionList = qunitFileParser.parseFile(results);
+                    console.log('results found');
+                    done();
                 });
             });
-            */
         });
     }
 };
