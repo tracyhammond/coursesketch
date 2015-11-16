@@ -10,5 +10,8 @@
     "materialize": "0.97.1",
     "dialog-polyfill": "0.4.2"
   },
+  "devDependencies": {
+    "blanket": "1.1.7"
+  },
   "private": true
 }

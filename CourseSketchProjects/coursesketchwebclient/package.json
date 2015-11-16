@@ -28,7 +28,9 @@
     "selenium-standalone": "4.7.1",
     "mocha": "2.3.3",
     "xunit-file": "0.0.9",
-    "grunt-mkdir": "0.1.2"
+    "grunt-mkdir": "0.1.2",
+    "jquery": "2.1.4",
+    "jsdom": "7.0.0"
   }
 }
 
