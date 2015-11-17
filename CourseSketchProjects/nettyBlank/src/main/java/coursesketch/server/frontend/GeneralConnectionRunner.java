@@ -1,4 +1,4 @@
-package coursesketch.server.base;
+package coursesketch.server.frontend;
 
 import coursesketch.server.interfaces.AbstractGeneralConnectionRunner;
 import coursesketch.server.interfaces.ISocketInitializer;
@@ -211,15 +211,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void stop() {
-
-    }
-
-    /**
-     * Stops the server.
-     * Input is not stopped by the method.
-     */
-    @Override
-    protected void reconnect() {
 
     }
 
