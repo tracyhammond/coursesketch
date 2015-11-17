@@ -50,7 +50,8 @@ module.exports = {
                     }).catch(function(result) {
                         console.log('Writing timeout result!!!! ', result);
                         var writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
-                        writeStream.write('[\n');
+                        writeStream.write('// ' + filePath);
+                        writeStream.write('\n[\n');
                         var timeoutMessage = {
                             passed: false,
                             message: 'Test timed out after ' + timeout,
@@ -81,7 +82,8 @@ module.exports = {
                     qunitFileParser.parseFile(results, function(resultList) {
                         if (html > 0) {
                             writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
-                            writeStream.write('[\n');
+                            writeStream.write('// ' + filePath);
+                            writeStream.write('\n[\n');
                         }
                         for (index in resultList) {
                             var testData = resultList[index];
