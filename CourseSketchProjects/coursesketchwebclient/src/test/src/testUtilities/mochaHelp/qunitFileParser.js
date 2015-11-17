@@ -55,6 +55,7 @@ function createPassingTest(moduleName, testName, runtime) {
 
 
 function createFailingTest(moduleName, testName, runtime, $) {
+    var globalTest = false;
     if (typeof moduleName == 'undefined') {
         moduleName = 'global';
     }
@@ -62,6 +63,7 @@ function createFailingTest(moduleName, testName, runtime, $) {
     if (typeof testName == 'undefined') {
         testName = 'global';
         runtime = 'N/A';
+        globalTest = true;
     }
     var message = $('.test-message').first().html();
     return {
@@ -70,7 +72,7 @@ function createFailingTest(moduleName, testName, runtime, $) {
         moduleName: moduleName,
         testName: testName,
         runtime: runtime,
-        stackTrace: getFailedLineNumbers($)
+        stackTrace: globalTest? [] : getFailedLineNumbers($)
     }
 }
 
@@ -85,6 +87,9 @@ function getFailedLineNumbers($) {
         if (stringResult == '') {
             return;
         }
+        if (stringResult.indexOf(/Error:/) >= 0) {
+            return string;
+        }
         var lineNumberIndex = stringResult.indexOf(' ');
         stringResult = stringResult.replace(localHostReg, '');
         var object = stringResult.substring(0, lineNumberIndex).trim();
@@ -94,8 +99,8 @@ function getFailedLineNumbers($) {
             object: object,
             // gets the file path and removes any ? from the url
             file: lineInfo[0].replace(/[?].*/,'').trim(),
-            line: lineInfo[1].trim(),
-            column: lineInfo[2].trim()
+            line: lineInfo[1],
+            column: lineInfo[2]
         };
     });
     return cleanArray(stackTrace);

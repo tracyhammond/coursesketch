@@ -36,7 +36,8 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     specs: [
-        'src/test/src/**/*Test.js'
+        'src/test/src/**/*Test.js',
+        // 'src/test/src/testUtilitiesTests/**/*Test.js'
         // Test.html
     ],
     //
@@ -128,7 +129,7 @@ exports.config = {
     // Test reporter for stdout.
     // The following are supported: dot (default), spec and xunit
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporter: 'dot',
+    reporter: 'spec',
     //
     // Some reporter require additional information which should get defined here
     reporterOptions: {

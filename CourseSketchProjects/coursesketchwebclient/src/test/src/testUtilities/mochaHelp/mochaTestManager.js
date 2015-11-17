@@ -7,7 +7,7 @@ var fs = require('fs');
 
 var mainPath = require.main.filename;
 var home = mainPath.substring(0, mainPath.indexOf('node_modules'));
-var output = home + '/target/unitTests';
+var output = home + '/target/unitTest';
 
 var failedElement = 'span.failed';
 var totalTestCases = 'span.total';
@@ -53,6 +53,7 @@ module.exports = {
     },
     createTests: function(browser, descrive, filePath, fileName, done) {
         console.log('creating tests from failures');
+        var writeStream = fs.createWriteStream(output + '/' + fileName + '.json');
         browser.getHTML(failedElement, false).then(function (html) {
             // console.log('the number of failed tests ' + html);
             browser.getHTML(codeCoverage).then(function(codeCoverage) {
@@ -61,10 +62,17 @@ module.exports = {
                     // console.log('the test results', results);
                     qunitFileParser.parseFile(results, function(resultList) {
                         console.log(resultList);
+                        writeStream.write('[\n');
                         for (index in resultList) {
                             var testData = resultList;
-                            assert.ok(testData.passing, testData);
+                            assert.ok(testData.passing, testData.message);
+                            if (!testData.passing) {
+                                writeStream.write(JSON.stringify(testData));
+                                writeStream.write(',\n');
+                            }
                         }
+                        writeStream.write(']');
+                        writeStream.end();
                         done();
                     });
                 });
