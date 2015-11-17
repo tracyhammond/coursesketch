@@ -3,6 +3,11 @@
  */
 var assert = require('assert');
 var qunitFileParser = require('./qunitFileParser');
+var fs = require('fs');
+
+var mainPath = require.main.filename;
+var home = mainPath.substring(0, mainPath.indexOf('node_modules'));
+var output = home + '/target/unitTests';
 
 var failedElement = 'span.failed';
 var totalTestCases = 'span.total';
@@ -54,9 +59,14 @@ module.exports = {
                 console.log('getting test results');
                 browser.getHTML(testResults).then(function (results) {
                     // console.log('the test results', results);
-                    assertionList = qunitFileParser.parseFile(results);
-                    console.log('results found');
-                    done();
+                    qunitFileParser.parseFile(results, function(resultList) {
+                        console.log(resultList);
+                        for (index in resultList) {
+                            var testData = resultList;
+                            assert.ok(testData.passing, testData);
+                        }
+                        done();
+                    });
                 });
             });
         });
