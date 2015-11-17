@@ -5,11 +5,11 @@ import com.mongodb.DB;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationChecker;
-import database.auth.AuthenticationDataCreator;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationOptionChecker;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.Authenticator;
 import database.institution.mongo.MongoInstitution;
 import org.junit.Before;
 import org.junit.Rule;
@@ -88,7 +88,7 @@ public class DataRequestHandlerTest {
 
     // THESE TEST CURRENTLY DO NOT WORK!
     // WILL BE FIXED IN NEXT REFACTOR
-    public void brokenDbReturnsAuthenticationExceptionRequest() throws DatabaseAccessException {
+    public void brokenDbReturnsAuthenticationExceptionRequest() throws DatabaseAccessException, AuthenticationException {
         String[] values = breakDatabase.invalidCourseAuthentication();
         Data.ItemRequest.Builder itemRequest = Data.ItemRequest.newBuilder();
         itemRequest.setQuery(Data.ItemQuery.COURSE);
@@ -110,7 +110,7 @@ public class DataRequestHandlerTest {
 
     // THESE TEST CURRENTLY DO NOT WORK!
     // WILL BE FIXED IN NEXT REFACTOR
-    public void brokenDbReturnsDatabaseAccessExceptionRequest() throws DatabaseAccessException {
+    public void brokenDbReturnsDatabaseAccessExceptionRequest() throws DatabaseAccessException, AuthenticationException {
         String[] values = breakDatabase.invalidCourse();
         Data.ItemRequest.Builder itemRequest = Data.ItemRequest.newBuilder();
         itemRequest.setQuery(Data.ItemQuery.COURSE);

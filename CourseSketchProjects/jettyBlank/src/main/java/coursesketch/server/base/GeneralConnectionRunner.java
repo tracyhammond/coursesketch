@@ -115,7 +115,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      * {@inheritDoc}
      */
     @Override
-    public final void loadConfigurations() {
+    protected void loadConfigurations() {
         // loading configuration code goes here.
     }
 

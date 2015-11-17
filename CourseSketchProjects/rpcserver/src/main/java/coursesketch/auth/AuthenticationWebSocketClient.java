@@ -1,11 +1,13 @@
 package coursesketch.auth;
 
 import com.google.protobuf.ServiceException;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationUpdater;
+import coursesketch.database.auth.Authenticator;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import database.auth.AuthenticationChecker;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
@@ -18,12 +20,23 @@ import java.net.URI;
  *
  * Created by gigemjt on 9/4/15.
  */
-public class AuthenticationWebSocketClient extends ClientWebSocket implements AuthenticationChecker {
+public class AuthenticationWebSocketClient extends ClientWebSocket implements AuthenticationChecker, AuthenticationUpdater {
+
+    /**
+     * The default address for the authentication server.
+     */
+    public static final String ADDRESS = "AUTH_IP_PROP";
+
+    /**
+     * The default port of the Auth Server.
+     */
+    public static final int PORT = 8890;
 
     /**
      * The blocker service that is used to communicate.
      */
     private Authentication.AuthenticationService.BlockingInterface authService;
+
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
      * <p/>
@@ -35,7 +48,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
      *         http://example.com:1234
      * @param iParentServer The server that created the websocket.
      */
-    protected AuthenticationWebSocketClient(final URI iDestination,
+    public AuthenticationWebSocketClient(final URI iDestination,
             final AbstractServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
@@ -79,5 +92,80 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
             throw new AuthenticationException(e);
         }
         return response;
+    }
+
+    @Override public final void createNewItem(final School.ItemType collectionType, final String itemId, final String parentId, final String userId,
+            final String registrationKey) throws AuthenticationException {
+
+        if (authService == null) {
+            authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
+        }
+
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+                .setAuthId(userId)
+                .setItemId(itemId)
+                .setItemType(collectionType)
+                .build();
+
+        final Authentication.AuthCreationRequest.Builder creationRequestBuilder = Authentication.AuthCreationRequest.newBuilder()
+                .setItemRequest(request);
+        if (parentId == null && School.ItemType.COURSE != collectionType && School.ItemType.BANK_PROBLEM != collectionType) {
+            throw new AuthenticationException("Parent Id can only be null when inserting a course", AuthenticationException.NO_AUTH_SENT);
+        }
+        if (parentId != null) {
+            creationRequestBuilder.setParentItemId(parentId);
+        }
+        if (registrationKey != null) {
+            creationRequestBuilder.setRegistrationKey(registrationKey);
+        }
+
+        Message.DefaultResponse response = null;
+        try {
+            final Authentication.AuthCreationRequest creationRequest = creationRequestBuilder.build();
+            response = authService.createNewItem(getNewRpcController(), creationRequest);
+            if (response.hasException()) {
+                final AuthenticationException authExcep =
+                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
+                authExcep.setProtoException(response.getException());
+                throw authExcep;
+            }
+        } catch (ServiceException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    @Override public final void registerUser(final School.ItemType collectionType, final String itemId, final String userId,
+            final String registrationKey)
+            throws AuthenticationException {
+        if (authService == null) {
+            authService = Authentication.AuthenticationService.newBlockingStub(getRpcChannel());
+        }
+
+        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+                .setAuthId(userId)
+                .setItemId(itemId)
+                .setItemType(collectionType)
+                .build();
+
+        final Authentication.UserRegistration.Builder creationRequest = Authentication.UserRegistration.newBuilder()
+                .setItemRequest(request);
+
+        if (registrationKey != null) {
+            creationRequest.setRegistrationKey(registrationKey);
+        }
+
+        Message.DefaultResponse response = null;
+        try {
+            response = authService.registerUser(getNewRpcController(), creationRequest.build());
+            if (response.hasException()) {
+                final AuthenticationException authExcep =
+                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
+                authExcep.setProtoException(response.getException());
+                throw authExcep;
+            }
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            throw new AuthenticationException(e);
+        }
     }
 }

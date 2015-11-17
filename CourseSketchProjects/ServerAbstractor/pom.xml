@@ -17,7 +17,7 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>43</projectBranchLevel>
+        <projectBranchLevel>39</projectBranchLevel>
         <projectLineLevel>34</projectLineLevel>
     </properties>
     <build>
@@ -70,6 +70,13 @@
             <groupId>com.boundary</groupId>
             <artifactId>high-scale-lib</artifactId>
             <version>1.0.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jeremyh</groupId>
+            <artifactId>jBCrypt</artifactId>
+            <version>jbcrypt-0.4</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

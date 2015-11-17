@@ -1,10 +1,10 @@
 package com.coursesketch.test.utilities;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationChecker;
-import database.auth.AuthenticationDataCreator;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
@@ -149,7 +149,7 @@ public class AuthenticationHelper {
                 createAnyEqMatcher(type, School.ItemType.class),
                 createAnyEqMatcher(itemId, String.class)))
                 .thenReturn(tempCreator);
-        when(option.isItemPublished(tempCreator))
+        when(option.isItemRegistrationRequired(tempCreator))
                 .thenReturn(isRegistraionRequired);
         return tempCreator;
     }

@@ -1,7 +1,7 @@
 package local.data;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -581,7 +581,7 @@ public class LocalAddProblems {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(false, null, null); // makes the database point locally
+		new MongoInstitution(null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 	}
  }
