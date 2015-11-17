@@ -104,6 +104,7 @@ module.exports = function(grunt) {
                { from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1' },
                { from: '^/test(.*)$', to: '/src/test/src$1', redirect: 'permanent' },
                { from: '^/other(.*)$', to: '/src/main/resources/other/$1' },
+               { from: '^/images(.*)$', to: '/src/main/resources/images/$1' },
             //   { from: '^/bower_components(.*)$', to: 'bower_components$1' }
             ],
             development: {
