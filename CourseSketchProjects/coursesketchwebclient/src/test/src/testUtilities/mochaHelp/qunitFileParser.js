@@ -76,6 +76,9 @@ function createFailingTest(moduleName, testName, runtime, $) {
 
 function getFailedLineNumbers($) {
     var source = $('.test-source pre').html();
+    if (typeof source == 'undefined') {
+        return [];
+    }
     var stackTrace = source.split(/\sat\s/g).map(function(string) {
         // removes "http://localhost:PORT/" and trims extra spaces
         var stringResult = string.trim();
