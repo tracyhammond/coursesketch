@@ -24,6 +24,11 @@ public class AuthenticationException extends Exception {
     public static final int NO_AUTH_SENT = 2;
 
     /**
+     * Indicates that the exception thrown is not known by its type.
+     */
+    public static final int OTHER = 3;
+
+    /**
      * Contains the type of issue with the authentication.
      */
     private final int exceptionType;
@@ -37,6 +42,17 @@ public class AuthenticationException extends Exception {
     public AuthenticationException(final int value) {
         super(getMessageFromValue(value));
         exceptionType = value;
+    }
+
+    /**
+     * Accepts an authentication type.
+     *
+     * @param exception
+     *         What started an exception.
+     */
+    public AuthenticationException(final Exception exception) {
+        super(exception);
+        exceptionType = OTHER;
     }
 
     /**
