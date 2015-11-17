@@ -7,11 +7,12 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import database.RequestConverter;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.MOD_GROUP_ID;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
+import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
@@ -52,7 +54,8 @@ import static database.utilities.MongoUtilities.createId;
  *
  * @author gigemjt
  */
-@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses" })
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
+    "PMD.TooManyMethods" })
 public final class CourseManager {
 
     /**
@@ -67,8 +70,10 @@ public final class CourseManager {
     }
 
     /**
-     * @param dbs    The database where the assignment is being stored.
-     * @param course The data of the course that is being inserted.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param course
+     *         The data of the course that is being inserted.
      * @return The id of the course that was inserted.
      */
     static String mongoInsertCourse(final DB dbs, final SrlCourse course) {
@@ -77,9 +82,9 @@ public final class CourseManager {
         final BasicDBObject query = new BasicDBObject(DESCRIPTION, course.getDescription()).append(NAME, course.getName())
                 .append(COURSE_ACCESS, course.getAccess().getNumber()).append(COURSE_SEMESTER, course.getSemester())
                 .append(ACCESS_DATE, course.getAccessDate().getMillisecond())
-                .append(IMAGE, course.getImageUrl()).append(ADMIN, course.getAccessPermission().getAdminPermissionList())
-                .append(MOD, course.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, course.getAccessPermission().getUserPermissionList());
+                .append(IMAGE, course.getImageUrl())
+                .append(REGISTRATION_KEY, course.getRegistrationKey())
+                .append(DatabaseStringConstants.STATE_PUBLISHED, true);
 
         // Sets a default date in the instance that a date was not given.
         if (!course.hasCloseDate()) {
@@ -92,19 +97,25 @@ public final class CourseManager {
             query.append(ASSIGNMENT_LIST, course.getAssignmentListList());
         }
         courseCollection.insert(query);
-        final DBObject cursor = courseCollection.findOne(query);
-        return cursor.get(SELF_ID).toString();
+        return query.get(SELF_ID).toString();
     }
 
     /**
-     * @param authenticator the object that is performing authentication.
-     * @param dbs           The database where the assignment is being stored.
-     * @param courseId      the id of what course is being grabbed.
-     * @param userId        the user requesting the course.
-     * @param checkTime     the time at which the course was requested.
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param courseId
+     *         the id of what course is being grabbed.
+     * @param userId
+     *         the user requesting the course.
+     * @param checkTime
+     *         the time at which the course was requested.
      * @return The course if all of the checks pass.
-     * @throws AuthenticationException Thrown if the user did not have the authentication to get the course.
-     * @throws DatabaseAccessException Thrown if there are problems retrieving the course.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to get the course.
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems retrieving the course.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
@@ -183,25 +194,27 @@ public final class CourseManager {
             } catch (ClassCastException exception) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
             }
-            final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
-            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // admin
-            exactCourse.setAccessPermission(permissions.build());
         }
         return exactCourse.build();
 
     }
 
     /**
-     * @param authenticator the object that is performing authentication.
-     * @param dbs           The database where the assignment is being stored.
-     * @param courseId      The id of the course being updated.
-     * @param userId        The id of the user that is updating the course.
-     * @param course        the course data that is being updated.
+     * @param authenticator
+     *         the object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param courseId
+     *         The id of the course being updated.
+     * @param userId
+     *         The id of the user that is updating the course.
+     * @param course
+     *         the course data that is being updated.
      * @return true if the update is successful.
-     * @throws AuthenticationException Thrown if the user did not have the authentication to update the course.
-     * @throws DatabaseAccessException Thrown if there are problems updating the course.
+     * @throws AuthenticationException
+     *         Thrown if the user did not have the authentication to update the course.
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems updating the course.
      */
     @SuppressWarnings("PMD.NPathComplexity")
     static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId,
@@ -293,12 +306,17 @@ public final class CourseManager {
      * With that being said this allows a course to be updated adding the
      * assignmentId to its list of items.
      *
-     * @param dbs          The database where the assignment is being stored.
-     * @param courseId     the course into which the assignment is being inserted into
-     * @param assignmentId the assignment that is being inserted into the course.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param courseId
+     *         the course into which the assignment is being inserted into
+     * @param assignmentId
+     *         the assignment that is being inserted into the course.
      * @return true if the assignment was inserted correctly.
-     * @throws AuthenticationException The user does not have permission to update the assignment.
-     * @throws DatabaseAccessException The assignment does not exist.
+     * @throws AuthenticationException
+     *         The user does not have permission to update the assignment.
+     * @throws DatabaseAccessException
+     *         The assignment does not exist.
      */
     static boolean mongoInsertAssignmentIntoCourse(final DB dbs, final String courseId, final String assignmentId)
             throws AuthenticationException, DatabaseAccessException {
@@ -320,12 +338,17 @@ public final class CourseManager {
      * With that being said this allows a course to be updated adding the
      * lectureId to its list of items.
      *
-     * @param dbs       The database where the assignment is being stored.
-     * @param courseId  the course into which the assignment is being inserted into
-     * @param lectureId the assignment that is being inserted into the course.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param courseId
+     *         the course into which the assignment is being inserted into
+     * @param lectureId
+     *         the assignment that is being inserted into the course.
      * @return true if the assignment was inserted correctly.
-     * @throws AuthenticationException The user does not have permission to update the course.
-     * @throws DatabaseAccessException The course does not exist.
+     * @throws AuthenticationException
+     *         The user does not have permission to update the course.
+     * @throws DatabaseAccessException
+     *         The course does not exist.
      */
     static boolean mongoInsertLectureIntoCourse(final DB dbs, final String courseId, final String lectureId)
             throws AuthenticationException, DatabaseAccessException {
@@ -342,7 +365,8 @@ public final class CourseManager {
     }
 
     /**
-     * @param dbs The database where the course is being stored.
+     * @param dbs
+     *         The database where the course is being stored.
      * @return a list of all public courses.
      * <p/>
      * FUTURE: this should probably be paginated so it does not crush
@@ -361,12 +385,15 @@ public final class CourseManager {
         final DBObject superPublicCheck = new BasicDBObject(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber());
         buildCourseForSearching(courseTable.find(superPublicCheck), resultList);
 
+        LOG.debug("Found {} courses in the current search", resultList.size());
         return resultList;
     }
 
     /**
-     * @param cursor     The pointer to the database object
-     * @param resultList The list that the results are added to.  This list is modified by this method.
+     * @param cursor
+     *         The pointer to the database object
+     * @param resultList
+     *         The list that the results are added to.  This list is modified by this method.
      */
     private static void buildCourseForSearching(final DBCursor cursor, final List<SrlCourse> resultList) {
         while (cursor.hasNext()) {
@@ -387,11 +414,16 @@ public final class CourseManager {
      * <p/>
      * With that being said this allows the default ids to be inserted.
      *
-     * @param dbs          The database where the course is being stored.
-     * @param courseId     the course that inserts the default id.
-     * @param userGroupId  the group id that is being inserted for users.
-     * @param modGroupId   the group id that is being inserted for moderators.
-     * @param adminGroupId the group id that is being inserted for admins.
+     * @param dbs
+     *         The database where the course is being stored.
+     * @param courseId
+     *         the course that inserts the default id.
+     * @param userGroupId
+     *         the group id that is being inserted for users.
+     * @param modGroupId
+     *         the group id that is being inserted for moderators.
+     * @param adminGroupId
+     *         the group id that is being inserted for admins.
      */
     static void mongoInsertDefaultGroupId(final DB dbs, final String courseId, final String userGroupId, final String modGroupId,
             final String adminGroupId) {
@@ -411,8 +443,10 @@ public final class CourseManager {
      * <p/>
      * The list are ordered as so: AdminGroup, ModGroup, UserGroup
      *
-     * @param dbs      The database where the course is being stored.
-     * @param courseId the course that the groups are being grabbed from.
+     * @param dbs
+     *         The database where the course is being stored.
+     * @param courseId
+     *         the course that the groups are being grabbed from.
      * @return a list of usergroups.
      */
     static List<String>[] mongoGetDefaultGroupList(final DB dbs, final String courseId) {
@@ -432,8 +466,10 @@ public final class CourseManager {
      * <p/>
      * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup
      *
-     * @param dbs      The database where the course is being stored.
-     * @param courseId the course whose user group is being requested.
+     * @param dbs
+     *         The database where the course is being stored.
+     * @param courseId
+     *         the course whose user group is being requested.
      * @return a list of user group ids.
      */
     static String[] mongoGetDefaultGroupId(final DB dbs, final String courseId) {
@@ -444,5 +480,47 @@ public final class CourseManager {
         returnValue[1] = corsor.get(MOD_GROUP_ID).toString();
         returnValue[2] = corsor.get(USER_GROUP_ID).toString();
         return returnValue;
+    }
+
+    /**
+     * Returns the registration key of the given course if the constraints are met, null is returned in all other cases.
+     *
+     * @param authenticator
+     *         Used to ensure the user has access to the registration key.
+     * @param database
+     *         The database that contains the registration key.
+     * @param courseId
+     *         The id of the course that contains the registration key.
+     * @param userId
+     *         The user wanting to view the registration key.
+     * @param checkTeacher
+     *         True if the fact that the user is an admin needs to be checked.  Otherwise it is not checked.
+     * @return The registration key of the given course if the constraints are met, null is returned in all other cases.
+     * @throws AuthenticationException
+     *         Thrown if there are problems checking the users authentication.
+     * @throws DatabaseAccessException
+     *         Thrown if the course does not exist.
+     */
+    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String courseId, final String userId,
+            final boolean checkTeacher)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBRef myDbRef = new DBRef(database, COURSE_COLLECTION, createId(courseId));
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
+            throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
+        }
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .setCheckingAdmin(checkTeacher)
+                .setCheckIsPublished(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, 0, authType);
+
+        if (responder.hasTeacherPermission() || (!responder.isRegistrationRequired() && responder.isItemPublished())) {
+            return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);
+        }
+        return null;
     }
 }

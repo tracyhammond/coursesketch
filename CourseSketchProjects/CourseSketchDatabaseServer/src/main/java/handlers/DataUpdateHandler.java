@@ -2,7 +2,7 @@ package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public final class DataUpdateHandler {
      * @param instance The database backer.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "checkstyle:avoidnestedblocks" })
     public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Receiving DATA UPDATE Request...");

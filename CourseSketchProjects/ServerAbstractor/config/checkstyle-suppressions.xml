@@ -7,4 +7,7 @@
 <suppressions>
     <suppress checks="JavadocVariable"
               files="DatabaseStringConstants.java"/>
+
+    <!-- Password hash library -->
+    <suppress checks=".*" files="PasswordHash.java" />
 </suppressions>

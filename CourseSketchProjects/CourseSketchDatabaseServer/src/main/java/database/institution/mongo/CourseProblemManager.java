@@ -5,11 +5,11 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +18,13 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.State;
 import protobuf.srl.services.authentication.Authentication;
-import protobuf.srl.utils.Util.SrlPermission;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
-import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.PROBLEM_NUMBER;
@@ -87,22 +83,17 @@ public final class CourseProblemManager {
         }
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, problem.getCourseId()).append(ASSIGNMENT_ID, problem.getAssignmentId())
-                .append(PROBLEM_BANK_ID, problem.getProblemBankId()).append(GRADE_WEIGHT, problem.getGradeWeight())
-                .append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
-                .append(MOD, problem.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(NAME, problem.getName())
+                .append(PROBLEM_BANK_ID, problem.getProblemBankId())
+                .append(GRADE_WEIGHT, problem.getGradeWeight())
+                .append(NAME, problem.getName())
                 .append(PROBLEM_NUMBER, problem.getProblemNumber());
         courseProblemCollection.insert(query);
-        final DBObject cursor = courseProblemCollection.findOne(query);
+        final String selfId = query.get(SELF_ID).toString();
 
         // inserts the id into the previous the course
-        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), cursor.get(SELF_ID).toString());
+        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), selfId);
 
-        if (problem.hasProblemBankId()) {
-            BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
-        }
-
-        return cursor.get(SELF_ID).toString();
+        return selfId;
     }
 
     /**
@@ -191,15 +182,6 @@ public final class CourseProblemManager {
             exactProblem.setProblemInfo(problemBank);
         }
 
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin can change this
-            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin can change this
-        }
-        if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // mod can change this
-            exactProblem.setAccessPermission(permissions.build());
-        }
         return exactProblem.build();
 
     }
@@ -269,29 +251,7 @@ public final class CourseProblemManager {
             }
             if (problem.hasProblemBankId()) {
                 updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
-
-                // updates the bank problem associated with this course problem
-                LOG.warn("Changing the bank problem id. This feature may be removed in the future");
-                BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
                 update = true;
-            }
-
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (problem.hasAccessPermission()) {
-                final SrlPermission permissions = problem.getAccessPermission();
-                if (responder.hasTeacherPermission()) {
-                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                    if (permissions.getAdminPermissionCount() > 0) {
-                        updateObj.append(ADMIN, permissions.getAdminPermissionList());
-                    }
-                    if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj.append(MOD, permissions.getModeratorPermissionList());
-                    }
-                }
-                if (permissions.getUserPermissionCount() > 0) {
-                    updateObj.append(USERS, permissions.getUserPermissionList());
-                }
             }
         }
         if (update) {

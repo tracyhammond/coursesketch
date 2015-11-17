@@ -2,7 +2,7 @@ package local.data;
 
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlAssignment;
@@ -51,7 +51,7 @@ public class LocalAddAssignments {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(false, null, null); // makes the database point locally
+		new MongoInstitution(null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 		testAssignments(""/*course id */,""/*instructor id*/);
 	}

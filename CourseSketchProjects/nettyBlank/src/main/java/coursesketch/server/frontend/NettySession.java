@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.concurrent.Future;
 
 /**
@@ -77,15 +78,16 @@ public final class NettySession implements SocketSession {
      */
     @Override
     public Future<Void> send(final ByteBuffer buffer) {
-        LOG.info("Sending");
-        LOG.info("local address {}", session.channel().localAddress());
-        LOG.info("remote address {}", session.channel().remoteAddress());
+        LOG.debug("BYTES {}", Arrays.toString(buffer.array()));
+        LOG.debug("Sending");
+        LOG.debug("local address {}", session.channel().localAddress());
+        LOG.debug("remote address {}", session.channel().remoteAddress());
         final BinaryWebSocketFrame frame = new BinaryWebSocketFrame(Unpooled.copiedBuffer(buffer));
-        LOG.info("Frame: {}", frame);
+        LOG.debug("Frame: {}", frame);
+        LOG.debug("FRAME BYTES{}", Arrays.toString(frame.content().array()));
         final ChannelFuture future = session.channel().write(frame);
         session.channel().flush();
         future.addListener(new GenericFutureListener<DefaultChannelPromise>() {
-
             /**
              * {@inheritDoc}
              **/
@@ -94,6 +96,7 @@ public final class NettySession implements SocketSession {
                 LOG.debug("Message sent successfully");
             }
         });
+        LOG.info("MESSAGE FINISHED!");
         return future;
     }
 

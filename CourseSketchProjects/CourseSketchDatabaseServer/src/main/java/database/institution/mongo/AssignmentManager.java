@@ -5,12 +5,12 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +46,7 @@ import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.utilities.MongoUtilities.createId;
 
@@ -103,9 +104,8 @@ public final class AssignmentManager {
                 .append(DESCRIPTION, assignment.getDescription()).append(ASSIGNMENT_RESOURCES, assignment.getLinksList())
                 .append(GRADE_WEIGHT, assignment.getGradeWeight()).append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
                 .append(DUE_DATE, assignment.getDueDate().getMillisecond())
-                .append(IMAGE, assignment.getImageUrl()).append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
-                .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+                .append(IMAGE, assignment.getImageUrl())
+                .append(STATE_PUBLISHED, true);
 
         // Sets a default date in the instance that a date was not given.
         if (!assignment.hasCloseDate()) {
@@ -123,13 +123,15 @@ public final class AssignmentManager {
         if (assignment.getProblemListList() != null) {
             query.append(PROBLEM_LIST, assignment.getProblemListList());
         }
+
         assignmentCollection.insert(query);
-        final DBObject cursor = assignmentCollection.findOne(query);
+        final String selfId = query.get(SELF_ID).toString();
+        // final DBObject cursor = assignmentCollection.findOne(query);
 
         // inserts the id into the previous the course
-        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), cursor.get(SELF_ID).toString());
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), selfId);
 
-        return cursor.get(SELF_ID).toString();
+        return selfId;
     }
 
     /**
@@ -233,15 +235,6 @@ public final class AssignmentManager {
 
         exactAssignment.setState(stateBuilder);
 
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin
-        }
-        if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // mod
-            exactAssignment.setAccessPermission(permissions.build());
-        }
         return exactAssignment.build();
     }
 
