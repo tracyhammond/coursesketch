@@ -19,9 +19,17 @@ import os
 
 class MainPage(webapp2.RequestHandler):
 
+    def getFailedUnitTest(self, file_name):
+        absPath = os.path.abspath('target/unitTest');
+        if os.path.exists(absPath):
+            fileName = absPath + "/" + file_name.replace(".html", ".json");
+            if os.path.isfile(fileName):
+                return "failed";
+        return "";
+
     def get_class_from_file_name(self, file_name):
         if file_name.endswith("Test.html"):
-            return "unitTest"
+            return "unitTest" + " " + self.getFailedUnitTest(file_name);
         elif file_name.endswith("FakePage.html"):
             return "fakePage"
         else:
@@ -51,13 +59,12 @@ class MainPage(webapp2.RequestHandler):
                 for files in testFiles:
                     fileNameWithPath = os.path.join(r,files);
                     fileName = str(files);
-                    self.response.write('<li><a class="testFile ' + self.get_class_from_file_name(fileName) + '"  href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
+                    self.response.write('<li><a class="testFile ' + self.get_class_from_file_name(fileName) +  '"  href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
                 self.response.write('</ul>')
                 self.response.write('</div></div>')
                 counter = counter + 1
         if counter == 1:
             self.response.write('<br><b>There are no test files in: ' + directory + '</b>')
-
 
     def get(myOwn):
         myOwn.response.write('<style type="text/css">')
@@ -72,6 +79,7 @@ class MainPage(webapp2.RequestHandler):
         myOwn.response.write('h1 a {text-decoration:underline; color:#00F0F0;}')
         myOwn.response.write('.testFile {text-decoration:none; color:#000000;}')
         myOwn.response.write('.testFile:hover {color:#ff0000;} ')
+        myOwn.response.write('.failed::before { content: "FAILED: "; color:#FF0000;}')
         myOwn.response.write('.fakePage {text-decoration:none; color:#00B26B;}')
         myOwn.response.write('.fakePage:hover {color:#006B40;} ')
         myOwn.response.write('.unitTest {text-decoration:none; color:#990099;}')

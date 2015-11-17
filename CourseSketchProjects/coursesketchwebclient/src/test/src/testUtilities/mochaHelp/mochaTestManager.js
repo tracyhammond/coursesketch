@@ -38,6 +38,7 @@ module.exports = {
             var unitTestsRan = false;
 
             it('running test for ' + fileUrl, function (done) {
+                this.timeout(1000 + timeout);
                 browser.url(fileUrl).then(function () {
                     browser.waitForExist(failedElement, timeout).then(function (result) {
                         console.log('done waiting for element to exist was it found? ' + result);
@@ -46,6 +47,23 @@ module.exports = {
                             createTests(browser, describe, filePath, fileName, done);
                         }
                         assert.equal(true, unitTestsRan, 'the browser was able to unit test');
+                    }).catch(function(result) {
+                        console.log('Writing timeout result!!!! ', result);
+                        var writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
+                        writeStream.write('[\n');
+                        var timeoutMessage = {
+                            passed: false,
+                            message: 'Test timed out after ' + timeout,
+                            moduleName: 'global',
+                            testName: 'global',
+                            runtime: timeout + 'ms',
+                            stacktrace: []
+                        };
+                        writeStream.write(JSON.stringify(timeoutMessage, null, '    '));
+                        writeStream.write(']');
+                        writeStream.end();
+                        assert.ok(false, '' + result);
+                        done();
                     });
                 });
             });
@@ -53,15 +71,18 @@ module.exports = {
     },
     createTests: function(browser, descrive, filePath, fileName, done) {
         console.log('creating tests from failures');
-        var writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
         browser.getHTML(failedElement, false).then(function (html) {
             // console.log('the number of failed tests ' + html);
+            var writeStream;
             browser.getHTML(codeCoverage).then(function(codeCoverage) {
                 console.log('getting test results');
                 browser.getHTML(testResults).then(function (results) {
                     // console.log('the test results', results);
                     qunitFileParser.parseFile(results, function(resultList) {
-                        writeStream.write('[\n');
+                        if (html > 0) {
+                            writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
+                            writeStream.write('[\n');
+                        }
                         for (index in resultList) {
                             var testData = resultList[index];
                             if (!testData.passing) {
@@ -69,8 +90,10 @@ module.exports = {
                                 writeStream.write(',\n');
                             }
                         }
-                        writeStream.write(']');
-                        writeStream.end();
+                        if (html > 0) {
+                            writeStream.write(']');
+                            writeStream.end();
+                        }
                         for (index in resultList) {
                             var testData = resultList[index];
                             if (!testData.passing) {
