@@ -28,7 +28,10 @@ module.exports = {
         var filePath = filePath.replace(/[\\\/]/g, '/');
         var fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
         var testPath = 'src/test/src';
-        var fileUrl = '/test' + filePath.substring(filePath.indexOf(testPath) + testPath.length);
+        var postTestPath = filePath.substring(filePath.indexOf(testPath) + testPath.length);
+        var fileUrl = '/test' + postTestPath;
+        var outputFileName = postTestPath.substring(1).replace(/\//g, '-');
+        console.log('output file name!!!', outputFileName);
         fileUrl = fileUrl.replace('.js', '.html?coverage=true');
         console.log('creating tests for this url!' + fileUrl);
 
@@ -44,12 +47,12 @@ module.exports = {
                         console.log('done waiting for element to exist was it found? ' + result);
                         unitTestsRan = result;
                         if (result) {
-                            createTests(browser, describe, filePath, fileName, done);
+                            createTests(browser, describe, filePath, outputFileName, done);
                         }
                         assert.equal(true, unitTestsRan, 'the browser was able to unit test');
                     }).catch(function(result) {
                         console.log('Writing timeout result!!!! ', result);
-                        var writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
+                        var writeStream = fs.createWriteStream(output + '/' + outputFileName + 'on');
                         writeStream.write('// ' + filePath);
                         writeStream.write('\n[\n');
                         var timeoutMessage = {

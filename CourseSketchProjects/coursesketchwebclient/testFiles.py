@@ -17,19 +17,22 @@
 import webapp2
 import os
 
+testDir = 'src/test/src/'
+
 class MainPage(webapp2.RequestHandler):
 
-    def getFailedUnitTest(self, file_name):
-        absPath = os.path.abspath('target/unitTest');
+    def getFailedUnitTest(self, file_name, fileNameWithPath):
+        absPath = os.path.abspath('target/unitTest')
         if os.path.exists(absPath):
-            fileName = absPath + "/" + file_name.replace(".html", ".json");
+            testFile = fileNameWithPath[len(testDir):].replace('/', '-').replace('\\', '-')
+            fileName = absPath + "/" + testFile.replace(".html", ".json")
             if os.path.isfile(fileName):
-                return "failed";
-        return "";
+                return "failed"
+        return ""
 
-    def get_class_from_file_name(self, file_name):
+    def get_class_from_file_name(self, file_name, fileNameWithPath):
         if file_name.endswith("Test.html"):
-            return "unitTest" + " " + self.getFailedUnitTest(file_name);
+            return "unitTest" + " " + self.getFailedUnitTest(file_name, fileNameWithPath);
         elif file_name.endswith("FakePage.html"):
             return "fakePage"
         else:
@@ -59,7 +62,7 @@ class MainPage(webapp2.RequestHandler):
                 for files in testFiles:
                     fileNameWithPath = os.path.join(r,files);
                     fileName = str(files);
-                    self.response.write('<li><a class="testFile ' + self.get_class_from_file_name(fileName) +  '"  href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
+                    self.response.write('<li><a class="testFile ' + self.get_class_from_file_name(fileName, fileNameWithPath) +  '"  href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
                 self.response.write('</ul>')
                 self.response.write('</div></div>')
                 counter = counter + 1
