@@ -10,6 +10,7 @@ var home = mainPath.substring(0, mainPath.indexOf('node_modules'));
 var output = home + '/target/unitTest';
 
 var failedElement = 'span.failed';
+var passedAssertions = '.result span.passed';
 var totalTestCases = 'span.total';
 var testResults = '#qunit-tests li';
 var codeCoverage = '#blanket-main';
@@ -47,7 +48,7 @@ module.exports = {
                         console.log('done waiting for element to exist was it found? ' + result);
                         unitTestsRan = result;
                         if (result) {
-                            createTests(browser, describe, filePath, outputFileName, done);
+                            createTests(browser, filePath, outputFileName, done);
                         }
                         assert.equal(true, unitTestsRan, 'the browser was able to unit test');
                     }).catch(function(result) {
@@ -73,42 +74,71 @@ module.exports = {
             });
         });
     },
-    createTests: function(browser, descrive, filePath, fileName, done) {
+    createTests: function(browser, filePath, fileName, done) {
         console.log('creating tests from failures');
-        browser.getHTML(failedElement, false).then(function (html) {
-            // console.log('the number of failed tests ' + html);
-            var writeStream;
-            browser.getHTML(codeCoverage).then(function(codeCoverage) {
-                console.log('getting test results');
-                browser.getHTML(testResults).then(function (results) {
-                    // console.log('the test results', results);
-                    qunitFileParser.parseFile(results, function(resultList) {
-                        if (html > 0) {
-                            writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
-                            writeStream.write('// ' + filePath);
-                            writeStream.write('\n[\n');
+
+        var decodeTests = this.decodeTests.bind(this);
+        browser.getHTML(failedElement, false).then(function (failedAssertions) {
+            // console.log('the number of failed tests ' + failedAssertions);
+            browser.getHTML(passedAssertions, false).then(function(passedAssertions) {
+                var writeStream;
+                if (passedAssertions == 0 && failedAssertions == 0) {
+                    writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
+                    writeStream.write('// ' + filePath);
+                    writeStream.write('\n[\n');
+                    var noAssertionMessage = {
+                        passed: false,
+                        message: 'No assertions were run each test requires at least 1 assertion',
+                        moduleName: 'global',
+                        testName: 'global',
+                        runtime: 0 + 'ms',
+                        stacktrace: []
+                    };
+                    writeStream.write(JSON.stringify(noAssertionMessage, null, '    '));
+                    writeStream.write(']');
+                    writeStream.end();
+                    console.log('test failed!!!');
+                    done();
+                } else {
+                    decodeTests(browser, filePath, fileName, failedAssertions, done)
+                }
+            });
+        });
+    },
+
+    decodeTests: function(browser, filePath, fileName, failedAssertions, done) {
+        var writeStream;
+        browser.getHTML(codeCoverage).then(function (codeCoverage) {
+            console.log('getting test results');
+            browser.getHTML(testResults).then(function (results) {
+                // console.log('the test results', results);
+                qunitFileParser.parseFile(results, function (resultList) {
+                    if (failedAssertions > 0) {
+                        writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
+                        writeStream.write('// ' + filePath);
+                        writeStream.write('\n[\n');
+                    }
+                    for (index in resultList) {
+                        var testData = resultList[index];
+                        if (!testData.passing) {
+                            writeStream.write(JSON.stringify(testData, null, '    '));
+                            writeStream.write(',\n');
                         }
-                        for (index in resultList) {
-                            var testData = resultList[index];
-                            if (!testData.passing) {
-                                writeStream.write(JSON.stringify(testData, null, '    '));
-                                writeStream.write(',\n');
-                            }
+                    }
+                    if (failedAssertions > 0) {
+                        writeStream.write(']');
+                        writeStream.end();
+                    }
+                    for (index in resultList) {
+                        var testData = resultList[index];
+                        if (!testData.passing) {
+                            assert.ok(testData.passing, testData.message);
                         }
-                        if (html > 0) {
-                            writeStream.write(']');
-                            writeStream.end();
-                        }
-                        for (index in resultList) {
-                            var testData = resultList[index];
-                            if (!testData.passing) {
-                                assert.ok(testData.passing, testData.message);
-                            }
-                        }
-                        done();
-                    });
+                    }
+                    done();
                 });
             });
         });
     }
+
 };
