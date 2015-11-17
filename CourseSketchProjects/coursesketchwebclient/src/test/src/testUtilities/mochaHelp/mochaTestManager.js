@@ -1,7 +1,7 @@
 /**
  * Created by dtracers on 11/14/2015.
  */
-var assert = require('assert');
+var assert = require('chai').assert;
 var qunitFileParser = require('./qunitFileParser');
 var fs = require('fs');
 
@@ -53,7 +53,7 @@ module.exports = {
     },
     createTests: function(browser, descrive, filePath, fileName, done) {
         console.log('creating tests from failures');
-        var writeStream = fs.createWriteStream(output + '/' + fileName + '.json');
+        var writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
         browser.getHTML(failedElement, false).then(function (html) {
             // console.log('the number of failed tests ' + html);
             browser.getHTML(codeCoverage).then(function(codeCoverage) {
@@ -61,18 +61,22 @@ module.exports = {
                 browser.getHTML(testResults).then(function (results) {
                     // console.log('the test results', results);
                     qunitFileParser.parseFile(results, function(resultList) {
-                        console.log(resultList);
                         writeStream.write('[\n');
                         for (index in resultList) {
-                            var testData = resultList;
-                            assert.ok(testData.passing, testData.message);
+                            var testData = resultList[index];
                             if (!testData.passing) {
-                                writeStream.write(JSON.stringify(testData));
+                                writeStream.write(JSON.stringify(testData, null, '    '));
                                 writeStream.write(',\n');
                             }
                         }
                         writeStream.write(']');
                         writeStream.end();
+                        for (index in resultList) {
+                            var testData = resultList[index];
+                            if (!testData.passing) {
+                                assert.ok(testData.passing, testData.message);
+                            }
+                        }
                         done();
                     });
                 });

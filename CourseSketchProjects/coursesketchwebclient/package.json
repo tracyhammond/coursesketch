@@ -31,7 +31,8 @@
     "grunt-mkdir": "0.1.2",
     "jquery": "2.1.4",
     "jsdom": "7.0.0",
-    "barrier": "dtracers/node-barrier#v1.0.1"
+    "barrier": "dtracers/node-barrier#v1.0.1",
+    "chai": "*"
   }
 }
 
