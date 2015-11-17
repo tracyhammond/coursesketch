@@ -98,7 +98,7 @@ module.exports = function(grunt) {
             options: {
                 port: 9001,
                 hostname: 'localhost',
-                debug: true
+                debug: false
             },
             rules: [
                { from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1' },
