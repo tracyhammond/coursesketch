@@ -76,4 +76,22 @@ public final class ExceptionUtilities {
     public static Message.Request createExceptionRequest(final Message.Request inputRequest, final Message.ProtoException exception) {
         return createExceptionRequest(inputRequest, exception, null);
     }
+
+    /**
+     * Holds an exception for multi threaded applications that need to pass up exceptions.
+     */
+    public static final class ExceptionHolder {
+        /**
+         * The exception that is being passed up.
+         */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
+        public Exception exception;
+    }
+
+    /**
+     * @return A new instance of an {@link ExceptionHolder}.
+     */
+    public static ExceptionHolder getExceptionHolder() {
+        return new ExceptionHolder();
+    }
 }

@@ -8,27 +8,25 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.auth.AuthenticationException;
+import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.tutorial.TutorialOuterClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.ELEMENT_LIST;
-import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.LECTURE_ID;
-import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDE_BLOB;
 import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static database.DatabaseStringConstants.SLIDE_COLLECTION;
-import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.X_DIMENSION;
 import static database.DatabaseStringConstants.X_POSITION;
 import static database.DatabaseStringConstants.Y_DIMENSION;
@@ -69,9 +67,16 @@ public final class SlideManager {
     public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String userId, final LectureSlide slide)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection newUser = dbs.getCollection(SLIDE_COLLECTION);
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(LECTURE_COLLECTION, slide.getLectureId(), userId, 0, auth)) {
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.LECTURE, slide.getLectureId(), userId, 0, authType);
+
+        if (!responder.hasAccess()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
         final BasicDBObject query = new BasicDBObject(LECTURE_ID, slide.getLectureId());
@@ -156,40 +161,33 @@ public final class SlideManager {
             throw new DatabaseAccessException("Slide was not found with the following ID " + slideId, true);
         }
 
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .setCheckingAdmin(true)
+                .build();
+        // FUTURE: figure out slide permissions
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.LECTURE, (String) corsor.get(LECTURE_ID), userId, 0, authType);
 
         // FUTURE Fix this! maybe make the lecture a user? not really sure for now everyone is a user.
-        isUsers = true; // authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
+        // authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
 
-        if (!isAdmin && !isMod && !isUsers) {
+        if (!responder.hasAccess()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
         // check to make sure the slide is within the time period that the
         // course is open and the user is in the course
         // FUTURE: maybe not make this necessary if the insertion of lecture prevents this.
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
-        auth.setCheckDate(true);
-        auth.setCheckUser(true);
-        if (isUsers && !authenticator.isAuthenticated(LECTURE_COLLECTION, (String) corsor.get(LECTURE_ID), userId, checkTime, auth)) {
+        if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !responder.isItemOpen()) {
             throw new AuthenticationException(AuthenticationException.INVALID_DATE);
         }
 
-        final School.State.Builder stateBuilder = School.State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
-        if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific slide is not published yet", true);
-                }
-                stateBuilder.setPublished(false);
-            }
+        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+            throw new DatabaseAccessException("The specific lecture is not published yet: " + slideId, true);
         }
 
         // now all possible exceptions have already been thrown.
@@ -230,17 +228,17 @@ public final class SlideManager {
         final DBObject corsor = myDbRef.fetch();
         final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
 
-        final DBRef parentLecture = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureSlide.getLectureId()));
-        final DBObject lectureCursor = parentLecture.fetch();
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.LECTURE, lectureSlideId, userId, 0, authType);
 
-        final boolean isAdmin = authenticator.checkAuthentication(userId, (List<String>) lectureCursor.get("Admin"));
-        final boolean isMod = authenticator.checkAuthentication(userId, (List<String>) lectureCursor.get("Mod"));
-
-        if (!isAdmin && !isMod) {
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
         // TODO make a way to clear out a lecture slide so it is empty?
-        if (isAdmin || isMod && lectureSlide.getElementsCount() > 0) {
+        if (lectureSlide.getElementsCount() > 0) {
             final List<BasicDBObject> list = new ArrayList<>();
             for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
                 list.add(createQueryFromElement(element));

@@ -10,12 +10,15 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
 import database.auth.AuthenticationException;
+import database.auth.AuthenticationResponder;
 import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.State;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
 
@@ -40,9 +43,9 @@ import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PERMISSION_LEVELS;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
-import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
+import static database.utilities.MongoUtilities.createId;
 
 /**
  * Interfaces with the database to manage course data.
@@ -89,8 +92,8 @@ public final class CourseManager {
             query.append(ASSIGNMENT_LIST, course.getAssignmentListList());
         }
         courseCollection.insert(query);
-        final DBObject corsor = courseCollection.findOne(query);
-        return corsor.get(SELF_ID).toString();
+        final DBObject cursor = courseCollection.findOne(query);
+        return cursor.get(SELF_ID).toString();
     }
 
     /**
@@ -106,27 +109,22 @@ public final class CourseManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, createId(courseId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
         }
 
-        final ArrayList adminList = (ArrayList<Object>) cursor.get(ADMIN); // convert
-        // to
-        // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) cursor.get(MOD); // convert
-        // to
-        // ArrayList<String>
-        final ArrayList usersList = (ArrayList<Object>) cursor.get(USERS); // convert
-        // to
-        // ArrayList<String>
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-        isUsers = authenticator.checkAuthentication(userId, usersList);
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckingAdmin(true)
+                .setCheckDate(true)
+                .setCheckIsPublished(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, checkTime, authType);
 
-        if (!isAdmin && !isMod && !isUsers) {
+        if (!responder.hasAccess()) {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
@@ -147,28 +145,20 @@ public final class CourseManager {
             stateBuilder.setPastDue(true);
         }
 
-        // FUTURE: add this to all fields!
-        // A course is only publishable after a certain criteria is met
-        if (cursor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) cursor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific course is not published yet: " + courseId, true);
-                } else {
-                    stateBuilder.setPublished(false);
-                }
-            }
+        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+            throw new DatabaseAccessException("The specific course is not published yet: " + courseId, true);
         }
+
+        // Post this point either item is published OR responder is at least responder.
+        stateBuilder.setPublished(responder.isItemPublished());
 
         if (cursor.get(IMAGE) != null) {
             exactCourse.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the course must be open to view the assignments
-        if (isAdmin || isMod
-                || (isUsers && Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate()))) {
+        if ((responder.hasAccess() && responder.isItemOpen())
+                || responder.hasPeerTeacherPermission()) {
             final Object assignmentList = cursor.get(ASSIGNMENT_LIST);
             final Object lectureList = cursor.get(LECTURE_LIST);
             if (assignmentList != null) {
@@ -178,7 +168,7 @@ public final class CourseManager {
                 exactCourse.addAllLectureList((List) lectureList);
             }
             stateBuilder.setAccessible(true);
-        } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactCourse.getAccessDate(), exactCourse.getCloseDate())) {
+        } else if (responder.hasAccess() && !responder.isItemOpen() && !responder.hasPeerTeacherPermission()) {
             LOG.info("USER CLASS TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactCourse.getAccessDate().getMillisecond(), checkTime,
                     exactCourse.getCloseDate().getMillisecond());
@@ -187,7 +177,7 @@ public final class CourseManager {
 
         exactCourse.setState(stateBuilder);
 
-        if (isAdmin) {
+        if (responder.hasTeacherPermission()) {
             try {
                 exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             } catch (ClassCastException exception) {
@@ -224,55 +214,49 @@ public final class CourseManager {
             throw new DatabaseAccessException("Course was not found with the following ID: " + courseId);
         }
 
-        DBObject updateObj = null;
+        final BasicDBObject updateObj = new BasicDBObject();
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
 
-        boolean isAdmin, isMod;
-        isAdmin = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (ArrayList) cursor.get(MOD));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, 0, authType);
 
-        if (!isAdmin && !isMod) {
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (isAdmin) {
+        if (responder.hasTeacherPermission()) {
             if (course.hasSemester()) {
-                updateObj = new BasicDBObject(COURSE_SEMESTER, course.getSemester());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(COURSE_SEMESTER, course.getSemester());
                 update = true;
             }
             if (course.hasAccessDate()) {
-
-                updateObj = new BasicDBObject(ACCESS_DATE, course.getAccessDate().getMillisecond());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(ACCESS_DATE, course.getAccessDate().getMillisecond());
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (course.hasCloseDate()) {
-                updateObj = new BasicDBObject(CLOSE_DATE, course.getCloseDate().getMillisecond());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(CLOSE_DATE, course.getCloseDate().getMillisecond());
                 update = true;
             }
 
             if (course.hasImageUrl()) {
-                updateObj = new BasicDBObject(IMAGE, course.getImageUrl());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(IMAGE, course.getImageUrl());
                 update = true;
             }
             if (course.hasDescription()) {
-                updateObj = new BasicDBObject(DESCRIPTION, course.getDescription());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(DESCRIPTION, course.getDescription());
                 update = true;
             }
             if (course.hasName()) {
-                updateObj = new BasicDBObject(NAME, course.getName());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(NAME, course.getName());
                 update = true;
             }
             if (course.hasAccess()) {
-                updateObj = new BasicDBObject(COURSE_ACCESS, course.getAccess().getNumber());
-                courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateObj.append(COURSE_ACCESS, course.getAccess().getNumber());
                 update = true;
             }
             // Optimization: have something to do with pulling values of an
@@ -281,29 +265,22 @@ public final class CourseManager {
                 LOG.info("Updating permissions!");
                 final SrlPermission permissions = course.getAccessPermission();
                 if (permissions.getAdminPermissionList() != null) {
-                    updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                    courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                    updateObj.append(ADMIN, permissions.getAdminPermissionList());
                 }
                 if (permissions.getModeratorPermissionList() != null) {
-                    updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                    courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                    updateObj.append(MOD, permissions.getModeratorPermissionList());
                 }
                 if (permissions.getUserPermissionList() != null) {
-                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+                    updateObj.append(USERS, permissions.getUserPermissionList());
                 }
             }
-        }
-        if (isAdmin || isMod && course.getAssignmentListList() != null) {
-            updateObj = new BasicDBObject(ASSIGNMENT_LIST, course.getAssignmentListList());
-            courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-            update = true;
         }
         // courses.update(cursor, new BasicDBObject (SET_COMMAND,updateObj));
 
         // get user list
         // send updates
         if (update) {
+            courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
         }
         return true;
