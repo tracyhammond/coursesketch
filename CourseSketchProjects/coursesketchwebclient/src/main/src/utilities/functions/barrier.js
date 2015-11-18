@@ -51,6 +51,28 @@ CallbackBarrier.prototype.finalize = function(callback) {
 };
 
 /**
+ * Creates a callback that is triggered once complete is called.
+ * <pre>
+ *     Example Use:
+ *     var b = new Barrier();
+ *
+ *     b.once(function() {
+ *       // do some stuff
+ *     });
+ *
+ *     fs.doSomethingAsync(function () {
+ *       b.complete();
+ *     });
+ * </pre>
+ * @param {Function} callback called after complete is called
+ */
+CallbackBarrier.prototype.once = function(callback) {
+    var result = this.getCallbackAmount(1);
+    this.finalize(callback);
+    this.complete = result;
+};
+
+/**
  * Creates a barrier with the specific amount and a callback.
  * What is returned is the function that is called a number of times before callback is called.
  */
@@ -60,3 +82,5 @@ function createBarrier(amount, callback) {
     barrier.finalize(callback);
     return result;
 }
+
+CallbackBarrier.createBarrier = createBarrier;
