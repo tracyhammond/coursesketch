@@ -135,6 +135,8 @@ public final class DatabaseStringConstants {
     public static final String STUDENT_ID = "StudentId";
     public static final String STUDENT_CLIENT_ID = "StudentClientId";
     public static final String INSTRUCTOR_CLIENT_ID = "InstructorClientId";
+    public static final String LAST_LOGIN_TIMES = "LoginSuccesses";
+    public static final String LOGIN_AMOUNT_FIELD = "LoginCount";
 
     // user group specific
     public static final String USER_LIST = "UserList";
@@ -146,6 +148,11 @@ public final class DatabaseStringConstants {
     // mongo comands
     public static final String SET_COMMAND = "$set";
     public static final String ADD_SET_COMMAND = "$addToSet";
+    public static final String PUSH_COMMAND = "$push";
+    public static final String EACH_COMMAND = "$each";
+    public static final String SORT_COMMAND = "$sort";
+    public static final String SLICE_COMMAND = "$slice";
+    public static final String INCREMENT_COMMAND = "$inc";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";
