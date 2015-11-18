@@ -85,6 +85,10 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 var db = e.target.result;
                 // A versionchange transaction is started automatically.
                 e.target.transaction.onerror = dbNameSpace.indexedDB.onerror;
+                if (upgradeTables === null) {
+                    // if the table is null then there is nothing to upgrade
+                    return;
+                }
                 for (var i = 0; i < upgradeTables.length; i++) {
                     table = upgradeTables[i];
                     // delete existing table

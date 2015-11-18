@@ -48,7 +48,8 @@ class ClientWebSocketWrapper extends Message.RequestService implements TcpConnec
      * @param request The request that was sent.  In this case it is a request meant for time management.
      * @param rpcCallback Call {@link RpcCallback#run(Object)} to send back the result.
      */
-    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request, final RpcCallback<Message.Request> rpcCallback) {
+    @Override public void sendTimeRequest(final RpcController controller, final Message.Request request,
+            final RpcCallback<Message.Request> rpcCallback) {
         rpcCallback.run(TimeManager.decodeRequest(request));
     }
 

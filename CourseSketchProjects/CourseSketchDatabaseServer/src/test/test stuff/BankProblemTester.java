@@ -6,10 +6,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
 
-import com.mongodb.DB;
-
-import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.BankProblemManager;
 import database.institution.Institution;
 

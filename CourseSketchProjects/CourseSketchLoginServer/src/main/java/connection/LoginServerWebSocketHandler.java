@@ -1,14 +1,15 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
-import database.DatabaseClient;
-import database.LoginException;
-import database.RegistrationException;
+import coursesketch.database.DatabaseClient;
+import coursesketch.database.LoginException;
+import coursesketch.database.RegistrationException;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +137,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
 
             // login user after registering user.
             loginUser(conn, req, login);
-        } catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException | AuthenticationException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
