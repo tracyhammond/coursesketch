@@ -169,7 +169,7 @@ function AdvanceDataListener(Request, defListener) {
      * Assigns a local function to the global connection object.
      */
     this.setupConnectionListeners = function() {
-        CourseSketch.connection.setSchoolDataListener(function (evt, msg) {
+        CourseSketch.connection.setSchoolDataListener(function(evt, msg) {
             decode(evt, msg);
         });
     };
@@ -215,7 +215,7 @@ function AdvanceDataListener(Request, defListener) {
         this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times);
 
         if (!CourseSketch.connection.isConnected()) {
-            console.log("The server is not connected all messages will be queued till reconnection is made.");
+            console.log('The server is not connected all messages will be queued till reconnection is made.');
             CourseSketch.pushServerMessage(request, callback, times);
             CourseSketch.createReconnection();
             return;
