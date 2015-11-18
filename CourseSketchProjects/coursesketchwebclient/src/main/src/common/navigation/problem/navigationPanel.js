@@ -45,22 +45,14 @@ function NavigationPanel() {
         button.onclick = function() {
             nav.gotoNext();
         };
-        if (nav.hasNext()) {
-            button.disabled = false;
-        } else {
-            button.disabled = true;
-        }
+        button.disabled = !nav.hasNext();
         button = this.shadowRoot.querySelector('#buttonPrev');
         button.onclick = function() {
             nav.gotoPrevious();
         };
-        if (nav.hasPrevious()) {
-            button.disabled = false;
-        } else {
-            button.disabled = true;
-        }
+        button.disabled = !nav.hasPrevious();
         /* jscs:enable jsDoc */
-    }
+    };
 
     /*
     Window.onresize = function() {
