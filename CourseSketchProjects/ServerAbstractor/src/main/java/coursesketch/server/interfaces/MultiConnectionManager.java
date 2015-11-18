@@ -197,7 +197,7 @@ public class MultiConnectionManager {
     /**
      * Drops all of the connections then adds them all back.
      */
-    protected final void reconnect() {
+    public final void reconnect() {
         this.dropAllConnection(true, false);
         this.connectServers(parent);
     }
@@ -209,6 +209,7 @@ public class MultiConnectionManager {
      *                     functionality.
      */
     public void connectServers(final AbstractServerWebSocketHandler parentServer) {
+        // overwritten to perform actions.
     }
 
     /**
@@ -268,14 +269,14 @@ public class MultiConnectionManager {
     public final void dropAllConnection(final boolean clearTypes, final boolean debugPrint) {
         synchronized (connections) {
             // <? extends ConnectionWrapper> // for safe keeping
-            for (Class<?> conKey : connections.keySet()) {
-                for (AbstractClientWebSocket connection : connections.get(conKey)) {
+            for (Map.Entry<Class<?>, ArrayList<AbstractClientWebSocket>> conKey : connections.entrySet()) {
+                for (AbstractClientWebSocket connection : conKey.getValue()) {
                     if (debugPrint) {
                         LOG.info("Connection URI: {}", connection.getURI());
                     }
                     connection.close();
                 }
-                connections.get(conKey).clear();
+                conKey.getValue().clear();
             }
             if (clearTypes) {
                 connections.clear();

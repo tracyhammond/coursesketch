@@ -444,13 +444,13 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
          */
         advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
-                callback(new DatabaseException('The data sent back from the server for searching courses', item));
+                callback(new DatabaseException('There was an exception when getting the data back from the server while searching courses', item));
                 return;
             }
 
             // there was an error getting the user classes.
             if (isUndefined(item.data) || item.data === null) {
-                callback(new DatabaseException('The data sent back from the server for searching courses'));
+                callback(new DatabaseException('The was no data sent back from the server for searching courses'));
                 return;
             }
             var courseList = [];

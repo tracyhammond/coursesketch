@@ -18,6 +18,7 @@ message SrlCourse {
     optional State state = 11;
     repeated string assignmentList = 12;
     repeated string lectureList = 13;
+    optional string registrationKey = 14;
 
     enum Accessibility {
         SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
@@ -58,6 +59,20 @@ message SrlAssignment {
     }
 }
 
+
+/**
+ * Specifies the type of item something is.
+ *
+ * NOTE: the names are used for the collection name for some databases.
+ */
+enum ItemType {
+    COURSE = 0;
+    ASSIGNMENT = 1;
+    COURSE_PROBLEM = 2;
+    BANK_PROBLEM = 3;
+    LECTURE = 4;
+}
+
 message SrlProblem {
     required string id = 1; // This must be unique within an assignment.
     optional string courseId = 2; // To know who the grandParent is.
@@ -85,6 +100,7 @@ message SrlBankProblem {
     optional protobuf.srl.utils.SrlPermission accessPermission = 10;
     optional string script = 11; // a script string that is used for custom setups in experiments
     optional protobuf.srl.commands.SrlUpdateList baseSketch = 12; // the base sketch the instructor will make for assignments
+    optional string registrationKey = 13;
 }
 
 message SrlGrade {

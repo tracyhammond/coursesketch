@@ -86,7 +86,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -94,7 +94,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeLocalEnvironment() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -102,7 +102,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeRemoteEnvironment() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -183,6 +183,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
             LOG.info("Server is running hopefully = {}", assumedRunning);
             getSocketInitailizerInstance().reconnect();
+            getSocketInitailizerInstance().onServerStart();
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
@@ -211,7 +212,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void stop() {
-
+        // Does nothing by default.
     }
 
     /**
