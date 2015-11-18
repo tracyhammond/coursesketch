@@ -55,7 +55,7 @@ function ProblemTextPanel() {
         actualText.innerHTML = textBuffer.innerHTML;
 
         textBuffer.parentNode.removeChild(textBuffer);
-    }
+    };
 }
 
 ProblemTextPanel.prototype = Object.create(HTMLElement.prototype);
