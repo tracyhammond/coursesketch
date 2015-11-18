@@ -9,8 +9,9 @@ import com.mongodb.DBRef;
 import connection.SubmissionClientWebSocket;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +19,14 @@ import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 import utilities.ConnectionException;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 
-import java.util.ArrayList;
-
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
-import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SOLUTION_ID;
@@ -152,16 +151,14 @@ public final class SubmissionManager {
         if (problem == null) {
             throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
         }
-        final ArrayList adminList = (ArrayList<Object>) problem.get(ADMIN); // convert
-        // to
-        // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert
-                                                                        // to
-        // ArrayList<String>
-        boolean isAdmin = false, isMod = false;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-        if (!isAdmin && !isMod) {
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
