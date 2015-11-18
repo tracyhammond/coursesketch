@@ -36,21 +36,21 @@ function LoginSystem() {
             }
             if (evt.code === connection.CONNECTION_LOST) {
                 if (!attemptingToReconnect) {
-                    alert('can not connect to the server');
+                    console.log('can not connect to the server');
                 }
             } else if (evt.code === connection.SERVER_FULL) {
                 if (!attemptingToReconnect) {
-                    alert(evt.reason); // Here we can try to connect to other servers.
+                    console.log(evt.reason); // Here we can try to connect to other servers.
                 }
             } else {
                 if (!attemptingToReconnect) {
-                    alert('SERVER CLOSED CONNECTION');
+                    console.log('SERVER CLOSED CONNECTION');
                 }
             }
         });
         connection.setOnOpenListener(function(evt) {
             // Do something on opening?
-            alert('You are now able to log in');
+            console.log('You are now able to log in');
             connected = true;
         });
         connection.reconnect();
@@ -122,7 +122,7 @@ function LoginSystem() {
                 connection.setLoginListener(undefined);
                 successLoginCallback(connection);
             } else {
-                alert('not able to login: ' + message.responseText);
+                console.log('not able to login: ' + message.responseText);
             }
         }
         connection.setLoginListener(onLogin);
@@ -144,7 +144,7 @@ function LoginSystem() {
          */
         function sendLogin(arg1, arg2) {
             if (!connection.isConnected()) {
-                alert('You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using' +
+                console.log('You are unable to login at the moment. Please be sure to VPN / connected to tamulink or that you are using' +
                         ' \n the newest version of chrome. If you are still unable to login please email' +
                         ' \n server@coursesketch.com with your device, and web browser');
                 return;

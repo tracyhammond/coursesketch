@@ -49,9 +49,9 @@
         });
 
         QUnit.asyncTest("creation and addition of tables", function(assert) {
-            expect(2);
+            expect(1);
             var database = new ProtoDatabase("id1", versionNumber, function() {
-                assert.ok(true, "Result function is called");
+                assert.notEqual(undefined, database.putInTable, "table should exist");
                 QUnit.start();
             });
             var tableName = "Table";
@@ -62,7 +62,6 @@
             tables.push(database.createTable(tableName, keyName, addFunction));
             database.setTables(tables);
             database.open();
-            assert.notEqual(database.putInTable, undefined, "table should exist");
         });
     </script>
 	<script>

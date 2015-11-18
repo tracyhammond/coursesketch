@@ -67,6 +67,7 @@
                         var dataResult = CourseSketch.prutil.DataResult();
                         var itemResult = CourseSketch.prutil.ItemResult();
                         var req = CourseSketch.prutil.Request();
+                        req.requestId = generateUUID();
                         req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
                         itemResult.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
                         dataResult.results = [itemResult];
@@ -74,6 +75,7 @@
                         itemResult.returnText = serverBankProblemId + ":" + bankProblem.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
+                            req.requestId = message.requestId;
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
                         dataManager.insertCourseProblem(courseProblem, function(localCourseProblem) {
@@ -94,6 +96,7 @@
                 var dataResult = CourseSketch.prutil.DataResult();
                 var itemResult = CourseSketch.prutil.ItemResult();
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
                 itemResult.query = CourseSketch.prutil.ItemQuery.COURSE_PROBLEM;
                 dataResult.results = [itemResult];
@@ -102,16 +105,21 @@
                 assignment.courseId = generateUUID();
                 var courseProblem = CourseSketch.prutil.SrlProblem();
                 courseProblem.id = generateUUID();
+                courseProblem.problemBankId = generateUUID();
                 courseProblem.assignmentId = assignment.id;
                 courseProblem.courseId = assignment.courseId;
                 courseProblem.name= "I AM TEST";
                 itemResult.returnText =  "1:" +courseProblem.id;
                 CourseSketch.connection.sendRequest = function(message) {
-                   req.otherData = dataResult.toArrayBuffer();
-                   CourseSketch.connection.sendSelf(req);
+                    console.log('sending data to server ', message);
+                    req.otherData = dataResult.toArrayBuffer();
+                    req.requestId = message.requestId;
+                    CourseSketch.connection.sendSelf(req);
                 }; //send request
                 waitForDatabase(dataManager, function() {
+                    console.log('database started!');
                     dataManager.setAssignment(assignment, function() {
+                        console.log('assignment set');
                         dataManager.insertCourseProblem(courseProblem, undefined, function(courseProblem2) {
                             assert.ok(true, "Server callback called.");
                             QUnit.start();
@@ -128,6 +136,7 @@
                         CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var assignment = CourseSketch.prutil.SrlAssignment(); // sets up server response.
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var itemResult = CourseSketch.prutil.ItemResult();
@@ -151,12 +160,14 @@
                         itemResult.returnText = "1Two" + ":" + courseProblem1.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
+                            req.requestId = message.requestId;
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
                         dataManager.insertCourseProblem(courseProblem1, undefined,function() {
                             itemResult.returnText = "2Two" + ":" + courseProblem2.id;
                             CourseSketch.connection.sendRequest = function(message) {
                                 req.otherData = dataResult.toArrayBuffer();
+                                req.requestId = message.requestId;
                                 CourseSketch.connection.sendSelf(req);
                             }; //send request
                             dataManager.insertCourseProblem(courseProblem2, undefined,function() {
@@ -185,6 +196,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                         CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var fakeId = generateUUID();
@@ -202,6 +214,7 @@
                 dataResult.results = [itemResult];
                 req.otherData = dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
+                    req.requestId = message.requestId;
                     CourseSketch.connection.sendSelf(req);
                 }; //send request
                 waitForDatabase(dataManager, function() {
@@ -272,6 +285,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                         CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_UPDATE;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var fakeId = generateUUID();
@@ -295,6 +309,7 @@
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
                     req.otherData = dataResult.toArrayBuffer();
+                    req.requestId = message.requestId;
                     CourseSketch.connection.sendSelf(req);
                 }; //send request
 
