@@ -106,7 +106,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                         }
                     });
             LOG.info("{} connecting to[ {} ]", this.getClass().getSimpleName() , getURI());
-            bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
+            bootstrap.connect(getURI().getHost(), getURI().getPort()).sync();
             handler.handshakeFuture().sync();
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
