@@ -9,6 +9,7 @@
     "stacktrace-js": "0.6.4",
     "materialize": "0.97.1",
     "dialog-polyfill": "0.4.2",
+    "paper": "v0.9.25",
     "protobufjs": "dcodeIO/protobuf.js#4.1.2"
   },
   "devDependencies": {
