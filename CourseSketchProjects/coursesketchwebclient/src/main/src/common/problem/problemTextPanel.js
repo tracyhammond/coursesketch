@@ -9,8 +9,8 @@
  */
 function ProblemTextPanel() {
 
-    var bufferQuery = "#buffer";
-    var textViewQuery = "#visual";
+    var bufferQuery = '#buffer';
+    var textViewQuery = '#visual';
 
     /**
      * @param {node} templateClone is a clone of the custom HTML Element for the text box
@@ -27,23 +27,22 @@ function ProblemTextPanel() {
     /**
      * Sets the question text if one it exists.
      *
-     * TODO: run question text through math jax
-     * @param {ProblemNavigator} navPanel the nav panel that is being used.
+     * @param {String} questionText the text/instructions for the problem.
      * @instance
      * @memberof NavigationPanel
      * @function setNavigator
      */
     this.setProblemText = function(questionText) {
-        this.textBuffer = document.createElement("p");
-        this.textBuffer.id = "mathBuffer";
-        this.textBuffer.style.display="none";
+        this.textBuffer = document.createElement('p');
+        this.textBuffer.id = 'mathBuffer';
+        this.textBuffer.style.display = 'none';
         document.body.appendChild(this.textBuffer);
         var textBuffer = this.textBuffer;
         var actualText = this.shadowRoot.querySelector(textViewQuery);
         textBuffer.innerHTML = questionText;
         actualText.innerHTML = questionText;
         MathJax.Hub.Queue(
-            ["Typeset", MathJax.Hub, textBuffer], ["swapBuffer", this]
+            [ 'Typeset', MathJax.Hub, textBuffer ], [ 'swapBuffer', this ]
         );
     };
 
