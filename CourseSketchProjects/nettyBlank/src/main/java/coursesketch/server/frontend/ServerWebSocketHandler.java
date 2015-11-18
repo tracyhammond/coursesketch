@@ -1,5 +1,6 @@
 package coursesketch.server.frontend;
 
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -51,7 +52,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void openSession(final SocketSession conn) {
-
+        // Does nothing by default.
     }
 
     /**
@@ -72,7 +73,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void onError(final SocketSession session, final Throwable cause) {
-
+        // Does nothing by default.
     }
 
     /**
@@ -112,7 +113,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void onStop() {
-
+        // Does nothing by default.
     }
 
     /**
@@ -120,5 +121,21 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     protected final MultiConnectionManager getConnectionManager() {
         return ((ServerWebSocketInitializer) getParentServer()).getManager();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected void onInitialize() {
+        // Does nothing by default.
     }
 }

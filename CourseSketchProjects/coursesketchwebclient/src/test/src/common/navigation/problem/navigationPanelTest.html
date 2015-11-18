@@ -47,9 +47,10 @@
             }
         });
         test("creation", function(assert) {
-            expect(0);
+            expect(1);
             var navElement = document.createElement("navigation-test");
             document.getElementById('nav').appendChild(navElement);
+            assert.ok(true);
         });
     </script>
 </body>

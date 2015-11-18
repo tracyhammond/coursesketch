@@ -1,7 +1,7 @@
 package local.data;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -548,7 +548,7 @@ public class LocalAddProblems {
 			bankBuilder.setQuestionType(questionType[k]);
 			String resultantId = null;
 			try {
-				resultantId = MongoInstitution.getInstance().insertBankProblem(mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
+				resultantId = MongoInstitution.getInstance(null).insertBankProblem(mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
 			} catch (AuthenticationException e1) {
 				e1.printStackTrace();
 			}
@@ -570,7 +570,7 @@ public class LocalAddProblems {
 			// testing inserting course
 				System.out.println("INSERTING PROBLEM");
 				try {
-					MongoInstitution.getInstance().insertCourseProblem(mastId, testBuilder.buildPartial());
+					MongoInstitution.getInstance(null).insertCourseProblem(mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
@@ -581,7 +581,7 @@ public class LocalAddProblems {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(false, null); // makes the database point locally
+		new MongoInstitution(null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 	}
  }
