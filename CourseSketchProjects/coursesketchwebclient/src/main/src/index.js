@@ -140,21 +140,21 @@ function() {
     /**
      * A public function that is used to display the login element anywhere.
      */
-    CourseSketch.createReconnection = function () {
+    CourseSketch.createReconnection = function() {
         createLogin(createRegister, CourseSketch.successfulReconnection);
-        element.className = "reconnectLogin";
-        element.style.display = "initial";
+        element.className = 'reconnectLogin';
+        element.style.display = 'initial';
     };
 
     /**
      * Called when a reconnection occurs
      */
     CourseSketch.successfulReconnection = function(loggedInConnection) {
-        console.log("The user relogged in correctly");
+        console.log('The user relogged in correctly');
         CourseSketch.connection = loggedInConnection;
         CourseSketch.dataListener.setupConnectionListeners();
         $(element).empty();
-        element.className = "";
+        element.className = '';
 
         // Note that this function may be defined dynamically
         CourseSketch.onSuccessfulReconnection();
