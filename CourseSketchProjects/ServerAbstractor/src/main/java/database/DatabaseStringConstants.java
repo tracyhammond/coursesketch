@@ -139,6 +139,7 @@ public final class DatabaseStringConstants {
     public static final String LOGIN_AMOUNT_FIELD = "LoginCount";
 
     // user group specific
+    public static final String NON_USER_LIST = "NonUserList"; // used for moderators, peer teachers, and admins
     public static final String USER_LIST = "UserList";
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();

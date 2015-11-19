@@ -1,0 +1,121 @@
+package coursesketch.serverfront;
+
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.Authenticator;
+import coursesketch.database.identity.IdentityManager;
+import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.server.rpc.CourseSketchRpcService;
+import coursesketch.server.rpc.ServerWebSocketHandler;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
+import coursesketch.services.IdentityService;
+import database.DatabaseAccessException;
+import protobuf.srl.school.School;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ */
+@SuppressWarnings("serial")
+public final class IdentityServiceInitializer extends ServerWebSocketInitializer {
+
+    /**
+     * A wrapper around the auth checker.  This is used because the checker has to be created before the socket exists.
+     */
+    private final IdentityAuthenticationChecker identityAuthenticationChecker;
+
+    /**
+     * A client that connects to the mongo database.
+     */
+    private final MongoClient mongoClient;
+
+    /**
+     * Constructor for AuthenticationServiceInitializer.
+     *
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
+     */
+    public IdentityServiceInitializer(final ServerInfo serverInfo) {
+        super(serverInfo);
+        mongoClient = new MongoClient(serverInfo.getDatabaseUrl());
+        identityAuthenticationChecker = new IdentityAuthenticationChecker();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ServerWebSocketHandler createServerSocket() {
+        return new DefaultWebSocketHandler(this, this.getServerInfo());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<CourseSketchRpcService> getRpcServices() {
+        final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
+        final DB mongoClientDB = mongoClient.getDB(this.getServerInfo().getDatabaseName());
+        services.add(new IdentityService(new Authenticator(identityAuthenticationChecker, createAuthenticationChecker()),
+                new IdentityManager(mongoClientDB)));
+        return services;
+    }
+
+    /**
+     * Sets the authentication websocket as an authenticator.
+     */
+    @Override
+    protected void onReconnect() {
+        identityAuthenticationChecker.setRealAuthenticationChecker(((DefaultWebSocketHandler) super.getServer()).getAuthenticationWebsocket());
+    }
+
+    /**
+     * Creates an empty authentication checker that only throws exceptions when the methods are called.
+     * @return Creates an instance of the {@link AuthenticationOptionChecker} that throws an exception when any of its methods are called.
+     */
+    private AuthenticationOptionChecker createAuthenticationChecker() {
+        return new AuthenticationOptionChecker() {
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public boolean authenticateDate(final AuthenticationDataCreator dataCreator, final long checkTime)
+                    throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public boolean isItemRegistrationRequired(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * This instance throws an exception.
+             */
+            @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
+                    throws DatabaseAccessException {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+}
