@@ -29,6 +29,8 @@ public interface HashWrapper {
      */
     String hash(String string, String salt) throws AuthenticationException;
 
+
+
     /**
      * Validates that the canidate and the hash are the same value.
      *
@@ -43,4 +45,11 @@ public interface HashWrapper {
      * @return a valid secure salt that can be used in hashing.
      */
     String generateSalt();
+
+    /**
+     * @return a valid secure salt that can be used in hashing.
+     * This salt is not secure and should not be used in passwords.
+     * @param originalSalt The salt the generated one is derived from.  It is completely deterministic based on the original salt
+     */
+    String generateUnsecuredSalt(String originalSalt);
 }

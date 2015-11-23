@@ -156,6 +156,19 @@ public final class HashManager {
     }
 
     /**
+     * @param originalSalt The salt the generated one is derived from.  It is completely deterministic based on the original salt.
+     * @return a valid secure salt that can be used in hashing.
+     * @throws NoSuchAlgorithmException Thrown if there are no salting algorithm's available.
+     */
+    public static String generateUnSecureSalt(final String originalSalt) throws NoSuchAlgorithmException {
+        final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
+        if (function == null) {
+            throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
+        }
+        return function.generateUnsecuredSalt(originalSalt);
+    }
+
+    /**
      * Converts A byte array into a hexadecimal string.
      * @param bytes The byte array to be converted into a hexadecimal string
      * @return A string that only contains hex characters
@@ -242,6 +255,16 @@ public final class HashManager {
         @Override public String generateSalt() {
             return BCrypt.gensalt(LOG_ROUNDS);
         }
+
+        /**
+         * @param originalSalt
+         *         The salt the generated one is derived from.  It is completely deterministic based on the original salt.
+         * @return a valid secure salt that can be used in hashing.
+         * This salt is not secure and should not be used in passwords.
+         */
+        @Override public String generateUnsecuredSalt(final String originalSalt) {
+            return BCrypt.gensalt(LOG_ROUNDS, new UnSecureRandom(originalSalt));
+        }
     }
 
     /**
@@ -284,6 +307,10 @@ public final class HashManager {
 
         @Override public String generateSalt() {
             return PasswordHash.createSalt();
+        }
+
+        @Override public String generateUnsecuredSalt(final String originalSalt) {
+            return PasswordHash.createSalt(originalSalt);
         }
     }
 

@@ -75,6 +75,13 @@ public final class PasswordHash {
         return new String(salt, StandardCharsets.UTF_8);
     }
 
+    public static String createSalt(final String baseSalt) {
+        final SecureRandom random = new UnSecureRandom(baseSalt);
+        final byte[] salt = new byte[SALT_BYTE_SIZE];
+        random.nextBytes(salt);
+        return new String(salt, StandardCharsets.UTF_8);
+    }
+
     /**
      * Returns a salted PBKDF2 hash of the password.
      *

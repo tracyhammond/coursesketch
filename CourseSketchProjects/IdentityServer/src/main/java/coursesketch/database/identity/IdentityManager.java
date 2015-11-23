@@ -156,7 +156,8 @@ public final class IdentityManager {
     public String createNewGroup(final String userId, final String courseId) throws AuthenticationException {
         String hash;
         try {
-            hash = HashManager.toHex(HashManager.createHash(userId, courseId).getBytes(StandardCharsets.UTF_8));
+            final String unsecuredSalt = HashManager.generateUnSecureSalt(courseId);
+            hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt).getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
@@ -191,7 +192,8 @@ public final class IdentityManager {
         }
         String hash = null;
         try {
-            hash = HashManager.toHex(HashManager.createHash(userId, (String) group.get(DatabaseStringConstants.COURSE_ID))
+            final String unsecuredSalt = HashManager.generateUnSecureSalt(group.get(DatabaseStringConstants.COURSE_ID).toString());
+            hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
                     .getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
