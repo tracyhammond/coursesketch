@@ -81,7 +81,7 @@ public final class IdentityManager {
         }
 
         if (itemType.equals(School.ItemType.BANK_PROBLEM)) {
-            final String groupId = createNewGroup(authId, itemId);
+            final String groupId = createNewGroup(userId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);

@@ -11,7 +11,6 @@ import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
-import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
@@ -35,9 +34,7 @@ import java.util.List;
 
 import static database.DbSchoolUtility.getCollectionFromType;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -206,7 +203,7 @@ public class IdentityManagerTest {
     }
 
     @Test
-    public void testInsertingBankItem() throws AuthenticationException, DatabaseAccessException {
+    public void testInsertingBankItem() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         final String courseId = "COURSE_ID";
         dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, courseId, null);
 
@@ -220,36 +217,42 @@ public class IdentityManagerTest {
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);
         Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
-        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+        String salt = HashManager.generateUnSecureSalt(dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
         String teacherHash = null;
-        try {
-            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_AUTH_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
-        Assert.assertTrue(dbObject.containsField(teacherHash));
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
-
         String courseHash = null;
         try {
-            courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
+            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
+            courseHash = HashManager.toHex(HashManager.createHash(courseHash, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
-        Assert.assertTrue(dbObject.containsField(courseHash));
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
+
+        // Non users
+        ArrayList<DBObject> nonUsers = new ArrayList<>();
+        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, teacherHash));
+
+        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        Assert.assertEquals(nonUsers, adminGroup);
+
+        // students
+        ArrayList<DBObject> students = new ArrayList<>();
+        nonUsers.add(new BasicDBObject(courseId, courseHash));
+
+        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        Assert.assertEquals(students, studentGroup);
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
     }
 
     @Test
-    public void testInsertingChildItemItemWithAdminPermission() throws AuthenticationException, DatabaseAccessException {
+    public void testInsertingChildItemItemWithAdminPermission() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+
+        AuthenticationHelper.setMockPermissions(authChecker, null, null, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -267,17 +270,29 @@ public class IdentityManagerTest {
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);
         Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
-        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
-        String hash = null;
+        String salt = HashManager.generateUnSecureSalt(dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        String teacherHash = null;
         try {
-            hash = HashManager.toHex(HashManager.createHash(TEACHER_AUTH_ID, salt).getBytes());
+            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
-        Assert.assertTrue(dbObject.containsField(hash));
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
+
+        // Non users
+        ArrayList<DBObject> nonUsers = new ArrayList<>();
+        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, teacherHash));
+
+        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        Assert.assertEquals(nonUsers, adminGroup);
+
+        // students
+        ArrayList<DBObject> students = new ArrayList<>();
+
+        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        Assert.assertEquals(students, studentGroup);
+
 
         List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
@@ -294,10 +309,7 @@ public class IdentityManagerTest {
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
 
-        when(dbAuthChecker.checkAuthentication(any(School.ItemType.class), anyString(), anyString(), anyInt(), any(Authentication.AuthType.class)))
-                .thenReturn(new AuthenticationResponder(
-                        Authentication.AuthResponse.newBuilder().setPermissionLevel(
-                                Authentication.AuthResponse.PermissionLevel.TEACHER).build()));
+        AuthenticationHelper.setMockPermissions(authChecker, null, null, TEACHER_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).remove(
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(VALID_ITEM_ID)));
@@ -318,6 +330,8 @@ public class IdentityManagerTest {
 
         AuthenticationHelper.setMockPermissions(authChecker, null, null, MOD_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.MODERATOR);
+
+        dbAuthManager.registerSelf(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
 
         dbAuthManager.insertNewItem(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
 
@@ -477,6 +491,8 @@ public class IdentityManagerTest {
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        dbAuthManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        AuthenticationHelper.setMockPermissions(authChecker, null, null, STUDENT_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        dbAuthManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 }
