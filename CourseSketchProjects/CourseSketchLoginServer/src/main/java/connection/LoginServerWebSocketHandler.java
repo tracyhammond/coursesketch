@@ -246,11 +246,4 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
         return new DatabaseClient(info);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    @Override protected void onInitialize() {
-        super.getDatabaseReader().startDatabase();
-    }
 }

@@ -222,7 +222,7 @@ public class IdentityManagerTest {
         String courseHash = null;
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
-            courseHash = HashManager.toHex(HashManager.createHash(courseHash, salt).getBytes());
+            courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (AuthenticationException e) {
@@ -238,13 +238,10 @@ public class IdentityManagerTest {
 
         // students
         ArrayList<DBObject> students = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(courseId, courseHash));
+        students.add(new BasicDBObject(courseId, courseHash));
 
         List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
-
-        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
     }
 
     @Test

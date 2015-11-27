@@ -76,7 +76,7 @@ public final class PasswordHash {
     }
 
     public static String createSalt(final String baseSalt) {
-        final SecureRandom random = new UnSecureRandom(baseSalt);
+        final SecureRandom random = new UnsecuredRandom(baseSalt);
         final byte[] salt = new byte[SALT_BYTE_SIZE];
         random.nextBytes(salt);
         return new String(salt, StandardCharsets.UTF_8);

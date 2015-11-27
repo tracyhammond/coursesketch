@@ -263,7 +263,7 @@ public final class HashManager {
          * This salt is not secure and should not be used in passwords.
          */
         @Override public String generateUnsecuredSalt(final String originalSalt) {
-            return BCrypt.gensalt(LOG_ROUNDS, new UnSecureRandom(originalSalt));
+            return BCrypt.gensalt(LOG_ROUNDS, new UnsecuredRandom(originalSalt));
         }
     }
 

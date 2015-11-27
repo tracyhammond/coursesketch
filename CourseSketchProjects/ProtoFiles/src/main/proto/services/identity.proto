@@ -66,8 +66,10 @@ service IdentityService {
 
     /**
      * Creates a new user then returns if the creation was successful or not.
+     *
+     * The userId is the username in this case.
      */
-    rpc createNewUser(IdentityRequest) returns (protobuf.srl.request.DefaultResponse);
+    rpc createNewUser(IdentityRequest) returns (UserNameResponse);
 
     /**
      * Creates a new user then returns if the creation was successful or not.

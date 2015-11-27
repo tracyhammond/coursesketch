@@ -86,11 +86,4 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
         return new MongoInstitution(info, auth, authUpdater);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    @Override protected void onInitialize() {
-        super.getDatabaseReader().startDatabase();
-    }
 }

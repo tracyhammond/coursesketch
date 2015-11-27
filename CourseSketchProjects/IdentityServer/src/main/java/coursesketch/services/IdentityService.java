@@ -54,67 +54,40 @@ public final class IdentityService extends Identity.IdentityService implements C
     }
 
     /**
-     * <code>rpc requestCourseRoster(.protobuf.srl.services.identity.RequestRoster) returns (.protobuf.srl.services.identity.UserNameResponse);</code>
+     * {@inheritDoc}
      *
-     * <pre>
-     * *
-     * Requests the roster.  Depending on permissions the usernames may not be returned
-     * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
+     * Grabs the course roster.
      */
     @Override public void requestCourseRoster(final RpcController controller, final Identity.RequestRoster request,
             final RpcCallback<Identity.UserNameResponse> done) {
-
+        // does nothing yet
     }
 
     /**
-     * <code>rpc createNewUser(.protobuf.srl.services.identity.IdentityRequest) returns (.protobuf.srl.request.DefaultResponse);</code>
+     * {@inheritDoc}
      *
-     * <pre>
-     * *
-     * Creates a new user then returns if the creation was successful or not.
-     * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
+     * Creates a new user in the identity server.
      */
     @Override public void createNewUser(final RpcController controller, final Identity.IdentityRequest request,
-            final RpcCallback<Message.DefaultResponse> done) {
-
+            final RpcCallback<Identity.UserNameResponse> done) {
+        String userId = identityManager.createNewUser(request.getUserId());
     }
 
     /**
-     * <code>rpc getUserIdentity(.protobuf.srl.services.identity.IdentityRequest) returns (.protobuf.srl.request.DefaultResponse);</code>
+     * {@inheritDoc}
      *
-     * <pre>
-     * *
-     * Creates a new user then returns if the creation was successful or not.
-     * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
+     * Gets the identity of the users based on their participation in the course.
      */
     @Override public void getUserIdentity(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
-
+        // does nothing yet
     }
 
     /**
-     * <code>rpc createNewItem(.protobuf.srl.services.identity.IdentityCreationRequest) returns (.protobuf.srl.request.DefaultResponse);</code>
+     * {@inheritDoc}
      *
-     * <pre>
-     *
-     * Creates a new set of item permissions.
-     * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
+     * Used to create new items.
+     * An item can be a course or an assignment or other parts of a course.
      */
     @Override public void createNewItem(final RpcController controller, final Identity.IdentityCreationRequest request,
             final RpcCallback<Message.DefaultResponse> done) {
@@ -133,16 +106,9 @@ public final class IdentityService extends Identity.IdentityService implements C
     }
 
     /**
-     * <code>rpc registerUser(.protobuf.srl.services.identity.IdentityRequest) returns (.protobuf.srl.request.DefaultResponse);</code>
+     * {@inheritDoc}
      *
-     * <pre>
-     * *
-     * Registers the user in the item.
-     * </pre>
-     *
-     * @param controller
-     * @param identityRequest
-     * @param done
+     * Registers user for a course or a bank problem.
      */
     @Override public void registerUser(final RpcController controller, final Identity.IdentityRequest identityRequest,
             final RpcCallback<Message.DefaultResponse> done) {

@@ -187,6 +187,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
                 try {
                     server.start();
                     getSocketInitailizerInstance().reconnect();
+                    getSocketInitailizerInstance().onServerStart();
                     LOG.info("Server started at " + server.getURI());
                     server.join();
                 } catch (InterruptedException e) {

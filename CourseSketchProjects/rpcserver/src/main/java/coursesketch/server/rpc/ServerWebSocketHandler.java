@@ -140,6 +140,6 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @SuppressWarnings("checkstyle:designforextension")
     @Override protected void onInitialize() {
-        // Does nothing by default.
+        // Does nothing by default
     }
 }

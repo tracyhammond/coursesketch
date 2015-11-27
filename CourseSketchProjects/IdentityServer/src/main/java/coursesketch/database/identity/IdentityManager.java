@@ -4,10 +4,13 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.authentication.HashManager;
+import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
@@ -25,19 +28,42 @@ import static database.DbSchoolUtility.getParentItemType;
 /**
  * Created by dtracers on 10/7/2015.
  */
-public final class IdentityManager {
+public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
     /**
      * The database that the auth checker grabs data from.
      */
-    private final DB database;
+    private DB database;
 
     /**
-     * Creates A DbAuthManager with a database.
+     * Creates An IdentityManager with a database.
      * @param database The database where all of the data is stored.
      */
     public IdentityManager(final DB database) {
+        super(null);
         this.database = database;
+    }
+
+    /**
+     * Creates An Identity Manager with a server information.
+     * @param serverInfo The information about the database location.
+     */
+    public IdentityManager(final ServerInfo serverInfo) {
+        super(serverInfo);
+    }
+
+    /**
+     * Called when startDatabase is called if the database has not already been started.
+     *
+     * This method should be synchronous.
+     */
+    @Override protected void onStartDatabase() throws DatabaseAccessException {
+        if (this.database != null) {
+            throw new DatabaseAccessException("Database was created incorrectly!");
+        }
+        final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
+        this.database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        super.setDatabaseStarted();
     }
 
     /**
@@ -246,5 +272,13 @@ public final class IdentityManager {
 
         final List<String> userGroups = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
         insertUserIntoGroup(userId, userGroups.get(0), !responder.hasPeerTeacherPermission());
+    }
+
+    public String createNewUser(final String userName) {
+        final ObjectId userId = new ObjectId();
+        database.getCollection(DatabaseStringConstants.USER_COLLECTION)
+                .insert(new BasicDBObject(DatabaseStringConstants.SELF_ID, userId)
+                        .append(DatabaseStringConstants.USER_NAME, userName));
+        return userId.toString();
     }
 }

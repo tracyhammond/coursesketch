@@ -1,6 +1,7 @@
 package coursesketch.database.interfaces;
 
 import coursesketch.server.interfaces.ServerInfo;
+import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public abstract class AbstractCourseSketchDatabaseReader {
      *
      * This method should be synchronous.
      */
-    protected abstract void onStartDatabase();
+    protected abstract void onStartDatabase() throws DatabaseAccessException;
 
     /**
      * Called when the database has started.

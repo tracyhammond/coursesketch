@@ -332,6 +332,7 @@ public abstract class AbstractServerWebSocketHandler {
      */
     public final void initialize() {
         databaseReader = createDatabaseReader(this.serverInfo);
+        startDatabase();
         onInitialize();
     }
 
@@ -342,6 +343,16 @@ public abstract class AbstractServerWebSocketHandler {
      * This is called by {@link #initialize()}.
      */
     protected abstract void onInitialize();
+
+    /**
+     * Starts the database if it exists.
+     */
+    protected final void startDatabase() {
+        final AbstractCourseSketchDatabaseReader reader = getDatabaseReader();
+        if (reader != null) {
+            reader.startDatabase();
+        }
+    }
 
     /**
      * @return {@link AbstractCourseSketchDatabaseReader}.  This may return null if one is not set.
