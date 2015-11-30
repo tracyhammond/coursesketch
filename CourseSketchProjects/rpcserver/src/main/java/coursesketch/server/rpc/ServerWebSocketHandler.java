@@ -2,6 +2,7 @@ package coursesketch.server.rpc;
 
 import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.pro.duplex.ClientRpcController;
+import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
@@ -141,5 +142,13 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     @SuppressWarnings("checkstyle:designforextension")
     @Override protected void onInitialize() {
         // Does nothing by default
+    }
+
+    /**
+     * @return AuthenticationChecker created from a socket to the other server.
+     */
+    /* package-private */ final AuthenticationWebSocketClient getAuthenticationWebsocket() {
+        return (AuthenticationWebSocketClient) getConnectionManager()
+                .getBestConnection(AuthenticationWebSocketClient.class);
     }
 }

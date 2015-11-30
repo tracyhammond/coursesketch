@@ -38,8 +38,10 @@ public abstract class AbstractCourseSketchDatabaseReader {
      * Called to start the database.
      *
      * This does use double check locking on this object when initialing the database.
+     *
+     * @throws DatabaseAccessException thrown if the database can not be started correctly.
      */
-    public final void startDatabase() {
+    public final void startDatabase() throws DatabaseAccessException {
         if (!databaseStarted) {
             synchronized (this) {
                 if (!databaseStarted) {
@@ -54,6 +56,8 @@ public abstract class AbstractCourseSketchDatabaseReader {
      * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
+     *
+     * @throws DatabaseAccessException thrown if a subclass throws an exception while starting the database.
      */
     protected abstract void onStartDatabase() throws DatabaseAccessException;
 

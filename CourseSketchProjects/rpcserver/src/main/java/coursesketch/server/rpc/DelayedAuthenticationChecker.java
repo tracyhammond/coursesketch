@@ -1,4 +1,4 @@
-package coursesketch.serverfront;
+package coursesketch.server.rpc;
 
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Created by dtracers on 11/19/2015.
  */
-class IdentityAuthenticationChecker implements AuthenticationChecker {
+class DelayedAuthenticationChecker implements AuthenticationChecker {
 
     /**
      * An authentication checker that is the real instance of the authenticator.

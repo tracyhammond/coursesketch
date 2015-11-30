@@ -1,6 +1,8 @@
 package coursesketch.server.rpc;
 
 import com.googlecode.protobuf.pro.duplex.server.DuplexTcpServerPipelineFactory;
+import coursesketch.auth.AuthenticationWebSocketClient;
+import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
@@ -45,6 +47,11 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     private final ServerInfo serverInfo;
 
     /**
+     * When the authentication is created the websocket might not be ready so this is used to save the instance.
+     */
+    private final DelayedAuthenticationChecker authenticationChecker;
+
+    /**
      * Creates a GeneralConnectionServlet.
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
@@ -55,6 +62,7 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         this.serverInfo = serverInfo;
         connectionServer = createServerSocket();
         manager = createConnectionManager(getServerInfo());
+        authenticationChecker = new DelayedAuthenticationChecker();
     }
 
     /**
@@ -81,6 +89,13 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
         }
         if (connectionServer != null) {
             connectionServer.initialize();
+        }
+
+        final AuthenticationWebSocketClient authSocket = ((ServerWebSocketHandler) getServer()).getAuthenticationWebsocket();
+        if (authSocket != null) {
+            authenticationChecker.setRealAuthenticationChecker(authSocket);
+        } else {
+            LOG.warn("Authentication Websocket does not exist for this rpc instance.");
         }
         onReconnect();
     }
@@ -197,5 +212,12 @@ public class ServerWebSocketInitializer implements ISocketInitializer {
     @SuppressWarnings("checkstyle:designforextension")
     protected List<CourseSketchRpcService> getRpcServices() {
         return new ArrayList<CourseSketchRpcService>();
+    }
+
+    /**
+     * @return an auth checker that looks for the authentication data over an rpc socket.
+     */
+    protected final AuthenticationChecker getRpcAuthChecker() {
+        return authenticationChecker;
     }
 }

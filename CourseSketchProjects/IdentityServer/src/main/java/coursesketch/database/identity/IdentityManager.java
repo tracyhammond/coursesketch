@@ -53,13 +53,13 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Called when startDatabase is called if the database has not already been started.
+     * {@inheritDoc}
      *
-     * This method should be synchronous.
+     * @throws DatabaseAccessException thrown if the database already exist when the database is created.
      */
     @Override protected void onStartDatabase() throws DatabaseAccessException {
         if (this.database != null) {
-            throw new DatabaseAccessException("Database was created incorrectly!");
+            throw new DatabaseAccessException("Mongo instance already exists!");
         }
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
         this.database = mongoClient.getDB(super.getServerInfo().getDatabaseName());

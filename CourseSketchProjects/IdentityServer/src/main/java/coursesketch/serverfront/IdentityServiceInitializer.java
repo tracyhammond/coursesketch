@@ -24,11 +24,6 @@ import java.util.List;
 public final class IdentityServiceInitializer extends ServerWebSocketInitializer {
 
     /**
-     * A wrapper around the auth checker.  This is used because the checker has to be created before the socket exists.
-     */
-    private final IdentityAuthenticationChecker identityAuthenticationChecker;
-
-    /**
      * A client that connects to the mongo database.
      */
     private final MongoClient mongoClient;
@@ -41,7 +36,6 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     public IdentityServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
         mongoClient = new MongoClient(serverInfo.getDatabaseUrl());
-        identityAuthenticationChecker = new IdentityAuthenticationChecker();
     }
 
     /**
@@ -59,7 +53,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
         final DB mongoClientDB = mongoClient.getDB(this.getServerInfo().getDatabaseName());
-        services.add(new IdentityService(new Authenticator(identityAuthenticationChecker, createAuthenticationChecker()),
+        services.add(new IdentityService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()),
                 new IdentityManager(mongoClientDB)));
         return services;
     }
@@ -69,7 +63,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
      */
     @Override
     protected void onReconnect() {
-        identityAuthenticationChecker.setRealAuthenticationChecker(((DefaultWebSocketHandler) super.getServer()).getAuthenticationWebsocket());
+        // Does nothing by default
     }
 
     /**
