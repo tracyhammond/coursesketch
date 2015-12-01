@@ -14,10 +14,17 @@ import protobuf.srl.request.Message;
 import protobuf.srl.services.identity.Identity;
 import utilities.ExceptionUtilities;
 
+import java.util.Map;
+
 /**
  * Created by gigemjt on 9/3/15.
  */
 public final class IdentityService extends Identity.IdentityService implements CourseSketchRpcService {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(IdentityService.class);
 
     /**
      * Manages authentication storage for this service.
@@ -28,11 +35,6 @@ public final class IdentityService extends Identity.IdentityService implements C
      * Used for checking if users have permissions to access certain values.
      */
     private final Authenticator authChecker;
-
-    /**
-     * Declaration and Definition of Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(IdentityService.class);
 
     /**
      * Creates an authentication service with an DbAuthManager and a DbAuthChecker.
@@ -70,12 +72,20 @@ public final class IdentityService extends Identity.IdentityService implements C
      */
     @Override public void createNewUser(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
-        final String userId = identityManager.createNewUser(request.getUserId());
+        final Map<String, String> userResult;
+        try {
+            userResult = identityManager.createNewUser(request.getUserId());
+        } catch (AuthenticationException e) {
+            LOG.error("Failed to create a new user", e);
+            controller.setFailed(e.getMessage());
+            return;
+        }
+        final Map.Entry<String, String> idPassEntry = userResult.entrySet().iterator().next();
         final Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()
                 .addUserNames(Identity.UserNameResponse.MapFieldEntry
                         .newBuilder()
-                        .setKey(request.getUserId())
-                        .setValue(userId)
+                        .setKey(idPassEntry.getKey())
+                        .setValue(idPassEntry.getValue())
                         .build())
                 .build();
         done.run(response);
@@ -87,8 +97,27 @@ public final class IdentityService extends Identity.IdentityService implements C
      * Gets the identity of the users based on their participation in the course.
      */
     @Override public void getUserIdentity(final RpcController controller, final Identity.IdentityRequest request,
-            final RpcCallback<Message.DefaultResponse> done) {
-        // does nothing yet
+            final RpcCallback<Identity.UserNameResponse> done) {
+        String identity = null;
+        try {
+            identity = identityManager.getUserIdentity(request.getUserId(), request.getAuthId());
+        } catch (AuthenticationException e) {
+            LOG.error("Authentication failed when getting user identity", e);
+            controller.setFailed("Authentication failed");
+            return;
+        } catch (DatabaseAccessException e) {
+            LOG.error("Failed to find user when getting user identity", e);
+            controller.setFailed("User was not found");
+            return;
+        }
+        final Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()
+                .addUserNames(Identity.UserNameResponse.MapFieldEntry
+                        .newBuilder()
+                        .setKey(request.getUserId())
+                        .setValue(identity)
+                        .build())
+                .build();
+        done.run(response);
     }
 
     /**

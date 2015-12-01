@@ -10,17 +10,22 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.authentication.HashManager;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.DbSchoolUtility.getParentItemType;
@@ -29,6 +34,11 @@ import static database.DbSchoolUtility.getParentItemType;
  * Created by dtracers on 10/7/2015.
  */
 public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(IdentityManager.class);
 
     /**
      * The database that the auth checker grabs data from.
@@ -278,14 +288,54 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Creates a new user in the identity server.
-     * @param userName
-     * @return
+     * @param userName The username that is being added to the database.
+     * @return A map that has the userId as the key and the password to access the userId as the value.
+     * @throws AuthenticationException thrown if there is a problem creating the user hash.
      */
-    public final String createNewUser(final String userName) {
+    public Map<String, String> createNewUser(final String userName) throws AuthenticationException {
         final ObjectId userId = new ObjectId();
+        final String userPassword = AbstractServerWebSocketHandler.Encoder.nextID().toString();
+        String hashPassword;
+        try {
+            hashPassword = HashManager.createHash(userPassword);
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Algorithm could not be found", e);
+            throw new AuthenticationException(e);
+        }
         database.getCollection(DatabaseStringConstants.USER_COLLECTION)
                 .insert(new BasicDBObject(DatabaseStringConstants.SELF_ID, userId)
-                        .append(DatabaseStringConstants.USER_NAME, userName));
-        return userId.toString();
+                        .append(DatabaseStringConstants.USER_NAME, userName)
+                        .append(DatabaseStringConstants.PASSWORD, hashPassword));
+
+        final Map<String, String> result = new HashMap<>();
+        result.put(userId.toString(), userPassword);
+        return result;
+    }
+
+    /**
+     * Gets the user identity.
+     *
+     * @param userName The username that is associated with the userId
+     * @param authId The password to getting the user identity.
+     * @return The userIdentity.
+     * @throws AuthenticationException Thrown if the {@code authId} is invalid.
+     * @throws DatabaseAccessException Thrown if the user is not found.
+     */
+    public String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException {
+        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        final DBObject userInfo = collection.findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, userName));
+
+        if (userInfo == null) {
+            throw new DatabaseAccessException("User not found with username [" + userName + "]");
+        }
+        try {
+            if (!HashManager.validateHash(authId, userInfo.get(DatabaseStringConstants.PASSWORD).toString())) {
+                throw new AuthenticationException("Auth Identification is invalid", AuthenticationException.INVALID_PERMISSION);
+            }
+        } catch (NoSuchAlgorithmException | AuthenticationException e) {
+            LOG.error("Problem validating user hash");
+            throw new AuthenticationException(e);
+        }
+        return userInfo.get(DatabaseStringConstants.SELF_ID).toString();
     }
 }

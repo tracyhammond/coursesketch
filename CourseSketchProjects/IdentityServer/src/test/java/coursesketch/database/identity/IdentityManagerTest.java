@@ -31,6 +31,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static database.DbSchoolUtility.getCollectionFromType;
 import static org.mockito.Matchers.any;
@@ -46,8 +47,10 @@ public class IdentityManagerTest {
     @Rule
     public FongoRule fongo = new FongoRule();
 
+    private static final String VALID_USERNAME = "Valid username";
     private static final String VALID_REGISTRATION_KEY = "VALID KEY YO";
     private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
+    private static final String INVALID_USERNAME = "NOT VALID USERNAME";
 
     public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
     public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
@@ -73,7 +76,7 @@ public class IdentityManagerTest {
 
     public DB db;
 
-    public IdentityManager dbAuthManager;
+    public IdentityManager identityManager;
     Authenticator dbAuthChecker;
     @Mock
     private AuthenticationChecker authChecker;
@@ -84,7 +87,7 @@ public class IdentityManagerTest {
     public void before() throws UnknownHostException {
 
         db = fongo.getDB(); // new MongoClient("localhost").getDB("test");
-        dbAuthManager = new IdentityManager(db);
+        identityManager = new IdentityManager(db);
 
         try {
             // general rules
@@ -131,7 +134,7 @@ public class IdentityManagerTest {
 
     @Test
     public void testGroupCreation() throws AuthenticationException, NoSuchAlgorithmException {
-        dbAuthManager.createNewGroup(TEACHER_USER_ID, VALID_ITEM_ID);
+        identityManager.createNewGroup(TEACHER_USER_ID, VALID_ITEM_ID);
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
         final DBObject dbObject = cursor.next();
         System.out.println(dbObject);
@@ -163,7 +166,7 @@ public class IdentityManagerTest {
 
     @Test
     public void testInsertingCourseItem() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -205,7 +208,7 @@ public class IdentityManagerTest {
     @Test
     public void testInsertingBankItem() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         final String courseId = "COURSE_ID";
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, courseId, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, courseId, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -246,7 +249,7 @@ public class IdentityManagerTest {
 
     @Test
     public void testInsertingChildItemItemWithAdminPermission() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         AuthenticationHelper.setMockPermissions(authChecker, null, null, TEACHER_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -255,7 +258,7 @@ public class IdentityManagerTest {
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
 
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
 
         // looks for item data
         final DBObject dbItemChildObject = db.getCollection(getCollectionFromType(VALID_ITEM_CHILD_TYPE)).findOne(new ObjectId(VALID_ITEM_CHILD_ID));
@@ -300,7 +303,7 @@ public class IdentityManagerTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void testInsertingChildItemItemWithMissingParent() throws AuthenticationException, DatabaseAccessException {
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -313,13 +316,13 @@ public class IdentityManagerTest {
         DBObject dbItemObjectNull = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertNull(dbItemObjectNull);
 
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
     }
 
     @Test
     public void testInsertingChildItemItemWithModeratorPermission() throws AuthenticationException, DatabaseAccessException,
             NoSuchAlgorithmException {
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -328,9 +331,9 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, null, null, MOD_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.MODERATOR);
 
-        dbAuthManager.registerSelf(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerSelf(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
 
-        dbAuthManager.insertNewItem(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.insertNewItem(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
 
         // looks for item data
         final DBObject dbItemChildObject = db.getCollection(getCollectionFromType(VALID_ITEM_CHILD_TYPE)).findOne(new ObjectId(VALID_ITEM_CHILD_ID));
@@ -378,18 +381,18 @@ public class IdentityManagerTest {
 
     @Test(expected = AuthenticationException.class)
     public void testInsertingChildItemItemWithInvalidPermission() throws AuthenticationException, DatabaseAccessException {
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
 
-        dbAuthManager.insertNewItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.insertNewItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
     }
 
     @Test
     public void testRegisteringUserInCourse() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -399,7 +402,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        dbAuthManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
 
         // Looks for group data
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
@@ -434,48 +437,48 @@ public class IdentityManagerTest {
     @Test(expected = AuthenticationException.class)
     public void testRegisteringUserInCourseInvalidKey() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        dbAuthManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
 
     @Test(expected = AuthenticationException.class)
     public void testRegisteringUserInCourseNullKey() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        dbAuthManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
 
     @Test(expected = DatabaseAccessException.class)
     public void testRegisteringUserInCourseInvalidItemId() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        dbAuthManager.registerSelf(STUDENT_USER_ID, userId, INVALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, userId, INVALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void testRegisteringUserInCourseInvalidGroupId() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        dbAuthManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // Remove group from the database
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
@@ -490,6 +493,85 @@ public class IdentityManagerTest {
 
         AuthenticationHelper.setMockPermissions(authChecker, null, null, STUDENT_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        dbAuthManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+    }
+
+    @Test
+    public void createNewUser() throws AuthenticationException, NoSuchAlgorithmException {
+        Map<String, String> results = identityManager.createNewUser(VALID_USERNAME);
+        Assert.assertEquals(1, results.size());
+
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+
+        Assert.assertEquals(VALID_USERNAME, dbObject.get(DatabaseStringConstants.USER_NAME));
+
+        final Map.Entry<String, String> next = results.entrySet().iterator().next();
+
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), next.getKey());
+        Assert.assertTrue(HashManager.validateHash(next.getValue(), dbObject.get(DatabaseStringConstants.PASSWORD).toString()));
+    }
+
+    @Test
+    public void getUserIdentity() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        Map<String, String> results = identityManager.createNewUser(VALID_USERNAME);
+        final Map.Entry<String, String> next = results.entrySet().iterator().next();
+
+        // user info is created correctly!
+        Assert.assertEquals(1, results.size());
+
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+
+        Assert.assertEquals(VALID_USERNAME, dbObject.get(DatabaseStringConstants.USER_NAME));
+
+        // Gets the user info
+
+        String userIdentity = identityManager.getUserIdentity(VALID_USERNAME, next.getValue());
+
+        // checks that the user identity is grabbed correctly!
+        Assert.assertEquals(next.getKey(), userIdentity);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void getUserIdentityThrowsWhenInvalidUsername() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        Map<String, String> results = identityManager.createNewUser(VALID_USERNAME);
+        final Map.Entry<String, String> next = results.entrySet().iterator().next();
+
+        // user info is created correctly!
+        Assert.assertEquals(1, results.size());
+
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+
+        Assert.assertEquals(VALID_USERNAME, dbObject.get(DatabaseStringConstants.USER_NAME));
+
+        // Gets the user info
+
+        String userIdentity = identityManager.getUserIdentity(INVALID_USERNAME, next.getValue());
+
+        // checks that the user identity is grabbed correctly!
+        Assert.assertEquals(next.getKey(), userIdentity);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void getUserIdentityThrowsWhenInvalidAuth() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        Map<String, String> results = identityManager.createNewUser(VALID_USERNAME);
+        final Map.Entry<String, String> next = results.entrySet().iterator().next();
+
+        // user info is created correctly!
+        Assert.assertEquals(1, results.size());
+
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+
+        Assert.assertEquals(VALID_USERNAME, dbObject.get(DatabaseStringConstants.USER_NAME));
+
+        // Gets the user info
+
+        String userIdentity = identityManager.getUserIdentity(VALID_USERNAME, "invalid auth");
+
+        // checks that the user identity is grabbed correctly!
+        Assert.assertEquals(next.getKey(), userIdentity);
     }
 }
