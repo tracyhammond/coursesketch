@@ -51,7 +51,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Creates An IdentityManager with a database.
-     * @param database The database where all of the data is stored.
+     *
+     * @param database
+     *         The database where all of the data is stored.
      */
     public IdentityManager(final DB database) {
         super(null);
@@ -60,7 +62,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Creates An Identity Manager with a server information.
-     * @param serverInfo The information about the database location.
+     *
+     * @param serverInfo
+     *         The information about the database location.
      */
     public IdentityManager(final ServerInfo serverInfo) {
         super(serverInfo);
@@ -69,7 +73,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * {@inheritDoc}
      *
-     * @throws DatabaseAccessException thrown if the database already exist when the database is created.
+     * @throws DatabaseAccessException
+     *         thrown if the database already exist when the database is created.
      */
     @Override protected void onStartDatabase() throws DatabaseAccessException {
         if (this.database != null) {
@@ -85,16 +90,24 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Inserts a new item into the database.
      *
-     * @param userId The user id of the user that is inserting the new item.
-     * @param authId The AuthId of the user that is inserting the new item.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link protobuf.srl.school.School.ItemType#COURSE}
-     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
-     *                 If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *                 problem
-     * @param authChecker Used to check that the user has access to perform the requested actions.
-     * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to perform the request actions.
-     * @throws AuthenticationException Thrown if there is data that can not be found in the database.
+     * @param userId
+     *         The user id of the user that is inserting the new item.
+     * @param authId
+     *         The AuthId of the user that is inserting the new item.
+     * @param itemId
+     *         The id of the item being inserted
+     * @param itemType
+     *         The type of item that is being inserted, EX: {@link protobuf.srl.school.School.ItemType#COURSE}
+     * @param parentId
+     *         The id of the parent object EX: parent points to course if item is an Assignment.
+     *         If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
+     *         problem
+     * @param authChecker
+     *         Used to check that the user has access to perform the requested actions.
+     * @throws DatabaseAccessException
+     *         Thrown if the user does not have the correct permissions to perform the request actions.
+     * @throws AuthenticationException
+     *         Thrown if there is data that can not be found in the database.
      */
     public void insertNewItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
             final String parentId, final Authenticator authChecker)
@@ -140,9 +153,12 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Creates a basic query for inserting items into the database.
      *
-     * @param userId The userId of the user that is inserting the new item.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
+     * @param userId
+     *         The userId of the user that is inserting the new item.
+     * @param itemId
+     *         The id of the item being inserted
+     * @param itemType
+     *         The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
      * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
      */
     private BasicDBObject createItemInsertQuery(final String userId, final String itemId, final School.ItemType itemType) {
@@ -161,13 +177,18 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Copies the details of the parent item (mainly groups and CourseId) into the current item.
      *
-     * @param insertQuery An existing query for an item that is going to be inserted into the database.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
-     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
-     *                 If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *                 problem
-     * @throws DatabaseAccessException Thrown if the parent object can not be found.
+     * @param insertQuery
+     *         An existing query for an item that is going to be inserted into the database.
+     * @param itemId
+     *         The id of the item being inserted
+     * @param itemType
+     *         The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
+     * @param parentId
+     *         The id of the parent object EX: parent points to course if item is an Assignment.
+     *         If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
+     *         problem
+     * @throws DatabaseAccessException
+     *         Thrown if the parent object can not be found.
      */
     private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final School.ItemType itemType, final String parentId)
             throws DatabaseAccessException {
@@ -189,10 +210,13 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Creates a new group in the database.
      *
-     * @param userId The id of the owner of the new group.
-     * @param courseId The course that the group belongs to.
+     * @param userId
+     *         The id of the owner of the new group.
+     * @param courseId
+     *         The course that the group belongs to.
      * @return A {@link String} that is the mongo id of the new group.
-     * @throws AuthenticationException Thrown if there are problems creating the hash data.
+     * @throws AuthenticationException
+     *         Thrown if there are problems creating the hash data.
      */
     public String createNewGroup(final String userId, final String courseId) throws AuthenticationException {
         String hash;
@@ -216,11 +240,16 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Allows the insertion of a user into a group with the designated permission.
      *
-     * @param userId The authentication Id of the user that is being added.
-     * @param groupId The group this specific user is being added to.
-     * @param isUser The id of the course the user is being added to.
-     * @throws AuthenticationException Thrown if a valid hash can not be created for this user.
-     * @throws DatabaseAccessException Thrown if the group can not be found.
+     * @param userId
+     *         The authentication Id of the user that is being added.
+     * @param groupId
+     *         The group this specific user is being added to.
+     * @param isUser
+     *         The id of the course the user is being added to.
+     * @throws AuthenticationException
+     *         Thrown if a valid hash can not be created for this user.
+     * @throws DatabaseAccessException
+     *         Thrown if the group can not be found.
      */
     private void insertUserIntoGroup(final String userId, final String groupId, final boolean isUser)
             throws AuthenticationException, DatabaseAccessException {
@@ -255,14 +284,22 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
      * Registers a student with a course.
      *
      * The student must have a valid registration key.
-     * @param userId The user Id of the user that is being added.
-     * @param authId The authentication Id of the user that is being added.
-     * @param itemId The Id of the course or bank problem the user is being added to.
-     * @param itemType The type of item the user is registering for (Only {@link protobuf.srl.school.School.ItemType#COURSE}
-     *                 and (Only {@link protobuf.srl.school.School.ItemType#BANK_PROBLEM} are valid types.
-     * @param authChecker Used to check permissions in the database.
-     * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
-     * @throws DatabaseAccessException Thrown if the item can not be found.
+     *
+     * @param userId
+     *         The user Id of the user that is being added.
+     * @param authId
+     *         The authentication Id of the user that is being added.
+     * @param itemId
+     *         The Id of the course or bank problem the user is being added to.
+     * @param itemType
+     *         The type of item the user is registering for (Only {@link protobuf.srl.school.School.ItemType#COURSE}
+     *         and (Only {@link protobuf.srl.school.School.ItemType#BANK_PROBLEM} are valid types.
+     * @param authChecker
+     *         Used to check permissions in the database.
+     * @throws AuthenticationException
+     *         If the user does not have access or an invalid {@code registrationKey}.
+     * @throws DatabaseAccessException
+     *         Thrown if the item can not be found.
      */
     public void registerSelf(final String userId, final String authId, final String itemId, final School.ItemType itemType,
             final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
@@ -291,9 +328,12 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Creates a new user in the identity server.
-     * @param userName The username that is being added to the database.
+     *
+     * @param userName
+     *         The username that is being added to the database.
      * @return A map that has the userId as the key and the password to access the userId as the value.
-     * @throws AuthenticationException thrown if there is a problem creating the user hash.
+     * @throws AuthenticationException
+     *         thrown if there is a problem creating the user hash.
      */
     public Map<String, String> createNewUser(final String userName) throws AuthenticationException {
         final ObjectId userId = new ObjectId();
@@ -318,11 +358,15 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Gets the user identity.
      *
-     * @param userName The username that is associated with the userId
-     * @param authId The password to getting the user identity.
+     * @param userName
+     *         The username that is associated with the userId
+     * @param authId
+     *         The password to getting the user identity.
      * @return The userIdentity.
-     * @throws AuthenticationException Thrown if the {@code authId} is invalid.
-     * @throws DatabaseAccessException Thrown if the user is not found.
+     * @throws AuthenticationException
+     *         Thrown if the {@code authId} is invalid.
+     * @throws DatabaseAccessException
+     *         Thrown if the user is not found.
      */
     public String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException {
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
@@ -343,15 +387,30 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
+     * Gets the course roster.
+     *
+     * Only the users in the course roster are returned and the non users (moderators, peer teachers, teachers) are not returned by this function.
+     *
      * @param authId
+     *         The authentication id of the user wanting the item roster
      * @param itemId
+     *         The item that the roster is being grabbed for (does not have to be a course)
      * @param itemType
-     * @param userIdsList a list of hashed userIds
+     *         The itemtype that the roster is being grabbed for (does not have to be a course)
+     * @param userIdsList
+     *         a list of specific userIds to be grabbed.  Only the ids contained in this list are returned.
+     *         This can be used to grab a single id as well
      * @param authChecker
-     * @return a map with null values if they are only a peer teacher!
+     *         Used to check permissions in the database.
+     * @return an {@code Map<String, String>} that maps a hashed userId (hashed by the courseId) to the username {@code Map<UserIdHash, UserName>}
+     * If the user getting the course roster only as peer level permissions then the user name is not returned but the course roster still is.
+     * Instead the map contains null values instead of a username {@code Map<UserIdHash, null>}.
      * @throws AuthenticationException
+     *         Thrown if the user does not have permission
+     * @throws DatabaseAccessException
+     *         Thrown if the item, group, or users do not exist.
      */
-    public Map<String, String> getCourseRoster(final String authId, final String itemId, final School.ItemType itemType,
+    public Map<String, String> getItemRoster(final String authId, final String itemId, final School.ItemType itemType,
             final Collection<String> userIdsList, final Authenticator authChecker)
             throws AuthenticationException, DatabaseAccessException {
         final AuthenticationResponder responder = authChecker.checkAuthentication(itemType, itemId, authId, 0,
@@ -372,13 +431,13 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
         for (String groupId : groupList) {
-            courseRoster.putAll(getGroupRoster(groupCollection, groupId, responder));
+            courseRoster.putAll(getGroupRoster(groupCollection, groupId));
         }
 
         final Map<String, String> userIdToUserNames = new HashMap<>();
 
         if (!responder.hasModeratorPermission()) {
-            for (String hashedId: courseRoster.values()) {
+            for (String hashedId : courseRoster.values()) {
                 userIdToUserNames.put(hashedId, null);
             }
             return userIdToUserNames;
@@ -393,20 +452,22 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
         final Map<String, String> unHashedUserIdsToUserNames = getUserNames(userIds);
 
-        for (String userId: unHashedUserIdsToUserNames.keySet()) {
+        for (String userId : unHashedUserIdsToUserNames.keySet()) {
             userIdToUserNames.put(courseRoster.get(userId), unHashedUserIdsToUserNames.get(userId));
         }
         return userIdToUserNames;
     }
 
     /**
+     * Gets the roster for the specific group.
      *
      * @param collection
+     *         The group collection.
      * @param groupId
-     * @param responder
-     * @return
+     *         The id where the group is located
+     * @return A {@code Map<String, String>} which is a {@code Map<UnhashedUserId, HashedUserId>}.
      */
-    private Map<String, String> getGroupRoster(final DBCollection collection, final String groupId, final AuthenticationResponder responder) {
+    private Map<String, String> getGroupRoster(final DBCollection collection, final String groupId) {
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
 
@@ -416,14 +477,22 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Gets the username given the actual unhashed userId.
+     *
      * @param userId
+     *         The userId the username is being requested for
      * @param authId
+     *         The permission the person who is asking for the username has
      * @param itemId
+     *         Used for authentication purposes to ensure the person asking for the userId has permission to get the username
      * @param itemType
+     *         Used for authentication purposes to ensure the person asking for the userId has permission to get the username
      * @param authChecker
-     * @return
+     *         Used to check permissions in the database.
+     * @return A map of the userId to the userName, {@code Map<UserId, UserName>}
      * @throws AuthenticationException
+     *         Thrown if the user does not have permission to get the user name
      * @throws DatabaseAccessException
+     *         Thrown if the username does not exist.
      */
     public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
             final Authenticator authChecker)
@@ -445,9 +514,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Gets the user names given the identity.
      *
-     * @param identity A list of userIds
+     * @param identity
+     *         A list of userIds
      * @return A map representing the userId to userName
-     * @throws DatabaseAccessException Thrown if no users are found.
+     * @throws DatabaseAccessException
+     *         Thrown if no users are found.
      */
     private Map<String, String> getUserNames(final String... identity) throws DatabaseAccessException {
         return getUserNames(Arrays.asList(identity));
@@ -456,13 +527,15 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     /**
      * Gets the user names given the identity.
      *
-     * @param identity A list of userIds
+     * @param identity
+     *         A list of userIds
      * @return A map representing the userId to userName
-     * @throws DatabaseAccessException Thrown if no users are found.
+     * @throws DatabaseAccessException
+     *         Thrown if no users are found.
      */
     private Map<String, String> getUserNames(final Collection<String> identity) throws DatabaseAccessException {
         final List<ObjectId> identityList = new ArrayList<>();
-        for (String userId: identity) {
+        for (String userId : identity) {
             identityList.add(new ObjectId(userId));
         }
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
@@ -492,17 +565,23 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
+     * Returns true if the user is in the item.
      *
      * @param userId
+     *         The id that is being checked
      * @param isUser
+     *         True if checking the user list instead of the non user list
      * @param itemId
-     * @param collectionType
-     * @return
+     *         The item that the user is being checked in
+     * @param itemType
+     *         The type of item that is being checked
+     * @return Returns true if the user is in the group.
      * @throws DatabaseAccessException
+     *         Thrown if the group does not exist.
      */
-    boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final School.ItemType collectionType)
+    boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final School.ItemType itemType)
             throws DatabaseAccessException {
-        final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
+        final DBCollection collection = this.database.getCollection(getCollectionFromType(itemType));
         final DBObject result = collection.findOne(new ObjectId(itemId));
         if (result == null) {
             throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
@@ -521,14 +600,19 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Checks the group permission, and returns a permission level.
+     * Returns true if the user is in the group.
      *
-     * @param collection The collection that contains the group.
-     * @param groupId The id of the group that is being checked.
-     * @param userId The id that is being checked
-     * @return A permission level that represents what permission the user has.  This does not return null.
-     * @throws DatabaseAccessException Thrown if the group does not exist.
-     * @throws AuthenticationException Thrown if there are problems comparing the hashes.
+     * @param collection
+     *         The collection that contains the group.
+     * @param groupId
+     *         The id of the group that is being checked.
+     * @param userId
+     *         The id that is being checked
+     * @param isUser
+     *         True if checking the user list instead of the non user list
+     * @return Returns true if the user is in the group.
+     * @throws DatabaseAccessException
+     *         Thrown if the group does not exist.
      */
     private boolean isUserInGroup(final DBCollection collection, final String groupId,
             final String userId, final boolean isUser) throws DatabaseAccessException {

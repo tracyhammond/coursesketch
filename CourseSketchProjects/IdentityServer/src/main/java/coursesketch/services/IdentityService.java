@@ -64,7 +64,7 @@ public final class IdentityService extends Identity.IdentityService implements C
             final RpcCallback<Identity.UserNameResponse> done) {
         final Identity.IdentityRequest requestData = request.getRequestData();
         try {
-            identityManager.getCourseRoster(requestData.getAuthId(), requestData.getItemId(), requestData.getItemType(),
+            identityManager.getItemRoster(requestData.getAuthId(), requestData.getItemId(), requestData.getItemType(),
                     request.getUserIdsList(), authChecker);
         } catch (AuthenticationException e) {
             e.printStackTrace();

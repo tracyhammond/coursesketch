@@ -713,7 +713,7 @@ public class IdentityManagerTest {
             identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
-        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
         Assert.assertEquals(userIdsToUserNames, userValues);
     }
 
@@ -754,7 +754,7 @@ public class IdentityManagerTest {
             identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
-        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, subset, dbAuthChecker);
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, subset, dbAuthChecker);
 
         Assert.assertEquals(userIdsToUserNames, userValues);
     }
@@ -792,7 +792,7 @@ public class IdentityManagerTest {
             identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
-        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
         Assert.assertEquals(userIdsToUserNames, userValues);
     }
 
@@ -827,7 +827,7 @@ public class IdentityManagerTest {
             identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
-        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
         Assert.assertEquals(userIdsToUserNames, userValues);
     }
 
@@ -865,7 +865,7 @@ public class IdentityManagerTest {
             identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
-        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
         Assert.assertEquals(userIdsToUserNames, userValues);
     }
 
@@ -899,6 +899,6 @@ public class IdentityManagerTest {
             userIdsToUserNames.put(hash, null);
         }
 
-        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
     }
 }

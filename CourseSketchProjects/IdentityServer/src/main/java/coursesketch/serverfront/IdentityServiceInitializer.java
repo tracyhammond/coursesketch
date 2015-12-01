@@ -35,7 +35,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     private final MongoClient mongoClient;
 
     /**
-     * Identity manager
+     * Identity manager.
      */
     private IdentityManager manager;
 
