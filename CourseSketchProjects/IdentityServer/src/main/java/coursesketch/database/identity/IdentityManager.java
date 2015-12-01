@@ -534,12 +534,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
             final String userId, final boolean isUser) throws DatabaseAccessException {
         final String listType = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
         final DBObject group = collection.findOne(new ObjectId(groupId), new BasicDBObject(listType, 1));
-
-        final DBObject list = (DBObject) group.get(listType);
         if (group == null) {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }
 
+        final DBObject list = (DBObject) group.get(listType);
         return list.containsField(userId);
     }
 }
