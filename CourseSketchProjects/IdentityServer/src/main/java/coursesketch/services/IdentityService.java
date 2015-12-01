@@ -83,6 +83,8 @@ public final class IdentityService extends Identity.IdentityService implements C
             identityManager.getUserName(request.getUserId(), request.getAuthId(), "", null, authChecker);
         } catch (AuthenticationException e) {
             e.printStackTrace();
+        } catch (DatabaseAccessException e) {
+            e.printStackTrace();
         }
     }
 

@@ -365,13 +365,17 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
      * @throws DatabaseAccessException Thrown if no users are found.
      */
     private Map<String, String> getUserNames(final String... identity) throws DatabaseAccessException {
-        final List<String> identityList = Arrays.asList(identity);
+        final List<ObjectId> identityList = new ArrayList<>();
+        for (String userId: identity) {
+            identityList.add(new ObjectId(userId));
+        }
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
         final DBCursor cursor = collection.find(
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, new BasicDBObject(DatabaseStringConstants.IN_COMMAND, identityList)),
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, 1).append(DatabaseStringConstants.USER_NAME, 1));
 
         if (!cursor.hasNext()) {
+            DBObject obj = collection.find().next();
             throw new DatabaseAccessException("No users were found with the given userIds");
         }
 
@@ -392,7 +396,16 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         return userNameMap;
     }
 
-    private boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final School.ItemType collectionType)
+    /**
+     *
+     * @param userId
+     * @param isUser
+     * @param itemId
+     * @param collectionType
+     * @return
+     * @throws DatabaseAccessException
+     */
+    boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final School.ItemType collectionType)
             throws DatabaseAccessException {
         final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
         final DBObject result = collection.findOne(new ObjectId(itemId));
@@ -401,7 +414,6 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         }
 
         final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
-        Authentication.AuthResponse.PermissionLevel permissionLevel = null;
 
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
@@ -425,13 +437,14 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
      */
     private boolean isUserInGroup(final DBCollection collection, final String groupId,
             final String userId, final boolean isUser) throws DatabaseAccessException {
-        final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
-        final DBObject group = collection.findOne(new ObjectId(groupId), new BasicDBObject(list, 1));
+        final String listType = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
+        final DBObject group = collection.findOne(new ObjectId(groupId), new BasicDBObject(listType, 1));
 
+        final DBObject list = (DBObject) group.get(listType);
         if (group == null) {
             throw new DatabaseAccessException("Can not find group with id: " + groupId);
         }
 
-        return group.containsField(userId);
+        return list.containsField(userId);
     }
 }

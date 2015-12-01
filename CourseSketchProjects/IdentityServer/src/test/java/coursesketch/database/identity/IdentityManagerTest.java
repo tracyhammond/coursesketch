@@ -573,4 +573,105 @@ public class IdentityManagerTest {
         // checks that the user identity is grabbed correctly!
         Assert.assertEquals(next.getKey(), userIdentity);
     }
+
+    @Test(expected = AuthenticationException.class)
+    public void getUserNameFromIdentityThrowsWhenInvalidPermisson() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        identityManager.getUserName(STUDENT_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void getUserNameFromIdentityThrowsWhenItemDoNotExist() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+        identityManager.getUserName(STUDENT_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void getUserNameFromIdentityThrowsWhenUserDoNotExistInItem() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.getUserName(STUDENT_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void getUserNameFromIdentityThrowsWhenUserDoNotExist() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.getUserName(STUDENT_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+    }
+
+    @Test
+    public void getUserNameFromIdentity() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        final String userId = identityManager.createNewUser(STUDENT_USER_ID).keySet().iterator().next();
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        final Map<String, String> userName = identityManager.getUserName(userId, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+
+        Assert.assertTrue(userName.containsKey(userId));
+        Assert.assertEquals(STUDENT_USER_ID, userName.get(userId));
+    }
+
+    @Test
+    public void isUserInItem() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        Assert.assertTrue(identityManager.isUserInItem(STUDENT_USER_ID, true, VALID_ITEM_ID, VALID_ITEM_TYPE));
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void isUserInItemThrowsWhenItemDoesNotExist() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        Assert.assertTrue(identityManager.isUserInItem(STUDENT_USER_ID, true, VALID_ITEM_ID, VALID_ITEM_TYPE));
+    }
+
+    @Test
+    public void isUserNotInItem() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Assert.assertFalse(identityManager.isUserInItem(STUDENT_USER_ID, true, VALID_ITEM_ID, VALID_ITEM_TYPE));
+    }
+
+    @Test
+    public void isAdminInItem() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        Assert.assertTrue(identityManager.isUserInItem(TEACHER_USER_ID, false, VALID_ITEM_ID, VALID_ITEM_TYPE));
+    }
 }
