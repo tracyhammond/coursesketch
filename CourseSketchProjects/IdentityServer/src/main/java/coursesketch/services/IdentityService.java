@@ -70,7 +70,15 @@ public final class IdentityService extends Identity.IdentityService implements C
      */
     @Override public void createNewUser(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
-        String userId = identityManager.createNewUser(request.getUserId());
+        final String userId = identityManager.createNewUser(request.getUserId());
+        final Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()
+                .addUserNames(Identity.UserNameResponse.MapFieldEntry
+                        .newBuilder()
+                        .setKey(request.getUserId())
+                        .setValue(userId)
+                        .build())
+                .build();
+        done.run(response);
     }
 
     /**

@@ -63,6 +63,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         }
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
         this.database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        final DBCollection collection = this.database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        collection.createIndex(new BasicDBObject(DatabaseStringConstants.USER_NAME, 1));
         super.setDatabaseStarted();
     }
 
@@ -274,7 +276,12 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         insertUserIntoGroup(userId, userGroups.get(0), !responder.hasPeerTeacherPermission());
     }
 
-    public String createNewUser(final String userName) {
+    /**
+     * Creates a new user in the identity server.
+     * @param userName
+     * @return
+     */
+    public final String createNewUser(final String userName) {
         final ObjectId userId = new ObjectId();
         database.getCollection(DatabaseStringConstants.USER_COLLECTION)
                 .insert(new BasicDBObject(DatabaseStringConstants.SELF_ID, userId)

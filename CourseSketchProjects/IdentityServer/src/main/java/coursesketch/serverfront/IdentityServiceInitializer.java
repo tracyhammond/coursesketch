@@ -1,6 +1,5 @@
 package coursesketch.serverfront;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationOptionChecker;
@@ -12,6 +11,8 @@ import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import coursesketch.services.IdentityService;
 import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 
 import java.util.ArrayList;
@@ -24,9 +25,19 @@ import java.util.List;
 public final class IdentityServiceInitializer extends ServerWebSocketInitializer {
 
     /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(IdentityServiceInitializer.class);
+
+    /**
      * A client that connects to the mongo database.
      */
     private final MongoClient mongoClient;
+
+    /**
+     * Identity manager
+     */
+    private IdentityManager manager;
 
     /**
      * Constructor for AuthenticationServiceInitializer.
@@ -36,6 +47,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     public IdentityServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
         mongoClient = new MongoClient(serverInfo.getDatabaseUrl());
+        manager = new IdentityManager(this.getServerInfo());
     }
 
     /**
@@ -52,9 +64,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        final DB mongoClientDB = mongoClient.getDB(this.getServerInfo().getDatabaseName());
-        services.add(new IdentityService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()),
-                new IdentityManager(mongoClientDB)));
+        services.add(new IdentityService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
         return services;
     }
 
@@ -63,6 +73,11 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
      */
     @Override
     protected void onReconnect() {
+        try {
+            manager.startDatabase();
+        } catch (DatabaseAccessException e) {
+            LOG.error("Error starting database", e);
+        }
         // Does nothing by default
     }
 
