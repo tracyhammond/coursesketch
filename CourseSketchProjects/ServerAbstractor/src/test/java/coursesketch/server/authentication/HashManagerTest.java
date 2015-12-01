@@ -89,4 +89,11 @@ public class HashManagerTest {
     public void invalidSaltThrowsException() throws Exception {
         HashManager.createHash("Pass", "badsalt");
     }
+
+    @Test
+    public void unsecureSaltIsGeneratedWithTinyValues() throws NoSuchAlgorithmException, AuthenticationException {
+        String str = "1";
+        String salt = HashManager.generateUnSecureSalt(str);
+        HashManager.createHash("Pass", salt);
+    }
 }
