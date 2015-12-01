@@ -80,7 +80,7 @@ public final class IdentityService extends Identity.IdentityService implements C
     @Override public void requestUserName(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
         try {
-            identityManager.getUserName(request.getUserId(), request.getAuthId(), "", null, authChecker);
+            identityManager.getUserName(request.getUserId(), request.getAuthId(), request.getItemId(), request.getItemType(), authChecker);
         } catch (AuthenticationException e) {
             e.printStackTrace();
         } catch (DatabaseAccessException e) {
