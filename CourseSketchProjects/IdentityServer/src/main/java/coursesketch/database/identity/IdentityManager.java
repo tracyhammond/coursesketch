@@ -3,6 +3,7 @@ package coursesketch.database.identity;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationException;
@@ -23,6 +24,7 @@ import protobuf.srl.services.authentication.Authentication;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +133,6 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
         final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
         collection.insert(insertQuery);
-
     }
 
     /**
@@ -199,10 +200,10 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
-        final List<BasicDBObject> nonStudent = new ArrayList<BasicDBObject>();
-        nonStudent.add(new BasicDBObject(userId, hash));
+        final BasicDBObject nonStudent = new BasicDBObject();
+        nonStudent.append(userId, hash);
         final BasicDBObject groupQuery = new BasicDBObject(DatabaseStringConstants.COURSE_ID, new ObjectId(courseId))
-                .append(DatabaseStringConstants.USER_LIST, new ArrayList<BasicDBObject>())
+                .append(DatabaseStringConstants.USER_LIST, new BasicDBObject())
                 .append(DatabaseStringConstants.NON_USER_LIST, nonStudent);
 
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
@@ -241,11 +242,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
             throw new AuthenticationException("Unable to create authentication hash for group " + groupId, AuthenticationException.OTHER);
         }
 
-        final BasicDBObject newIdentity = new BasicDBObject(userId, hash);
+        // final BasicDBObject newIdentity = new BasicDBObject(userId, hash);
         final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
         database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
                 group,
-                new BasicDBObject(DatabaseStringConstants.ADD_SET_COMMAND, new BasicDBObject(list, newIdentity)));
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(list + "." + userId, hash)));
     }
 
     /**
@@ -337,5 +338,100 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
             throw new AuthenticationException(e);
         }
         return userInfo.get(DatabaseStringConstants.SELF_ID).toString();
+    }
+
+    public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+            final Authenticator authChecker)
+            throws AuthenticationException, DatabaseAccessException {
+        final AuthenticationResponder responder = authChecker.checkAuthentication(itemType, itemId, authId, 0,
+                Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("Need to be a mod", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        if (!isUserInItem(userId, true, itemId, itemType)) {
+            throw new AuthenticationException("User needs to be in the item that the requester is a mod of",
+                    AuthenticationException.OTHER);
+        }
+
+        return getUserNames(userId);
+    }
+
+    /**
+     * Gets the user names given the identity.
+     *
+     * @param identity A list of userIds
+     * @return A map representing the userId to userName
+     * @throws DatabaseAccessException Thrown if no users are found.
+     */
+    private Map<String, String> getUserNames(final String... identity) throws DatabaseAccessException {
+        final List<String> identityList = Arrays.asList(identity);
+        final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        final DBCursor cursor = collection.find(
+                new BasicDBObject(DatabaseStringConstants.SELF_ID, new BasicDBObject(DatabaseStringConstants.IN_COMMAND, identityList)),
+                new BasicDBObject(DatabaseStringConstants.SELF_ID, 1).append(DatabaseStringConstants.USER_NAME, 1));
+
+        if (!cursor.hasNext()) {
+            throw new DatabaseAccessException("No users were found with the given userIds");
+        }
+
+        final Map<String, String> userNameMap = new HashMap<>();
+        while (cursor.hasNext()) {
+            final DBObject userName = cursor.next();
+            userNameMap.put(userName.get(DatabaseStringConstants.SELF_ID).toString(),
+                    userName.get(DatabaseStringConstants.USER_NAME).toString());
+        }
+
+        if (identity.length != userNameMap.size() && LOG.isWarnEnabled()) {
+            for (String userId : identity) {
+                if (!userNameMap.containsKey(userId)) {
+                    LOG.warn("User id {} not found in the database", userId);
+                }
+            }
+        }
+        return userNameMap;
+    }
+
+    private boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final School.ItemType collectionType)
+            throws DatabaseAccessException {
+        final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
+        final DBObject result = collection.findOne(new ObjectId(itemId));
+        if (result == null) {
+            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+        }
+
+        final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
+        Authentication.AuthResponse.PermissionLevel permissionLevel = null;
+
+        final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+
+        for (String groupId : groupList) {
+            if (isUserInGroup(groupCollection, groupId, userId, isUser)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks the group permission, and returns a permission level.
+     *
+     * @param collection The collection that contains the group.
+     * @param groupId The id of the group that is being checked.
+     * @param userId The id that is being checked
+     * @return A permission level that represents what permission the user has.  This does not return null.
+     * @throws DatabaseAccessException Thrown if the group does not exist.
+     * @throws AuthenticationException Thrown if there are problems comparing the hashes.
+     */
+    private boolean isUserInGroup(final DBCollection collection, final String groupId,
+            final String userId, final boolean isUser) throws DatabaseAccessException {
+        final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
+        final DBObject group = collection.findOne(new ObjectId(groupId), new BasicDBObject(list, 1));
+
+        if (group == null) {
+            throw new DatabaseAccessException("Can not find group with id: " + groupId);
+        }
+
+        return group.containsField(userId);
     }
 }

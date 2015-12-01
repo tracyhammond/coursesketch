@@ -65,6 +65,14 @@ service IdentityService {
     rpc requestCourseRoster(RequestRoster) returns (UserNameResponse);
 
     /**
+     * Requests the username from the user Identity.
+     *
+     * userId is the id that the user name is being requested for.
+     * authId is the id that is checked to see if the user has the access they are asking for.
+     */
+    rpc requestUserName(IdentityRequest) returns (UserNameResponse);
+
+    /**
      * Creates a new user and returns a map with userIdentity as the key and userIdentityPassword as a password.
      */
     rpc createNewUser(IdentityRequest) returns (UserNameResponse);

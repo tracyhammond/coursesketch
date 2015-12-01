@@ -28,7 +28,6 @@ import protobuf.srl.services.authentication.Authentication;
 
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -150,16 +149,16 @@ public class IdentityManagerTest {
         }
 
         // Non users
-        ArrayList<DBObject> nonUsers = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, hash));
+        DBObject nonUsers = new BasicDBObject();
+        nonUsers.put(TEACHER_USER_ID, hash);
 
-        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        DBObject adminGroup = (DBObject) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
         Assert.assertEquals(nonUsers, adminGroup);
 
         // students
-        ArrayList<DBObject> students = new ArrayList<>();
+        DBObject students = new BasicDBObject();
 
-        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        DBObject studentGroup = (DBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
 
     }
@@ -189,16 +188,16 @@ public class IdentityManagerTest {
         }
 
         // Non users
-        ArrayList<DBObject> nonUsers = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, hash));
+        DBObject nonUsers = new BasicDBObject();
+        nonUsers.put(TEACHER_USER_ID, hash);
 
-        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        DBObject adminGroup = (DBObject) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
         Assert.assertEquals(nonUsers, adminGroup);
 
         // students
-        ArrayList<DBObject> students = new ArrayList<>();
+        DBObject students = new BasicDBObject();
 
-        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        DBObject studentGroup = (DBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
@@ -233,17 +232,17 @@ public class IdentityManagerTest {
         }
 
         // Non users
-        ArrayList<DBObject> nonUsers = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, teacherHash));
+        DBObject nonUsers = new BasicDBObject();
+        nonUsers.put(TEACHER_USER_ID, teacherHash);
 
-        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        DBObject adminGroup = ((DBObject) dbObject.get(DatabaseStringConstants.NON_USER_LIST));
         Assert.assertEquals(nonUsers, adminGroup);
 
         // students
-        ArrayList<DBObject> students = new ArrayList<>();
-        students.add(new BasicDBObject(courseId, courseHash));
+        DBObject students = new BasicDBObject();
+        students.put(courseId, courseHash);
 
-        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        DBObject studentGroup = (DBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
     }
 
@@ -281,16 +280,16 @@ public class IdentityManagerTest {
         }
 
         // Non users
-        ArrayList<DBObject> nonUsers = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, teacherHash));
+        DBObject nonUsers = new BasicDBObject();
+        nonUsers.put(TEACHER_USER_ID, teacherHash);
 
-        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        DBObject adminGroup = (DBObject) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
         Assert.assertEquals(nonUsers, adminGroup);
 
         // students
-        ArrayList<DBObject> students = new ArrayList<>();
+        BasicDBObject students = new BasicDBObject();
 
-        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        DBObject studentGroup = (BasicDBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
 
 
@@ -358,17 +357,17 @@ public class IdentityManagerTest {
         }
 
         // Non users
-        ArrayList<DBObject> nonUsers = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, teacherHash));
-        nonUsers.add(new BasicDBObject(MOD_USER_ID, moderatorHash));
+        DBObject nonUsers = new BasicDBObject();
+        nonUsers.put(TEACHER_USER_ID, teacherHash);
+        nonUsers.put(MOD_USER_ID, moderatorHash);
 
-        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        DBObject adminGroup = (DBObject) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
         Assert.assertEquals(nonUsers, adminGroup);
 
         // students
-        ArrayList<DBObject> students = new ArrayList<>();
+        DBObject students = new BasicDBObject();
 
-        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        DBObject studentGroup = (DBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
 
         // userlists
@@ -417,17 +416,17 @@ public class IdentityManagerTest {
         studentHash = HashManager.toHex(HashManager.createHash(STUDENT_USER_ID, salt).getBytes());
 
         // Non users
-        ArrayList<DBObject> nonUsers = new ArrayList<>();
-        nonUsers.add(new BasicDBObject(TEACHER_USER_ID, teacherHash));
+        DBObject nonUsers = new BasicDBObject();
+        nonUsers.put(TEACHER_USER_ID, teacherHash);
 
-        List<DBObject> adminGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
+        DBObject adminGroup = (DBObject) dbObject.get(DatabaseStringConstants.NON_USER_LIST);
         Assert.assertEquals(nonUsers, adminGroup);
 
         // students
-        ArrayList<DBObject> students = new ArrayList<>();
-        students.add(new BasicDBObject(STUDENT_USER_ID, studentHash));
+        DBObject students = new BasicDBObject();
+        students.put(STUDENT_USER_ID, studentHash);
 
-        List<DBObject> studentGroup = (List<DBObject>) dbObject.get(DatabaseStringConstants.USER_LIST);
+        DBObject studentGroup = (DBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);

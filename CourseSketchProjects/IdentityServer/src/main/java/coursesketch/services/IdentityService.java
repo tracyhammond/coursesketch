@@ -66,6 +66,27 @@ public final class IdentityService extends Identity.IdentityService implements C
     }
 
     /**
+     * <code>rpc requestUserName(.protobuf.srl.services.identity.IdentityRequest) returns (.protobuf.srl.services.identity.UserNameResponse);</code>
+     *
+     * <pre>
+     * *
+     * Requests the username from the user Identity.
+     * </pre>
+     *
+     * @param controller
+     * @param request
+     * @param done
+     */
+    @Override public void requestUserName(final RpcController controller, final Identity.IdentityRequest request,
+            final RpcCallback<Identity.UserNameResponse> done) {
+        try {
+            identityManager.getUserName(request.getUserId(), request.getAuthId(), "", null, authChecker);
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * {@inheritDoc}
      *
      * Creates a new user in the identity server.
