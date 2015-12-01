@@ -60,7 +60,8 @@ message IdentityCreationRequest {
 service IdentityService {
 
     /**
-     * Requests the roster.  Depending on permissions the usernames may not be returned
+     * Requests the roster.  Depending on permissions the usernames may not be returned.
+     *
      */
     rpc requestCourseRoster(RequestRoster) returns (UserNameResponse);
 

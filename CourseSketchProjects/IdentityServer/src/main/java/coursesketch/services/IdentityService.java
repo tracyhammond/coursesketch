@@ -62,6 +62,15 @@ public final class IdentityService extends Identity.IdentityService implements C
      */
     @Override public void requestCourseRoster(final RpcController controller, final Identity.RequestRoster request,
             final RpcCallback<Identity.UserNameResponse> done) {
+        final Identity.IdentityRequest requestData = request.getRequestData();
+        try {
+            identityManager.getCourseRoster(requestData.getAuthId(), requestData.getItemId(), requestData.getItemType(),
+                    request.getUserIdsList(), authChecker);
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        } catch (DatabaseAccessException e) {
+            e.printStackTrace();
+        }
         // does nothing yet
     }
 
@@ -69,7 +78,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      * <code>rpc requestUserName(.protobuf.srl.services.identity.IdentityRequest) returns (.protobuf.srl.services.identity.UserNameResponse);</code>
      *
      * <pre>
-     * *
+     *
      * Requests the username from the user Identity.
      * </pre>
      *

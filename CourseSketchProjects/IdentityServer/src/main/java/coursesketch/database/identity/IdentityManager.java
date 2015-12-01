@@ -25,9 +25,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.DbSchoolUtility.getParentItemType;
@@ -340,6 +342,89 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         return userInfo.get(DatabaseStringConstants.SELF_ID).toString();
     }
 
+    /**
+     * @param authId
+     * @param itemId
+     * @param itemType
+     * @param userIdsList a list of hashed userIds
+     * @param authChecker
+     * @return a map with null values if they are only a peer teacher!
+     * @throws AuthenticationException
+     */
+    public Map<String, String> getCourseRoster(final String authId, final String itemId, final School.ItemType itemType,
+            final Collection<String> userIdsList, final Authenticator authChecker)
+            throws AuthenticationException, DatabaseAccessException {
+        final AuthenticationResponder responder = authChecker.checkAuthentication(itemType, itemId, authId, 0,
+                Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
+        if (!responder.hasPeerTeacherPermission()) {
+            throw new AuthenticationException("Need to be at least a peer teacher", AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
+
+        final DBObject item = collection.findOne(new ObjectId(itemId),
+                new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
+
+        final Map<String, String> courseRoster = new HashMap<>();
+
+        final List<String> groupList = (List<String>) item.get(DatabaseStringConstants.USER_LIST);
+
+        final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
+
+        for (String groupId : groupList) {
+            courseRoster.putAll(getGroupRoster(groupCollection, groupId, responder));
+        }
+
+        final Map<String, String> userIdToUserNames = new HashMap<>();
+
+        if (!responder.hasModeratorPermission()) {
+            for (String hashedId: courseRoster.values()) {
+                userIdToUserNames.put(hashedId, null);
+            }
+            return userIdToUserNames;
+        }
+
+        final Set<String> userIds = courseRoster.keySet();
+        if (userIdsList != null && !userIdsList.isEmpty()) {
+            // This does modify the courseRoster map also removing elements from that are not in the set
+            // This is okay because we do not need the extra values in it anyways.
+            userIds.retainAll(userIdsList);
+        }
+
+        final Map<String, String> unHashedUserIdsToUserNames = getUserNames(userIds);
+
+        for (String userId: unHashedUserIdsToUserNames.keySet()) {
+            userIdToUserNames.put(courseRoster.get(userId), unHashedUserIdsToUserNames.get(userId));
+        }
+        return userIdToUserNames;
+    }
+
+    /**
+     *
+     * @param collection
+     * @param groupId
+     * @param responder
+     * @return
+     */
+    private Map<String, String> getGroupRoster(final DBCollection collection, final String groupId, final AuthenticationResponder responder) {
+        final DBObject group = collection.findOne(new ObjectId(groupId),
+                new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
+
+        final DBObject groupList = (DBObject) group.get(DatabaseStringConstants.USER_LIST);
+        return (Map<String, String>) groupList;
+    }
+
+    /**
+     * Gets the username given the actual unhashed userId.
+     * @param userId
+     * @param authId
+     * @param itemId
+     * @param itemType
+     * @param authChecker
+     * @return
+     * @throws AuthenticationException
+     * @throws DatabaseAccessException
+     */
     public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
             final Authenticator authChecker)
             throws AuthenticationException, DatabaseAccessException {
@@ -365,6 +450,17 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
      * @throws DatabaseAccessException Thrown if no users are found.
      */
     private Map<String, String> getUserNames(final String... identity) throws DatabaseAccessException {
+        return getUserNames(Arrays.asList(identity));
+    }
+
+    /**
+     * Gets the user names given the identity.
+     *
+     * @param identity A list of userIds
+     * @return A map representing the userId to userName
+     * @throws DatabaseAccessException Thrown if no users are found.
+     */
+    private Map<String, String> getUserNames(final Collection<String> identity) throws DatabaseAccessException {
         final List<ObjectId> identityList = new ArrayList<>();
         for (String userId: identity) {
             identityList.add(new ObjectId(userId));
@@ -375,7 +471,6 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, 1).append(DatabaseStringConstants.USER_NAME, 1));
 
         if (!cursor.hasNext()) {
-            DBObject obj = collection.find().next();
             throw new DatabaseAccessException("No users were found with the given userIds");
         }
 
@@ -386,7 +481,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
                     userName.get(DatabaseStringConstants.USER_NAME).toString());
         }
 
-        if (identity.length != userNameMap.size() && LOG.isWarnEnabled()) {
+        if (identity.size() != userNameMap.size() && LOG.isWarnEnabled()) {
             for (String userId : identity) {
                 if (!userNameMap.containsKey(userId)) {
                     LOG.warn("User id {} not found in the database", userId);

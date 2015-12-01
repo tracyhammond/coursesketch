@@ -27,10 +27,15 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static database.DbSchoolUtility.getCollectionFromType;
 import static org.mockito.Matchers.any;
@@ -673,5 +678,121 @@ public class IdentityManagerTest {
         identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
         identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         Assert.assertTrue(identityManager.isUserInItem(TEACHER_USER_ID, false, VALID_ITEM_ID, VALID_ITEM_TYPE));
+    }
+
+    @Test
+    public void getCourseRoster() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+
+        Map<String, String> userIdsToUserNames = new HashMap<>();
+        List<String> userIds = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            String userName = "UserName" + i;
+            String userId = identityManager.createNewUser(userName).keySet().iterator().next();
+            userIds.add(userId);
+            String hash = null;
+            try {
+                final String unsecuredSalt = HashManager.generateUnSecureSalt(VALID_ITEM_ID);
+                hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
+                        .getBytes(StandardCharsets.UTF_8));
+            } catch (NoSuchAlgorithmException e) {
+                throw new AuthenticationException(e);
+            }
+            userIdsToUserNames.put(hash, userName);
+        }
+
+        // adds user to the course
+        for (String userId: userIds) {
+            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        }
+
+        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Assert.assertEquals(userIdsToUserNames, userValues);
+    }
+
+    @Test
+    public void getCourseRosterReturnsSubsetWhenGivenSubset() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+
+        Map<String, String> userIdsToUserNames = new HashMap<>();
+        List<String> userIds = new ArrayList<>();
+        Set<String> subset = new HashSet<>();
+
+        for (int i = 0; i < 10; i++) {
+            String userName = "UserName" + i;
+            String userId = identityManager.createNewUser(userName).keySet().iterator().next();
+            userIds.add(userId);
+            String hash = null;
+            try {
+                final String unsecuredSalt = HashManager.generateUnSecureSalt(VALID_ITEM_ID);
+                hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
+                        .getBytes(StandardCharsets.UTF_8));
+            } catch (NoSuchAlgorithmException e) {
+                throw new AuthenticationException(e);
+            }
+            if (Math.random() >= 0.5) {
+                subset.add(userId);
+                userIdsToUserNames.put(hash, userName);
+            }
+        }
+
+        // adds user to the course
+        for (String userId: userIds) {
+            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        }
+
+        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, subset, dbAuthChecker);
+
+        Assert.assertEquals(userIdsToUserNames, userValues);
+    }
+
+    @Test
+    public void getCourseRosterDoesNotReturnUserNamesWhenPeer() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+
+        Map<String, String> userIdsToUserNames = new HashMap<>();
+        List<String> userIds = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            String userName = "UserName" + i;
+            String userId = identityManager.createNewUser(userName).keySet().iterator().next();
+            userIds.add(userId);
+            String hash = null;
+            try {
+                final String unsecuredSalt = HashManager.generateUnSecureSalt(VALID_ITEM_ID);
+                hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
+                        .getBytes(StandardCharsets.UTF_8));
+            } catch (NoSuchAlgorithmException e) {
+                throw new AuthenticationException(e);
+            }
+            userIdsToUserNames.put(hash, userName);
+        }
+
+        // adds user to the course
+        for (String userId: userIds) {
+            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        }
+
+        Map<String, String> userValues = identityManager.getCourseRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        Assert.assertEquals(userIdsToUserNames, userValues);
     }
 }
