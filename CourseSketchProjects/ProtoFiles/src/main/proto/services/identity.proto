@@ -65,16 +65,17 @@ service IdentityService {
     rpc requestCourseRoster(RequestRoster) returns (UserNameResponse);
 
     /**
-     * Creates a new user then returns if the creation was successful or not.
-     *
-     * The userId is the username in this case.
+     * Creates a new user and returns a map with userIdentity as the key and userIdentityPassword as a password.
      */
     rpc createNewUser(IdentityRequest) returns (UserNameResponse);
 
     /**
-     * Creates a new user then returns if the creation was successful or not.
+     * Returns the user identity from the username.
+     * The return value is the userName as the key and the identity as the value.
+     *
+     * A user passwword must be sent to recover this value.
      */
-    rpc getUserIdentity(IdentityRequest) returns (protobuf.srl.request.DefaultResponse);
+    rpc getUserIdentity(IdentityRequest) returns (UserNameResponse);
 
     /**
      * Creates a new set of item permissions.
