@@ -170,7 +170,7 @@ public class IdentityManagerTest {
 
     @Test
     public void testInsertingCourseItem() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -212,7 +212,7 @@ public class IdentityManagerTest {
     @Test
     public void testInsertingBankItem() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         final String courseId = "COURSE_ID";
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, courseId, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, courseId, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -253,7 +253,7 @@ public class IdentityManagerTest {
 
     @Test
     public void testInsertingChildItemItemWithAdminPermission() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         AuthenticationHelper.setMockPermissions(authChecker, null, null, TEACHER_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -262,7 +262,7 @@ public class IdentityManagerTest {
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
 
         // looks for item data
         final DBObject dbItemChildObject = db.getCollection(getCollectionFromType(VALID_ITEM_CHILD_TYPE)).findOne(new ObjectId(VALID_ITEM_CHILD_ID));
@@ -307,7 +307,7 @@ public class IdentityManagerTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void testInsertingChildItemItemWithMissingParent() throws AuthenticationException, DatabaseAccessException {
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -320,13 +320,13 @@ public class IdentityManagerTest {
         DBObject dbItemObjectNull = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertNull(dbItemObjectNull);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
     }
 
     @Test
     public void testInsertingChildItemItemWithModeratorPermission() throws AuthenticationException, DatabaseAccessException,
             NoSuchAlgorithmException {
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -335,9 +335,9 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, null, null, MOD_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.MODERATOR);
 
-        identityManager.registerSelf(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerUserInItem(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
 
-        identityManager.insertNewItem(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.createNewItem(MOD_USER_ID, MOD_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
 
         // looks for item data
         final DBObject dbItemChildObject = db.getCollection(getCollectionFromType(VALID_ITEM_CHILD_TYPE)).findOne(new ObjectId(VALID_ITEM_CHILD_ID));
@@ -385,18 +385,18 @@ public class IdentityManagerTest {
 
     @Test(expected = AuthenticationException.class)
     public void testInsertingChildItemItemWithInvalidPermission() throws AuthenticationException, DatabaseAccessException {
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
 
-        identityManager.insertNewItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
+        identityManager.createNewItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_CHILD_ID, VALID_ITEM_CHILD_TYPE, VALID_ITEM_ID, dbAuthChecker);
     }
 
     @Test
     public void testRegisteringUserInCourse() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
@@ -406,7 +406,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
 
         // Looks for group data
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
@@ -441,48 +441,48 @@ public class IdentityManagerTest {
     @Test(expected = AuthenticationException.class)
     public void testRegisteringUserInCourseInvalidKey() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        identityManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
 
     @Test(expected = AuthenticationException.class)
     public void testRegisteringUserInCourseNullKey() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        identityManager.registerSelf(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, userId, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
 
     @Test(expected = DatabaseAccessException.class)
     public void testRegisteringUserInCourseInvalidItemId() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // looks for item data
         final DBObject dbItemObject = db.getCollection(getCollectionFromType(VALID_ITEM_TYPE)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.COURSE_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
-        identityManager.registerSelf(STUDENT_USER_ID, userId, INVALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, userId, INVALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void testRegisteringUserInCourseInvalidGroupId() throws AuthenticationException, DatabaseAccessException {
         String userId = "New User!";
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
 
         // Remove group from the database
         final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
@@ -497,7 +497,7 @@ public class IdentityManagerTest {
 
         AuthenticationHelper.setMockPermissions(authChecker, null, null, STUDENT_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
     @Test
@@ -596,7 +596,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, null);
         identityManager.getUserName(STUDENT_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
@@ -608,8 +608,8 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
-        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         identityManager.getUserName(STUDENT_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
     }
 
@@ -623,8 +623,8 @@ public class IdentityManagerTest {
 
         final String userId = identityManager.createNewUser(STUDENT_USER_ID).keySet().iterator().next();
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
-        identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerUserInItem(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         final Map<String, String> userName = identityManager.getUserName(userId, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
 
         Assert.assertTrue(userName.containsKey(userId));
@@ -639,8 +639,8 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
-        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         Assert.assertTrue(identityManager.isUserInItem(STUDENT_USER_ID, true, VALID_ITEM_ID, VALID_ITEM_TYPE));
     }
 
@@ -663,7 +663,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
         Assert.assertFalse(identityManager.isUserInItem(STUDENT_USER_ID, true, VALID_ITEM_ID, VALID_ITEM_TYPE));
     }
 
@@ -675,8 +675,8 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
-        identityManager.registerSelf(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.registerUserInItem(STUDENT_USER_ID, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         Assert.assertTrue(identityManager.isUserInItem(TEACHER_USER_ID, false, VALID_ITEM_ID, VALID_ITEM_TYPE));
     }
 
@@ -688,7 +688,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
 
         Map<String, String> userIdsToUserNames = new HashMap<>();
         List<String> userIds = new ArrayList<>();
@@ -710,7 +710,7 @@ public class IdentityManagerTest {
 
         // adds user to the course
         for (String userId: userIds) {
-            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+            identityManager.registerUserInItem(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
         Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
@@ -725,7 +725,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
 
         Map<String, String> userIdsToUserNames = new HashMap<>();
         List<String> userIds = new ArrayList<>();
@@ -751,7 +751,7 @@ public class IdentityManagerTest {
 
         // adds user to the course
         for (String userId: userIds) {
-            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+            identityManager.registerUserInItem(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
         Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, subset, dbAuthChecker);
@@ -767,7 +767,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
 
         Map<String, String> userIdsToUserNames = new HashMap<>();
         List<String> userIds = new ArrayList<>();
@@ -789,7 +789,7 @@ public class IdentityManagerTest {
 
         // adds user to the course
         for (String userId: userIds) {
-            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+            identityManager.registerUserInItem(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
         Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
@@ -802,7 +802,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
 
         Map<String, String> userIdsToUserNames = new HashMap<>();
         List<String> userIds = new ArrayList<>();
@@ -824,7 +824,7 @@ public class IdentityManagerTest {
 
         // adds user to the course
         for (String userId: userIds) {
-            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+            identityManager.registerUserInItem(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
         Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
@@ -840,7 +840,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
 
         Map<String, String> userIdsToUserNames = new HashMap<>();
         List<String> userIds = new ArrayList<>();
@@ -862,7 +862,7 @@ public class IdentityManagerTest {
 
         // adds user to the course
         for (String userId: userIds) {
-            identityManager.registerSelf(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
+            identityManager.registerUserInItem(userId, STUDENT_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, dbAuthChecker);
         }
 
         Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
@@ -879,7 +879,7 @@ public class IdentityManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, STUDENT_AUTH_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        identityManager.insertNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
 
         Map<String, String> userIdsToUserNames = new HashMap<>();
         List<String> userIds = new ArrayList<>();

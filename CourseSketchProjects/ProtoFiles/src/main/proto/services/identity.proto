@@ -19,10 +19,6 @@ message IdentityRequest {
     optional string authId = 4;
 }
 
-message IdentityResponse {
-    optional string userId = 1;
-}
-
 message RequestRoster {
     // The authId of the person making the request.
     optional IdentityRequest requestData = 1;
@@ -41,6 +37,7 @@ message UserNameResponse {
     }
 
     repeated MapFieldEntry userNames = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
 }
 
 /**
