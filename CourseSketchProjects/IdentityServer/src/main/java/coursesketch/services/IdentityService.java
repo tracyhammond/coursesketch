@@ -185,7 +185,7 @@ public final class IdentityService extends Identity.IdentityService implements C
             final RpcCallback<Message.DefaultResponse> done) {
         final Identity.IdentityRequest identityRequest = request.getItemRequest();
         try {
-            identityManager.insertNewItem(identityRequest.getUserId(), identityRequest.getAuthId(), identityRequest.getItemId(),
+            identityManager.createNewItem(identityRequest.getUserId(), identityRequest.getAuthId(), identityRequest.getItemId(),
                     identityRequest.getItemType(), request.getParentItemId(), authChecker);
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
@@ -205,7 +205,7 @@ public final class IdentityService extends Identity.IdentityService implements C
     @Override public void registerUser(final RpcController controller, final Identity.IdentityRequest identityRequest,
             final RpcCallback<Message.DefaultResponse> done) {
         try {
-            identityManager.registerSelf(identityRequest.getUserId(), identityRequest.getAuthId(), identityRequest.getItemId(),
+            identityManager.registerUserInItem(identityRequest.getUserId(), identityRequest.getAuthId(), identityRequest.getItemId(),
                     identityRequest.getItemType(), authChecker);
             done.run(Message.DefaultResponse.getDefaultInstance());
         } catch (DatabaseAccessException e) {
