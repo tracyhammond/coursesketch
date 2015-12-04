@@ -19,8 +19,8 @@
         <mainClass>connection.IdentityServerRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>85</projectBranchLevel>
-        <projectLineLevel>62</projectLineLevel>
+        <projectBranchLevel>78</projectBranchLevel>
+        <projectLineLevel>51</projectLineLevel>
     </properties>
 
     <build>

@@ -1,6 +1,5 @@
 package coursesketch.serverfront;
 
-import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
@@ -30,14 +29,9 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
     private static final Logger LOG = LoggerFactory.getLogger(IdentityServiceInitializer.class);
 
     /**
-     * A client that connects to the mongo database.
-     */
-    private final MongoClient mongoClient;
-
-    /**
      * Identity manager.
      */
-    private IdentityManager manager;
+    private final IdentityManager manager;
 
     /**
      * Constructor for AuthenticationServiceInitializer.
@@ -46,7 +40,6 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
      */
     public IdentityServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
-        mongoClient = new MongoClient(serverInfo.getDatabaseUrl());
         manager = new IdentityManager(this.getServerInfo());
     }
 

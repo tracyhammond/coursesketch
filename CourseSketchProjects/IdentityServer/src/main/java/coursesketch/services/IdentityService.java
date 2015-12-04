@@ -63,38 +63,61 @@ public final class IdentityService extends Identity.IdentityService implements C
     @Override public void requestCourseRoster(final RpcController controller, final Identity.RequestRoster request,
             final RpcCallback<Identity.UserNameResponse> done) {
         final Identity.IdentityRequest requestData = request.getRequestData();
+        Map<String, String> userIds;
         try {
-            identityManager.getItemRoster(requestData.getAuthId(), requestData.getItemId(), requestData.getItemType(),
+            userIds = identityManager.getItemRoster(requestData.getAuthId(), requestData.getItemId(), requestData.getItemType(),
                     request.getUserIdsList(), authChecker);
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            LOG.error("Authentication failed when getting user identity", e);
+            controller.setFailed("Authentication failed");
+            return;
         } catch (DatabaseAccessException e) {
-            e.printStackTrace();
+            LOG.error("Failed to find user when getting user identity", e);
+            controller.setFailed("User was not found");
+            return;
         }
+
+        final Identity.UserNameResponse.Builder response = Identity.UserNameResponse.newBuilder();
+        for (Map.Entry<String, String> userIdToUserName : userIds.entrySet()) {
+            response.addUserNames(Identity.UserNameResponse.MapFieldEntry
+                    .newBuilder()
+                    .setKey(userIdToUserName.getKey())
+                    .setValue(userIdToUserName.getValue())
+                    .build());
+        }
+
+        done.run(response.build());
         // does nothing yet
     }
 
     /**
-     * <code>rpc requestUserName(.protobuf.srl.services.identity.IdentityRequest) returns (.protobuf.srl.services.identity.UserNameResponse);</code>
+     * {@inheritDoc}
      *
-     * <pre>
-     *
-     * Requests the username from the user Identity.
-     * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
+     * Gets the username from the userId.
      */
     @Override public void requestUserName(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
+        Map<String, String> userIdToUserName;
         try {
-            identityManager.getUserName(request.getUserId(), request.getAuthId(), request.getItemId(), request.getItemType(), authChecker);
+            userIdToUserName = identityManager
+                    .getUserName(request.getUserId(), request.getAuthId(), request.getItemId(), request.getItemType(), authChecker);
         } catch (AuthenticationException e) {
-            e.printStackTrace();
+            LOG.error("Authentication failed when getting user identity", e);
+            controller.setFailed("Authentication failed");
+            return;
         } catch (DatabaseAccessException e) {
-            e.printStackTrace();
+            LOG.error("Failed to find user when getting user identity", e);
+            controller.setFailed("User was not found");
+            return;
         }
+        final Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()
+                .addUserNames(Identity.UserNameResponse.MapFieldEntry
+                        .newBuilder()
+                        .setKey(request.getUserId())
+                        .setValue(userIdToUserName.get(request.getUserId()))
+                        .build())
+                .build();
+        done.run(response);
     }
 
     /**

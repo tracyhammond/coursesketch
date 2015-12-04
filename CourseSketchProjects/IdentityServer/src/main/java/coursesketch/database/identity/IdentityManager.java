@@ -452,8 +452,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
 
         final Map<String, String> unHashedUserIdsToUserNames = getUserNames(userIds);
 
-        for (String userId : unHashedUserIdsToUserNames.keySet()) {
-            userIdToUserNames.put(courseRoster.get(userId), unHashedUserIdsToUserNames.get(userId));
+        for (Map.Entry<String, String> userId : unHashedUserIdsToUserNames.entrySet()) {
+            userIdToUserNames.put(courseRoster.get(userId.getKey()), userId.getValue());
         }
         return userIdToUserNames;
     }
@@ -471,8 +471,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader {
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
 
-        final DBObject groupList = (DBObject) group.get(DatabaseStringConstants.USER_LIST);
-        return (Map<String, String>) groupList;
+        return (Map<String, String>) group.get(DatabaseStringConstants.USER_LIST);
     }
 
     /**
