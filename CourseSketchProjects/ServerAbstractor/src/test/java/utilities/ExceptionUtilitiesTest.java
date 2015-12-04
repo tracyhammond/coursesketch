@@ -48,4 +48,22 @@ public class ExceptionUtilitiesTest {
 
         System.out.println(exceptionResponse);
     }
+
+    @Test
+    public void exceptionTypesAreCorrectlyChecked() {
+        String message = "MY MESSAGE";
+        Exception exception = new Exception(message);
+        Message.ProtoException exceptionResponse = ExceptionUtilities.createProtoException(exception);
+
+        Assert.assertTrue(ExceptionUtilities.isSameType(exception, exceptionResponse));
+    }
+
+    @Test
+    public void exceptionTypesAreCorrectlyChecked2() {
+        String message = "MY MESSAGE";
+        Exception exception = new Exception(message);
+        Message.ProtoException exceptionResponse = ExceptionUtilities.createProtoException(exception);
+
+        Assert.assertTrue(ExceptionUtilities.isSameType(Exception.class, exceptionResponse));
+    }
 }

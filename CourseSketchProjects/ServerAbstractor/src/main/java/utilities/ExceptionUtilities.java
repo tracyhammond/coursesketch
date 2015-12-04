@@ -125,4 +125,22 @@ public final class ExceptionUtilities {
     public static ExceptionHolder getExceptionHolder() {
         return new ExceptionHolder();
     }
+
+    /**
+     * @param throwable The exception that is being compared.
+     * @param exception The proto exception that is being checked.
+     * @return true if the given Throwable is the same type as the protoException
+     */
+    public static boolean isSameType(final Throwable throwable, final Message.ProtoException exception) {
+        return exception.getExceptionType().equals(throwable.getClass().toString());
+    }
+
+    /**
+     * @param throwable The class representing the exception being compared.
+     * @param exception The proto exception that is being checked.
+     * @return true if the given Throwable is the same type as the protoException
+     */
+    public static boolean isSameType(final Class<? extends Throwable> throwable, final Message.ProtoException exception) {
+        return exception.getExceptionType().equals(throwable.toString());
+    }
 }
