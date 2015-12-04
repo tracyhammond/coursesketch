@@ -222,6 +222,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      * @param tException The exception thrown
      * @return A username response that has had an exception thrown.
      */
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private Identity.UserNameResponse createErredUserNameResponse(final Throwable tException) {
         return Identity.UserNameResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(tException)).build();
     }
