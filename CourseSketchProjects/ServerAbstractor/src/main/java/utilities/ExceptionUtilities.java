@@ -21,6 +21,13 @@ public final class ExceptionUtilities {
      */
     public static Message.ProtoException createProtoException(final Throwable tException) {
         final Message.ProtoException.Builder pException = Message.ProtoException.newBuilder();
+        if (tException == null) {
+            pException.setMssg("Passed in null exception");
+            for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+                pException.addStackTrace(element.toString());
+            }
+            return pException.build();
+        }
         if (tException.getMessage() != null) {
             pException.setMssg(tException.getMessage());
         } else {
@@ -39,8 +46,27 @@ public final class ExceptionUtilities {
         }
 
         // gets the class name of the exception.
-        pException.setExceptionType(tException.getClass().getSimpleName());
+        pException.setExceptionType(tException.getClass().toString());
         return pException.build();
+    }
+
+    /**
+     * Takes in an exception, and creates a response on it.
+     * @param tException Is a Throwable Exception
+     * @param successful true if the request was successful even with the exception
+     * @return A response that contains the exception.
+     */
+    public static Message.DefaultResponse createExceptionResponse(final Throwable tException, final boolean successful) {
+        return Message.DefaultResponse.newBuilder().setException(createProtoException(tException)).setSuccessful(true).build();
+    }
+
+    /**
+     * Takes in an exception, and creates a response on it.
+     * @param tException Is a Throwable Exception
+     * @return A response that contains the exception
+     */
+    public static Message.DefaultResponse createExceptionResponse(final Throwable tException) {
+        return createExceptionResponse(tException, false);
     }
 
     /**

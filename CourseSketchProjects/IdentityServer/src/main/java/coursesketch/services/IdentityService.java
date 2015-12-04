@@ -69,11 +69,11 @@ public final class IdentityService extends Identity.IdentityService implements C
                     request.getUserIdsList(), authChecker);
         } catch (AuthenticationException e) {
             LOG.error("Authentication failed when getting user identity", e);
-            controller.setFailed("Authentication failed");
+            done.run(createErredUserNameResponse(e));
             return;
         } catch (DatabaseAccessException e) {
             LOG.error("Failed to find user when getting user identity", e);
-            controller.setFailed("User was not found");
+            done.run(createErredUserNameResponse(e));
             return;
         }
 
@@ -103,11 +103,11 @@ public final class IdentityService extends Identity.IdentityService implements C
                     .getUserName(request.getUserId(), request.getAuthId(), request.getItemId(), request.getItemType(), authChecker);
         } catch (AuthenticationException e) {
             LOG.error("Authentication failed when getting user identity", e);
-            controller.setFailed("Authentication failed");
+            done.run(createErredUserNameResponse(e));
             return;
         } catch (DatabaseAccessException e) {
             LOG.error("Failed to find user when getting user identity", e);
-            controller.setFailed("User was not found");
+            done.run(createErredUserNameResponse(e));
             return;
         }
         final Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()
@@ -132,7 +132,7 @@ public final class IdentityService extends Identity.IdentityService implements C
             userResult = identityManager.createNewUser(request.getUserId());
         } catch (AuthenticationException e) {
             LOG.error("Failed to create a new user", e);
-            controller.setFailed(e.getMessage());
+            done.run(createErredUserNameResponse(e));
             return;
         }
         final Map.Entry<String, String> idPassEntry = userResult.entrySet().iterator().next();
@@ -158,11 +158,11 @@ public final class IdentityService extends Identity.IdentityService implements C
             identity = identityManager.getUserIdentity(request.getUserId(), request.getAuthId());
         } catch (AuthenticationException e) {
             LOG.error("Authentication failed when getting user identity", e);
-            controller.setFailed("Authentication failed");
+            done.run(createErredUserNameResponse(e));
             return;
         } catch (DatabaseAccessException e) {
             LOG.error("Failed to find user when getting user identity", e);
-            controller.setFailed("User was not found");
+            done.run(createErredUserNameResponse(e));
             return;
         }
         final Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()
@@ -215,5 +215,14 @@ public final class IdentityService extends Identity.IdentityService implements C
             done.run(Message.DefaultResponse.newBuilder().setException(ExceptionUtilities.createProtoException(e)).build());
             LOG.error("User may not have permission to register for this class.", e);
         }
+    }
+
+    /**
+     * Creates a username response based on the exception.
+     * @param tException The exception thrown
+     * @return A username response that has had an exception thrown.
+     */
+    private Identity.UserNameResponse createErredUserNameResponse(final Throwable tException) {
+        return Identity.UserNameResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(tException)).build();
     }
 }
