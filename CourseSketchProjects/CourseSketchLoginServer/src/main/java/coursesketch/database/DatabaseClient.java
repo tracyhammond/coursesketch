@@ -269,6 +269,9 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *         Thrown if the specified algorithm does not exist.
      * @throws RegistrationException
      *         Thrown if the user already exist in the system.
+     * @throws DatabaseAccessException
+     *         Thrown if there are problems with the IdentityServer
+     * @return The user identity grabbed from the identity server.
      */
     public String createUser(final String user, final String password, final String email, final boolean isInstructor)
             throws AuthenticationException, NoSuchAlgorithmException, RegistrationException, DatabaseAccessException {
