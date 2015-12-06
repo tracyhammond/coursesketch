@@ -6,7 +6,9 @@ import coursesketch.database.DatabaseClient;
 import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -243,7 +245,9 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * @return {@link DatabaseClient}.
      */
     @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
-        return new DatabaseClient(info);
+        final IdentityManagerInterface identityWebSocketClient = (IdentityWebSocketClient) getConnectionManager()
+                .getBestConnection(IdentityWebSocketClient.class);
+        return new DatabaseClient(info, identityWebSocketClient);
     }
 
 }

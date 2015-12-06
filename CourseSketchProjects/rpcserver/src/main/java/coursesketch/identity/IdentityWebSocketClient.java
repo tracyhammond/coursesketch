@@ -7,10 +7,11 @@ import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.services.identity.Identity;
-import utilities.CourseSketchException;
 import utilities.ExceptionUtilities;
 
 import java.net.URI;
@@ -25,6 +26,11 @@ import java.util.Map;
  * Created by gigemjt on 12/4/15.
  */
 public final class IdentityWebSocketClient extends ClientWebSocket implements IdentityManagerInterface {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(IdentityWebSocketClient.class);
 
     /**
      * The default address for the identity server.
@@ -238,5 +244,6 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
             exception1.setProtoException(exception);
             throw exception1;
         }
+        LOG.error(message, exception);
     }
 }

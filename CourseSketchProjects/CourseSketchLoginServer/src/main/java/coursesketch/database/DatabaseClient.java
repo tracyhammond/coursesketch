@@ -1,5 +1,6 @@
 package coursesketch.database;
 
+import com.google.protobuf.MapEntry;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -8,10 +9,12 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import connection.LoginServerWebSocketHandler;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
+import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import utilities.LoggingConstants;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
@@ -61,6 +65,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * The key for if the user is logged in as an instructor in the returned value for logging in.
      */
     public static final String IS_INSTRUCTOR = "IsInstructor";
+    private final IdentityManagerInterface identityManager;
 
     /**
      * a private database.
@@ -71,8 +76,9 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     /**
      * @param info Server information..
      */
-    public DatabaseClient(final ServerInfo info) {
+    public DatabaseClient(final ServerInfo info, final IdentityManagerInterface identityWebSocketClient) {
         super(info);
+        identityManager = identityWebSocketClient;
     }
 
     /**
@@ -86,8 +92,9 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *         uses a fake DB for its unit tests. This is typically used for
      *         unit test.
      */
-    public DatabaseClient(final boolean testOnly, final DB fakeDB) {
+    public DatabaseClient(final boolean testOnly, final DB fakeDB, final IdentityManagerInterface identityWebSocketClient) {
         super(null);
+        identityManager = identityWebSocketClient;
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
@@ -107,6 +114,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
             }
         }
     }
+
 
     /**
      * {@inheritDoc}
@@ -253,17 +261,21 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @throws RegistrationException
      *         Thrown if the user already exist in the system.
      */
-    public void createUser(final String user, final String password, final String email, final boolean isInstructor)
-            throws AuthenticationException, NoSuchAlgorithmException, RegistrationException {
+    public String createUser(final String user, final String password, final String email, final boolean isInstructor)
+            throws AuthenticationException, NoSuchAlgorithmException, RegistrationException, DatabaseAccessException {
         final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
         BasicDBObject query = new BasicDBObject(USER_NAME, user);
         final DBObject cursor = loginCollection.findOne(query);
         if (cursor == null) {
+            final Map.Entry<String, String> userIdentity = identityManager.createNewUser(user).entrySet().iterator().next();
             query = new BasicDBObject(USER_NAME, user).append(PASSWORD, HashManager.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
                     .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
-                    .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString());
+                    .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
+                    .append(DatabaseStringConstants.IDENTITY_AUTH, userIdentity.getValue());
             loginCollection.insert(query);
+
+            return userIdentity.getKey();
         } else {
             throw new RegistrationException(LoginServerWebSocketHandler.REGISTRATION_ERROR_MESSAGE);
         }
