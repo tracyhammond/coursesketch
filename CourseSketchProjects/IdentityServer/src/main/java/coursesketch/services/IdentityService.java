@@ -60,7 +60,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      *
      * Grabs the course roster.
      */
-    @Override public void requestCourseRoster(final RpcController controller, final Identity.RequestRoster request,
+    @Override public void getItemRoster(final RpcController controller, final Identity.RequestRoster request,
             final RpcCallback<Identity.UserNameResponse> done) {
         final Identity.IdentityRequest requestData = request.getRequestData();
         Map<String, String> userIds;
@@ -95,7 +95,7 @@ public final class IdentityService extends Identity.IdentityService implements C
      *
      * Gets the username from the userId.
      */
-    @Override public void requestUserName(final RpcController controller, final Identity.IdentityRequest request,
+    @Override public void getUserName(final RpcController controller, final Identity.IdentityRequest request,
             final RpcCallback<Identity.UserNameResponse> done) {
         Map<String, String> userIdToUserName;
         try {
