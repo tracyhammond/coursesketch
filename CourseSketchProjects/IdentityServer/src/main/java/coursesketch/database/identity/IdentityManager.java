@@ -295,7 +295,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * {@inheritDoc}
      */
     @Override
-    public Map<String, String> createNewUser(final String userName) throws AuthenticationException {
+    public Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException {
         final ObjectId userId = new ObjectId();
         final String userPassword = AbstractServerWebSocketHandler.Encoder.nextID().toString();
         String hashPassword;
@@ -305,10 +305,16 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             LOG.error("Algorithm could not be found", e);
             throw new AuthenticationException(e);
         }
-        database.getCollection(DatabaseStringConstants.USER_COLLECTION)
-                .insert(new BasicDBObject(DatabaseStringConstants.SELF_ID, userId)
-                        .append(DatabaseStringConstants.USER_NAME, userName)
-                        .append(DatabaseStringConstants.PASSWORD, hashPassword));
+        final DBCollection userCollection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.USER_NAME, userName);
+        final DBObject cursor = userCollection.findOne(query);
+        if (cursor == null) {
+            userCollection.insert(new BasicDBObject(DatabaseStringConstants.SELF_ID, userId)
+                    .append(DatabaseStringConstants.USER_NAME, userName)
+                    .append(DatabaseStringConstants.PASSWORD, hashPassword));
+        } else {
+            throw new DatabaseAccessException("User [" + userName + "] already exists in the database");
+        }
 
         final Map<String, String> result = new HashMap<>();
         result.put(userId.toString(), userPassword);

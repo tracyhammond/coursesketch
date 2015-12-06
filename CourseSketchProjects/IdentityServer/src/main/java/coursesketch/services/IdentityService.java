@@ -130,7 +130,7 @@ public final class IdentityService extends Identity.IdentityService implements C
         final Map<String, String> userResult;
         try {
             userResult = identityManager.createNewUser(request.getUserId());
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | DatabaseAccessException e) {
             LOG.error("Failed to create a new user", e);
             done.run(createErredUserNameResponse(e));
             return;

@@ -501,7 +501,7 @@ public class IdentityManagerTest {
     }
 
     @Test
-    public void createNewUser() throws AuthenticationException, NoSuchAlgorithmException {
+    public void createNewUser() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
         Map<String, String> results = identityManager.createNewUser(VALID_USERNAME);
         Assert.assertEquals(1, results.size());
 
@@ -514,6 +514,24 @@ public class IdentityManagerTest {
 
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), next.getKey());
         Assert.assertTrue(HashManager.validateHash(next.getValue(), dbObject.get(DatabaseStringConstants.PASSWORD).toString()));
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void createNewUserThrowsExceptionIfUserExists() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        Map<String, String> results = identityManager.createNewUser(VALID_USERNAME);
+        Assert.assertEquals(1, results.size());
+
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+
+        Assert.assertEquals(VALID_USERNAME, dbObject.get(DatabaseStringConstants.USER_NAME));
+
+        final Map.Entry<String, String> next = results.entrySet().iterator().next();
+
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), next.getKey());
+        Assert.assertTrue(HashManager.validateHash(next.getValue(), dbObject.get(DatabaseStringConstants.PASSWORD).toString()));
+
+        identityManager.createNewUser(VALID_USERNAME);
     }
 
     @Test
