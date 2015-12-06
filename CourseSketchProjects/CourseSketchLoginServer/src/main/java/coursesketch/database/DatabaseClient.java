@@ -240,6 +240,15 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         } else {
             throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
+
+        // gets user id
+        try {
+            final String userId = identityManager.getUserIdentity(cursor.get(DatabaseStringConstants.USER_NAME).toString(),
+                    cursor.get(DatabaseStringConstants.IDENTITY_AUTH).toString());
+            result.append(DatabaseStringConstants.USER_ID, userId);
+        } catch (AuthenticationException | DatabaseAccessException e) {
+            throw new LoginException("Error getting the user identity", e);
+        }
         return result;
     }
 
@@ -267,14 +276,17 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         BasicDBObject query = new BasicDBObject(USER_NAME, user);
         final DBObject cursor = loginCollection.findOne(query);
         if (cursor == null) {
-            final Map.Entry<String, String> userIdentity = identityManager.createNewUser(user).entrySet().iterator().next();
+            final Map<String, String> result = identityManager.createNewUser(user);
+            if (result.isEmpty()) {
+                throw new RegistrationException("Unable to get the password from the new user");
+            }
+            final Map.Entry<String, String> userIdentity =  result.entrySet().iterator().next();
             query = new BasicDBObject(USER_NAME, user).append(PASSWORD, HashManager.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
                     .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
                     .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
                     .append(DatabaseStringConstants.IDENTITY_AUTH, userIdentity.getValue());
             loginCollection.insert(query);
-
             return userIdentity.getKey();
         } else {
             throw new RegistrationException(LoginServerWebSocketHandler.REGISTRATION_ERROR_MESSAGE);
