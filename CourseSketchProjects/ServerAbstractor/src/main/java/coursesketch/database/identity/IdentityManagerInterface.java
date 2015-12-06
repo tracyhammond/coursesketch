@@ -49,7 +49,7 @@ public interface IdentityManagerInterface {
      * @throws AuthenticationException
      *         thrown if there is a problem creating the user hash.
      */
-    Map<String, String> createNewUser(final String userName) throws AuthenticationException;
+    Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets the username given the actual unhashed userId.
