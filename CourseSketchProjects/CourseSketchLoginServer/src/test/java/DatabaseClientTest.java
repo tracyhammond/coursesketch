@@ -5,7 +5,7 @@ import com.mongodb.DBObject;
 import coursesketch.database.DatabaseClient;
 import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
-import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.server.authentication.HashManager;
 import database.DatabaseStringConstants;
 import org.junit.Assert;
@@ -13,10 +13,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static database.DatabaseStringConstants.INSTRUCTOR_CLIENT_ID;
 import static database.DatabaseStringConstants.INSTRUCTOR_ID;
@@ -30,6 +33,7 @@ import static database.DatabaseStringConstants.STUDENT_ID;
 public class DatabaseClientTest {
 
     private static final String VALID_USERNAME = "ValidUser";
+    private static final String VALID_USER_IDENTITY = "ValidUserId";
     private static final String VALID_PASSWORD = "ValidPassword";
     private static final String VALID_EMAIL = "ValidEmail";
     private static final boolean INSTRUCTOR = true;
@@ -39,18 +43,28 @@ public class DatabaseClientTest {
     @Rule
     public FongoRule fongo = new FongoRule();
 
+    @Mock
+    IdentityManagerInterface identityManager;
+
+    Map<String, String> createUserResult;
+
     public DB db;
     DatabaseClient client;
 
     @Before
-    public void before() {
+    public void before() throws Exception {
         db = fongo.getDB();
-        client = new DatabaseClient(true, db);
+        client = new DatabaseClient(true, db, identityManager);
+
+        createUserResult = new HashMap<>();
+        createUserResult.put(VALID_USER_IDENTITY, VALID_PASSWORD);
+
+        Mockito.when(identityManager.createNewUser(VALID_USERNAME)).thenReturn(createUserResult);
     }
 
     @Test
-    public void createUserInsertsUserInfo() throws NoSuchAlgorithmException, RegistrationException, AuthenticationException {
-        client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
+    public void createUserInsertsUserInfo() throws Exception {
+        String userId = client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
         final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
                 .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
         Assert.assertEquals(VALID_USERNAME, obj.get(DatabaseStringConstants.USER_NAME));
@@ -62,11 +76,13 @@ public class DatabaseClientTest {
         Assert.assertTrue(obj.containsField(STUDENT_ID));
         Assert.assertTrue(obj.containsField(STUDENT_CLIENT_ID));
         Assert.assertTrue(obj.containsField(INSTRUCTOR_CLIENT_ID));
+        Assert.assertEquals(obj.get(DatabaseStringConstants.IDENTITY_AUTH), VALID_PASSWORD);
+        Assert.assertEquals(VALID_USER_IDENTITY, userId);
     }
 
     @Test(expected = RegistrationException.class)
-    public void createUserThrowsExceptionIfUserNameExists() throws NoSuchAlgorithmException, RegistrationException, AuthenticationException {
-        client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
+    public void createUserThrowsExceptionIfUserNameExists() throws Exception {
+        String userId = client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
         final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
                 .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
         Assert.assertEquals(VALID_USERNAME, obj.get(DatabaseStringConstants.USER_NAME));
@@ -78,12 +94,14 @@ public class DatabaseClientTest {
         Assert.assertTrue(obj.containsField(STUDENT_ID));
         Assert.assertTrue(obj.containsField(STUDENT_CLIENT_ID));
         Assert.assertTrue(obj.containsField(INSTRUCTOR_CLIENT_ID));
+        Assert.assertEquals(obj.get(DatabaseStringConstants.IDENTITY_AUTH), VALID_PASSWORD);
+        Assert.assertEquals(VALID_USER_IDENTITY, userId);
 
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
     }
 
     @Test
-    public void userLoggedInSuccessfullyAddsUserLoginTimeInstructor() throws NoSuchAlgorithmException, RegistrationException, AuthenticationException {
+    public void userLoggedInSuccessfullyAddsUserLoginTimeInstructor() throws Exception {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
@@ -106,7 +124,7 @@ public class DatabaseClientTest {
     }
 
     @Test
-    public void userLoggedInSuccessfullyAddsUserLoginTimeStudent() throws NoSuchAlgorithmException, RegistrationException, AuthenticationException {
+    public void userLoggedInSuccessfullyAddsUserLoginTimeStudent() throws Exception {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
@@ -129,7 +147,7 @@ public class DatabaseClientTest {
     }
 
     @Test
-    public void userLoggedLimitsLoginsToTen() throws NoSuchAlgorithmException, RegistrationException, AuthenticationException {
+    public void userLoggedLimitsLoginsToTen() throws Exception {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
@@ -157,7 +175,7 @@ public class DatabaseClientTest {
 
     @Test(expected = LoginException.class)
     public void loggingInThrowsExceptionIfInvalidUsernameIsUsed()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         client.mongoIdentify(INVALID_USERNAME, VALID_PASSWORD, true, true);
@@ -165,7 +183,7 @@ public class DatabaseClientTest {
 
     @Test(expected = LoginException.class)
     public void loggingInThrowsExceptionIfInvalidPasswordIsUsed()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         client.mongoIdentify(VALID_USERNAME, INVALID_PASSWORD, true, true);
@@ -173,7 +191,7 @@ public class DatabaseClientTest {
 
     @Test
     public void goodValuesAreReturnedIfLoginIsSuccessfulAsInstructorNoDefault()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, INSTRUCTOR);
@@ -191,7 +209,7 @@ public class DatabaseClientTest {
 
     @Test
     public void goodValuesAreReturnedIfLoginIsSuccessfulAsDefaultInstructor()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, STUDENT);
@@ -209,7 +227,7 @@ public class DatabaseClientTest {
 
     @Test
     public void goodValuesAreReturnedIfLoginIsSuccessfulAsDefaultStudentForcedInstructor()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, STUDENT);
 
         final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, INSTRUCTOR);
@@ -227,7 +245,7 @@ public class DatabaseClientTest {
 
     @Test
     public void goodValuesAreReturnedIfLoginIsSuccessfulAsNoDefaultStudent()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
         final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, STUDENT);
@@ -245,7 +263,7 @@ public class DatabaseClientTest {
 
     @Test
     public void goodValuesAreReturnedIfLoginIsSuccessfulAsDefaultStudent()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, STUDENT);
 
         final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, STUDENT);
@@ -264,7 +282,7 @@ public class DatabaseClientTest {
 
     @Test
     public void goodValuesAreReturnedIfLoginIsSuccessfulAsDefaultStudentWithInstructorIgnored()
-            throws NoSuchAlgorithmException, RegistrationException, AuthenticationException, LoginException {
+            throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, STUDENT);
 
         final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, INSTRUCTOR);
