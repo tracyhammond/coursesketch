@@ -60,7 +60,7 @@ service IdentityService {
      * Requests the roster.  Depending on permissions the usernames may not be returned.
      *
      */
-    rpc requestCourseRoster(RequestRoster) returns (UserNameResponse);
+    rpc getItemRoster(RequestRoster) returns (UserNameResponse);
 
     /**
      * Requests the username from the user Identity.
@@ -70,7 +70,7 @@ service IdentityService {
      * itemId is the id of the item (courseId, assignmentId, ... etc) This is used for authentication purposes.
      * itemType is the type of the item This is used for authentication purposes.
      */
-    rpc requestUserName(IdentityRequest) returns (UserNameResponse);
+    rpc getUserName(IdentityRequest) returns (UserNameResponse);
 
     /**
      * Creates a new user and returns a map with userIdentity as the key and userIdentityPassword as a password.
