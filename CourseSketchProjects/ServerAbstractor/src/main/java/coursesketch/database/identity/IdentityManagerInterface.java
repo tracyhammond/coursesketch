@@ -48,6 +48,8 @@ public interface IdentityManagerInterface {
      * @return A map that has the userId as the key and the password to access the userId as the value.
      * @throws AuthenticationException
      *         thrown if there is a problem creating the user hash.
+     * @throws DatabaseAccessException
+     *         thrown if there is a problem with the database.
      */
     Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException;
 
