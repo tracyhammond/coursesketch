@@ -10,9 +10,12 @@ import database.DatabaseAccessException;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.services.identity.Identity;
+import utilities.CourseSketchException;
+import utilities.ExceptionUtilities;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -128,42 +131,112 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
                 .setItemId(itemId)
                 .setItemType(itemType)
+                .setAuthId(authId)
                 .build();
 
-        final Identity.IdentityCreationRequest.Builder creationRequestBuilder = Identity.IdentityCreationRequest.newBuilder()
-                .setItemRequest(request);
-        if (parentId == null && School.ItemType.COURSE != itemType && School.ItemType.BANK_PROBLEM != itemType) {
-            throw new AuthenticationException("Parent Id can only be null when inserting a course", AuthenticationException.NO_AUTH_SENT);
-        }
-        if (parentId != null) {
-            creationRequestBuilder.setParentItemId(parentId);
-        }
+        final Identity.RequestRoster.Builder creationRequestBuilder = Identity.RequestRoster.newBuilder()
+                .setRequestData(request)
+                .addAllUserIds(userIdsList);
 
-        Message.DefaultResponse response = null;
+        Identity.UserNameResponse response = null;
         try {
-            final Identity.IdentityCreationRequest creationRequest = creationRequestBuilder.build();
-            response = identityService.requestCourseRoster(getNewRpcController(), creationRequest);
-            if (response.hasException()) {
-                final AuthenticationException authExcep =
-                        new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
-                authExcep.setProtoException(response.getException());
-                throw authExcep;
+            final Identity.RequestRoster creationRequest = creationRequestBuilder.build();
+            response = identityService.getItemRoster(getNewRpcController(), creationRequest);
+            if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
             }
         } catch (ServiceException e) {
-            throw new AuthenticationException(e);
+            throw new DatabaseAccessException(e, false);
         }
+        return createMapFromProto(response);
     }
 
-    @Override public Map<String, String> createNewUser(final String userName) throws AuthenticationException {
-        return null;
+    @Override public Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException {
+        if (identityService == null) {
+            identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
+        }
+
+        final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
+                .setUserId(userName)
+                .build();
+
+        Identity.UserNameResponse response = null;
+        try {
+            response = identityService.createNewUser(getNewRpcController(), request);
+            if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
+            }
+        } catch (ServiceException e) {
+            throw new DatabaseAccessException(e, false);
+        }
+        return createMapFromProto(response);
     }
 
     @Override public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
             final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
-        return null;
+        if (identityService == null) {
+            identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
+        }
+
+        final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
+                .setUserId(userId)
+                .setItemId(itemId)
+                .setItemType(itemType)
+                .setAuthId(authId)
+                .build();
+
+        Identity.UserNameResponse response = null;
+        try {
+            response = identityService.getUserName(getNewRpcController(), request);
+            if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
+            }
+        } catch (ServiceException e) {
+            throw new DatabaseAccessException(e, false);
+        }
+        return createMapFromProto(response);
     }
 
     @Override public String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException {
-        return null;
+        if (identityService == null) {
+            identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
+        }
+
+        final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
+                .setUserId(userName)
+                .setAuthId(authId)
+                .build();
+
+        Identity.UserNameResponse response = null;
+        try {
+            response = identityService.getUserName(getNewRpcController(), request);
+            if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
+            }
+        } catch (ServiceException e) {
+            throw new DatabaseAccessException(e, false);
+        }
+        return createMapFromProto(response).entrySet().iterator().next().getValue();
+    }
+
+    private Map<String, String> createMapFromProto(final Identity.UserNameResponse response) {
+        final Map<String, String> result = new HashMap<>();
+        for (Identity.UserNameResponse.MapFieldEntry mapFieldEntry : response.getUserNamesList()) {
+            result.put(mapFieldEntry.getKey(), mapFieldEntry.getValue());
+        }
+        return result;
+    }
+
+    private void handleProtoException(final Message.ProtoException exception, final String message)
+            throws AuthenticationException, DatabaseAccessException {
+        if (ExceptionUtilities.isSameType(AuthenticationException.class, exception)) {
+            final AuthenticationException exception1 = new AuthenticationException(message, AuthenticationException.OTHER);
+            exception1.setProtoException(exception);
+            throw exception1;
+        } else if (ExceptionUtilities.isSameType(AuthenticationException.class, exception)) {
+            final DatabaseAccessException exception1 = new DatabaseAccessException(message);
+            exception1.setProtoException(exception);
+            throw exception1;
+        }
     }
 }
