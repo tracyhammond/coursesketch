@@ -9,7 +9,6 @@ import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import database.DatabaseAccessException;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
-import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.services.identity.Identity;
 
 import java.net.URI;
@@ -22,7 +21,7 @@ import java.util.Map;
  *
  * Created by gigemjt on 12/4/15.
  */
-public class IdentityWebSocketClient extends ClientWebSocket implements IdentityManagerInterface {
+public final class IdentityWebSocketClient extends ClientWebSocket implements IdentityManagerInterface {
 
     /**
      * The default address for the identity server.
@@ -55,34 +54,32 @@ public class IdentityWebSocketClient extends ClientWebSocket implements Identity
         super(iDestination, iParentServer);
     }
 
-    @Override public final void createNewItem(final School.ItemType collectionType, final String itemId, final String parentId, final String userId,
-            final String registrationKey) throws AuthenticationException {
+    @Override public void createNewItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+            final String parentId, final Authenticator authChecker)
+            throws AuthenticationException {
 
         if (identityService == null) {
             identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
         }
 
-        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+        final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
                 .setAuthId(userId)
                 .setItemId(itemId)
-                .setItemType(collectionType)
+                .setItemType(itemType)
                 .build();
 
-        final Authentication.AuthCreationRequest.Builder creationRequestBuilder = Authentication.AuthCreationRequest.newBuilder()
+        final Identity.IdentityCreationRequest.Builder creationRequestBuilder = Identity.IdentityCreationRequest.newBuilder()
                 .setItemRequest(request);
-        if (parentId == null && School.ItemType.COURSE != collectionType && School.ItemType.BANK_PROBLEM != collectionType) {
+        if (parentId == null && School.ItemType.COURSE != itemType && School.ItemType.BANK_PROBLEM != itemType) {
             throw new AuthenticationException("Parent Id can only be null when inserting a course", AuthenticationException.NO_AUTH_SENT);
         }
         if (parentId != null) {
             creationRequestBuilder.setParentItemId(parentId);
         }
-        if (registrationKey != null) {
-            creationRequestBuilder.setRegistrationKey(registrationKey);
-        }
 
         Message.DefaultResponse response = null;
         try {
-            final Authentication.AuthCreationRequest creationRequest = creationRequestBuilder.build();
+            final Identity.IdentityCreationRequest creationRequest = creationRequestBuilder.build();
             response = identityService.createNewItem(getNewRpcController(), creationRequest);
             if (response.hasException()) {
                 final AuthenticationException authExcep =
@@ -95,29 +92,21 @@ public class IdentityWebSocketClient extends ClientWebSocket implements Identity
         }
     }
 
-    @Override public final void registerUser(final School.ItemType collectionType, final String itemId, final String userId,
-            final String registrationKey)
-            throws AuthenticationException {
+    @Override public void registerUserInItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+            final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
         if (identityService == null) {
             identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
         }
 
-        final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
+        final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
                 .setAuthId(userId)
                 .setItemId(itemId)
-                .setItemType(collectionType)
+                .setItemType(itemType)
                 .build();
-
-        final Authentication.UserRegistration.Builder creationRequest = Authentication.UserRegistration.newBuilder()
-                .setItemRequest(request);
-
-        if (registrationKey != null) {
-            creationRequest.setRegistrationKey(registrationKey);
-        }
 
         Message.DefaultResponse response = null;
         try {
-            response = identityService.registerUser(getNewRpcController(), creationRequest.build());
+            response = identityService.registerUser(getNewRpcController(), request);
             if (response.hasException()) {
                 final AuthenticationException authExcep =
                         new AuthenticationException("Exception with authentication server", AuthenticationException.OTHER);
@@ -128,6 +117,35 @@ public class IdentityWebSocketClient extends ClientWebSocket implements Identity
             e.printStackTrace();
             throw new AuthenticationException(e);
         }
+    }
+
+    /**
+     * Gets the course roster.
+     *
+     * Only the users in the course roster are returned and the non users (moderators, peer teachers, teachers) are not returned by this function.
+     *
+     * @param authId
+     *         The authentication id of the user wanting the item roster
+     * @param itemId
+     *         The item that the roster is being grabbed for (does not have to be a course)
+     * @param itemType
+     *         The itemtype that the roster is being grabbed for (does not have to be a course)
+     * @param userIdsList
+     *         a list of specific userIds to be grabbed.  Only the ids contained in this list are returned.
+     *         This can be used to grab a single id as well
+     * @param authChecker
+     *         Used to check permissions in the database.
+     * @return an {@code Map<String, String>} that maps a hashed userId (hashed by the courseId) to the username {@code Map<UserIdHash, UserName>}
+     * If the user getting the course roster only as peer level permissions then the user name is not returned but the course roster still is.
+     * Instead the map contains null values instead of a username {@code Map<UserIdHash, null>}.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission
+     * @throws DatabaseAccessException
+     *         Thrown if the item, group, or users do not exist.
+     */
+    @Override public Map<String, String> getItemRoster(final String authId, final String itemId, final School.ItemType itemType,
+            final Collection<String> userIdsList, final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
+        return null;
     }
 
     /**
@@ -182,58 +200,5 @@ public class IdentityWebSocketClient extends ClientWebSocket implements Identity
      */
     @Override public String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException {
         return null;
-    }
-
-    /**
-     * Inserts a new item into the database.
-     *
-     * @param userId
-     *         The user id of the user that is inserting the new item.
-     * @param authId
-     *         The AuthId of the user that is inserting the new item.
-     * @param itemId
-     *         The id of the item being inserted
-     * @param itemType
-     *         The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
-     * @param parentId
-     *         The id of the parent object EX: parent points to course if item is an Assignment.
-     *         If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *         problem
-     * @param authChecker
-     *         Used to check that the user has access to perform the requested actions.
-     * @throws DatabaseAccessException
-     *         Thrown if the user does not have the correct permissions to perform the request actions.
-     * @throws AuthenticationException
-     *         Thrown if there is data that can not be found in the database.
-     */
-    @Override public void createNewItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
-            final String parentId, final Authenticator authChecker) throws DatabaseAccessException, AuthenticationException {
-
-    }
-
-    /**
-     * Registers a student with a course.
-     *
-     * The student must have a valid registration key.
-     *
-     * @param userId
-     *         The user Id of the user that is being added.
-     * @param authId
-     *         The authentication Id of the user that is being added.
-     * @param itemId
-     *         The Id of the course or bank problem the user is being added to.
-     * @param itemType
-     *         The type of item the user is registering for (Only {@link School.ItemType#COURSE}
-     *         and (Only {@link School.ItemType#BANK_PROBLEM} are valid types.
-     * @param authChecker
-     *         Used to check permissions in the database.
-     * @throws AuthenticationException
-     *         If the user does not have access or an invalid {@code registrationKey}.
-     * @throws DatabaseAccessException
-     *         Thrown if the item can not be found.
-     */
-    @Override public void registerUserInItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
-            final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
-
     }
 }
