@@ -124,7 +124,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
             }
         } catch (ServiceException e) {
             e.printStackTrace();
-            throw new AuthenticationException(e);
+            throw new DatabaseAccessException("An exception calling the identity server", e);
         }
     }
 

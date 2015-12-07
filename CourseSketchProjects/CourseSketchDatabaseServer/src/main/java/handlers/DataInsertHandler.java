@@ -162,8 +162,6 @@ public final class DataInsertHandler {
                             throw new Exception("Insert type not supported.");
                     }
                 } catch (AuthenticationException e) {
-                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     if (e.getType() == AuthenticationException.INVALID_DATE) {
                         final ItemResult.Builder itemResult = ItemResult.newBuilder();
                         itemResult.setQuery(itemSet.getQuery());
@@ -172,7 +170,15 @@ public final class DataInsertHandler {
                         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                         throw e;
                     }
-
+                } catch (DatabaseAccessException e) {
+                    if (e.isRecoverable()) {
+                        final ItemResult.Builder itemResult = ItemResult.newBuilder();
+                        itemResult.setQuery(itemSet.getQuery());
+                        results.add(ResultBuilder.buildResult(e.getMessage(), itemSet.getQuery(), itemResult.build()));
+                    } else {
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        throw e;
+                    }
                 } catch (Exception e) {
                     final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                     conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
