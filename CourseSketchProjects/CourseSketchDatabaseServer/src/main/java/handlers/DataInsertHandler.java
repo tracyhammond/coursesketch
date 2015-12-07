@@ -90,25 +90,25 @@ public final class DataInsertHandler {
                     switch (itemSet.getQuery()) {
                         case COURSE: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertCourse(userId, course);
+                            final String resultId = instance.insertCourse(userId, course, null);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + course.getId()));
                         }
                         break;
                         case ASSIGNMENT: {
                             final SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertAssignment(userId, assignment);
+                            final String resultId = instance.insertAssignment(userId, assignment, null);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + assignment.getId()));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertCourseProblem(userId, problem);
+                            final String resultId = instance.insertCourseProblem(userId, problem, null);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertBankProblem(userId, problem);
+                            final String resultId = instance.insertBankProblem(userId, problem, null);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
@@ -126,7 +126,7 @@ public final class DataInsertHandler {
                         case REGISTER: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                             final String courseId = course.getId();
-                            final boolean success = instance.putUserInCourse(userId, courseId, course.getRegistrationKey());
+                            final boolean success = instance.putUserInCourse(userId, courseId, course.getRegistrationKey(), null);
                             if (!success) {
                                 throw new DatabaseAccessException("User was already registered for course!");
                             } else {
@@ -136,7 +136,7 @@ public final class DataInsertHandler {
                         break;
                         case LECTURE: {
                             final Lecture lecture = Lecture.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertLecture(userId, lecture);
+                            final String resultId = instance.insertLecture(userId, lecture, null);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lecture.getId()));
                         }
                         break;
@@ -150,7 +150,7 @@ public final class DataInsertHandler {
                             LOG.info("Inserting experiment!");
                             final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
                             LOG.info("Experiment: {}", experiment);
-                            instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
+                            instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true, null);
                         }
                         break;
                         default:

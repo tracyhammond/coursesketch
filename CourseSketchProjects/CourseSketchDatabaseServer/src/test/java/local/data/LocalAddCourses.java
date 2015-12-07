@@ -28,7 +28,7 @@ public class LocalAddCourses {
 
 			// testing inserting course
 			System.out.println("INSERTING COURSE");
-			String courseId = MongoInstitution.getInstance(null).insertCourse(instructionID, testBuilder.buildPartial());
+			String courseId = MongoInstitution.getInstance(null).insertCourse(instructionID, testBuilder.buildPartial(), null);
 			System.out.println("INSERTING COURSE SUCCESSFUL");
 			System.out.println(courseId);
 			LocalAddAssignments.testAssignments(courseId, instructionID);

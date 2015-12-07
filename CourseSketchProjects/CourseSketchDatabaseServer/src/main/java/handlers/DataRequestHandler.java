@@ -151,7 +151,7 @@ public final class DataRequestHandler {
                                     try {
                                         final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                         build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                        instance.getExperimentAsUser(userId, itemId, build.build(), internalConnections);
+                                        instance.getExperimentAsUser(userId, itemId, build.build(), internalConnections, null);
                                         results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
                                     } catch (DatabaseAccessException e) {
                                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
