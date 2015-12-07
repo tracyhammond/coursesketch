@@ -170,7 +170,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         try {
             response = identityService.createNewUser(getNewRpcController(), request);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
-                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while creating a new user");
             }
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
@@ -195,7 +195,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         try {
             response = identityService.getUserName(getNewRpcController(), request);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
-                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the user name");
             }
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
@@ -215,9 +215,9 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
 
         Identity.UserNameResponse response = null;
         try {
-            response = identityService.getUserName(getNewRpcController(), request);
+            response = identityService.getUserIdentity(getNewRpcController(), request);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
-                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the item roster");
+                handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the user identity");
             }
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
@@ -225,6 +225,11 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         return createMapFromProto(response).entrySet().iterator().next().getValue();
     }
 
+    /**
+     * Creates a map from the UserNameResponse.
+     * @param response The response that contains the map that is being reconstructed.
+     * @return A map of one string to the other that was in the user name response.
+     */
     private Map<String, String> createMapFromProto(final Identity.UserNameResponse response) {
         final Map<String, String> result = new HashMap<>();
         for (Identity.UserNameResponse.MapFieldEntry mapFieldEntry : response.getUserNamesList()) {
@@ -233,6 +238,13 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         return result;
     }
 
+    /**
+     * Checks the type of exception that was thrown in the proto exception and throws the same type if it exists.
+     * @param exception The exception that was found to be thrown.
+     * @param message An optional message
+     * @throws AuthenticationException Thrown if the proto exception was an AuthenticationException.
+     * @throws DatabaseAccessException Thrown if the proto exception was an DatabaseAccessException.
+     */
     private void handleProtoException(final Message.ProtoException exception, final String message)
             throws AuthenticationException, DatabaseAccessException {
         if (ExceptionUtilities.isSameType(AuthenticationException.class, exception)) {

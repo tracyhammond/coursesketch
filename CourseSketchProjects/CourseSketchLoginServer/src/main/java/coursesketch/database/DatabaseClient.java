@@ -1,6 +1,5 @@
 package coursesketch.database;
 
-import com.google.protobuf.MapEntry;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -65,6 +64,10 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * The key for if the user is logged in as an instructor in the returned value for logging in.
      */
     public static final String IS_INSTRUCTOR = "IsInstructor";
+
+    /**
+     * Manages the identity of the user.
+     */
     private final IdentityManagerInterface identityManager;
 
     /**
@@ -74,7 +77,8 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     private DB database = null;
 
     /**
-     * @param info Server information..
+     * @param info Server information
+     * @param identityWebSocketClient The interface for getting user identity information.
      */
     public DatabaseClient(final ServerInfo info, final IdentityManagerInterface identityWebSocketClient) {
         super(info);
@@ -91,6 +95,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @param fakeDB
      *         uses a fake DB for its unit tests. This is typically used for
      *         unit test.
+     * @param identityWebSocketClient The interface for getting user identity information.
      */
     public DatabaseClient(final boolean testOnly, final DB fakeDB, final IdentityManagerInterface identityWebSocketClient) {
         super(null);
@@ -240,16 +245,27 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         } else {
             throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
-
+        final String userId = getUserId(cursor.get(DatabaseStringConstants.USER_NAME).toString(),
+                cursor.get(DatabaseStringConstants.IDENTITY_AUTH).toString());
+        result.append(DatabaseStringConstants.USER_ID, userId);
         // gets user id
+
+        return result;
+    }
+
+    /**
+     * Gets the user identity for the server.
+     * @param userName The username of the user
+     * @param idAuth The authentication needed to get the id.
+     * @return The user id
+     * @throws LoginException Thrown if there are problems getting the user id.
+     */
+    private String getUserId(final String userName, final String idAuth) throws LoginException {
         try {
-            final String userId = identityManager.getUserIdentity(cursor.get(DatabaseStringConstants.USER_NAME).toString(),
-                    cursor.get(DatabaseStringConstants.IDENTITY_AUTH).toString());
-            result.append(DatabaseStringConstants.USER_ID, userId);
+            return identityManager.getUserIdentity(userName, idAuth);
         } catch (AuthenticationException | DatabaseAccessException e) {
             throw new LoginException("Error getting the user identity", e);
         }
-        return result;
     }
 
     /**
