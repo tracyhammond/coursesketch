@@ -66,7 +66,7 @@ public class LoginConnectionState extends MultiConnectionState {
      * @param authId The authentication id for this specific login state
      * @param userIdentity The userIdentity for this specific login state
      */
-    /* package-private */final void logIn(final boolean instructorFlag, final String authId, final String userIdentity) {
+    /* package-private */ final void logIn(final boolean instructorFlag, final String authId, final String userIdentity) {
         LOG.debug("logging in user {}", userIdentity);
         loggedIn = true;
         instructor = instructorFlag;
