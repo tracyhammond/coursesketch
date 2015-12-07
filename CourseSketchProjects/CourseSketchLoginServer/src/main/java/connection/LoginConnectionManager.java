@@ -1,6 +1,5 @@
-package coursesketch.serverfront;
+package connection;
 
-import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
