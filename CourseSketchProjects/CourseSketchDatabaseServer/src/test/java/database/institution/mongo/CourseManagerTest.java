@@ -189,12 +189,12 @@ public class CourseManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         for (int i = 0; i < 5; i++) {
+            // We do not need to save the ids because we expect an empty list.
             String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
                     School.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)
                             .build());
-            // defaultCourse.addAssignmentList(assignmentId);
         }
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, USER_USER,
@@ -220,10 +220,8 @@ public class CourseManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         School.SrlCourse problem = CourseManager.mongoGetCourse(authenticator, db, courseId, ADMIN_USER, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                //.ignoreField(School.Course.getDescriptor().findFieldByName("accessPermission"))
-                .setIsDeepEquals(false)
-                .build().equals(defaultCourse.build(), problem);
+        new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
+                .equals(defaultCourse.build(), problem);
     }
 
     @Test

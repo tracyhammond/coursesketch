@@ -283,9 +283,8 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
         School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_VALID_DATE);
-        new ProtobufComparisonBuilder()
-                //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
-                .build().equals(defaultProblem.build(), problem);
+        new ProtobufComparisonBuilder().build()
+                .equals(defaultProblem.build(), problem);
     }
 
     @Test
@@ -302,9 +301,8 @@ public class CourseProblemManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
-                .build().equals(defaultProblem.build(), problem);
+        new ProtobufComparisonBuilder().build()
+                .equals(defaultProblem.build(), problem);
     }
 
     // UPDATING TESTS
@@ -444,7 +442,7 @@ public class CourseProblemManagerTest {
     }
 
     /**
-     * checks that the course is registered for the bank problem when a course problem is inserted.
+     * Checks that the course is registered for the bank problem when a course problem is inserted.
      */
     @Test
     public void registerBankProblemIfItIsNotRegistered() throws Exception  {
