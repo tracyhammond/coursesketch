@@ -58,7 +58,7 @@ message SrlAssignment {
 }
 
 /**
- * Specifies the type of item something is
+ * Specifies the type of item something is.
  */
 enum ItemType {
     COURSE = 0;

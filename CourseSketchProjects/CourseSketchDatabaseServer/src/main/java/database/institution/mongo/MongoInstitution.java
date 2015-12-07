@@ -101,8 +101,10 @@ public final class MongoInstitution implements Institution {
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
+     *
+     * Because we only want the database set once it has to be set in the constructor.
+     * We also want the class to be final so the test code has to be here.
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
@@ -136,8 +138,10 @@ public final class MongoInstitution implements Institution {
     /**
      * @return An instance of the mongo client. Creates it if it does not exist.
      *
+     * If an instance already exists then passing in the {@code Authenticator} does nothing.
      * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      * @param authenticator What is used to authenticate access to the different resources.
+     *                      This is only set if the instance does not already exist
      */
     @SuppressWarnings("checkstyle:innerassignment")
     public static MongoInstitution getInstance(final Authenticator authenticator) {
@@ -145,7 +149,6 @@ public final class MongoInstitution implements Institution {
         if (result == null) {
             synchronized (MongoInstitution.class) {
                 if (result == null) {
-                    result = instance;
                     instance = result = new MongoInstitution();
                     result.auth = authenticator;
                 }
@@ -421,11 +424,9 @@ public final class MongoInstitution implements Institution {
     @Override
     public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
         // this actually requires getting the data from the course itself
-        final String userGroupId = CourseManager.mongoGetDefaultGroupId(getInstance(null).database, courseId)[2]; // user
-        // group!
+        final String userGroupId = CourseManager.mongoGetDefaultGroupId(getInstance(null).database, courseId)[2]; // user group!
 
-        // FIXME: when mongo version 2.5.5 java client comes out please change
-        // this!
+        // FIXME: when mongo version 2.5.5 java client comes out please change this!
         /*
         final ArrayList<String> hack = new ArrayList<String>();
         hack.add(GROUP_PREFIX + userGroupId);

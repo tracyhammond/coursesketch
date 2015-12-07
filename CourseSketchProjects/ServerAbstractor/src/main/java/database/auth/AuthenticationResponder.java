@@ -35,7 +35,7 @@ public class AuthenticationResponder {
     }
 
     /**
-     * @return true iff if the item is within the open dates.  By default this returns false.
+     * @return true IFF the item is within the open dates.  By default this returns false.
      */
     public final boolean isItemOpen() {
         return response.getIsItemOpen();
