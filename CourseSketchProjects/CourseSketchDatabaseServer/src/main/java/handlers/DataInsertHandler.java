@@ -126,7 +126,7 @@ public final class DataInsertHandler {
                         case REGISTER: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                             final String courseId = course.getId();
-                            final boolean success = instance.putUserInCourse(courseId, userId, course.getRegistrationKey());
+                            final boolean success = instance.putUserInCourse(userId, courseId, course.getRegistrationKey());
                             if (!success) {
                                 throw new DatabaseAccessException("User was already registered for course!");
                             } else {

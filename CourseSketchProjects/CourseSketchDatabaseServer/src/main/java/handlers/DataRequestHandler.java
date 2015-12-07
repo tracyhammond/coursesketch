@@ -100,24 +100,24 @@ public final class DataRequestHandler {
                     LOG.info("looking at query {}", itemRequest.getQuery().name());
                     switch (itemRequest.getQuery()) {
                         case COURSE: {
-                            final List<SrlCourse> courseLoop = instance.getCourses(itemRequest.getItemIdList(), userId);
+                            final List<SrlCourse> courseLoop = instance.getCourses(userId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE, courseLoop));
                         }
                         break;
                         case ASSIGNMENT: {
-                            final List<SrlAssignment> assignmentLoop = instance.getAssignment(itemRequest.getItemIdList(), userId);
+                            final List<SrlAssignment> assignmentLoop = instance.getAssignment(userId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.ASSIGNMENT, assignmentLoop));
                         }
                         break;
                         case COURSE_PROBLEM: {
-                            final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(itemRequest.getItemIdList(), userId);
+                            final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(userId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_PROBLEM, courseProblemLoop));
                         }
                         break;
                         case BANK_PROBLEM: {
                             List<SrlBankProblem> bankProblemLoop = null;
                             if (!itemRequest.hasPage()) {
-                                bankProblemLoop = instance.getProblem(itemRequest.getItemIdList(), userId);
+                                bankProblemLoop = instance.getProblem(userId, itemRequest.getItemIdList());
                             } else {
                                 final int page = itemRequest.getPage();
                                 // The first id in the item is the course id.
@@ -186,12 +186,12 @@ public final class DataRequestHandler {
                         }
                         break;
                         case LECTURE: {
-                            final List<Lecture> lectureLoop = instance.getLecture(itemRequest.getItemIdList(), userId);
+                            final List<Lecture> lectureLoop = instance.getLecture(userId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURE, lectureLoop));
                         }
                         break;
                         case LECTURESLIDE: {
-                            final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(itemRequest.getItemIdList(), userId);
+                            final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(userId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURESLIDE, lectureSlideLoop));
                         }
                         break;

@@ -326,7 +326,7 @@ public class MongoInstitutionTest {
 
     @Test
     public void registerCourseInBankProblemWorksWithRgistrationKey() throws Exception {
-        institution.putCourseInBankProblem(courseId, bankProblemId, ADMIN_USER, VALID_REGISTRATION_KEY);
+        institution.putCourseInBankProblem(ADMIN_USER, courseId, bankProblemId, VALID_REGISTRATION_KEY);
 
         verify(authenticationUpdater, atLeastOnce()).registerUser(eq(School.ItemType.BANK_PROBLEM), eq(bankProblemId), eq(courseId),
                 eq(VALID_REGISTRATION_KEY));
@@ -334,7 +334,7 @@ public class MongoInstitutionTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void registerCourseInBankProblemThrowsExceptionWithInvalidBankId() throws Exception {
-        institution.putCourseInBankProblem(courseId, bankProblemId, ADMIN_USER, null);
+        institution.putCourseInBankProblem(ADMIN_USER, courseId, bankProblemId, null);
     }
 
     @Test
@@ -350,7 +350,7 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = institution.getCourseProblem(Lists.newArrayList(courseProblemId), ADMIN_USER).get(0);
+        School.SrlProblem problem = institution.getCourseProblem(ADMIN_USER, Lists.newArrayList(courseProblemId)).get(0);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
@@ -387,7 +387,7 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = institution.getCourseProblem(Lists.newArrayList(courseProblemId), ADMIN_USER).get(0);
+        School.SrlProblem problem = institution.getCourseProblem(ADMIN_USER, Lists.newArrayList(courseProblemId)).get(0);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 

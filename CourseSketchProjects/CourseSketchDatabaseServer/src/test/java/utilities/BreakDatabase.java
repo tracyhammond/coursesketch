@@ -64,7 +64,7 @@ public final class BreakDatabase {
 
         userClient.insertUser(user, user.getUsername());
         String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
+        mongoDatabase.putUserInCourse(user.getUsername(), courseID, null);
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
         collection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
@@ -78,7 +78,7 @@ public final class BreakDatabase {
 
         userClient.insertUser(user, user.getUsername());
         String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
+        mongoDatabase.putUserInCourse(user.getUsername(), courseID, null);
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
         DBObject dbCourse = collection.findOne();

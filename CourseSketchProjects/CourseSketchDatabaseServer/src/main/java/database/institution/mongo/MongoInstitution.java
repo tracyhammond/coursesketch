@@ -168,26 +168,26 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ArrayList<SrlCourse> getCourses(final List<String> courseIds, final String userId) throws AuthenticationException,
+    public ArrayList<SrlCourse> getCourses(final String authId, final List<String> courseIds) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
         for (String courseId : courseIds) {
-            allCourses.add(CourseManager.mongoGetCourse(auth, database, courseId, userId, currentTime));
+            allCourses.add(CourseManager.mongoGetCourse(auth, database, courseId, authId, currentTime));
         }
-        LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), userId);
+        LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), authId);
         return allCourses;
     }
 
     @Override
-    public ArrayList<SrlProblem> getCourseProblem(final List<String> problemID, final String userId) throws AuthenticationException,
+    public ArrayList<SrlProblem> getCourseProblem(final String authId, final List<String> problemID) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
         for (int index = 0; index < problemID.size(); index++) {
             try {
                 allCourses.add(CourseProblemManager.mongoGetCourseProblem(
-                        auth, database, problemID.get(index), userId, currentTime));
+                        auth, database, problemID.get(index), authId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -203,14 +203,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ArrayList<SrlAssignment> getAssignment(final List<String> assignmentID, final String userId) throws AuthenticationException,
+    public ArrayList<SrlAssignment> getAssignment(final String authId, final List<String> assignmentID) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
         for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
                 allAssignments.add(AssignmentManager.mongoGetAssignment(
-                        auth, database, assignmentID.get(assignments), userId, currentTime));
+                        auth, database, assignmentID.get(assignments), authId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -226,14 +226,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ArrayList<Lecture> getLecture(final List<String> lectureId, final String userId) throws AuthenticationException,
+    public ArrayList<Lecture> getLecture(final String authId, final List<String> lectureId) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
         for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
             try {
                 allLectures.add(LectureManager.mongoGetLecture(auth, database, lectureId.get(lectures),
-                        userId, currentTime));
+                        authId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -250,14 +250,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ArrayList<LectureSlide> getLectureSlide(final List<String> slideId, final String userId) throws AuthenticationException,
+    public ArrayList<LectureSlide> getLectureSlide(final String authId, final List<String> slideId) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
         for (int slides = slideId.size() - 1; slides >= 0; slides--) {
             try {
                 allSlides.add(SlideManager.mongoGetLectureSlide(auth, database, slideId.get(slides),
-                        userId, currentTime));
+                        authId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -274,12 +274,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ArrayList<SrlBankProblem> getProblem(final List<String> problemID, final String userId)
+    public ArrayList<SrlBankProblem> getProblem(final String authId, final List<String> problemID)
             throws AuthenticationException, DatabaseAccessException {
         final ArrayList<SrlBankProblem> allProblems = new ArrayList<>();
         for (int problem = problemID.size() - 1; problem >= 0; problem--) {
             allProblems.add(BankProblemManager.mongoGetBankProblem(
-                    auth, database, problemID.get(problem), userId));
+                    auth, database, problemID.get(problem), authId));
         }
         return allProblems;
     }
@@ -346,7 +346,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, authId, problem);
 
         if (problem.hasProblemBankId()) {
-            putCourseInBankProblem(problem.getCourseId(), problem.getProblemBankId(), authId, null);
+            putCourseInBankProblem(authId, problem.getCourseId(), problem.getProblemBankId(), null);
         }
 
         try {
@@ -394,7 +394,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         CourseProblemManager.mongoUpdateCourseProblem(auth, database, srlProblem.getId(), authId, srlProblem);
 
         if (srlProblem.hasProblemBankId()) {
-            putCourseInBankProblem(srlProblem.getCourseId(), srlProblem.getProblemBankId(), authId, null);
+            putCourseInBankProblem(authId, srlProblem.getCourseId(), srlProblem.getProblemBankId(), null);
         }
     }
 
@@ -409,7 +409,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-     public boolean putUserInCourse(final String courseId, final String authId, final String clientRegistrationKey)
+     public boolean putUserInCourse(final String authId, final String courseId, final String clientRegistrationKey)
             throws DatabaseAccessException, AuthenticationException {
 
         String registrationKey = clientRegistrationKey;
@@ -430,7 +430,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public boolean putCourseInBankProblem(final String courseId, final String bankProblemId, final String authId, final String clientRegistrationKey)
+    public boolean putCourseInBankProblem(final String authId, final String courseId, final String bankProblemId,
+            final String clientRegistrationKey)
             throws DatabaseAccessException, AuthenticationException {
 
         String registrationKey = clientRegistrationKey;
@@ -450,7 +451,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public ArrayList<SrlCourse> getUserCourses(final String authId) throws AuthenticationException, DatabaseAccessException {
-        return this.getCourses(UserClient.getUserCourses(authId), authId);
+        return this.getCourses(authId, UserClient.getUserCourses(authId));
     }
 
     @Override
