@@ -290,7 +290,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public String insertCourse(final String authId, final SrlCourse course, final String userId) throws DatabaseAccessException {
+    public String insertCourse(final String userId, final String authId, final SrlCourse course) throws DatabaseAccessException {
         final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
         LOG.debug("Course is being inserted with registration key {}", registrationId);
@@ -320,7 +320,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public String insertAssignment(final String authId, final SrlAssignment assignment, final String userId) throws AuthenticationException,
+    public String insertAssignment(final String userId, final String authId, final SrlAssignment assignment) throws AuthenticationException,
             DatabaseAccessException {
         final String resultId = AssignmentManager.mongoInsertAssignment(auth, database, authId, assignment);
 
@@ -342,7 +342,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public String insertLecture(final String authId, final Lecture lecture, final String userId) throws AuthenticationException,
+    public String insertLecture(final String userId, final String authId, final Lecture lecture) throws AuthenticationException,
             DatabaseAccessException {
         final String resultId = LectureManager.mongoInsertLecture(auth, database, authId, lecture);
 
@@ -358,7 +358,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public String insertCourseProblem(final String authId, final SrlProblem problem, final String userId) throws AuthenticationException,
+    public String insertCourseProblem(final String userId, final String authId, final SrlProblem problem) throws AuthenticationException,
             DatabaseAccessException {
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, authId, problem);
 
@@ -384,7 +384,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public String insertBankProblem(final String authId, final SrlBankProblem problem, final String userId)
+    public String insertBankProblem(final String userId, final String authId, final SrlBankProblem problem)
             throws AuthenticationException, DatabaseAccessException {
 
         final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
@@ -441,7 +441,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-     public boolean putUserInCourse(final String authId, final String courseId, final String clientRegistrationKey, final String userId)
+     public boolean putUserInCourse(final String userId, final String authId, final String courseId, final String clientRegistrationKey)
             throws DatabaseAccessException, AuthenticationException {
 
         String registrationKey = clientRegistrationKey;
@@ -504,15 +504,15 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void insertSubmission(final String authId, final String problemId, final String submissionId,
-            final boolean experiment, final String userId)
+    public void insertSubmission(final String userId, final String authId, final String problemId, final String submissionId,
+            final boolean experiment)
             throws DatabaseAccessException {
         SubmissionManager.mongoInsertSubmission(database, authId, problemId, submissionId, experiment);
     }
 
     @Override
-    public void getExperimentAsUser(final String authId, final String problemId, final Message.Request sessionInfo,
-            final MultiConnectionManager internalConnections, final String userId) throws DatabaseAccessException {
+    public void getExperimentAsUser(final String userId, final String authId, final String problemId, final Message.Request sessionInfo,
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         LOG.debug("Getting experiment for user: {}", authId);
         LOG.info("Problem: {}", problemId);
         SubmissionManager.mongoGetExperiment(database, authId, problemId, sessionInfo, internalConnections);

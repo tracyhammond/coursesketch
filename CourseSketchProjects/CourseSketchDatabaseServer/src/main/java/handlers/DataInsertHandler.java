@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.AuthenticationException;
@@ -75,12 +76,16 @@ public final class DataInsertHandler {
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })
     public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
-            LOG.info("Recieving DATA SEND Request...");
+            LOG.info("Receiving DATA INSERT Request...");
 
+            final String authId = req.getServersideId();
             final String userId = req.getServersideId();
             final DataSend request = DataSend.parseFrom(req.getOtherData());
-            if (userId == null || userId.equals("")) {
+            if (Strings.isNullOrEmpty(authId)) {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
+            }
+            if (Strings.isNullOrEmpty(userId)) {
+                throw new DatabaseAccessException("Invalid User Identification");
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
 
@@ -90,43 +95,43 @@ public final class DataInsertHandler {
                     switch (itemSet.getQuery()) {
                         case COURSE: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertCourse(userId, course, null);
+                            final String resultId = instance.insertCourse(userId, authId, course);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + course.getId()));
                         }
                         break;
                         case ASSIGNMENT: {
                             final SrlAssignment assignment = SrlAssignment.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertAssignment(userId, assignment, null);
+                            final String resultId = instance.insertAssignment(userId, authId, assignment);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + assignment.getId()));
                         }
                         break;
                         case COURSE_PROBLEM: {
                             final SrlProblem problem = SrlProblem.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertCourseProblem(userId, problem, null);
+                            final String resultId = instance.insertCourseProblem(userId, authId, problem);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
                         case BANK_PROBLEM: {
                             final SrlBankProblem problem = SrlBankProblem.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertBankProblem(userId, problem, null);
+                            final String resultId = instance.insertBankProblem(userId, authId, problem);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
                         /*
                          * case CLASS_GRADE: { SrlGrade grade =
                          * SrlGrade.parseFrom(itemSet.getData()); String
-                         * resultId = MongoInstitution.mongoInsertClassGrade(userId,
+                         * resultId = MongoInstitution.mongoInsertClassGrade(authId,
                          * grade); results.add(ResultBuilder.buildResult(resultId + " : " +
                          * grade.getId(), itemSet.getQuery())); } break;
                          */
                         case USER_INFO: {
-                            UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
+                            UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), authId);
                         }
                         break;
                         case REGISTER: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                             final String courseId = course.getId();
-                            final boolean success = instance.putUserInCourse(userId, courseId, course.getRegistrationKey(), null);
+                            final boolean success = instance.putUserInCourse(userId, authId, courseId, course.getRegistrationKey());
                             if (!success) {
                                 throw new DatabaseAccessException("User was already registered for course!");
                             } else {
@@ -136,13 +141,13 @@ public final class DataInsertHandler {
                         break;
                         case LECTURE: {
                             final Lecture lecture = Lecture.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertLecture(userId, lecture, null);
+                            final String resultId = instance.insertLecture(null, authId, lecture);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lecture.getId()));
                         }
                         break;
                         case LECTURESLIDE: {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
-                            final String resultId = instance.insertLectureSlide(userId, lectureSlide);
+                            final String resultId = instance.insertLectureSlide(authId, lectureSlide);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lectureSlide.getId()));
                         }
                         break;
@@ -150,7 +155,7 @@ public final class DataInsertHandler {
                             LOG.info("Inserting experiment!");
                             final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
                             LOG.info("Experiment: {}", experiment);
-                            instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true, null);
+                            instance.insertSubmission(userId, authId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
                         }
                         break;
                         default:
@@ -181,14 +186,12 @@ public final class DataInsertHandler {
             if (!results.isEmpty()) {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx, "user was not authenticated to insert data " + protoEx.getMssg()));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
         }

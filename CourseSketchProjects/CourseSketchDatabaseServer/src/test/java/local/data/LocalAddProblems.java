@@ -548,9 +548,11 @@ public class LocalAddProblems {
 			bankBuilder.setQuestionType(questionType[k]);
 			String resultantId = null;
 			try {
-				resultantId = MongoInstitution.getInstance(null).insertBankProblem(mastId, bankBuilder.buildPartial(), null); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
+				resultantId = MongoInstitution.getInstance(null).insertBankProblem(null, mastId, bankBuilder.buildPartial()); // "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332"
 			} catch (AuthenticationException e1) {
 				e1.printStackTrace();
+			} catch (DatabaseAccessException e) {
+				e.printStackTrace();
 			}
 
 			SrlProblem.Builder testBuilder = SrlProblem.newBuilder();
@@ -570,7 +572,7 @@ public class LocalAddProblems {
 			// testing inserting course
 				System.out.println("INSERTING PROBLEM");
 				try {
-					MongoInstitution.getInstance(null).insertCourseProblem(mastId, testBuilder.buildPartial(), null);
+					MongoInstitution.getInstance(null).insertCourseProblem(null, mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
@@ -581,7 +583,7 @@ public class LocalAddProblems {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(null, null, null); // makes the database point locally
+		new MongoInstitution(null, null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 	}
  }

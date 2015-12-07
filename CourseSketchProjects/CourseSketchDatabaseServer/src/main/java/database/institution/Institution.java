@@ -102,17 +102,17 @@ public interface Institution {
      * the groups in its access permission list</li>
      * </ol>
      *
+     * @param userId
      * @param authId
      *            The credentials used to authenticate the insertion.  All users can create a course.
      * @param course
      *            The object being inserted
-     * @param userId
      * @return The Id of the object that was inserted
      * @throws DatabaseAccessException
      *             Thrown if the course is not able to be inserted.
      *
      */
-    String insertCourse(String authId, SrlCourse course, final String userId) throws DatabaseAccessException;
+    String insertCourse(final String userId, String authId, SrlCourse course) throws DatabaseAccessException;
 
     /**
      * Inserts the assignment into the the database.
@@ -124,11 +124,11 @@ public interface Institution {
      * <li>the assignment has the same default permissions as the parent course</li>
      * </ol>
      *
+     * @param userId
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param assignment
      *            The object being inserted
-     * @param userId
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to insert an
      *             Assignment.
@@ -136,7 +136,7 @@ public interface Institution {
      *             Thrown if there is a problem inserting the assignment.
      * @return The Id of the object that was inserted
      */
-    String insertAssignment(String authId, SrlAssignment assignment, final String userId) throws AuthenticationException, DatabaseAccessException;
+    String insertAssignment(final String userId, String authId, SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the lecture into the the database.
@@ -148,11 +148,11 @@ public interface Institution {
      * <li>the lecture has the same default permissions as the parent course</li>
      * </ol>
      *
+     * @param userId
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param lecture
      *            The object being inserted
-     * @param userId
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to insert an
      *             Assignment.
@@ -160,7 +160,7 @@ public interface Institution {
      *             Thrown if there is a problem inserting the assignment.
      * @return The Id of the object that was inserted
      */
-    String insertLecture(String authId, Lecture lecture, final String userId) throws AuthenticationException, DatabaseAccessException;
+    String insertLecture(final String userId, String authId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the lecture slide into the the database.
@@ -195,11 +195,11 @@ public interface Institution {
      * </li>
      * </ol>
      *
+     * @param userId
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param problem
      *            The object being inserted
-     * @param userId
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to insert a
      *             Course Problem.
@@ -207,23 +207,23 @@ public interface Institution {
      *             Thrown if there is a problem inserting the assignment.
      * @return The Id of the object that was inserted
      */
-    String insertCourseProblem(String authId, SrlProblem problem, final String userId) throws AuthenticationException, DatabaseAccessException;
+    String insertCourseProblem(final String userId, String authId, SrlProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the {@link SrlBankProblem} into the the database.
      *
      * Upon insertion a bank problem is created within the problem bank.
      *
+     * @param userId
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param problem
      *            The object being inserted
-     * @param userId
      * @return The Id of the object that was inserted
      *
      * @throws AuthenticationException if the user does not have permission to insert this bank problem.
      */
-    String insertBankProblem(String authId, SrlBankProblem problem, final String userId) throws AuthenticationException, DatabaseAccessException;
+    String insertBankProblem(final String userId, String authId, SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Updates an existing lecture in the database.
@@ -365,20 +365,20 @@ public interface Institution {
      * <li>The user now has the course in its list of courses.</li>
      * </ol>
      *
+     * @param userId
      * @param authId
      *            The credentials user to be put into the course.
      * @param courseId
      *            The course that the user is being inserted into
      * @param registrationKey
      *            Used to ensure that the user has permission to be added to the course.
-     * @param userId
      * @return The Id of the object that was inserted
      * @throws DatabaseAccessException
      *             Thrown if there is data missing or the registration was not successful.
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to be inserted into the course.
      */
-    boolean putUserInCourse(String authId, String courseId, String registrationKey, final String userId) throws DatabaseAccessException, AuthenticationException;
+    boolean putUserInCourse(final String userId, String authId, String courseId, String registrationKey) throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Registers a course for a bank problem
@@ -418,27 +418,27 @@ public interface Institution {
     /**
      * A message sent from the submission server that allows the insertion of
      * the submission.
+     * @param userId
      * @param authId The user that the submission is associated.
      * @param problemId The bank problem that is related
      * @param submissionId The submission that is being inserted.
      * @param isExperiment True if the submission is an experiment.
-     * @param userId
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void insertSubmission(String authId, String problemId, String submissionId, boolean isExperiment, final String userId)
+    void insertSubmission(final String userId, String authId, String problemId, String submissionId, boolean isExperiment)
             throws DatabaseAccessException;
 
     /**
      * Calls the submission server for a specific experiment from a specific user.
+     * @param userId
      * @param authId User requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
      * @param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
-     * @param userId
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void getExperimentAsUser(String authId, String problemId, Message.Request sessionInfo, MultiConnectionManager internalConnections,
-            final String userId)
+    void getExperimentAsUser(final String userId, String authId, String problemId, Message.Request sessionInfo,
+            MultiConnectionManager internalConnections)
             throws DatabaseAccessException;
 
     /**

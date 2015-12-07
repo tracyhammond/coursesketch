@@ -38,7 +38,7 @@ public class LocalAddAssignments {
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
 				try {
-					assignmentId = MongoInstitution.getInstance(null).insertAssignment(mastId, testBuilder.buildPartial(), null);
+					assignmentId = MongoInstitution.getInstance(null).insertAssignment(null, mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
@@ -51,7 +51,7 @@ public class LocalAddAssignments {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(null, null, null); // makes the database point locally
+		new MongoInstitution(null, null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 		testAssignments(""/*course id */,""/*instructor id*/);
 	}
