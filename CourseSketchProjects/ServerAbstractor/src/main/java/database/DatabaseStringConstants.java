@@ -39,6 +39,7 @@ public final class DatabaseStringConstants {
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
     public static final String AUTH_DATABASE = "auth";
+    public static final String IDENTITY_DATABASE = "identity";
 
     // meta fields
     public static final String NAME = "Name";

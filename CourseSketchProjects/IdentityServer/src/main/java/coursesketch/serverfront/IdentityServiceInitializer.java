@@ -4,6 +4,7 @@ import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManager;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
@@ -119,5 +120,14 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return {@link IdentityConnectionManager}.
+     */
+    @Override
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return new IdentityConnectionManager(getServer(), serverInfo);
     }
 }

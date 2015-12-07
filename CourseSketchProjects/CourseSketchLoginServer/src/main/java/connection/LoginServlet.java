@@ -4,6 +4,7 @@ import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.serverfront.LoginConnectionManager;
 
 /**
  * Creates a servlet specific to the login server.
@@ -32,14 +33,10 @@ public final class LoginServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
-     * <p/>
-     * The login server does not need to manage multiple connections so it returns null.
-     *
-     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
-     * @return {@code null}.
+     * @return {@link coursesketch.serverfront.LoginConnectionManager}.
      */
     @Override
     public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return null;
+        return new LoginConnectionManager(getServer(), serverInfo);
     }
 }

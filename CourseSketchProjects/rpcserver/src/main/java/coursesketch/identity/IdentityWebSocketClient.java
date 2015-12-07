@@ -216,13 +216,18 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         Identity.UserNameResponse response = null;
         try {
             response = identityService.getUserIdentity(getNewRpcController(), request);
+            LOG.debug("Response ", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
                 handleProtoException(response.getDefaultResponse().getException(), "Exception thrown while getting the user identity");
             }
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
         }
-        return createMapFromProto(response).entrySet().iterator().next().getValue();
+        final Map<String, String> result = createMapFromProto(response);
+        if (result.isEmpty()) {
+            throw new DatabaseAccessException("Unable to find the user identity");
+        }
+        return result.entrySet().iterator().next().getValue();
     }
 
     /**
@@ -251,7 +256,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
             final AuthenticationException exception1 = new AuthenticationException(message, AuthenticationException.OTHER);
             exception1.setProtoException(exception);
             throw exception1;
-        } else if (ExceptionUtilities.isSameType(AuthenticationException.class, exception)) {
+        } else if (ExceptionUtilities.isSameType(DatabaseAccessException.class, exception)) {
             final DatabaseAccessException exception1 = new DatabaseAccessException(message);
             exception1.setProtoException(exception);
             throw exception1;
