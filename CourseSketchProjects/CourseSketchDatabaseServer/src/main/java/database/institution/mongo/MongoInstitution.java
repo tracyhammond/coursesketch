@@ -489,11 +489,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         }
 
         try {
-            LOG.debug("Registration user with userId key {} into course {}", courseId, bankProblemId);
+            LOG.debug("Registration user with userId key {} into bank problem  {}", courseId, bankProblemId);
             identityManager.registerUserInItem(courseId, authId, bankProblemId, School.ItemType.BANK_PROBLEM, auth);
         } catch (AuthenticationException | DatabaseAccessException e) {
             // Revert the adding of the course to the database!
-            throw new DatabaseAccessException("Failed to register the user in the course", e);
+            throw new DatabaseAccessException("Failed to register the user in the bank problem", e);
         }
         return true;
     }
