@@ -105,10 +105,10 @@ public final class CourseManager {
      *         the object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         the user requesting the course.
      * @param courseId
      *         the id of what course is being grabbed.
-     * @param userId
-     *         the user requesting the course.
      * @param checkTime
      *         the time at which the course was requested.
      * @return The course if all of the checks pass.
@@ -118,7 +118,8 @@ public final class CourseManager {
      *         Thrown if there are problems retrieving the course.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity" })
-    static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId, final long checkTime)
+    static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String authId, final String courseId,
+            final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, createId(courseId));
         final DBObject cursor = myDbRef.fetch();
@@ -133,7 +134,7 @@ public final class CourseManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, checkTime, authType);
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), authId, checkTime, authType);
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
@@ -206,8 +207,6 @@ public final class CourseManager {
      *         The database where the assignment is being stored.
      * @param courseId
      *         The id of the course being updated.
-     * @param userId
-     *         The id of the user that is updating the course.
      * @param course
      *         the course data that is being updated.
      * @return true if the update is successful.
@@ -217,7 +216,7 @@ public final class CourseManager {
      *         Thrown if there are problems updating the course.
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId,
+    static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String authId, final String courseId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
@@ -234,7 +233,7 @@ public final class CourseManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For course: " + courseId, AuthenticationException.INVALID_PERMISSION);
@@ -491,8 +490,6 @@ public final class CourseManager {
      *         The database that contains the registration key.
      * @param courseId
      *         The id of the course that contains the registration key.
-     * @param userId
-     *         The user wanting to view the registration key.
      * @param checkTeacher
      *         True if the fact that the user is an admin needs to be checked.  Otherwise it is not checked.
      * @return The registration key of the given course if the constraints are met, null is returned in all other cases.
@@ -501,7 +498,7 @@ public final class CourseManager {
      * @throws DatabaseAccessException
      *         Thrown if the course does not exist.
      */
-    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String courseId, final String userId,
+    public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String authId, final String courseId,
             final boolean checkTeacher)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(database, COURSE_COLLECTION, createId(courseId));
@@ -516,7 +513,7 @@ public final class CourseManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE, courseId.trim(), authId, 0, authType);
 
         if (responder.hasTeacherPermission() || (!responder.isRegistrationRequired() && responder.isItemPublished())) {
             return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);

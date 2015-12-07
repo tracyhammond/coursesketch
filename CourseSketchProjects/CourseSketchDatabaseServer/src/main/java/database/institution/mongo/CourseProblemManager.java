@@ -58,7 +58,7 @@ public final class CourseProblemManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the course problem is being stored.
-     * @param userId
+     * @param authId
      *         The user that is asking to insert a course problem.
      * @param problem
      *         The data of the course problem being inserted.
@@ -68,7 +68,7 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String userId, final SrlProblem problem)
+    public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection courseProblemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
@@ -77,7 +77,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, problem.getAssignmentId(), userId, 0, courseAuthType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, problem.getAssignmentId(), authId, 0, courseAuthType);
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For assignment: " + problem.getAssignmentId(), AuthenticationException.INVALID_PERMISSION);
         }
@@ -105,10 +105,10 @@ public final class CourseProblemManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The user requesting the problem.
      * @param problemId
      *         The problem being requested.
-     * @param userId
-     *         The user requesting the problem.
      * @param checkTime
      *         The time at which the problem was requested.
      * @return An SrlProblem if it exists and all checks pass.
@@ -117,7 +117,7 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
+    public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, createId(problemId));
         final DBObject cursor = myDbRef.fetch();
@@ -130,7 +130,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, checkTime, authType);
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, checkTime, authType);
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
@@ -142,7 +142,7 @@ public final class CourseProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), userId, checkTime, assignmentAuthType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), authId, checkTime, assignmentAuthType);
 
         // Throws an exception if a user (only) is trying to get an problem when the assignment is closed.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
@@ -169,8 +169,8 @@ public final class CourseProblemManager {
         // problem manager get problem from bank (as a user!)
         SrlBankProblem problemBank = null;
         try {
-            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) cursor.get(PROBLEM_BANK_ID),
-                    (String) exactProblem.getCourseId());
+            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) exactProblem.getCourseId(),
+                    (String) cursor.get(PROBLEM_BANK_ID));
         } catch (DatabaseAccessException e) {
             // only a student can't view a problem with no problem info.
             // FUTURE: check to see if this is the best option!
@@ -205,10 +205,10 @@ public final class CourseProblemManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The user requesting the problem.
      * @param problemId
      *         The problem being updated.
-     * @param userId
-     *         The user requesting the problem.
      * @param problem
      *         The data of the problem itself.
      * @return True if the data was updated successfully.
@@ -217,7 +217,7 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
+    public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
@@ -234,7 +234,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);

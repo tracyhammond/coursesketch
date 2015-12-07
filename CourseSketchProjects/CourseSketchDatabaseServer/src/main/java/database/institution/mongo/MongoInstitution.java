@@ -173,7 +173,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
         for (String courseId : courseIds) {
-            allCourses.add(CourseManager.mongoGetCourse(auth, database, courseId, authId, currentTime));
+            allCourses.add(CourseManager.mongoGetCourse(auth, database, authId, courseId, currentTime));
         }
         LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), authId);
         return allCourses;
@@ -187,7 +187,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         for (int index = 0; index < problemID.size(); index++) {
             try {
                 allCourses.add(CourseProblemManager.mongoGetCourseProblem(
-                        auth, database, problemID.get(index), authId, currentTime));
+                        auth, database, authId, problemID.get(index), currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -210,7 +210,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
                 allAssignments.add(AssignmentManager.mongoGetAssignment(
-                        auth, database, assignmentID.get(assignments), authId, currentTime));
+                        auth, database, authId, assignmentID.get(assignments), currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -279,7 +279,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final ArrayList<SrlBankProblem> allProblems = new ArrayList<>();
         for (int problem = problemID.size() - 1; problem >= 0; problem--) {
             allProblems.add(BankProblemManager.mongoGetBankProblem(
-                    auth, database, problemID.get(problem), authId));
+                    auth, database, authId, problemID.get(problem)));
         }
         return allProblems;
     }
@@ -381,17 +381,17 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public void updateCourse(final String authId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
-        CourseManager.mongoUpdateCourse(auth, database, course.getId(), authId, course);
+        CourseManager.mongoUpdateCourse(auth, database, authId, course.getId(), course);
     }
 
     @Override
     public void updateAssignment(final String authId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
-        AssignmentManager.mongoUpdateAssignment(auth, database, assignment.getId(), authId, assignment);
+        AssignmentManager.mongoUpdateAssignment(auth, database, authId, assignment.getId(), assignment);
     }
 
     @Override
     public void updateCourseProblem(final String authId, final SrlProblem srlProblem) throws AuthenticationException, DatabaseAccessException {
-        CourseProblemManager.mongoUpdateCourseProblem(auth, database, srlProblem.getId(), authId, srlProblem);
+        CourseProblemManager.mongoUpdateCourseProblem(auth, database, authId, srlProblem.getId(), srlProblem);
 
         if (srlProblem.hasProblemBankId()) {
             putCourseInBankProblem(authId, srlProblem.getCourseId(), srlProblem.getProblemBankId(), null);
@@ -400,7 +400,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public void updateBankProblem(final String authId, final SrlBankProblem srlBankProblem) throws AuthenticationException, DatabaseAccessException {
-        BankProblemManager.mongoUpdateBankProblem(auth, database, srlBankProblem.getId(), authId, srlBankProblem);
+        BankProblemManager.mongoUpdateBankProblem(auth, database, authId, srlBankProblem.getId(), srlBankProblem);
     }
 
     @Override
@@ -415,7 +415,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         String registrationKey = clientRegistrationKey;
         if (Strings.isNullOrEmpty(clientRegistrationKey)) {
             LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
-            registrationKey = CourseManager.mongoGetRegistrationKey(auth, database, courseId, authId, false);
+            registrationKey = CourseManager.mongoGetRegistrationKey(auth, database, authId, courseId, false);
         }
         try {
             LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
@@ -437,7 +437,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         String registrationKey = clientRegistrationKey;
         if (Strings.isNullOrEmpty(clientRegistrationKey)) {
             LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
-            registrationKey = BankProblemManager.mongoGetRegistrationKey(auth, database, bankProblemId, authId);
+            registrationKey = BankProblemManager.mongoGetRegistrationKey(auth, database, authId, bankProblemId);
         }
         try {
             LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
@@ -455,10 +455,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void insertSubmission(final String userId, final String problemId, final String submissionId,
+    public void insertSubmission(final String authId, final String problemId, final String submissionId,
             final boolean experiment)
             throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(database, userId, problemId, submissionId, experiment);
+        SubmissionManager.mongoInsertSubmission(database, authId, problemId, submissionId, experiment);
     }
 
     @Override

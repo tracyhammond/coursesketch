@@ -184,13 +184,13 @@ public class CourseProblemManagerTest {
         defaultProblem.setId(courseProblemId);
 
         CourseProblemManager.mongoGetCourseProblem(authenticator, db,
-                DatabaseHelper.createNonExistentObjectId(courseProblemId), ADMIN_USER, FAKE_VALID_DATE);
+                ADMIN_USER, DatabaseHelper.createNonExistentObjectId(courseProblemId), FAKE_VALID_DATE);
     }
 
     // Student grabbing test
     @Test(expected = DatabaseAccessException.class)
     public void getCourseProblemThatDoesNotExistWithMalformedObjectId() throws Exception {
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, 0);
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, 0);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -201,7 +201,7 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, 0);
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, 0);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -215,7 +215,7 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, FAKE_INVALID_DATE);
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_INVALID_DATE);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -229,7 +229,7 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, FAKE_VALID_DATE);
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -247,7 +247,7 @@ public class CourseProblemManagerTest {
 
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
-        CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, FAKE_VALID_DATE);
+        CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
     }
 
     @Test
@@ -266,7 +266,7 @@ public class CourseProblemManagerTest {
 
         defaultProblem.setProblemInfo(bankProblem);
 
-        final School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, USER_USER, FAKE_VALID_DATE);
+        final School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
     }
@@ -288,7 +288,7 @@ public class CourseProblemManagerTest {
 
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_VALID_DATE);
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
                 //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
                 .build().equals(defaultProblem.build(), problem);
@@ -307,7 +307,7 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
         new ProtobufComparisonBuilder()
                 //.ignoreField(School.SrlProblem.getDescriptor().findFieldByName("accessPermission"))
                 .build().equals(defaultProblem.build(), problem);
@@ -325,8 +325,8 @@ public class CourseProblemManagerTest {
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, DatabaseHelper.createNonExistentObjectId(courseProblemId),
-                ADMIN_USER, defaultProblem.build());
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, DatabaseHelper.createNonExistentObjectId(courseProblemId),
+                defaultProblem.build());
     }
 
     @Test
@@ -342,7 +342,7 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
@@ -351,10 +351,10 @@ public class CourseProblemManagerTest {
                 .setName("New name")
                 .build();
 
-        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, updatedProblem);
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem);
 
         School.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
-                courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+                ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
         new ProtobufComparisonBuilder()
                 .setFailAtFirstMisMatch(false)
                 .build().equals(updatedProblem, updatedProblemResult);
@@ -373,7 +373,7 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+        School.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
@@ -391,13 +391,13 @@ public class CourseProblemManagerTest {
                 .setGradeWeight("NEW GRADE WEIGHT")
                 .setProblemBankId(bankProblemId2);
 
-        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, ADMIN_USER, updatedProblem.build());
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem.build());
 
         // change the data contained in the update problem bc it should now contain new data.
         updatedProblem.setProblemInfo(bankProblem2.setId(bankProblemId2));
 
         School.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
-                courseProblemId, ADMIN_USER, FAKE_INVALID_DATE);
+                ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
         new ProtobufComparisonBuilder()
                 .setFailAtFirstMisMatch(false)
                 .build().equals(updatedProblem.build(), updatedProblemResult);
@@ -415,7 +415,7 @@ public class CourseProblemManagerTest {
                 .setGradeWeight("NEW GRADE WEIGHT")
                 .build();
 
-        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, courseProblemId, USER_USER, updatedProblem);
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, USER_USER, courseProblemId, updatedProblem);
     }
 
 
