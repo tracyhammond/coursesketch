@@ -5,12 +5,18 @@ import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
-import database.DatabaseAccessException;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
+import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
+import database.DbSchoolUtility;
+import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,12 +45,16 @@ public class AssignmentManagerTest {
     public DB db;
     public Authenticator authenticator;
 
+    public static final String VALID_NAME = "Valid course name!";
+    public static final String FAKE_DESCRIPTION = "DESCRIPTIONS YAY";
+    public static final String FAKE_ID = "507f1f77bcf86cd799439011";
     public static final long FAKE_VALID_DATE = 1000;
+    public static final Util.DateTime FAKE_VALID_DATE_OBJECT = Util.DateTime.newBuilder().setMillisecond(FAKE_VALID_DATE).build();
     public static final long FAKE_INVALID_DATE = 1001;
-    public static final String FAKE_QUESTION_TEXT = "Question Texts";
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
-    public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
+    private static final School.SrlAssignment.AssignmentType VALID_ASSIGNMENT_TYPE = School.SrlAssignment.AssignmentType.EXAM;
+    private static final int VALID_ASSIGNMENT_TYPE_VALUE = School.SrlAssignment.AssignmentType.EXAM_VALUE;
 
     private String courseId;
     private String assignmentId;
@@ -118,6 +128,30 @@ public class AssignmentManagerTest {
         insertCourse();
 
         AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
+    }
+
+    @Test
+    public void insertAssignmentIntoAssignmentSetsValuesCorrectly() throws Exception {
+        insertCourse();
+
+        defaultAssignment.setDescription(FAKE_DESCRIPTION);
+        defaultAssignment.setAccessDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setCloseDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setDueDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setName(VALID_NAME);
+        defaultAssignment.setAssignmentType(VALID_ASSIGNMENT_TYPE);
+
+        assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
+
+        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.ASSIGNMENT, true), new ObjectId(assignmentId));
+        final DBObject mongoAssignment = myDbRef.fetch();
+
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DUE_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ASSIGNMENT_TYPE), VALID_ASSIGNMENT_TYPE_VALUE);
     }
 
     // GETTING TEST

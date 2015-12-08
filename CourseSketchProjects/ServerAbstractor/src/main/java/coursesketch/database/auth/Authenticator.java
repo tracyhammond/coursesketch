@@ -244,10 +244,12 @@ public final class Authenticator {
         if (checkType.getCheckDate()) {
             authBuilder.setIsItemOpen(optionChecker.authenticateDate(dataCreator, checkTime));
         }
-        if (checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired()) {
+        if ((checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired())
+                && (School.ItemType.COURSE == collectionType || School.ItemType.BANK_PROBLEM == collectionType)) {
             authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
         }
-        if (checkType.getCheckIsPublished()) {
+        // Course Problems can not be published only assignments!
+        if (checkType.getCheckIsPublished() && School.ItemType.COURSE_PROBLEM != collectionType) {
             authBuilder.setIsItemPublished(optionChecker.isItemPublished(dataCreator));
         }
     }

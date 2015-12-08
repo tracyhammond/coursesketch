@@ -170,7 +170,7 @@ public class DatabaseClient {
                     throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
                 }
             }
-        } catch (GeneralSecurityException e) {
+        } catch (GeneralSecurityException | AuthenticationException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             throw new LoginException("An error occured while comparing passwords", e);
         }
@@ -232,14 +232,13 @@ public class DatabaseClient {
      *            The email of the user.
      * @param isInstructor
      *            If the default account is an instructor
-     * @throws GeneralSecurityException
-     *             Thrown if there are problems creating the hash for the
-     *             password.
+     * @throws AuthenticationException Thrown if an invalid key is set
+     * @throws NoSuchAlgorithmException Thrown if the specified algorithm does not exist.
      * @throws RegistrationException
      *             Thrown if the user already exist in the system.
      */
     public static final void createUser(final String user, final String password, final String email, final boolean isInstructor)
-            throws GeneralSecurityException, RegistrationException {
+            throws AuthenticationException, NoSuchAlgorithmException, RegistrationException {
         final DBCollection loginCollection = getInstance().database.getCollection(LOGIN_COLLECTION);
         BasicDBObject query = new BasicDBObject(USER_NAME, user);
         final DBObject cursor = loginCollection.findOne(query);

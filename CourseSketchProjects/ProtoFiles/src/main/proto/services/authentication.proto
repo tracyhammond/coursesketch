@@ -67,7 +67,7 @@ message AuthCreationRequest {
     required AuthRequest itemRequest = 1;
     // contains the id of the parent of this item.
     // NOTE: If the bank problem is being created for use with a course then it will automatically add itself to the list of valid users!
-    required string parentItemId = 2;
+    optional string parentItemId = 2;
     optional string registrationKey = 3;
 }
 
@@ -77,7 +77,7 @@ message AuthCreationRequest {
 message UserRegistration {
     // contains all of the information about the item being created
     required AuthRequest itemRequest = 1;
-    // contains the id of the parent of this item.
+    // contains the registration key if it is needed
     optional string registrationKey = 3;
 }
 
@@ -122,7 +122,18 @@ message AuthResponse {
 }
 
 service AuthenticationService {
+    /**
+     * Authorizes the user to have permissions to the item detailed in the AuthRequest.
+     */
     rpc authorizeUser(AuthRequest) returns (AuthResponse);
+
+    /**
+     * Creates a new set of item permissions.
+     */
     rpc createNewItem(AuthCreationRequest) returns (protobuf.srl.request.DefaultResponse);
+
+    /**
+     * Registers the user in the item.
+     */
     rpc registerUser(UserRegistration) returns (protobuf.srl.request.DefaultResponse);
 }

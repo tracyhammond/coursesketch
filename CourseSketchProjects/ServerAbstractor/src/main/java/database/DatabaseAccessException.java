@@ -1,11 +1,13 @@
 package database;
 
+import utilities.CourseSketchException;
+
 /**
  * An exception that occurs if data from the database is not accessible or has errors in it.
  * @author gigemjt
  *
  */
-public class DatabaseAccessException extends Exception {
+public class DatabaseAccessException extends CourseSketchException {
 
     /**
      * True if the exception is recoverable.

@@ -3,6 +3,7 @@ package handlers;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.AuthenticationException;
+import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
 import org.slf4j.Logger;
@@ -126,9 +127,11 @@ public final class DataInsertHandler {
                         case REGISTER: {
                             final SrlCourse course = SrlCourse.parseFrom(itemSet.getData());
                             final String courseId = course.getId();
-                            final boolean success = instance.putUserInCourse(courseId, userId);
+                            final boolean success = instance.putUserInCourse(courseId, userId, course.getRegistrationKey());
                             if (!success) {
-                                results.add(ResultBuilder.buildResult(itemSet.getQuery(), "User was already registered for course!"));
+                                throw new DatabaseAccessException("User was already registered for course!");
+                            } else {
+                                results.add(ResultBuilder.buildResult(itemSet.getQuery(), SUCCESS_MESSAGE));
                             }
                         }
                         break;
