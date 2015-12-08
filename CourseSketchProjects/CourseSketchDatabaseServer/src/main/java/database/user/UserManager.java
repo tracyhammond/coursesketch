@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,8 +102,8 @@ public final class UserManager {
         LOG.debug("The users Id {}", userId);
         final DBCollection users = database.getCollection(USER_COLLECTION);
 
-        final DBRef myDbRef = new DBRef(database, USER_COLLECTION, userId);
-        final DBObject cursor = myDbRef.fetch();
+        final DBObject cursor = users.findOne(new BasicDBObject(SELF_ID, userId));
+
         if (cursor != null) {
             final BasicDBObject query = new BasicDBObject("$addToSet", new BasicDBObject(COURSE_LIST, courseId));
             LOG.info("query {}", query);

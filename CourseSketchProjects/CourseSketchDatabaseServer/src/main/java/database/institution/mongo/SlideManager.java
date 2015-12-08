@@ -166,7 +166,7 @@ public final class SlideManager {
                 .setCheckDate(true)
                 .setCheckingAdmin(true)
                 .build();
-        // FUTURE: figure out slide permissions
+        // FUTURE: figure out lecture slide permissions
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(School.ItemType.LECTURE, (String) corsor.get(LECTURE_ID), userId, 0, authType);
 
