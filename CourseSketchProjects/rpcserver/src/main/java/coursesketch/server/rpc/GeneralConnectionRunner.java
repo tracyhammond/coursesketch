@@ -285,6 +285,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             Thread.sleep(ONE_SECOND);
             LOG.info("Server is running hopefully");
             getSocketInitailizerInstance().reconnect();
+            getSocketInitailizerInstance().onServerStart();
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
