@@ -4,7 +4,9 @@ import database.DatabaseAccessException;
 import protobuf.srl.school.School;
 
 /**
- * Checks different data for
+ * Checks the database for auxiliary permission data.
+ *
+ * For example this will be used for checking the dates or if the item requires registration but does not check if there is a user or an admin.
  * Created by gigemjt on 9/4/15.
  */
 @SuppressWarnings("PMD.CommentRequired")
@@ -23,6 +25,8 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
     }
 
     /**
+     * Creates a mongo database interface for grabbing specific pieces of data.
+     *
      * @param collectionType The type of collection that is being checked.
      * @param itemId The id of the tiem that is being checked.
      * @return a data creator that grabs the data for any other uses by the option checker.

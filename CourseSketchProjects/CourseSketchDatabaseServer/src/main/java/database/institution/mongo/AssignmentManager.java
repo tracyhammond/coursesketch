@@ -47,7 +47,7 @@ import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
-import static database.utilities.MongoUtilities.createId;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages assignments for mongo.
@@ -158,7 +158,7 @@ public final class AssignmentManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, createId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
@@ -176,10 +176,6 @@ public final class AssignmentManager {
         if (!responder.hasAccess()) {
             throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
-
-        // check to make sure the assignment is within the time period that the
-        // course is open and the user is in the course
-        // FUTURE: maybe not make this necessarry if the insertion of assignments prevents this.
 
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckDate(true)
@@ -478,7 +474,7 @@ public final class AssignmentManager {
      */
     static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, createId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
 
         final DBObject cursor = myDbRef.fetch();
 
