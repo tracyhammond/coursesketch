@@ -42,7 +42,7 @@ import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
-import static database.utilities.MongoUtilities.createId;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Interfaces with the mongo database to manage bank problems.
@@ -123,10 +123,10 @@ public final class BankProblemManager {
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, createId(problemBankId));
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
         if (mongoBankProblem == null) {
-            throw new DatabaseAccessException("bank problem can not be found with id " + problemBankId);
+            throw new DatabaseAccessException("bank problem can not be found with id: " + problemBankId);
         }
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
@@ -321,7 +321,6 @@ public final class BankProblemManager {
      */
     public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
             final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
-
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -330,6 +329,7 @@ public final class BankProblemManager {
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
+
         final DBCollection problemCollection = database.getCollection(PROBLEM_BANK_COLLECTION);
         final DBCursor dbCursor = problemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
         final List<SrlBankProblem> results = new ArrayList<>();
