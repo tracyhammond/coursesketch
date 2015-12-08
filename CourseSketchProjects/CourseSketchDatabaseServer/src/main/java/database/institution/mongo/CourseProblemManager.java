@@ -35,7 +35,7 @@ import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
-import static database.utilities.MongoUtilities.createId;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages course problems for the mongo database.
@@ -76,7 +76,7 @@ public final class CourseProblemManager {
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection courseProblemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
-        // make sure person is mod or admin for the assignment
+        // Make sure person is mod or admin for the assignment.
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -128,7 +128,7 @@ public final class CourseProblemManager {
      */
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, createId(problemId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, convertStringToObjectId(problemId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
@@ -168,12 +168,11 @@ public final class CourseProblemManager {
             throw new DatabaseAccessException("The specific problem is not published yet: " + problemId, true);
         }
 
-        // Post this point either item is published OR responder is at least responder.
+        // Past this point, the item is either published or the responder is at least a mod.
         stateBuilder.setPublished(responder.isItemPublished());
 
-        final SrlProblem.Builder exactProblem = SrlProblem.newBuilder();
+        final SrlProblem.Builder exactProblem = extractProblemData(cursor);
         exactProblem.setId(problemId);
-        extractProblemData(exactProblem, cursor);
 
         // problem manager get problem from bank (as a user!)
         SrlBankProblem problemBank = null;
@@ -181,7 +180,7 @@ public final class CourseProblemManager {
             problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) cursor.get(PROBLEM_BANK_ID),
                     (String) exactProblem.getCourseId());
         } catch (DatabaseAccessException e) {
-            // only a student can't view a problem with no problem info.
+            // Students are the only users that cannot view a problem that doesn't have problem info.
             // FUTURE: check to see if this is the best option!
             if (!responder.hasModeratorPermission() && assignmentResponder.isItemPublished()) {
                 throw new DatabaseAccessException(e, false);
@@ -193,11 +192,13 @@ public final class CourseProblemManager {
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN)); // admin can change this
-            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD)); // admin can change this
+            // Admins can change these permissions.
+            permissions.addAllAdminPermission((ArrayList) cursor.get(ADMIN));
+            permissions.addAllModeratorPermission((ArrayList) cursor.get(MOD));
         }
         if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) cursor.get(USERS)); // mod can change this
+            // Moderator can change these permissions.
+            permissions.addAllUserPermission((ArrayList) cursor.get(USERS));
             exactProblem.setAccessPermission(permissions.build());
         }
         return exactProblem.build();
@@ -206,16 +207,20 @@ public final class CourseProblemManager {
 
     /**
      * Extracts the problem data from the {@link DBObject} into the {@link SrlProblem}.
-     * @param problem The problem that is being filled with the data.
+     *
      * @param dbProblem Contains the data from the database.
+     * @return An {@link SrlProblem} problem that is being filled with the data.
      */
-    private static void extractProblemData(final SrlProblem.Builder problem, final DBObject dbProblem) {
+    private static SrlProblem.Builder extractProblemData(final DBObject dbProblem) {
+        final SrlProblem.Builder problem = SrlProblem.newBuilder();
         problem.setCourseId((String) dbProblem.get(COURSE_ID));
         problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
         problem.setProblemBankId((String) dbProblem.get(PROBLEM_BANK_ID));
         problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
         problem.setName((String) dbProblem.get(NAME));
         problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
+
+        return problem;
     }
 
     /**
@@ -258,40 +263,39 @@ public final class CourseProblemManager {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (responder.hasModeratorPermission()) {
-            if (problem.hasName()) {
-                updateObj.append(NAME, problem.getName());
-                update = true;
-            }
-            if (problem.hasGradeWeight()) {
-                updateObj.append(GRADE_WEIGHT, problem.getGradeWeight());
-                update = true;
-            }
-            if (problem.hasProblemBankId()) {
-                updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
+        // Past this point the user is at least a moderator.
+        if (problem.hasName()) {
+            updateObj.append(NAME, problem.getName());
+            update = true;
+        }
+        if (problem.hasGradeWeight()) {
+            updateObj.append(GRADE_WEIGHT, problem.getGradeWeight());
+            update = true;
+        }
+        if (problem.hasProblemBankId()) {
+            updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
 
-                // updates the bank problem associated with this course problem
-                LOG.warn("Changing the bank problem id. This feature may be removed in the future");
-                BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
-                update = true;
-            }
+            // updates the bank problem associated with this course problem
+            LOG.warn("Changing the bank problem id. This feature may be removed in the future");
+            BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
+            update = true;
+        }
 
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (problem.hasAccessPermission()) {
-                final SrlPermission permissions = problem.getAccessPermission();
-                if (responder.hasTeacherPermission()) {
-                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                    if (permissions.getAdminPermissionCount() > 0) {
-                        updateObj.append(ADMIN, permissions.getAdminPermissionList());
-                    }
-                    if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj.append(MOD, permissions.getModeratorPermissionList());
-                    }
+        // Optimization: have something to do with pulling values of an
+        // array and pushing values to an array
+        if (problem.hasAccessPermission()) {
+            final SrlPermission permissions = problem.getAccessPermission();
+            if (responder.hasTeacherPermission()) {
+                // Only admins can change admin and mod permissions.
+                if (permissions.getAdminPermissionCount() > 0) {
+                    updateObj.append(ADMIN, permissions.getAdminPermissionList());
                 }
-                if (permissions.getUserPermissionCount() > 0) {
-                    updateObj.append(USERS, permissions.getUserPermissionList());
+                if (permissions.getModeratorPermissionCount() > 0) {
+                    updateObj.append(MOD, permissions.getModeratorPermissionList());
                 }
+            }
+            if (permissions.getUserPermissionCount() > 0) {
+                updateObj.append(USERS, permissions.getUserPermissionList());
             }
         }
         if (update) {
