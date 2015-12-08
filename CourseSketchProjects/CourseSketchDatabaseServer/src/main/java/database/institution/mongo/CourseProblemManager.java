@@ -180,7 +180,7 @@ public final class CourseProblemManager {
             problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) cursor.get(PROBLEM_BANK_ID),
                     (String) exactProblem.getCourseId());
         } catch (DatabaseAccessException e) {
-            // only a student can't view a problem with no problem info.
+            // Students are the only users that cannot view a problem that doesn't have problem info.
             // FUTURE: check to see if this is the best option!
             if (!responder.hasModeratorPermission() && assignmentResponder.isItemPublished()) {
                 throw new DatabaseAccessException(e, false);
