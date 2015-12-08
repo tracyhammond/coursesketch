@@ -57,6 +57,17 @@ message SrlAssignment {
     }
 }
 
+/**
+ * Specifies the type of item something is.
+ */
+enum ItemType {
+    COURSE = 0;
+    ASSIGNMENT = 1;
+    COURSE_PROBLEM = 2;
+    BANK_PROBLEM = 3;
+    LECTURE = 4;
+}
+
 message LatePolicy {
     required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
     optional TimeFrame timeFrameType = 2 [default = DAY]; // because this is what people are used to.

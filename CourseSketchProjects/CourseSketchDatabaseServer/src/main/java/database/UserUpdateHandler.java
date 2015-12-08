@@ -195,16 +195,16 @@ public final class UserUpdateHandler {
             objectAffectedId.add((String) ((BasicBSONObject) userUpdates.get(i)).get(UPDATEID));
             if (COURSE_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.COURSE,
-                        MongoInstitution.getInstance().getCourses(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getCourses(objectAffectedId, userId)));
             } else if (ASSIGNMENT_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.ASSIGNMENT,
-                        MongoInstitution.getInstance().getAssignment(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getAssignment(objectAffectedId, userId)));
             } else if (PROBLEM_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.BANK_PROBLEM,
-                        MongoInstitution.getInstance().getProblem(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getProblem(objectAffectedId, userId)));
             } else if (COURSE_PROBLEM_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.COURSE_PROBLEM,
-                        MongoInstitution.getInstance().getCourseProblem(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getCourseProblem(objectAffectedId, userId)));
             }
         }
         return resultList;

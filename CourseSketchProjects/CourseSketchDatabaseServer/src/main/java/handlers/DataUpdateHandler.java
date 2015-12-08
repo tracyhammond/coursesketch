@@ -4,7 +4,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import database.auth.AuthenticationException;
 import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
@@ -54,15 +53,16 @@ public final class DataUpdateHandler {
      *
      * decode request and pull correct information from {@link database.institution.Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     *
      * @param req
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
+     * @param instance
+     *         The object that interfaces with the database and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
-    public static void handleData(final Request req, final SocketSession conn) {
+    public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Receiving DATA UPDATE Request...");
 
@@ -73,7 +73,6 @@ public final class DataUpdateHandler {
             }
             final ArrayList<ItemResult> results = new ArrayList<>();
 
-            final Institution instance = MongoInstitution.getInstance();
             for (int p = 0; p < request.getItemsList().size(); p++) {
                 final ItemSend itemSet = request.getItemsList().get(p);
                 try {

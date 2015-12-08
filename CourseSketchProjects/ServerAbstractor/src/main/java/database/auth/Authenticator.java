@@ -1,12 +1,18 @@
 package database.auth;
 
 import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.DateTime;
+import utilities.ExceptionUtilities;
 
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static database.DatabaseStringConstants.GROUP_PREFIX;
-import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A class that performs authentication.
@@ -19,49 +25,33 @@ import static database.DatabaseStringConstants.GROUP_PREFIX_LENGTH;
 public final class Authenticator {
 
     /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(Authenticator.class);
+
+    /**
+     * Manages the execution of threads.
+     */
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(100);
+
+    /**
      * An implementation of the {@link AuthenticationDataCreator}.
      * Allows the data from authentication to come from multiple sources depending on the server.
      */
-    private final AuthenticationDataCreator dataGrabber;
+    private final AuthenticationChecker checker;
 
     /**
-     * @param iDataGrabber Implements where the data actually comes from.
+     * Checks for other details relevent to authentication that do not require a userId to check.
      */
-    public Authenticator(final AuthenticationDataCreator iDataGrabber) {
-        dataGrabber = iDataGrabber;
-        if (iDataGrabber == null) {
-            throw new IllegalArgumentException("The AuthenticationDataCreator can not be null.");
-        }
-    }
+    private final AuthenticationOptionChecker optionChecker;
 
     /**
-     * Checks to see if a user is allowed within the current groupList.
-     *
-     * looks up the groupId if there are groupId associated with this groupList
-     *
-     * @param userId
-     *            the userId within the program that is trying to be
-     *            authenticated
-     * @param groups The list of names to check if the user exist in.
-     * @return True if the userId is in the list of the group.
+     * @param authenticationChecker Checks if the user is in the system with their authenticationId.
+     * @param optionChecker Checks data that does not require a userId.  Instead it grabs data about the course.
      */
-    public boolean checkAuthentication(final String userId, final List<String> groups) {
-        if (groups == null) {
-            return false;
-        }
-        for (String group : groups) {
-            if (group.startsWith(GROUP_PREFIX)) {
-                final List<String> list = dataGrabber.getUserList(group.substring(GROUP_PREFIX_LENGTH));
-                if (checkAuthentication(userId, list)) {
-                    return true;
-                }
-            } else {
-                if (group.equals(userId)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public Authenticator(final AuthenticationChecker authenticationChecker, final AuthenticationOptionChecker optionChecker) {
+        checker = checkNotNull(authenticationChecker, "authenticationChecker");
+        this.optionChecker = checkNotNull(optionChecker, "optionChecker");
     }
 
     /**
@@ -85,342 +75,278 @@ public final class Authenticator {
     }
 
     /**
-     * A list of Authentication options.
-     * Compares against values in {@link AuthenticationData}.
-     * @author gigemjt
-     */
-    public static final class AuthType {
-        /**
-         * If true then it checks against the userList in {@link AuthenticationData}.
-         */
-        private boolean user = false;
-
-        /**
-         * If true then it checks against the modlist in {@link AuthenticationData}.
-         */
-        private boolean mod = false;
-
-        /**
-         * If true then it checks against the adminlist in {@link AuthenticationData}.
-         */
-        private boolean admin = false;
-
-        /**
-         * If true then it checks that the dates in {@link AuthenticationData}.
-         */
-        private boolean checkDate = false;
-
-        /**
-         * If true then it passes if either mod or admin exist. {@link AuthenticationData}.
-         */
-        private boolean checkAdminOrMod = false;
-
-        /**
-         * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
-         */
-        private boolean checkAccess = false;
-
-        /**
-         * @return True if one of the values in AuthType is true.
-         */
-        public boolean validRequest() {
-            return isCheckingUser() || isCheckingMod() || isCheckingAdmin() || isCheckDate() || isCheckAdminOrMod() || isCheckAccess();
-        }
-
-        /**
-         * @return the user
-         */
-        public boolean isCheckingUser() {
-            return user;
-        }
-
-        /**
-         * @param iUser the user to set
-         */
-        public void setCheckUser(final boolean iUser) {
-            this.user = iUser;
-        }
-
-        /**
-         * @return the mod
-         */
-        public boolean isCheckingMod() {
-            return mod;
-        }
-
-        /**
-         * @param iMod the mod to set
-         */
-        public void setCheckMod(final boolean iMod) {
-            this.mod = iMod;
-        }
-
-        /**
-         * @return the admin
-         */
-        public boolean isCheckingAdmin() {
-            return admin;
-        }
-
-        /**
-         * @param iAdmin the admin to set
-         */
-        public void setCheckAdmin(final boolean iAdmin) {
-            this.admin = iAdmin;
-        }
-
-        /**
-         * @return the checkDate
-         */
-        public boolean isCheckDate() {
-            return checkDate;
-        }
-
-        /**
-         * @param iCheckDate the checkDate to set
-         */
-        public void setCheckDate(final boolean iCheckDate) {
-            this.checkDate = iCheckDate;
-        }
-
-        /**
-         * @return the checkAdminOrMod
-         */
-        public boolean isCheckAdminOrMod() {
-            return checkAdminOrMod;
-        }
-
-        /**
-         * @param iCheckAdminOrMod the checkAdminOrMod to set
-         */
-        public void setCheckAdminOrMod(final boolean iCheckAdminOrMod) {
-            this.checkAdminOrMod = iCheckAdminOrMod;
-        }
-
-        /**
-         * @return the checkAccess
-         */
-        public boolean isCheckAccess() {
-            return checkAccess;
-        }
-
-        /**
-         * Checks for admin, mod, or user.
-         *
-         * @param iCheckAccess the checkAccess to set
-         */
-        public void setCheckAccess(final boolean iCheckAccess) {
-            this.checkAccess = iCheckAccess;
-        }
-
-        /**
-         * Sets all checks to false to enable reuse of the same object.
-         */
-        public void clear() {
-            setCheckAccess(false);
-            setCheckAdmin(false);
-            setCheckAdminOrMod(false);
-            setCheckDate(false);
-            setCheckMod(false);
-            setCheckUser(false);
-        }
-    }
-
-    /**
-     * Contains data used for authentication.
-     * @author gigemjt
-     */
-    public static final class AuthenticationData {
-        /**
-         * A list of users that have access to the given data.
-         */
-        private List<String> userList;
-
-        /**
-         * A list of moderators that have access to the given data.
-         */
-        private List<String> moderatorList;
-
-        /**
-         * A list of admins that have access to the given data.
-         */
-        private List<String> adminList;
-
-        /**
-         * The date that the data is accessable.
-         */
-        private DateTime accessDate;
-
-        /**
-         * The data that the data is no longer accessable.
-         */
-        private DateTime closeDate;
-
-        /**
-         * @return the userList
-         */
-        List<String> getUserList() {
-            return userList;
-        }
-
-        /**
-         * @param iUserList the userList to set
-         */
-        void setUserList(final List<String> iUserList) {
-            this.userList = iUserList;
-        }
-
-        /**
-         * @return the moderatorList
-         */
-        List<String> getModeratorList() {
-            return moderatorList;
-        }
-
-        /**
-         * @param iModeratorList the moderatorList to set
-         */
-        void setModeratorList(final List<String> iModeratorList) {
-            this.moderatorList = iModeratorList;
-        }
-
-        /**
-         * @return the adminList
-         */
-        List<String> getAdminList() {
-            return adminList;
-        }
-
-        /**
-         * @param iAdminList the adminList to set
-         */
-        void setAdminList(final List<String> iAdminList) {
-            this.adminList = iAdminList;
-        }
-
-        /**
-         * @return the accessDate
-         */
-        DateTime getAccessDate() {
-            return accessDate;
-        }
-
-        /**
-         * @param iAccessDate the accessDate to set
-         */
-        void setAccessDate(final DateTime iAccessDate) {
-            this.accessDate = iAccessDate;
-        }
-
-        /**
-         * @return the closeDate
-         */
-        DateTime getCloseDate() {
-            return closeDate;
-        }
-
-        /**
-         * @param iCloseDate the closeDate to set
-         */
-        void setCloseDate(final DateTime iCloseDate) {
-            this.closeDate = iCloseDate;
-        }
-    }
-
-    /**
-     * Checks to make sure that the user is authenticated for all values that
-     * are true.
+     * Checks if the input {@link protobuf.srl.services.authentication.Authentication.AuthType} is a valid authentication request.
      *
-     * @param collection The table / collection where this data is store.
-     * @param itemId
-     *            The Id of the object we are checking against.
-     * @param userId
-     *            The user we are checking is valid
-     * @param checkTime The time that the date check is checking against.
-     * @param checkType The rules at that give a correct or false response.
-     * @return True if all checked values are valid
-     * @throws DatabaseAccessException thrown if there are issues grabbing data for the authenticator.
+     * @param authType The parameters used for an authentication check.
+     * @return True if one of the values in AuthType is true.
      */
-    public boolean isAuthenticated(final String collection, final String itemId,
-            final String userId, final long checkTime, final Authenticator.AuthType checkType) throws DatabaseAccessException {
-
-        if (!checkType.validRequest()) {
-            return false;
-        }
-
-        final AuthenticationData result = dataGrabber.getAuthGroups(collection, itemId);
-
-
-        boolean validAccess = authenticateUser(userId, result, checkType);
-        final boolean validUser = checkType.isCheckingUser() && validAccess;
-
-        boolean validModOrAdmin = authenticateModerator(userId, result, checkType);
-        final boolean validMod = checkType.isCheckingMod() && validModOrAdmin;
-
-        boolean validAdmin = authenticateAdmin(userId, result, checkType);
-        validModOrAdmin = validAdmin || validModOrAdmin;
-        validAccess = validAccess || validModOrAdmin;
-
-        validAdmin = validAdmin && checkType.isCheckingAdmin();
-        validAccess = validAccess && checkType.isCheckAccess();
-
-        validModOrAdmin = validModOrAdmin && checkType.isCheckAdminOrMod();
-
-        boolean validDate = false;
-        if (checkType.isCheckDate()) {
-            validDate = Authenticator.isTimeValid(checkTime, result.getAccessDate(), result.getCloseDate());
-        }
-
-        return validUser == checkType.isCheckingUser() && validMod == checkType.isCheckingMod() && validAdmin == checkType.isCheckingAdmin()
-                && validDate == checkType.isCheckDate() && validModOrAdmin == checkType.isCheckAdminOrMod()
-                && validAccess == checkType.isCheckAccess();
+    public static boolean validRequest(final Authentication.AuthType authType) {
+        return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
+                || authType.getCheckDate() || authType.getCheckingPeerTeacher() || authType.getCheckAccess()
+                || authType.getCheckIsPublished() || authType.getCheckIsRegistrationRequired();
     }
 
     /**
-     * Authenticates just the user list.
-     * @param userId the user being authenticated.
-     * @param result contains the user list.
-     * @param checkType contains data about what is being checked.
-     * @return true if the user is authenticated.  false if it is not being checked or if the user is not authenticated.
+     * Checks if the input {@link protobuf.srl.services.authentication.Authentication.AuthType} is a valid user access request.
+     *
+     * @param authType The parameters used for an authentication check.
+     * @return True if one of the values in AuthType is true.
+     *          Excluded is anything that the {@link AuthenticationOptionChecker} looks at.
      */
-    private boolean authenticateUser(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
-        boolean validUser = false;
-        if (checkType.isCheckingUser() || checkType.isCheckAccess()) {
-            final List usersList = result.getUserList();
-            validUser = this.checkAuthentication(userId, usersList);
-        }
-        return validUser;
+    public static boolean validUserAccessRequest(final Authentication.AuthType authType) {
+        return authType.getCheckingUser() || authType.getCheckingMod() || authType.getCheckingAdmin()
+                || authType.getCheckingPeerTeacher() || authType.getCheckAccess();
     }
 
     /**
-     * Authenticates just the moderator list.
-     * @param userId the user being authenticated.
-     * @param result contains the moderator list.
-     * @param checkType contains data about what is being checked.
-     * @return true if the user is authenticated.  false if it is not being checked or if the moderator is not authenticated.
+     * Creates an {@link AuthenticationResponder} when checking authentication.
+     *
+     * @param collectionType The type of item it is. Ex: A course or an assignment
+     * @param itemId The id for the item that the authentication is being checked.
+     * @param userId The user who wants to authenticate.
+     * @param checkTime The time that the user wants access to the item.
+     * @param checkType The type of the checks that are requested.
+     * @return An {@link AuthenticationResponder} that contains the information about the authentication response.
+     * @throws AuthenticationException Thrown if there are problems creating the {@link AuthenticationResponder}.
      */
-    private boolean authenticateModerator(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
-        boolean validMod = false;
-        if (checkType.isCheckingMod() || checkType.isCheckAdminOrMod() || checkType.isCheckAccess()) {
-            final List modList = result.getModeratorList();
-            validMod = this.checkAuthentication(userId, modList);
+    public AuthenticationResponder checkAuthentication(final School.ItemType collectionType, final String itemId,
+            final String userId, final long checkTime, final Authentication.AuthType checkType) throws AuthenticationException {
+        checkNotNull(collectionType, "collectionType");
+        checkNotNull(itemId, "itemId");
+        checkNotNull(userId, "userId");
+        checkNotNull(checkType, "checkType");
+
+        if (!validRequest(checkType)) {
+            throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
         }
-        return validMod;
+
+        final Authentication.AuthResponse.Builder authBuilder = Authentication.AuthResponse.newBuilder();
+        final CountDownLatch totalLatch = new CountDownLatch(2);
+        final CountDownLatch checkLatch = new CountDownLatch(1);
+
+        // Auth checking checking
+        final AuthenticationThreadData authThreadData = new AuthenticationThreadData(authBuilder, checkType, ExceptionUtilities.getExceptionHolder(),
+                totalLatch, checkLatch);
+        checkAuth(collectionType, itemId, userId, authThreadData);
+
+        // Date checking
+        final AuthenticationThreadData optionThreadData = new AuthenticationThreadData(authBuilder, checkType,
+                ExceptionUtilities.getExceptionHolder(), totalLatch, checkLatch);
+        checkOption(collectionType, itemId, checkTime, optionThreadData);
+
+        authThreadData.awaitMainLatch();
+
+        if (validUserAccessRequest(checkType)) {
+            authBuilder.setHasAccess(authBuilder.getHasAccess()
+                    || authBuilder.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE);
+        }
+
+        // hasAccess will be true if they have a permission level that is above NO_PERMISSION or no registration is required for access.
+        if (checkType.getCheckAccess()) {
+            authBuilder.setHasAccess(authBuilder.getHasAccess() || !authBuilder.getIsRegistrationRequired());
+        }
+
+        authThreadData.checkException();
+        optionThreadData.checkException();
+
+        return new AuthenticationResponder(authBuilder.build());
     }
 
     /**
-     * Authenticates just the admin list.
-     * @param userId the user being authenticated.
-     * @param result contains the admin list.
-     * @param checkType contains data about what is being checked.
-     * @return true if the user is authenticated.  false if it is not being checked or if the admin is not authenticated.
+     * Checks if the user has access to the item.
+     *
+     * @param collectionType The type of item that is being checked.
+     * @param itemId The id of the item being checked.
+     * @param userId The user trying to authenticate.
+     * @param threadData Object that contains information useful to all threads.
      */
-    private boolean authenticateAdmin(final String userId, final AuthenticationData result, final Authenticator.AuthType checkType) {
-        boolean validAdmin = false;
-        if (checkType.isCheckingAdmin() || checkType.isCheckAdminOrMod() || checkType.isCheckAccess()) {
-            final List adminList = result.getAdminList();
-            validAdmin = this.checkAuthentication(userId, adminList);
+    private void checkAuth(final School.ItemType collectionType, final String itemId, final String userId,
+            final AuthenticationThreadData threadData) {
+        final Authentication.AuthType checkType = threadData.authType;
+        if (validUserAccessRequest(checkType)) {
+            EXECUTOR_SERVICE.execute(new Runnable() {
+                @Override
+                @SuppressWarnings("PMD.CommentRequired")
+                public void run() {
+                    try {
+                        final Authentication.AuthResponse result = checker.isAuthenticated(collectionType, itemId, userId, checkType);
+                        synchronized (threadData.authBuilder) {
+                            threadData.authBuilder.mergeFrom(result);
+                        }
+                    } catch (DatabaseAccessException e) {
+                        threadData.exceptionHolder.exception = e;
+                        LOG.error("Exception was thrown while accessing database", e);
+                    } catch (AuthenticationException e) {
+                        threadData.exceptionHolder.exception = e;
+                        LOG.error("Exception was thrown while authenticating person", e);
+                    }
+                    threadData.secondaryLatch.countDown();
+                    threadData.mainLatch.countDown();
+                }
+            });
+        } else {
+            threadData.secondaryLatch.countDown();
+            threadData.mainLatch.countDown();
         }
-        return validAdmin;
+    }
+
+    /**
+     * Checks for miscellaneous data that is useful for authentication.
+     *
+     * @param collectionType The type of item that is being checked.
+     * @param itemId The id of the item being checked.
+     * @param checkTime The time that the item is being accessed.  (Or perceived to be accessed at)
+     * @param threadData Object that contains information useful to all threads.
+     */
+    private void checkOption(final School.ItemType collectionType, final String itemId, final long checkTime,
+            final AuthenticationThreadData threadData) {
+        final Authentication.AuthType checkType = threadData.authType;
+        if (checkType.getCheckDate() || checkType.getCheckAccess() || checkType.getCheckIsPublished() || checkType.getCheckIsRegistrationRequired()) {
+            EXECUTOR_SERVICE.execute(new Runnable() {
+                @SuppressWarnings("PMD.CommentRequired")
+                public void run() {
+                    try {
+                        final Authentication.AuthResponse.Builder result = Authentication.AuthResponse.newBuilder();
+                        setOptionAuthData(collectionType, itemId, checkTime, result, threadData.authType);
+                        threadData.awaitSecondaryLatch();
+                        synchronized (threadData.authBuilder) {
+                            threadData.authBuilder.mergeFrom(result.build());
+                        }
+                        // set auth data.
+                    } catch (DatabaseAccessException | AuthenticationException e) {
+                        threadData.exceptionHolder.exception = e;
+                        LOG.error("Exception was thrown while accessing database", e);
+                    }
+                    threadData.mainLatch.countDown();
+                }
+
+
+            });
+        } else {
+            // This is one of the two threads that are occurring at the same time.
+            threadData.mainLatch.countDown();
+        }
+    }
+
+    /**
+     * Sets the data received by the option authenticator.
+     *
+     * @param collectionType The type of item it is. Ex: A course or an assignment
+     * @param itemId The id for the item that the authentication is being checked.
+     * @param checkTime The time that the user wants access to the item.
+     * @param authBuilder Contains the response.
+     * @param checkType Contains what is being checked.
+     * @throws DatabaseAccessException Thrown if there are problems reading the data from the database.
+     */
+    private void setOptionAuthData(final School.ItemType collectionType, final String itemId, final long checkTime,
+            final Authentication.AuthResponse.Builder authBuilder, final Authentication.AuthType checkType) throws DatabaseAccessException {
+        final AuthenticationDataCreator dataCreator = optionChecker.createDataGrabber(collectionType, itemId);
+        if (checkType.getCheckDate()) {
+            authBuilder.setIsItemOpen(optionChecker.authenticateDate(dataCreator, checkTime));
+        }
+        if (checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired()) {
+            authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
+        }
+        if (checkType.getCheckIsPublished()) {
+            authBuilder.setIsItemPublished(optionChecker.isItemPublished(dataCreator));
+        }
+    }
+
+    /**
+     * Holds data related to managing threads.
+     */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    private static class AuthenticationThreadData {
+        /**
+         * The latch that locks all threads together.
+         */
+        private final CountDownLatch mainLatch;
+
+        /**
+         * Latch used to ensure order of the sub threads.
+         */
+        private final CountDownLatch secondaryLatch;
+
+        /**
+         * The type of checks that are wanted to be returned.
+         */
+        private final Authentication.AuthType authType;
+
+        /**
+         * The result being built by the different threads.
+         */
+        private final Authentication.AuthResponse.Builder authBuilder;
+
+        /**
+         * Holds any exceptions that are thrown.
+         */
+        private final ExceptionUtilities.ExceptionHolder exceptionHolder;
+
+        /**
+         * Constructor for the thread data.
+         *
+         * @param authBuilder
+         *         {@link #authBuilder}
+         * @param authType
+         *         {@link #authType}
+         * @param exceptionHolder
+         *         {@link #exceptionHolder}
+         * @param mainLatch
+         *         {@link #mainLatch}
+         * @param secondaryLatch
+         *         {@link #secondaryLatch}
+         */
+        AuthenticationThreadData(final Authentication.AuthResponse.Builder authBuilder,
+                final Authentication.AuthType authType, final ExceptionUtilities.ExceptionHolder exceptionHolder, final CountDownLatch mainLatch,
+                final CountDownLatch secondaryLatch) {
+            this.authBuilder = authBuilder;
+            this.authType = authType;
+            this.exceptionHolder = exceptionHolder;
+            this.mainLatch = mainLatch;
+            this.secondaryLatch = secondaryLatch;
+        }
+
+        /**
+         * Awaits the secondary latch (preventing the need for the exception).
+         *
+         * @throws AuthenticationException
+         *         Thrown if there could be potential synchronization problems.
+         */
+        public final void awaitSecondaryLatch() throws AuthenticationException {
+            try {
+                secondaryLatch.await();
+            } catch (InterruptedException e) {
+                LOG.error("Await was interrupted while authenticating date", e);
+                throw new AuthenticationException(e);
+            }
+        }
+
+        /**
+         * Awaits the main latch (preventing the need for the exception).
+         *
+         * @throws AuthenticationException
+         *         Thrown if there could be potential synchronization problems.
+         */
+        public final void awaitMainLatch() throws AuthenticationException {
+            try {
+                mainLatch.await();
+            } catch (InterruptedException e) {
+                LOG.error("Await was interrupted while authenticating date", e);
+                throw new AuthenticationException(e);
+
+            }
+        }
+
+        /**
+         * Checks to see if there is an exception thrown.
+         *
+         * If there is that exception is then thrown and passed up.
+         * @throws AuthenticationException Thrown if an exception exist in the exception holder.
+         */
+        public void checkException() throws AuthenticationException {
+            if (exceptionHolder.exception != null) {
+                throw new AuthenticationException(exceptionHolder.exception);
+            }
+        }
     }
 }

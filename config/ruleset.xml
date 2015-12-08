@@ -32,6 +32,12 @@
         <exclude name="UncommentedEmptyMethod"/>
     </rule>
 
+    <rule ref="rulesets/java/comments.xml">
+        <exclude name="CommentRequired"/>
+    </rule>
+
+    <!-- property changes -->
+
     <rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>
             <property name="problemDepth" value="4"/>
