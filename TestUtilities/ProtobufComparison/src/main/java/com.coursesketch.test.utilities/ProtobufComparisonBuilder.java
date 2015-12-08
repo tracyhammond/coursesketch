@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Creates an {@link ProtobufComparison}.
+ *
+ * The {@link ProtobufComparison} that is returned will throw an exception if the protobuf objects are not equal.
  * Created by gigemjt on 9/6/15.
  */
 public class ProtobufComparisonBuilder {
@@ -51,6 +54,7 @@ public class ProtobufComparisonBuilder {
 
     /**
      * Ignores the field when comparing protobufs.
+     *
      * @param ignoreField A field that will be ignored by the Comparison.
      * @return Itself.
      */
@@ -61,6 +65,7 @@ public class ProtobufComparisonBuilder {
 
     /**
      * Ignores the message when comparing protobufs.
+     *
      * @param ignoreMessage The message that will be ignored by the Comparison.
      * @return Itself.
      */
@@ -79,6 +84,7 @@ public class ProtobufComparisonBuilder {
 
     /**
      * Sets if a deep comparison should happen.
+     *
      * @param isDeepEquals true if a deep equals comparison should happen. False otherwise.
      * @return Itself.
      */

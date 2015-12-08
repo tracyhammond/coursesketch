@@ -120,8 +120,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
+     *
+     * Because we only want the database set once it has to be set in the constructor.
+     * We also want the class to be final so the test code has to be here.
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
@@ -418,7 +420,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             // Revert the adding of the course to the database!
             throw new AuthenticationException("Failed to register the user in the course", e);
         }
-
         UserClient.addCourseToUser(userId, courseId);
         return true;
     }
