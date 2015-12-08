@@ -4,6 +4,7 @@ import database.DatabaseAccessException;
 import database.RequestConverter;
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,7 +73,8 @@ public class AuthenticatorTest {
 
     @Test()
     public void creationSucceedsIfGivenValue() {
-        new Authenticator(Mockito.mock(AuthenticationChecker.class), Mockito.mock(AuthenticationOptionChecker.class));
+        Authenticator auth = new Authenticator(Mockito.mock(AuthenticationChecker.class), Mockito.mock(AuthenticationOptionChecker.class));
+        Assert.assertNotNull(auth);
     }
 
     @Test(expected = NullPointerException.class)
