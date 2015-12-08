@@ -10,8 +10,8 @@ option java_generic_services = true;
  * A list of Authentication options.
  * Compares against values in {@link AuthenticationData}.
  *
- * Works on the principle of accumalitive permissions.  So if you check for admin it will checker for all permissions below it.
- * but if you check for user it will not checker for any permissions above it.
+ * Works on the principle of accumalitive permissions.  So if you check for admin it will check for all permissions below it.
+ * But if you check for user it will not checker for any permissions above it.
  * @author gigemjt
  */
 message AuthType {
@@ -21,28 +21,28 @@ message AuthType {
     optional bool checkingUser = 1;
 
     /**
-     * If true then it checks against the userList in {@link AuthenticationData}.
+     * If true then it checks against the peerTeacherList in {@link AuthenticationData}.
      */
     optional bool checkingPeerTeacher = 2;
 
     /**
-     * If true then it checks against the modlist in {@link AuthenticationData}.
+     * If true then it checks against the modList in {@link AuthenticationData}.
      */
     optional bool checkingMod = 3;
 
     /**
-     * If true then it checks against the adminlist in {@link AuthenticationData}.
+     * If true then it checks against the adminList in {@link AuthenticationData}.
      */
     optional bool checkingAdmin = 4;
 
     /**
-     * If true then it checks that the dates in {@link AuthenticationData}.
+     * If true then it checks that the dates are within the open and close datae in {@link AuthenticationData}.
      */
     optional bool checkDate = 5;
 
     /**
      * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
-     * Or if the class does not require registration
+     * Or if the class does not require registration.
      */
     optional bool checkAccess = 6;
 
@@ -59,6 +59,7 @@ message AuthType {
 }
 
 /**
+ * The default data used for authentication request
  * Used when creating a new group
  */
 message AuthCreationRequest {
@@ -90,12 +91,12 @@ message AuthRequest {
 /**
  * Returns the result of the authentication request.
  * NOTE: values are only returned true for data that is checked.
- * For example if you do not ask to check if they are a student and nothing else they will only return that they are a student.
+ * For example if you ask to check if they are a student and nothing else they will only return that they are a student.
  */
 message AuthResponse {
     // This is true if they have a value greater than NO_PERMISSION
     // or if the item is published and registration is not required.
-    // dates are handled separately from having access.
+    // Dates are handled separately from having access.
     optional bool hasAccess = 1;
 
     optional PermissionLevel permissionLevel = 2 [default = NO_PERMISSION];
@@ -103,14 +104,14 @@ message AuthResponse {
     // True if the item is currently open during the time the check was performed.
     optional bool isItemOpen = 3;
 
-    // true if the item requires registration to access
-    // if explicitly set to false then hasAccess will almost always be true even if they have NO_PERMISSION
+    // True if the item requires registration to access.
+    // If explicitly set to false then hasAccess will almost always be true even if they have NO_PERMISSION.
     optional bool isRegistrationRequired = 4 [default=true];
 
-    // true if the item is published, false otherwise
+    // True if the item is published, false otherwise.
     optional bool isItemPublished = 5;
 
-    // ASSUMPTION LARGER PERMISSIONS HAVE LARGER NUMBERS
+    // ASSUMPTION: LARGER PERMISSIONS HAVE LARGER NUMBERS
     enum PermissionLevel {
         NO_PERMISSION = 0;
         STUDENT = 100;

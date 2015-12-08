@@ -68,7 +68,8 @@ public final class DataInsertHandler {
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
-     * @param instance The database backer.
+     * @param instance
+     *         The object that interfaces with the database and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })

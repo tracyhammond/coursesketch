@@ -83,6 +83,7 @@ public final class NettySession implements SocketSession {
         final BinaryWebSocketFrame frame = new BinaryWebSocketFrame(Unpooled.copiedBuffer(buffer));
         LOG.info("Frame: {}", frame);
         final ChannelFuture future = session.channel().write(frame);
+        session.channel().flush();
         future.addListener(new GenericFutureListener<DefaultChannelPromise>() {
 
             /**

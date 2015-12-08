@@ -122,8 +122,10 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
+     *
+     * Because we only want the database set once it has to be set in the constructor.
+     * We also want the class to be final so the test code has to be here.
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
@@ -421,12 +423,10 @@ public final class MongoInstitution extends CourseSketchDatabaseReader implement
 
     @Override
     public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
-        // this actually requires getting the data from the course itself
-        final String userGroupId = CourseManager.mongoGetDefaultGroupId(database, courseId)[2]; // user
-        // group!
+        // This actually requires getting the data from the course itself.
+        final String userGroupId = CourseManager.mongoGetDefaultGroupId(database, courseId)[2]; // user group!
 
-        // FIXME: when mongo version 2.5.5 java client comes out please change
-        // this!
+        // FIXME: when mongo version 2.5.5 java client comes out please change this!
         /*
         final ArrayList<String> hack = new ArrayList<String>();
         hack.add(GROUP_PREFIX + userGroupId);
