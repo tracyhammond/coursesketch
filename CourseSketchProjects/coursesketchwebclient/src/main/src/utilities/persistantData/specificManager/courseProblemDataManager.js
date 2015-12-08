@@ -105,7 +105,6 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                 }
             });
         });
-        advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE_PROBLEM, courseProblem.toArrayBuffer());
     }
 
     /**
