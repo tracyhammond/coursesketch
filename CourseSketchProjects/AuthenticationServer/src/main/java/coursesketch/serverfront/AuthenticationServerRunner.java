@@ -33,6 +33,7 @@ public final class AuthenticationServerRunner extends GeneralConnectionRunner {
     protected void loadConfigurations() {
         super.setDatabaseName(DatabaseStringConstants.AUTH_DATABASE);
     }
+
     /**
      * sets some SSL information. FUTURE: this should be read from a file
      * instead of listed in code.

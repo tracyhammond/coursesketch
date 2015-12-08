@@ -197,7 +197,7 @@ public class MultiConnectionManager {
     /**
      * Drops all of the connections then adds them all back.
      */
-    protected final void reconnect() {
+    public final void reconnect() {
         this.dropAllConnection(true, false);
         this.connectServers(parent);
     }

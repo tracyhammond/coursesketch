@@ -160,4 +160,14 @@ public class ServerInfo {
     public final void setDatabaseName(final String databaseName) {
         this.databaseName = databaseName;
     }
+
+    /**
+     * This can really only be used for testing purposes because it contains invalid values.
+     * @return a default {@link ServerInfo}
+     */
+    public static ServerInfo createDefaultServerInfo() {
+        final List<ServerAddress> databaseUrl = new ArrayList<>();
+        databaseUrl.add(new ServerAddress());
+        return new ServerInfo(null, 0, 0, false, true, "TEST", databaseUrl);
+    }
 }
