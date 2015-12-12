@@ -1,6 +1,7 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.base.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
@@ -76,6 +77,8 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                         // we might have to do a lot of work here!
                         final ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
                         if (rev.getShowUserNames()) {
+                            final IdentityWebSocketClient identityWebSocketClient =
+                                    (IdentityWebSocketClient) super.getParentManager().getBestConnection(IdentityWebSocketClient.class);
                             LOG.info("Attempting to change out usernames!");
                             result2.addResults(item);
                         } else {
