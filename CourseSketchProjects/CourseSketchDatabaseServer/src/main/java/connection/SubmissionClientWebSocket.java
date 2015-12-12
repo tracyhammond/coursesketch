@@ -77,8 +77,9 @@ public class SubmissionClientWebSocket extends ClientWebSocket {
                         // we might have to do a lot of work here!
                         final ExperimentReview rev = ExperimentReview.parseFrom(item.getAdvanceQuery());
                         if (rev.getShowUserNames()) {
-                            final IdentityWebSocketClient identityWebSocketClient =
-                                    (IdentityWebSocketClient) super.getParentManager().getBestConnection(IdentityWebSocketClient.class);
+                            final IdentityWebSocketClient identityWebSocketClient = getParentManager()
+                                    .getBestConnection(IdentityWebSocketClient.class);
+                            identityWebSocketClient.getItemRoster(req.getServersideId());
                             LOG.info("Attempting to change out usernames!");
                             result2.addResults(item);
                         } else {
