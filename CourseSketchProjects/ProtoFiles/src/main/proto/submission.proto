@@ -37,3 +37,7 @@ message SrlExperiment {
     optional SrlSubmission submission = 6;
     optional protobuf.srl.utils.SrlPermission accessPermission = 7;
 }
+
+service IdentityService {
+    rpc get(RequestRoster) returns (UserNameResponse);
+}
