@@ -59,18 +59,20 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
             final RpcCallback<SubmissionServer.ExperimentResponse> done) {
 
         final List<String> ids = request.getSubmissionIdsList();
-            try {
-                final List<Submission.SrlExperiment> submission = manager
-                        .getSubmission(request.getAuthId(), authenticator, request.getProblemId(), (String[]) ids.toArray());
-            } catch (DatabaseAccessException e) {
-                LOG.error("Database exception occurred while trying to get experiments", e);
-                done.run(SubmissionServer.ExperimentResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
-                return;
+        List<Submission.SrlExperiment> srlExperimentList;
+        try {
+            srlExperimentList = manager
+                    .getSubmission(request.getAuthId(), authenticator, request.getProblemId(), ids.toArray(new String[0]));
+        } catch (DatabaseAccessException e) {
+            LOG.error("Database exception occurred while trying to get experiments", e);
+            done.run(SubmissionServer.ExperimentResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
+            return;
         } catch (AuthenticationException e) {
-                LOG.error("Authentication exception occurred while trying to get experiments", e);
-                done.run(SubmissionServer.ExperimentResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
-                return;
+            LOG.error("Authentication exception occurred while trying to get experiments", e);
+            done.run(SubmissionServer.ExperimentResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
+            return;
         }
+        done.run(SubmissionServer.ExperimentResponse.newBuilder().addAllExperiments(srlExperimentList).build());
     }
 
     /**
@@ -87,8 +89,9 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
      */
     @Override public void insertExperiment(final RpcController controller, final SubmissionServer.ExperimentInsert request,
             final RpcCallback<SubmissionServer.SubmissionResponse> done) {
+        String submissionId;
         try {
-            final String submissionId = manager
+            submissionId = manager
                     .insertExperiment(request.getRequestData().getAuthId(), authenticator, request.getSubmission(), request.getSubmissionTime());
         } catch (AuthenticationException e) {
             LOG.error("Authentication exception occurred while trying to insert experiment", e);
@@ -99,6 +102,7 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
             done.run(SubmissionServer.SubmissionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
             return;
         }
+        done.run(SubmissionServer.SubmissionResponse.newBuilder().setSubmissionId(submissionId).build());
     }
 
     /**
@@ -115,8 +119,9 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
      */
     @Override public void insertSolution(final RpcController controller, final SubmissionServer.SolutionInsert request,
             final RpcCallback<SubmissionServer.SubmissionResponse> done) {
+        String submissionId;
         try {
-            final String submissionId = manager.insertSolution(request.getRequestData().getAuthId(), authenticator, request.getSubmission());
+            submissionId = manager.insertSolution(request.getRequestData().getAuthId(), authenticator, request.getSubmission());
         } catch (AuthenticationException e) {
             LOG.error("Authentication exception occurred while trying to insert experiment", e);
             done.run(SubmissionServer.SubmissionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
@@ -126,6 +131,7 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
             done.run(SubmissionServer.SubmissionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
             return;
         }
+        done.run(SubmissionServer.SubmissionResponse.newBuilder().setSubmissionId(submissionId).build());
     }
 
 }
