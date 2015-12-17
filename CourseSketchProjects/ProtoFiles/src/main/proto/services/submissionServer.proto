@@ -22,10 +22,6 @@ message SolutionInsert {
     optional protobuf.srl.submission.SrlSolution submission = 2;
 }
 
-message MultipleExperimentRequest {
-    optional SubmissionRequest requestData = 1;
-}
-
 message ExperimentResponse {
     repeated protobuf.srl.submission.SrlExperiment experiments = 1;
     optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
@@ -54,5 +50,5 @@ service SubmissionService {
     /**
      * Inserts the solution into the submission server.
      */
-    rpc insertSolution(ExperimentInsert) returns (SubmissionResponse);
+    rpc insertSolution(SolutionInsert) returns (SubmissionResponse);
 }
