@@ -7,6 +7,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import connection.SubmissionClientWebSocket;
+import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
@@ -45,6 +46,8 @@ public final class SubmissionManager {
      * Declaration and Definition.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
+
+    private SubmissionManagerInterface submissionManager;
 
     /**
      * Private constructor.
