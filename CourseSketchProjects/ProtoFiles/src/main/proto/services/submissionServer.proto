@@ -1,0 +1,58 @@
+package protobuf.srl.services.submission;
+
+import "message.proto";
+import "submission.proto";
+
+option java_generic_services = true;
+
+message SubmissionRequest {
+    optional string authId = 1;
+    optional string problemId = 2;
+    repeated string submissionIds = 3;
+}
+
+message ExperimentInsert {
+    optional SubmissionRequest requestData = 1;
+    optional protobuf.srl.submission.SrlExperiment submission = 2;
+    optional int64 submissionTime = 3;
+}
+
+message SolutionInsert {
+    optional SubmissionRequest requestData = 1;
+    optional protobuf.srl.submission.SrlSolution submission = 2;
+}
+
+message MultipleExperimentRequest {
+    optional SubmissionRequest requestData = 1;
+}
+
+message ExperimentResponse {
+    repeated protobuf.srl.submission.SrlExperiment experiments = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
+}
+
+message SubmissionResponse {
+    optional string submissionId = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
+}
+
+/**
+ * A service that handles submissions to the submission server and responses from the submission server
+ */
+service SubmissionService {
+
+    /**
+     * Gets the submissions. given the ids.
+     */
+    rpc getSubmission(SubmissionRequest) returns (ExperimentResponse);
+
+    /**
+     * Inserts the experiment into the submission server.
+     */
+    rpc insertExperiment(ExperimentInsert) returns (SubmissionResponse);
+
+    /**
+     * Inserts the solution into the submission server.
+     */
+    rpc insertSolution(ExperimentInsert) returns (SubmissionResponse);
+}
