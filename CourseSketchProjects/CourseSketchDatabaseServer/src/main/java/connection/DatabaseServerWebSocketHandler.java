@@ -13,7 +13,6 @@ import coursesketch.server.interfaces.SocketSession;
 import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
-import database.submission.SubmissionManager;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
 import handlers.DataUpdateHandler;

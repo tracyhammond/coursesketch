@@ -1,22 +1,18 @@
 package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import connection.SubmissionClientWebSocket;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.submission.SubmissionManagerInterface;
-import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
 import database.institution.Institution;
+import database.institution.mongo.MongoInstitution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.submission.Submission;
-import utilities.ConnectionException;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
-import utilities.ProtobufUtilities;
 
 /**
  * Created by dtracers on 12/17/2015.
@@ -82,21 +78,23 @@ public class SubmissionHandler {
             }
 
             try {
-                instance.insertSubmission(req.getServerUserId(), student.getProblemId(), submissionId, true);
+                // TODO: use the hashedUserId instead of the server-side id when you convert everything to using the identity server
+                final String hashedUserId = MongoInstitution.convertUserId(req.getServerUserId(), student.getCourseId());
+                instance.insertSubmission(req.getServersideId(), student.getProblemId(), submissionId, true);
             } catch (DatabaseAccessException e) {
+                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            } catch (AuthenticationException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         } else {
-            try {
-                getConnectionManager().send(req, req.getSessionInfo(),
-                        SubmissionClientWebSocket.class);
-            } catch (ConnectionException e) {
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-            }
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(
+                    new DatabaseAccessException("INSTRUCTORS CAN NOT SUBMIT SOLUTIONS"));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+            LOG.warn("INSTRUCTORS CAN NOT SUBMIT ANYTHING RIGHT NOW");
         }
     }
 }

@@ -9,6 +9,7 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -29,6 +30,7 @@ import protobuf.srl.school.School.SrlProblem;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -473,5 +475,13 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page)
             throws AuthenticationException, DatabaseAccessException {
         return BankProblemManager.mongoGetAllBankProblems(auth, database, userId, courseId, page);
+    }
+
+    public static String convertUserId(final String userId, final String courseId) throws AuthenticationException {
+        try {
+            return HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
+        }
     }
 }
