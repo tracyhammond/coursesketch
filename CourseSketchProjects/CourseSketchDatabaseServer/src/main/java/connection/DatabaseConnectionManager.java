@@ -4,6 +4,7 @@ import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import utilities.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +53,8 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
         }
 
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), SUBMISSION_ADDRESS, SUBMISSION_PORT, this.isSecure(),
-                    SubmissionClientWebSocket.class);
+            createAndAddConnection(serv, this.isConnectionLocal(), SubmissionWebSocketClient.ADDRESS, SubmissionWebSocketClient.PORT,
+                    this.isSecure(), SubmissionWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
