@@ -71,6 +71,14 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     }
 
     /**
+     * Sets up any indexes that need to be set up or have not yet been set up.
+     */
+    @Override protected void setUpIndexes() {
+        final DBCollection collection = this.database.getCollection(DatabaseStringConstants.USER_COLLECTION);
+        collection.createIndex(new BasicDBObject(DatabaseStringConstants.USER_NAME, 1));
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws DatabaseAccessException
@@ -82,8 +90,6 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         }
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
         this.database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
-        final DBCollection collection = this.database.getCollection(DatabaseStringConstants.USER_COLLECTION);
-        collection.createIndex(new BasicDBObject(DatabaseStringConstants.USER_NAME, 1));
         super.setDatabaseStarted();
     }
 
