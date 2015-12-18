@@ -1,11 +1,10 @@
 package handlers;
 
-import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
-import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 import org.slf4j.Logger;
@@ -149,19 +148,11 @@ public final class DataRequestHandler {
                             if (!itemRequest.hasAdvanceQuery()) {
                                 for (String itemId : itemRequest.getItemIdList()) {
                                     LOG.info("Trying to retrieve an experiment from a user!");
-                                    try {
-                                        final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
-                                        build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                        final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, itemId, build.build(),
-                                                internalConnections);
-                                        results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
-                                    } catch (DatabaseAccessException e) {
-                                        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                                        results.add(ResultBuilder.buildResult(e.getLocalizedMessage(), ItemQuery.EXPERIMENT,
-                                                (GeneratedMessage[]) null));
-                                        break;
-                                    }
+                                    final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                                    build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                                    final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, itemId, build.build(),
+                                            internalConnections);
+                                    results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             } else {
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);

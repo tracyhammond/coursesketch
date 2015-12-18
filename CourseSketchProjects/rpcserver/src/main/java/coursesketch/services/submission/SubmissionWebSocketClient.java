@@ -75,7 +75,7 @@ public class SubmissionWebSocketClient extends ClientWebSocket implements Submis
         try {
             LOG.debug("Sending submission request");
             response = submissionService.getSubmission(getNewRpcController(), request);
-            LOG.debug("Submission response {}", response);
+            LOG.debug("Submission response: {}", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
                 final DatabaseAccessException authExcep =
                         new DatabaseAccessException("Exception with submission server");
@@ -85,7 +85,7 @@ public class SubmissionWebSocketClient extends ClientWebSocket implements Submis
         } catch (ServiceException e) {
             throw new DatabaseAccessException("Exception inserting submission into submission server", e);
         }
-        return null;
+        return response.getExperimentsList();
     }
 
     @Override public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
@@ -111,10 +111,10 @@ public class SubmissionWebSocketClient extends ClientWebSocket implements Submis
             response = submissionService.insertExperiment(getNewRpcController(), request);
             LOG.debug("Submission response {}", response);
             if (response.hasDefaultResponse() && response.getDefaultResponse().hasException()) {
-                final DatabaseAccessException authExcep =
+                final DatabaseAccessException databaseAccessException =
                         new DatabaseAccessException("Exception with submission server");
-                authExcep.setProtoException(response.getDefaultResponse().getException());
-                throw authExcep;
+                databaseAccessException.setProtoException(response.getDefaultResponse().getException());
+                throw databaseAccessException;
             }
         } catch (ServiceException e) {
             throw new DatabaseAccessException("Exception inserting submission into submission server", e);

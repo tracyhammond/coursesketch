@@ -39,7 +39,7 @@ public class SubmissionManager implements SubmissionManagerInterface {
         final AuthenticationResponder authenticationResponder = authenticator
                 .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, TimeManager.getSystemTime(),
                         authType.build());
-        if (!authenticationResponder.hasPeerTeacherPermission()) {
+        if (!authenticationResponder.hasStudentPermission()) {
             throw new AuthenticationException("User does not have permission to for this submission", AuthenticationException.INVALID_PERMISSION);
         }
 

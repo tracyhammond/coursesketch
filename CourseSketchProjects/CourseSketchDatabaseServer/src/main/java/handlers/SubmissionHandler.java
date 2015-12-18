@@ -55,9 +55,9 @@ public class SubmissionHandler {
             final Institution instance) {
         if (req.getResponseText().equals("student")) {
             LOG.info("Parsing as an experiment");
-            Submission.SrlExperiment student = null;
+            Submission.SrlExperiment experiment = null;
             try {
-                student = Submission.SrlExperiment.parseFrom(req.getOtherData());
+                experiment = Submission.SrlExperiment.parseFrom(req.getOtherData());
             } catch (InvalidProtocolBufferException e1) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
@@ -65,9 +65,11 @@ public class SubmissionHandler {
                 return; // sorry but we are bailing if anything does not look right.
             }
 
+            final Submission.SrlExperiment experimentWithIds = Submission.SrlExperiment.newBuilder(experiment).setUserId(req.getServersideId()).build();
+
             String submissionId = null;
             try {
-                submissionId = submissionManager.insertExperiment(req.getServersideId(), null, student, req.getMessageTime());
+                submissionId = submissionManager.insertExperiment(req.getServersideId(), null, experimentWithIds, req.getMessageTime());
             } catch (AuthenticationException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
@@ -93,8 +95,8 @@ public class SubmissionHandler {
 
             try {
                 // TODO: use the hashedUserId instead of the server-side id when you convert everything to using the identity server
-                final String hashedUserId = MongoInstitution.convertUserId(req.getServerUserId(), student.getCourseId());
-                instance.insertSubmission(req.getServersideId(), student.getProblemId(), submissionId, true);
+                final String hashedUserId = MongoInstitution.convertUserId(req.getServerUserId(), experiment.getCourseId());
+                instance.insertSubmission(req.getServersideId(), experiment.getProblemId(), submissionId, true);
             } catch (DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));

@@ -1,5 +1,6 @@
 package database;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
@@ -221,21 +222,21 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      */
     @SuppressWarnings("PMD.CyclomaticComplexity")
     private static void verifyInput(final SrlExperiment experiment) throws DatabaseAccessException {
-        if (!experiment.hasProblemId() || "".equals(experiment.getProblemId())) {
+        if (!experiment.hasProblemId() || Strings.isNullOrEmpty(experiment.getProblemId())) {
             throw new DatabaseAccessException("Problem id must be defined to make a submission");
         }
 
-        if (!experiment.hasCourseId() || "".equals(experiment.getCourseId())) {
+        if (!experiment.hasCourseId() || Strings.isNullOrEmpty(experiment.getCourseId())) {
             throw new DatabaseAccessException("Course id must be defined to make a submission");
         }
 
-        if (!experiment.hasAssignmentId() || "".equals(experiment.getAssignmentId())) {
+        if (!experiment.hasAssignmentId() || Strings.isNullOrEmpty(experiment.getAssignmentId())) {
             throw new DatabaseAccessException("Assignment id must be defined to make a submission");
         }
         if (!experiment.hasSubmission()) {
             throw new DatabaseAccessException("there is no submission data defined in this submission");
         }
-        if (!experiment.hasUserId() || "".equals(experiment.getUserId())) {
+        if (!experiment.hasUserId() || Strings.isNullOrEmpty(experiment.getUserId())) {
             throw new DatabaseAccessException("there is no user id data defined in this submission");
         }
     }
