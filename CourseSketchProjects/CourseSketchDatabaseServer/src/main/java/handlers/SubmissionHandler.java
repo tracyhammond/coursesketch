@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.submission.SubmissionManagerInterface;
@@ -71,10 +72,23 @@ public class SubmissionHandler {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                // bail early
+                return;
             } catch (DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                // bail early
+                return;
+            }
+
+            if (Strings.isNullOrEmpty(submissionId)) {
+                Exception e = new DatabaseAccessException("Unable to store submission in the database!");
+                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                // bail early
+                return;
             }
 
             try {
@@ -85,10 +99,14 @@ public class SubmissionHandler {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                // bail early
+                return;
             } catch (AuthenticationException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                // bail early
+                return;
             }
         } else {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(
