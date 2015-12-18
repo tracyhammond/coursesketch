@@ -1,5 +1,6 @@
 package database.submission;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -7,24 +8,29 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import connection.SubmissionClientWebSocket;
-import coursesketch.database.submission.SubmissionManagerInterface;
-import coursesketch.server.interfaces.MultiConnectionManager;
-import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
+import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.services.submission.SubmissionWebSocketClient;
+import database.DatabaseAccessException;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.submission.Submission;
 import utilities.ConnectionException;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
+
+import java.util.List;
 
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
@@ -105,33 +111,28 @@ public final class SubmissionManager {
      * @param internalConnections A manager of connections to another database.
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      */
-    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
+    public static List<Submission.SrlExperiment> mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
 
-        final ItemRequest.Builder build = ItemRequest.newBuilder();
-        build.setQuery(ItemQuery.EXPERIMENT);
+        final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
+        send.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
-        final String sketchId = "" + corsor.get(userId);
+        if (!cursor.containsField(userId) || Strings.isNullOrEmpty((String) cursor.get(userId))) {
+            throw new DatabaseAccessException("The student has not submitted anything for this problem");
+        }
+        final String sketchId = cursor.get(userId).toString();
         LOG.info("SketchId: ", sketchId);
-        if ("null".equals(sketchId)) {
-            throw new DatabaseAccessException("The student has not submitted anything for this problem");
-        }
-        build.addItemId(sketchId);
-        final DataRequest.Builder data = DataRequest.newBuilder();
-        data.addItems(build);
 
-        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(sessionInfo);
-        requestBuilder.setOtherData(data.build().toByteString());
-        try {
-            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
-        } catch (ConnectionException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            throw new DatabaseAccessException("Failed to send request to submission server for experiment", e);
+        final List<Submission.SrlExperiment> experimentList = internalConnections.getBestConnection(SubmissionWebSocketClient.class)
+                .getSubmission(userId, null, problemId, sketchId);
+        if (experimentList.isEmpty()) {
+            throw new DatabaseAccessException("No experiments were found");
         }
+        return experimentList;
     }
 
     /**

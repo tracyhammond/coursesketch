@@ -461,7 +461,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
-        SubmissionManager.mongoGetExperiment(database, userId, problemId, sessionInfo, internalConnections);
+        return SubmissionManager.mongoGetExperiment(database, userId, problemId, sessionInfo, internalConnections);
     }
 
     @Override
