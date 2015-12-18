@@ -27,6 +27,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
@@ -457,7 +458,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void getExperimentAsUser(final String userId, final String problemId, final Message.Request sessionInfo,
+    public Submission.SrlExperiment getExperimentAsUser(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
@@ -465,9 +466,9 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
+    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId, sessionInfo,
+        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId, sessionInfo,
                 internalConnections, review);
     }
 

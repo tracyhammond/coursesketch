@@ -30,6 +30,7 @@ import utilities.ConnectionException;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
@@ -111,7 +112,7 @@ public final class SubmissionManager {
      * @param internalConnections A manager of connections to another database.
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      */
-    public static List<Submission.SrlExperiment> mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
+    public static Submission.SrlExperiment mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
 
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
@@ -132,7 +133,7 @@ public final class SubmissionManager {
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
-        return experimentList;
+        return experimentList.get(0);
     }
 
     /**
@@ -148,8 +149,9 @@ public final class SubmissionManager {
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
-    public static void mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs, final String userId,
-            final String problemId, final Request sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+    public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs,
+            final String userId, final String problemId, final Request sessionInfo,
+            final MultiConnectionManager internalConnections, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {
@@ -173,16 +175,13 @@ public final class SubmissionManager {
             throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
         }
 
-        final ItemRequest itemRequest = createSubmissionRequest(dbObject, review);
-        final DataRequest.Builder data = DataRequest.newBuilder();
-        data.addItems(itemRequest);
-        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(sessionInfo);
-        requestBuilder.setOtherData(data.build().toByteString());
-        try {
-            internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
-        } catch (ConnectionException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        final List<String> itemRequest = createSubmissionRequest(dbObject, review);
+        final List<Submission.SrlExperiment> experimentList = internalConnections.getBestConnection(SubmissionWebSocketClient.class)
+                .getSubmission(userId, null, problemId, itemRequest.toArray(new String[0]));
+        if (experimentList.isEmpty()) {
+            throw new DatabaseAccessException("No experiments were found");
         }
+        return experimentList;
     }
 
     /**
@@ -191,9 +190,8 @@ public final class SubmissionManager {
      * @param review An advance query used for reviewing students submissions.
      * @return {@link ItemRequest} That is used to query the submission server.
      */
-    private static ItemRequest createSubmissionRequest(final DBObject experiments, final ByteString review) {
-        final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
-        itemRequest.setQuery(ItemQuery.EXPERIMENT);
+    private static List<String> createSubmissionRequest(final DBObject experiments, final ByteString review) {
+        final List<String> itemRequest = new ArrayList<>();
         for (String key : experiments.keySet()) {
             if (SELF_ID.equals(key)) {
                 continue;
@@ -204,10 +202,9 @@ public final class SubmissionManager {
             }
             final String sketchId = experiments.get(key).toString();
             LOG.info("SketchId: {}", sketchId);
-            itemRequest.addItemId(sketchId);
+            itemRequest.add(sketchId);
         }
-        itemRequest.setAdvanceQuery(review);
-        return itemRequest.build();
+        return itemRequest;
     }
 
     // need to be able to get a single submission

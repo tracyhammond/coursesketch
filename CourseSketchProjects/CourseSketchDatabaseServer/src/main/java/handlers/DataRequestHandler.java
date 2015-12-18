@@ -23,6 +23,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
@@ -151,8 +152,9 @@ public final class DataRequestHandler {
                                     try {
                                         final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                         build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                        instance.getExperimentAsUser(userId, itemId, build.build(), internalConnections);
-                                        results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
+                                        final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, itemId, build.build(),
+                                                internalConnections);
+                                        results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                     } catch (DatabaseAccessException e) {
                                         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                                         conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
@@ -166,11 +168,12 @@ public final class DataRequestHandler {
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
                                 final Request baseRequest = build.build();
                                 for (String itemId : itemRequest.getItemIdList()) {
-
-                                    instance.getExperimentAsInstructor(userId, itemId, baseRequest, internalConnections,
-                                            itemRequest.getAdvanceQuery());
+                                    final List<Submission.SrlExperiment> experimentList = instance.getExperimentAsInstructor(userId, itemId,
+                                            baseRequest, internalConnections, itemRequest.getAdvanceQuery());
+                                    for (Submission.SrlExperiment experiment: experimentList) {
+                                        results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
+                                    }
                                 }
-                                results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
                             }
                         }
                         break;
