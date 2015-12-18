@@ -10,10 +10,13 @@ import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+
+import java.util.Arrays;
 
 /**
  * Created by dtracers on 12/17/2015.
@@ -110,6 +113,13 @@ public class SubmissionHandler {
                 // bail early
                 return;
             }
+
+            final Message.Request result = ResultBuilder.buildRequest(
+                    Arrays.asList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SUBMISSION")),
+                    "SUCCESSFULLY STORED SUBMISSION",
+                    req
+            );
+            conn.send(result);
         } else {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(
                     new DatabaseAccessException("INSTRUCTORS CAN NOT SUBMIT SOLUTIONS"));
