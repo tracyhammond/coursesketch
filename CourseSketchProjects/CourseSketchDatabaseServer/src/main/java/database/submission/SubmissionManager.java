@@ -7,28 +7,20 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import connection.SubmissionClientWebSocket;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
-import coursesketch.server.interfaces.MultiConnectionManager;
-import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
-import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
-import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
-import utilities.ConnectionException;
-import utilities.LoggingConstants;
-import utilities.ProtobufUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +46,6 @@ public final class SubmissionManager {
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
 
-    private SubmissionManagerInterface submissionManager;
 
     /**
      * Private constructor.
@@ -70,7 +61,7 @@ public final class SubmissionManager {
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem
      *  @param dbs The database that contains the information about the submission.
-     * @param uniqueId Generally the userId.
+     * @param uniqueId Generally the userId.  But it is used to uniquely identify each submission.
      * @param problemId The problem id.
      * @param submissionId The id associated with the submission on the submission server.
      * @param experiment True if the object being submitted is an experiment
@@ -82,24 +73,24 @@ public final class SubmissionManager {
         LOG.info("Inserting an experiment {}", experiment);
         LOG.info("Database is {}", dbs);
         LOG.info("Problem id: {}", problemId);
-        final DBRef myDbRef = new DBRef(dbs, experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION, new ObjectId(problemId));
+        final BasicDBObject myDbRef = new BasicDBObject(SELF_ID, new ObjectId(problemId));
         final DBCollection collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
-        final DBObject corsor = myDbRef.fetch();
+        final DBObject cursor = collection.findOne(myDbRef);
 
-        LOG.info("corsor: {}", corsor);
+        LOG.info("cursor: {}", cursor);
         LOG.info("uniuq id: {}", uniqueId);
 
         final BasicDBObject queryObj = new BasicDBObject(experiment ? uniqueId : SOLUTION_ID, submissionId);
-        if (corsor == null) {
+        if (cursor == null) {
             LOG.info("Creating a new instance to this old itemid");
             queryObj.append(SELF_ID, new ObjectId(problemId));
             collection.insert(queryObj);
-            // we need to create a new corsor
+            // we need to create a new cursor
         } else {
             LOG.info("adding a new submission to this old itemid");
             // insert the submissionId, if it is an experiment then we need to
             // use the uniqueId to make it work.
-            collection.update(corsor, new BasicDBObject("$set", queryObj));
+            collection.update(cursor, new BasicDBObject("$set", queryObj));
         }
     }
 
@@ -108,12 +99,12 @@ public final class SubmissionManager {
      * @param dbs The database that contains data about the experiment.
      * @param userId The user who has access to the experiment.
      * @param problemId The id of the problem associated with the sketch.
-     * @param sessionInfo The session information that is sent to the submission server.
-     * @param internalConnections A manager of connections to another database.
+     * @param submissionManager The connections of the submission server
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
+     * @throws AuthenticationException Thrown if the user does not have the authentication```
      */
-    public static Submission.SrlExperiment mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
-            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
+    public static Submission.SrlExperiment mongoGetExperiment(final DB dbs, final String userId, final String problemId,
+            final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
 
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
@@ -128,8 +119,7 @@ public final class SubmissionManager {
         final String sketchId = cursor.get(userId).toString();
         LOG.info("SketchId: ", sketchId);
 
-        final List<Submission.SrlExperiment> experimentList = internalConnections.getBestConnection(SubmissionWebSocketClient.class)
-                .getSubmission(userId, null, problemId, sketchId);
+        final List<Submission.SrlExperiment> experimentList = submissionManager.getSubmission(userId, null, problemId, sketchId);
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
@@ -143,15 +133,14 @@ public final class SubmissionManager {
      * @param dbs The database where the data is stored.
      * @param userId The user that was requesting this information.
      * @param problemId The problem for which the sketch data is being requested.
-     * @param sessionInfo The session information of the current server.
-     * @param internalConnections The connections of other servers.
+     * @param submissionManager The connections of the submission server
      * @param review A list of data about reviewing the sketches.
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs,
-            final String userId, final String problemId, final Request sessionInfo,
-            final MultiConnectionManager internalConnections, final ByteString review)
+            final String userId, final String problemId,
+            final SubmissionManagerInterface submissionManager, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {
@@ -175,8 +164,8 @@ public final class SubmissionManager {
             throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
         }
 
-        final List<String> itemRequest = createSubmissionRequest(dbObject, review);
-        final List<Submission.SrlExperiment> experimentList = internalConnections.getBestConnection(SubmissionWebSocketClient.class)
+        final List<String> itemRequest = createSubmissionRequest(dbObject);
+        final List<Submission.SrlExperiment> experimentList = submissionManager
                 .getSubmission(userId, null, problemId, itemRequest.toArray(new String[0]));
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
@@ -187,11 +176,10 @@ public final class SubmissionManager {
     /**
      * Creates a submission request for the submission server.
      * @param experiments A {@link DBObject} that represents the experiments in the database.
-     * @param review An advance query used for reviewing students submissions.
      * @return {@link ItemRequest} That is used to query the submission server.
      */
-    private static List<String> createSubmissionRequest(final DBObject experiments, final ByteString review) {
-        final List<String> itemRequest = new ArrayList<>();
+    private static List<String> createSubmissionRequest(final DBObject experiments) {
+        final List<String> submissionIds = new ArrayList<>();
         for (String key : experiments.keySet()) {
             if (SELF_ID.equals(key)) {
                 continue;
@@ -202,9 +190,9 @@ public final class SubmissionManager {
             }
             final String sketchId = experiments.get(key).toString();
             LOG.info("SketchId: {}", sketchId);
-            itemRequest.add(sketchId);
+            submissionIds.add(sketchId);
         }
-        return itemRequest;
+        return submissionIds;
     }
 
     // need to be able to get a single submission

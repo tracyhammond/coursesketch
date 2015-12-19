@@ -13,6 +13,7 @@ import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
@@ -459,17 +460,18 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public Submission.SrlExperiment getExperimentAsUser(final String userId, final String problemId, final Message.Request sessionInfo,
-            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException, AuthenticationException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
-        return SubmissionManager.mongoGetExperiment(database, userId, problemId, sessionInfo, internalConnections);
+        return SubmissionManager.mongoGetExperiment(database, userId, problemId,
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class));
     }
 
     @Override
     public List<Submission.SrlExperiment> getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId, sessionInfo,
-                internalConnections, review);
+        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId,
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class), review);
     }
 
     @Override

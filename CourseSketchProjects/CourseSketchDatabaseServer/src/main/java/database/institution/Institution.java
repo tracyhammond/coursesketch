@@ -432,7 +432,7 @@ public interface Institution {
      */
     Submission.SrlExperiment getExperimentAsUser(String userId, String problemId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections)
-            throws DatabaseAccessException;
+            throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Calls the submission server for a specific experiment from a specific user.
