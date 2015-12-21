@@ -41,14 +41,14 @@ public final class DbAuthManager {
      * Inserts a new item into the database.
      *
      * @param authId The AuthId of the user that is inserting the new item.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link protobuf.srl.school.School.ItemType#COURSE}
-     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
-     *                 If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *                 problem
-     * @param registrationKey The key is needed to allow users to added themselves having permissions to access the course.
-     * @param authChecker Used to check that the user has access to perform the requested actions.
-     * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to perform the request actions.
+     * @param itemId The id of the item being inserted.
+     * @param itemType The type of item that is being inserted. EX: {@link protobuf.srl.school.School.ItemType#COURSE}
+     * @param parentId The id of the parent object. EX: parent points to the course if item is an Assignment.
+     *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
+     *                 problem.
+     * @param registrationKey This key is needed for a user to grant themself access permission to a course.
+     * @param authChecker Used to check if the user has permission to insert the item.
+     * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to insert the item.
      * @throws AuthenticationException Thrown if there is data that can not be found in the database.
      */
     public void insertNewItem(final String authId, final String itemId, final School.ItemType itemType,
