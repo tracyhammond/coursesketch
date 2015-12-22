@@ -225,7 +225,7 @@ public final class DbAuthManager {
     public void registerSelf(final String authId, final String itemId, final School.ItemType itemType, final String registrationKey,
             final DbAuthChecker authChecker) throws AuthenticationException, DatabaseAccessException {
         if (!School.ItemType.COURSE.equals(itemType) && !School.ItemType.BANK_PROBLEM.equals(itemType)) {
-            throw new AuthenticationException("Can only register users in a course or a bank problem", AuthenticationException.OTHER);
+            throw new AuthenticationException("Can only register users in a course or a bank problem.", AuthenticationException.OTHER);
         }
 
         final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
