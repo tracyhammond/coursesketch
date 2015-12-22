@@ -234,7 +234,7 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.REGISTRATION_KEY, true));
 
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
+            throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the database.");
         }
         if (!result.get(DatabaseStringConstants.REGISTRATION_KEY).equals(registrationKey)) {
             throw new AuthenticationException("Invalid Registration key", AuthenticationException.INVALID_PERMISSION);
