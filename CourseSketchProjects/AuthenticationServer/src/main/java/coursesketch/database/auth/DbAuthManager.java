@@ -98,9 +98,9 @@ public final class DbAuthManager {
      * Creates a basic query for inserting items into the database.
      *
      * @param authId The AuthId of the user that is inserting the new item.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
-     * @param registrationKey The key is needed to allow users to added themselves having permissions to access the course.
+     * @param itemId The id of the item being inserted.
+     * @param itemType The type of item that is being inserted. EX: {@link School.ItemType#COURSE}
+     * @param registrationKey This key is needed for a user to grant themself access permission to a course.
      * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
      */
     private BasicDBObject createItemInsertQuery(final String authId, final String itemId, final School.ItemType itemType,
@@ -124,11 +124,11 @@ public final class DbAuthManager {
      * Copies the details of the parent item (mainly groups and CourseId) into the current item.
      *
      * @param insertQuery An existing query for an item that is going to be inserted into the database.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
-     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
-     *                 If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *                 problem
+     * @param itemId The id of the item being inserted.
+     * @param itemType The type of item that is being inserted. EX: {@link School.ItemType#COURSE}
+     * @param parentId The id of the parent object. EX: parent points to course if item is an Assignment.
+     *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
+     *                 problem.
      * @throws DatabaseAccessException Thrown if the parent object can not be found.
      */
     private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final School.ItemType itemType, final String parentId)
@@ -140,10 +140,10 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.COURSE_ID, true)
                         .append(DatabaseStringConstants.OWNER_ID, true));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
-        // This would overwrite existing id but there is already a valid id in here.
+        // This prevents the existing insertQuery ObjectId from being overwritten by the result ObjectId.
         result.removeField(DatabaseStringConstants.SELF_ID);
         insertQuery.putAll(result);
     }
@@ -189,7 +189,7 @@ public final class DbAuthManager {
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.SALT, true));
         if (group == null) {
-            throw new DatabaseAccessException("group could not be found");
+            throw new DatabaseAccessException("Group with id " + groupId + " could not be found.");
         }
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
         String hash = null;
@@ -210,14 +210,14 @@ public final class DbAuthManager {
     }
 
     /**
-     * Registers a student with a course.
+     * Self-registers a student for a course via a registration key.
      *
-     * The student must have a valid registration key.
+     * The student must have a valid registration key, an instructor does not require a valid registration key in some instances.
      * @param authId The authentication Id of the user that is being added.
      * @param itemId The Id of the course or bank problem the user is being added to.
      * @param itemType The type of item the user is registering for (Only {@link protobuf.srl.school.School.ItemType#COURSE}
      *                 and (Only {@link protobuf.srl.school.School.ItemType#BANK_PROBLEM} are valid types.
-     * @param registrationKey The key that is used to register to the course.
+     * @param registrationKey The key that is used to register for the course.
      * @param authChecker Used to check permissions in the database.
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
      * @throws DatabaseAccessException Thrown if the item can not be found.
@@ -234,7 +234,7 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.REGISTRATION_KEY, true));
 
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
         if (!result.get(DatabaseStringConstants.REGISTRATION_KEY).equals(registrationKey)) {
             throw new AuthenticationException("Invalid Registration key", AuthenticationException.INVALID_PERMISSION);
