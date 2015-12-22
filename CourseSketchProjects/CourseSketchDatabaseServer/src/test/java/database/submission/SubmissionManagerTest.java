@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.submission.Submission;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -93,6 +94,41 @@ public class SubmissionManagerTest {
 
         List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID), eq(SUBMISSION_ID))).thenReturn(experimentList);
+
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, USER_USER, PROBLEM_ID, submissionManagerInterface);
+        new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
+    }
+
+    @Test
+    public void getSubmissionThrowsDatabaseExceptionWhen() throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+
+        List<Submission.SrlExperiment> experimentList = new ArrayList<>();
+        when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID), eq(SUBMISSION_ID))).thenReturn(experimentList);
+
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, USER_USER, PROBLEM_ID, submissionManagerInterface);
+        new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void getSubmissionHandlesAuthExceptionCorrectly() throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+
+        List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
+        when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
+                eq(SUBMISSION_ID))).thenThrow(AuthenticationException.class);
+
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, USER_USER, PROBLEM_ID, submissionManagerInterface);
+        new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
+    public void getSubmissionHandlesDatabaseExceptionCorrectly() throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+
+        List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
+        when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
+                eq(SUBMISSION_ID))).thenThrow(DatabaseAccessException.class);
 
         Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, USER_USER, PROBLEM_ID, submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
