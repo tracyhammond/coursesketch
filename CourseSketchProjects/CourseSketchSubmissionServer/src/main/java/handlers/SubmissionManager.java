@@ -45,7 +45,7 @@ public class SubmissionManager implements SubmissionManagerInterface {
 
         final List<Submission.SrlExperiment> experiments = new ArrayList<>();
         for (String submission: submissionIds) {
-            experiments.add(submissionDatabaseClient.getExperiment(submission));
+            experiments.add(submissionDatabaseClient.getExperiment(submission, problemId));
         }
         return experiments;
     }

@@ -9,6 +9,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
@@ -245,16 +246,30 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * Gets the experiment by its id and sends all of the important information associated with it.
      *
      * @param itemId
-     *         the id of the experiment we are trying to retrieve.
+     *         The id of the experiment we are trying to retrieve.
+     * @param problemId
+     *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
      * @return the experiment found in the database.
      * @throws DatabaseAccessException
-     *         thrown if there are problems getting the item
+     *         thrown if there are problems getting the item.
+     * @throws AuthenticationException
+     *         thrown if the problemId given does not match the problemId in the database.
      */
-    public SrlExperiment getExperiment(final String itemId) throws DatabaseAccessException {
+    public SrlExperiment getExperiment(final String itemId, final String problemId) throws DatabaseAccessException, AuthenticationException {
+        if (Strings.isNullOrEmpty(problemId) || Strings.isNullOrEmpty(itemId)) {
+            throw new DatabaseAccessException("Invalid arguments while getting experiment",
+                    new NullPointerException("itemId and problemId can not be null"));
+        }
+
         LOG.info("Fetching experiment");
         final DBObject cursor = database.getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
         if (cursor == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
+        }
+
+        if (!problemId.equals(cursor.get(COURSE_PROBLEM_ID).toString())) {
+            throw new AuthenticationException("Problem Id of the submission must match the submission being requested.",
+                    AuthenticationException.INVALID_PERMISSION);
         }
 
         final SrlExperiment.Builder build = SrlExperiment.newBuilder();

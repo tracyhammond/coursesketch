@@ -46,7 +46,6 @@ public final class SubmissionManager {
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
 
-
     /**
      * Private constructor.
      *
