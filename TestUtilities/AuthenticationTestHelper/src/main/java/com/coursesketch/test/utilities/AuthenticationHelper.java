@@ -1,10 +1,10 @@
 package com.coursesketch.test.utilities;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationChecker;
-import database.auth.AuthenticationDataCreator;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 

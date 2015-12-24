@@ -185,7 +185,9 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * Called after reconnecting the connections.
      */
-    protected void onReconnect() { }
+    protected void onReconnect() {
+        // Defined by specific implementations.
+    }
 
     /**
      * @return the multiConnectionManager.  This is only used within this package.

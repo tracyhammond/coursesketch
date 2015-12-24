@@ -88,6 +88,7 @@ public class ProtobufComparisonBuilder {
      * @param isDeepEquals true if a deep equals comparison should happen. False otherwise.
      * @return Itself.
      */
+    @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setIsDeepEquals(final boolean isDeepEquals) {
         this.isDeepEquals = isDeepEquals;
         return this;
@@ -100,8 +101,44 @@ public class ProtobufComparisonBuilder {
      * @param failAtFirstMisMatch Default is true.
      * @return Itself.
      */
+    @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setFailAtFirstMisMatch(final boolean failAtFirstMisMatch) {
         this.failAtFirstMisMatch = failAtFirstMisMatch;
+        return this;
+    }
+
+    /**
+     * If this value is true, the comparison will also accept the default value for a field when it is expecting a blank value.
+     * If this value is false, it will throw an exception if the expected blank fields are not blank
+     *
+     * <pre>
+     * EX:
+     * Expected protobuf does not have field A (which is a string) set.
+     * Actual protobuf does have field A set, but it is set to the default value.
+     * This will not throw an assertion error.
+     * </pre>
+     * @param ignoreSetDefaultFields False to throw an assertion error if the expected field has no value, but the actual field has a default value.
+     *                               The param is true by default (and thus accepts the default field value for a blank expected value).
+     * @return Itself.
+     */
+    @SuppressWarnings("checkstyle:hiddenfield")
+    public final ProtobufComparisonBuilder setIgnoreSetDefaultFields(final boolean ignoreSetDefaultFields) {
+        this.ignoreSetDefaultFields = ignoreSetDefaultFields;
+        return this;
+    }
+
+    /**
+     * If true, this will ignore fields where the expected protobuf has no value even if the actual protobuf has a value.
+     * If false, this will throw an assertion error if the expected protobuf has no value for a field
+     * and the actual protobuf has a value for that field.
+     *
+     * Basically, if true it only compares fields that are set in the expected protobuf.
+     * @param ignoreNonSetFields True to ignore any field that is not set on the expected protobuf.  This is false by default.
+     * @return Itself.
+     */
+    @SuppressWarnings("checkstyle:hiddenfield")
+    public final ProtobufComparisonBuilder setIgnoreNonSetFields(final boolean ignoreNonSetFields) {
+        this.ignoreNonSetFields = ignoreNonSetFields;
         return this;
     }
 }

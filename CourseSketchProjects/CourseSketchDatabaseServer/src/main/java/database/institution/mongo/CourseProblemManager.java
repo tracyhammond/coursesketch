@@ -7,9 +7,9 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,16 +93,16 @@ public final class CourseProblemManager {
                 .append(USERS, problem.getAccessPermission().getUserPermissionList()).append(NAME, problem.getName())
                 .append(PROBLEM_NUMBER, problem.getProblemNumber());
         courseProblemCollection.insert(query);
-        final DBObject cursor = courseProblemCollection.findOne(query);
+        final String selfId = query.get(SELF_ID).toString();
 
         // inserts the id into the previous the course
-        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), cursor.get(SELF_ID).toString());
+        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), selfId);
 
         if (problem.hasProblemBankId()) {
             BankProblemManager.mongoRegisterCourseProblem(authenticator, dbs, userId, problem);
         }
 
-        return cursor.get(SELF_ID).toString();
+        return selfId;
     }
 
     /**

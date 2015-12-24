@@ -7,9 +7,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
@@ -59,7 +59,7 @@ public final class SlideManager {
      * @param slide
      *         The slide that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws database.auth.AuthenticationException
+     * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to perform the authentication.
      * @throws database.DatabaseAccessException
      *         Thrown if there are problems inserting the assignment.

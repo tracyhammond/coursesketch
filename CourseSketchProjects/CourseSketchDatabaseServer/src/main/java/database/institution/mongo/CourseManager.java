@@ -9,9 +9,9 @@ import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,8 +92,7 @@ public final class CourseManager {
             query.append(ASSIGNMENT_LIST, course.getAssignmentListList());
         }
         courseCollection.insert(query);
-        final DBObject cursor = courseCollection.findOne(query);
-        return cursor.get(SELF_ID).toString();
+        return query.get(SELF_ID).toString();
     }
 
     /**

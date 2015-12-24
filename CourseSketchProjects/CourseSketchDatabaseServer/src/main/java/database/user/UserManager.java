@@ -1,31 +1,28 @@
 package database.user;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.server.authentication.HashManager;
+import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.school.School.SrlUser;
+import utilities.LoggingConstants;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
 import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_LIST;
 import static database.DatabaseStringConstants.CREDENTIALS;
 import static database.DatabaseStringConstants.EMAIL;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.USER_COLLECTION;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-
-import protobuf.srl.school.School.SrlUser;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-
-import database.DatabaseAccessException;
-import database.PasswordHash;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
 
 /**
  * Manages different user infomation.
@@ -85,11 +82,11 @@ public final class UserManager {
         LOG.debug("userId: {}", userId);
         try {
             query = new BasicDBObject(SELF_ID, userId).append(COURSE_LIST, new ArrayList<String>())
-                    .append(CREDENTIALS, PasswordHash.createHash(user.getEmail())).append(EMAIL, user.getEmail())
-                    .append(ADMIN, PasswordHash.createHash(userId));
+                    .append(CREDENTIALS, HashManager.createHash(user.getEmail())).append(EMAIL, user.getEmail())
+                    .append(ADMIN, HashManager.createHash(userId));
         } catch (NoSuchAlgorithmException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        } catch (InvalidKeySpecException e) {
+        } catch (AuthenticationException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         if (query == null) {

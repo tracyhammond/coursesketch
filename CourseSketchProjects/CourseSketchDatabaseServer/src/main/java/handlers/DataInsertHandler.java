@@ -2,7 +2,7 @@ package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 import org.slf4j.Logger;
@@ -72,7 +72,7 @@ public final class DataInsertHandler {
      *         The object that interfaces with the database and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl" })
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })
     public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Recieving DATA SEND Request...");
@@ -112,13 +112,6 @@ public final class DataInsertHandler {
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
-                        /*
-                         * case CLASS_GRADE: { SrlGrade grade =
-                         * SrlGrade.parseFrom(itemSet.getData()); String
-                         * resultId = MongoInstitution.mongoInsertClassGrade(userId,
-                         * grade); results.add(ResultBuilder.buildResult(resultId + " : " +
-                         * grade.getId(), itemSet.getQuery())); } break;
-                         */
                         case USER_INFO: {
                             UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
                         }
