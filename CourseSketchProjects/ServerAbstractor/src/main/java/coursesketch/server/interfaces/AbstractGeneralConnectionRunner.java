@@ -617,7 +617,7 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     protected final void setDatabaseName(final String databaseName) {
         if (!setup) {
-            throw new IllegalStateException("Can only set this variable during valid times");
+            throw new IllegalStateException("Can only set this variable during setup");
         }
         this.databaseName = databaseName;
     }

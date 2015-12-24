@@ -89,6 +89,7 @@ public final class DbAuthManager {
             }
         }
 
+        // Collection is created by mongo if it did not exist before.
         final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
         collection.insert(insertQuery);
 

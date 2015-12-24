@@ -2,10 +2,8 @@ package coursesketch.server.authentication;
 
 import com.google.common.collect.ImmutableMap;
 import coursesketch.database.auth.AuthenticationException;
-import org.mindrot.BCrypt;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
 /**
@@ -22,7 +20,7 @@ public final class HashManager {
     /**
      * The minimum salt length we decide to be secure enough.  (Honestly this is probably too short)
      */
-    private static final int MIN_SALT_LENGTH = 10;
+    static final int MIN_SALT_LENGTH = 10;
 
     /**
      * Used when converting hashes to hex and back.
@@ -221,96 +219,6 @@ public final class HashManager {
             return  hash.substring(HASH_NAME_LENGTH + 1);
         }
         return hash;
-    }
-
-    /**
-     * Interfaces with the BCrypt library.
-     */
-    private static class BCryptWrapper implements HashWrapper {
-        /**
-         * Number of rounds used when generating salt.
-         */
-        private static final int LOG_ROUNDS = 12;
-
-        /**
-         * The character that represents the bycrypt version.
-         */
-        private static final int SALT_VERSION_CHAR0 = 36;
-
-        /**
-         * The character that represents the bycrypt version.
-         */
-        private static final int SALT_VERSION_CHAR1 = 50;
-
-        @Override public String algorithmName() {
-            return "BYCRYPT";
-        }
-
-        @Override public String hash(final String password)throws AuthenticationException {
-            return BCrypt.hashpw(password, generateSalt());
-        }
-
-        @Override public String hash(final String string, final String salt) throws AuthenticationException {
-            if (salt.length() < MIN_SALT_LENGTH || salt.charAt(0) != SALT_VERSION_CHAR0 || salt.charAt(1) != SALT_VERSION_CHAR1) {
-                throw new AuthenticationException("Invalid Salt Format", AuthenticationException.INSUFFICIENT_HASH);
-            }
-            return BCrypt.hashpw(string, salt);
-        }
-
-        @Override public boolean validateHash(final String candidate, final String hashedValue) {
-            try {
-                return BCrypt.checkpw(candidate, hashedValue);
-            } catch (IllegalArgumentException e) {
-                return false;
-            }
-        }
-
-        @Override public String generateSalt() {
-            return BCrypt.gensalt(LOG_ROUNDS);
-        }
-    }
-
-    /**
-     * Implements Java's Sha1 algorithm using pbdkf2.
-     */
-    @Deprecated
-    private static class PasswordHashWrapper implements HashWrapper {
-
-        @Override public String algorithmName() {
-            return "PASHASH";
-        }
-
-        @Override public String hash(final String password) throws AuthenticationException {
-            try {
-                return PasswordHash.createHash(password);
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                throw new AuthenticationException(e);
-            }
-        }
-
-        @Override public String hash(final String string, final String salt) throws AuthenticationException {
-            if (salt.length() < MIN_SALT_LENGTH) {
-                throw new AuthenticationException("Invalid Salt Format", AuthenticationException.INSUFFICIENT_HASH);
-            }
-            try {
-                return PasswordHash.createHash(string + salt);
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                throw new AuthenticationException(e);
-            }
-        }
-
-        @Override public boolean validateHash(final String candidate, final String hashedValue)
-                throws AuthenticationException {
-            try {
-                return PasswordHash.validatePassword(candidate, hashedValue);
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                throw new AuthenticationException(e);
-            }
-        }
-
-        @Override public String generateSalt() {
-            return PasswordHash.createSalt();
-        }
     }
 
     /**
