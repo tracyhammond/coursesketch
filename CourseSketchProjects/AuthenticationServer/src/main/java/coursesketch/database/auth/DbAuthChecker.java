@@ -20,7 +20,7 @@ import static database.DbSchoolUtility.getCollectionFromType;
 import static protobuf.srl.services.authentication.Authentication.AuthResponse.PermissionLevel.STUDENT;
 
 /**
- * Checks The local database for access to certain items.
+ * Checks the local database for access to certain items.
  *
  * Created by dtracers
  */
@@ -40,22 +40,21 @@ public final class DbAuthChecker implements AuthenticationChecker {
     }
 
     /**
-     * Checks to make sure that the user is authenticated for all values that
-     * are true.
+     * Checks to make sure that the user is authenticated for all values  in the preFixedCheckType that are true.
      *
      * @param collectionType
-     *         The table / collection where this data is store.
+     *         The table / collection where this data is stored.
      * @param itemId
      *         The Id of the object we are checking against.
      * @param userId
-     *         The user we are checking is valid
+     *         The user we are checking is valid.
      * @param preFixedCheckType
-     *         The rules at that give a correct or false response.
-     * @return True if all checked values are valid
+     *         The rules that we check against to determine if the user is authenticated or not.
+     * @return True if all checked values are valid.
      * @throws DatabaseAccessException
-     *         thrown if there are issues grabbing data for the authenticator.
+     *         Thrown if there are issues grabbing data for the database.
      * @throws AuthenticationException
-     *         thrown if there are problems creating the auth response.
+     *         Thrown if there are problems creating the auth response.
      */
     @Override public Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId, final String userId,
             final Authentication.AuthType preFixedCheckType) throws DatabaseAccessException, AuthenticationException {
@@ -66,14 +65,14 @@ public final class DbAuthChecker implements AuthenticationChecker {
 
         final Authentication.AuthType checkType = AuthUtilities.fixCheckType(preFixedCheckType);
         if (!Authenticator.validUserAccessRequest(checkType)) {
-            throw new AuthenticationException("Invalid Authentication Request: No options to check were filled out",
+            throw new AuthenticationException("Invalid Authentication Request: No auth options set to check against.",
                     AuthenticationException.NO_AUTH_SENT);
         }
 
         final DBCollection collection = this.database.getCollection(getCollectionFromType(collectionType));
         final DBObject result = collection.findOne(new ObjectId(itemId));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
         final List<String> groupList = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
@@ -81,8 +80,9 @@ public final class DbAuthChecker implements AuthenticationChecker {
 
         final DBCollection groupCollection = this.database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
 
+        // Checks the permission level for each group that is used by the item+
         for (String groupId : groupList) {
-            final Authentication.AuthResponse.PermissionLevel permLevel = checkGroupPermission(groupCollection, groupId, userId);
+            final Authentication.AuthResponse.PermissionLevel permLevel = getUserPermissionLevel(groupCollection, groupId, userId);
             if (permLevel != null) {
                 permissionLevel = permLevel;
                 break;
@@ -112,12 +112,12 @@ public final class DbAuthChecker implements AuthenticationChecker {
      *
      * @param collection The collection that contains the group.
      * @param groupId The id of the group that is being checked.
-     * @param userId The id that is being checked
+     * @param userId The id that is being checked.
      * @return A permission level that represents what permission the user has.  This does not return null.
      * @throws DatabaseAccessException Thrown if the group does not exist.
      * @throws AuthenticationException Thrown if there are problems comparing the hashes.
      */
-    private Authentication.AuthResponse.PermissionLevel checkGroupPermission(final DBCollection collection, final String groupId,
+    private Authentication.AuthResponse.PermissionLevel getUserPermissionLevel(final DBCollection collection, final String groupId,
             final String userId) throws DatabaseAccessException, AuthenticationException {
         final DBObject group = collection.findOne(new ObjectId(groupId));
         if (group == null) {
