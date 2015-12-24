@@ -112,13 +112,6 @@ public final class DataInsertHandler {
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
-                        /*
-                         * case CLASS_GRADE: { SrlGrade grade =
-                         * SrlGrade.parseFrom(itemSet.getData()); String
-                         * resultId = MongoInstitution.mongoInsertClassGrade(userId,
-                         * grade); results.add(ResultBuilder.buildResult(resultId + " : " +
-                         * grade.getId(), itemSet.getQuery())); } break;
-                         */
                         case USER_INFO: {
                             UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), userId);
                         }

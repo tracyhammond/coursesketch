@@ -44,7 +44,7 @@ public class AnswerCheckerRunner extends GeneralConnectionRunner {
      */
     @Override
     public void executeLocalEnvironment() {
-        // Does nothing by default.
+        // Currently this server does not have any specific changes for executing a local environment.
     }
 
     /**

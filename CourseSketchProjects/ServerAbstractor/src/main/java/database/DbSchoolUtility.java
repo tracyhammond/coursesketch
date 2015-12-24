@@ -50,7 +50,7 @@ public final class DbSchoolUtility {
 
     /**
      * Returns the {@code ItemType} that created the given {@code ItemType}.
-     * <p/>
+     *
      * A course item type returns itself.
      * A bank problem also returns itself.
      * @param item {@link protobuf.srl.school.School.ItemType}.
