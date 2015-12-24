@@ -578,7 +578,8 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Returns a list of valid {@link ServerAddress} the database can connect to
+     * Returns a list of valid {@link ServerAddress} the database can connect to.
+     *
      * @return An unmodifiable list that represents the addresses the database can connect to.
      */
     private List<ServerAddress> getDatabaseUrl() {
