@@ -3,9 +3,9 @@ package coursesketch.auth;
 import com.google.protobuf.ServiceException;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import database.auth.AuthenticationChecker;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationChecker;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.Authenticator;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 

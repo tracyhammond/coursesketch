@@ -203,12 +203,15 @@ public class MultiConnectionManager {
     }
 
     /**
-     * Does nothing by default. Can be overwritten to make life easier.
+     * Does nothing by default.
+     *
+     * Can be overwritten to handle events when the servers are being connected.
      *
      * @param parentServer ignored by this implementation. Override to change
      *                     functionality.
      */
     public void connectServers(final AbstractServerWebSocketHandler parentServer) {
+        // Overwritten by specific implementations.
     }
 
     /**
@@ -247,16 +250,17 @@ public class MultiConnectionManager {
      * time. This can be overridden for a better server specific system.
      *
      * @param connectionType The type of connection being requested.
+     * @param <T> A subclass of the {@link AbstractClientWebSocket}.
      * @return A valid connection.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public AbstractClientWebSocket getBestConnection(final Class<? extends AbstractClientWebSocket> connectionType) {
-        final ArrayList<AbstractClientWebSocket> cons = connections.get(connectionType);
+    public <T extends AbstractClientWebSocket> T getBestConnection(final Class<T> connectionType) {
+        final ArrayList<? extends AbstractClientWebSocket> cons = connections.get(connectionType);
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
         LOG.info("getting Connection: {}", connectionType.getSimpleName());
-        return cons.get(0); // lame best connection.
+        return (T) cons.get(0); // lame best connection.
     }
 
     /**

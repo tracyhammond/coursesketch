@@ -9,9 +9,9 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
@@ -94,8 +94,7 @@ public final class BankProblemManager {
         }
 
         problemBankCollection.insert(insertObject);
-        final DBObject cursor = problemBankCollection.findOne(insertObject);
-        return cursor.get(SELF_ID).toString();
+        return insertObject.get(SELF_ID).toString();
     }
 
     /**

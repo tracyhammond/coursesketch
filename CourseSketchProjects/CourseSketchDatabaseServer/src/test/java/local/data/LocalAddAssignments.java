@@ -2,7 +2,7 @@ package local.data;
 
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlAssignment;

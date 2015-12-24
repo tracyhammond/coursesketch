@@ -7,7 +7,7 @@ import protobuf.srl.school.School.SrlAssignment.LatePolicy;
 import protobuf.srl.utils.Util.SrlPermission;
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class ManyTestAssignments {

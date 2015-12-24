@@ -5,7 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 import org.slf4j.Logger;
@@ -84,7 +84,7 @@ public final class DataRequestHandler {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount",
-            "checkstyle:methodlength" })
+            "checkstyle:methodlength", "checkstyle:avoidnestedblocks" })
     public static void handleRequest(final Request req, final SocketSession conn, final Institution instance,
             final String sessionId,
             final MultiConnectionManager internalConnections) {

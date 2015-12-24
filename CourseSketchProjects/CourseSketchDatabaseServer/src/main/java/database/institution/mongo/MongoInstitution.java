@@ -9,8 +9,8 @@ import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.Authenticator;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
 import database.user.GroupManager;
@@ -94,10 +94,8 @@ public final class MongoInstitution implements Institution {
      * A default constructor that creates an instance at a specific database
      * location.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     private MongoInstitution() {
-        this("192.168.56.201");
-        // this("localhost");
+        this("localhost");
     }
 
     /**

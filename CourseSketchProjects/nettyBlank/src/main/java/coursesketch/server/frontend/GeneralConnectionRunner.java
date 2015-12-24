@@ -86,7 +86,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-
+        // Defined by specific implementations.
     }
 
     /**
@@ -94,7 +94,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeLocalEnvironment() {
-
+        // Defined by specific implementations.
     }
 
     /**
@@ -102,7 +102,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeRemoteEnvironment() {
-
+        // Defined by specific implementations.
     }
 
     /**
@@ -211,7 +211,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void stop() {
-
+        // Defined by specific implementations.
     }
 
     /**

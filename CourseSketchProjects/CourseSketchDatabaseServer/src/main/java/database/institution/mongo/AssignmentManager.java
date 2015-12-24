@@ -5,12 +5,12 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.AuthenticationResponder;
-import database.auth.Authenticator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,13 +123,14 @@ public final class AssignmentManager {
         if (assignment.getProblemListList() != null) {
             query.append(PROBLEM_LIST, assignment.getProblemListList());
         }
+
         assignmentCollection.insert(query);
-        final DBObject cursor = assignmentCollection.findOne(query);
+        final String selfId = query.get(SELF_ID).toString();
 
-        // inserts the id into the previous the course
-        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), cursor.get(SELF_ID).toString());
+        // Inserts the id into the parent course.
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), selfId);
 
-        return cursor.get(SELF_ID).toString();
+        return selfId;
     }
 
     /**
