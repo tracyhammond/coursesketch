@@ -198,14 +198,13 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      *            Request from which to generate the response.
      * @param login
      *            The information sent by the user for logging in.
-     *
      * @param success
      *            <code>true</code> if the login was successful,
      *            <code>false</code> otherwise
      * @param message
      *            Message text to be included in the response.
      * @param userLoginInfo
-     * @return the request body
+     * @return {@link Request} that contains the response from the login server.
      */
     private static Request createLoginResponse(final Request req, final LoginInformation login, final boolean success, final String message,
             final BasicDBObject userLoginInfo) {
