@@ -186,7 +186,7 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      * Called after reconnecting the connections.
      */
     protected void onReconnect() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**

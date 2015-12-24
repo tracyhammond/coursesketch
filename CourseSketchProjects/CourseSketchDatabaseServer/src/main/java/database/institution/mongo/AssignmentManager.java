@@ -126,9 +126,8 @@ public final class AssignmentManager {
 
         assignmentCollection.insert(query);
         final String selfId = query.get(SELF_ID).toString();
-        // final DBObject cursor = assignmentCollection.findOne(query);
 
-        // inserts the id into the previous the course
+        // Inserts the id into the parent course.
         CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), selfId);
 
         return selfId;

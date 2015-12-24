@@ -70,7 +70,7 @@ public class DbAuthManagerTest {
     @Before
     public void before() throws UnknownHostException {
 
-        db = fongo.getDB(); // new MongoClient("localhost").getDB("test");
+        db = fongo.getDB(); // Equivalent to new MongoClient("localhost").getDB("test");
         dbAuthChecker = new DbAuthChecker(db);
         dbAuthManager = new DbAuthManager(db);
     }
