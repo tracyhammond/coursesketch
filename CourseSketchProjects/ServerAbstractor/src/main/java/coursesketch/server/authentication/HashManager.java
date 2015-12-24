@@ -328,7 +328,7 @@ public final class HashManager {
     }
 
     /**
-     * A helper method that adds a hash to the map.
+     * A helper method that adds a hash algorithm to the map.
      *
      * @param mapBuilder Contains all of the hashing algorithms.
      * @param wrapper A specific hash algorithm.
