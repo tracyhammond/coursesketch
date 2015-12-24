@@ -102,7 +102,7 @@ public class AuthenticationException extends CourseSketchException {
             case NO_AUTH_SENT:
                 return "No Authentication Information was received: ";
             case INSUFFICIENT_HASH:
-                return "A problem occurred so a hash of sufficient strength could not be created: ";
+                return "A problem occurred and a hash of sufficient strength could not be created: ";
             default:
                 return null;
         }
