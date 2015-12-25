@@ -47,7 +47,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     private static final int MAX_LOGIN_TIME_LENGTH = 10;
 
     /**
-     * The key for the client id in the returned value for logging in.
+     * The key for the client id in the value returned for logging in.
      */
     public static final String CLIENT_ID = "ClientId";
 
