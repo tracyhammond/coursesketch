@@ -57,8 +57,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
     public static final String INCORRECT_LOGIN_MESSAGE = "Incorrect username " + "or password";
 
     /**
-     * Sent if the user does not have the ability to login as a student or an
-     * instructor.
+     * Sent if the user does not have the ability to login as a student or an instructor.
      */
     public static final String INCORRECT_LOGIN_TYPE_MESSAGE = "You do " + "not have the ability to login as that type!";
     /**
@@ -219,8 +218,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             loginBuilder.setUsername(login.getUsername());
             loginBuilder.setIsLoggedIn(success);
             if (success && userLoginInfo != null) {
-                // The reason for this is so the proxy can continue to register
-                // user
+                // The reason for this is so the proxy can continue to register user
                 loginBuilder.setIsRegistering(login.getIsRegistering());
                 if (loginBuilder.getIsRegistering()) {
                     loginBuilder.setEmail(login.getEmail());
