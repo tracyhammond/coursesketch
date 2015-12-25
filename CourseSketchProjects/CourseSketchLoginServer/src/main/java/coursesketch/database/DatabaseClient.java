@@ -1,6 +1,5 @@
 package coursesketch.database;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -192,7 +191,8 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     private void updatePassword(final DBCollection table, final DBObject userDatabaseObject, final String newPassword)
             throws AuthenticationException, NoSuchAlgorithmException {
         final String newHash = HashManager.createHash(newPassword);
-        table.update(userDatabaseObject, new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
+        table.update(userDatabaseObject,
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
     }
 
     /**
@@ -288,12 +288,6 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
         final BasicDBObject query = new BasicDBObject(USER_NAME, username).append(isInstructor ? INSTRUCTOR_ID : STUDENT_ID, authId);
 
-        // FUTURE: remove this once https://github.com/fakemongo/fongo/issues/156 is resolved and use systemTime in mongo directly.
-        final BasicDBList timeList = new BasicDBList();
-        for (long time: systemTime) {
-            timeList.add(time);
-        }
-
         /*
             $push: {
                 LAST_LOGIN_TIMES: {
@@ -308,7 +302,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
          */
         final BasicDBObject update = new BasicDBObject(DatabaseStringConstants.PUSH_COMMAND,
                 new BasicDBObject(DatabaseStringConstants.LAST_LOGIN_TIMES,
-                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, timeList)
+                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, systemTime)
                                 .append(DatabaseStringConstants.SORT_COMMAND, -1)
                                 .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)))
                 .append(DatabaseStringConstants.INCREMENT_COMMAND,
