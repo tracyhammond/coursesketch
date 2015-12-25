@@ -13,12 +13,13 @@ import java.util.List;
 public interface SubmissionManagerInterface {
     /**
      * Returns the submissions based on the submission ids.
+     *
      * @param authId Used to authenticate the user asking for the submissions
      * @param authenticator Used to authenticate the user and validate permissions.
      * @param problemId This should related with the submission and is used to validate permissions
-     * @param submissionIds
-     * @return
-     * @throws DatabaseAccessException
+     * @param submissionIds A list of submission ids that are used to identify the specific submissions wanted.
+     * @return A {@link List<protobuf.srl.submission.Submission.SrlExperiment>} That matches the
+     * @throws DatabaseAccessException Thrown
      * @throws AuthenticationException
      */
     List<Submission.SrlExperiment> getSubmission(String authId, final Authenticator authenticator, final String problemId, String... submissionIds)

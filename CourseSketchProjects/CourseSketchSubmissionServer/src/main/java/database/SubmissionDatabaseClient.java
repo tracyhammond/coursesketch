@@ -188,7 +188,6 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             experiments.update(cursor, updateQueryPart2);
             experiments.update(cursor, updateQuery2Part2);
 
-            // TODO: We do not need to return the id it already exist
             return cursor.get(SELF_ID).toString();
         } else {
             multipleObjectCursor.close();

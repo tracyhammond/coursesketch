@@ -480,7 +480,16 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         return BankProblemManager.mongoGetAllBankProblems(auth, database, userId, courseId, page);
     }
 
-    public static String convertUserId(final String userId, final String courseId) throws AuthenticationException {
+    /**
+     * Hashes a userId based on the courseId.
+     *
+     * Only hashed user Ids are stored in the database.
+     * @param userId The userId that is being hashed.
+     * @param courseId The courseId that is being used as a salt.
+     * @return A hashed version of this Id.
+     * @throws AuthenticationException Thrown if there are problems creating the hash.
+     */
+    public static String hashUserId(final String userId, final String courseId) throws AuthenticationException {
         try {
             return HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId));
         } catch (NoSuchAlgorithmException e) {

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.ItemQuery;
-import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
@@ -95,12 +94,14 @@ public final class SubmissionManager {
 
     /**
      * Sends a request to the submission server to request an experiment as a user.
+     *
      * @param dbs The database that contains data about the experiment.
      * @param userId The user who has access to the experiment.
      * @param problemId The id of the problem associated with the sketch.
      * @param submissionManager The connections of the submission server
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
-     * @throws AuthenticationException Thrown if the user does not have the authentication```
+     * @throws AuthenticationException Thrown if the user does not have the authentication
+     * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
      */
     public static Submission.SrlExperiment mongoGetExperiment(final DB dbs, final String userId, final String problemId,
             final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
@@ -126,8 +127,8 @@ public final class SubmissionManager {
     }
 
     /**
-     * Builds a request to the server for all of the sketches in a single
-     * problem.
+     * Builds a request to the server for all of the sketches in a single problem.
+     *
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
      * @param userId The user that was requesting this information.
@@ -135,7 +136,8 @@ public final class SubmissionManager {
      * @param submissionManager The connections of the submission server
      * @param review A list of data about reviewing the sketches.
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
-     * @throws AuthenticationException Thrown if the user does not have the authentication
+     * @throws AuthenticationException Thrown if the user does not have the authentication.
+     * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that were found with the specific submission ids.
      */
     public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs,
             final String userId, final String problemId,
@@ -174,8 +176,9 @@ public final class SubmissionManager {
 
     /**
      * Creates a submission request for the submission server.
+     *
      * @param experiments A {@link DBObject} that represents the experiments in the database.
-     * @return {@link ItemRequest} That is used to query the submission server.
+     * @return {@link List<String>} of submission ids that is used to query the submission server.
      */
     private static List<String> createSubmissionRequest(final DBObject experiments) {
         final List<String> submissionIds = new ArrayList<>();
@@ -194,9 +197,4 @@ public final class SubmissionManager {
         return submissionIds;
     }
 
-    // need to be able to get a single submission
-    // be able to get all of the submissions
-    // if you are trying to get your submission you just need your userId
-    // if you are trying to get all submissions you need to authenticate with
-    // the specific course problem.
 }

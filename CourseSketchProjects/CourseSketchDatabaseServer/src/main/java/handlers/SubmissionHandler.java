@@ -19,9 +19,13 @@ import utilities.LoggingConstants;
 import java.util.Arrays;
 
 /**
+ * Handles submission storage requests.
+ *
+ * All request to save submissions is sent to this class.
  * Created by dtracers on 12/17/2015.
  */
-public class SubmissionHandler {
+public final class SubmissionHandler {
+
     /**
      * Declaration and Definition of Logger.
      */
@@ -46,12 +50,13 @@ public class SubmissionHandler {
     /**
      * Takes in a request that has to deal with inserting data.
      *
-     * decode request and pull correct information from {@link Institution}
-     * (courses, assignments, ...) then repackage everything and send it out.
+     * decode request and pull correct information from {@link Institution} (courses, assignments, ...) then repackage everything and send it out.
      * @param req
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
+     * @param submissionManager
+     *         The manager for submission data on other servers.
      * @param instance The database backer.
      */
     public static void handleData(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
@@ -68,9 +73,11 @@ public class SubmissionHandler {
                 return; // sorry but we are bailing if anything does not look right.
             }
 
-            final Submission.SrlExperiment experimentWithIds = Submission.SrlExperiment.newBuilder(experiment).setUserId(req.getServersideId()).build();
+            final Submission.SrlExperiment experimentWithIds = Submission.SrlExperiment.newBuilder(experiment)
+                    .setUserId(req.getServersideId())
+                    .build();
 
-            String submissionId = null;
+            String submissionId;
             try {
                 submissionId = submissionManager.insertExperiment(req.getServersideId(), null, experimentWithIds, req.getMessageTime());
             } catch (AuthenticationException e) {
@@ -88,17 +95,17 @@ public class SubmissionHandler {
             }
 
             if (Strings.isNullOrEmpty(submissionId)) {
-                Exception e = new DatabaseAccessException("Unable to store submission in the database!");
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                final Exception exception = new DatabaseAccessException("Unable to store submission in the database!");
+                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
                 // bail early
                 return;
             }
 
             try {
-                // TODO: use the hashedUserId instead of the server-side id when you convert everything to using the identity server
-                final String hashedUserId = MongoInstitution.convertUserId(req.getServerUserId(), experiment.getCourseId());
+                // FUTURE: Use the hashedUserId instead of the server-side id when you convert everything to using the identity server.
+                final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
                 instance.insertSubmission(req.getServersideId(), experiment.getProblemId(), submissionId, true);
             } catch (DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);

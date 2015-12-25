@@ -19,19 +19,29 @@ import java.util.List;
 /**
  * Created by dtracers on 12/17/2015.
  */
-public class SubmissionManager implements SubmissionManagerInterface {
+public final class SubmissionManager implements SubmissionManagerInterface {
 
     /**
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
 
+    /**
+     * The interface for the mongo database.
+     */
     private final SubmissionDatabaseClient submissionDatabaseClient;
 
+    /**
+     * A constructor that takes in a {@link SubmissionDatabaseClient}.
+     * @param submissionDatabaseClient The interface for the mongo database.
+     */
     public SubmissionManager(final SubmissionDatabaseClient submissionDatabaseClient) {
         this.submissionDatabaseClient = submissionDatabaseClient;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator,
             final String problemId, final String... submissionIds) throws DatabaseAccessException, AuthenticationException {
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
@@ -50,6 +60,9 @@ public class SubmissionManager implements SubmissionManagerInterface {
         return experiments;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
             final long submissionTime)
             throws AuthenticationException, DatabaseAccessException {
@@ -66,6 +79,9 @@ public class SubmissionManager implements SubmissionManagerInterface {
         return submissionDatabaseClient.saveExperiment(submission, submissionTime);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
             throws AuthenticationException, DatabaseAccessException {
         final String problemBankId = submission.getProblemBankId();
