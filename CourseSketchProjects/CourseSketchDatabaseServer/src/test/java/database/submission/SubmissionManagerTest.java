@@ -4,7 +4,9 @@ import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
@@ -38,10 +40,15 @@ public class SubmissionManagerTest {
     public FongoRule fongo = new FongoRule();
     public DB db;
 
+    @Mock AuthenticationChecker authChecker;
+    @Mock AuthenticationOptionChecker optionChecker;
+    public Authenticator authenticator;
+
     @Mock
     SubmissionManagerInterface submissionManagerInterface;
 
     Submission.SrlExperiment experiment;
+
 
     public static final String SUBMISSION_ID = new ObjectId().toHexString();
     public static final String SUBMISSION_ID2 = new ObjectId().toHexString();
@@ -59,6 +66,7 @@ public class SubmissionManagerTest {
                 .setUserId(USER_USER)
                 .setSubmission(Submission.SrlSubmission.getDefaultInstance())
                 .build();
+        authenticator = new Authenticator(authChecker, optionChecker);
     }
 
     @Test
@@ -130,7 +138,21 @@ public class SubmissionManagerTest {
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
                 eq(SUBMISSION_ID))).thenThrow(DatabaseAccessException.class);
 
-        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, USER_USER, PROBLEM_ID, submissionManagerInterface);
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, ADMIN_USER, PROBLEM_ID, submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
+    }
+
+
+    @Test(expected = DatabaseAccessException.class)
+    public void getExperimentsAsInstructorThrowsWhenDataDoesNotExist() throws DatabaseAccessException, AuthenticationException {
+        final List<Submission.SrlExperiment> experiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
+                USER_USER, PROBLEM_ID, submissionManagerInterface);
+    }
+
+    @Test
+    public void getExperimentsAsInstructorThrows() throws DatabaseAccessException, AuthenticationException {
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+        final List<Submission.SrlExperiment> experiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
+                ADMIN_USER, PROBLEM_ID, submissionManagerInterface);
     }
 }

@@ -471,7 +471,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public List<Submission.SrlExperiment> getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
         return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId,
-                internalConnections.getBestConnection(SubmissionWebSocketClient.class), review);
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class));
     }
 
     @Override

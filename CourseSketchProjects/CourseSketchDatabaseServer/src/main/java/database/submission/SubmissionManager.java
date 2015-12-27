@@ -1,7 +1,6 @@
 package database.submission;
 
 import com.google.common.base.Strings;
-import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -134,15 +133,15 @@ public final class SubmissionManager {
      * @param userId The user that was requesting this information.
      * @param problemId The problem for which the sketch data is being requested.
      * @param submissionManager The connections of the submission server
-     * @param review A list of data about reviewing the sketches.
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
      * @throws AuthenticationException Thrown if the user does not have the authentication.
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that were found with the specific submission ids.
      */
     public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs,
             final String userId, final String problemId,
-            final SubmissionManagerInterface submissionManager, final ByteString review)
+            final SubmissionManagerInterface submissionManager)
             throws DatabaseAccessException, AuthenticationException {
+
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {
             throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
