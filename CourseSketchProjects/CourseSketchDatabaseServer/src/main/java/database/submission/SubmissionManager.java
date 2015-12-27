@@ -5,12 +5,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,6 @@ import protobuf.srl.submission.Submission;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
@@ -107,8 +106,7 @@ public final class SubmissionManager {
 
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
-        final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBObject cursor = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION).findOne(new ObjectId(problemId));
         if (cursor == null) {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
@@ -142,9 +140,9 @@ public final class SubmissionManager {
             final SubmissionManagerInterface submissionManager)
             throws DatabaseAccessException, AuthenticationException {
 
-        final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
-        if (problem == null) {
-            throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
+        final DBObject problemExperimentMap = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION).findOne(new ObjectId(problemId));
+        if (problemExperimentMap == null) {
+            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
         }
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
@@ -157,16 +155,10 @@ public final class SubmissionManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-        final DBObject dbObject = myDbRef.fetch();
-
-        if (dbObject == null) {
-            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
-        }
-
-        final List<String> itemRequest = createSubmissionRequest(dbObject);
+        final List<String> itemRequest = createSubmissionRequest(problemExperimentMap);
+        final String[] submissionIds = itemRequest.toArray(new String[itemRequest.size()]);
         final List<Submission.SrlExperiment> experimentList = submissionManager
-                .getSubmission(userId, null, problemId, itemRequest.toArray(new String[itemRequest.size()]));
+                .getSubmission(userId, null, problemId, submissionIds);
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
