@@ -167,7 +167,7 @@ public final class SubmissionManager {
 
         final List<String> itemRequest = createSubmissionRequest(dbObject);
         final List<Submission.SrlExperiment> experimentList = submissionManager
-                .getSubmission(userId, null, problemId, itemRequest.toArray(new String[0]));
+                .getSubmission(userId, null, problemId, itemRequest.toArray(new String[itemRequest.size()]));
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }

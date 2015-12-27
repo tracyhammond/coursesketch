@@ -99,8 +99,8 @@ public class SubmissionManagerTest {
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
     }
 
-    @Test
-    public void getSubmissionThrowsDatabaseExceptionWhen() throws DatabaseAccessException, AuthenticationException {
+    @Test(expected = DatabaseAccessException.class)
+    public void getSubmissionThrowsDatabaseExceptionWhenNoExperimentsInList() throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
 
         List<Submission.SrlExperiment> experimentList = new ArrayList<>();

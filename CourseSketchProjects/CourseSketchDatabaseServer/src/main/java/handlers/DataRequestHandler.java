@@ -53,6 +53,7 @@ public final class DataRequestHandler {
     /**
      * A message returned when getting the data was successful.
      */
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private static final String NO_OP_MESSAGE = "NO DATA TO RETURN";
 
     /**

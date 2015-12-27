@@ -16,19 +16,9 @@ import utilities.LoggingConstants;
 public class DatabaseConnectionManager extends MultiConnectionManager {
 
     /**
-     * IP address for submission server.
-     */
-    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
-
-    /**
      *  Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnectionManager.class);
-
-    /**
-     * The port number of the submission server.
-     */
-    private static final int SUBMISSION_PORT = 8883;
 
     /**
      * A constructor for the multi connection manager.

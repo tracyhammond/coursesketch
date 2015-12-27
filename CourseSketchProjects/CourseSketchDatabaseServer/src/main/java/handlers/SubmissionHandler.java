@@ -32,16 +32,6 @@ public final class SubmissionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(DataInsertHandler.class);
 
     /**
-     * The string used to separate ids when returning a result.
-     */
-    private static final String ID_SEPARATOR = " : ";
-
-    /**
-     * A message returned when the insert was successful.
-     */
-    private static final String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
-
-    /**
      * Private constructor.
      */
     private SubmissionHandler() {
@@ -106,6 +96,7 @@ public final class SubmissionHandler {
             try {
                 // FUTURE: Use the hashedUserId instead of the server-side id when you convert everything to using the identity server.
                 final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
+                LOG.debug("Hahsed user id: {}", hashedUserId);
                 instance.insertSubmission(req.getServersideId(), experiment.getProblemId(), submissionId, true);
             } catch (DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
