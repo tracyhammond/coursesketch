@@ -19,19 +19,31 @@ import java.util.List;
 /**
  * Created by gigemjt on 12/14/15.
  */
-public class SubmissionService extends SubmissionServer.SubmissionService implements CourseSketchRpcService {
+public final class SubmissionService extends SubmissionServer.SubmissionService implements CourseSketchRpcService {
 
     /**
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionService.class);
 
+    /**
+     * Used to authenticate any permissions.
+     */
     private final Authenticator authenticator;
-    private final SubmissionManagerInterface manager;
 
-    public SubmissionService(final Authenticator authenticator, final SubmissionManagerInterface manager) {
+    /**
+     * Connects to the database to store and retrieve submissions.
+     */
+    private final SubmissionManagerInterface submissionDatabaseInterface;
+
+    /**
+     * A constructor for the submission service that takes in an authenticator and a submission manager interface.
+     * @param authenticator Authenticates users.
+     * @param submissionDatabaseInterface Connects to the database to store submissions.
+     */
+    public SubmissionService(final Authenticator authenticator, final SubmissionManagerInterface submissionDatabaseInterface) {
         this.authenticator = authenticator;
-        this.manager = manager;
+        this.submissionDatabaseInterface = submissionDatabaseInterface;
     }
 
     /**
@@ -44,16 +56,14 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
     }
 
     /**
-     * <code>rpc getSubmission(.protobuf.srl.services.submission.SubmissionRequest) returns (.protobuf.srl.services.submission.ExperimentResponse);</code>
+     * {@inheritDoc}
+     * <code>rpc getSubmission(.protobuf.srl.services.submission.SubmissionRequest) returns
+     * (.protobuf.srl.services.submission.ExperimentResponse);</code>
      *
      * <pre>
-     * *
      * Gets the submissions. given the ids.
      * </pre>
      *
-     * @param controller
-     * @param request
-     * @param done
      */
     @Override public void getSubmission(final RpcController controller, final SubmissionServer.SubmissionRequest request,
             final RpcCallback<SubmissionServer.ExperimentResponse> done) {
@@ -61,7 +71,7 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
         final List<String> ids = request.getSubmissionIdsList();
         List<Submission.SrlExperiment> srlExperimentList;
         try {
-            srlExperimentList = manager
+            srlExperimentList = submissionDatabaseInterface
                     .getSubmission(request.getAuthId(), authenticator, request.getProblemId(), ids.toArray(new String[0]));
         } catch (DatabaseAccessException e) {
             LOG.error("Database exception occurred while trying to get experiments", e);
@@ -76,22 +86,20 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
     }
 
     /**
-     * <code>rpc insertExperiment(.protobuf.srl.services.submission.ExperimentInsert) returns (.protobuf.srl.services.submission.SubmissionResponse);</code>
+     * {@inheritDoc}
+     * <code>rpc insertExperiment(.protobuf.srl.services.submission.ExperimentInsert) returns
+     * (.protobuf.srl.services.submission.SubmissionResponse);</code>
      *
      * <pre>
      * *
      * Inserts the experiment into the submission server.
      * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
      */
     @Override public void insertExperiment(final RpcController controller, final SubmissionServer.ExperimentInsert request,
             final RpcCallback<SubmissionServer.SubmissionResponse> done) {
         String submissionId;
         try {
-            submissionId = manager
+            submissionId = submissionDatabaseInterface
                     .insertExperiment(request.getRequestData().getAuthId(), authenticator, request.getSubmission(), request.getSubmissionTime());
         } catch (AuthenticationException e) {
             LOG.error("Authentication exception occurred while trying to insert experiment", e);
@@ -106,22 +114,20 @@ public class SubmissionService extends SubmissionServer.SubmissionService implem
     }
 
     /**
-     * <code>rpc insertSolution(.protobuf.srl.services.submission.ExperimentInsert) returns (.protobuf.srl.services.submission.SubmissionResponse);</code>
+     * {@inheritDoc}
+     * <code>rpc insertSolution(.protobuf.srl.services.submission.ExperimentInsert) returns
+     * (.protobuf.srl.services.submission.SubmissionResponse);</code>
      *
      * <pre>
      * *
      * Inserts the solution into the submission server.
      * </pre>
-     *
-     * @param controller
-     * @param request
-     * @param done
      */
     @Override public void insertSolution(final RpcController controller, final SubmissionServer.SolutionInsert request,
             final RpcCallback<SubmissionServer.SubmissionResponse> done) {
         String submissionId;
         try {
-            submissionId = manager.insertSolution(request.getRequestData().getAuthId(), authenticator, request.getSubmission());
+            submissionId = submissionDatabaseInterface.insertSolution(request.getRequestData().getAuthId(), authenticator, request.getSubmission());
         } catch (AuthenticationException e) {
             LOG.error("Authentication exception occurred while trying to insert experiment", e);
             done.run(SubmissionServer.SubmissionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());

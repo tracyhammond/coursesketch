@@ -432,6 +432,7 @@ public interface Institution {
      * @param internalConnections The connection manager to other servers.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
+     * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
      */
     Submission.SrlExperiment getExperimentAsUser(String userId, String problemId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections)

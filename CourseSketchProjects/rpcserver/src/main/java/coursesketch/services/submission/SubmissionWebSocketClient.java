@@ -9,7 +9,6 @@ import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.request.Message;
 import protobuf.srl.services.submission.SubmissionServer;
 import protobuf.srl.submission.Submission;
 
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * Created by dtracers on 12/15/2015.
  */
-public class SubmissionWebSocketClient extends ClientWebSocket implements SubmissionManagerInterface {
+public final class SubmissionWebSocketClient extends ClientWebSocket implements SubmissionManagerInterface {
 
     /**
      * Declaration and Definition of Logger.
@@ -59,6 +58,9 @@ public class SubmissionWebSocketClient extends ClientWebSocket implements Submis
         super(iDestination, iParentServer);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public List<Submission.SrlExperiment> getSubmission(final String authId, final Authenticator authenticator,
             final String problemId, final String... submissionIds) throws DatabaseAccessException {
         if (submissionService == null) {
@@ -88,6 +90,9 @@ public class SubmissionWebSocketClient extends ClientWebSocket implements Submis
         return response.getExperimentsList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public String insertExperiment(final String authId, final Authenticator authenticator, final Submission.SrlExperiment submission,
             final long submissionTime) throws AuthenticationException, DatabaseAccessException {
         if (submissionService == null) {
@@ -122,6 +127,9 @@ public class SubmissionWebSocketClient extends ClientWebSocket implements Submis
         return response.getSubmissionId();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override public String insertSolution(final String authId, final Authenticator authenticator, final Submission.SrlSolution submission)
             throws AuthenticationException, DatabaseAccessException {
         if (submissionService == null) {
