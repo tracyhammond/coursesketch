@@ -52,7 +52,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void openSession(final SocketSession conn) {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**
@@ -73,7 +73,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void onError(final SocketSession session, final Throwable cause) {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**
@@ -113,7 +113,7 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      */
     @Override
     protected void onStop() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**

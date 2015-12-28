@@ -3,6 +3,8 @@ package utilities;
 import protobuf.srl.services.authentication.Authentication;
 
 /**
+ * Contains utilities for {@link protobuf.srl.services.authentication.Authentication.AuthType}.
+ *
  * Created by dtracers on 9/16/2015.
  */
 @SuppressWarnings("checkstyle:magicnumber")
@@ -16,7 +18,7 @@ public final class AuthUtilities {
 
     /**
      * Converts the checktype to make it cumulative.
-     * <p/>
+     *
      * So if a checktype with only admin set is passed in the output would contain all of the permission below it.
      * @param preFixedCheckType an AuthType that may not be cumulative.
      * @return An {@link protobuf.srl.services.authentication.Authentication.AuthType} that is cumulative.
@@ -34,8 +36,8 @@ public final class AuthUtilities {
 
     /**
      * Converts the checktype to make it a cumulative permission check.
-     * <p/>
-     * only returns the most restrictive permission level allowed
+     *
+     * Only returns the most restrictive permission level allowed.
      * @param checkType an AuthType that may not be cumulative.
      * @return The largest level that is asked for by the given check type.
      */
@@ -56,9 +58,10 @@ public final class AuthUtilities {
     }
 
     /**
-     * returns a long that contains all of the values in the auth check combined.
-     * @param preFixedCheckType an AuthType that may not be cumulative.
-     * @return a long that represents the combined value of all permissions that were set by the checktype.
+     * Returns a long that contains all of the values in the auth check combined.
+     *
+     * @param preFixedCheckType An AuthType that may not be cumulative.
+     * @return A long that represents the combined value of all permissions that were set by the checktype.
      */
     private static long mergeCheckTypes(final Authentication.AuthType preFixedCheckType) {
         return createAccessValue(preFixedCheckType.getCheckAccess())
@@ -69,6 +72,8 @@ public final class AuthUtilities {
     }
 
     /**
+     * Creates the long representation of a true check for access.
+     *
      * @param value true if this should return a bitshifted 1
      * @return {@code 0b00001} if given true.
      */
@@ -77,6 +82,8 @@ public final class AuthUtilities {
     }
 
     /**
+     * Creates the long representation of a true check for a user level of permission.
+     *
      * @param value true if this should return a bitshifted 1
      * @return {@code 0b00010} if given true.
      */
@@ -85,6 +92,8 @@ public final class AuthUtilities {
     }
 
     /**
+     * Creates the long representation of a true check for a peerteacher level of permission.
+     *
      * @param value true if this should return a bitshifted 1
      * @return {@code 0b00100} if given true.
      */
@@ -93,6 +102,8 @@ public final class AuthUtilities {
     }
 
     /**
+     * Creates the long representation of a true check for a moderator level of permission.
+     *
      * @param value true if this should return a bitshifted 1
      * @return {@code 0b01000} if given true.
      */
@@ -101,6 +112,8 @@ public final class AuthUtilities {
     }
 
     /**
+     * Creates the long representation of a true check for an admin (teacher) level of permission.
+     *
      * @param value true if this should return a bitshifted 1
      * @return {@code 0b10000} if given true.
      */
@@ -111,7 +124,7 @@ public final class AuthUtilities {
     /**
      * Converts the boolean to a number then shifts it.
      *
-     * @param bool if falze zero is always returned.
+     * @param bool If false, zero is always returned.
      * @param shiftAmount the amount to shift the result by.
      * @return A number that is based on the input.
      */
