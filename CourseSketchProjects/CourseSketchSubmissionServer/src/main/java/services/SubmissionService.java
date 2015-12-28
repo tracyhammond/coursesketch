@@ -53,6 +53,7 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
      *         The {@link ISocketInitializer} that contains useful data for any RpcService used by CourseSketch.
      */
     @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
+        // Currently not needed.
     }
 
     /**
@@ -72,7 +73,7 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
         List<Submission.SrlExperiment> srlExperimentList;
         try {
             srlExperimentList = submissionDatabaseInterface
-                    .getSubmission(request.getAuthId(), authenticator, request.getProblemId(), ids.toArray(new String[0]));
+                    .getSubmission(request.getAuthId(), authenticator, request.getProblemId(), ids.toArray(new String[ids.size()]));
         } catch (DatabaseAccessException e) {
             LOG.error("Database exception occurred while trying to get experiments", e);
             done.run(SubmissionServer.ExperimentResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
@@ -129,11 +130,11 @@ public final class SubmissionService extends SubmissionServer.SubmissionService 
         try {
             submissionId = submissionDatabaseInterface.insertSolution(request.getRequestData().getAuthId(), authenticator, request.getSubmission());
         } catch (AuthenticationException e) {
-            LOG.error("Authentication exception occurred while trying to insert experiment", e);
+            LOG.error("Authentication exception occurred while trying to insert solution", e);
             done.run(SubmissionServer.SubmissionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
             return;
         } catch (DatabaseAccessException e) {
-            LOG.error("Database exception occurred while trying to insert experiment", e);
+            LOG.error("Database exception occurred while trying to insert solution", e);
             done.run(SubmissionServer.SubmissionResponse.newBuilder().setDefaultResponse(ExceptionUtilities.createExceptionResponse(e)).build());
             return;
         }

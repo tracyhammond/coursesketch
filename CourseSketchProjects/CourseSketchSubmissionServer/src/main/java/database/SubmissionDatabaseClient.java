@@ -257,7 +257,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     public SrlExperiment getExperiment(final String itemId, final String problemId) throws DatabaseAccessException, AuthenticationException {
         if (Strings.isNullOrEmpty(problemId) || Strings.isNullOrEmpty(itemId)) {
             throw new DatabaseAccessException("Invalid arguments while getting experiment",
-                    new NullPointerException("itemId and problemId can not be null"));
+                    new IllegalArgumentException("itemId and problemId can not be null"));
         }
 
         LOG.info("Fetching experiment");
@@ -596,9 +596,6 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
-     *
-     * @throws DatabaseAccessException
-     *         thrown if a subclass throws an exception while starting the database.
      */
     @Override protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());

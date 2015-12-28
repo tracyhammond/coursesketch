@@ -6,8 +6,6 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import database.SubmissionDatabaseClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
@@ -20,11 +18,6 @@ import java.util.List;
  * Created by dtracers on 12/17/2015.
  */
 public final class SubmissionManager implements SubmissionManagerInterface {
-
-    /**
-     * Declaration and Definition of Logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(SubmissionManager.class);
 
     /**
      * The interface for the mongo database.
@@ -50,7 +43,7 @@ public final class SubmissionManager implements SubmissionManagerInterface {
                 .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, TimeManager.getSystemTime(),
                         authType.build());
         if (!authenticationResponder.hasStudentPermission()) {
-            throw new AuthenticationException("User does not have permission to for this submission", AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("User does not have permission to for this submission:", AuthenticationException.INVALID_PERMISSION);
         }
 
         final List<Submission.SrlExperiment> experiments = new ArrayList<>();
