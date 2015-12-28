@@ -1,6 +1,7 @@
 package database.institution;
 
 import com.google.protobuf.ByteString;
+import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
@@ -433,17 +434,16 @@ public interface Institution {
     /**
      * Calls the submission server for a specific experiment from a specific user.
      *
-     * @param authId The authentication of the user requesting the experiment.
      * @param userId User requesting the experiment.
+     * @param authId The authentication of the user requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
-     * @param sessionInfo The session information of this query.
-     * @param internalConnections The connection manager to other servers.
+     * @param submissionManager The connection manager to other servers.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
      * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
      */
-    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, String problemId, Message.Request sessionInfo,
-            MultiConnectionManager internalConnections)
+    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, String problemId,
+            SubmissionManagerInterface submissionManager)
             throws DatabaseAccessException, AuthenticationException;
 
     /**

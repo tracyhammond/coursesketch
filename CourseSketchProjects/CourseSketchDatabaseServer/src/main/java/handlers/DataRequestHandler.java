@@ -5,6 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
@@ -158,8 +159,8 @@ public final class DataRequestHandler {
                                     LOG.info("Trying to retrieve an experiment from a user!");
                                     final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                     build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                    final Submission.SrlExperiment experiment = instance.getExperimentAsUser(authId, null, itemId, build.build(),
-                                            internalConnections);
+                                    final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, authId, itemId,
+                                            internalConnections.getBestConnection(SubmissionWebSocketClient.class));
                                     results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             } else {

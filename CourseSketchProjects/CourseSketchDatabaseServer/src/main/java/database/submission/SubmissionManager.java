@@ -12,6 +12,7 @@ import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
+import database.institution.mongo.MongoInstitution;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,30 +96,47 @@ public final class SubmissionManager {
     /**
      * Sends a request to the submission server to request an experiment as a user.
      *
+     *
+     * @param authenticator The object being used to authenticate the user.
      * @param dbs The database that contains data about the experiment.
      * @param userId The user who has access to the experiment.
+     * @param authId The id used to authenticate the users permissions to the submission.
+     * @param courseId The id of the course the problem belongs to.
      * @param problemId The id of the problem associated with the sketch.
      * @param submissionManager The connections of the submission server
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
      */
-    public static Submission.SrlExperiment mongoGetExperiment(final DB dbs, final String userId, final String problemId,
+    public static Submission.SrlExperiment mongoGetExperiment(final Authenticator authenticator, final DB dbs, final String userId,
+            final String authId, final String courseId,
+            final String problemId,
             final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
+
+        if (!responder.hasStudentPermission()) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
 
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
         final DBObject cursor = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION).findOne(new ObjectId(problemId));
         if (cursor == null) {
+            throw new DatabaseAccessException("Mo student has submitted anything for this problem");
+        }
+        final String hashedUserId = MongoInstitution.hashUserId(userId, courseId);
+        if (!cursor.containsField(hashedUserId) || Strings.isNullOrEmpty((String) cursor.get(hashedUserId))) {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
-        if (!cursor.containsField(userId) || Strings.isNullOrEmpty((String) cursor.get(userId))) {
-            throw new DatabaseAccessException("The student has not submitted anything for this problem");
-        }
-        final String sketchId = cursor.get(userId).toString();
-        LOG.info("SketchId: ", sketchId);
+        final String sketchId = cursor.get(hashedUserId).toString();
+        LOG.info("SubmissionId: ", sketchId);
 
-        final List<Submission.SrlExperiment> experimentList = submissionManager.getSubmission(userId, null, problemId, sketchId);
+        final List<Submission.SrlExperiment> experimentList = submissionManager.getSubmission(authId, null, problemId, sketchId);
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
@@ -128,7 +146,7 @@ public final class SubmissionManager {
     /**
      * Builds a request to the server for all of the sketches in a single problem.
      *
-     * @param authenticator The object being used to authenticate the server.
+     * @param authenticator The object being used to authenticate the user.
      * @param dbs The database where the data is stored.
      * @param authId The user that was requesting this information.
      * @param problemId The problem for which the sketch data is being requested.
