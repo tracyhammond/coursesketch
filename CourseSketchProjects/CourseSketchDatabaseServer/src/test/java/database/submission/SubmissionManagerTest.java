@@ -1,6 +1,7 @@
 package database.submission;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.CourseSketchMatcher;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
@@ -13,7 +14,6 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import org.bson.types.ObjectId;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,7 +34,9 @@ import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -203,18 +205,15 @@ public class SubmissionManagerTest {
         for (int k = 0; k < 10; k++) {
             String userId = new ObjectId().toString();
             String submissionId = new ObjectId().toString();
-            when(submissionManagerInterface.getSubmission(eq(userId), any(Authenticator.class), eq(PROBLEM_ID),
-                    eq(submissionId))).thenReturn(experimentList);
             SubmissionManager.mongoInsertSubmission(db, userId, PROBLEM_ID, submissionId, true);
-            Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(db, userId, PROBLEM_ID, submissionManagerInterface);
             submissionIds.add(submissionId);
-            experiments.add(actualExperiment);
+            experiments.add(experiment);
         }
 
         String[] submissionIdArray = submissionIds.toArray(new String[submissionIds.size()]);
 
-        when(submissionManagerInterface.getSubmission(eq(ADMIN_USER), any(Authenticator.class), eq(PROBLEM_ID),
-                Mockito.argThat(Matchers.arrayContainingInAnyOrder(submissionIdArray))))
+        when(submissionManagerInterface.getSubmission(anyString(), any(Authenticator.class), anyString(),
+                Mockito.argThat(CourseSketchMatcher.iterableEqualAnyOrder(submissionIds))))
                         .thenReturn(experiments);
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
@@ -225,5 +224,8 @@ public class SubmissionManagerTest {
         for (int k = 0; k < experimentList.size(); k++) {
             new ProtobufComparisonBuilder().build().equals(experiments.get(k), actualExperiments.get(k));
         }
+
+        verify(submissionManagerInterface).getSubmission(eq(ADMIN_USER), any(Authenticator.class), eq(PROBLEM_ID),
+                Mockito.argThat(CourseSketchMatcher.iterableEqualAnyOrder(submissionIds)));
     }
 }
