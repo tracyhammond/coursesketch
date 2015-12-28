@@ -80,7 +80,7 @@ public final class DataInsertHandler {
             LOG.info("Receiving DATA INSERT Request...");
 
             final String authId = req.getServersideId();
-            final String userId = req.getServersideId();
+            final String userId = req.getServerUserId();
             final DataSend request = DataSend.parseFrom(req.getOtherData());
             if (Strings.isNullOrEmpty(authId)) {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);

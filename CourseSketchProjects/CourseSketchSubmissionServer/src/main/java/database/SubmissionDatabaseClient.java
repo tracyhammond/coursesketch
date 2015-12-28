@@ -10,6 +10,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
@@ -254,7 +256,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws AuthenticationException
      *         thrown if the problemId given does not match the problemId in the database.
      */
-    public SrlExperiment getExperiment(final String itemId, final String problemId) throws DatabaseAccessException, AuthenticationException {
+    public SrlExperiment getExperiment(final String itemId, final String problemId, final AuthenticationResponder permissions)
+            throws DatabaseAccessException, AuthenticationException {
         if (Strings.isNullOrEmpty(problemId) || Strings.isNullOrEmpty(itemId)) {
             throw new DatabaseAccessException("Invalid arguments while getting experiment",
                     new IllegalArgumentException("itemId and problemId can not be null"));
@@ -273,7 +276,11 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         final SrlExperiment.Builder build = SrlExperiment.newBuilder();
         build.setAssignmentId(cursor.get(ASSIGNMENT_ID).toString());
-        build.setUserId(cursor.get(USER_ID).toString());
+
+        // only moderators and above are allowed to see the user id.
+        if (permissions.hasModeratorPermission()) {
+            build.setUserId(cursor.get(USER_ID).toString());
+        }
         build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());
         build.setCourseId(cursor.get(COURSE_ID).toString());
         SrlSubmission sub = null;

@@ -8,6 +8,7 @@ import com.mongodb.DBObject;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
+import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
@@ -22,6 +23,7 @@ import protobuf.srl.submission.Submission;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
@@ -128,7 +130,7 @@ public final class SubmissionManager {
      *
      * @param authenticator The object being used to authenticate the server.
      * @param dbs The database where the data is stored.
-     * @param userId The user that was requesting this information.
+     * @param authId The user that was requesting this information.
      * @param problemId The problem for which the sketch data is being requested.
      * @param submissionManager The connections of the submission server
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
@@ -136,8 +138,9 @@ public final class SubmissionManager {
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that were found with the specific submission ids.
      */
     public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs,
-            final String userId, final String problemId,
-            final SubmissionManagerInterface submissionManager)
+            final String authId, final String problemId,
+            final SubmissionManagerInterface submissionManager,
+            final IdentityManagerInterface identityManager)
             throws DatabaseAccessException, AuthenticationException {
 
         final DBObject problemExperimentMap = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION).findOne(new ObjectId(problemId));
@@ -149,20 +152,32 @@ public final class SubmissionManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
-        if (!responder.hasModeratorPermission()) {
+        if (!responder.hasPeerTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
         final List<String> itemRequest = createSubmissionRequest(problemExperimentMap);
         final String[] submissionIds = itemRequest.toArray(new String[itemRequest.size()]);
         final List<Submission.SrlExperiment> experimentList = submissionManager
-                .getSubmission(userId, authenticator, problemId, submissionIds);
+                .getSubmission(authId, authenticator, problemId, submissionIds);
+
+        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, problemId, School.ItemType.COURSE_PROBLEM, null, authenticator);
+
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
         return experimentList;
+    }
+
+    private static List<Submission.SrlExperiment> mapExperiemntToUserNames(Map<String, String> userIdToUsername,
+            Map<String, Object> userNameToSubmissionId, List<Submission.SrlExperiment> experiments) {
+        List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
+
+        for (Submission.SrlExperiment experiment: experiments) {
+            experiment.
+        }
     }
 
     /**

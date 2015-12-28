@@ -94,10 +94,9 @@ public final class SubmissionHandler {
             }
 
             try {
-                // FUTURE: Use the hashedUserId instead of the server-side id when you convert everything to using the identity server.
                 final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
                 LOG.debug("Hahsed user id: {}", hashedUserId);
-                instance.insertSubmission(req.getServersideId(), experiment.getProblemId(), submissionId, true);
+                instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), submissionId, true);
             } catch (DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
