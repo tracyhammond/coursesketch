@@ -11,7 +11,9 @@ import org.bson.types.ObjectId;
 import protobuf.srl.school.School;
 
 /**
- * Checks different data for
+ * Checks the database for auxiliary permission data.
+ *
+ * For example this will be used for checking the dates or if the item requires registration but does not check if there is a user or an admin.
  * Created by gigemjt on 9/4/15.
  */
 @SuppressWarnings("PMD.CommentRequired")
@@ -82,7 +84,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
 
     /**
      * {@inheritDoc}
-     * @return a data creator that grabs the data for any other uses by the option checker.
+     * @return a new instance of data creator that interfaces with mongo and grabs the data for any other uses by the option checker.
      */
     @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
             throws DatabaseAccessException {

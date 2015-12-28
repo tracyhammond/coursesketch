@@ -6,6 +6,7 @@ import org.junit.Test;
 import protobuf.srl.services.authentication.Authentication;
 
 /**
+ * Tests for the auth utilities
  * Created by dtracers on 9/16/2015.
  */
 public class AuthUtilitiesTester {

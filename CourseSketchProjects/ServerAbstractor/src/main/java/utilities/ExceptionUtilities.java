@@ -109,7 +109,7 @@ public final class ExceptionUtilities {
     }
 
     /**
-     * Holds an exception for multi threaded applications that need to pass up exceptions.
+     * Holds an exception for multi-threaded applications that need to pass up exceptions.
      */
     public static final class ExceptionHolder {
         /**

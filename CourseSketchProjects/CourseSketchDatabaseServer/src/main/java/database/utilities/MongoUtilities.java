@@ -15,14 +15,15 @@ public final class MongoUtilities {
     private MongoUtilities() { }
 
     /**
-     * Creates an id and throws a {@link DatabaseAccessException} if a valid one can not be created.
+     * Tries to convert a string into a mongo ObjectId.
      *
+     * Throws a {@link DatabaseAccessException} if a valid id can not be created.
      * An id is valid if it is not null and conforms to the ObjectId Format.  It does not mean the id actually exist.
-     * @param objectId The id that a mongo id is wanted to be created out of.
-     * @return {@link ObjectId} if it about to be created.
+     * @param objectId The string id that we want convert to a mongo ObjectId.
+     * @return {@link ObjectId} if it is successfully created.
      * @throws DatabaseAccessException Thrown if a valid id can not be created.
      */
-    public static ObjectId createId(final String objectId) throws DatabaseAccessException {
+    public static ObjectId convertStringToObjectId(final String objectId) throws DatabaseAccessException {
         if (objectId == null) {
             throw new DatabaseAccessException(new IllegalArgumentException("Object Id was given a null parameter"), false);
         }
