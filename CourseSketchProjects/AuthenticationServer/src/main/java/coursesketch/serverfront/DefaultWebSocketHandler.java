@@ -11,10 +11,10 @@ import protobuf.srl.request.Message.Request;
  *
  * Contains simple proxy information that is sent to other servers.
  */
-// @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
 
     /**
+     * Creates a websocket handler with the initializer and info.
      *
      * @param parent
      *            The servlet made for this server.
@@ -29,11 +29,11 @@ public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
      * Tries to sync time with this new client.
      *
      * @param conn
-     *            the connection that is being opened.
+     *            The connection that is being opened.
      */
     @Override
     public void openSession(final SocketSession conn) {
-        // Does nothing by default.
+        // Defined by the specific implementations.
     }
 
     /**
@@ -41,7 +41,6 @@ public final class DefaultWebSocketHandler extends ServerWebSocketHandler {
      */
     @Override
     public void onMessage(final SocketSession conn, final Request req) {
-        // Does nothing by default.
+        // Defined by the specific implementations.
     }
-
 }

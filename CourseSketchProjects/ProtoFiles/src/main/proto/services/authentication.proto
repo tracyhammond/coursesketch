@@ -72,13 +72,14 @@ message AuthCreationRequest {
 }
 
 /**
- * Used when creating adding a user to a course.
+ * Used when adding a user to a course.
  */
 message UserRegistration {
-    // contains all of the information about the item being created
+    // Contains all of the information about the registration.
     required AuthRequest itemRequest = 1;
-    // contains the registration key if it is needed
-    optional string registrationKey = 3;
+
+    // Contains the registration key that is used to authenticate registration.
+    optional string registrationKey = 2;
 }
 
 message AuthRequest {

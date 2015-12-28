@@ -74,6 +74,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     /**
      * Creates a mongo institution based on the server info.
+     *
      * @param info Server information.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param updater Used to change authentication data.
@@ -85,12 +86,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * @return An instance of the mongo client. Creates it if it does not exist.
-     *
      * This is only used for testing and references the test database not the real database.
      *
      * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @return An instance of the mongo client. Creates it if it does not exist.
      */
     @Deprecated
     @SuppressWarnings("checkstyle:innerassignment")
