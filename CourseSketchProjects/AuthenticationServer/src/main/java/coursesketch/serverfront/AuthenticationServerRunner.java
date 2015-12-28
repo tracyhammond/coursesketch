@@ -6,7 +6,7 @@ import coursesketch.server.rpc.ServerWebSocketInitializer;
 import database.DatabaseStringConstants;
 
 /**
- * A subclass of the runner and sets up some special information for running the
+ * A subclass of the runner which sets up some special information for running the
  * environment.
  */
 public final class AuthenticationServerRunner extends GeneralConnectionRunner {
@@ -19,7 +19,7 @@ public final class AuthenticationServerRunner extends GeneralConnectionRunner {
 
     /**
      * @param args
-     *            arguments from the command line.
+     *            Arguments from the command line.
      */
     public static void main(final String... args) {
         final AuthenticationServerRunner run = new AuthenticationServerRunner(args);
@@ -35,8 +35,7 @@ public final class AuthenticationServerRunner extends GeneralConnectionRunner {
     }
 
     /**
-     * sets some SSL information. FUTURE: this should be read from a file
-     * instead of listed in code.
+     * Sets some SSL information. FUTURE: this should be read from a file instead of listed in code.
      */
     @Override
     public void executeRemoteEnvironment() {
@@ -48,7 +47,7 @@ public final class AuthenticationServerRunner extends GeneralConnectionRunner {
      * Creates a new proxy runner.
      *
      * @param args
-     *            arguments from the command line.
+     *            Arguments from the command line.
      */
     public AuthenticationServerRunner(final String... args) {
         super(args);

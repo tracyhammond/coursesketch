@@ -71,7 +71,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     @Override
     public void stop() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**
@@ -165,7 +165,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * Called after reconnecting the connections.
      */
     protected void onReconnect() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**
