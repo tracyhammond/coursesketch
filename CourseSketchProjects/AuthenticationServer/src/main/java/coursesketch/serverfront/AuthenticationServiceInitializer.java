@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Sets up the services and creates the default socket.
  */
 @SuppressWarnings("serial")
 public final class AuthenticationServiceInitializer extends ServerWebSocketInitializer {

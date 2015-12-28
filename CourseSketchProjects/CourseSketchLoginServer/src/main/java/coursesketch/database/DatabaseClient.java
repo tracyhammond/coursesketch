@@ -189,7 +189,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Updates the password to the new value.
+     * Updates the password to the new value using the hash manager.
      *
      * This method is private on purpose please leave it that way.
      *
