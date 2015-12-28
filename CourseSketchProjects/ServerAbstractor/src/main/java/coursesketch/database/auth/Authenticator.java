@@ -75,6 +75,8 @@ public final class Authenticator {
     }
 
     /**
+     * Checks if the input {@link protobuf.srl.services.authentication.Authentication.AuthType} is a valid authentication request.
+     *
      * @param authType The parameters used for an authentication check.
      * @return True if one of the values in AuthType is true.
      */
@@ -85,6 +87,8 @@ public final class Authenticator {
     }
 
     /**
+     * Checks if the input {@link protobuf.srl.services.authentication.Authentication.AuthType} is a valid user access request.
+     *
      * @param authType The parameters used for an authentication check.
      * @return True if one of the values in AuthType is true.
      *          Excluded is anything that the {@link AuthenticationOptionChecker} looks at.
@@ -96,11 +100,12 @@ public final class Authenticator {
 
     /**
      * Creates an {@link AuthenticationResponder} when checking authentication.
+     *
      * @param collectionType The type of item it is. Ex: A course or an assignment
      * @param itemId The id for the item that the authentication is being checked.
      * @param userId The user who wants to authenticate.
      * @param checkTime The time that the user wants access to the item.
-     * @param checkType The type of checks that are wanted to be returned.
+     * @param checkType The type of the checks that are requested.
      * @return An {@link AuthenticationResponder} that contains the information about the authentication response.
      * @throws AuthenticationException Thrown if there are problems creating the {@link AuthenticationResponder}.
      */
@@ -136,7 +141,7 @@ public final class Authenticator {
                     || authBuilder.getPermissionLevel().getNumber() >= Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE);
         }
 
-        // hasAccess will be true if they have a permission level that is not above
+        // hasAccess will be true if they have a permission level that is above NO_PERMISSION or no registration is required for access.
         if (checkType.getCheckAccess()) {
             authBuilder.setHasAccess(authBuilder.getHasAccess() || !authBuilder.getIsRegistrationRequired());
         }
@@ -149,6 +154,7 @@ public final class Authenticator {
 
     /**
      * Checks if the user has access to the item.
+     *
      * @param collectionType The type of item that is being checked.
      * @param itemId The id of the item being checked.
      * @param userId The user trying to authenticate.
@@ -186,6 +192,7 @@ public final class Authenticator {
 
     /**
      * Checks for miscellaneous data that is useful for authentication.
+     *
      * @param collectionType The type of item that is being checked.
      * @param itemId The id of the item being checked.
      * @param checkTime The time that the item is being accessed.  (Or perceived to be accessed at)
@@ -216,17 +223,18 @@ public final class Authenticator {
 
             });
         } else {
-            // this is one of the two
+            // This is one of the two threads that are occurring at the same time.
             threadData.mainLatch.countDown();
         }
     }
 
     /**
      * Sets the data received by the option authenticator.
+     *
      * @param collectionType The type of item it is. Ex: A course or an assignment
      * @param itemId The id for the item that the authentication is being checked.
      * @param checkTime The time that the user wants access to the item.
-     * @param authBuilder Contains the respond.
+     * @param authBuilder Contains the response.
      * @param checkType Contains what is being checked.
      * @throws DatabaseAccessException Thrown if there are problems reading the data from the database.
      */
@@ -301,10 +309,10 @@ public final class Authenticator {
         }
 
         /**
-         * Awaits for the secondary latch (preventing the need for the exception).
+         * Awaits the secondary latch (preventing the need for the exception).
          *
          * @throws AuthenticationException
-         *         thrown if there could be potential synchronization problems.
+         *         Thrown if there could be potential synchronization problems.
          */
         public final void awaitSecondaryLatch() throws AuthenticationException {
             try {
@@ -316,10 +324,10 @@ public final class Authenticator {
         }
 
         /**
-         * Awaits for the secondary latch (preventing the need for the exception).
+         * Awaits the main latch (preventing the need for the exception).
          *
          * @throws AuthenticationException
-         *         thrown if there could be potential synchronization problems.
+         *         Thrown if there could be potential synchronization problems.
          */
         public final void awaitMainLatch() throws AuthenticationException {
             try {
@@ -332,7 +340,9 @@ public final class Authenticator {
         }
 
         /**
-         * Checks to see if there is an exception throws if there is.
+         * Checks to see if there is an exception thrown.
+         *
+         * If there is that exception is then thrown and passed up.
          * @throws AuthenticationException Thrown if an exception exist in the exception holder.
          */
         public void checkException() throws AuthenticationException {

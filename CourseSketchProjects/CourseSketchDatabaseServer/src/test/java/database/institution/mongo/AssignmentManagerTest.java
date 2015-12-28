@@ -224,9 +224,8 @@ public class AssignmentManagerTest {
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
         final School.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, assignmentId, USER_USER, FAKE_VALID_DATE);
-        new ProtobufComparisonBuilder()
-                .setIsDeepEquals(false)
-                .build().equals(defaultAssignment.build(), srlAssignment);
+        new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
+                .equals(defaultAssignment.build(), srlAssignment);
     }
 
     @Test
@@ -255,9 +254,8 @@ public class AssignmentManagerTest {
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
 
         final School.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, assignmentId, USER_USER, FAKE_VALID_DATE);
-        new ProtobufComparisonBuilder()
-                .setIsDeepEquals(false)
-                .build().equals(defaultAssignment.build(), srlAssignment);
+        new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
+                .equals(defaultAssignment.build(), srlAssignment);
     }
 
     @Test
@@ -271,13 +269,13 @@ public class AssignmentManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         for (int i = 0; i < 5; i++) {
+            // We do not save the newly created problemIds because an empty problem list should be returned.
             String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
                     School.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)
                             .setCourseId(courseId)
                             .build());
-            // we do not set an problems because an empty problem list should be returned.
         }
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
@@ -285,13 +283,12 @@ public class AssignmentManagerTest {
 
         dataCreator = AuthenticationHelper.setMockPublished(optionChecker, null, School.ItemType.ASSIGNMENT, assignmentId, true);
 
-        // makes the assigment closed
+        // makes the assignment closed
         AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, false);
 
         final School.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, assignmentId, USER_USER, FAKE_VALID_DATE);
-        new ProtobufComparisonBuilder()
-                .setIsDeepEquals(false)
-                .build().equals(defaultAssignment.build(), srlAssignment);
+        new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
+                .equals(defaultAssignment.build(), srlAssignment);
     }
 
     // Teacher grabbing permissions
@@ -307,10 +304,8 @@ public class AssignmentManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         School.SrlAssignment problem = AssignmentManager.mongoGetAssignment(authenticator, db, assignmentId, ADMIN_USER, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                //.ignoreField(School.Assignment.getDescriptor().findFieldByName("accessPermission"))
-                .setIsDeepEquals(false)
-                .build().equals(defaultAssignment.build(), problem);
+        new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
+                .equals(defaultAssignment.build(), problem);
     }
 
     @Test
@@ -366,9 +361,8 @@ public class AssignmentManagerTest {
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, false);
 
         final School.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, assignmentId, ADMIN_USER, FAKE_VALID_DATE);
-        new ProtobufComparisonBuilder()
-                .setIsDeepEquals(false)
-                .build().equals(defaultAssignment.build(), srlAssignment);
+        new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
+                .equals(defaultAssignment.build(), srlAssignment);
     }
 
     @Test

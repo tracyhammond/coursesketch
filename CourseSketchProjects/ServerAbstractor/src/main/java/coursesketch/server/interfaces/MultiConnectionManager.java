@@ -203,13 +203,15 @@ public class MultiConnectionManager {
     }
 
     /**
-     * Does nothing by default. Can be overwritten to make life easier.
+     * Does nothing by default.
+     *
+     * Can be overwritten to handle events when the servers are being connected.
      *
      * @param parentServer ignored by this implementation. Override to change
      *                     functionality.
      */
     public void connectServers(final AbstractServerWebSocketHandler parentServer) {
-        // overwritten to perform actions.
+        // Overwritten by specific implementations.
     }
 
     /**

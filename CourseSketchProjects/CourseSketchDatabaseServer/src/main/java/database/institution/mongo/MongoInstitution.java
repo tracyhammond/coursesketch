@@ -78,6 +78,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     /**
      * Creates a mongo institution based on the server info.
+     *
      * @param info Server information.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param updater Used to change authentication data.
@@ -89,12 +90,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * @return An instance of the mongo client. Creates it if it does not exist.
-     *
      * This is only used for testing and references the test database not the real database.
      *
      * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @return An instance of the mongo client. Creates it if it does not exist.
      */
     @Deprecated
     @SuppressWarnings("checkstyle:innerassignment")
@@ -124,8 +124,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
+     *
+     * Because we only want the database set once it has to be set in the constructor.
+     * We also want the class to be final so the test code has to be here.
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
@@ -422,7 +424,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             // Revert the adding of the course to the database!
             throw new AuthenticationException("Failed to register the user in the course", e);
         }
-
         UserClient.addCourseToUser(userId, courseId);
         return true;
     }
