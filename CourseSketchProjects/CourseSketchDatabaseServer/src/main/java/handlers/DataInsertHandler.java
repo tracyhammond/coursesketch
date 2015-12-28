@@ -70,7 +70,8 @@ public final class DataInsertHandler {
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
-     * @param instance The database backer.
+     * @param instance
+     *         The object that interfaces with the database and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl", "checkstyle:avoidnestedblocks" })
@@ -117,13 +118,6 @@ public final class DataInsertHandler {
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + problem.getId()));
                         }
                         break;
-                        /*
-                         * case CLASS_GRADE: { SrlGrade grade =
-                         * SrlGrade.parseFrom(itemSet.getData()); String
-                         * resultId = MongoInstitution.mongoInsertClassGrade(authId,
-                         * grade); results.add(ResultBuilder.buildResult(resultId + " : " +
-                         * grade.getId(), itemSet.getQuery())); } break;
-                         */
                         case USER_INFO: {
                             UserClient.insertUser(SrlUser.parseFrom(itemSet.getData()), authId);
                         }

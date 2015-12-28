@@ -10,9 +10,11 @@ import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
@@ -27,9 +29,11 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +81,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     /**
      * Creates a mongo institution based on the server info.
+     *
      * @param info Server information.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param authUpdater Used to change authentication data.
@@ -90,12 +95,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * @return An instance of the mongo client. Creates it if it does not exist.
-     *
      * This is only used for testing and references the test database not the real database.
      *
      * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @return An instance of the mongo client. Creates it if it does not exist.
      */
     @Deprecated
     @SuppressWarnings("checkstyle:innerassignment")
@@ -125,8 +129,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
+     *
+     * Because we only want the database set once it has to be set in the constructor.
+     * We also want the class to be final so the test code has to be here.
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
@@ -511,23 +517,41 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void getExperimentAsUser(final String userId, final String authId, final String problemId, final Message.Request sessionInfo,
-            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        LOG.debug("Getting experiment for user: {}", authId);
+    public Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, final String problemId, final Message.Request sessionInfo,
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException, AuthenticationException {
+        LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
-        SubmissionManager.mongoGetExperiment(database, authId, problemId, sessionInfo, internalConnections);
+        return SubmissionManager.mongoGetExperiment(database, userId, problemId,
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class));
     }
 
     @Override
-    public void getExperimentAsInstructor(final String authId, final String problemId, final Message.Request sessionInfo,
+    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, problemId, sessionInfo,
-                internalConnections, review);
+        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, problemId,
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class));
     }
 
     @Override
     public List<SrlBankProblem> getAllBankProblems(final String authId, final String courseId, final int page)
             throws AuthenticationException, DatabaseAccessException {
         return BankProblemManager.mongoGetAllBankProblems(auth, database, authId, courseId, page);
+    }
+
+    /**
+     * Hashes a userId based on the courseId.
+     *
+     * Only hashed user Ids are stored in the database.
+     * @param userId The userId that is being hashed.
+     * @param courseId The courseId that is being used as a salt.
+     * @return A hashed version of this Id.
+     * @throws AuthenticationException Thrown if there are problems creating the hash.
+     */
+    public static String hashUserId(final String userId, final String courseId) throws AuthenticationException {
+        try {
+            return HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
+        }
     }
 }

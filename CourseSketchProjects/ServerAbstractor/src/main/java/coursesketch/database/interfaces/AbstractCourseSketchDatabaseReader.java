@@ -53,6 +53,11 @@ public abstract class AbstractCourseSketchDatabaseReader {
     }
 
     /**
+     * Sets up any indexes that need to be set up or have not yet been set up.
+     */
+    protected abstract void setUpIndexes();
+
+    /**
      * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
@@ -65,6 +70,8 @@ public abstract class AbstractCourseSketchDatabaseReader {
      * Called when the database has started.
      */
     protected final void setDatabaseStarted() {
+        LOG.debug("Setting up indexes for the database");
+        setUpIndexes();
         LOG.debug("The database was successfully started.");
         databaseStarted = true;
     }

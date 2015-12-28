@@ -429,5 +429,4 @@ public class MongoInstitutionTest {
 
         institution.updateCourseProblem(TEACHER_AUTH_ID, updatedProblem);
     }
-
 }

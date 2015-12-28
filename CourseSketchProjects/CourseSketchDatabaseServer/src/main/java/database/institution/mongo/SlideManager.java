@@ -61,7 +61,7 @@ public final class SlideManager {
      * @return The mongo database id of the assignment.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to perform the authentication.
-     * @throws database.DatabaseAccessException
+     * @throws DatabaseAccessException
      *         Thrown if there are problems inserting the assignment.
      */
     public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String userId, final LectureSlide slide)
@@ -166,7 +166,7 @@ public final class SlideManager {
                 .setCheckDate(true)
                 .setCheckingAdmin(true)
                 .build();
-        // FUTURE: figure out slide permissions
+        // FUTURE: figure out lecture slide permissions
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(School.ItemType.LECTURE, (String) corsor.get(LECTURE_ID), userId, 0, authType);
 

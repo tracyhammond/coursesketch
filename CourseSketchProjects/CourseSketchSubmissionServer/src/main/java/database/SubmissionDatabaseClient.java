@@ -1,5 +1,6 @@
 package database;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
@@ -8,7 +9,10 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +32,7 @@ import static database.DatabaseStringConstants.ANSWER_CHOICE;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
+import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static database.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
@@ -44,18 +49,12 @@ import static database.DatabaseStringConstants.USER_ID;
  * Manages the submissions in the database.
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-public class DatabaseClient {
+public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Declaration and Definition of Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
-
-    /**
-     * A single instance of the mongo institution.
-     */
-    @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
-    private static volatile DatabaseClient instance;
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionDatabaseClient.class);
 
     /**
      * A private Database that stores all of the data used by mongo.
@@ -63,74 +62,43 @@ public class DatabaseClient {
     private DB database;
 
     /**
-     * A private institution that accepts a url for the database location.
+     * A private SubmissionDatabaseClient that accepts data for the database location.
      *
-     * @param url
+     * @param info Server information.
      *         The location that the server is taking place.
      */
-    private DatabaseClient(final String url) {
-        MongoClient mongoClient = null;
-        try {
-            mongoClient = new MongoClient(url);
-        } catch (UnknownHostException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        if (mongoClient == null) {
-            return;
-        }
-        database = mongoClient.getDB("submissions");
-        if (database == null) {
-            LOG.error("Db is null!");
-        } else {
-            setUpIndexes();
-        }
-    }
-
-    /**
-     * A default constructor that creates an instance at a specific database
-     * location.
-     */
-    private DatabaseClient() {
-        this("localhost");
-        //this("localhost");
+    public SubmissionDatabaseClient(final ServerInfo info) {
+        super(info);
     }
 
     /**
      * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database.
      *
      * @param testOnly
-     *         true if we only want to tests the database client.
+     *         if true it uses the test database. Otherwise it uses the real
+     *         name of the database.
+     * @param fakeDB The fake database.
      */
-    public DatabaseClient(final boolean testOnly) {
-        try {
-            final MongoClient mongoClient = new MongoClient("localhost");
+    public SubmissionDatabaseClient(final boolean testOnly, final DB fakeDB) {
+        this(null);
+        if (testOnly && fakeDB != null) {
+            database = fakeDB;
+        } else {
+            MongoClient mongoClient = null;
+            try {
+                mongoClient = new MongoClient("localhost");
+            } catch (UnknownHostException e) {
+                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+            }
+            if (mongoClient == null) {
+                return;
+            }
             if (testOnly) {
                 database = mongoClient.getDB("test");
             } else {
-                database = mongoClient.getDB("submissions");
-            }
-        } catch (UnknownHostException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        instance = this;
-    }
-
-    /**
-     * @return An instance of the mongo client. Creates it if it does not exist.
-     */
-    @SuppressWarnings("checkstyle:innerassignment")
-    public static DatabaseClient getInstance() {
-        DatabaseClient result = instance;
-        if (result == null) {
-            synchronized (DatabaseClient.class) {
-                if (result == null) {
-                    result = instance;
-                    instance = result = new DatabaseClient();
-                    //result.auth = new Authenticator(new MongoAuthenticator(instance.database));
-                }
+                database = mongoClient.getDB(DATABASE);
             }
         }
-        return result;
     }
 
     /**
@@ -138,19 +106,17 @@ public class DatabaseClient {
      *
      * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
      *
-     * It also ensures that the solution recieved is built on the previous solution as we do not permit the overwritting of history
+     * It also ensures that the solution received is built on the previous solution as we do not permit the overwriting of history
      *
      * @param solution
      *         TODO change this to use new stuff
-     * @param client
-     *         The database that is being used to store the data.
      * @return id if the element does not already exist.
      * @throws DatabaseAccessException
      *         problems
      */
-    public static String saveSolution(final SrlSolution solution, final DatabaseClient client) throws DatabaseAccessException {
+    public String saveSolution(final SrlSolution solution) throws DatabaseAccessException {
         LOG.info("\n\n\nsaving the experiment!");
-        final DBCollection solutions = client.getDb().getCollection(SOLUTION_COLLECTION);
+        final DBCollection solutions = database.getCollection(SOLUTION_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
         final DBCursor multipleObjectCursor = solutions.find(findQuery);
@@ -180,10 +146,7 @@ public class DatabaseClient {
      *
      * First it searches to see if any experiments exist.  If they do then we sort them by submission time and overwrite them!
      *
-     * TODO SECURITY CHECKS!
      *
-     * @param client
-     *         The database that is being used to store the data.
      * @param experiment
      *         What the user is submitting.
      * @param submissionTime
@@ -192,12 +155,12 @@ public class DatabaseClient {
      * @throws DatabaseAccessException
      *         thrown if there are problems saving the experiment.
      */
-    public static String saveExperiment(final DatabaseClient client, final SrlExperiment experiment, final long submissionTime)
+    public String saveExperiment(final SrlExperiment experiment, final long submissionTime)
             throws DatabaseAccessException {
         LOG.info("saving the experiment!");
         verifyInput(experiment);
 
-        final DBCollection experiments = client.getDb().getCollection(EXPERIMENT_COLLECTION);
+        final DBCollection experiments = database.getCollection(EXPERIMENT_COLLECTION);
 
         final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
                 .append(USER_ID, experiment.getUserId());
@@ -225,8 +188,7 @@ public class DatabaseClient {
             experiments.update(cursor, updateQueryPart2);
             experiments.update(cursor, updateQuery2Part2);
 
-            // We do not need to return the id it already exist
-            return null;
+            return cursor.get(SELF_ID).toString();
         } else {
             multipleObjectCursor.close();
             final DBObject submissionObject;
@@ -260,42 +222,53 @@ public class DatabaseClient {
      */
     @SuppressWarnings("PMD.CyclomaticComplexity")
     private static void verifyInput(final SrlExperiment experiment) throws DatabaseAccessException {
-        if (!experiment.hasProblemId() || "".equals(experiment.getProblemId())) {
+        if (!experiment.hasProblemId() || Strings.isNullOrEmpty(experiment.getProblemId())) {
             throw new DatabaseAccessException("Problem id must be defined to make a submission");
         }
 
-        if (!experiment.hasCourseId() || "".equals(experiment.getCourseId())) {
+        if (!experiment.hasCourseId() || Strings.isNullOrEmpty(experiment.getCourseId())) {
             throw new DatabaseAccessException("Course id must be defined to make a submission");
         }
 
-        if (!experiment.hasAssignmentId() || "".equals(experiment.getAssignmentId())) {
+        if (!experiment.hasAssignmentId() || Strings.isNullOrEmpty(experiment.getAssignmentId())) {
             throw new DatabaseAccessException("Assignment id must be defined to make a submission");
         }
         if (!experiment.hasSubmission()) {
             throw new DatabaseAccessException("there is no submission data defined in this submission");
         }
-        if (!experiment.hasUserId() || "".equals(experiment.getUserId())) {
+        if (!experiment.hasUserId() || Strings.isNullOrEmpty(experiment.getUserId())) {
             throw new DatabaseAccessException("there is no user id data defined in this submission");
         }
     }
 
     /**
      * Gets the experiment by its id and sends all of the important information associated with it.
-     * TODO run auth checks.
      *
      * @param itemId
-     *         the id of the experiment we are trying to retrieve.
-     * @param client
-     *         The database that is being used to store the data.
+     *         The id of the experiment we are trying to retrieve.
+     * @param problemId
+     *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
      * @return the experiment found in the database.
      * @throws DatabaseAccessException
-     *         thrown if there are problems getting the item
+     *         thrown if there are problems getting the item.
+     * @throws AuthenticationException
+     *         thrown if the problemId given does not match the problemId in the database.
      */
-    public static SrlExperiment getExperiment(final String itemId, final DatabaseClient client) throws DatabaseAccessException {
+    public SrlExperiment getExperiment(final String itemId, final String problemId) throws DatabaseAccessException, AuthenticationException {
+        if (Strings.isNullOrEmpty(problemId) || Strings.isNullOrEmpty(itemId)) {
+            throw new DatabaseAccessException("Invalid arguments while getting experiment",
+                    new IllegalArgumentException("itemId and problemId can not be null"));
+        }
+
         LOG.info("Fetching experiment");
-        final DBObject cursor = client.getDb().getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
+        final DBObject cursor = database.getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
         if (cursor == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
+        }
+
+        if (!problemId.equals(cursor.get(COURSE_PROBLEM_ID).toString())) {
+            throw new AuthenticationException("Problem Id of the submission must match the submission being requested.",
+                    AuthenticationException.INVALID_PERMISSION);
         }
 
         final SrlExperiment.Builder build = SrlExperiment.newBuilder();
@@ -611,7 +584,8 @@ public class DatabaseClient {
     /**
      * Sets up the index to allow for quicker access to the submission.
      */
-    public final void setUpIndexes() {
+    @Override
+    public void setUpIndexes() {
         LOG.info("Setting up an index");
         LOG.info("Experiment Index command: {}", new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
         database.getCollection(EXPERIMENT_COLLECTION).createIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1).append("unique", true));
@@ -619,15 +593,13 @@ public class DatabaseClient {
     }
 
     /**
-     * Returns null if a subclass is used.
+     * Called when startDatabase is called if the database has not already been started.
      *
-     * @return An instance of the current database (this method is protected).
+     * This method should be synchronous.
      */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected DB getDb() {
-        if (getClass().equals(DatabaseClient.class)) {
-            return database;
-        }
-        return null;
+    @Override protected void onStartDatabase() {
+        final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
+        database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        super.setDatabaseStarted();
     }
 }

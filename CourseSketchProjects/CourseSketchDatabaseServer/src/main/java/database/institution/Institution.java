@@ -11,6 +11,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission;
 
 import java.util.List;
 
@@ -408,6 +409,7 @@ public interface Institution {
 
     /**
      * Gets all of the courses of a specific user.
+     *
      * @param authId The user asking for their courses.
      * @return A list of all courses for a specific user.
      * @throws AuthenticationException Thrown if the user does not have authentication to some of the courses.
@@ -416,10 +418,10 @@ public interface Institution {
     List<SrlCourse> getUserCourses(String authId) throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * A message sent from the submission server that allows the insertion of
-     * the submission.
-     * @param userId
-     * @param authId The user that the submission is associated.
+     * A message sent from the submission server that submits the submission information into the database.
+     *
+     * @param authId The id that signifies the permissions of the user the submission is associated with.
+     * @param userId The user that the submission is associated.
      * @param problemId The bank problem that is related
      * @param submissionId The submission that is being inserted.
      * @param isExperiment True if the submission is an experiment.
@@ -430,34 +432,40 @@ public interface Institution {
 
     /**
      * Calls the submission server for a specific experiment from a specific user.
-     * @param userId
-     * @param authId User requesting the experiment.
+     *
+     * @param authId The authentication of the user requesting the experiment.
+     * @param userId User requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
      * @param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
+     * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
      */
-    void getExperimentAsUser(final String userId, String authId, String problemId, Message.Request sessionInfo,
+    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, String problemId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections)
-            throws DatabaseAccessException;
+            throws DatabaseAccessException, AuthenticationException;
 
     /**
-     * Calls the submission server for a specific experiment from a specific user.
-     * @param authId User requesting the experiment.
+     * Calls the submission server for a list of experiments based on user ids.
+     *
+     * @param authId Permissions of the user requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
      * @param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
-     * @param review data about review the sketch.
+     * @param review Data about review the sketch.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
+     * @return The list of experiments grabbed by the instructor.
      */
-    void getExperimentAsInstructor(String authId, String problemId, Message.Request sessionInfo,
+    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, String problemId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Gets all bank problems in the database by a page.
-     * @param authId the user who is requesting all bank problems
-     * @param courseId must be admin of the course.
+     *
+     * @param authId The user who is requesting all bank problems
+     * @param courseId Must be admin of the course.
      * @param page The page number.
      * @return A list of all bank problems.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.

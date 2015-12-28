@@ -12,11 +12,13 @@ import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.institution.Institution;
 import database.institution.mongo.MongoInstitution;
 import handlers.DataInsertHandler;
 import handlers.DataRequestHandler;
 import handlers.DataUpdateHandler;
+import handlers.SubmissionHandler;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,13 +68,15 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
             DataInsertHandler.handleData(req, conn, instance);
         } else if (req.getRequestType() == Request.MessageType.DATA_UPDATE) {
             DataUpdateHandler.handleData(req, conn, instance);
+        } else if (req.getRequestType() == Request.MessageType.SUBMISSION) {
+            SubmissionHandler.handleData(req, conn, getConnectionManager().getBestConnection(SubmissionWebSocketClient.class), instance);
         } else if (req.getRequestType() == Request.MessageType.TIME) {
             final Request rsp = TimeManager.decodeRequest(req);
             if (rsp != null) {
                 send(conn, rsp);
             }
         }
-        LOG.info("Finished looking at query {}", req); // Is this what you meant by print out request type??
+        LOG.debug("Finished looking at query {}", req);
     }
 
     /**

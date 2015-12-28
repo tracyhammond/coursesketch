@@ -1,5 +1,9 @@
 package utilities;
 
+import coursesketch.database.auth.AuthenticationException;
+import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 
 /**
@@ -7,6 +11,11 @@ import protobuf.srl.request.Message;
  * Created by Raunak on 3/31/15.
  */
 public final class ExceptionUtilities {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionUtilities.class);
 
     /**
      * Private constructor.
@@ -109,7 +118,7 @@ public final class ExceptionUtilities {
     }
 
     /**
-     * Holds an exception for multi threaded applications that need to pass up exceptions.
+     * Holds an exception for multi-threaded applications that need to pass up exceptions.
      */
     public static final class ExceptionHolder {
         /**
@@ -142,5 +151,26 @@ public final class ExceptionUtilities {
      */
     public static boolean isSameType(final Class<? extends Throwable> throwable, final Message.ProtoException exception) {
         return exception.getExceptionType().equals(throwable.toString());
+    }
+
+    /**
+     * Checks the type of exception that was thrown in the proto exception and throws the same type if it exists.
+     * @param exception The exception that was found to be thrown.
+     * @param message An optional message
+     * @throws AuthenticationException Thrown if the proto exception was an AuthenticationException.
+     * @throws DatabaseAccessException Thrown if the proto exception was an DatabaseAccessException.
+     */
+    public static void handleProtoException(final Message.ProtoException exception, final String message)
+            throws AuthenticationException, DatabaseAccessException {
+        if (ExceptionUtilities.isSameType(AuthenticationException.class, exception)) {
+            final AuthenticationException exception1 = new AuthenticationException(message, AuthenticationException.OTHER);
+            exception1.setProtoException(exception);
+            throw exception1;
+        } else if (ExceptionUtilities.isSameType(DatabaseAccessException.class, exception)) {
+            final DatabaseAccessException exception1 = new DatabaseAccessException(message);
+            exception1.setProtoException(exception);
+            throw exception1;
+        }
+        LOG.error(message, exception);
     }
 }

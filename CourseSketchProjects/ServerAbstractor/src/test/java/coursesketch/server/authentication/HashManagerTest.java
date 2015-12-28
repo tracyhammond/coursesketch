@@ -9,6 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * Tests for the hash manager
  * Created by dtracers on 10/7/2015.
  */
 @RunWith(PowerMockRunner.class)

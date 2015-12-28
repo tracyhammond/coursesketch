@@ -47,7 +47,7 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
-import static database.utilities.MongoUtilities.createId;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Interfaces with the database to manage course data.
@@ -121,7 +121,7 @@ public final class CourseManager {
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String authId, final String courseId,
             final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, createId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
@@ -161,7 +161,7 @@ public final class CourseManager {
             throw new DatabaseAccessException("The specific course is not published yet: " + courseId, true);
         }
 
-        // Post this point either item is published OR responder is at least responder.
+        // Past this point, the item is either published or the responder is at least a mod.
         stateBuilder.setPublished(responder.isItemPublished());
 
         if (cursor.get(IMAGE) != null) {
@@ -287,10 +287,8 @@ public final class CourseManager {
                 }
             }
         }
-        // courses.update(cursor, new BasicDBObject (SET_COMMAND,updateObj));
 
-        // get user list
-        // send updates
+        // get user list send updates
         if (update) {
             courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
