@@ -229,7 +229,7 @@ public class DbAuthManagerTest {
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
+        Assert.assertEquals(null, dbObject.get(courseHash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
@@ -272,7 +272,7 @@ public class DbAuthManagerTest {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
+        Assert.assertEquals(null, dbObject.get(courseHash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
