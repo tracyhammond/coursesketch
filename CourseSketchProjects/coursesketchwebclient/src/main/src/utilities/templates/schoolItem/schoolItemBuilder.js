@@ -161,6 +161,7 @@ function SchoolItemBuilder() {
         var box = document.createElement('school-item');
         box.setAttribute('id', srlSchoolItem.id);
         box.schoolItemData = srlSchoolItem;
+        box.className += " card-panel hoverable";
 
         // every box starts off not being edtited
         box.dataset.isediting = false;
