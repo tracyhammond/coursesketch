@@ -7,7 +7,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
-import coursesketch.database.interfaces.CourseSketchDatabaseReader;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
@@ -50,7 +50,7 @@ import static database.DatabaseStringConstants.USER_LIST;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.TooManyMethods" })
-public final class MongoInstitution extends CourseSketchDatabaseReader implements Institution {
+public final class MongoInstitution extends AbstractCourseSketchDatabaseReader implements Institution {
 
     /**
      * Declaration and Definition of Logger.

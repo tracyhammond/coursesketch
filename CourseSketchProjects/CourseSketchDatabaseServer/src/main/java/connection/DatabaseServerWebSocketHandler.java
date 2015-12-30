@@ -1,7 +1,7 @@
 package connection;
 
 import coursesketch.auth.AuthenticationWebSocketClient;
-import coursesketch.database.interfaces.CourseSketchDatabaseReader;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -104,7 +104,7 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
      *
      * @return {@link MongoInstitution}.
      */
-    @Override protected final CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+    @Override protected final AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
         return new MongoInstitution(info, getAuthInstance());
     }
 

@@ -14,8 +14,8 @@
             <FileNamePattern>log/Proxy/Proxy.%d{yyyy-MM-dd}.log</FileNamePattern>
         </rollingPolicy>
     </appender>
-    <logger name="com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker" level="DEBUG" />
-    <root level="DEBUG">
+    <logger name="com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker" level="INFO" />
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="file"/>
     </root>
