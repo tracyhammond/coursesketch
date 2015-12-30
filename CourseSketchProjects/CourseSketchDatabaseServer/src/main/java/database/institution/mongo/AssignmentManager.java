@@ -355,7 +355,7 @@ public final class AssignmentManager {
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
