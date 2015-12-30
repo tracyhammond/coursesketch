@@ -1,5 +1,6 @@
 package coursesketch.database.identity;
 
+import com.google.common.base.Strings;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -265,7 +266,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
         database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
                 group,
-                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(list + "." + userId, hash)));
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(list + DatabaseStringConstants.SUBFIELD_COMMAND + userId, hash)));
     }
 
     /**
