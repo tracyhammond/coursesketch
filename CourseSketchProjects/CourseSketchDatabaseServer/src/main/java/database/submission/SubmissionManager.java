@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
@@ -57,17 +58,17 @@ public final class SubmissionManager {
     /**
      * Inserts a submission into the database.
      *
-     * if {@code experiment} is true then {@code uniqueId} is a userId otherwise
+     * if {@code experiment} is true then {@code userId} is a userId otherwise
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem
      *  @param dbs The database that contains the information about the submission.
-     * @param uniqueId Generally the userId.  But it is used to uniquely identify each submission.
+     * @param userId Generally the userId.  But it is used to uniquely identify each submission.
      * @param problemId The problem id.
      * @param submissionId The id associated with the submission on the submission server.
      * @param experiment True if the object being submitted is an experiment
      */
     @SuppressWarnings({ "PMD.NPathComplexity" })
-    public static void mongoInsertSubmission(final DB dbs, final String uniqueId, final String problemId,
+    public static void mongoInsertSubmission(final DB dbs, final String userId, final String problemId,
             final String submissionId,
             final boolean experiment) {
         LOG.info("Inserting an experiment {}", experiment);
@@ -78,9 +79,9 @@ public final class SubmissionManager {
         final DBObject cursor = collection.findOne(myDbRef);
 
         LOG.info("cursor: {}", cursor);
-        LOG.info("uniuq id: {}", uniqueId);
+        LOG.info("uniuq id: {}", userId);
 
-        final BasicDBObject queryObj = new BasicDBObject(experiment ? uniqueId : SOLUTION_ID, submissionId);
+        final BasicDBObject queryObj = new BasicDBObject(experiment ? userId : SOLUTION_ID, submissionId);
         if (cursor == null) {
             LOG.info("Creating a new instance to this old itemid");
             queryObj.append(SELF_ID, new ObjectId(problemId));
@@ -89,7 +90,7 @@ public final class SubmissionManager {
         } else {
             LOG.info("adding a new submission to this old itemid");
             // insert the submissionId, if it is an experiment then we need to
-            // use the uniqueId to make it work.
+            // use the userId to make it work.
             collection.update(cursor, new BasicDBObject("$set", queryObj));
         }
     }
@@ -131,6 +132,7 @@ public final class SubmissionManager {
             throw new DatabaseAccessException("Mo student has submitted anything for this problem");
         }
         final String hashedUserId = MongoInstitution.hashUserId(userId, courseId);
+        LOG.debug("Grabbing user with userId: {}", hashedUserId);
         if (!cursor.containsField(hashedUserId) || Strings.isNullOrEmpty((String) cursor.get(hashedUserId))) {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
@@ -187,17 +189,31 @@ public final class SubmissionManager {
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
-        return mapExperiemntToUserNames(itemRoster, new HashMap(), experimentList);
+        return mapExperimentToUserNames(itemRoster, new HashMap(), experimentList);
     }
 
-    private static List<Submission.SrlExperiment> mapExperiemntToUserNames(final Map<String, String> userIdToUsername,
+    private static List<Submission.SrlExperiment> mapExperimentToUserNames(final Map<String, String> userIdToUsername,
             final Map userNameToSubmissionId, final List<Submission.SrlExperiment> experiments) {
         final List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
 
+        final Random r = new Random();
+
         for (Submission.SrlExperiment experiment: experiments) {
+            final String userId = experiment.getUserId();
+            String userName = null;
+            if (Strings.isNullOrEmpty(userId)) {
+                userName = ((Integer) r.nextInt()).toString();
+            } else {
+                userName = userIdToUsername.get(userId);
+            }
+            if (userName == null) {
+                userName = ((Integer) r.nextInt()).toString();
+            }
+
+            experimentListWithUserIds.add(Submission.SrlExperiment.newBuilder(experiment).setUserId(userName).build());
             // experiment.
         }
-        return experiments;
+        return experimentListWithUserIds;
     }
 
     /**
