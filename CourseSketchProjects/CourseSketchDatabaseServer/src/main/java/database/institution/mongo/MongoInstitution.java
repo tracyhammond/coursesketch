@@ -114,9 +114,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      */
     @Override protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-        if (mongoClient == null) {
-            return;
-        }
+
         database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
