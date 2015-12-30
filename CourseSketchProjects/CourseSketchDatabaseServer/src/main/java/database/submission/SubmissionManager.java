@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.SELF_ID;
@@ -207,8 +206,6 @@ public final class SubmissionManager {
     private static List<Submission.SrlExperiment> mapExperimentToUserNames(final Map<String, String> userIdToUsername,
             final Map<String, String> submissionIdToUserId, final List<Submission.SrlExperiment> experiments) {
         final List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
-
-        final Random random = new Random();
 
         for (Submission.SrlExperiment experiment: experiments) {
             final String userId = experiment.getUserId();
