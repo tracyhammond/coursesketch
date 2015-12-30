@@ -178,13 +178,13 @@ public final class SubmissionManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final List<String> itemRequest = createSubmissionRequest(problemExperimentMap);
+        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, problemId, School.ItemType.COURSE_PROBLEM, null, authenticator);
+        LOG.debug("User Roster for problem: {}, Roster: {}", problemId, itemRoster);
+
+        final List<String> itemRequest = createSubmissionRequest(problemExperimentMap, itemRoster);
         final String[] submissionIds = itemRequest.toArray(new String[itemRequest.size()]);
         final List<Submission.SrlExperiment> experimentList = submissionManager
                 .getSubmission(authId, authenticator, problemId, submissionIds);
-
-        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, problemId, School.ItemType.COURSE_PROBLEM, null, authenticator);
-        LOG.debug("User Roster for problem: {}, Roster: {}", problemId, itemRoster);
 
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
@@ -229,18 +229,12 @@ public final class SubmissionManager {
      * Creates a submission request for the submission server.
      *
      * @param experiments A {@link DBObject} that represents the experiments in the database.
+     * @param itemRoster The list of users that are able to be viewed by the user wanting to view sketches.
      * @return {@link List<String>} of submission ids that is used to query the submission server.
      */
-    private static List<String> createSubmissionRequest(final DBObject experiments) {
+    private static List<String> createSubmissionRequest(final DBObject experiments, final Map<String, String> itemRoster) {
         final List<String> submissionIds = new ArrayList<>();
-        for (String key : experiments.keySet()) {
-            if (SELF_ID.equals(key)) {
-                continue;
-            }
-            final Object experimentId = experiments.get(key);
-            if (experimentId == null || experimentId instanceof ObjectId) {
-                continue;
-            }
+        for (String key : itemRoster.keySet()) {
             final String sketchId = experiments.get(key).toString();
             LOG.info("SketchId: {}", sketchId);
             submissionIds.add(sketchId);
