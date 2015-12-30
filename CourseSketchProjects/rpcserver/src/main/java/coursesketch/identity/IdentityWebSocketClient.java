@@ -142,8 +142,10 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
                 .build();
 
         final Identity.RequestRoster.Builder creationRequestBuilder = Identity.RequestRoster.newBuilder()
-                .setRequestData(request)
-                .addAllUserIds(userIdsList);
+                .setRequestData(request);
+        if (userIdsList != null) {
+            creationRequestBuilder.addAllUserIds(userIdsList);
+        }
 
         Identity.UserNameResponse response = null;
         try {
