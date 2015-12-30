@@ -272,7 +272,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
         database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
                 group,
-                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(list + DatabaseStringConstants.SUBFIELD_COMMAND + userId, hash)));
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND,
+                        new BasicDBObject(list + DatabaseStringConstants.SUBFIELD_COMMAND + userId, hash)));
     }
 
     /**
