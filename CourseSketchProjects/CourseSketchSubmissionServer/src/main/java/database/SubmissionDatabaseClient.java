@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
-import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
@@ -277,18 +276,22 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         final SrlExperiment.Builder build = SrlExperiment.newBuilder();
         build.setAssignmentId(cursor.get(ASSIGNMENT_ID).toString());
 
+        String submissionId = null;
+
         // only moderators and above are allowed to see the user id.
         if (permissions.hasModeratorPermission()) {
             build.setUserId(cursor.get(USER_ID).toString());
+            submissionId = cursor.get(SELF_ID).toString();
         }
         build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());
         build.setCourseId(cursor.get(COURSE_ID).toString());
         SrlSubmission sub = null;
         try {
-            sub = getSubmission(cursor);
+            sub = getSubmission(cursor, submissionId);
         } catch (SubmissionException e) {
             throw new DatabaseAccessException("Error getting submission data", e);
         }
+
         build.setSubmission(sub);
         LOG.info("Experiment successfully fetched");
         return build.build();
@@ -297,20 +300,23 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * Retrieves the submission portion of the solution or experiment.
      *
-     * @param cursor
+     * @param submissionObject
      *         the database pointer to the data.
      * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
      * @throws SubmissionException
      *         Thrown if there are issues getting the submission.
      */
-    private static SrlSubmission getSubmission(final DBObject cursor) throws SubmissionException {
+    private static SrlSubmission getSubmission(final DBObject submissionObject, final String submissionId) throws SubmissionException {
         final SrlSubmission.Builder subBuilder = SrlSubmission.newBuilder();
+        if (!Strings.isNullOrEmpty(submissionId)) {
+            subBuilder.setId(submissionId);
+        }
 
-        final SrlSubmission.SubmissionTypeCase submissionType = getExpectedType(cursor);
+        final SrlSubmission.SubmissionTypeCase submissionType = getExpectedType(submissionObject);
 
         switch (submissionType) {
             case UPDATELIST:
-                final Object binary = cursor.get(UPDATELIST);
+                final Object binary = submissionObject.get(UPDATELIST);
                 if (binary == null) {
                     throw new SubmissionException("UpdateList did not contain any data", null);
                 }
@@ -321,14 +327,14 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
                     throw new SubmissionException("Error decoding update list", e);
                 }
             case TEXTANSWER:
-                final Object text = cursor.get(TEXT_ANSWER);
+                final Object text = submissionObject.get(TEXT_ANSWER);
                 if (text == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }
                 subBuilder.setTextAnswer(text.toString());
                 return subBuilder.build();
             case ANSWERCHOICE:
-                final Object answerChoice = cursor.get(ANSWER_CHOICE);
+                final Object answerChoice = submissionObject.get(ANSWER_CHOICE);
                 if (answerChoice == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }

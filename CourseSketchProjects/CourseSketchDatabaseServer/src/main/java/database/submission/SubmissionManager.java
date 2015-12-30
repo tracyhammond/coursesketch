@@ -98,7 +98,6 @@ public final class SubmissionManager {
     /**
      * Sends a request to the submission server to request an experiment as a user.
      *
-     *
      * @param authenticator The object being used to authenticate the user.
      * @param dbs The database that contains data about the experiment.
      * @param userId The user who has access to the experiment.
@@ -185,15 +184,19 @@ public final class SubmissionManager {
                 .getSubmission(authId, authenticator, problemId, submissionIds);
 
         final Map<String, String> itemRoster = identityManager.getItemRoster(authId, problemId, School.ItemType.COURSE_PROBLEM, null, authenticator);
+        LOG.debug("User Roster for problem: {}, Roster: {}", problemId, itemRoster);
 
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
-        return mapExperimentToUserNames(itemRoster, new HashMap(), experimentList);
+
+        final Map<String, String> userIdToSubmissionId = createSubmissionIdToUserIdMap(problemExperimentMap);
+        LOG.debug("Submission id to user Id map: {}", userIdToSubmissionId);
+        return mapExperimentToUserNames(itemRoster, userIdToSubmissionId, experimentList);
     }
 
     private static List<Submission.SrlExperiment> mapExperimentToUserNames(final Map<String, String> userIdToUsername,
-            final Map userNameToSubmissionId, final List<Submission.SrlExperiment> experiments) {
+            final Map<String, String> userIdToSubmissionId, final List<Submission.SrlExperiment> experiments) throws AuthenticationException {
         final List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
 
         final Random r = new Random();
@@ -202,13 +205,19 @@ public final class SubmissionManager {
             final String userId = experiment.getUserId();
             String userName = null;
             if (Strings.isNullOrEmpty(userId)) {
+                LOG.debug("Userid does not exist in the experiment: {}", experiment.getSubmission().getId());
                 userName = ((Integer) r.nextInt()).toString();
             } else {
-                userName = userIdToUsername.get(userId);
+                final String hashedUserId = userIdToSubmissionId.get(experiment.getSubmission().getId());
+                LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());
+                userName = userIdToUsername.get(hashedUserId);
             }
             if (userName == null) {
+                LOG.debug("Userid does not exist in the course roster: {}", userId);
                 userName = ((Integer) r.nextInt()).toString();
             }
+
+            LOG.debug("UserName: {} for experiment: {}", userName, experiment.getSubmission().getId());
 
             experimentListWithUserIds.add(Submission.SrlExperiment.newBuilder(experiment).setUserId(userName).build());
             // experiment.
@@ -235,6 +244,29 @@ public final class SubmissionManager {
             final String sketchId = experiments.get(key).toString();
             LOG.info("SketchId: {}", sketchId);
             submissionIds.add(sketchId);
+        }
+        return submissionIds;
+    }
+
+    /**
+     * Creates a submission request for the submission server.
+     *
+     * @param experiments A {@link DBObject} that represents the experiments in the database.
+     * @return {@link List<String>} of submission ids that is used to query the submission server.
+     */
+    private static Map<String, String> createSubmissionIdToUserIdMap(final DBObject experiments) {
+        final Map<String, String> submissionIds = new HashMap<>();
+        for (String key : experiments.keySet()) {
+            if (SELF_ID.equals(key)) {
+                continue;
+            }
+            final Object experimentId = experiments.get(key);
+            if (experimentId == null || experimentId instanceof ObjectId) {
+                continue;
+            }
+            final String sketchId = experiments.get(key).toString();
+            LOG.info("SketchId: {}", sketchId);
+            submissionIds.put(sketchId, key);
         }
         return submissionIds;
     }
