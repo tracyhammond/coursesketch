@@ -1,7 +1,7 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import coursesketch.database.interfaces.CourseSketchDatabaseReader;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -90,7 +90,7 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * An object that reads from the database.
      */
-    private CourseSketchDatabaseReader databaseReader;
+    private AbstractCourseSketchDatabaseReader databaseReader;
 
     /**
      * A constructor that accepts a servlet.
@@ -294,9 +294,9 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * Creates a CourseSketchDatabaseReader if it is needed.
      * @param info Information about the server.
-     * @return {@link CourseSketchDatabaseReader}.
+     * @return {@link AbstractCourseSketchDatabaseReader}.
      */
-    protected abstract CourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+    protected abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
 
     /**
      * @return A map representing the Id to state. The returned map is read only.
@@ -343,9 +343,9 @@ public abstract class AbstractServerWebSocketHandler {
     protected abstract void onInitialize();
 
     /**
-     * @return {@link CourseSketchDatabaseReader}.  This may return null if one is not set.
+     * @return {@link AbstractCourseSketchDatabaseReader}.  This may return null if one is not set.
      */
-    protected final CourseSketchDatabaseReader getDatabaseReader() {
+    protected final AbstractCourseSketchDatabaseReader getDatabaseReader() {
         return databaseReader;
     }
 

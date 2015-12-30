@@ -17,7 +17,7 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     /**
      * IP address for submission server.
      */
-    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
+    private static final String SUBMISSION_ADDRESS = "192.168.56.202";
 
     /**
      *  Declaration and Definition of Logger.
