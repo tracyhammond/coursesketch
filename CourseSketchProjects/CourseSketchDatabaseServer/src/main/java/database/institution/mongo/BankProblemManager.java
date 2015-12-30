@@ -7,12 +7,11 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import database.DatabaseAccessException;
-import database.UserUpdateHandler;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
-import org.bson.types.ObjectId;
+import database.DatabaseAccessException;
+import database.UserUpdateHandler;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
@@ -208,7 +207,7 @@ public final class BankProblemManager {
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problemBankId));
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
@@ -358,7 +357,7 @@ public final class BankProblemManager {
             throw new DatabaseAccessException("Unable to register the course problem: missing course id [" + problem.getId() + "]");
         }
 
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, new ObjectId(problem.getProblemBankId()));
+        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problem.getProblemBankId()));
         final DBObject dbObject = myDbRef.fetch();
 
         if (dbObject == null) {

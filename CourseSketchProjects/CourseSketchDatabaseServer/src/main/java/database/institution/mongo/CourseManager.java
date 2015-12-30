@@ -206,7 +206,7 @@ public final class CourseManager {
     static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String courseId, final String userId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
@@ -299,7 +299,7 @@ public final class CourseManager {
      */
     static boolean mongoInsertAssignmentIntoCourse(final DB dbs, final String courseId, final String assignmentId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
         DBObject updateObj = null;
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
@@ -326,7 +326,7 @@ public final class CourseManager {
      */
     static boolean mongoInsertLectureIntoCourse(final DB dbs, final String courseId, final String lectureId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
         final DBObject cursor = myDbRef.fetch();
         DBObject updateObj = null;
         final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
