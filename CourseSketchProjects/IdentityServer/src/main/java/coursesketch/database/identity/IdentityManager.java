@@ -130,7 +130,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
 
-            if (parentId != null) {
+            if (!Strings.isNullOrEmpty(parentId)) {
+                LOG.warn("Inserting bank problem {} with no parent id", itemId);
                 insertUserIntoGroup(parentId, groupId, true);
             }
         }
@@ -243,7 +244,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
     private void insertUserIntoGroup(final String userId, final String groupId, final boolean isUser)
             throws AuthenticationException, DatabaseAccessException {
         if (Strings.isNullOrEmpty(userId)) {
-            throw new DatabaseAccessException("Illegal argument when inserting user into group",
+            throw new DatabaseAccessException("Illegal argument when inserting user into group, userId can not be empty",
                     new IllegalArgumentException("UserId can not be null or empty"));
         }
 

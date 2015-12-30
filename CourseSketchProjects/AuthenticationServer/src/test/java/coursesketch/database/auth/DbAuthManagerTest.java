@@ -192,6 +192,92 @@ public class DbAuthManagerTest {
         Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
     }
 
+
+    @Test
+    public void testInsertingBankItemWithNoCourseId() throws AuthenticationException, DatabaseAccessException {
+        final String courseId = "COURSE_ID";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, null, VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.PROBLEM_BANK_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        // Looks for group data
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+        String teacherHash = null;
+        try {
+            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(teacherHash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
+
+        String courseHash = null;
+        try {
+            courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
+
+        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+    }
+
+    @Test
+    public void testInsertingBankItemWithEmptyCourseId() throws AuthenticationException, DatabaseAccessException {
+        final String courseId = "COURSE_ID";
+        dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, "", VALID_REGISTRATION_KEY, null);
+
+        // looks for item data
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
+        Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.PROBLEM_BANK_ID).toString());
+        Assert.assertEquals(VALID_REGISTRATION_KEY, dbItemObject.get(DatabaseStringConstants.REGISTRATION_KEY).toString());
+        Assert.assertEquals(TEACHER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
+
+        // Looks for group data
+        final DBCursor cursor = db.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).find();
+        final DBObject dbObject = cursor.next();
+        System.out.println(dbObject);
+        Assert.assertEquals(VALID_ITEM_ID, dbObject.get(DatabaseStringConstants.COURSE_ID).toString());
+        String salt = dbObject.get(DatabaseStringConstants.SALT).toString();
+        String teacherHash = null;
+        try {
+            teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_ID, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        Assert.assertTrue(dbObject.containsField(teacherHash));
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(teacherHash));
+
+        String courseHash = null;
+        try {
+            courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+
+        Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
+
+        List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+    }
+
     @Test
     public void testInsertingChildItemItemWithAdminPermission() throws AuthenticationException, DatabaseAccessException {
         dbAuthManager.insertNewItem(TEACHER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY, null);
