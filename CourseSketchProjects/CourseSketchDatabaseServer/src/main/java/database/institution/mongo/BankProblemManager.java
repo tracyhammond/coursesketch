@@ -362,7 +362,7 @@ public final class BankProblemManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
             final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(database, PROBLEM_BANK_COLLECTION, createId(bankProblemId));
+        final DBRef myDbRef = new DBRef(database, PROBLEM_BANK_COLLECTION, new ObjectId(bankProblemId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("BankProblem was not found with the following ID " + bankProblemId);

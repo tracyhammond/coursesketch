@@ -112,7 +112,7 @@ public class SubmissionDatabaseClientTest {
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         Assert.assertEquals(expected, result);
     }
 
@@ -136,7 +136,7 @@ public class SubmissionDatabaseClientTest {
         // just like you would with a real one.
         DB db = fongoRule.getDB();
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(ObjectId.createFromLegacyFormat(0, 0, 0).toString(), PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(ObjectId.createFromLegacyFormat(0, 0, 0).toString(), PROBLEM_ID, null);
     }
 
     @Test
@@ -153,7 +153,7 @@ public class SubmissionDatabaseClientTest {
         Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
         String id = databaseClient.saveExperiment(usedUpdate, submissionTime);
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
 
         Commands.SrlUpdateList resultList = result.getSubmission().getUpdateList();
         Commands.SrlUpdate lastUpdate = resultList.getList(resultList.getListCount() - 1);
@@ -197,7 +197,7 @@ public class SubmissionDatabaseClientTest {
         Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
         String id = databaseClient.saveExperiment(usedUpdate, submissionTime);
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
 
         Commands.SrlUpdateList resultList = result.getSubmission().getUpdateList();
         Commands.SrlUpdate lastUpdate = resultList.getList(resultList.getListCount() - 1);
@@ -239,7 +239,7 @@ public class SubmissionDatabaseClientTest {
 
         Assert.assertEquals(id, secondId);
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         Assert.assertEquals(secondSubmission, result);
     }
 
@@ -256,7 +256,7 @@ public class SubmissionDatabaseClientTest {
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, "NotProblemId");
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, "NotProblemId", null);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -283,7 +283,7 @@ public class SubmissionDatabaseClientTest {
 
         Assert.assertEquals(null, secondId);
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         Assert.assertEquals(secondSubmission, result);
     }
 
@@ -311,7 +311,7 @@ public class SubmissionDatabaseClientTest {
 
         Assert.assertEquals(null, secondId);
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         Assert.assertEquals(secondSubmission, result);
     }
 
@@ -339,7 +339,7 @@ public class SubmissionDatabaseClientTest {
 
         Assert.assertEquals(null, secondId);
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         Assert.assertEquals(secondSubmission, result);
     }
 
@@ -359,7 +359,7 @@ public class SubmissionDatabaseClientTest {
         String id = databaseClient.saveExperiment(expected, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         String resultAnswer = result.getSubmission().getTextAnswer();
 
         Assert.assertEquals(textAnswer, resultAnswer);
@@ -389,7 +389,7 @@ public class SubmissionDatabaseClientTest {
         String secondId = databaseClient.saveExperiment(secondSubmission, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         String resultAnswer = result.getSubmission().getTextAnswer();
 
         Assert.assertEquals(textAnswer2, resultAnswer);
@@ -412,7 +412,7 @@ public class SubmissionDatabaseClientTest {
         String id = databaseClient.saveExperiment( expected, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         int resultAnswer = result.getSubmission().getAnswerChoice();
 
         Assert.assertEquals(answerChoice, resultAnswer);
@@ -442,7 +442,7 @@ public class SubmissionDatabaseClientTest {
         String secondId = databaseClient.saveExperiment( secondSubmission, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
         int resultAnswer = result.getSubmission().getAnswerChoice();
 
         Assert.assertEquals(textAnswer2, resultAnswer);

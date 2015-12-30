@@ -499,7 +499,7 @@ public final class CourseManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String authId, final String courseId,
             final boolean checkTeacher)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(database, COURSE_COLLECTION, createId(courseId));
+        final DBRef myDbRef = new DBRef(database, COURSE_COLLECTION, new ObjectId(courseId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);

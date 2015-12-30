@@ -23,6 +23,7 @@ import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -186,16 +187,17 @@ public final class SubmissionManager {
         if (experimentList.isEmpty()) {
             throw new DatabaseAccessException("No experiments were found");
         }
-        return experimentList;
+        return mapExperiemntToUserNames(itemRoster, new HashMap(), experimentList);
     }
 
-    private static List<Submission.SrlExperiment> mapExperiemntToUserNames(Map<String, String> userIdToUsername,
-            Map<String, Object> userNameToSubmissionId, List<Submission.SrlExperiment> experiments) {
-        List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
+    private static List<Submission.SrlExperiment> mapExperiemntToUserNames(final Map<String, String> userIdToUsername,
+            final Map userNameToSubmissionId, final List<Submission.SrlExperiment> experiments) {
+        final List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
 
         for (Submission.SrlExperiment experiment: experiments) {
-            experiment.
+            // experiment.
         }
+        return experiments;
     }
 
     /**
