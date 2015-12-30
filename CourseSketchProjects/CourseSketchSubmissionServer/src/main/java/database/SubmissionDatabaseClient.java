@@ -249,6 +249,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *         The id of the experiment we are trying to retrieve.
      * @param problemId
      *         This much match the problemId of the submission stored here otherwise it is considered an invalid retrieval.
+     * @param permissions
+     *          The permissions of the person attempting to get the experiment.
      * @return the experiment found in the database.
      * @throws DatabaseAccessException
      *         thrown if there are problems getting the item.
@@ -301,7 +303,9 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * Retrieves the submission portion of the solution or experiment.
      *
      * @param submissionObject
-     *         the database pointer to the data.
+     *         The database pointer to the data.
+     * @param submissionId
+     *         An optional id to add to the submission.
      * @return {@link protobuf.srl.submission.Submission.SrlSubmission} the resulting submission.
      * @throws SubmissionException
      *         Thrown if there are issues getting the submission.

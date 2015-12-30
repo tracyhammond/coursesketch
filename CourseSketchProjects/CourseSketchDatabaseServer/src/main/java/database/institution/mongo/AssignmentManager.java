@@ -236,11 +236,10 @@ public final class AssignmentManager {
     /**
      * Sets data of the assignment from the given cursor.
      *
+     * @param exactAssignment
+     *         The assignment that the data is being set to.
      * @param cursor
      *         The database cursor pointing to a specific assignment.
-     * @param exactAssignment
- *         The assignment that the data is being set to.
-     * @param cursor
      */
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject cursor) {
         exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
@@ -254,17 +253,19 @@ public final class AssignmentManager {
 
     /**
      * Sets data about the state of the assignment and its date.
-     *  @param exactAssignment
+     *
+     * @param exactAssignment
      *         A protobuf assignment builder.
      * @param stateBuilder
      *         A protobuf state builder.
      * @param cursor
- *         The current database pointer for the assignment.
+     *         The current database pointer for the assignment.
      * @param isAdmin
-*         True if the user is acting as an admin.
+     *         True if the user is acting as an admin.
      * @param isMod
-*         True if the user is acting as a moderator.
+     *         True if the user is acting as a moderator.
      * @param checkTime
+     *         The time that the check was performed.
      */
     private static void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder,
             final DBObject cursor, final boolean isAdmin, final boolean isMod, final long checkTime) {

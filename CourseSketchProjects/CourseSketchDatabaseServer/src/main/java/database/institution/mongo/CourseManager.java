@@ -205,6 +205,8 @@ public final class CourseManager {
      *         the object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The id of the user that is updating the course.  Used to check permissions.
      * @param courseId
      *         The id of the course being updated.
      * @param course
@@ -486,6 +488,8 @@ public final class CourseManager {
      *         Used to ensure the user has access to the registration key.
      * @param database
      *         The database that contains the registration key.
+     * @param authId
+     *         The id of the user that is updating the course.  Used to check permissions.
      * @param courseId
      *         The id of the course that contains the registration key.
      * @param checkTeacher

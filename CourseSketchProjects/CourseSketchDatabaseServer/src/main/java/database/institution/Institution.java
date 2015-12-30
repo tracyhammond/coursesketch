@@ -105,6 +105,7 @@ public interface Institution {
      * </ol>
      *
      * @param userId
+     *            The user that is inserting the course.  Used for identification purposes.
      * @param authId
      *            The credentials used to authenticate the insertion.  All users can create a course.
      * @param course
@@ -127,6 +128,7 @@ public interface Institution {
      * </ol>
      *
      * @param userId
+     *            The user that is inserting the assignment.  Used for identification purposes.
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param assignment
@@ -151,6 +153,7 @@ public interface Institution {
      * </ol>
      *
      * @param userId
+     *            The user that is inserting the lecture.  Used for identification purposes.
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param lecture
@@ -198,6 +201,7 @@ public interface Institution {
      * </ol>
      *
      * @param userId
+     *            The user that is inserting the course problem.  Used for identification purposes.
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param problem
@@ -217,6 +221,7 @@ public interface Institution {
      * Upon insertion a bank problem is created within the problem bank.
      *
      * @param userId
+     *            The user that is inserting bank problem.  Used for identification purposes.
      * @param authId
      *            The credentials used to authenticate the insertion
      * @param problem
@@ -224,6 +229,8 @@ public interface Institution {
      * @return The Id of the object that was inserted
      *
      * @throws AuthenticationException if the user does not have permission to insert this bank problem.
+     * @throws DatabaseAccessException
+     *             Thrown if there is a problem inserting the bank problem.
      */
     String insertBankProblem(final String userId, String authId, SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException;
 
@@ -368,6 +375,7 @@ public interface Institution {
      * </ol>
      *
      * @param userId
+     *            The id of the user that is being added to the course.  Used for identification purposes.
      * @param authId
      *            The credentials user to be put into the course.
      * @param courseId
@@ -380,7 +388,8 @@ public interface Institution {
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to be inserted into the course.
      */
-    boolean putUserInCourse(final String userId, String authId, String courseId, String registrationKey) throws DatabaseAccessException, AuthenticationException;
+    boolean putUserInCourse(final String userId, String authId, String courseId, String registrationKey)
+            throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Registers a course for a bank problem

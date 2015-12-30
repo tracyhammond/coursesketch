@@ -153,6 +153,7 @@ public final class SubmissionManager {
      * @param authId The user that was requesting this information.
      * @param problemId The problem for which the sketch data is being requested.
      * @param submissionManager The connections of the submission server
+     * @param identityManager The connection to the identity server.
      * @throws DatabaseAccessException Thrown if there are no problems data that exist.
      * @throws AuthenticationException Thrown if the user does not have the authentication.
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that were found with the specific submission ids.
@@ -195,8 +196,16 @@ public final class SubmissionManager {
         return mapExperimentToUserNames(itemRoster, userIdToSubmissionId, experimentList);
     }
 
+    /**
+     * Creates a list of experiments with user ids.
+     *
+     * @param userIdToUsername A map of userIds to usernames.
+     * @param submissionIdToUserId A map of submissionIds to userIds.
+     * @param experiments A list of experiments that do not contain valid usernames.
+     * @return A list of {@link protobuf.srl.submission.Submission.SrlExperiment} that contain usernames.
+     */
     private static List<Submission.SrlExperiment> mapExperimentToUserNames(final Map<String, String> userIdToUsername,
-            final Map<String, String> userIdToSubmissionId, final List<Submission.SrlExperiment> experiments) throws AuthenticationException {
+            final Map<String, String> submissionIdToUserId, final List<Submission.SrlExperiment> experiments) {
         final List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
 
         final Random r = new Random();
@@ -206,15 +215,15 @@ public final class SubmissionManager {
             String userName = null;
             if (Strings.isNullOrEmpty(userId)) {
                 LOG.debug("Userid does not exist in the experiment: {}", experiment.getSubmission().getId());
-                userName = ((Integer) r.nextInt()).toString();
+                userName = ((Integer) Math.abs(r.nextInt())).toString();
             } else {
-                final String hashedUserId = userIdToSubmissionId.get(experiment.getSubmission().getId());
+                final String hashedUserId = submissionIdToUserId.get(experiment.getSubmission().getId());
                 LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());
                 userName = userIdToUsername.get(hashedUserId);
             }
             if (userName == null) {
                 LOG.debug("Userid does not exist in the course roster: {}", userId);
-                userName = ((Integer) r.nextInt()).toString();
+                userName = ((Integer) Math.abs(r.nextInt())).toString();
             }
 
             LOG.debug("UserName: {} for experiment: {}", userName, experiment.getSubmission().getId());

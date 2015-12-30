@@ -75,6 +75,9 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      */
     private final AuthenticationUpdater authUpdater;
 
+    /**
+     * Used to get user identity information.
+     */
     private final IdentityManagerInterface identityManager;
 
     /**
@@ -88,6 +91,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      * @param info Server information.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param authUpdater Used to change authentication data.
+     * @param identityManagerInterface @see {@link #identityManager}
      */
     public MongoInstitution(final ServerInfo info, final Authenticator authenticator, final AuthenticationUpdater authUpdater,
             final IdentityManagerInterface identityManagerInterface) {
@@ -142,6 +146,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      * @param fakeDB The fake database.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param authUpdater Used to change authentication data.
+     * @param identityManagerInterface @see {@link #identityManager}
      */
     public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator, final AuthenticationUpdater authUpdater,
             final IdentityManagerInterface identityManagerInterface) {
