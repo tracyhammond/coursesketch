@@ -95,7 +95,7 @@ public final class SubmissionHandler {
 
             try {
                 final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
-                LOG.debug("Hahsed user id: {}", hashedUserId);
+                LOG.debug("Hashed user id: {}", hashedUserId);
                 instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), submissionId, true);
             } catch (DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
