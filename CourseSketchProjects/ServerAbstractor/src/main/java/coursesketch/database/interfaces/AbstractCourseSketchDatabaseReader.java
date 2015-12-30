@@ -59,7 +59,7 @@ public abstract class AbstractCourseSketchDatabaseReader {
     /**
      * Called when the database has started.
      */
-    protected final void databaseStarted() {
+    protected final void setDatabaseStarted() {
         LOG.debug("The database was successfully started.");
         databaseStarted = true;
     }

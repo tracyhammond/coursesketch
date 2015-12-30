@@ -118,7 +118,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             return;
         }
         database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
-        super.databaseStarted();
+        super.setDatabaseStarted();
     }
 
     /**
