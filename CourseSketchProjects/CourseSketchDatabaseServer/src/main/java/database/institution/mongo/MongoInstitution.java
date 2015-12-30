@@ -516,7 +516,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public void insertSubmission(final String userId, final String authId, final String problemId, final String submissionId,
             final boolean experiment)
             throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(database, authId, problemId, submissionId, experiment);
+        SubmissionManager.mongoInsertSubmission(database, userId, problemId, submissionId, experiment);
     }
 
     @Override
@@ -554,7 +554,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      */
     public static String hashUserId(final String userId, final String courseId) throws AuthenticationException {
         try {
-            return HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId));
+            return HashManager.toHex(HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId)).getBytes());
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
