@@ -242,6 +242,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      */
     private void insertUserIntoGroup(final String userId, final String groupId, final boolean isUser)
             throws AuthenticationException, DatabaseAccessException {
+        if (Strings.isNullOrEmpty(userId)) {
+            throw new DatabaseAccessException("Illegal argument when inserting user into group",
+                    new IllegalArgumentException("UserId can not be null or empty"));
+        }
+
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, true)
