@@ -195,6 +195,12 @@ public final class DbAuthManager {
      */
     private void insertUserIntoGroup(final String authId, final String groupId, final Authentication.AuthResponse.PermissionLevel permissionLevel)
             throws AuthenticationException, DatabaseAccessException {
+
+        if (Strings.isNullOrEmpty(authId)) {
+            throw new DatabaseAccessException("Illegal argument when inserting user into group, userId can not be empty",
+                    new IllegalArgumentException("UserId can not be null or empty"));
+        }
+
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.SALT, true));
