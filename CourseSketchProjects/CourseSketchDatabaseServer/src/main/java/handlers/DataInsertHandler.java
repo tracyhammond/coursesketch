@@ -181,11 +181,13 @@ public final class DataInsertHandler {
         } catch (AuthenticationException | DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx, "user was not authenticated to insert data " + protoEx.getMssg()));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx,
+                    "user was not authenticated or had a database error " + protoEx.getMssg()));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ResultBuilder.buildRequest(null, e.getMessage(), req));
+            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx,
+                    "A exception occurred while inserting data" + protoEx.getMssg()));
         }
     }
 }

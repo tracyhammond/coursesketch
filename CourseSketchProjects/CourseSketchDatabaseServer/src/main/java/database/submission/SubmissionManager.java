@@ -208,14 +208,14 @@ public final class SubmissionManager {
             final Map<String, String> submissionIdToUserId, final List<Submission.SrlExperiment> experiments) {
         final List<Submission.SrlExperiment> experimentListWithUserIds = new ArrayList<>();
 
-        final Random r = new Random();
+        final Random random = new Random();
 
         for (Submission.SrlExperiment experiment: experiments) {
             final String userId = experiment.getUserId();
             String userName = null;
             if (Strings.isNullOrEmpty(userId)) {
                 LOG.debug("Userid does not exist in the experiment: {}", experiment.getSubmission().getId());
-                userName = ((Integer) Math.abs(r.nextInt())).toString();
+                userName = "" + ((Math.random() + 2.0) * (2 >> 2));
             } else {
                 final String hashedUserId = submissionIdToUserId.get(experiment.getSubmission().getId());
                 LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());
@@ -223,7 +223,7 @@ public final class SubmissionManager {
             }
             if (userName == null) {
                 LOG.debug("Userid does not exist in the course roster: {}", userId);
-                userName = ((Integer) Math.abs(r.nextInt())).toString();
+                userName = "" + ((Math.random() + 2.0) * (2 >> 2));
             }
 
             LOG.debug("UserName: {} for experiment: {}", userName, experiment.getSubmission().getId());

@@ -36,6 +36,7 @@ import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -559,7 +560,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      */
     public static String hashUserId(final String userId, final String courseId) throws AuthenticationException {
         try {
-            return HashManager.toHex(HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId)).getBytes());
+            return HashManager.toHex(HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId)).getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException(e);
         }
