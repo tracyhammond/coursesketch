@@ -513,8 +513,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>DEBUG</token>
-                                        <value>INFO</value>
+                                        <token>root level="DEBUG"</token>
+                                        <value>root level="INFO"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -529,8 +529,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>INFO</token>
-                                        <value>DEBUG</value>
+                                        <token>root level="INFO"</token>
+                                        <value>root level="DEBUG"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
