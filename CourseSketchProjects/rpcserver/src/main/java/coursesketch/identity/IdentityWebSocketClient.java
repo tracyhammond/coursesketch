@@ -72,7 +72,8 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         }
 
         final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
-                .setAuthId(userId)
+                .setAuthId(authId)
+                .setUserId(userId)
                 .setItemId(itemId)
                 .setItemType(itemType)
                 .build();
@@ -108,7 +109,8 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         }
 
         final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
-                .setAuthId(userId)
+                .setAuthId(authId)
+                .setUserId(userId)
                 .setItemId(itemId)
                 .setItemType(itemType)
                 .build();
@@ -141,8 +143,11 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
                 .build();
 
         final Identity.RequestRoster.Builder creationRequestBuilder = Identity.RequestRoster.newBuilder()
-                .setRequestData(request)
-                .addAllUserIds(userIdsList);
+                .setRequestData(request);
+
+        if (userIdsList != null) {
+            creationRequestBuilder.addAllUserIds(userIdsList);
+        }
 
         Identity.UserNameResponse response = null;
         try {
@@ -154,7 +159,11 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
         }
-        return createMapFromProto(response);
+        final Map<String, String> result = createMapFromProto(response);
+        if (result.isEmpty()) {
+            throw new DatabaseAccessException("Unable to return course roster or class is empty");
+        }
+        return result;
     }
 
     @Override public Map<String, String> createNewUser(final String userName) throws AuthenticationException, DatabaseAccessException {
@@ -175,7 +184,11 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
         }
-        return createMapFromProto(response);
+        final Map<String, String> result = createMapFromProto(response);
+        if (result.isEmpty()) {
+            throw new DatabaseAccessException("Unable to return the user Identity associated with this new user");
+        }
+        return result;
     }
 
     @Override public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
@@ -200,7 +213,11 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         } catch (ServiceException e) {
             throw new DatabaseAccessException(e, false);
         }
-        return createMapFromProto(response);
+        final Map<String, String> result = createMapFromProto(response);
+        if (result.isEmpty()) {
+            throw new DatabaseAccessException("Unable to find username, server returned empty response");
+        }
+        return result;
     }
 
     @Override public String getUserIdentity(final String userName, final String authId) throws AuthenticationException, DatabaseAccessException {
@@ -225,7 +242,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         }
         final Map<String, String> result = createMapFromProto(response);
         if (result.isEmpty()) {
-            throw new DatabaseAccessException("Unable to find the user identity");
+            throw new DatabaseAccessException("Unable to find the user identity, server returned empty response");
         }
         return result.entrySet().iterator().next().getValue();
     }
