@@ -16,8 +16,8 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>0</projectBranchLevel>
-        <projectLineLevel>0</projectLineLevel>
+        <projectBranchLevel>27</projectBranchLevel>
+        <projectLineLevel>23</projectLineLevel>
         <netty.version>4.0.27.Final</netty.version>
     </properties>
     <build>

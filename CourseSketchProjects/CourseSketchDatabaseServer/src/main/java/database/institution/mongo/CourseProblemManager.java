@@ -223,7 +223,7 @@ public final class CourseProblemManager {
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, convertStringToObjectId(problemId));
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
