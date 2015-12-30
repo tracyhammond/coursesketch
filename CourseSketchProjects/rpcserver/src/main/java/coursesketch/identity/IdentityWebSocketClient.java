@@ -73,7 +73,8 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         }
 
         final Identity.IdentityRequest request = Identity.IdentityRequest.newBuilder()
-                .setAuthId(userId)
+                .setUserId(userId)
+                .setAuthId(authId)
                 .setItemId(itemId)
                 .setItemType(itemType)
                 .build();
