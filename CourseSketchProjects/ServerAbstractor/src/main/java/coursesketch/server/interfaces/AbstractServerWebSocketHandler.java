@@ -391,6 +391,7 @@ public abstract class AbstractServerWebSocketHandler {
             try {
                 return Request.parseFrom(buffer.array());
             } catch (final InvalidProtocolBufferException e) {
+                LOG.error("Error parsing request", e);
                 return null;
             }
         }
