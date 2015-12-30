@@ -367,6 +367,10 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         final DBObject item = collection.findOne(new ObjectId(itemId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
 
+        if (item == null) {
+            throw new DatabaseAccessException(getCollectionFromType(itemType) + " can not be found with the given itemId: " + itemId);
+        }
+
         final Map<String, String> courseRoster = new HashMap<>();
 
         final List<String> groupList = (List<String>) item.get(DatabaseStringConstants.USER_LIST);

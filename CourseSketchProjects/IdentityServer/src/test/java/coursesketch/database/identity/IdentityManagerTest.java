@@ -850,6 +850,14 @@ public class IdentityManagerTest {
     }
 
     @Test(expected = DatabaseAccessException.class)
+    public void getCourseRosterThrowsWhenItemDoesNotExist() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
+        AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        Map<String, String> userValues = identityManager.getItemRoster(TEACHER_AUTH_ID, INVALID_ITEM_ID, VALID_ITEM_TYPE, null, dbAuthChecker);
+    }
+
+    @Test(expected = DatabaseAccessException.class)
     public void getCourseRosterThrowsWhenUsersDoNotExist() throws AuthenticationException, NoSuchAlgorithmException, DatabaseAccessException {
 
         AuthenticationHelper.setMockPermissions(authChecker, VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_AUTH_ID, null,
