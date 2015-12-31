@@ -31,7 +31,7 @@ import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
-import static database.utilities.MongoUtilities.createId;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages course problems for the mongo database.
@@ -58,7 +58,7 @@ public final class CourseProblemManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the course problem is being stored.
-     * @param userId
+     * @param authId
      *         The user that is asking to insert a course problem.
      * @param problem
      *         The data of the course problem being inserted.
@@ -68,16 +68,16 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String userId, final SrlProblem problem)
+    public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection courseProblemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
 
-        // make sure person is mod or admin for the assignment
+        // Make sure person is mod or admin for the assignment.
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, problem.getAssignmentId(), userId, 0, courseAuthType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, problem.getAssignmentId(), authId, 0, courseAuthType);
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For assignment: " + problem.getAssignmentId(), AuthenticationException.INVALID_PERMISSION);
         }
@@ -105,10 +105,10 @@ public final class CourseProblemManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The user requesting the problem.
      * @param problemId
      *         The problem being requested.
-     * @param userId
-     *         The user requesting the problem.
      * @param checkTime
      *         The time at which the problem was requested.
      * @return An SrlProblem if it exists and all checks pass.
@@ -117,9 +117,9 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
+    public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, createId(problemId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, convertStringToObjectId(problemId));
         final DBObject cursor = myDbRef.fetch();
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
@@ -130,7 +130,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, checkTime, authType);
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, checkTime, authType);
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
@@ -142,7 +142,7 @@ public final class CourseProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), userId, checkTime, assignmentAuthType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), authId, checkTime, assignmentAuthType);
 
         // Throws an exception if a user (only) is trying to get an problem when the assignment is closed.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
@@ -159,20 +159,19 @@ public final class CourseProblemManager {
             throw new DatabaseAccessException("The specific problem is not published yet: " + problemId, true);
         }
 
-        // Post this point either item is published OR responder is at least responder.
+        // Past this point, the item is either published or the responder is at least a mod.
         stateBuilder.setPublished(responder.isItemPublished());
 
-        final SrlProblem.Builder exactProblem = SrlProblem.newBuilder();
+        final SrlProblem.Builder exactProblem = extractProblemData(cursor);
         exactProblem.setId(problemId);
-        extractProblemData(exactProblem, cursor);
 
         // problem manager get problem from bank (as a user!)
         SrlBankProblem problemBank = null;
         try {
-            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) cursor.get(PROBLEM_BANK_ID),
-                    (String) exactProblem.getCourseId());
+            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) exactProblem.getCourseId(),
+                    (String) cursor.get(PROBLEM_BANK_ID));
         } catch (DatabaseAccessException e) {
-            // only a student can't view a problem with no problem info.
+            // Students are the only users that cannot view a problem that doesn't have problem info.
             // FUTURE: check to see if this is the best option!
             if (!responder.hasModeratorPermission() && assignmentResponder.isItemPublished()) {
                 throw new DatabaseAccessException(e, false);
@@ -188,16 +187,20 @@ public final class CourseProblemManager {
 
     /**
      * Extracts the problem data from the {@link DBObject} into the {@link SrlProblem}.
-     * @param problem The problem that is being filled with the data.
+     *
      * @param dbProblem Contains the data from the database.
+     * @return An {@link SrlProblem} problem that is being filled with the data.
      */
-    private static void extractProblemData(final SrlProblem.Builder problem, final DBObject dbProblem) {
+    private static SrlProblem.Builder extractProblemData(final DBObject dbProblem) {
+        final SrlProblem.Builder problem = SrlProblem.newBuilder();
         problem.setCourseId((String) dbProblem.get(COURSE_ID));
         problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
         problem.setProblemBankId((String) dbProblem.get(PROBLEM_BANK_ID));
         problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
         problem.setName((String) dbProblem.get(NAME));
         problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
+
+        return problem;
     }
 
     /**
@@ -205,10 +208,10 @@ public final class CourseProblemManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The user requesting the problem.
      * @param problemId
      *         The problem being updated.
-     * @param userId
-     *         The user requesting the problem.
      * @param problem
      *         The data of the problem itself.
      * @return True if the data was updated successfully.
@@ -217,10 +220,10 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String problemId, final String userId,
+    public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId));
+        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, convertStringToObjectId(problemId));
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {
@@ -234,25 +237,24 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (responder.hasModeratorPermission()) {
-            if (problem.hasName()) {
-                updateObj.append(NAME, problem.getName());
-                update = true;
-            }
-            if (problem.hasGradeWeight()) {
-                updateObj.append(GRADE_WEIGHT, problem.getGradeWeight());
-                update = true;
-            }
-            if (problem.hasProblemBankId()) {
-                updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
-                update = true;
-            }
+        // Past this point the user is at least a moderator.
+        if (problem.hasName()) {
+            updateObj.append(NAME, problem.getName());
+            update = true;
+        }
+        if (problem.hasGradeWeight()) {
+            updateObj.append(GRADE_WEIGHT, problem.getGradeWeight());
+            update = true;
+        }
+        if (problem.hasProblemBankId()) {
+            updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
+            update = true;
         }
         if (update) {
             problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));

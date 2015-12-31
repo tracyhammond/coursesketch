@@ -1,6 +1,5 @@
 package connection;
 
-import coursesketch.database.DatabaseClient;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.ServerInfo;
@@ -51,7 +50,6 @@ public final class LoginRunner extends GeneralConnectionRunner {
     @Override
     public void executeLocalEnvironment() {
         LOG.info("Setting the login database to connect locally");
-        new DatabaseClient(false, null); // makes the database point locally
     }
 
     /**

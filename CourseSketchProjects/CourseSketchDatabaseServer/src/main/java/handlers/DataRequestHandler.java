@@ -1,11 +1,12 @@
 package handlers;
 
-import com.google.protobuf.GeneratedMessage;
+import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
-import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 import handlers.subhandlers.GradingRequestHandler;
@@ -26,6 +27,7 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.utils.Util;
+import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
@@ -56,6 +58,7 @@ public final class DataRequestHandler {
     /**
      * A message returned when getting the data was successful.
      */
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private static final String NO_OP_MESSAGE = "NO DATA TO RETURN";
 
     /**
@@ -78,10 +81,12 @@ public final class DataRequestHandler {
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
-     * @param instance The database backer.
+     * @param instance
+     *         The object that interfaces with the database and handles specific requests.
      * @param sessionId
-*         the id of this particular session which is used if another server is talked to.
-     * @param internalConnections Connections to other clients.
+     *         The id of this particular session which is used if another server is talked to.
+     * @param internalConnections
+     *         Connections to other clients.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "PMD.NcssMethodCount",
@@ -91,10 +96,14 @@ public final class DataRequestHandler {
             final MultiConnectionManager internalConnections) {
         try {
             LOG.info("Receiving DATA Request...");
-            final String userId = req.getServersideId();
+            final String authId = req.getServersideId();
+            final String userId = req.getServerUserId();
             final DataRequest request = DataRequest.parseFrom(req.getOtherData());
-            if (userId == null) {
+            if (Strings.isNullOrEmpty(authId)) {
                 throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
+            }
+            if (Strings.isNullOrEmpty(userId)) {
+                throw new DatabaseAccessException("Invalid User Identification");
             }
             final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
             for (int p = 0; p < request.getItemsList().size(); p++) {
@@ -103,28 +112,28 @@ public final class DataRequestHandler {
                     LOG.info("looking at query {}", itemRequest.getQuery().name());
                     switch (itemRequest.getQuery()) {
                         case COURSE: {
-                            final List<SrlCourse> courseLoop = instance.getCourses(itemRequest.getItemIdList(), userId);
+                            final List<SrlCourse> courseLoop = instance.getCourses(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE, courseLoop));
                         }
                         break;
                         case ASSIGNMENT: {
-                            final List<SrlAssignment> assignmentLoop = instance.getAssignment(itemRequest.getItemIdList(), userId);
+                            final List<SrlAssignment> assignmentLoop = instance.getAssignment(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.ASSIGNMENT, assignmentLoop));
                         }
                         break;
                         case COURSE_PROBLEM: {
-                            final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(itemRequest.getItemIdList(), userId);
+                            final List<SrlProblem> courseProblemLoop = instance.getCourseProblem(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_PROBLEM, courseProblemLoop));
                         }
                         break;
                         case BANK_PROBLEM: {
                             List<SrlBankProblem> bankProblemLoop = null;
                             if (!itemRequest.hasPage()) {
-                                bankProblemLoop = instance.getProblem(itemRequest.getItemIdList(), userId);
+                                bankProblemLoop = instance.getProblem(authId, itemRequest.getItemIdList());
                             } else {
                                 final int page = itemRequest.getPage();
                                 // The first id in the item is the course id.
-                                bankProblemLoop = instance.getAllBankProblems(userId, itemRequest.getItemId(0), page);
+                                bankProblemLoop = instance.getAllBankProblems(authId, itemRequest.getItemId(0), page);
                             }
                             results.add(ResultBuilder.buildResult(ItemQuery.BANK_PROBLEM, bankProblemLoop));
                         }
@@ -136,7 +145,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case SCHOOL: {
-                            final List<SrlCourse> courseLoop = instance.getUserCourses(userId);
+                            final List<SrlCourse> courseLoop = instance.getUserCourses(authId);
                             if (courseLoop.isEmpty()) {
                                 results.add(ResultBuilder.buildResult(NO_COURSE_MESSAGE, ItemQuery.SCHOOL, courseLoop));
                             } else {
@@ -151,29 +160,23 @@ public final class DataRequestHandler {
                             if (!itemRequest.hasAdvanceQuery()) {
                                 for (String itemId : itemRequest.getItemIdList()) {
                                     LOG.info("Trying to retrieve an experiment from a user!");
-                                    try {
-                                        final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
-                                        build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                        instance.getExperimentAsUser(userId, itemId, build.build(), internalConnections);
-                                        results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
-                                    } catch (DatabaseAccessException e) {
-                                        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                                        results.add(ResultBuilder.buildResult(e.getLocalizedMessage(), ItemQuery.EXPERIMENT,
-                                                (GeneratedMessage[]) null));
-                                        break;
-                                    }
+                                    final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                                    build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                                    final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, authId, itemId,
+                                            internalConnections.getBestConnection(SubmissionWebSocketClient.class));
+                                    results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             } else {
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
                                 final Request baseRequest = build.build();
                                 for (String itemId : itemRequest.getItemIdList()) {
-
-                                    instance.getExperimentAsInstructor(userId, itemId, baseRequest, internalConnections,
-                                            itemRequest.getAdvanceQuery());
+                                    final List<Submission.SrlExperiment> experimentList = instance.getExperimentAsInstructor(authId, itemId,
+                                            baseRequest, internalConnections, itemRequest.getAdvanceQuery());
+                                    for (Submission.SrlExperiment experiment: experimentList) {
+                                        results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
+                                    }
                                 }
-                                results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
                             }
                         }
                         break;
@@ -184,17 +187,17 @@ public final class DataRequestHandler {
                             }
                             LOG.info("Last request time! {}", lastRequestTime);
                             // for now get all updates!
-                            final List<Data.ItemResult> updates = UserClient.mongoGetReleventUpdates(userId, lastRequestTime);
+                            final List<Data.ItemResult> updates = UserClient.mongoGetReleventUpdates(authId, lastRequestTime);
                             results.addAll(updates);
                         }
                         break;
                         case LECTURE: {
-                            final List<Lecture> lectureLoop = instance.getLecture(itemRequest.getItemIdList(), userId);
+                            final List<Lecture> lectureLoop = instance.getLecture(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURE, lectureLoop));
                         }
                         break;
                         case LECTURESLIDE: {
-                            final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(itemRequest.getItemIdList(), userId);
+                            final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURESLIDE, lectureSlideLoop));
                         }
                         break;

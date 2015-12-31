@@ -9,6 +9,8 @@ import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
@@ -24,6 +26,11 @@ import static database.DbSchoolUtility.getParentItemType;
  * Created by dtracers on 10/7/2015.
  */
 public final class DbAuthManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DbAuthManager.class);
 
     /**
      * The database that the auth checker grabs data from.
@@ -42,14 +49,14 @@ public final class DbAuthManager {
      * Inserts a new item into the database.
      *
      * @param authId The AuthId of the user that is inserting the new item.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link protobuf.srl.school.School.ItemType#COURSE}
-     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
-     *                 If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *                 problem
-     * @param registrationKey The key is needed to allow users to added themselves having permissions to access the course.
-     * @param authChecker Used to check that the user has access to perform the requested actions.
-     * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to perform the request actions.
+     * @param itemId The id of the item being inserted.
+     * @param itemType The type of item that is being inserted. EX: {@link protobuf.srl.school.School.ItemType#COURSE}
+     * @param parentId The id of the parent object. EX: parent points to the course if item is an Assignment.
+     *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
+     *                 problem.
+     * @param registrationKey This key is needed for a user to grant themself access permission to a course.
+     * @param authChecker Used to check if the user has permission to insert the item.
+     * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to insert the item.
      * @throws AuthenticationException Thrown if there is data that can not be found in the database.
      */
     public void insertNewItem(final String authId, final String itemId, final School.ItemType itemType,
@@ -85,11 +92,13 @@ public final class DbAuthManager {
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
 
-            if (parentId != null) {
+            if (!Strings.isNullOrEmpty(parentId)) {
+                LOG.warn("Inserting bank problem {} with no parent id", itemId);
                 insertUserIntoGroup(parentId, groupId, Authentication.AuthResponse.PermissionLevel.STUDENT);
             }
         }
 
+        // Collection is created by mongo if it did not exist before.
         final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
         collection.insert(insertQuery);
 
@@ -99,9 +108,9 @@ public final class DbAuthManager {
      * Creates a basic query for inserting items into the database.
      *
      * @param authId The AuthId of the user that is inserting the new item.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
-     * @param registrationKey The key is needed to allow users to added themselves having permissions to access the course.
+     * @param itemId The id of the item being inserted.
+     * @param itemType The type of item that is being inserted. EX: {@link School.ItemType#COURSE}
+     * @param registrationKey This key is needed for a user to grant themself access permission to a course.
      * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
      */
     private BasicDBObject createItemInsertQuery(final String authId, final String itemId, final School.ItemType itemType,
@@ -125,11 +134,11 @@ public final class DbAuthManager {
      * Copies the details of the parent item (mainly groups and CourseId) into the current item.
      *
      * @param insertQuery An existing query for an item that is going to be inserted into the database.
-     * @param itemId The id of the item being inserted
-     * @param itemType The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
-     * @param parentId The id of the parent object EX: parent points to course if item is an Assignment.
-     *                 If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
-     *                 problem
+     * @param itemId The id of the item being inserted.
+     * @param itemType The type of item that is being inserted. EX: {@link School.ItemType#COURSE}
+     * @param parentId The id of the parent object. EX: parent points to course if item is an Assignment.
+     *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
+     *                 problem.
      * @throws DatabaseAccessException Thrown if the parent object can not be found.
      */
     private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final School.ItemType itemType, final String parentId)
@@ -141,10 +150,10 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.COURSE_ID, true)
                         .append(DatabaseStringConstants.OWNER_ID, true));
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id " + itemId + " was not found in the database.");
         }
 
-        // This would overwrite existing id but there is already a valid id in here.
+        // This prevents the existing insertQuery ObjectId from being overwritten by the result ObjectId.
         result.removeField(DatabaseStringConstants.SELF_ID);
         insertQuery.putAll(result);
     }
@@ -186,11 +195,17 @@ public final class DbAuthManager {
      */
     private void insertUserIntoGroup(final String authId, final String groupId, final Authentication.AuthResponse.PermissionLevel permissionLevel)
             throws AuthenticationException, DatabaseAccessException {
+
+        if (Strings.isNullOrEmpty(authId)) {
+            throw new DatabaseAccessException("Illegal argument when inserting user into group, userId can not be empty",
+                    new IllegalArgumentException("UserId can not be null or empty"));
+        }
+
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.SALT, true));
         if (group == null) {
-            throw new DatabaseAccessException("group could not be found");
+            throw new DatabaseAccessException("Group with id " + groupId + " could not be found.");
         }
         final String salt = group.get(DatabaseStringConstants.SALT).toString();
         String hash = null;
@@ -211,14 +226,14 @@ public final class DbAuthManager {
     }
 
     /**
-     * Registers a student with a course.
+     * Self-registers a student for a course via a registration key.
      *
-     * The student must have a valid registration key.
+     * The student must have a valid registration key, an instructor does not require a valid registration key in some instances.
      * @param authId The authentication Id of the user that is being added.
      * @param itemId The Id of the course or bank problem the user is being added to.
      * @param itemType The type of item the user is registering for (Only {@link protobuf.srl.school.School.ItemType#COURSE}
      *                 and (Only {@link protobuf.srl.school.School.ItemType#BANK_PROBLEM} are valid types.
-     * @param registrationKey The key that is used to register to the course.
+     * @param registrationKey The key that is used to register for the course.
      * @param authChecker Used to check permissions in the database.
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
      * @throws DatabaseAccessException Thrown if the item can not be found.
@@ -226,7 +241,7 @@ public final class DbAuthManager {
     public void registerSelf(final String authId, final String itemId, final School.ItemType itemType, final String registrationKey,
             final DbAuthChecker authChecker) throws AuthenticationException, DatabaseAccessException {
         if (!School.ItemType.COURSE.equals(itemType) && !School.ItemType.BANK_PROBLEM.equals(itemType)) {
-            throw new AuthenticationException("Can only register users in a course or a bank problem", AuthenticationException.OTHER);
+            throw new AuthenticationException("Can only register users in a course or a bank problem.", AuthenticationException.OTHER);
         }
 
         final DBCollection collection = database.getCollection(getCollectionFromType(itemType));
@@ -235,7 +250,7 @@ public final class DbAuthManager {
                         .append(DatabaseStringConstants.REGISTRATION_KEY, true));
 
         if (result == null) {
-            throw new DatabaseAccessException("The item with the id " + itemId + " Was not found in the database");
+            throw new DatabaseAccessException("The item with the id: " + itemId + " was not found in the database.");
         }
         if (Strings.isNullOrEmpty(registrationKey)) {
             throw new AuthenticationException("Registration key is required but none is given", AuthenticationException.INVALID_PERMISSION);

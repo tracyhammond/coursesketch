@@ -1,6 +1,7 @@
 package coursesketch.database.interfaces;
 
 import coursesketch.server.interfaces.ServerInfo;
+import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +38,10 @@ public abstract class AbstractCourseSketchDatabaseReader {
      * Called to start the database.
      *
      * This does use double check locking on this object when initialing the database.
+     *
+     * @throws DatabaseAccessException thrown if the database can not be started correctly.
      */
-    public final void startDatabase() {
+    public final void startDatabase() throws DatabaseAccessException {
         if (!databaseStarted) {
             synchronized (this) {
                 if (!databaseStarted) {
@@ -50,16 +53,25 @@ public abstract class AbstractCourseSketchDatabaseReader {
     }
 
     /**
+     * Sets up any indexes that need to be set up or have not yet been set up.
+     */
+    protected abstract void setUpIndexes();
+
+    /**
      * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
+     *
+     * @throws DatabaseAccessException thrown if a subclass throws an exception while starting the database.
      */
-    protected abstract void onStartDatabase();
+    protected abstract void onStartDatabase() throws DatabaseAccessException;
 
     /**
      * Called when the database has started.
      */
     protected final void setDatabaseStarted() {
+        LOG.debug("Setting up indexes for the database");
+        setUpIndexes();
         LOG.debug("The database was successfully started.");
         databaseStarted = true;
     }

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Creates an {@link ProtobufComparison}.
+ *
+ * The {@link ProtobufComparison} that is returned will throw an exception if the protobuf objects are not equal.
  * Created by gigemjt on 9/6/15.
  */
 public class ProtobufComparisonBuilder {
@@ -51,6 +54,7 @@ public class ProtobufComparisonBuilder {
 
     /**
      * Ignores the field when comparing protobufs.
+     *
      * @param ignoreField A field that will be ignored by the Comparison.
      * @return Itself.
      */
@@ -60,7 +64,20 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
+     * Ignores the field when comparing protobufs.
+     *
+     * @param descriptor A descriptor for the message that contains the field that is being ignored.
+     * @param fieldNumberToIgnore The field number that should be ignored by the given descriptor.
+     * @return Itself.
+     */
+    public final ProtobufComparisonBuilder ignoreField(final Descriptors.Descriptor descriptor, final int fieldNumberToIgnore) {
+        ignoredFields.add(descriptor.findFieldByNumber(fieldNumberToIgnore));
+        return this;
+    }
+
+    /**
      * Ignores the message when comparing protobufs.
+     *
      * @param ignoreMessage The message that will be ignored by the Comparison.
      * @return Itself.
      */
@@ -79,6 +96,7 @@ public class ProtobufComparisonBuilder {
 
     /**
      * Sets if a deep comparison should happen.
+     *
      * @param isDeepEquals true if a deep equals comparison should happen. False otherwise.
      * @return Itself.
      */
@@ -102,16 +120,17 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
-     * If true it will ignore if the expected has fields not set but the actual protobuf has the fields set but they are set to the same values
-     * as the default protobuf.
-     * <p/>
+     * If this value is true, the comparison will also accept the default value for a field when it is expecting a blank value.
+     * If this value is false, it will throw an exception if the expected blank fields are not blank
+     *
      * <pre>
      * EX:
-     * expected protobuf does not have field A which is a string set.
-     * actual protobuf does have the field set but it is set to what the message returns for a default value.
-     * This will not through an assertion error.
+     * Expected protobuf does not have field A (which is a string) set.
+     * Actual protobuf does have field A set, but it is set to the default value.
+     * This will not throw an assertion error.
      * </pre>
-     * @param ignoreSetDefaultFields false to throw an assertion if the expected has no value but the actual does.  This is true by default.
+     * @param ignoreSetDefaultFields False to throw an assertion error if the expected field has no value, but the actual field has a default value.
+     *                               The param is true by default (and thus accepts the default field value for a blank expected value).
      * @return Itself.
      */
     @SuppressWarnings("checkstyle:hiddenfield")
@@ -121,12 +140,11 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
-     * If true this will ignore any field where the expected has no value but the actual protobuf does have a value.
+     * If true, this will ignore fields where the expected protobuf has no value even if the actual protobuf has a value.
+     * If false, this will throw an assertion error if the expected protobuf has no value for a field
+     * and the actual protobuf has a value for that field.
      *
-     * <p/>
-     * (Basically it ignores any field not set on the expected protobuf)
-     *
-     * If this is false it will consider this a mismatch and throw an assertion error.
+     * Basically, if true it only compares fields that are set in the expected protobuf.
      * @param ignoreNonSetFields True to ignore any field that is not set on the expected protobuf.  This is false by default.
      * @return Itself.
      */

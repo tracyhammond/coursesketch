@@ -31,7 +31,7 @@ public final class BreakDatabase {
     private UserClient userClient;
 
     public BreakDatabase(final DB db) {
-        mongoDatabase = new MongoInstitution(null, null, null);
+        mongoDatabase = new MongoInstitution(null, null, null, null);
         database = db;
         userClient = new UserClient(true, db);
     }
@@ -63,8 +63,8 @@ public final class BreakDatabase {
         School.SrlCourse course = createRandomCourse();
 
         userClient.insertUser(user, user.getUsername());
-        String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
+        String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
+        mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
         collection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
@@ -77,8 +77,8 @@ public final class BreakDatabase {
         School.SrlCourse course = createRandomCourse();
 
         userClient.insertUser(user, user.getUsername());
-        String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
+        String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
+        mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
         DBCollection collection = database.getCollection(COURSE_COLLECTION);
         DBObject dbCourse = collection.findOne();
@@ -125,7 +125,7 @@ public final class BreakDatabase {
 
             // testing inserting course
             System.out.println("INSERTING COURSE");
-            String courseId = MongoInstitution.getInstance(null).insertCourse(instructionID, testBuilder.buildPartial());
+            String courseId = MongoInstitution.getInstance(null).insertCourse(null, instructionID, testBuilder.buildPartial());
             System.out.println("INSERTING COURSE SUCCESSFUL");
             System.out.println(courseId);
             LocalAddAssignments.testAssignments(courseId, instructionID);
