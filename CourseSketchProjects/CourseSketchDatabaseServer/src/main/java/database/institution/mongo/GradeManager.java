@@ -1,5 +1,6 @@
 package database.institution.mongo;
 
+import com.google.common.base.Strings;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -22,7 +23,6 @@ import java.util.List;
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COMMENT;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.CURRENT_GRADE;
@@ -239,16 +239,12 @@ public final class GradeManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database that the grades are being retrieved from.
-     * @param requesterId
+     * @param authId
      *         The id of the user requesting the grade. This is required.
      * @param userId
      *         The id of the user that the grade is for. This is required. This value is at itemId(3).
-     * @param courseId
-     *         The id of the course that the grade is for. This is required. This value is at itemId(0).
-     * @param assignmentId
-     *         The id of the assignment that the grade is for. This is optional. This value is at itemId(1).
-     * @param problemId
-     *         The id of the problem that the grade is for. This is optional. This value is at itemId(2).
+     * @param grade
+     *         A grade object that contains the data needed to get a grade for similar parameters.
      * @return ProtoGrade object representing the grade requested.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
@@ -256,42 +252,43 @@ public final class GradeManager {
      *         Thrown if a grade is not found in the database matching the requested parameters.
      * Package-private
      */
-    static ProtoGrade getGrade(final Authenticator authenticator, final DB dbs, final String requesterId, final String userId,
-            final String courseId, final String assignmentId, final String problemId) throws AuthenticationException, DatabaseAccessException {
+    static ProtoGrade getGrade(final Authenticator authenticator, final DB dbs, final String authId, final String userId, final ProtoGrade grade)
+            throws AuthenticationException, DatabaseAccessException {
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
 
         // If requester is the user for the grade, check if they are in the course.
         // If requester is not the user for the grade, check if they are an admin for the course.
-        if (requesterId.equals(userId)) {
-            auth.setCheckUser(true);
-        } else {
-            auth.setCheckAdminOrMod(true);
+        auth.setCheckingAdmin(true);
+
+        final AuthenticationResponder responder = checkUserExistsForGrade(authenticator, authId, auth.build(), grade);
+        if (!responder.hasStudentPermission()) {
+            throw new AuthenticationException("User does not have permission to see this grade", AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        if (!responder.hasModeratorPermission() && !userId.equals(grade.getUserId())) {
+            throw new AuthenticationException("User does not have permission to see this grade", AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId).append(USER_ID, userId);
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, userId);
 
         // Adds to query to look for documents without assignmentId field if assignmentId is not given.
-        if (assignmentId != null) {
-            query.append(ASSIGNMENT_ID, assignmentId);
+        if (!Strings.isNullOrEmpty(grade.getAssignmentId())) {
+            query.append(ASSIGNMENT_ID, grade.getAssignmentId());
         } else {
             query.append(ASSIGNMENT_ID, new BasicDBObject(EXISTS, false));
         }
 
         // Adds to query to look for documents without problemId field if problemId is not given.
-        if (problemId != null) {
-            query.append(COURSE_PROBLEM_ID, problemId);
+        if (!Strings.isNullOrEmpty(grade.getProblemId())) {
+            query.append(COURSE_PROBLEM_ID, grade.getProblemId());
         } else {
             query.append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         }
 
         final DBCursor cursor = gradeCollection.find(query);
         if (!cursor.hasNext()) {
-            throw new DatabaseAccessException("Did not find a grade matching those parameters for that student in course: " + courseId);
+            throw new DatabaseAccessException("Did not find a grade matching those parameters for that student in course: " + grade.getCourseId());
         }
 
         return buildProtoGrade(cursor.next());
@@ -316,7 +313,7 @@ public final class GradeManager {
      *         The database that the grades are being retrieved from.
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param requesterId
+     * @param authId
      *         The user that is requesting the grades. Only users with admin access can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
@@ -326,12 +323,14 @@ public final class GradeManager {
      *         Thrown if grades are not found in the database.
      */
     public static List<ProtoGrade> getAllAssignmentGradesInstructor(final Authenticator authenticator, final DB dbs, final String courseId,
-            final String requesterId) throws AuthenticationException, DatabaseAccessException {
+            final String authId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can retrieve all grades
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        auth.setCheckingAdmin(true);
+        final AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, auth.build());
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("User does not have permissions to get grades for this course",
+                    AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
@@ -370,7 +369,7 @@ public final class GradeManager {
      *         The database that the grades are being retrieved from.
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param requesterId
+     * @param authId
      *         The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
@@ -380,17 +379,19 @@ public final class GradeManager {
      *         Thrown if grades are not found in the database.
      */
     public static List<ProtoGrade> getAllAssignmentGradesStudent(final Authenticator authenticator, final DB dbs, final String courseId,
-            final String requesterId) throws AuthenticationException, DatabaseAccessException {
+            final String authId, final String userId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication to make sure the user is in the course
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
-        auth.setCheckUser(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        auth.setCheckingAdmin(true);
+        final AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, auth.build());
+        if (!responder.hasStudentPermission()) {
+            throw new AuthenticationException("User does not have permissions to get grades for this course",
+                    AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
-                .append(USER_ID, requesterId)
+                .append(USER_ID, userId)
                 .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1); // Sort by assignmentId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);

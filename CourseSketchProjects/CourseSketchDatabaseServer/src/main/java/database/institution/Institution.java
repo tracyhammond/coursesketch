@@ -1,12 +1,12 @@
 package database.institution;
 
 import com.google.protobuf.ByteString;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import coursesketch.database.auth.AuthenticationException;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
@@ -583,23 +583,17 @@ public interface Institution {
      * For example, if looking for a particular assignment grade, pass in null for the problemId parameter.
      * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
      *
-     * @param requesterId
+     * @param authId
      *         The id of the user requesting the grade. This is required.
-     * @param userId
-     *         The id of the user that the grade is for. This is required. This value is at itemId(3).
-     * @param courseId
-     *         The id of the course that the grade is for. This is required. This value is at itemId(0).
-     * @param assignmentId
-     *         The id of the assignment that the grade is for. This is optional. This value is at itemId(1).
-     * @param problemId
-     *         The id of the problem that the grade is for. This is optional. This value is at itemId(2).
+     * @param gradeData
+     *         Grade data that contains information about the grade that is wanted (courseId, userId, assignmentId, problemId).
      * @return ProtoGrade object representing the grade requested.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the grades.
      * @throws DatabaseAccessException
      *         Thrown if a grade is not found in the database matching the requested parameters.
      */
-    ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId, final String problemId)
+    ProtoGrade getGrade(final String authId, final ProtoGrade gradeData)
             throws AuthenticationException, DatabaseAccessException;
 
     /**

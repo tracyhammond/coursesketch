@@ -579,15 +579,15 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String authId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllAssignmentGradesInstructor(auth, database, courseId, userId);
+        return GradeManager.getAllAssignmentGradesInstructor(auth, database, courseId, authId);
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, userId);
+        return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, authId, authId);
     }
 
     @Override
@@ -596,15 +596,14 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId,
-            final String problemId) throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getGrade(auth, database, requesterId, userId, courseId, assignmentId, problemId);
+    public ProtoGrade getGrade(final String authId, final ProtoGrade gradeData) throws AuthenticationException, DatabaseAccessException {
+        return GradeManager.getGrade(auth, database, authId, authId, gradeData);
     }
 
     @Override
-    public List<String> getCourseRoster(final String userId, final String courseId)
+    public List<String> getCourseRoster(final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
-        return CourseManager.mongoGetCourseRoster(auth, database, userId, courseId);
+        return CourseManager.mongoGetCourseRoster(auth, database, authId, courseId);
     }
 
 }
