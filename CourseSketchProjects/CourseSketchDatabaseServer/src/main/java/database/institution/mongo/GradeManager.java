@@ -6,23 +6,24 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
 import protobuf.srl.grading.Grading.GradeHistory;
 import protobuf.srl.grading.Grading.ProtoGrade;
+import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
-import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COMMENT;
 import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
-import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.CURRENT_GRADE;
 import static database.DatabaseStringConstants.EXISTS;
@@ -100,15 +101,12 @@ public final class GradeManager {
     static void addGrade(final Authenticator authenticator, final DB dbs, final String adderId, final ProtoGrade grade)
             throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can add grades
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), adderId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
+        auth.setCheckingAdmin(true);
+        final AuthenticationResponder responder = checkUserExistsForGrade(authenticator, adderId, auth.build(), grade);
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("User does not have permission to change this grade.", AuthenticationException.INVALID_PERMISSION);
         }
-
-        auth.clear();
-        auth.setCheckUser(true);
-        checkUserExistsForGrade(authenticator, auth, grade);
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
 
@@ -176,25 +174,27 @@ public final class GradeManager {
      * @param grade The grade object the authentication is being performed on.
      * @throws DatabaseAccessException if the user is not in the respective collection for the grade type being checked.
      */
-    private static void checkUserExistsForGrade(final Authenticator authenticator, final Authenticator.AuthType auth, final ProtoGrade grade)
-            throws DatabaseAccessException {
+    private static AuthenticationResponder checkUserExistsForGrade(final Authenticator authenticator, final String authId,
+            final Authentication.AuthType auth,
+            final ProtoGrade grade)
+            throws DatabaseAccessException, AuthenticationException {
+
+        String itemId;
+        School.ItemType itemType;
         if (grade.getExternalGrade()) {
-            if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), grade.getUserId(), 0, auth)) {
-                throw new DatabaseAccessException("The user is not in the course that the grade is being inserted for.");
-            }
+            itemId = grade.getCourseId();
+            itemType = School.ItemType.COURSE;
         } else if (grade.hasProblemId()) {
-            if (!authenticator.isAuthenticated(COURSE_PROBLEM_COLLECTION, grade.getProblemId(), grade.getUserId(), 0, auth)) {
-                throw new DatabaseAccessException("The user is not assigned the problem that the grade is being inserted for.");
-            }
+            itemId = grade.getProblemId();
+            itemType = School.ItemType.COURSE_PROBLEM;
         } else if (grade.hasAssignmentId()) {
-            if (!authenticator.isAuthenticated(ASSIGNMENT_COLLECTION, grade.getAssignmentId(), grade.getUserId(), 0, auth)) {
-                throw new DatabaseAccessException("Th user is not assigned the assignment that the grade is being inserted for.");
-            }
+            itemId = grade.getAssignmentId();
+            itemType = School.ItemType.ASSIGNMENT;
         } else {
-            if (!authenticator.isAuthenticated(COURSE_COLLECTION, grade.getCourseId(), grade.getUserId(), 0, auth)) {
-                throw new DatabaseAccessException("The user is not in the course that the grade is being inserted for.");
-            }
+            itemId = grade.getCourseId();
+            itemType = School.ItemType.COURSE;
         }
+        return authenticator.checkAuthentication(itemType, itemId, authId, 0, auth);
     }
 
     /**
@@ -258,7 +258,7 @@ public final class GradeManager {
      */
     static ProtoGrade getGrade(final Authenticator authenticator, final DB dbs, final String requesterId, final String userId,
             final String courseId, final String assignmentId, final String problemId) throws AuthenticationException, DatabaseAccessException {
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
+        final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
 
         // If requester is the user for the grade, check if they are in the course.
         // If requester is not the user for the grade, check if they are an admin for the course.
@@ -328,7 +328,7 @@ public final class GradeManager {
     public static List<ProtoGrade> getAllAssignmentGradesInstructor(final Authenticator authenticator, final DB dbs, final String courseId,
             final String requesterId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can retrieve all grades
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
+        final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckAdminOrMod(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -382,7 +382,7 @@ public final class GradeManager {
     public static List<ProtoGrade> getAllAssignmentGradesStudent(final Authenticator authenticator, final DB dbs, final String courseId,
             final String requesterId) throws AuthenticationException, DatabaseAccessException {
         // Check authentication to make sure the user is in the course
-        final Authenticator.AuthType auth = new Authenticator.AuthType();
+        final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckUser(true);
         if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, requesterId, 0, auth)) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
