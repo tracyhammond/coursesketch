@@ -1,9 +1,11 @@
 package database;
 
+import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
@@ -11,6 +13,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 import util.SubmissionMergerTest;
 
@@ -21,9 +24,10 @@ import static database.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
 import static database.SubmissionDatabaseClient.createUpdateList;
 
 public class SubmissionDatabaseClientTest {
-
     @Rule
     public FongoRule fongoRule = new FongoRule();
+
+    AuthenticationResponder responder;
 
     public static final String PROBLEM_ID = new ObjectId().toString();
     public static final String ASSIGNMENT_ID = new ObjectId().toString();
@@ -31,10 +35,10 @@ public class SubmissionDatabaseClientTest {
 
     SubmissionDatabaseClient databaseClient;
 
-
     @Before
     public void before() {
         databaseClient = new SubmissionDatabaseClient(true, fongoRule.getDB());
+        responder = new AuthenticationResponder(Authentication.AuthResponse.getDefaultInstance());
     }
 
     public static Commands.SrlUpdateList createSimpleDatabaseListWithSaveMarker(long submissionTime) {
@@ -106,14 +110,17 @@ public class SubmissionDatabaseClientTest {
         // just like you would with a real one.
         DB db = fongoRule.getDB();
 
-
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
         Submission.SrlExperiment expected = getFakeExperiment("User1", build.build());
         String id = databaseClient.saveExperiment(expected, 200);
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
-        Assert.assertEquals(expected, result);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
+        new ProtobufComparisonBuilder()
+                .ignoreField(Submission.SrlSubmission.getDescriptor(), Submission.SrlSubmission.ID_FIELD_NUMBER)
+                .ignoreField(Submission.SrlExperiment.getDescriptor(), Submission.SrlExperiment.USERID_FIELD_NUMBER)
+                .build()
+                .equals(expected, result);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -153,7 +160,7 @@ public class SubmissionDatabaseClientTest {
         Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
         String id = databaseClient.saveExperiment(usedUpdate, submissionTime);
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
 
         Commands.SrlUpdateList resultList = result.getSubmission().getUpdateList();
         Commands.SrlUpdate lastUpdate = resultList.getList(resultList.getListCount() - 1);
@@ -197,7 +204,7 @@ public class SubmissionDatabaseClientTest {
         Submission.SrlExperiment usedUpdate = getFakeExperiment("User1", usedList.build());
         String id = databaseClient.saveExperiment(usedUpdate, submissionTime);
 
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
 
         Commands.SrlUpdateList resultList = result.getSubmission().getUpdateList();
         Commands.SrlUpdate lastUpdate = resultList.getList(resultList.getListCount() - 1);
@@ -223,7 +230,6 @@ public class SubmissionDatabaseClientTest {
         // just like you would with a real one.
         DB db = fongoRule.getDB();
 
-
         // round 1
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         final Commands.SrlUpdateList original = createSimpleDatabaseListWithSaveMarker(200);
@@ -238,9 +244,15 @@ public class SubmissionDatabaseClientTest {
         String secondId = databaseClient.saveExperiment(secondSubmission, 200);
 
         Assert.assertEquals(id, secondId);
+
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
-        Assert.assertEquals(secondSubmission, result);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, new AuthenticationResponder(
+                Authentication.AuthResponse.newBuilder().setPermissionLevel(Authentication.AuthResponse.PermissionLevel.MODERATOR).build()));
+        new ProtobufComparisonBuilder()
+                .ignoreField(Submission.SrlSubmission.getDescriptor(), Submission.SrlSubmission.ID_FIELD_NUMBER)
+                .ignoreField(Submission.SrlExperiment.getDescriptor(), Submission.SrlExperiment.USERID_FIELD_NUMBER)
+                .build()
+                .equals(secondSubmission, result);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -359,7 +371,7 @@ public class SubmissionDatabaseClientTest {
         String id = databaseClient.saveExperiment(expected, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
         String resultAnswer = result.getSubmission().getTextAnswer();
 
         Assert.assertEquals(textAnswer, resultAnswer);
@@ -389,7 +401,7 @@ public class SubmissionDatabaseClientTest {
         String secondId = databaseClient.saveExperiment(secondSubmission, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
         String resultAnswer = result.getSubmission().getTextAnswer();
 
         Assert.assertEquals(textAnswer2, resultAnswer);
@@ -412,7 +424,7 @@ public class SubmissionDatabaseClientTest {
         String id = databaseClient.saveExperiment( expected, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
         int resultAnswer = result.getSubmission().getAnswerChoice();
 
         Assert.assertEquals(answerChoice, resultAnswer);
@@ -442,7 +454,7 @@ public class SubmissionDatabaseClientTest {
         String secondId = databaseClient.saveExperiment( secondSubmission, 200);
 
         // get experiment
-        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, null);
+        Submission.SrlExperiment result = databaseClient.getExperiment(id, PROBLEM_ID, responder);
         int resultAnswer = result.getSubmission().getAnswerChoice();
 
         Assert.assertEquals(textAnswer2, resultAnswer);

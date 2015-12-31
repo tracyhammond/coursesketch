@@ -64,6 +64,18 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
+     * Ignores the field when comparing protobufs.
+     *
+     * @param descriptor A descriptor for the message that contains the field that is being ignored.
+     * @param fieldNumberToIgnore The field number that should be ignored by the given descriptor.
+     * @return Itself.
+     */
+    public final ProtobufComparisonBuilder ignoreField(final Descriptors.Descriptor descriptor, final int fieldNumberToIgnore) {
+        ignoredFields.add(descriptor.findFieldByNumber(fieldNumberToIgnore));
+        return this;
+    }
+
+    /**
      * Ignores the message when comparing protobufs.
      *
      * @param ignoreMessage The message that will be ignored by the Comparison.

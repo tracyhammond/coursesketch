@@ -282,7 +282,6 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
 
         // only moderators and above are allowed to see the user id.
         if (permissions.hasModeratorPermission()) {
-            build.setUserId(cursor.get(USER_ID).toString());
             submissionId = cursor.get(SELF_ID).toString();
         }
         build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());

@@ -210,14 +210,11 @@ public final class SubmissionManager {
         for (Submission.SrlExperiment experiment: experiments) {
             final String userId = experiment.getUserId();
             String userName = null;
-            if (Strings.isNullOrEmpty(userId)) {
-                LOG.debug("Userid does not exist in the experiment: {}", experiment.getSubmission().getId());
-                userName = "" + ((Math.random() + 2.0) * (2 >> 2));
-            } else {
-                final String hashedUserId = submissionIdToUserId.get(experiment.getSubmission().getId());
-                LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());
-                userName = userIdToUsername.get(hashedUserId);
-            }
+
+            final String hashedUserId = submissionIdToUserId.get(experiment.getSubmission().getId());
+            LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());
+            userName = userIdToUsername.get(hashedUserId);
+
             if (userName == null) {
                 LOG.debug("Userid does not exist in the course roster: {}", userId);
                 userName = "" + ((Math.random() + 2.0) * (2 >> 2));
