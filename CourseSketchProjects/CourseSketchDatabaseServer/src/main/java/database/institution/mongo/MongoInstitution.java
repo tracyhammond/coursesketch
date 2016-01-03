@@ -42,6 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.SELF_ID;
@@ -603,7 +604,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public List<String> getCourseRoster(final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
-        return CourseManager.mongoGetCourseRoster(auth, database, authId, courseId);
+        final Set<String> userIds = identityManager.getItemRoster(authId, courseId, School.ItemType.COURSE,
+                null, null).keySet();
+        final List<String> resultList = new ArrayList<>();
+        resultList.addAll(userIds);
+        return resultList;
     }
 
 }

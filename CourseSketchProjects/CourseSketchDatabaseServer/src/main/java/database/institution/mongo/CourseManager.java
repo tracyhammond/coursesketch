@@ -483,43 +483,6 @@ public final class CourseManager {
     }
 
     /**
-     * @param authenticator
-     *         The object that is performing the authentication
-     * @param dbs
-     *         The database where the roster is coming from
-     * @param userId
-     *         The id of the user requesting the courseRoster
-     * @param courseId
-     *         The id of what courseRoster is being grabbed
-     * @return a list of users in the course
-     * @throws DatabaseAccessException
-     *         Thrown if there are problems accessing the database.
-     * @throws AuthenticationException
-     *         Thrown if the user did not have the authentication to get the course.
-     */
-    static List<String> mongoGetCourseRoster(final Authenticator authenticator, final DB dbs, final String userId, final String courseId)
-        throws DatabaseAccessException, AuthenticationException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId.trim()));
-        final DBObject cursor = myDbRef.fetch();
-        if (cursor == null) {
-            throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
-        }
-        final ArrayList<String> adminList = (ArrayList<String>) cursor.get(ADMIN);
-        final ArrayList<String> userList = (ArrayList<String>) cursor.get(USERS);
-
-        boolean isAdmin;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-
-        if (!isAdmin) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
-        }
-
-        final DBRef groupDbRef = new DBRef(dbs, USER_GROUP_COLLECTION, new ObjectId(userList.get(0).substring(5)));
-        final DBObject groupCursor = groupDbRef.fetch();
-        return (List) groupCursor.get(USER_LIST);
-    }
-
-    /**
      * Returns the registration key of the given course if the constraints are met, null is returned in all other cases.
      *
      * @param authenticator

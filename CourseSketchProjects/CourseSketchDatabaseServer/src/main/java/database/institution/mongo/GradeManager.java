@@ -12,6 +12,8 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.RequestConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.GradeHistory;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.school.School;
@@ -64,6 +66,11 @@ import static database.DatabaseStringConstants.WHO_CHANGED;
  * Created by Matt on 3/29/2015.
  */
 public final class GradeManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GradeManager.class);
 
     /**
      * Private constructor.
@@ -194,6 +201,7 @@ public final class GradeManager {
             itemId = grade.getCourseId();
             itemType = School.ItemType.COURSE;
         }
+        LOG.debug("Checking grade permission for type: {}", itemType);
         return authenticator.checkAuthentication(itemType, itemId, authId, 0, auth);
     }
 
