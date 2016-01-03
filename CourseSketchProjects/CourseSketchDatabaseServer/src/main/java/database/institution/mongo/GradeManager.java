@@ -177,13 +177,15 @@ public final class GradeManager {
      * Course grade or external grade checks course collection.
      *
      * @param authenticator The object that is performing authentication.
+     * @param authId The authenticationId that is being checked.
      * @param auth The authentication being performed.
      * @param grade The grade object the authentication is being performed on.
+     * @return {@link AuthenticationResponder} that contains the authentication of the user.
      * @throws DatabaseAccessException if the user is not in the respective collection for the grade type being checked.
+     * @throws AuthenticationException Thrown if there are problems checking the users permission.
      */
-    private static AuthenticationResponder checkUserExistsForGrade(final Authenticator authenticator, final String authId,
-            final Authentication.AuthType auth,
-            final ProtoGrade grade)
+    private static AuthenticationResponder checkUserExistsForGrade(final Authenticator authenticator,
+            final String authId, final Authentication.AuthType auth, final ProtoGrade grade)
             throws DatabaseAccessException, AuthenticationException {
 
         String itemId;
@@ -378,6 +380,8 @@ public final class GradeManager {
      * @param courseId
      *         The course that the grades are being retrieved for.
      * @param authId
+     *         The user that is requesting the grades.
+     * @param userId
      *         The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
