@@ -18,6 +18,7 @@ public final class DatabaseStringConstants {
     public static final String EXPERIMENT_ID = "ExperimentId";
     public static final String USER_ID = "UserId";
     public static final String SCHOOLITEMID = "SchoolItemID";
+    public static final String OWNER_ID = "OWNER";
 
     // collections
     public static final String COURSE_COLLECTION = "Courses";
@@ -38,6 +39,9 @@ public final class DatabaseStringConstants {
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
+    public static final String AUTH_DATABASE = "auth";
+    public static final String IDENTITY_DATABASE = "identity";
+    public static final String SUBMISSION_DATABASE = "submissions";
 
     // meta fields
     public static final String NAME = "Name";
@@ -152,16 +156,29 @@ public final class DatabaseStringConstants {
     public static final String STUDENT_ID = "StudentId";
     public static final String STUDENT_CLIENT_ID = "StudentClientId";
     public static final String INSTRUCTOR_CLIENT_ID = "InstructorClientId";
+    public static final String LAST_LOGIN_TIMES = "LoginSuccesses";
+    public static final String LOGIN_AMOUNT_FIELD = "LoginCount";
+    public static final String IDENTITY_AUTH = "Identity Auth";
 
     // user group specific
+    public static final String NON_USER_LIST = "NonUserList"; // used for moderators, peer teachers, and admins
     public static final String USER_LIST = "UserList";
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
+    public static final String SALT = "Salt";
+    public static final String REGISTRATION_KEY = "RegistrationKey";
 
     // mongo commands
     public static final String SET_COMMAND = "$set";
     public static final String ADD_SET_COMMAND = "$addToSet";
     public static final String EXISTS = "$exists";
+    public static final String PUSH_COMMAND = "$push";
+    public static final String EACH_COMMAND = "$each";
+    public static final String SORT_COMMAND = "$sort";
+    public static final String SLICE_COMMAND = "$slice";
+    public static final String INCREMENT_COMMAND = "$inc";
+    public static final String IN_COMMAND = "$in";
+    public static final String SUBFIELD_COMMAND = ".";
 
     // state and grade specific
     public static final String SCHOOL_ITEM_TYPE = "SchoolItemType";

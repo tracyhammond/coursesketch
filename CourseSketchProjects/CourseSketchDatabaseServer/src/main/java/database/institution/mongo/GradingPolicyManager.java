@@ -5,10 +5,10 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.Authenticator.AuthType;
 import org.bson.types.ObjectId;
 import protobuf.srl.grading.Grading.DropType;
 import protobuf.srl.grading.Grading.DroppedAssignment;
@@ -16,6 +16,8 @@ import protobuf.srl.grading.Grading.DroppedProblems;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.grading.Grading.PolicyCategory;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
+import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,6 @@ import java.util.Map;
 
 import static database.DatabaseStringConstants.APPLY_ONLY_TO_LATE_PROBLEMS;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_ID;
 import static database.DatabaseStringConstants.DROPPED_ASSIGNMENTS;
 import static database.DatabaseStringConstants.DROPPED_PROBLEMS;
@@ -105,10 +106,12 @@ public final class GradingPolicyManager {
      */
     public static void insertGradingPolicy(final Authenticator authenticator, final DB dbs, final String userId, final ProtoGradingPolicy policy)
             throws AuthenticationException, DatabaseAccessException {
-        final AuthType auth = new AuthType();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, policy.getCourseId(), userId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
+        auth.setCheckingAdmin(true);
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, policy.getCourseId(), userId, 0, auth.build());
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("User does not have permission to insert grade policy", AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBCollection policyCollection = dbs.getCollection(GRADING_POLICY_COLLECTION);
@@ -175,10 +178,12 @@ public final class GradingPolicyManager {
             throw new DatabaseAccessException("Grading policy was not found for course with ID " + courseId);
         }
 
-        final AuthType auth = new AuthType();
+        final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckAccess(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, courseId, userId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE, courseId, userId, 0, auth.build());
+        if (!responder.hasAccess()) {
+            throw new AuthenticationException("User does not have permission to insert grade policy", AuthenticationException.INVALID_PERMISSION);
         }
 
         final ProtoGradingPolicy.Builder policy = ProtoGradingPolicy.newBuilder();

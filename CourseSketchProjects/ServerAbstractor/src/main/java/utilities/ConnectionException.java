@@ -1,5 +1,7 @@
 package utilities;
 
+import protobuf.srl.request.Message;
+
 /**
  * A generic exception that is thrown by this library.
  *
@@ -7,7 +9,7 @@ package utilities;
  *
  */
 @SuppressWarnings("serial")
-public class ConnectionException extends Exception {
+public class ConnectionException extends CourseSketchException {
 
     /**
      * A simple constructor.
@@ -28,4 +30,17 @@ public class ConnectionException extends Exception {
         super(string, cause);
     }
 
+    /**
+     * Constructs a new exception with {@code null} as its detail message.
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
+     *
+     * @param message
+     *            The message for the exception.
+     * @param protoException
+     *         An existing chain of exceptions.  This could come from a different server even.
+     */
+    public ConnectionException(final String message, final Message.ProtoException protoException) {
+        super(message, protoException);
+    }
 }

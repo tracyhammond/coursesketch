@@ -404,7 +404,7 @@ function ProtobufSetup() {
             throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
         }
 
-        return createRequestFromData(update, requestType);
+        return this.createRequestFromData(update, requestType);
     };
 
     /**

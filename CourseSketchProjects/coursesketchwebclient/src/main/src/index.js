@@ -9,6 +9,11 @@ CourseSketch.redirector = {};
  */
 $(document).ready(
 function() {
+    /**
+     * A local instance of the document object used to maintain the correct instance when potentially called from IFrames.
+     * @type {document}
+     */
+    var localDoc = document;
 
     /**
      * @returns {Element} The element that encapsulates the exception.
@@ -62,7 +67,7 @@ function() {
      */
     var successLogin = function(loggedInConnection) {
         CourseSketch.connection = loggedInConnection;
-        $('#loginLocation').empty();
+        $(element).empty();
         var importPage = document.createElement('link');
         importPage.rel = 'import';
         importPage.href = '/src/main.html';
@@ -80,7 +85,7 @@ function() {
 
             loadHomePage();
         };
-        document.head.appendChild(importPage);
+        localDoc.head.appendChild(importPage);
         element.style.display = 'none';
     };
 
@@ -93,12 +98,12 @@ function() {
      * @see {@link Index.createRegister}
      * @memberof Index
      */
-    function createLogin(register) {
-        $('#loginLocation').empty();
+    function createLogin(register, successLoginCallback) {
+        $(element).empty();
         var login = document.createElement('login-system');
-        login.setOnSuccessLogin(successLogin);
+        login.setOnSuccessLogin(successLoginCallback);
         login.setRegisterCallback(function() {
-            register(createLogin);
+            register(createLogin, successLoginCallback);
         });
         element.appendChild(login);
     }
@@ -112,16 +117,48 @@ function() {
      * @see {@link Index.createLogin}
      * @memberof Index
      */
-    function createRegister(login) {
-        $('#loginLocation').empty();
+    function createRegister(login, successLoginCallback) {
+        $(element).empty();
         var register = document.createElement('register-system');
-        register.setOnSuccessLogin(successLogin);
+        register.setOnSuccessLogin(successLoginCallback);
         register.setCancelCallback(function() {
-            login(createRegister);
+            login(createRegister, successLoginCallback);
         });
         element.appendChild(register);
     }
-    createLogin(createRegister);
+
+
+    /**
+     * A public function that creates a login element.
+     */
+    CourseSketch.createLoginElement = function() {
+        createLogin(createRegister, successLogin);
+    };
+
+    CourseSketch.createLoginElement();
+
+    /**
+     * A public function that is used to display the login element anywhere.
+     */
+    CourseSketch.createReconnection = function() {
+        createLogin(createRegister, CourseSketch.successfulReconnection);
+        element.className = 'reconnectLogin';
+        element.style.display = 'initial';
+    };
+
+    /**
+     * Called when a reconnection occurs
+     */
+    CourseSketch.successfulReconnection = function(loggedInConnection) {
+        console.log('The user relogged in correctly');
+        CourseSketch.connection = loggedInConnection;
+        CourseSketch.dataListener.setupConnectionListeners();
+        $(element).empty();
+        element.className = '';
+
+        // Note that this function may be defined dynamically
+        CourseSketch.onSuccessfulReconnection();
+    };
 
     /**
      * Creates and loads the menu.
@@ -158,7 +195,7 @@ function() {
             CourseSketch.redirectContent('/src/student/homepage/homePage.html', 'Welcome Student');
         }
 
-        CourseSketch.dataListener = new AdvanceDataListener(CourseSketch.connection,
+        CourseSketch.dataListener = new AdvanceDataListener(
                 CourseSketch.prutil.getRequestClass(), function(evt, item) {
             console.log('default listener');
         });

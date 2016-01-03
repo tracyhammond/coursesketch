@@ -46,16 +46,22 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             courseManagement.showCourses(courseList);
         };
         if (CourseSketch.dataManager.isDatabaseReady()) {
+            CourseSketch.dataManager.getAllCourses(loadCourses);
+            /*
             CourseSketch.dataManager.pollUpdates(function() {
-                CourseSketch.dataManager.getAllCourses(loadCourses);
+
             });
+            */
         } else {
             var intervalVar = setInterval(function() {
                 if (CourseSketch.dataManager.isDatabaseReady()) {
                     clearInterval(intervalVar);
+                    CourseSketch.dataManager.getAllCourses(loadCourses);
+                    /*
                     CourseSketch.dataManager.pollUpdates(function() {
-                        CourseSketch.dataManager.getAllCourses(loadCourses);
+
                     });
+                    */
                 }
             }, 100);
         }
