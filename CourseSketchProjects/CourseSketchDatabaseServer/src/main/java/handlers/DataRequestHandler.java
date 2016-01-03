@@ -207,7 +207,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case COURSE_ROSTER: {
-                            final List<String> userList = instance.getCourseRoster(userId, itemRequest.getItemId(0));
+                            final List<String> userList = instance.getCourseRoster(authId, itemRequest.getItemId(0));
                             final Util.IdChain.Builder idChain = Util.IdChain.newBuilder();
                             idChain.addAllIdChain(userList);
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, idChain.build()));
