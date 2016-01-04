@@ -191,8 +191,11 @@ public abstract class AbstractGeneralConnectionRunner {
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = createSocketInitializer(
-                new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal(), getDatabaseName(), getDatabaseUrl()));
+
+        final ServerInfo serverInfo = new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal(),
+                getDatabaseName(), getDatabaseUrl());
+
+        socketInitializerInstance = createSocketInitializer(serverInfo);
 
         addConnections();
 

@@ -21,9 +21,20 @@ import java.net.URI;
 public class AuthenticationWebSocketClient extends ClientWebSocket implements AuthenticationChecker {
 
     /**
+     * The default address for the authentication server.
+     */
+    public static final String ADDRESS = "AUTH_IP_PROP";
+
+    /**
+     * The default port of the Auth Server.
+     */
+    public static final int PORT = 8890;
+
+    /**
      * The blocker service that is used to communicate.
      */
     private Authentication.AuthenticationService.BlockingInterface authService;
+
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
      *
@@ -35,7 +46,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
      *         http://example.com:1234
      * @param iParentServer The server that created the websocket.
      */
-    protected AuthenticationWebSocketClient(final URI iDestination,
+    public AuthenticationWebSocketClient(final URI iDestination,
             final AbstractServerWebSocketHandler iParentServer) {
         super(iDestination, iParentServer);
     }
