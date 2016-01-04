@@ -8,7 +8,11 @@
     "IndexedDBShim": "",
     "stacktrace-js": "0.6.4",
     "materialize": "0.97.1",
-    "dialog-polyfill": "0.4.2"
+    "dialog-polyfill": "0.4.2",
+    "protobufjs": "dcodeIO/protobuf.js#4.1.2"
+  },
+  "devDependencies": {
+    "blanket": "1.1.7"
   },
   "private": true
 }
