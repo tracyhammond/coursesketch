@@ -95,7 +95,7 @@ public final class GradeManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database that the grade is being added to.
-     * @param adderId
+     * @param authId
      *         The Id of the person trying to add the grade.
      * @param grade
      *         The ProtoObject representing the grade to be added.
@@ -107,12 +107,12 @@ public final class GradeManager {
      *         Thrown if grades are not found in the database.
      * Package-private
      */
-    static void addGrade(final Authenticator authenticator, final DB dbs, final String adderId, final ProtoGrade grade)
+    static void addGrade(final Authenticator authenticator, final DB dbs, final String authId, final ProtoGrade grade)
             throws AuthenticationException, DatabaseAccessException {
         // Check authentication so only teachers of the course can add grades
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckingAdmin(true);
-        final AuthenticationResponder responder = checkUserExistsForGrade(authenticator, adderId, auth.build(), grade);
+        final AuthenticationResponder responder = checkUserExistsForGrade(authenticator, authId, auth.build(), grade);
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to change this grade.", AuthenticationException.INVALID_PERMISSION);
         }
