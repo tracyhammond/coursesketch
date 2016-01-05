@@ -496,7 +496,7 @@ public interface Institution {
      *
      * @param courseId
      *         The gradingPolicy we will get is from this course.
-     * @param userId
+     * @param authId
      *         The id of the user asking for the state.
      * @return The protoObject representing the gradingPolicy.
      * @throws AuthenticationException
@@ -504,7 +504,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if connecting to database causes an error.
      */
-    ProtoGradingPolicy getGradingPolicy(final String courseId, final String userId) throws AuthenticationException, DatabaseAccessException;
+    ProtoGradingPolicy getGradingPolicy(final String courseId, final String authId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets all bank problems in the database by a page.
@@ -537,12 +537,12 @@ public interface Institution {
             throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * Gets all grades for a certain student in a certain course. Sorted in ascending order by assignmentId and then userId.
+     * Gets all grades for a certain student in a certain course. Sorted in ascending order by assignmentId and then authId.
      * This does not mean the list will be in chronological or alphabetical order.
      *
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param userId
+     * @param authId
      *         The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
@@ -551,7 +551,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String userId)
+    List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -567,7 +567,7 @@ public interface Institution {
      *  { upsert: true }
      * )
      * </code></pre>
-     * @param adderId
+     * @param authId
      *         The Id of the person trying to add the grade.
      * @param grade
      *         The ProtoObject representing the grade to be added.
@@ -576,7 +576,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    void addGrade(final String adderId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException;
+    void addGrade(final String authId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Finds a single grade for a student in a course. If fields are not required in the search, pass in null.
@@ -597,7 +597,7 @@ public interface Institution {
             throws AuthenticationException, DatabaseAccessException;
 
     /**
-     * @param userId
+     * @param authId
      *         The id of the user requesting the courseRoster
      * @param courseId
      *         The id of what courseRoster is being grabbed
@@ -607,6 +607,6 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    List<String> getCourseRoster(final String userId, final String courseId)
+    List<String> getCourseRoster(final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException;
 }
