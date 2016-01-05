@@ -99,6 +99,8 @@ public final class GradeManager {
      *         The Id of the person trying to add the grade.
      * @param grade
      *         The ProtoObject representing the grade to be added.
+     *         Assumptions:
+     *              The userId is the hashed userId.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to add the grade.
      * @throws DatabaseAccessException
