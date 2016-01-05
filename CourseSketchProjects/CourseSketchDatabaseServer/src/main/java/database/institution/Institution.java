@@ -544,6 +544,7 @@ public interface Institution {
      *         The course that the grades are being retrieved for.
      * @param authId
      *         The user that is requesting the grades.
+     * @param userId
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
@@ -551,7 +552,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId)
+    List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId, String userId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**

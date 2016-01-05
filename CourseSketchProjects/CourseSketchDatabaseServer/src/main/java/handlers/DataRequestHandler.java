@@ -202,7 +202,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case GRADE: {
-                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, authId);
+                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, authId, userId);
                             results.add(ResultBuilder.buildResult(ItemQuery.GRADE, gradeList));
                         }
                         break;
