@@ -34,6 +34,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
 
@@ -42,6 +43,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static database.DatabaseStringConstants.DATABASE;
@@ -602,13 +604,23 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public List<String> getCourseRoster(final String authId, final String courseId)
+    public Identity.UserNameResponse getCourseRoster(final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
-        final Set<String> userIds = identityManager.getItemRoster(authId, courseId, School.ItemType.COURSE,
-                null, null).keySet();
-        final List<String> resultList = new ArrayList<>();
-        resultList.addAll(userIds);
-        return resultList;
+        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, courseId, School.ItemType.COURSE, null, null);
+        final Identity.UserNameResponse.Builder builder = Identity.UserNameResponse.newBuilder();
+        for (Map.Entry<String, String> stringStringEntry : itemRoster.entrySet()) {
+            builder.addUserNames(Identity.UserNameResponse.MapFieldEntry.newBuilder()
+                    .setKey(stringStringEntry.getKey())
+                    .setValue(stringStringEntry.getValue())
+                    .build());
+        }
+        return builder.build();
+    }
+
+    @Override
+    public String getUserNameForIdentity(final String userId, final String authId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException {
+        return identityManager.getUserName(userId, authId, courseId, School.ItemType.COURSE, null).values().iterator().next();
     }
 
 }

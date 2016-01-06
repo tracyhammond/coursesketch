@@ -14,9 +14,11 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A wrapper around the database that contains institution data.
@@ -608,6 +610,19 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    List<String> getCourseRoster(final String authId, final String courseId)
+    Identity.UserNameResponse getCourseRoster(final String authId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Gets the username for the userId.
+     *
+     * @param userId The userId that is being exchanged for the userId.
+     * @param authId The authentication of the user that is exchanging the userId.
+     * @param courseId The course the username is being asked for.
+     * @return The username if the permissions are successful.
+     * @throws DatabaseAccessException
+     * @throws AuthenticationException
+     */
+    String getUserNameForIdentity(final String userId, final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException;
 }
