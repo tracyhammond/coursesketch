@@ -27,7 +27,6 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.services.identity.Identity;
-import protobuf.srl.utils.Util;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
@@ -35,7 +34,6 @@ import utilities.ProtobufUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Handles all request for data.

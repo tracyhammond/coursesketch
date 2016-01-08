@@ -18,7 +18,6 @@ import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * A wrapper around the database that contains institution data.
@@ -547,6 +546,7 @@ public interface Institution {
      * @param authId
      *         The user that is requesting the grades.
      * @param userId
+     *         The user that is requesting the grades (used for identification purposes).
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
@@ -620,8 +620,8 @@ public interface Institution {
      * @param authId The authentication of the user that is exchanging the userId.
      * @param courseId The course the username is being asked for.
      * @return The username if the permissions are successful.
-     * @throws DatabaseAccessException
-     * @throws AuthenticationException
+     * @throws DatabaseAccessException Thrown if the user does not exist or there are problems getting the username.
+     * @throws AuthenticationException Thrown if the user does not have the authentication to get the username.
      */
     String getUserNameForIdentity(final String userId, final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException;
