@@ -44,7 +44,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.SELF_ID;
