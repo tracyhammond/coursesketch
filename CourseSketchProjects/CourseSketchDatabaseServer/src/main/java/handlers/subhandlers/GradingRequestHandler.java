@@ -56,14 +56,15 @@ public final class GradingRequestHandler {
      *
      * @param institution The database interface.
      * @param request The request being sent.
-     * @param authId The Id of the user who sent the request.
+     * @param authId The Id of the user who sent the request used for authentication purposes.
+     * @param userId The id of the user who sent the request used for identification purposes.
      * @return List of the grades. The list is length 1 if it is only a single grade.
      * @throws AuthenticationException Thrown if user does not have correct permission to retrieve grade.
      * @throws DatabaseAccessException Thrown if there is something not found in the database.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
      */
-    public static List<ProtoGrade> gradingRequestHandler(final Institution institution, final ItemRequest request, final String authId)
-            throws DatabaseAccessException, InvalidProtocolBufferException, AuthenticationException {
+    public static List<ProtoGrade> gradingRequestHandler(final Institution institution, final ItemRequest request, final String authId,
+            final String userId) throws DatabaseAccessException, InvalidProtocolBufferException, AuthenticationException {
         final GradingQuery query = GradingQuery.parseFrom(request.getAdvanceQuery());
 
         final boolean instructor = query.getPermissionLevel() == GradingQuery.PermissionLevel.INSTRUCTOR;
@@ -76,7 +77,7 @@ public final class GradingRequestHandler {
         if (instructor && allGrades) {
             returnList = institution.getAllAssignmentGradesInstructor(request.getItemId(COURSE_INDEX), authId);
         } else if (student && allGrades) {
-            returnList = institution.getAllAssignmentGradesStudent(request.getItemId(COURSE_INDEX), authId);
+            returnList = institution.getAllAssignmentGradesStudent(request.getItemId(COURSE_INDEX), authId, userId);
         } else {
             final ProtoGrade gradeData = ProtoGrade.newBuilder()
                     .setUserId(request.getItemId(USER_INDEX))
