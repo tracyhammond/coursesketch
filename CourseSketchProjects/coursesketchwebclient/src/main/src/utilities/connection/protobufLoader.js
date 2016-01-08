@@ -141,6 +141,17 @@ function ProtobufSetup() {
     }
 
     /**
+     * Builds the UpdateList protobuf files.
+     *
+     * These contain all of the little actions that can occur
+     */
+    function buildUpdateList() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'identity.proto');
+        var ProtoIdentityServiceBuilder = builder.build(PROTOBUF_PACKAGE).srl.services.identity;
+        assignValues(ProtoIdentityServiceBuilder);
+    }
+
+    /**
      * Builds the Tutorial protobuf files.
      *
      * These ares used for the tutorials
