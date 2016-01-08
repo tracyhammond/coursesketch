@@ -17,13 +17,13 @@
     CourseSketch.gradeBook.loadGrades = function(courseId) {
         CourseSketch.dataManager.getCourse(courseId, function(course) {
             CourseSketch.gradeBook.course = course;
-            CourseSketch.dataManager.getCourseRoster(courseId, function(studentList) {
+            CourseSketch.dataManager.getCourseRoster(courseId, function(idToNameMap) {
                 // loads all of the grades
-                CourseSketch.dataManager.courseRoster = studentList;
+                CourseSketch.dataManager.courseRoster = idToNameMap;
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
                     var assignmentList = course.assignmentList;
                     var table = document.querySelector('.tabletalk');
-                    CourseSketch.gradeBook.initializeTable(assignmentList, gradeList, studentList, table);
+                    CourseSketch.gradeBook.initializeTable(assignmentList, gradeList, idToNameMap, table);
                 });
             });
         });
@@ -34,35 +34,35 @@
      *
      * @param {List<String>} assignmentList List of assignment IDs.
      * @param {List<ProtoGrade>} gradeList List of grades from the server.
-     * @param {List<String>} studentList List of student IDs.
+     * @param {Map<String:String>} idToNameMap Map of key: studentId and value: username
      * @param {HTMLTable} table The grade table on the webpage.
      */
-    CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, studentList, table) {
+    CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, idToNameMap, table) {
         table.innerHTML = '';
-
+        var studentList = Array.from(idToNameMap.keys());
         var assignmentMap = new Map();
-        var studentMap = new Map();
+        var idToRowMap = new Map();
         var body = document.createElement('tbody');
         table.appendChild(body);
 
         for (var i = 0; i < studentList.length; i++) {
-            addNewStudent(studentMap, studentList[i], assignmentList, body);
+            addNewStudent(idToRowMap, studentList[i], assignmentList, body);
         }
-        CourseSketch.gradeBook.studentMap = studentMap;
+        CourseSketch.gradeBook.idToRowMap = idToRowMap;
 
         createAssignmentHeader(assignmentList, assignmentMap, table);
-        CourseSketch.gradeBook.populateGrades(gradeList, studentMap, assignmentMap, body);
-        populateStudentNames(studentMap);
+        CourseSketch.gradeBook.populateGrades(gradeList, idToRowMap, assignmentMap, body);
+        populateStudentNames(idToRowMap);
     };
 
     /**
      * Creates a new tr with the number of assignments and adds it to the student map.
      *
-     * @param {Map<String,Element>} studentMap This is a map of studentId's to table rows.
+     * @param {Map<String,Element>} idToRowMap This is a map of studentId's to table rows.
      * @param {String} studentId The student's ID number.
      * @param {Integer} assignmentList The list of assignments for the course.
      */
-    function addNewStudent(studentMap, studentId, assignmentList, table) {
+    function addNewStudent(idToRowMap, studentId, assignmentList, table) {
         var row = document.createElement('tr');
         for (var i = 0; i < assignmentList.length; i++) {
             var column = document.createElement('td');
@@ -78,30 +78,30 @@
             row.appendChild(column);
         }
         table.appendChild(row);
-        studentMap.set(studentId, row);
+        idToRowMap.set(studentId, row);
     }
 
     /**
      * This populates the map of grades for each student and, calls student adding function if student has not been added yet.
      *
      * @param {List<ProtoGrade>} listGrades The list of grades from the server.
-     * @param {Map<String, Integer>} studentMap This is a map of studentIds to table rows.
+     * @param {Map<String, Integer>} idToRowMap This is a map of studentIds to table rows.
      * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
      * @param {HTMLTable} table The grade table on the webpage.
      * @return {List<ProtoGrade>} grades that were not displayed.
      *          This is because the users do not exist anymore in the course roster.
      */
-    CourseSketch.gradeBook.populateGrades = function(listGrades, studentMap, assignmentMap, table) {
+    CourseSketch.gradeBook.populateGrades = function(listGrades, idToRowMap, assignmentMap, table) {
         var gradesNotShown = [];
         for (var i = 0; i < listGrades.length; i++) {
             var protoGrade = listGrades[i];
             var studentId = protoGrade.userId;
             var assignmentId = protoGrade.assignmentId;
-            if (!studentMap.has(studentId)) {
+            if (!idToRowMap.has(studentId)) {
                 gradesNotShown.push(protoGrade);
                 continue;
             }
-            var studentRow = studentMap.get(studentId);
+            var studentRow = idToRowMap.get(studentId);
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
             var stringGrade = '' + protoGrade.getCurrentGrade();
@@ -164,16 +164,18 @@
     /**
      * Adds the student names to the first column of every row.
      *
-     * @param {Map<String, Element>} studentMap This is a map of studentIds to table rows.
+     * @param {Map<String, Element>} idToRowMap This is a map of studentIds to table rows.
      */
-    function populateStudentNames(studentMap) {
-        studentMap.forEach(function(value, key, map) {
+    function populateStudentNames(idToRowMap) {
+        console.log(idToRowMap);
+        idToRowMap.forEach(function(value, key, map) {
             var row = map.get(key);
             var cell = document.createElement('td');
             cell.dataset.student = key;
-            var cellText = key;
-            if (key.length > 13) {
-                cellText = key.substring(0, 10) + '...';
+            var username = CourseSketch.dataManager.courseRoster.get(key);
+            var cellText = username;
+            if (username.length > 13) {
+                cellText = username.substring(0, 10) + '...';
             }
             cell.textContent = cellText;
             cell.className = 'namecell';
@@ -251,9 +253,9 @@
             input.focus();
             input.select();
 
-            addCommentButton.onclick = (function() {
+            addCommentButton.onclick = function() {
                 addComment(this);
-            }).bind(this);
+            }.bind(this);
 
             /**
              * Sets validity message for checking that the user only entered numbers.
