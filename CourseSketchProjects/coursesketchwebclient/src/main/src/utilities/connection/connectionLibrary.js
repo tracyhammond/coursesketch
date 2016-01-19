@@ -293,7 +293,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                 data: message.toArrayBuffer()
             };
             websocket.onmessage(event);
-        }, 100);
+        }, 20);
     };
     /**
      * Closes the websocket.

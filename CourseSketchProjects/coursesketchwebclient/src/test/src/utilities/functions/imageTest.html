@@ -6,6 +6,7 @@
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
 <!-- files needed for testing -->
+    <script src="/src/utilities/functions/base.js"></script>
 
 <!-- file being tested. -->
 <script src="/src/utilities/functions/image.js" data-cover></script>
@@ -27,14 +28,16 @@
 	<script>
         QUnit.module("testModule1");
         test("svg test", function(assert) {
-            expect(0);
-            imgTag = document.getElementById("testImageSvg");
-            var data = getBase64Image(imgTag);
-            console.log(data);
-            var storeTag = document.getElementById("resultImageSvg");
-            setBase64Image(storeTag, data);
-            var data2 = getBase64Image(storeTag);
-            //assert.equal(data, data2);
+            expect(1);
+            throws(function() {
+                imgTag = document.getElementById("testImageSvg");
+                var data = getBase64Image(imgTag);
+                console.log(data);
+                var storeTag = document.getElementById("resultImageSvg");
+                setBase64Image(storeTag, data);
+                var data2 = getBase64Image(storeTag);
+                //assert.equal(data, data2);
+            });
         });
 
         test("png test", function(assert) {

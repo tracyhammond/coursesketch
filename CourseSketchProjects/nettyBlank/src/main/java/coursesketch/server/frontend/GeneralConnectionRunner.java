@@ -86,7 +86,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-
+        // Defined by specific implementations.
     }
 
     /**
@@ -94,7 +94,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeLocalEnvironment() {
-
+        // Defined by specific implementations.
     }
 
     /**
@@ -102,7 +102,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void executeRemoteEnvironment() {
-
+        // Defined by specific implementations.
     }
 
     /**
@@ -183,6 +183,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
             final boolean assumedRunning = !workerGroup.isShutdown() && !workerGroup.isTerminated() && !workerGroup.isShuttingDown();
             LOG.info("Server is running hopefully = {}", assumedRunning);
             getSocketInitailizerInstance().reconnect();
+            getSocketInitailizerInstance().onServerStart();
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
@@ -211,16 +212,7 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     @Override
     protected void stop() {
-
-    }
-
-    /**
-     * Stops the server.
-     * Input is not stopped by the method.
-     */
-    @Override
-    protected void reconnect() {
-
+        // Defined by specific implementations.
     }
 
     /**
