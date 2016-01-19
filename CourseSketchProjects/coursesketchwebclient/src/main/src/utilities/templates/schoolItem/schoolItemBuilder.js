@@ -159,7 +159,7 @@ function SchoolItemBuilder() {
     this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type, index) {
         // Required Items
         var box = document.createElement('school-item');
-        box.className = "hoverable";
+        box.className = 'hoverable';
         box.setAttribute('id', srlSchoolItem.id);
         box.schoolItemData = srlSchoolItem;
 
