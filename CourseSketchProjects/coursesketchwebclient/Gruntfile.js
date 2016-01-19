@@ -408,7 +408,7 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // sets up tasks related to setting the system for the rests of the tasks
+    // Sets up tasks related to setting the system for the rest of the tasks.
     grunt.registerTask('setup', function() {
         printTaskGroup();
         grunt.task.run([
