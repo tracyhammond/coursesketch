@@ -169,6 +169,7 @@ public class ServerInfo {
 
     /**
      * This can really only be used for testing purposes because it contains invalid values.
+     *
      * @return a default {@link ServerInfo}
      */
     public static ServerInfo createDefaultServerInfo() {
