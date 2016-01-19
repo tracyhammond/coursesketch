@@ -106,7 +106,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
                         }
                     });
             LOG.info("{} connecting to[ {} ]", this.getClass().getSimpleName() , getURI());
-            bootstrap.connect(getURI().getHost(), getURI().getPort()).sync().channel();
+            bootstrap.connect(getURI().getHost(), getURI().getPort()).sync();
             handler.handshakeFuture().sync();
         } catch (InterruptedException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -122,7 +122,7 @@ public class ClientWebSocket extends AbstractClientWebSocket {
      *         The message that is received by this object.
      */
     @Override protected void onMessage(final ByteBuffer buffer) {
-
+        // Defined by specific implementations.
     }
 
     /**

@@ -146,6 +146,13 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     }
 
     /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    @Override public void onServerStart() {
+        // Does nothing by default
+    }
+
+    /**
      * {@inheritDoc}
      * <p/>
      * Override this method to create a subclass of the MultiConnectionManager.
@@ -166,10 +173,13 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
      */
     @Override
     public final void reconnect() {
-        LOG.info("Reconnecting");
+        LOG.info("Reconnecting to remote servers.");
         if (manager != null) {
             manager.dropAllConnection(true, false);
             manager.connectServers(connectionServer);
+        }
+        if (connectionServer != null) {
+            connectionServer.initialize();
         }
         onReconnect();
     }
@@ -185,7 +195,9 @@ public class ServerWebSocketInitializer extends WebSocketServlet implements ISoc
     /**
      * Called after reconnecting the connections.
      */
-    protected void onReconnect() { }
+    protected void onReconnect() {
+        // Defined by specific implementations.
+    }
 
     /**
      * @return the multiConnectionManager.  This is only used within this package.

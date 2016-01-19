@@ -62,6 +62,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      *            The message that is received by this object.
      */
     @Override
+    @SuppressWarnings("PMD.AvoidThrowingNullPointerException")
     public void onMessage(final ByteBuffer buffer) {
         LOG.debug("Received login response info");
         final Request request = AbstractServerWebSocketHandler.Decoder.parseRequest(buffer);
@@ -91,13 +92,14 @@ public final class LoginClientWebSocket extends ClientWebSocket {
             final LoginConnectionState state = (LoginConnectionState) getStateFromId(request.getSessionInfo());
             // If there was no connection state created then we can not log the student in.
             if (state == null) {
-                final Exception e = new NullPointerException("No State was grabbed for session: [" + request.getSessionInfo() + "]");
-                LOG.error("Unable to create a state object for the given session ", e);
+                final Exception nullPointerException = new NullPointerException("No State was grabbed for session:[ "
+                        + request.getSessionInfo() + "]");
+                LOG.error("Unable to create a state object for the given session", nullPointerException);
 
                 final Request result = createExceptionRequest(ProxyConnectionManager.createClientRequest(request),
-                        ExceptionUtilities.createProtoException(e));
+                        ExceptionUtilities.createProtoException(nullPointerException));
 
-                this.getParentServer().send(getConnectionFromState(state), result);
+                this.getParentServer().send(getConnectionFromState(null), result);
                 return;
             }
 
@@ -126,7 +128,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      */
     private void loginUser(final LoginInformation login, final Request request, final LoginConnectionState state) {
         if (login.getIsLoggedIn()) {
-            state.logIn(login.getIsInstructor(), request.getServersideId());
+            state.logIn(login.getIsInstructor(), request.getServersideId(), request.getServerUserId());
         }
 
         // strips away identification

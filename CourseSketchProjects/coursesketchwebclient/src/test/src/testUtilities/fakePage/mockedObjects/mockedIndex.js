@@ -1,4 +1,7 @@
-var CourseSketch = {}; // notice that this is not read only!
+
+if (typeof window.CourseSketch == "undefined" || typeof CourseSketch == "undefined") {
+    var CourseSketch = {}; // notice that this is not read only!
+}
 if (typeof parent == "undefined" || parent == null) {
     parent = {};
 }
