@@ -27,7 +27,8 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * Max size used in aggregating http request.  which is 2^16.
      */
-    private static final int MAX_SIZE = 65536;
+    public static final int MAX_FRAME_SIZE = Integer.MAX_VALUE;
+
     /**
      * The server that the servlet is connected to.
      */
@@ -71,7 +72,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     @Override
     public void stop() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**
@@ -153,7 +154,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
             pipeline.addFirst("ssl", sslContext.newHandler(channel.alloc()));
         }
         pipeline.addLast(new HttpServerCodec());
-        pipeline.addLast(new HttpObjectAggregator(MAX_SIZE));
+        pipeline.addLast(new HttpObjectAggregator(MAX_FRAME_SIZE));
         // TODO change this to the double locking check thingy
         if (singleWrapper == null) {
             singleWrapper = new ServerSocketWrapper(getServer(), this.getServerInfo().isSecure());
@@ -165,7 +166,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * Called after reconnecting the connections.
      */
     protected void onReconnect() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**

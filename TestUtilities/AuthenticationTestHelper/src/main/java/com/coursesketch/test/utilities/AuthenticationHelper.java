@@ -23,7 +23,8 @@ import static org.mockito.Mockito.when;
 public class AuthenticationHelper {
 
     /**
-     * If element is not null it will create an eq matcher if element is not null then it will create an any matcher.
+     * If element is not null it will create an eq matcher. If element is not null then it will create an any matcher.
+     *
      * @param element The object that a matcher is being created for.
      * @param tClass The class that represents the object.
      * @param <T> The object type
@@ -41,6 +42,7 @@ public class AuthenticationHelper {
 
     /**
      * Sets permissions for the given authentication checker.
+     *
      * @param authChecker The authentication checker that the permissions are being created for.
      * @param type The {@code ItemType} which will be matched for this permission. Send in null to apply this to any {@code ItemType}.
      * @param itemId The {@code itemId} that will be matched for this permission. Send in null to apply this to any (@code itemId}.
@@ -67,6 +69,7 @@ public class AuthenticationHelper {
 
     /**
      * Sets mock date for the given {@link AuthenticationOptionChecker}.
+     *
      * @param option The {@link AuthenticationOptionChecker} that the date is being created for.
      * @param creator The {@link AuthenticationDataCreator} that will be matched for this date.
      *                Send in null to apply this to a new {@link AuthenticationDataCreator}.
@@ -97,6 +100,7 @@ public class AuthenticationHelper {
 
     /**
      * Sets the mock publish state for the given {@link AuthenticationOptionChecker}.
+     *
      * @param option The {@link AuthenticationOptionChecker} that the publish state is being created for.
      * @param creator The {@link AuthenticationDataCreator} that will be matched for this publish state.
      *                Send in null to apply this to a new {@link AuthenticationDataCreator}.
@@ -126,12 +130,14 @@ public class AuthenticationHelper {
 
     /**
      * Sets the mock registration state for the given {@link AuthenticationOptionChecker}.
+     *
      * @param option The {@link AuthenticationOptionChecker} that the registration state is being created for.
      * @param creator The {@link AuthenticationDataCreator} that will be matched for this registration state.
      *                Send in null to apply this to a new {@link AuthenticationDataCreator}.
      * @param type The {@code ItemType} which will be matched for this registration state. Send in null to apply this to any {@code ItemType}.
      * @param itemId The {@code itemId} that will be matched for this registration state. Send in null to apply this to any (@code itemId}.
-     * @param isRegistraionRequired The resulting mock registration state that will be returned if the {@code authChecker} is given the above matches.
+     * @param isRegistrationRequired The resulting mock registration state that will be returned if the
+     *          {@code authChecker} is given the above matches.
      * @throws DatabaseAccessException Should not be thrown because authChecker should be a mock.
      * @return {@link AuthenticationDataCreator}, A new instance if {@code creator} is null otherwise it is the value of {@code creator}.
      * @see #setMockDate(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, long, boolean)
@@ -139,7 +145,7 @@ public class AuthenticationHelper {
      */
     public static AuthenticationDataCreator setMockRegistrationRequired(final AuthenticationOptionChecker option,
             final AuthenticationDataCreator creator,
-            final School.ItemType type, final String itemId, final boolean isRegistraionRequired) throws DatabaseAccessException {
+            final School.ItemType type, final String itemId, final boolean isRegistrationRequired) throws DatabaseAccessException {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
@@ -150,7 +156,7 @@ public class AuthenticationHelper {
                 createAnyEqMatcher(itemId, String.class)))
                 .thenReturn(tempCreator);
         when(option.isItemRegistrationRequired(tempCreator))
-                .thenReturn(isRegistraionRequired);
+                .thenReturn(isRegistrationRequired);
         return tempCreator;
     }
 }

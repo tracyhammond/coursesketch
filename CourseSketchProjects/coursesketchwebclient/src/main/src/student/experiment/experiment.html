@@ -17,6 +17,7 @@
     <!-- experiment specific -->
     <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
     <link rel="import" href="/src/common/submission/submissionInclude.html">
+    <link rel="import" href="/src/common/problem/problemTextPanelInclude.html">
 
     <!-- embedded HTML -->
     <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html">
@@ -27,11 +28,14 @@
 </head>
 <body style = "overflow: hidden">
     <div class="row">
-        <navigation-panel></navigation-panel>
-        <question-panel></question-panel>
+        <div class="col s9" style="position: absolute; display: inline-flex; z-index: 1;">
+            <navigation-panel></navigation-panel>
+            <problem-text-panel style="flex: 1 1;"></problem-text-panel>
+        </div>
         <div id="percentBar" style="display:none;"></div>
         <submit-panel id="problemPanel" class="col s12 cyan lighten-5">
             <problem-tool-bar></problem-tool-bar>
         </submit-panel>
     </div>
 </body>
+</html>

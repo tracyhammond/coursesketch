@@ -15,6 +15,8 @@ import protobuf.srl.services.authentication.Authentication;
 import utilities.ExceptionUtilities;
 
 /**
+ * Manages RPC messages for authentication purposes.
+ *
  * Created by gigemjt on 9/3/15.
  */
 public final class AuthenticationService extends Authentication.AuthenticationService implements CourseSketchRpcService {
@@ -35,7 +37,8 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationService.class);
 
     /**
-     * Creates an authentication service with an DbAuthManager and a DbAuthChecker.
+     * Creates an authentication service with a DbAuthManager and a DbAuthChecker.
+     *
      * @param authChecker {@link #authChecker}
      * @param authManager {@link #authManager}
      */
@@ -50,7 +53,7 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
      * @param socketInitializer The object used to initialize the sockets.
      */
     @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        // Does not set any values.
+        // Defined by other implementations.
     }
 
     /**

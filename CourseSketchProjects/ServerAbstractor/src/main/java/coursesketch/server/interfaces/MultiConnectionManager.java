@@ -203,13 +203,15 @@ public class MultiConnectionManager {
     }
 
     /**
-     * Does nothing by default. Can be overwritten to make life easier.
+     * Does nothing by default.
+     *
+     * Can be overwritten to handle events when the servers are being connected.
      *
      * @param parentServer ignored by this implementation. Override to change
      *                     functionality.
      */
     public void connectServers(final AbstractServerWebSocketHandler parentServer) {
-        // overwritten to perform actions.
+        // Overwritten by specific implementations.
     }
 
     /**
@@ -248,16 +250,17 @@ public class MultiConnectionManager {
      * time. This can be overridden for a better server specific system.
      *
      * @param connectionType The type of connection being requested.
+     * @param <T> An instance of {@link AbstractClientWebSocket} that is returned.
      * @return A valid connection.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public AbstractClientWebSocket getBestConnection(final Class<? extends AbstractClientWebSocket> connectionType) {
-        final ArrayList<AbstractClientWebSocket> cons = connections.get(connectionType);
+    public <T extends AbstractClientWebSocket> T getBestConnection(final Class<T> connectionType) {
+        final ArrayList<? extends AbstractClientWebSocket> cons = connections.get(connectionType);
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
         LOG.info("getting Connection: {}", connectionType.getSimpleName());
-        return cons.get(0); // lame best connection.
+        return (T) cons.get(0); // lame best connection.
     }
 
     /**
@@ -269,14 +272,14 @@ public class MultiConnectionManager {
     public final void dropAllConnection(final boolean clearTypes, final boolean debugPrint) {
         synchronized (connections) {
             // <? extends ConnectionWrapper> // for safe keeping
-            for (Class<?> conKey : connections.keySet()) {
-                for (AbstractClientWebSocket connection : connections.get(conKey)) {
+            for (Map.Entry<Class<?>, ArrayList<AbstractClientWebSocket>> conKey : connections.entrySet()) {
+                for (AbstractClientWebSocket connection : conKey.getValue()) {
                     if (debugPrint) {
                         LOG.info("Connection URI: {}", connection.getURI());
                     }
                     connection.close();
                 }
-                connections.get(conKey).clear();
+                conKey.getValue().clear();
             }
             if (clearTypes) {
                 connections.clear();

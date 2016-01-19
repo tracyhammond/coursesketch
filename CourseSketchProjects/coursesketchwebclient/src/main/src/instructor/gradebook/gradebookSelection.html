@@ -1,0 +1,44 @@
+<html>
+<head>
+<link rel="stylesheet" href="/src/instructor/gradebook/gradebookSelection.css">
+
+<!-- basic utilities -->
+<link rel="import" href="/src/utilities/libraries/purecss/pureInclude.html">
+<link rel="import" href="/src/utilities/defaultUtils.html">
+
+<script type="text/javascript" src="/src/utilities/functions/childScript.js"
+    data-namespace="courseManagement"></script>
+
+<!-- basic setup for this page -->
+
+<link rel="import"
+    href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+<link rel="import"
+    href="/src/utilities/templates/loading/loadingInclude.html">
+
+<!-- protobuf -->
+<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+<!-- homepage specific -->
+<script type="text/javascript"
+    src="/src/common/homepage/courseManager.js"></script>
+<script type="text/javascript"
+    src="/src/instructor/gradebook/gradebookSelection.js"></script>
+  
+<script>
+    $(document).ready(function() {
+        CourseSketch.courseManagement.initializeCourseManagment();
+    });
+</script>
+
+</head>
+<body>
+<body style="background: #55C3C2;">
+    <!-- Center Section -->
+    <div id="class_list_column" class="wide_centre">*
+    </div>
+</body>
+
+
+</head>
+</html>

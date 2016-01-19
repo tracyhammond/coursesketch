@@ -9,6 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * Tests for the hash manager
  * Created by dtracers on 10/7/2015.
  */
 @RunWith(PowerMockRunner.class)
@@ -88,5 +89,12 @@ public class HashManagerTest {
     @Test(expected = AuthenticationException.class)
     public void invalidSaltThrowsException() throws Exception {
         HashManager.createHash("Pass", "badsalt");
+    }
+
+    @Test
+    public void unsecureSaltIsGeneratedWithTinyValues() throws NoSuchAlgorithmException, AuthenticationException {
+        String str = "1";
+        String salt = HashManager.generateUnSecureSalt(str);
+        HashManager.createHash("Pass", salt);
     }
 }
