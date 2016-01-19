@@ -20,10 +20,10 @@ module.exports = {
     /**
      * Runs the generic unit test for the given file.
      *
-     * @param browser The browser the html tests will run in
-     * @param describe The mocha instance
-     * @param filePath The specific file that is being tested
-     * @param timeout The amount of time to wait for the html tests to finish.
+     * @param browser {Object} The browser the html tests will run in.
+     * @param describe {Object} The mocha instance.
+     * @param filePath {String} The specific file that is being tested.
+     * @param timeout {Long} The amount of time to wait for the html tests to finish.
      */
     run: function(browser, describe, filePath, timeout) {
         var filePath = filePath.replace(/[\\\/]/g, '/');
@@ -79,7 +79,6 @@ module.exports = {
 
         var decodeTests = this.decodeTests.bind(this);
         browser.getHTML(failedElement, false).then(function (failedAssertions) {
-            // console.log('the number of failed tests ' + failedAssertions);
             browser.getHTML(passedAssertions, false).then(function(passedAssertions) {
                 var writeStream;
                 if (passedAssertions == 0 && failedAssertions == 0) {
@@ -111,7 +110,6 @@ module.exports = {
         browser.getHTML(codeCoverage).then(function (codeCoverage) {
             console.log('getting test results');
             browser.getHTML(testResults).then(function (results) {
-                // console.log('the test results', results);
                 qunitFileParser.parseFile(results, function (resultList) {
                     if (failedAssertions > 0) {
                         writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
