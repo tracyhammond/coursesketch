@@ -36,13 +36,13 @@ public abstract class AbstractCourseSketchDatabaseReader {
     /**
      * Called to start the database.
      *
-     * This does use double check locking on this object when initialing the database.
+     * This uses double check locking on the object when initialing the database.
      */
     public final void startDatabase() {
         if (!databaseStarted) {
             synchronized (this) {
                 if (!databaseStarted) {
-                    LOG.debug("Starting a connection to the database");
+                    LOG.debug("Starting a connection to the database.");
                     onStartDatabase();
                 }
             }
@@ -65,7 +65,7 @@ public abstract class AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * @return {@link ServerInfo} server information.
+     * @return {@link ServerInfo} Server information.
      */
     protected final ServerInfo getServerInfo() {
         return serverInfo;
