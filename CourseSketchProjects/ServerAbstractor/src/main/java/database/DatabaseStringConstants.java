@@ -55,7 +55,8 @@ public final class DatabaseStringConstants {
     public static final String ACCESS_DATE = "AccessDate";
     public static final String DUE_DATE = "DueDate";
     public static final String CLOSE_DATE = "CloseDate";
-    public static final String GRADED_DATE = "GradedDate";
+    public static final String REVIEW_OPEN_DATE = "ReviewOpenDate"; // The date that the assignment is open for review
+    public static final String GRADED_DATE = "GradedDate"; // The date the item was graded.
 
     // permissions
     public static final String ADMIN = "Admin";
@@ -86,6 +87,11 @@ public final class DatabaseStringConstants {
     public static final String DROPPED_ASSIGNMENTS = "DroppedAssignments";
     public static final String DROP_TYPE = "DropType";
 
+    // default categories
+    public static final String TEST_CATEGORY = "Test";
+    public static final String HOMEWORK_CATEGORY = "Homework";
+    public static final String QUIZ_CATEGORY = "Quiz";
+
     // course specific
     public static final String COURSE_SEMESTER = "Semester";
     public static final String COURSE_ACCESS = "Access";
@@ -94,7 +100,8 @@ public final class DatabaseStringConstants {
 
     // assignment specific
     public static final String ASSIGNMENT_TYPE = "AssignmentType";
-    public static final String ASSIGNMENT_OTHER_TYPE = "OtherType";
+    public static final String NAVIGATION_TYPE = "NavigationType";
+    public static final String ASSIGNMENT_CATEGORY = "AssignmentCategory";
     public static final String ASSIGNMENT_RESOURCES = "Resources";
     public static final String LATE_POLICY = "LatePolicy";
     public static final String LATE_POLICY_FUNCTION_TYPE = "LatePolicyFunctionType";
