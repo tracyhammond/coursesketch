@@ -37,23 +37,29 @@
      * assinging details to the experiments so we can seach for specific problems
      */
 
-    experiment1.assignmentId = "1"
-    experiment2.assignmentId = "1"
-    experiment3.assignmentId = "1"
-    experiment4.assignmentId = "1"
-    experiment5.assignmentId = "1"
+    experiment2.courseId = '1';
+    experiment3.courseId = '1';
+    experiment4.courseId = '1';
+    experiment5.courseId = '1';
+    experiment1.courseId = '1';
 
-    experiment1.problemId = "1"
-    experiment2.problemId = "1"
-    experiment3.problemId = "1"
-    experiment4.problemId = "2"
-    experiment5.problemId = "2"
+    experiment1.assignmentId = '1';
+    experiment2.assignmentId = '1';
+    experiment3.assignmentId = '1';
+    experiment4.assignmentId = '1';
+    experiment5.assignmentId = '1';
 
-    experiment1.userId = "tony"
-    experiment2.userId = "Dtracer"
-    experiment3.userId = "Chrome"
-    experiment4.userId = "Chrome"
-    experiment5.userId = "Dtracer"
+    experiment1.problemId = '1';
+    experiment2.problemId = '1';
+    experiment3.problemId = '1';
+    experiment4.problemId = '2';
+    experiment5.problemId = '2';
+
+    experiment1.userId = 'tony';
+    experiment2.userId = 'Dtracer';
+    experiment3.userId = 'Chrome';
+    experiment4.userId = 'Chrome';
+    experiment5.userId = 'Dtracer';
 
     CourseSketch.fakeExperiments.push(experiment1);
     CourseSketch.fakeExperiments.push(experiment2);

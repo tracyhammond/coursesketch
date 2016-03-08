@@ -26,9 +26,9 @@ import protobuf.srl.school.School.SrlUser;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
-import static handlers.ResultBuilder.ID_SEPARATOR;
-
 import java.util.ArrayList;
+
+import static handlers.ResultBuilder.ID_SEPARATOR;
 
 /**
  * Handles data being added or edited.
@@ -143,7 +143,7 @@ public final class DataInsertHandler {
                         }
                         break;
                         case GRADE: {
-                            GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, userId);
+                            GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, userId, req.getMessageTime());
                         }
                         break;
                         default:

@@ -30,7 +30,7 @@ message SrlCourse {
 }
 
 message SrlAssignment {
-    required string courseId = 1; // To know who the parent is.
+    optional string courseId = 1; // To know who the parent is.
     required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
     optional string name = 3;
     optional AssignmentType assignmentType = 4 [default=HOMEWORK]; // used for grading purposes (and may change how it is displayed)
