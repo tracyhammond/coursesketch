@@ -36,6 +36,40 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
 /**
  * Manages course problems for the mongo database.
  *
+ * These are problem parts (a,b,c,d) in a normal assignment and the lecture groups in a lecture.
+ * In the mongo database, a course problem has the following structure.
+ *
+ * CourseProblem
+ * {
+ *     // Ids
+ *     _id: ID,
+ *     courseId: ID,
+ *     assignmentId: ID,
+ *
+ *     name: String,
+ *
+ *     // Grade info (overwrites grade policy)
+ *     gradeWeight: float,
+ *
+ *     // The problems contained within this group.
+ *     bankProblems: [
+ *         { slide: slideUUID },
+ *         { problem: problemUUID },
+ *         ...
+ *     ],
+ *     nextGroupId: (if blank it goes through next problem group in list)
+ *     questionActions: {
+ *         // (if a question has an action it is the last problem in the list)
+ *         // these will be how the to proceed on incorrect or correct answers to the problem [this is taken from lectures]
+ *         // which depends on the problem
+ *      }
+ *      problemRestriction: {
+ *          // FUTURE: figure these out
+ *          // you can only restrict a problem group, problem parts only exist in sequential order
+ *          // OR make it so a problem group is a complete then move
+ *      }
+ *  }
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",

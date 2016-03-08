@@ -54,6 +54,52 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
 /**
  * Manages assignments for mongo.
  *
+ * In the mongo database, an assignment has the following structure.
+ *
+ * Assignment
+ * {
+ *     // IDs
+ *     _id : ID,
+ *     courseId: ID,
+ *
+ *     // Human information
+ *     name: String,
+ *     description: String,
+ *
+ *     // Display and navigation information
+ *     assignmentType: AssignmentType,
+ *     navigationType: NavigationType,
+ *
+ *     // Grading (these values being set override the grade policy)
+ *     assignmentCategory: String,
+ *     latePolicy: LatePolicy,
+ *     gradeWeight: float,
+ *
+ *     // Date related
+ *     accessDate: milliseconds,
+ *     dueDate: milliseconds,
+ *     closeDate: milliseconds,
+ *     reviewOpenDate: milliseconds,  // zero means not reviewable (which is default)
+ *
+ *     published: boolean,
+ *     problemGroups: [
+ *         "groupUUid1",
+ *         "groupUUid2",
+ *     ],
+ * }
+ *
+ * AssignmentTypes:
+ *     FLASHCARD, (this means infinite questions in random order)
+ *     LECTURE, (this means it will look like a lecture)
+ *     GRADED, (this is the default students can not see any answers till the assignment is closed)
+ *     PRACTICE (this allows students to see the correct answer immediately)
+ *
+ * NavigationTypes:
+ *     DEFAULT, (chooses what the default type is for the specific assignmentType
+ *     LOOPING, (this means the question order loops when the end is reached)
+ *     NO_BACK_TRAVEL, (what it sounds like, as soon as they progress they can not navigate backwards [this one might require server navigation])
+ *     RANDOM (pulls the next one at a random order)
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
