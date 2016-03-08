@@ -60,6 +60,7 @@ function ProtobufSetup() {
         buildSubmissions();
         buildLectures();
         buildGrading();
+        buildGrade();
         return localScope;
     };
 
@@ -72,6 +73,17 @@ function ProtobufSetup() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'util.proto');
         var utilBuilder = builder.build(PROTOBUF_PACKAGE).srl.utils;
         assignValues(utilBuilder);
+    }
+
+    /**
+     * Builds the Grade protobuf files.
+     *
+     * This is the base for storing and retrieving grades.
+     */
+    function buildGrade() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'grading.proto');
+        var gradingBuilder = builder.build(PROTOBUF_PACKAGE).srl.grading;
+        assignValues(gradingBuilder);
     }
 
     /**
@@ -127,6 +139,17 @@ function ProtobufSetup() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'commands.proto');
         var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
         assignValues(ProtoUpdateCommandBuilder);
+    }
+
+    /**
+     * Builds the UpdateList protobuf files.
+     *
+     * These contain all of the little actions that can occur
+     */
+    function buildUpdateList() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'identity.proto');
+        var ProtoIdentityServiceBuilder = builder.build(PROTOBUF_PACKAGE).srl.services.identity;
+        assignValues(ProtoIdentityServiceBuilder);
     }
 
     /**

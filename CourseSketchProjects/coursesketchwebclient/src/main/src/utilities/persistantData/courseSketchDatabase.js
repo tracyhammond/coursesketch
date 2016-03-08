@@ -35,6 +35,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var submissionManager;
     var lectureDataManager;
     var slideDataManager;
+    var gradeDataManager;
 
     /*
      * END OF VARIABLE SETTING
@@ -112,6 +113,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
     this.start = function() {
         // creates a manager for just courses.
+        gradeDataManager = new GradeDataManager(this, dataListener, database, Request, ByteBuffer);
         courseManager = new CourseDataManager(this, dataListener, database, Request, ByteBuffer);
         assignmentManager = new AssignmentDataManager(this, dataListener, database, Request, ByteBuffer);
         courseProblemManager = new CourseProblemDataManager(this, dataListener, database, Request, ByteBuffer);

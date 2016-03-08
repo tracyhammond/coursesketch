@@ -78,6 +78,9 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, Request, 
         if (isUndefined(callback)) {
             throw new DatabaseException('Calling getGrade with an undefined callback');
         }
+        if (isUndefined(courseId)) {
+            throw new DatabaseException('The given id is not assigned', 'getting Grade: ' + courseId);
+        }
 
         var isInstructor = CourseSketch.connection.isInstructor;
 

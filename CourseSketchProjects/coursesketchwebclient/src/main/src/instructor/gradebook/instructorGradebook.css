@@ -1,22 +1,93 @@
-.tabletalk {
-    border-color: black;
-    border-style: solid;
-    border-width: 2 px;
-    border-radius: 10%;
-    width: 90%;
-    height: 100%;
-    margin-top: 10%;
-    margin-right: auto;
-    margin-left: auto;
+body {
+    background-color: #FFFFFF;
+}
+
+.verticalTableHolder {
+    overflow-y: auto;
+    overflow-x: visible;
+    position: relative;
+    max-height: calc(100% - 20px - 48px - 5px);
+}
+
+.tableHolder {
+    position: relative;
+}
+
+.horizontalTableHolder {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+    max-width: 100%;
+}
+
+.fixedHead {
+    display: block;
+    position: absolute;
+    top: 0px;
+    background-color:#FFFFFF;
+    z-index: 1;
+}
+
+th {
+    font-weight:normal;
+    text-align: center;
+}
+
+td, th {
+    padding-left:0px;
+    padding-right:0px;
 }
 
 td {
-    border-color: black;
-    border-style: solid;
-    border-width: 2 px;
-    border-radius:20%
+    /* white-space:nowrap; */
+    -webkit-transition: background-color .25s ease;
+    -moz-transition: background-color .25s ease;
+    -o-transition: background-color .25s ease;
+    -ms-transition: background-color .25s ease;
+    transition: background-color .25s ease;
 }
 
+td:hover, .gradeSelected {
+    background-color:#fffde7;
+
+}
+
+td:hover:not(:first-child) {
+    cursor: text;
+}
+
+td:first-child:hover {
+    background-color:inherit;
+    cursor: default;
+}
+
+tr:first-child:hover {
+    cursor: pointer;
+}
+
+input {
+    text-align: center;
+}
+
+.filledGradeCell {
+    font-size: .75em;
+    text-align: center;
+    cursor: default;
+}
+
+.gradeCell {
+    font-size: .95em;
+}
+
+.gradeSelected {
+    padding-top:2px;
+}
+
+.gradeForm {
+    margin: 0px;
+}
+
+/*
 th {
     border-color: black;
     border-style: none;
@@ -25,8 +96,8 @@ th {
     background-color: #C2E0FF;
 }
 
-.tabletalk: hover td  div {
-    background-color: blue;
+.tabletalk: hoverable td  div {
+    background-color: yellow;
 }
 
 .tabletalk  th div {
@@ -37,3 +108,5 @@ th {
     border-bottom-style: solid;
     border-width: 1px;
 }
+
+*/

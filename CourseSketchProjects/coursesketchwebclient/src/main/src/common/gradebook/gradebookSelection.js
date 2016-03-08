@@ -13,9 +13,9 @@ validateFirstRun(document.currentScript);
     courseManagement.courseClicked = function(course) {
         CourseSketch.dataManager.addState('gradebookCourseid', course.id);
         if (CourseSketch.connection.isInstructor) {
-            CourseSketch.redirectContent('/src/instructor/review/multiviewGrading.html', 'Loading Gradebook');
+            CourseSketch.redirectContent('/src/instructor/gradebook/instructorGradebook.html', 'Loading Gradebook');
         } else {
-            CourseSketch.redirectContent('/src/student/experiment/experiment.html', 'Loading Grades');
+            CourseSketch.redirectContent('/src/student/gradebook/studentGradebook.html', 'Loading Grades');
         }
     };
 })();
