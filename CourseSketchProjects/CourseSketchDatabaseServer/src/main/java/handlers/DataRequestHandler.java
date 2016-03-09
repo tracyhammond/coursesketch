@@ -22,7 +22,7 @@ import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;

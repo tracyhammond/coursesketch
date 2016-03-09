@@ -30,7 +30,7 @@ import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
-import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
@@ -250,7 +250,9 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final long currentTime = System.currentTimeMillis();
         final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
         for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
+            /*
             try {
+
                 allLectures.add(LectureManager.mongoGetLecture(auth, database, lectureId.get(lectures),
                         authId, currentTime));
             } catch (DatabaseAccessException e) {
@@ -264,6 +266,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
                     throw e;
                 }
             }
+            */
+            throw new DatabaseAccessException("No lectures exist in the database");
         }
         return allLectures;
     }
@@ -274,7 +278,9 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final long currentTime = System.currentTimeMillis();
         final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
         for (int slides = slideId.size() - 1; slides >= 0; slides--) {
+            /*
             try {
+
                 allSlides.add(SlideManager.mongoGetLectureSlide(auth, database, slideId.get(slides),
                         authId, currentTime));
             } catch (DatabaseAccessException e) {
@@ -288,6 +294,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
                     throw e;
                 }
             }
+            */
+            throw new DatabaseAccessException("No slides exist in the database");
         }
         return allSlides;
     }
@@ -363,17 +371,21 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public String insertLecture(final String userId, final String authId, final Lecture lecture) throws AuthenticationException,
             DatabaseAccessException {
+        throw new DatabaseAccessException("lecture insertion is not supported");
+        /*
         final String resultId = LectureManager.mongoInsertLecture(auth, database, authId, lecture);
 
         final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(database, lecture.getCourseId());
         LectureManager.mongoInsertDefaultGroupId(database, resultId, ids);
 
         return resultId;
+        */
     }
 
     @Override
     public String insertLectureSlide(final String authId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        return SlideManager.mongoInsertSlide(auth, database, authId, lectureSlide);
+        throw new DatabaseAccessException("slide insertion is not supported");
+        // return SlideManager.mongoInsertSlide(auth, database, authId, lectureSlide);
     }
 
     @Override
@@ -427,7 +439,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public void updateLecture(final String authId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
-        LectureManager.mongoUpdateLecture(auth, database, lecture.getId(), authId, lecture);
+        throw new DatabaseAccessException("lecture update not supported");
+        // LectureManager.mongoUpdateLecture(auth, database, lecture.getId(), authId, lecture);
     }
 
     @Override
@@ -456,7 +469,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public void updateLectureSlide(final String authId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        SlideManager.mongoUpdateLectureSlide(auth, database, lectureSlide.getId(), authId, lectureSlide);
+        throw new DatabaseAccessException("slide update not supported");
+        // SlideManager.mongoUpdateLectureSlide(auth, database, lectureSlide.getId(), authId, lectureSlide);
     }
 
     @Override

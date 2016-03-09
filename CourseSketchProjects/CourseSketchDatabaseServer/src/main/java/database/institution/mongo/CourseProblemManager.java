@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.State;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.util.List;

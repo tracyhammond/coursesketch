@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import protobuf.srl.school.Assignment;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -118,7 +119,7 @@ public class CourseProblemManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // creating assignment
-        final School.SrlAssignment.Builder assignment = School.SrlAssignment.newBuilder();
+        final Assignment.SrlAssignment.Builder assignment = Assignment.SrlAssignment.newBuilder();
         assignment.setId("ID");
         assignment.setCourseId(courseId);
 

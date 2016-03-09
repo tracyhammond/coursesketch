@@ -33,7 +33,7 @@ public class DbAuthCheckerTest {
     @Rule
     public FongoRule fongo = new FongoRule();
 
-    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
+    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.BANK_PROBLEM;
     public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
 
     public static final String INVALID_ITEM_ID = new ObjectId().toHexString();

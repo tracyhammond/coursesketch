@@ -6,7 +6,7 @@ import static database.DatabaseStringConstants.STATE_STARTED;
 
 import org.bson.types.ObjectId;
 
-import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.State;
 
 import com.mongodb.DB;
 import com.mongodb.DBObject;

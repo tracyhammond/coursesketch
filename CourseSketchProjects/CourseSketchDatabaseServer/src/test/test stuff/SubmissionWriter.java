@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.School.SrlProblem;
 
 import com.mongodb.BasicDBObject;

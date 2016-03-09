@@ -42,6 +42,7 @@ import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.NAVIGATION_TYPE;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
+import static database.DatabaseStringConstants.REVIEW_OPEN_DATE;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
@@ -196,14 +197,13 @@ public final class AssignmentManager {
             query.append(CLOSE_DATE, RequestConverter.getMaxTime());
         }
 
-        // assignment.hasReviewOpenDate()
-        if (false) {
-            // query.append(CLOSE_DATE, assignment.getReviewOpenDate().getMillisecond());
+        if (assignment.hasReviewOpenDate()) {
+            query.append(REVIEW_OPEN_DATE, assignment.getReviewOpenDate().getMillisecond());
         } else if (isInsertion) {
-            query.append(CLOSE_DATE, -1);
+            query.append(REVIEW_OPEN_DATE, -1);
         }
 
-        return isInsertion || assignment.hasAccessDate() || assignment.hasDueDate() || assignment.hasCloseDate() || false;
+        return isInsertion || assignment.hasAccessDate() || assignment.hasDueDate() || assignment.hasCloseDate() || assignment.hasReviewOpenDate();
     }
 
     /**
@@ -221,14 +221,14 @@ public final class AssignmentManager {
             query.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
         } else if (isInsertion) {
             // The default is the current server time.
-            query.append(ASSIGNMENT_TYPE, Assignment.AssignmentType.GRADED);
+            query.append(ASSIGNMENT_TYPE, Assignment.AssignmentType.GRADED.getNumber());
         }
 
         // Sets a default date in the instance that a date was not given.
         if (assignment.hasNavigationType()) {
             query.append(NAVIGATION_TYPE, assignment.getNavigationType().getNumber());
         } else if (isInsertion) {
-            query.append(NAVIGATION_TYPE, Assignment.NavigationType.DEFAULT);
+            query.append(NAVIGATION_TYPE, Assignment.NavigationType.DEFAULT.getNumber());
         }
 
         return isInsertion || assignment.hasAssignmentType() || assignment.hasNavigationType();
@@ -352,7 +352,6 @@ public final class AssignmentManager {
             if (cursor.get(PROBLEM_LIST) != null) {
                 exactAssignment.addAllProblemGroups((List) cursor.get(PROBLEM_LIST));
             }
-
             stateBuilder.setAccessible(true);
         } else if (responder.hasAccess() && !responder.isItemOpen()) {
             stateBuilder.setAccessible(false);
@@ -453,6 +452,7 @@ public final class AssignmentManager {
         exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
         exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(DUE_DATE)).longValue()));
         exactAssignment.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
+        exactAssignment.setReviewOpenDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(REVIEW_OPEN_DATE)).longValue()));
 
         if (exactAssignment.getDueDate().getMillisecond() > checkTime) {
             stateBuilder.setPastDue(true);

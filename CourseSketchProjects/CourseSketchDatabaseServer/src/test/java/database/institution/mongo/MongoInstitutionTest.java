@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.school.Assignment;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -85,8 +86,8 @@ public class MongoInstitutionTest {
 
     public static final Commands.SrlUpdateList.Builder FAKE_UPDATELIST = Commands.SrlUpdateList.newBuilder();
     public static final Util.QuestionType FAKE_QUESTION_TYPE = Util.QuestionType.FREE_RESP;
-    public static final School.SrlAssignment.AssignmentType VALID_ASSIGNMENT_TYPE = School.SrlAssignment.AssignmentType.EXAM;
-    public static final int VALID_ASSIGNMENT_TYPE_VALUE = School.SrlAssignment.AssignmentType.EXAM_VALUE;
+    public static final Assignment.AssignmentType VALID_ASSIGNMENT_TYPE = Assignment.AssignmentType.GRADED;
+    public static final int VALID_ASSIGNMENT_TYPE_VALUE = Assignment.AssignmentType.GRADED_VALUE;
 
     private String courseId;
     private String assignmentId;
@@ -94,7 +95,7 @@ public class MongoInstitutionTest {
     private String bankProblemId;
 
     private School.SrlCourse.Builder defaultCourse;
-    private School.SrlAssignment.Builder defaultAssignment;
+    private Assignment.SrlAssignment.Builder defaultAssignment;
     private School.SrlProblem.Builder defaultProblem;
     private School.SrlBankProblem.Builder bankProblem;
 
@@ -134,7 +135,7 @@ public class MongoInstitutionTest {
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setName(VALID_NAME);
 
-        defaultAssignment = School.SrlAssignment.newBuilder();
+        defaultAssignment = Assignment.SrlAssignment.newBuilder();
         defaultAssignment.setId(FAKE_ID);
 
         defaultProblem = School.SrlProblem.newBuilder();

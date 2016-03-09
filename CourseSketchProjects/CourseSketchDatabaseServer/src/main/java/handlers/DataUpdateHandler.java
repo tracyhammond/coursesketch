@@ -16,6 +16,7 @@ import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.Assignment;
 import protobuf.srl.school.School;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
@@ -103,7 +104,7 @@ public final class DataUpdateHandler {
                         }
                         break;
                         case ASSIGNMENT: {
-                            final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
+                            final Assignment.SrlAssignment assignment = Assignment.SrlAssignment.parseFrom(itemSet.getData());
                             instance.updateAssignment(authId, assignment);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }

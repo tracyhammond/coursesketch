@@ -43,7 +43,6 @@ public final class DbSchoolUtility {
             case ASSIGNMENT: return DatabaseStringConstants.ASSIGNMENT_COLLECTION;
             case COURSE_PROBLEM: return DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
             case BANK_PROBLEM: return DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
-            case LECTURE: return DatabaseStringConstants.LECTURE_COLLECTION;
             default: return "NO_COLLECTION";
         }
     }
@@ -62,7 +61,6 @@ public final class DbSchoolUtility {
             case ASSIGNMENT: return School.ItemType.COURSE;
             case COURSE_PROBLEM: return School.ItemType.ASSIGNMENT;
             case BANK_PROBLEM: return School.ItemType.BANK_PROBLEM;
-            case LECTURE: return School.ItemType.COURSE;
             default: return null;
         }
     }

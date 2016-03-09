@@ -1,6 +1,6 @@
 package test;
 
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
+import protobuf.srl.school.Assignment.SrlAssignment.LatePolicy;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;

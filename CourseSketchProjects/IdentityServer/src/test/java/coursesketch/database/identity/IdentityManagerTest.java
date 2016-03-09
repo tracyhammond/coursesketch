@@ -56,7 +56,7 @@ public class IdentityManagerTest {
     private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
     private static final String INVALID_USERNAME = "NOT VALID USERNAME";
 
-    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
+    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.BANK_PROBLEM;
     public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
     public static final School.ItemType VALID_ITEM_CHILD_TYPE = School.ItemType.ASSIGNMENT;
 

@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import protobuf.srl.school.Assignment;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -191,7 +192,7 @@ public class CourseManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
-                    School.SrlAssignment.newBuilder()
+                    Assignment.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)
                             .build());
@@ -222,7 +223,7 @@ public class CourseManagerTest {
         for (int i = 0; i < 5; i++) {
             // We do not need to save the ids because we expect an empty list.
             String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
-                    School.SrlAssignment.newBuilder()
+                    Assignment.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)
                             .build());
@@ -266,7 +267,7 @@ public class CourseManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
-                    School.SrlAssignment.newBuilder()
+                    Assignment.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)
                             .build());
@@ -295,7 +296,7 @@ public class CourseManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
-                    School.SrlAssignment.newBuilder()
+                    Assignment.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)
                             .build());
@@ -320,7 +321,7 @@ public class CourseManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER,
-                    School.SrlAssignment.newBuilder()
+                    Assignment.SrlAssignment.newBuilder()
                             .setId("ID")
                             .setCourseId(courseId)
                             .build());

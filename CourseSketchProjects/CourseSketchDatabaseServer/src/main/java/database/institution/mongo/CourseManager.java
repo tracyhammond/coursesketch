@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.State;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
