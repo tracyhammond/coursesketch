@@ -19,7 +19,7 @@
             CourseSketch.gradeBook.course = course;
             CourseSketch.dataManager.getCourseRoster(courseId, function(idToNameMap) {
                 // loads all of the grades
-                CourseSketch.gradeBook.courseRoster = idToNameMap;
+                CourseSketch.dataManager.courseRoster = idToNameMap;
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
                     var assignmentList = course.assignmentList;
                     var table = document.querySelector('.tabletalk');
