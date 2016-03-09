@@ -14,8 +14,9 @@ import database.RequestConverter;
 import database.UserUpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.State;
+import protobuf.srl.school.Assignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.utils.Util.State;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
@@ -39,6 +40,7 @@ import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.NAME;
+import static database.DatabaseStringConstants.NAVIGATION_TYPE;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
@@ -142,18 +144,16 @@ public final class AssignmentManager {
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId())
                 .append(NAME, assignment.getName())
-                .append(DESCRIPTION, assignment.getDescription())
+                .append(DESCRIPTION, assignment.getDescription());
 
-                // display and navigation information
-                .append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber())
-                .append(DatabaseStringConstants.NAVIGATION_TYPE, 1); // TODO: change this to the protobuf
+        setAssignmentTypeInformation(assignment, query, true);
 
         setDateInformation(assignment, query, true);
 
         setGradeInformation(assignment, query, true);
 
-        if (assignment.getProblemListList() != null) {
-            query.append(PROBLEM_LIST, assignment.getProblemListList());
+        if (assignment.getProblemGroupsList() != null) {
+            query.append(PROBLEM_LIST, assignment.getProblemGroupsList());
         }
 
         assignmentCollection.insert(query);
@@ -215,6 +215,34 @@ public final class AssignmentManager {
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
+    public static boolean setAssignmentTypeInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+        // Grade data
+        if (assignment.hasAssignmentType()) {
+            query.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
+        } else if (isInsertion) {
+            // The default is the current server time.
+            query.append(ASSIGNMENT_TYPE, Assignment.AssignmentType.GRADED);
+        }
+
+        // Sets a default date in the instance that a date was not given.
+        if (assignment.hasNavigationType()) {
+            query.append(NAVIGATION_TYPE, assignment.getNavigationType().getNumber());
+        } else if (isInsertion) {
+            query.append(NAVIGATION_TYPE, Assignment.NavigationType.DEFAULT);
+        }
+
+        return isInsertion || assignment.hasAssignmentType() || assignment.hasNavigationType();
+    }
+
+    /**
+     * Sets the grade information for inserting an assignment into the database.
+     *
+     * Does not set an information if it is already set.
+     * @param assignment The assignment that contains the date information
+     * @param query The object that the date information is being set into.
+     * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
+     * @return True if the query was modified, false otherwise.
+     */
     public static boolean setGradeInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
         // Grade data
         if (assignment.hasLatePolicy()) {
@@ -230,13 +258,13 @@ public final class AssignmentManager {
         }
 
         // The default is homework.
-        if (assignment.hasOther()) {
-            query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, assignment.getOther());
+        if (assignment.hasAssignmentCatagory()) {
+            query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, assignment.getAssignmentCatagory());
         } else if (isInsertion) {
             query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, DatabaseStringConstants.HOMEWORK_CATEGORY);
         }
 
-        return isInsertion || assignment.hasLatePolicy() || assignment.hasGradeWeight() || assignment.hasOther();
+        return isInsertion || assignment.hasLatePolicy() || assignment.hasGradeWeight() || assignment.hasAssignmentCatagory();
     }
 
     /**
@@ -322,7 +350,7 @@ public final class AssignmentManager {
         if (responder.hasPeerTeacherPermission() || (responder.hasAccess()
                 && responder.isItemOpen())) {
             if (cursor.get(PROBLEM_LIST) != null) {
-                exactAssignment.addAllProblemList((List) cursor.get(PROBLEM_LIST));
+                exactAssignment.addAllProblemGroups((List) cursor.get(PROBLEM_LIST));
             }
 
             stateBuilder.setAccessible(true);
@@ -350,8 +378,9 @@ public final class AssignmentManager {
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject cursor) {
         exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
         exactAssignment.setName((String) cursor.get(NAME));
-        exactAssignment.setAssignmentType(SrlAssignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
-        exactAssignment.setOther((String) cursor.get(ASSIGNMENT_CATEGORY));
+        exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
+        exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
+        exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
         exactAssignment.setDescription((String) cursor.get(DESCRIPTION));
         if (cursor.containsField(GRADE_WEIGHT)) {
             exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
@@ -480,11 +509,6 @@ public final class AssignmentManager {
                 update = true;
             }
 
-            if (assignment.hasAssignmentType()) {
-                update = true;
-                updateQuery.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
-            }
-
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (assignment.hasDescription()) {
@@ -497,6 +521,7 @@ public final class AssignmentManager {
                 update = true;
             }
 
+            update |= setAssignmentTypeInformation(assignment, updateQuery, false);
             update |= setDateInformation(assignment, updateQuery, false);
             update |= setGradeInformation(assignment, updateQuery, false);
         }

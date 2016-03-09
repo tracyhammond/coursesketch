@@ -1,8 +1,7 @@
-package protobuf.srl.school;
-
 import "util.proto";
 import "grading.proto";
-import "commands.proto";
+
+package protobuf.srl.school;
 
 message SrlAssignment {
     optional string courseId = 1; // To know who the parent is.

@@ -13,7 +13,7 @@ message Lecture {
     optional protobuf.srl.utils.SrlPermission accessPermission = 6;
     optional protobuf.srl.utils.DateTime accessDate = 7;
     optional protobuf.srl.utils.DateTime closeDate = 8;
-    optional protobuf.srl.school.State state = 9;
+    optional protobuf.srl.utils.State state = 9;
 }
 
 message IdsInLecture {
