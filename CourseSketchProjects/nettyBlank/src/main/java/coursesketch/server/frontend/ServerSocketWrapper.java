@@ -158,7 +158,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
     private void handShake(final ChannelHandlerContext ctx, final FullHttpRequest req) {
         // Handshake
         final WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
-                getWebSocketLocation(req), null, false);
+                getWebSocketLocation(req), null, false, ServerWebSocketInitializer.MAX_FRAME_SIZE);
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());

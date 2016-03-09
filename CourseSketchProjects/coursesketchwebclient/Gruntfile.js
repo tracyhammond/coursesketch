@@ -1,19 +1,24 @@
 //jscs:disable jsDoc
 
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
+var selenium = require('selenium-standalone');
+
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-regex-check');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-connect-rewrite');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-wiredep');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-webdriver');
+    grunt.loadNpmTasks('grunt-selenium-server');
+    grunt.loadNpmTasks('grunt-mkdir');
+    grunt.loadTasks('config/gruntTasks/');
 
     /******************************************
      * GRUNT INIT
@@ -25,6 +30,9 @@ module.exports = function(grunt) {
             prodFiles: [ 'target/website/index.html', 'target/website/src/**/*.html', 'target/website/src/**/*.js',
                 '!target/website/src/main/src/utilities/libraries/**/*.js', '!target/website/src/main/src/utilities/libraries/**/*.html' ]
         },
+        /**
+         * CHECKSTYLE
+         */
         jshint: {
             options: {
                 jshintrc: 'config/.jshintrc',
@@ -36,7 +44,7 @@ module.exports = function(grunt) {
                 reporterOutput: 'target/jshint.xml'
             },
             files: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                    '!src/test/src/testUtilities/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
+                    '!src/test/src/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
         },
         jscs: {
             src: '<%= jshint.files %>',
@@ -62,16 +70,42 @@ module.exports = function(grunt) {
                 }
             }
         },
+        /**
+         * JSDOC
+         */
+        jsdoc: {
+            dist: {
+                src: '<%= jshint.files %>',
+                options: {
+                    destination: 'doc'
+                }
+            }
+        },
+        /**
+         * Directory Creation
+         */
+        mkdir: {
+            all: {
+                options: {
+                    create: [ 'target/unitTest', 'target/screenshots' ]
+                }
+            }
+        },
+        /**
+         * UNIT TESTS AND SERVER
+         */
         connect: {
             options: {
                 port: 9001,
                 hostname: 'localhost',
-                debug: true
+                debug: false
             },
             rules: [
                { from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1' },
                { from: '^/test(.*)$', to: '/src/test/src$1', redirect: 'permanent' },
-               { from: '^/other(.*)$', to: 'src/main/resources/other/$1' }
+               { from: '^/other(.*)$', to: '/src/main/resources/other/$1' },
+               { from: '^/images(.*)$', to: '/src/main/resources/images/$1' },
+            //   { from: '^/bower_components(.*)$', to: 'bower_components$1' }
             ],
             development: {
                 options: {
@@ -99,21 +133,34 @@ module.exports = function(grunt) {
                 }
             }
         },
-        qunit: {
-            options: {
-                httpBase: 'http://localhost:9001',
-                timeout: 2000
-            },
-            all: [ 'src/test/src/**/*Test.html' ]
-        },
-        jsdoc: {
-            dist: {
-                src: '<%= jshint.files %>',
+        webdriver: {
+            unit: {
                 options: {
-                    destination: 'doc'
-                }
+                    specs: [
+                        'src/test/src/**/*Test.html'
+                        // Test.html
+                    ]
+                },
+                specs: [
+                    'src/test/src/**/*Test.html'
+                    // Test.html
+                ],
+                configFile: 'config/test/wdio.conf.js'
             }
         },
+        'seleniumStandalone': {
+            run: {
+
+            }
+        },
+        'seleniumKill': {
+            run: {
+
+            }
+        },
+        /**
+         * BUILDERS
+         */
         babel: {
             options: {
                 sourceMap: true
@@ -129,6 +176,18 @@ module.exports = function(grunt) {
             }
         },
         copy: {
+            proto: {
+                files: [
+                    {
+                        filter: 'isFile',
+                        expand: true,
+                        flatten: true,
+                        cwd: '../ProtoFiles/src/main/',
+                        src: [ 'proto/**/**.proto' ],
+                        dest: 'src/main/resources/other/protobuf'
+                    }
+                ]
+            },
             main: {
                 files: [
                     {
@@ -322,12 +381,22 @@ module.exports = function(grunt) {
     });
 
     /******************************************
+     * UTILITIES
+     ******************************************/
+
+    function printTaskGroup() {
+        grunt.log.write('\n===========\n=========== Running task group ' + grunt.task.current.name + ' ===========\n===========\n');
+    }
+
+    /******************************************
      * TASK WORKFLOW SETUP
      ******************************************/
 
     // sets up tasks relating to starting the server
     grunt.registerTask('server', function() {
+        printTaskGroup();
         grunt.task.run([
+            'seleniumStandalone:run',
             'configureRewriteRules',
             'connect:development'
         ]);
@@ -335,14 +404,41 @@ module.exports = function(grunt) {
 
     // sets up tasks related to testing
     grunt.registerTask('test', function() {
+        printTaskGroup();
         grunt.task.run([
             'server',
-            'qunit'
+            'webdriver:unit',
+            'seleniumKill:run'
+        ]);
+    });
+
+    // sets up tasks related to creating documentation
+    grunt.registerTask('documentation', function() {
+        printTaskGroup();
+        grunt.task.run([
+            'jsdoc'
+        ]);
+    });
+
+    // Sets up tasks related to setting the system for the rest of the tasks.
+    grunt.registerTask('setup', function() {
+        printTaskGroup();
+        grunt.task.run([
+            'mkdir'
+        ]);
+    });
+
+    // sets up tasks needed before any checking happens.  (which in this case is changing proto files)
+    grunt.registerTask('install', function() {
+        printTaskGroup();
+        grunt.task.run([
+            'copy:proto'
         ]);
     });
 
     // sets up tasks related to checkstyle
     grunt.registerTask('checkstyle', function() {
+        printTaskGroup();
         grunt.task.run([
             'jscs',
             'jshint',
@@ -352,6 +448,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to building the production website
     grunt.registerTask('build', function() {
+        printTaskGroup();
         grunt.task.run([
             'preBuild',
             'setupProd',
@@ -364,6 +461,7 @@ module.exports = function(grunt) {
     // sets up tasks needed before building.
     // specifically this loads node_modules to bower components
     grunt.registerTask('preBuild', function() {
+        printTaskGroup();
         grunt.task.run([
             'copy:babel'
         ]);
@@ -371,6 +469,7 @@ module.exports = function(grunt) {
 
     // Sets up tasks related to setting up the production website.
     grunt.registerTask('setupProd', function() {
+        printTaskGroup();
         grunt.task.run([
             'copy:main',
             'replace:appEngine'
@@ -379,6 +478,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to loading up bower
     grunt.registerTask('bower', function() {
+        printTaskGroup();
         grunt.task.run([
             'replace:bowerLoad',
             'wiredep',
@@ -390,6 +490,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to supporting older version of browsers
     grunt.registerTask('polyfill', function() {
+        printTaskGroup();
         grunt.task.run([
             'replace:isUndefined'
             // babel is turned off because it is breaking things.
@@ -399,6 +500,7 @@ module.exports = function(grunt) {
 
     // sets up tasks related to minifying the code
     grunt.registerTask('obfuscate', function() {
+        printTaskGroup();
         grunt.task.run([
             'uglify'
         ]);
@@ -409,5 +511,5 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'build' ]);
+    grunt.registerTask('default', [ 'install', 'checkstyle', 'documentation', 'setup', 'test', 'build' ]);
 };

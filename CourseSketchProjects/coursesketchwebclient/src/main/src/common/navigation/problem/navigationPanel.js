@@ -21,7 +21,7 @@ function NavigationPanel() {
         this.itemNavigator.addCallback(function(nav) {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
-            setUpButtons(nav);
+            this.setUpButtons(nav);
             var totalNumber = nav.getLength();
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;
@@ -29,7 +29,7 @@ function NavigationPanel() {
 
         }.bind(this));
 
-        setUpButtons(this.itemNavigator);
+        this.setUpButtons(this.itemNavigator);
     };
 
     /**
@@ -38,29 +38,21 @@ function NavigationPanel() {
      * @memberof NavigationPanel
      * @function setUpButtons
      */
-    function setUpButtons(nav) {
+    this.setUpButtons = function(nav) {
         var button = this.shadowRoot.querySelector('#buttonNext');
 
         /* jscs:disable jsDoc */
         button.onclick = function() {
             nav.gotoNext();
         };
-        if (nav.hasNext()) {
-            button.disabled = false;
-        } else {
-            button.disabled = true;
-        }
+        button.disabled = !nav.hasNext();
         button = this.shadowRoot.querySelector('#buttonPrev');
         button.onclick = function() {
             nav.gotoPrevious();
         };
-        if (nav.hasPrevious()) {
-            button.disabled = false;
-        } else {
-            button.disabled = true;
-        }
+        button.disabled = !nav.hasPrevious();
         /* jscs:enable jsDoc */
-    }
+    };
 
     /*
     Window.onresize = function() {
@@ -80,9 +72,8 @@ function NavigationPanel() {
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
-        localScope = this; // This sets the variable to the level of the custom element tag
-        shadowRoot = this.createShadowRoot();
-        shadowRoot.appendChild(templateClone);
+        this.shadowRoot = this.createShadowRoot();
+        this.shadowRoot.appendChild(templateClone);
 
         if (isUndefined(this.itemNavigator)) {
             this.itemNavigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);

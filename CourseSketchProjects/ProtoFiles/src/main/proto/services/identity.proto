@@ -1,35 +1,97 @@
 package protobuf.srl.services.identity;
 
+import "school.proto";
+import "message.proto";
+
 option java_generic_services = true;
 
+/**
+ * Used for any identity request
+ */
+message IdentityRequest {
+    // the user id of the person making the request (sometimes the username)
+    optional string userId = 1;
+    // the item that is involved in the request
+    optional string itemId = 2;
+    // the item type that is involved in the request
+    optional protobuf.srl.school.ItemType itemType = 3;
+    // used in the case that authentication is required
+    optional string authId = 4;
+}
 
-message UserNameRequest {
-    // UserId of the person making the request.
-    optional string requesterId = 1;
+message RequestRoster {
     // The authId of the person making the request.
-    optional string requesterAuth = 2;
-    // Id of the course the users belong to.
-    optional string courseId = 3;
+    optional IdentityRequest requestData = 1;
     // List of userIds for which we want to find corresponding usernames in the course.
-    repeated string userIds = 4;
-
-    // NEXT_ID: 5
+    repeated string userIds = 2;
 }
 
 message UserNameResponse {
     // A map with key userIds and value userNames.
     // when protobuf 3.0 works map<string, string> userNames = 1;
     message MapFieldEntry {
+        // in this case key is a hashed userId
         optional string key = 1;
+        // in this case value is a username
         optional string value = 2;
     }
 
     repeated MapFieldEntry userNames = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
+}
+
+/**
+ * Used when creating a new group
+ */
+message IdentityCreationRequest {
+    // contains all of the information about the item being created
+    required IdentityRequest itemRequest = 1;
+    // contains the id of the parent of this item.
+    // NOTE: If the bank problem is being created for use with a course then it will automatically add itself to the list of valid users!
+    optional string parentItemId = 2;
 }
 
 /**
  * A service that deals with the conversion of userIds to userNames.
  */
 service IdentityService {
-    rpc requestUserNames(UserNameRequest) returns (UserNameResponse);
+
+    /**
+     * Requests the roster.  Depending on permissions the usernames may not be returned.
+     *
+     */
+    rpc getItemRoster(RequestRoster) returns (UserNameResponse);
+
+    /**
+     * Requests the username from the user Identity.
+     *
+     * userId is the id that the user name is being requested for.
+     * authId is the id that is checked to see if the user has the access they are asking for.
+     * itemId is the id of the item (courseId, assignmentId, ... etc) This is used for authentication purposes.
+     * itemType is the type of the item This is used for authentication purposes.
+     */
+    rpc getUserName(IdentityRequest) returns (UserNameResponse);
+
+    /**
+     * Creates a new user and returns a map with userIdentity as the key and userIdentityPassword as a password.
+     */
+    rpc createNewUser(IdentityRequest) returns (UserNameResponse);
+
+    /**
+     * Returns the user identity from the username.
+     * The return value is the userName as the key and the identity as the value.
+     *
+     * A user passwword must be sent to recover this value.
+     */
+    rpc getUserIdentity(IdentityRequest) returns (UserNameResponse);
+
+    /**
+     * Creates a new set of item permissions.
+     */
+    rpc createNewItem(IdentityCreationRequest) returns (protobuf.srl.request.DefaultResponse);
+
+    /**
+     * Registers the user in the item.
+     */
+    rpc registerUser(IdentityRequest) returns (protobuf.srl.request.DefaultResponse);
 }

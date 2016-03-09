@@ -10,7 +10,7 @@ import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 
 import java.net.UnknownHostException;

@@ -1,16 +1,11 @@
 package test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.utils.Util.SrlPermission;
-
-import com.mongodb.DB;
 
 import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.CourseManager;
 import database.institution.Institution;
 
