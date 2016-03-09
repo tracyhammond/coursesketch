@@ -63,7 +63,7 @@ public class AssignmentManagerTest {
     public static final String ADMIN_USER = "adminUser";
     public static final String USER_USER = "userUser";
     private static final Assignment.AssignmentType VALID_ASSIGNMENT_TYPE = Assignment.AssignmentType.PRACTICE;
-    private static final int VALID_ASSIGNMENT_TYPE_VALUE = Assignment.AssignmentType.PRACTICE_VALUE;
+    private static final Assignment.NavigationType VALID_NAVIGATION_TYPE = Assignment.NavigationType.LOOPING;
 
     private String courseId;
     private String assignmentId;
@@ -107,6 +107,7 @@ public class AssignmentManagerTest {
 
         defaultAssignment = Assignment.SrlAssignment.newBuilder();
         defaultAssignment.setId(FAKE_ID);
+        defaultAssignment.setAssignmentCatagory(DatabaseStringConstants.HOMEWORK_CATEGORY);
     }
 
     public void insertCourse() throws DatabaseAccessException, AuthenticationException {
@@ -182,8 +183,11 @@ public class AssignmentManagerTest {
         defaultAssignment.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultAssignment.setCloseDate(FAKE_VALID_DATE_OBJECT);
         defaultAssignment.setDueDate(FAKE_VALID_DATE_OBJECT);
+        defaultAssignment.setReviewOpenDate(FAKE_VALID_DATE_OBJECT);
         defaultAssignment.setName(VALID_NAME);
         defaultAssignment.setAssignmentType(VALID_ASSIGNMENT_TYPE);
+        defaultAssignment.setNavigationType(VALID_NAVIGATION_TYPE);
+        defaultAssignment.setAssignmentCatagory(DatabaseStringConstants.QUIZ_CATEGORY);
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
@@ -195,7 +199,10 @@ public class AssignmentManagerTest {
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DUE_DATE), FAKE_VALID_DATE);
-        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ASSIGNMENT_TYPE), VALID_ASSIGNMENT_TYPE_VALUE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.REVIEW_OPEN_DATE), FAKE_VALID_DATE);
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ASSIGNMENT_TYPE), VALID_ASSIGNMENT_TYPE.getNumber());
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAVIGATION_TYPE), VALID_NAVIGATION_TYPE.getNumber());
+        Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ASSIGNMENT_CATEGORY), DatabaseStringConstants.QUIZ_CATEGORY);
     }
 
     // GETTING TEST
@@ -382,7 +389,6 @@ public class AssignmentManagerTest {
         AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, false);
     }
 
-
     @Test
     public void getAssignmentReturnsProblemListWhenNotPublishedAsInstructor() throws Exception {
         insertCourse();
@@ -473,7 +479,9 @@ public class AssignmentManagerTest {
                 .setName("New Name")
                 .setDescription("New Description")
                 .setAssignmentType(Assignment.AssignmentType.FLASHCARD)
+                .setNavigationType(Assignment.NavigationType.RANDOM)
                 .setAssignmentCatagory("OTHERTYPE")
+                .setReviewOpenDate(FAKE_VALID_DATE_OBJECT)
                 .build();
 
         AssignmentManager.mongoUpdateAssignment(authenticator, db, ADMIN_USER, assignmentId, updatedProblem);
