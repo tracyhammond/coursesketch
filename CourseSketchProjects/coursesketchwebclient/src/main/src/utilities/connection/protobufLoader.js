@@ -59,7 +59,6 @@ function ProtobufSetup() {
         buildTutorial();
         buildSubmissions();
         buildLectures();
-        buildGrading();
         buildGrade();
         return localScope;
     };
@@ -185,16 +184,6 @@ function ProtobufSetup() {
         assignValues(ProtoSubmissionBuilder);
     }
 
-    /**
-     * Builds the Lecture protobuf files.
-     *
-     * These ares used for lecture data.
-     */
-    function buildGrading() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'grading.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.grading;
-        assignValues(ProtoSubmissionBuilder);
-    }
 
     /**
      * @function assignValues
