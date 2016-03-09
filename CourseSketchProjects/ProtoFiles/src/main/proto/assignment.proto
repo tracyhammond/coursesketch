@@ -1,0 +1,49 @@
+package protobuf.srl.school;
+
+import "util.proto";
+import "grading.proto";
+import "commands.proto";
+
+message SrlAssignment {
+    optional string courseId = 1; // To know who the parent is.
+    required string id = 2; // This must be unique within a course. We will strive for global uniqueness.
+
+    // Display information is 3- 9
+    optional string name = 3;
+    optional string description = 4;
+    repeated string links = 5; // external links/resources. Field needs improvement.
+    optional string imageUrl = 6;
+
+    // Dates are 10 - 19
+    optional protobuf.srl.utils.DateTime accessDate = 10; // Date that a student can access/view/begin an assignment
+    optional protobuf.srl.utils.DateTime dueDate = 11; // Date that the late policy goes into affect
+    optional protobuf.srl.utils.DateTime closeDate = 12; // Date that the assignment closes and can no longer be accessed
+    optional protobuf.srl.utils.DateTime reviewOpenDate = 13; // Date that the assignment review opens so students can view answers again.
+
+    // Grading 20 - 29
+    optional string assignmentCatagory = 20; // Name of an Instructor-defined assignment type
+    optional protobuf.srl.grading.LatePolicy latePolicy = 21;
+    optional string gradeWeight = 22; // Percentage of Assignment Category's total grade
+    optional float grade = 23; // Calculated grade for whole Assignment
+
+    // State and Types 30 - 39
+    optional protobuf.srl.utils.State state = 30;
+    optional AssignmentType assignmentType = 31 [default = GRADED];
+    optional NavigationType navigationType = 32 [default = DEFAULT];
+
+    repeated string problemGroups = 50; // a list of Ids that point to the different problem groups
+}
+
+enum AssignmentType {
+    GRADED = 0; // (this is the default students can not see any answers till the assignment is closed)
+    FLASHCARD = 1; // (this means infinite questions in random order)
+    LECTURE = 2; // (this means it will look like a lecture)
+    PRACTICE  = 3; // (this allows students to see the correct answer immediately)
+}
+
+enum NavigationType {
+    DEFAULT = 0; // (chooses what the default type is for the specific assignmentType
+    LOOPING = 1; // (this means the question order loops when the end is reached)
+    NO_BACK_TRAVEL = 2; // (what it sounds like, as soon as they progress they can not navigate backwards [this one might require server navigation])
+    RANDOM = 3; // (pulls the next one at a random order)
+}

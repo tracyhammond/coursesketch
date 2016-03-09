@@ -353,8 +353,9 @@ public final class AssignmentManager {
         exactAssignment.setAssignmentType(SrlAssignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
         exactAssignment.setOther((String) cursor.get(ASSIGNMENT_CATEGORY));
         exactAssignment.setDescription((String) cursor.get(DESCRIPTION));
-        exactAssignment.addAllLinks((List) cursor.get(ASSIGNMENT_RESOURCES));
-        exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
+        if (cursor.containsField(GRADE_WEIGHT)) {
+            exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
+        }
     }
 
     /**
