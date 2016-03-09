@@ -247,7 +247,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public ArrayList<Lecture> getLecture(final String authId, final List<String> lectureId) throws AuthenticationException,
             DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
+        // final long currentTime = TimeManager.getSystemTime();
         final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
         for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
             /*
@@ -275,7 +275,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public ArrayList<LectureSlide> getLectureSlide(final String authId, final List<String> slideId) throws AuthenticationException,
             DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
+        // final long currentTime = TimeManager.getSystemTime();
         final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
         for (int slides = slideId.size() - 1; slides >= 0; slides--) {
             /*

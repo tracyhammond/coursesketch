@@ -73,7 +73,7 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
-        "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
+        "PMD.CommentSize", "PMD.NPathComplexity" })
 public final class CourseProblemManager {
 
     /**

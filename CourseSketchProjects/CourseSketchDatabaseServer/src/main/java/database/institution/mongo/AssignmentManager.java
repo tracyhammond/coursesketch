@@ -100,7 +100,7 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-        "PMD.UselessParentheses" })
+        "PMD.CommentSize", "PMD.UselessParentheses" })
 public final class AssignmentManager {
 
     /**
