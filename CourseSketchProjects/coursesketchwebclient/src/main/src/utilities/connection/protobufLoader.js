@@ -184,6 +184,7 @@ function ProtobufSetup() {
         assignValues(ProtoSubmissionBuilder);
     }
 
+
     /**
      * @function assignValues
      * @param {String} protoPackage
