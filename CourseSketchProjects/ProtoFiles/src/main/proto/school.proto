@@ -42,35 +42,7 @@ enum ItemType {
     BANK_PROBLEM = 3;
 }
 
-message SrlProblem {
-    required string id = 1; // This must be unique within an assignment.
-    optional string courseId = 2; // To know who the grandParent is.
-    optional string assignmentId = 3; // To know who the parent is.
-    optional string problemBankId = 4;
-    optional string name = 5;
-    optional SrlBankProblem problemInfo = 6;
-    optional string gradeWeight = 7; // Percentage of assignment grade
-    optional float grade = 8; // Calculated grade of all subproblems for this problem
-    optional protobuf.srl.utils.State state = 9;
-    optional protobuf.srl.utils.SrlPermission accessPermission = 10;
-    optional int32 problemNumber = 11; // the order in which the problem appears in the assignment.
-}
 
-message SrlBankProblem {
-    required string id = 1;
-    optional string questionText = 2;
-    optional protobuf.srl.utils.QuestionType questionType = 3 [default=SKETCH];
-    optional string image = 4;
-    optional string solutionId = 5;
-    optional string courseTopic = 6;
-    optional string subTopic = 7;
-    optional string source = 8;
-    repeated string otherKeywords = 9;
-    optional protobuf.srl.utils.SrlPermission accessPermission = 10;
-    optional string script = 11; // a script string that is used for custom setups in experiments
-    optional protobuf.srl.commands.SrlUpdateList baseSketch = 12; // the base sketch the instructor will make for assignments
-    optional string registrationKey = 13;
-}
 
 message SrlGrade {
     required string id = 1;
