@@ -12,7 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;

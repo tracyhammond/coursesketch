@@ -4,21 +4,22 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import database.UserUpdateHandler;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.school.School;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.utils.Util.State;
 import protobuf.srl.services.authentication.Authentication;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
@@ -27,13 +28,11 @@ import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
 import static database.DatabaseStringConstants.IS_SLIDE;
 import static database.DatabaseStringConstants.IS_UNLOCKED;
-import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
-import static database.DatabaseStringConstants.SLIDES;
 import static database.DatabaseStringConstants.USERS;
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
@@ -126,6 +125,7 @@ public final class CourseProblemManager {
                 .append(GRADE_WEIGHT, problem.getGradeWeight())
                 .append(NAME, problem.getName())
                 .append(PROBLEM_NUMBER, problem.getProblemNumber());
+
         courseProblemCollection.insert(query);
         final String selfId = query.get(SELF_ID).toString();
 
@@ -205,6 +205,11 @@ public final class CourseProblemManager {
         final SrlProblem.Builder exactProblem = extractProblemData(cursor);
         exactProblem.setId(problemId);
 
+        if (cursor.containsField(DatabaseStringConstants.PROBLEM_LIST)) {
+            createProblemSlideHolderList(authenticator, dbs, authId, exactProblem.getCourseId(), checkTime,
+                    (List<DBObject>) cursor.get(DatabaseStringConstants.PROBLEM_LIST));
+        }
+
         // problem manager get problem from bank (as a user!)
         SrlBankProblem problemBank = null;
         try {
@@ -244,6 +249,66 @@ public final class CourseProblemManager {
     }
 
     /**
+     *
+     * @param authenticator
+     * @param database
+     * @param authId
+     * @param checkTime
+     * @param slideObjects
+     * @return
+     * @throws AuthenticationException
+     * @throws DatabaseAccessException
+     */
+    static List<SrlProblem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final DB database, final String authId,
+            final String courseId, final long checkTime, final List<DBObject> slideObjects) throws AuthenticationException, DatabaseAccessException {
+        final List<SrlProblem.ProblemSlideHolder> list = new ArrayList<>();
+        for (int i = 0; i < slideObjects.size(); i++) {
+            final DBObject dbObject = slideObjects.get(i);
+            list.add(createProblemSlideHolder(authenticator, database, authId, courseId, checkTime, dbObject, i));
+        }
+        return list;
+    }
+
+    /**
+     *
+     * @param authenticator
+     * @param database
+     * @param authId
+     * @param checkTime
+     * @param data
+     * @param index
+     * @return
+     * @throws AuthenticationException
+     * @throws DatabaseAccessException
+     */
+    private static SrlProblem.ProblemSlideHolder createProblemSlideHolder(final Authenticator authenticator, final DB database,
+            final String authId, final String courseId, final long checkTime, final DBObject data, final int index)
+            throws AuthenticationException, DatabaseAccessException {
+        final SrlProblem.ProblemSlideHolder.Builder holder = SrlProblem.ProblemSlideHolder.newBuilder();
+        holder.setIndex(index);
+
+        if (!(Boolean) data.get(DatabaseStringConstants.IS_UNLOCKED)) {
+            // Future: add the other conditions for checking if an item is unlocked
+            holder.setUnlocked(false);
+            return holder.build();
+        }
+        holder.setUnlocked(true);
+
+        final String id = data.get(DatabaseStringConstants.ITEM_ID).toString();
+
+        if ((Boolean) data.get(DatabaseStringConstants.IS_SLIDE)) {
+            final Lecturedata.LectureSlide lectureSlide = SlideManager
+                    .mongoGetLectureSlide(authenticator, database, authId, id, checkTime);
+            holder.setSlide(lectureSlide);
+        } else {
+            final SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, database, courseId, id);
+            holder.setProblem(problem);
+        }
+
+        return holder.build();
+    }
+
+    /**
      * @param authenticator
      *         The object that is performing authentication.
      * @param dbs
@@ -263,15 +328,14 @@ public final class CourseProblemManager {
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(problemId));
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = problemCollection.findOne(convertStringToObjectId(problemId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
         }
 
         final BasicDBObject updateObj = new BasicDBObject();
-        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -304,27 +368,40 @@ public final class CourseProblemManager {
     }
 
     /**
-     * NOTE: This is meant for internal use do not make this method public
      *
-     * This is used to copy permissions from the parent assignment into the
-     * current problem.
-     *
+     * @param authenticator
      * @param dbs
-     *         The database where the assignment is being stored.
-     * @param courseProblemId
-     *         The problem that the group is being inserted into.
-     * @param ids
-     *         The list of id groupings that contain the ids being copied over.
+     * @param authId
+     * @param problemId
+     * @param bankProblemId
+     * @throws AuthenticationException
+     * @throws DatabaseAccessException
      */
-    static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>... ids) {
-        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.COURSE_PROBLEM), new ObjectId(courseProblemId));
-        final DBObject corsor = myDbRef.fetch();
-        final DBCollection problems = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+    public static void insertNewProblemPart(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
+            final String bankProblemId) throws AuthenticationException, DatabaseAccessException {
 
-        final BasicDBObject updateQuery = new BasicDBObject(); //MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = problemCollection.findOne(convertStringToObjectId(problemId));
 
-        LOG.info("Updated Query: ", updateQuery);
-        problems.update(corsor, updateQuery);
+        if (cursor == null) {
+            throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
+        }
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
+        }
+
+        mongoInsertBankProblemIntoProblemGroup(dbs, cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString(),
+                problemId,
+                bankProblemId,
+                true);
+
     }
 
     /**
@@ -333,33 +410,83 @@ public final class CourseProblemManager {
      * With that being said this allows a course to be updated adding the
      * slideId to its list of items.
      *
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
-     * @param assignmentId
-     *         the course into which the assignment is being inserted into
+     * @param authId
+     *         The user requesting the problem.
+     *@param assignmentId
+     *         The assignment into which the slide is being inserted into.
+     * @param problemGroupId
+ *         The courseProblem the slide is being inserted into.
      * @param slideId
-     *         the assignment that is being inserted into the course.
+*         The assignment that is being inserted into the course.
      * @param unlocked
-     *         a boolean that is true if the object is unlocked
-     * @return true if the assignment was inserted correctly.
+*         A boolean that is true if the object is unlocked.     @return true if the assignment was inserted correctly.
      * @throws AuthenticationException The user does not have permission to update the lecture.
      * @throws DatabaseAccessException The lecture does not exist.
      */
-    static boolean mongoInsertSlideIntoSlideGroup(final DB dbs, final String assignmentId, final String problemGroup, final String slideId, final boolean unlocked)
+    static boolean mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
+            final String problemGroupId,
+            final String slideId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(assignmentId));
-        final DBObject cursor = myDbRef.fetch();
-        DBObject updateObj = null;
-        final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
-        updateObj = createSlideProblemHolder(slideId, true, unlocked);
-        lectures.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemGroupId, authId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        }
+
+        final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
+                createSlideProblemHolder(slideId, true, unlocked));
+        collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
         return true;
     }
 
-    public static void mongoInsertSlide(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {
+    /**
+     * NOTE: This is meant for internal use do not make this method public.
+     * <p/>
+     * With that being said this allows a course to be updated adding the
+     * bankProblemId to its list of items.
+     *
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param assignmentId
+     *         The assignment into which the slide is being inserted into.
+     * @param problemGroupId
+     *         The courseProblem the slide is being inserted into.
+     * @param bankProblemId
+     *         The assignment that is being inserted into the course.
+     * @param unlocked
+     *         A boolean that is true if the object is unlocked.
+     * @return true if the assignment was inserted correctly.
+     * @throws AuthenticationException The user does not have permission to update the lecture.
+     * @throws DatabaseAccessException The lecture does not exist.
+     */
+    static boolean mongoInsertBankProblemIntoProblemGroup(final DB dbs, final String assignmentId, final String problemGroupId,
+            final String bankProblemId, final boolean unlocked)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
 
+        final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
+                createSlideProblemHolder(bankProblemId, false, unlocked));
+        collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+
+        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
+        return true;
     }
 
     /**
@@ -376,6 +503,6 @@ public final class CourseProblemManager {
      * @return a BasicDBObject of the message type IdInLecture
      */
     private static BasicDBObject createSlideProblemHolder(final String itemId, final boolean isSlide, final boolean isUnlocked) {
-        return new BasicDBObject(SELF_ID, itemId).append(IS_SLIDE, isSlide).append(IS_UNLOCKED, isUnlocked);
+        return new BasicDBObject(DatabaseStringConstants.ITEM_ID, itemId).append(IS_SLIDE, isSlide).append(IS_UNLOCKED, isUnlocked);
     }
 }

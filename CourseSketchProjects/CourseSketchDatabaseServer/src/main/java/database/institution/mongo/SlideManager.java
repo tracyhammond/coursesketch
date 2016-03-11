@@ -5,12 +5,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
-import org.bson.types.ObjectId;
+import database.DatabaseStringConstants;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.school.School;
@@ -20,17 +19,18 @@ import protobuf.srl.tutorial.TutorialOuterClass;
 import java.util.ArrayList;
 import java.util.List;
 
+import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.ELEMENT_LIST;
-import static database.DatabaseStringConstants.LECTURE_ID;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.SLIDE_BLOB;
 import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
-import static database.DatabaseStringConstants.SLIDE_COLLECTION;
 import static database.DatabaseStringConstants.X_DIMENSION;
 import static database.DatabaseStringConstants.X_POSITION;
 import static database.DatabaseStringConstants.Y_DIMENSION;
 import static database.DatabaseStringConstants.Y_POSITION;
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages slides for mongo.
@@ -54,7 +54,7 @@ public final class SlideManager {
      *         the object that is performing authenticaton.
      * @param dbs
      *         The database where the slide is being stored.
-     * @param userId
+     * @param authId
      *         The id of the user that asking to insert the slide.
      * @param slide
      *         The slide that is being inserted.
@@ -64,22 +64,24 @@ public final class SlideManager {
      * @throws DatabaseAccessException
      *         Thrown if there are problems inserting the assignment.
      */
-    public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String userId, final LectureSlide slide)
+    public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String authId, final LectureSlide slide)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection newUser = dbs.getCollection(SLIDE_COLLECTION);
+        final DBCollection newUser = dbs.getCollection(getCollectionFromType(School.ItemType.SLIDE));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .setCheckingAdmin(true)
                 .build();
-        final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, slide.getLectureId(), userId, 0, authType);
 
-        if (!responder.hasAccess()) {
+        // Checks the course problem if the user has permission to insert a slide
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, slide.getCourseProblemId(), authId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
-        final BasicDBObject query = new BasicDBObject(LECTURE_ID, slide.getLectureId());
+        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.ASSIGNMENT_ID, slide.getAssignmentId());
         final ArrayList list = new ArrayList();
         for (Lecturedata.LectureElement element : slide.getElementsList()) {
             list.add(createQueryFromElement(element));
@@ -87,10 +89,6 @@ public final class SlideManager {
         query.append(ELEMENT_LIST, list);
         newUser.insert(query);
         final DBObject cursor = newUser.findOne(query);
-
-        // inserts the id into the previous the course
-        CourseProblemManager.mongoInsertSlide(dbs, slide.getLectureId(), cursor.get(SELF_ID).toString(), true);
-        LectureManager.mongoInsertSlideIntoLecture(dbs, slide.getLectureId(), cursor.get(SELF_ID).toString(), true);
 
         return cursor.get(SELF_ID).toString();
     }
@@ -136,10 +134,10 @@ public final class SlideManager {
      *         the object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
-     * @param slideId
-     *         the id of the lecture that is being grabbed.
      * @param userId
      *         The id of the user that asking to insert the lecture.
+     * @param slideId
+     *         the id of the lecture that is being grabbed.
      * @param checkTime
      *         The time that the assignment was asked to be grabbed. (used to
      *         check if the slide is valid)
@@ -151,10 +149,10 @@ public final class SlideManager {
      *         Thrown if there are problems retrieving the slide.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
-    public static LectureSlide mongoGetLectureSlide(final Authenticator authenticator, final DB dbs, final String slideId, final String userId,
+    public static LectureSlide mongoGetLectureSlide(final Authenticator authenticator, final DB dbs, final String userId, final String slideId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(slideId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.SLIDE));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(slideId));
         if (cursor == null) {
             throw new DatabaseAccessException("Slide was not found with the following ID " + slideId, true);
         }
@@ -166,7 +164,7 @@ public final class SlideManager {
                 .build();
         // FUTURE: figure out lecture slide permissions
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(LECTURE_ID), userId, 0, authType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), userId, 0, authType);
 
         // FUTURE Fix this! maybe make the lecture a user? not really sure for now everyone is a user.
         // authenticator.checkAuthentication(userId, (List<String>) cursor.get(USERS));
@@ -222,9 +220,8 @@ public final class SlideManager {
     public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(assignmentId));
-        final DBObject cursor = myDbRef.fetch();
-        final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.SLIDE));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(lectureSlide.getId()));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -241,7 +238,7 @@ public final class SlideManager {
             for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
                 list.add(createQueryFromElement(element));
             }
-            lectureSlides.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
+            collection.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
             update = true;
         }
         return update;
@@ -258,7 +255,7 @@ public final class SlideManager {
      *         passes exception through to createElementFromQuery
      */
     public static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final DBObject cursor) throws DatabaseAccessException {
-        exactSlide.setLectureId((String) cursor.get(LECTURE_ID));
+        exactSlide.setAssignmentId(cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString());
         exactSlide.setId(cursor.get(SELF_ID).toString());
         if (cursor.get(ELEMENT_LIST) != null) {
             final ArrayList<Lecturedata.LectureElement> objects = new ArrayList<>();

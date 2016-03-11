@@ -31,6 +31,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.school.Assignment;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -98,8 +99,8 @@ public class MongoInstitutionTest {
 
     private School.SrlCourse.Builder defaultCourse;
     private Assignment.SrlAssignment.Builder defaultAssignment;
-    private School.SrlProblem.Builder defaultProblem;
-    private School.SrlBankProblem.Builder bankProblem;
+    private Problem.SrlProblem.Builder defaultProblem;
+    private Problem.SrlBankProblem.Builder bankProblem;
 
     @Before
     public void before() {
@@ -140,7 +141,7 @@ public class MongoInstitutionTest {
         defaultAssignment = Assignment.SrlAssignment.newBuilder();
         defaultAssignment.setId(FAKE_ID);
 
-        defaultProblem = School.SrlProblem.newBuilder();
+        defaultProblem = Problem.SrlProblem.newBuilder();
         defaultProblem.setId(FAKE_ID);
 
         courseId = null;
@@ -167,7 +168,7 @@ public class MongoInstitutionTest {
     public void insertCourseAndAssignment() throws DatabaseAccessException, AuthenticationException {
 
         // creating bank problem
-        bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -202,7 +203,7 @@ public class MongoInstitutionTest {
     @Test
     public void insertingBankProblemCreatesRegistrationKey() throws AuthenticationException, InvalidProtocolBufferException, DatabaseAccessException {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
@@ -381,11 +382,11 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = institution.getCourseProblem(TEACHER_AUTH_ID, Lists.newArrayList(courseProblemId)).get(0);
+        Problem.SrlProblem problem = institution.getCourseProblem(TEACHER_AUTH_ID, Lists.newArrayList(courseProblemId)).get(0);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
-        bankProblem = School.SrlBankProblem.newBuilder();
+        bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -394,7 +395,7 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
                 newBankProblemId, TEACHER_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem updatedProblem = School.SrlProblem.newBuilder(defaultProblem.build())
+        Problem.SrlProblem updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
                 .setGradeWeight("NEW GRADE WEIGHT")
                 .setProblemBankId(newBankProblemId)
                 .build();
@@ -421,11 +422,11 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlProblem problem = institution.getCourseProblem(TEACHER_AUTH_ID, Lists.newArrayList(courseProblemId)).get(0);
+        Problem.SrlProblem problem = institution.getCourseProblem(TEACHER_AUTH_ID, Lists.newArrayList(courseProblemId)).get(0);
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
-        School.SrlProblem updatedProblem = School.SrlProblem.newBuilder(defaultProblem.build())
+        Problem.SrlProblem updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
                 .setGradeWeight("NEW GRADE WEIGHT")
                 .setProblemBankId(DatabaseHelper.createNonExistentObjectId(bankProblemId))
                 .build();

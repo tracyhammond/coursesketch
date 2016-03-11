@@ -7,13 +7,12 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
@@ -75,7 +74,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if the data does not exist.
      */
-    List<Lecture> getLecture(String authId, List<String> lectureId) throws AuthenticationException,
+    List<SrlAssignment> getLecture(String authId, List<String> lectureId) throws AuthenticationException,
             DatabaseAccessException;
 
     /**
@@ -176,7 +175,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if there is a problem inserting the assignment.
      */
-    String insertLecture(final String userId, String authId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
+    String insertLecture(final String userId, String authId, SrlAssignment lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Inserts the lecture slide into the the database.
@@ -263,7 +262,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if there is a problem inserting the assignment.
      */
-    void updateLecture(String authId, Lecture lecture) throws AuthenticationException, DatabaseAccessException;
+    void updateLecture(String authId, SrlAssignment lecture) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Updates an existing course in the database.

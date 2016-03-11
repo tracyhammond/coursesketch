@@ -23,8 +23,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
-import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
@@ -94,7 +95,7 @@ public class BankProblemManagerTest {
     @Test
     public void insertBankProblemNoPermissions() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
@@ -120,7 +121,7 @@ public class BankProblemManagerTest {
     @Test
     public void insertBankProblemPermissions() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
@@ -134,7 +135,7 @@ public class BankProblemManagerTest {
     @Test(expected = AuthenticationException.class)
     public void getBankProblemNoPermissions() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
@@ -148,7 +149,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankProblemAdminAccess() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -157,7 +158,7 @@ public class BankProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
                 problemBankId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, ADMIN_USER, problemBankId);
+        Problem.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, ADMIN_USER, problemBankId);
 
         Assert.assertEquals(resultBankProblem.getQuestionText(), FAKE_QUESTION_TEXT);
     }
@@ -165,7 +166,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankRegistrationKeyAdminAccessShouldReturnKey() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
@@ -183,7 +184,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankRegistrationKeyNoAccessShouldBeNull() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
@@ -201,7 +202,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankRegistrationKeyNoAccessWithNoRegistrationNotPublishedShouldBeNull() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
@@ -222,7 +223,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankRegistrationKeyNoAccessWithRegistrationPublishedShouldBeNull() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
@@ -246,7 +247,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankRegistrationKeyNoAccessWithNoRegistrationIsPublishedShouldBeKey() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setRegistrationKey(VALID_REGISTRATION_KEY);
@@ -270,7 +271,7 @@ public class BankProblemManagerTest {
     @Test
     public void getBankProblemUserAccess() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -280,7 +281,7 @@ public class BankProblemManagerTest {
                         .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
                         .build());
 
-        School.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, USER_USER, problemBankId);
+        Problem.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, USER_USER, problemBankId);
 
         Assert.assertFalse(resultBankProblem.hasAccessPermission());
     }
@@ -288,7 +289,7 @@ public class BankProblemManagerTest {
     @Test
     public void getAllBankProblemsPageZero() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -305,14 +306,14 @@ public class BankProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 0);
+        List<Problem.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 0);
         Assert.assertEquals(2, resultBankProblem.size());
     }
 
     @Test(expected = AuthenticationException.class)
     public void getAllBankProblemsNoPermission() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
@@ -332,13 +333,13 @@ public class BankProblemManagerTest {
         course.setAccessPermission(permissionBuilder);
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, USER_USER, courseId, 0);
+        List<Problem.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, USER_USER, courseId, 0);
     }
 
     @Test
     public void getAllBankProblemsPageOne() throws Exception {
 
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -354,13 +355,13 @@ public class BankProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<School.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 1);
+        List<Problem.SrlBankProblem> resultBankProblem = BankProblemManager.mongoGetAllBankProblems(authenticator, db, ADMIN_USER, courseId, 1);
         Assert.assertEquals(0, resultBankProblem.size());
     }
 
     @Test
     public void updateBankProblemAsInstructor() throws Exception {
-        SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -370,12 +371,12 @@ public class BankProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, db, ADMIN_USER, bankProblemId);
+        Problem.SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, db, ADMIN_USER, bankProblemId);
         new ProtobufComparisonBuilder()
                 .setIsDeepEquals(false)
                 .build().equals(bankProblem.build(), problem);
 
-        School.SrlBankProblem updatedProblem = School.SrlBankProblem.newBuilder(bankProblem.build())
+        Problem.SrlBankProblem updatedProblem = Problem.SrlBankProblem.newBuilder(bankProblem.build())
                 .setQuestionText("New QuestionText")
                 .setCourseTopic("New course topic")
                 .setImage("image")
@@ -388,7 +389,7 @@ public class BankProblemManagerTest {
 
         BankProblemManager.mongoUpdateBankProblem(authenticator, db, ADMIN_USER, bankProblemId, updatedProblem);
 
-        School.SrlBankProblem updatedBankProblemResult = BankProblemManager.mongoGetBankProblem(authenticator, db,
+        Problem.SrlBankProblem updatedBankProblemResult = BankProblemManager.mongoGetBankProblem(authenticator, db,
                 ADMIN_USER, bankProblemId);
         new ProtobufComparisonBuilder()
                 .setIsDeepEquals(false)
@@ -398,7 +399,7 @@ public class BankProblemManagerTest {
 
     @Test
     public void updateBankProblemAsInstructorButNothingChanges() throws Exception {
-        SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId("NOT REAL ID");
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
 
@@ -408,17 +409,17 @@ public class BankProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        School.SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, db, ADMIN_USER, bankProblemId);
+        Problem.SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, db, ADMIN_USER, bankProblemId);
         new ProtobufComparisonBuilder()
                 .setIsDeepEquals(false)
                 .build().equals(bankProblem.build(), problem);
 
-        School.SrlBankProblem updatedProblem = School.SrlBankProblem.newBuilder(bankProblem.build())
+        Problem.SrlBankProblem updatedProblem = Problem.SrlBankProblem.newBuilder(bankProblem.build())
                 .build();
 
         BankProblemManager.mongoUpdateBankProblem(authenticator, db, ADMIN_USER, bankProblemId, updatedProblem);
 
-        School.SrlBankProblem updatedBankProblemResult = BankProblemManager.mongoGetBankProblem(authenticator, db,
+        Problem.SrlBankProblem updatedBankProblemResult = BankProblemManager.mongoGetBankProblem(authenticator, db,
                 ADMIN_USER, bankProblemId);
         new ProtobufComparisonBuilder()
                 .setIsDeepEquals(false)
@@ -428,7 +429,7 @@ public class BankProblemManagerTest {
 
     @Test
     public void testSetScript() throws Exception {
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
 
@@ -442,7 +443,7 @@ public class BankProblemManagerTest {
 
     @Test
     public void testSetBaseSketch() throws Exception {
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
@@ -459,7 +460,7 @@ public class BankProblemManagerTest {
      */
     @Test
     public void testGetScript() throws Exception {
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
@@ -476,7 +477,7 @@ public class BankProblemManagerTest {
 
     @Test
     public void testGetBaseSketch() throws Exception {
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
@@ -496,7 +497,7 @@ public class BankProblemManagerTest {
      */
     @Test
     public void testUpdateScript () throws Exception {
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
@@ -504,7 +505,7 @@ public class BankProblemManagerTest {
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
 
         String newFakeScript = "Faker Script";
-        School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
         updateBankProblem.setId(FAKE_ID);
         updateBankProblem.setScript(newFakeScript);
 
@@ -524,7 +525,7 @@ public class BankProblemManagerTest {
      */
     @Test(expected = AuthenticationException.class)
     public void testUpdateScriptFailsWithInvalidPermission() throws Exception {
-        School.SrlBankProblem.Builder bankProblem = School.SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
         bankProblem.setScript(FAKE_SCRIPT);
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
@@ -532,7 +533,7 @@ public class BankProblemManagerTest {
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
 
         String newFakeScript = "Faker Script";
-        School.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
+        Problem.SrlBankProblem.Builder updateBankProblem = SrlBankProblem.newBuilder();
         updateBankProblem.setId(FAKE_ID);
         updateBankProblem.setScript(newFakeScript);
 

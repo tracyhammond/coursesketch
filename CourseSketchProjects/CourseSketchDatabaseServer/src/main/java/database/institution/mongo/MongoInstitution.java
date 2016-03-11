@@ -26,17 +26,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
+import utilities.TimeManager;
 
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -189,7 +189,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public ArrayList<SrlCourse> getCourses(final String authId, final List<String> courseIds) throws AuthenticationException,
             DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
+        final long currentTime = TimeManager.getSystemTime();
         final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
         for (String courseId : courseIds) {
             allCourses.add(CourseManager.mongoGetCourse(auth, database, authId, courseId, currentTime));
@@ -201,7 +201,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public ArrayList<SrlProblem> getCourseProblem(final String authId, final List<String> problemID) throws AuthenticationException,
             DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
+        final long currentTime = TimeManager.getSystemTime();
         final ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
         for (int index = 0; index < problemID.size(); index++) {
             try {
@@ -224,7 +224,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public ArrayList<SrlAssignment> getAssignment(final String authId, final List<String> assignmentID) throws AuthenticationException,
             DatabaseAccessException {
-        final long currentTime = System.currentTimeMillis();
+        final long currentTime = TimeManager.getSystemTime();
         final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
         for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
@@ -245,15 +245,13 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ArrayList<Lecture> getLecture(final String authId, final List<String> lectureId) throws AuthenticationException,
+    public List<SrlAssignment> getLecture(final String authId, final List<String> lectureId) throws AuthenticationException,
             DatabaseAccessException {
-        // final long currentTime = TimeManager.getSystemTime();
-        final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
+        final long currentTime = TimeManager.getSystemTime();
+        final ArrayList<SrlAssignment> allLectures = new ArrayList<SrlAssignment>();
         for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
-            /*
             try {
-
-                allLectures.add(LectureManager.mongoGetLecture(auth, database, lectureId.get(lectures),
+                allLectures.add(AssignmentManager.mongoGetAssignment(auth, database, lectureId.get(lectures),
                         authId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -266,8 +264,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
                     throw e;
                 }
             }
-            */
-            throw new DatabaseAccessException("No lectures exist in the database");
         }
         return allLectures;
     }
@@ -275,12 +271,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public ArrayList<LectureSlide> getLectureSlide(final String authId, final List<String> slideId) throws AuthenticationException,
             DatabaseAccessException {
-        // final long currentTime = TimeManager.getSystemTime();
+        final long currentTime = TimeManager.getSystemTime();
         final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
         for (int slides = slideId.size() - 1; slides >= 0; slides--) {
-            /*
             try {
-
                 allSlides.add(SlideManager.mongoGetLectureSlide(auth, database, slideId.get(slides),
                         authId, currentTime));
             } catch (DatabaseAccessException e) {
@@ -294,8 +288,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
                     throw e;
                 }
             }
-            */
-            throw new DatabaseAccessException("No slides exist in the database");
         }
         return allSlides;
     }
@@ -369,23 +361,19 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public String insertLecture(final String userId, final String authId, final Lecture lecture) throws AuthenticationException,
+    public String insertLecture(final String userId, final String authId, final SrlAssignment lecture) throws AuthenticationException,
             DatabaseAccessException {
-        throw new DatabaseAccessException("lecture insertion is not supported");
-        /*
-        final String resultId = LectureManager.mongoInsertLecture(auth, database, authId, lecture);
-
-        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(database, lecture.getCourseId());
-        LectureManager.mongoInsertDefaultGroupId(database, resultId, ids);
-
-        return resultId;
-        */
+        return insertAssignment(userId, authId, lecture);
     }
 
     @Override
     public String insertLectureSlide(final String authId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        throw new DatabaseAccessException("slide insertion is not supported");
-        // return SlideManager.mongoInsertSlide(auth, database, authId, lectureSlide);
+        final String slideId = SlideManager.mongoInsertSlide(auth, database, authId, lectureSlide);
+
+        // inserts the id into the previous the course
+        CourseProblemManager.mongoInsertSlideIntoSlideGroup(auth, database, authId,
+                lectureSlide.getAssignmentId(), lectureSlide.getCourseProblemId(), slideId, true);
+        return slideId;
     }
 
     @Override
@@ -438,7 +426,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void updateLecture(final String authId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
+    public void updateLecture(final String authId, final SrlAssignment lecture) throws AuthenticationException, DatabaseAccessException {
         throw new DatabaseAccessException("lecture update not supported");
         // LectureManager.mongoUpdateLecture(auth, database, lecture.getId(), authId, lecture);
     }

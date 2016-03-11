@@ -4,10 +4,10 @@ import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
-import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.utils.Util.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 
 public class LocalAddProblems {
 	public static void testProblems(String courseId, String assignmentId, String mastId) {

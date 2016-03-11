@@ -10,7 +10,6 @@ public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";
     public static final String COURSE_ID = "CourseId";
-    public static final String LECTURE_ID = "LectureId";
     public static final String ASSIGNMENT_ID = "AssignmentId";
     public static final String PROBLEM_BANK_ID = "ProblemBankId";
     public static final String COURSE_PROBLEM_ID = "CourseProblemId";
@@ -19,10 +18,9 @@ public final class DatabaseStringConstants {
     public static final String USER_ID = "UserId";
     public static final String SCHOOLITEMID = "SchoolItemID";
     public static final String OWNER_ID = "OWNER";
+    public static final String ITEM_ID = "ItemId";
 
     // collections
-    public static final String LECTURE_COLLECTION = "Lectures";
-    public static final String SLIDE_COLLECTION = "Slides";
     public static final String GRADE_COLLECTION = "Grades";
     public static final String GRADING_POLICY_COLLECTION = "GradingPolicies";
 

@@ -28,6 +28,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.school.Assignment;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -155,8 +156,8 @@ public class AssignmentManagerTest {
         defaultAssignment.setId(FAKE_ID);
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.ASSIGNMENT, true), new ObjectId(assignmentId));
-        final DBObject mongoAssignment = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ACCESS_DATE), TimeManager.getSystemTime());
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.CLOSE_DATE), RequestConverter.getMaxTime());
@@ -293,7 +294,7 @@ public class AssignmentManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
-                    School.SrlProblem.newBuilder()
+                    Problem.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)
                             .setCourseId(courseId)
@@ -324,7 +325,7 @@ public class AssignmentManagerTest {
         for (int i = 0; i < 5; i++) {
             // We do not save the newly created problemIds because an empty problem list should be returned.
             String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
-                    School.SrlProblem.newBuilder()
+                    Problem.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)
                             .setCourseId(courseId)
@@ -373,7 +374,7 @@ public class AssignmentManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
-                    School.SrlProblem.newBuilder()
+                    Problem.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)
                             .setCourseId(courseId)
@@ -403,7 +404,7 @@ public class AssignmentManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
-                    School.SrlProblem.newBuilder()
+                    Problem.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)
                             .setCourseId(courseId)
@@ -429,7 +430,7 @@ public class AssignmentManagerTest {
 
         for (int i = 0; i < 5; i++) {
             String problemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER,
-                    School.SrlProblem.newBuilder()
+                    Problem.SrlProblem.newBuilder()
                             .setId("ID")
                             .setAssignmentId(assignmentId)
                             .setCourseId(courseId)

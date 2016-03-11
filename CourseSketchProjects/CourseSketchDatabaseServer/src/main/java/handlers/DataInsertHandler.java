@@ -10,7 +10,6 @@ import database.user.UserClient;
 import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
@@ -19,9 +18,9 @@ import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
@@ -131,7 +130,7 @@ public final class DataInsertHandler {
                         }
                         break;
                         case LECTURE: {
-                            final Lecture lecture = Lecture.parseFrom(itemSet.getData());
+                            final SrlAssignment lecture = SrlAssignment.parseFrom(itemSet.getData());
                             final String resultId = instance.insertLecture(null, authId, lecture);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lecture.getId()));
                         }

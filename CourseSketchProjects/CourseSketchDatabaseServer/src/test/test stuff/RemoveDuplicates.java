@@ -14,7 +14,7 @@ import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.submission.Submission.SrlChecksum;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSubmission;

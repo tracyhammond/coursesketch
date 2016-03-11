@@ -35,6 +35,9 @@ message SrlProblem {
         }
 
         optional bool unlocked = 4;
+
+        // The index of the item inside this group
+        optional int32 index = 5;
     }
 }
 

@@ -88,7 +88,7 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
      */
     @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
             throws DatabaseAccessException {
-        final String collectionName = DbSchoolUtility.getCollectionFromType(collectionType, true);
+        final String collectionName = DbSchoolUtility.getCollectionFromType(collectionType);
         final DBObject result = database.getCollection(collectionName).findOne(new ObjectId(itemId));
         if (result == null) {
             throw new DatabaseAccessException(DbSchoolUtility.getCollectionFromType(collectionType) + " Was not found in " + collectionName
