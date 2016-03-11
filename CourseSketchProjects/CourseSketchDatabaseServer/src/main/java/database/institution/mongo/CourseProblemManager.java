@@ -211,23 +211,6 @@ public final class CourseProblemManager {
                     (List<DBObject>) cursor.get(DatabaseStringConstants.PROBLEM_LIST));
         }
 
-        // problem manager get problem from bank (as a user!)
-        SrlBankProblem problemBank = null;
-        try {
-            problemBank = BankProblemManager.mongoGetBankProblem(authenticator, dbs, (String) exactProblem.getCourseId(),
-                    (String) cursor.get(PROBLEM_BANK_ID));
-        } catch (DatabaseAccessException e) {
-            // Students are the only users that cannot view a problem that doesn't have problem info.
-            // FUTURE: check to see if this is the best option!
-            if (!responder.hasModeratorPermission() && assignmentResponder.isItemPublished()) {
-                throw new DatabaseAccessException(e, false);
-            }
-        }
-        if (problemBank != null) {
-            // adds a single bank problem to the list.
-            exactProblem.addSubgroups(SrlProblem.ProblemSlideHolder.newBuilder().setProblem(problemBank));
-        }
-
         return exactProblem.build();
     }
 

@@ -4,6 +4,7 @@ import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.utils.Util.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
@@ -544,7 +545,6 @@ public class LocalAddProblems {
 			bankBuilder.setQuestionText(questionText[k]);
 			SrlPermission.Builder permissions2 = SrlPermission.newBuilder();
 			permissions2.addUserPermission(courseId);
-			bankBuilder.setAccessPermission(permissions2.build());
 			bankBuilder.setQuestionType(questionType[k]);
 			String resultantId = null;
 			try {
@@ -555,13 +555,12 @@ public class LocalAddProblems {
 				e.printStackTrace();
 			}
 
-			SrlProblem.Builder testBuilder = SrlProblem.newBuilder();
+			Problem.SrlProblem.Builder testBuilder = Problem.SrlProblem.newBuilder();
 			testBuilder.setName(name[k]);
 			//testBuilder.setDescription(descsription[k]);
 			testBuilder.setGradeWeight("50%");
 			testBuilder.setAssignmentId(assignmentId);
 			testBuilder.setCourseId(courseId);
-			testBuilder.setProblemBankId(resultantId);
 			/*
 			SrlPermission.Builder permissions = SrlPermission.newBuilder();
 

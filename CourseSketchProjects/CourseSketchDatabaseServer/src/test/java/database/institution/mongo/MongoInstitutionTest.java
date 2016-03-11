@@ -197,7 +197,12 @@ public class MongoInstitutionTest {
     public void updateProblemIds(String courseId, String assignmentId, String bankProblemId) {
         defaultProblem.setCourseId(courseId);
         defaultProblem.setAssignmentId(assignmentId);
-        defaultProblem.setProblemBankId(bankProblemId);
+        defaultProblem.clearSubgroups();
+
+        // Add bank problem information
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblemId)
+                .setItemType(School.ItemType.BANK_PROBLEM));
     }
 
     @Test
@@ -209,7 +214,6 @@ public class MongoInstitutionTest {
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
         bankProblem.setQuestionType(FAKE_QUESTION_TYPE);
-        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
         String problemBankId = institution.insertBankProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, bankProblem.build());
 
@@ -377,7 +381,12 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(null, TEACHER_AUTH_ID, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
-        defaultProblem.setProblemInfo(bankProblem);
+
+        // Add bank problem information
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem.getId())
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setProblem(bankProblem));
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -395,12 +404,15 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM,
                 newBankProblemId, TEACHER_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        Problem.SrlProblem updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
-                .setGradeWeight("NEW GRADE WEIGHT")
-                .setProblemBankId(newBankProblemId)
-                .build();
+        Problem.SrlProblem.Builder updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
+                .setGradeWeight("NEW GRADE WEIGHT");
 
-        institution.updateCourseProblem(TEACHER_AUTH_ID, updatedProblem);
+        // Add bank problem information
+        updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(newBankProblemId)
+                .setItemType(School.ItemType.BANK_PROBLEM));
+
+        institution.updateCourseProblem(TEACHER_AUTH_ID, updatedProblem.build());
 
         verify(authenticationUpdater, atLeastOnce()).registerUser(eq(courseId), eq(newBankProblemId), eq(School.ItemType.BANK_PROBLEM),
                 (String) isNotNull());
@@ -417,7 +429,12 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(null, TEACHER_AUTH_ID, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
-        defaultProblem.setProblemInfo(bankProblem);
+
+        // Add bank problem information
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem.getId())
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setProblem(bankProblem));
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -426,11 +443,15 @@ public class MongoInstitutionTest {
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
-        Problem.SrlProblem updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
+        Problem.SrlProblem.Builder updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
                 .setGradeWeight("NEW GRADE WEIGHT")
-                .setProblemBankId(DatabaseHelper.createNonExistentObjectId(bankProblemId))
-                .build();
+                .clearSubgroups();
 
-        institution.updateCourseProblem(TEACHER_AUTH_ID, updatedProblem);
+        // Add bank problem information
+        updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(DatabaseHelper.createNonExistentObjectId(bankProblemId))
+                .setItemType(School.ItemType.BANK_PROBLEM));
+
+        institution.updateCourseProblem(TEACHER_AUTH_ID, updatedProblem.build());
     }
 }
