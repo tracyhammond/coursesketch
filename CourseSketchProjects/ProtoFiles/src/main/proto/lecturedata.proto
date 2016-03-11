@@ -1,14 +1,15 @@
 import "tutorial.proto";
-import "util.proto";
 import "commands.proto";
 package protobuf.srl.lecturedata;
 
 message LectureSlide {
-    required string lectureId = 1;
-    //id of this slide
-    required string id = 2;
-    //thumbnail
-    repeated LectureElement elements = 3;
+    // Ids
+    required string id = 1;
+    required string assignmentId = 2;
+    required string courseProblemId = 3;
+
+    // The elements that are displayed for each slide
+    repeated LectureElement elements = 4;
 }
 
 message LectureElement {

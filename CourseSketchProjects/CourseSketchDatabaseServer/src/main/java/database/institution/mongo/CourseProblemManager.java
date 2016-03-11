@@ -14,23 +14,29 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.utils.Util.State;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.util.List;
 
+import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
+import static database.DatabaseStringConstants.IS_SLIDE;
+import static database.DatabaseStringConstants.IS_UNLOCKED;
+import static database.DatabaseStringConstants.LECTURE_COLLECTION;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.SLIDES;
 import static database.DatabaseStringConstants.USERS;
+import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
@@ -212,11 +218,11 @@ public final class CourseProblemManager {
             }
         }
         if (problemBank != null) {
-            exactProblem.setProblemInfo(problemBank);
+            // adds a single bank problem to the list.
+            exactProblem.addSubgroups(SrlProblem.ProblemSlideHolder.newBuilder().setProblem(problemBank));
         }
 
         return exactProblem.build();
-
     }
 
     /**
@@ -319,5 +325,57 @@ public final class CourseProblemManager {
 
         LOG.info("Updated Query: ", updateQuery);
         problems.update(corsor, updateQuery);
+    }
+
+    /**
+     * NOTE: This is meant for internal use do not make this method public.
+     * <p/>
+     * With that being said this allows a course to be updated adding the
+     * slideId to its list of items.
+     *
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param assignmentId
+     *         the course into which the assignment is being inserted into
+     * @param slideId
+     *         the assignment that is being inserted into the course.
+     * @param unlocked
+     *         a boolean that is true if the object is unlocked
+     * @return true if the assignment was inserted correctly.
+     * @throws AuthenticationException The user does not have permission to update the lecture.
+     * @throws DatabaseAccessException The lecture does not exist.
+     */
+    static boolean mongoInsertSlideIntoSlideGroup(final DB dbs, final String assignmentId, final String problemGroup, final String slideId, final boolean unlocked)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(assignmentId));
+        final DBObject cursor = myDbRef.fetch();
+        DBObject updateObj = null;
+        final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
+        updateObj = createSlideProblemHolder(slideId, true, unlocked);
+        lectures.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+
+        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
+        return true;
+    }
+
+    public static void mongoInsertSlide(final DB dbs, final String lectureId, final String slideId, final boolean unlocked) {
+
+    }
+
+    /**
+     * NOTE: This is meant for internal use.
+     *
+     * creates an object of the IdInLecture message type from the proto file
+     *
+     * @param itemId
+     *         the itemId of the slide or bank problem that used to create the message
+     * @param isSlide
+     *         a boolean that is true if the slideId param belongs to a slide
+     * @param isUnlocked
+     *         a boolean that is true if the user trying to access this slide is allowed
+     * @return a BasicDBObject of the message type IdInLecture
+     */
+    private static BasicDBObject createSlideProblemHolder(final String itemId, final boolean isSlide, final boolean isUnlocked) {
+        return new BasicDBObject(SELF_ID, itemId).append(IS_SLIDE, isSlide).append(IS_UNLOCKED, isUnlocked);
     }
 }

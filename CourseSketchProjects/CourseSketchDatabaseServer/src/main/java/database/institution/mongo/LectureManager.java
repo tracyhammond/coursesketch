@@ -353,51 +353,5 @@ public final class LectureManager {
         return true;
     }
 
-    /**
-     * NOTE: This is meant for internal use do not make this method public.
-     * <p/>
-     * With that being said this allows a course to be updated adding the
-     * slideId to its list of items.
-     *
-     * @param dbs
-     *         The database where the assignment is being stored.
-     * @param lectureId
-     *         the course into which the assignment is being inserted into
-     * @param slideId
-     *         the assignment that is being inserted into the course.
-     * @param unlocked
-     *         a boolean that is true if the object is unlocked
-     * @return true if the assignment was inserted correctly.
-     * @throws AuthenticationException The user does not have permission to update the lecture.
-     * @throws DatabaseAccessException The lecture does not exist.
-     */
-    static boolean mongoInsertSlideIntoLecture(final DB dbs, final String lectureId, final String slideId, final boolean unlocked)
-            throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, LECTURE_COLLECTION, new ObjectId(lectureId));
-        final DBObject cursor = myDbRef.fetch();
-        DBObject updateObj = null;
-        final DBCollection lectures = dbs.getCollection(LECTURE_COLLECTION);
-        updateObj = createIdInLecture(slideId, true, unlocked);
-        lectures.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
-        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), lectureId, UserUpdateHandler.LECTURE_CLASSIFICATION);
-        return true;
-    }
-
-    /**
-     * NOTE: This is meant for internal use.
-     *
-     * creates an object of the IdInLecture message type from the proto file
-     *
-     * @param slideId
-     *         the slideId of the slide that used to create the message
-     * @param isSlide
-     *         a boolean that is true if the slideId param belongs to a slide
-     * @param isUnlocked
-     *         a boolean that is true if the user trying to access this slide is allowed
-     * @return a BasicDBObject of the message type IdInLecture
-     */
-    private static BasicDBObject createIdInLecture(final String slideId, final boolean isSlide, final boolean isUnlocked) {
-        return new BasicDBObject(SLIDES, new BasicDBObject(SELF_ID, slideId).append(IS_SLIDE, isSlide).append(IS_UNLOCKED, isUnlocked));
-    }
 }

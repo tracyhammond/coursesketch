@@ -74,7 +74,7 @@ public final class SlideManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.LECTURE, slide.getLectureId(), userId, 0, authType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, slide.getLectureId(), userId, 0, authType);
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -89,6 +89,7 @@ public final class SlideManager {
         final DBObject cursor = newUser.findOne(query);
 
         // inserts the id into the previous the course
+        CourseProblemManager.mongoInsertSlide(dbs, slide.getLectureId(), cursor.get(SELF_ID).toString(), true);
         LectureManager.mongoInsertSlideIntoLecture(dbs, slide.getLectureId(), cursor.get(SELF_ID).toString(), true);
 
         return cursor.get(SELF_ID).toString();
@@ -101,7 +102,7 @@ public final class SlideManager {
      *         an element that belongs on a lecture
      * @return a BasicDBObject of the element
      */
-    private static BasicDBObject createQueryFromElement(final Lecturedata.LectureElement lectureElement) {
+    public static BasicDBObject createQueryFromElement(final Lecturedata.LectureElement lectureElement) {
         final BasicDBObject query = new BasicDBObject(SELF_ID, lectureElement.getId())
                 .append(X_POSITION, lectureElement.getXPosition())
                 .append(Y_POSITION, lectureElement.getYPosition())
@@ -117,9 +118,6 @@ public final class SlideManager {
                 break;
             case SKETCHAREA:
                 query.append(SLIDE_BLOB, lectureElement.getSketchArea().toByteArray());
-                break;
-            case QUESTION:
-                query.append(SLIDE_BLOB, lectureElement.getQuestion().toByteArray());
                 break;
             case EMBEDDEDHTML:
                 query.append(SLIDE_BLOB, lectureElement.getEmbeddedHtml().toByteArray());
@@ -156,8 +154,8 @@ public final class SlideManager {
     public static LectureSlide mongoGetLectureSlide(final Authenticator authenticator, final DB dbs, final String slideId, final String userId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(slideId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBObject cursor = myDbRef.fetch();
+        if (cursor == null) {
             throw new DatabaseAccessException("Slide was not found with the following ID " + slideId, true);
         }
 
@@ -168,10 +166,10 @@ public final class SlideManager {
                 .build();
         // FUTURE: figure out lecture slide permissions
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.LECTURE, (String) corsor.get(LECTURE_ID), userId, 0, authType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(LECTURE_ID), userId, 0, authType);
 
         // FUTURE Fix this! maybe make the lecture a user? not really sure for now everyone is a user.
-        // authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
+        // authenticator.checkAuthentication(userId, (List<String>) cursor.get(USERS));
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -196,7 +194,7 @@ public final class SlideManager {
         exactSlide.setId(slideId);
 
         // sets the majority of the slide data
-        setSlideData(exactSlide, corsor);
+        setSlideData(exactSlide, cursor);
 
         return exactSlide.build();
     }
@@ -208,7 +206,7 @@ public final class SlideManager {
      *         the object that is performing authentication.
      * @param dbs
      *         The database where the lecture slide is being stored.
-     * @param lectureSlideId
+     * @param assignmentId
      *         the id of the lecture slide that is being updated.
      * @param userId
      *         The id of the user that asking to update the lecture slide.
@@ -221,18 +219,18 @@ public final class SlideManager {
      *         The lecture does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
-    public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String lectureSlideId, final String userId,
+    public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(lectureSlideId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBRef myDbRef = new DBRef(dbs, SLIDE_COLLECTION, new ObjectId(assignmentId));
+        final DBObject cursor = myDbRef.fetch();
         final DBCollection lectureSlides = dbs.getCollection(SLIDE_COLLECTION);
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.LECTURE, lectureSlideId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, userId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -243,7 +241,7 @@ public final class SlideManager {
             for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
                 list.add(createQueryFromElement(element));
             }
-            lectureSlides.update(corsor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
+            lectureSlides.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
             update = true;
         }
         return update;
@@ -259,7 +257,7 @@ public final class SlideManager {
      * @throws database.DatabaseAccessException
      *         passes exception through to createElementFromQuery
      */
-    private static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final DBObject cursor) throws DatabaseAccessException {
+    public static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final DBObject cursor) throws DatabaseAccessException {
         exactSlide.setLectureId((String) cursor.get(LECTURE_ID));
         exactSlide.setId(cursor.get(SELF_ID).toString());
         if (cursor.get(ELEMENT_LIST) != null) {
@@ -280,7 +278,7 @@ public final class SlideManager {
      * @throws database.DatabaseAccessException
      *         a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
-    private static Lecturedata.LectureElement createElementFromQuery(final BasicDBObject query) throws DatabaseAccessException {
+    public static Lecturedata.LectureElement createElementFromQuery(final DBObject query) throws DatabaseAccessException {
         final Lecturedata.LectureElement.Builder element = Lecturedata.LectureElement.newBuilder();
         final String lectureElementId = (String) query.get(SELF_ID);
         final int xPos = (int) query.get(X_POSITION);
@@ -305,9 +303,6 @@ public final class SlideManager {
                     break;
                 case SKETCHAREA:
                     element.setSketchArea(Lecturedata.SketchArea.parseFrom(blob));
-                    break;
-                case QUESTION:
-                    element.setQuestion(Lecturedata.SrlQuestion.parseFrom(blob));
                     break;
                 case EMBEDDEDHTML:
                     element.setEmbeddedHtml(Lecturedata.EmbeddedHtml.parseFrom(blob));

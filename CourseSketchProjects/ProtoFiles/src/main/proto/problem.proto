@@ -3,6 +3,8 @@ import "grading.proto";
 import "commands.proto";
 import "lecturedata.proto";
 
+package protobuf.srl.school;
+
 message SrlProblem {
     required string id = 1; // This must be unique within an assignment.
     optional string courseId = 2; // To know who the grandParent is.
@@ -23,8 +25,9 @@ message SrlProblem {
     repeated QuestionAction actions = 16;
     repeated ProblemRestriction restrictions = 17;
 
-
+    // Holds a single slide or problem and a boolean on if it is unlocked
     message ProblemSlideHolder {
+        // the id of the item being held
         optional string id = 1;
         oneof problemSlide {
             SrlBankProblem problem = 2;
@@ -40,7 +43,8 @@ message QuestionAction {
 }
 
 message ProblemRestriction {
-
+    // The next answer (or slide) can not be moved until the answer is correct.
+    optional bool onlyUntilCorrect = 1;
 }
 
 message SrlBankProblem {
