@@ -5,6 +5,7 @@ import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationChecker;
@@ -28,6 +29,8 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -165,8 +168,8 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE_PROBLEM, true), new ObjectId(courseProblemId));
-        final DBObject mongoProblem = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
     }

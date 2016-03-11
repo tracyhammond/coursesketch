@@ -27,27 +27,6 @@ public final class DbSchoolUtility {
     }
 
     /**
-     * Returns a string representing the type of school item it is based on the enum.
-     *
-     * This method is used to make it easier to handle upgrades or changes to protobuf names.
-     * @param type {@link protobuf.srl.school.School.ItemType}.
-     * @param legacy true if the legacy names should be used instead of the new names.
-     * @return A string representing the ItemType.
-     */
-    public static String getCollectionFromType(final School.ItemType type, final boolean legacy) {
-        if (!legacy) {
-            return getCollectionFromType(type);
-        }
-        switch (type) {
-            case COURSE: return DatabaseStringConstants.COURSE_COLLECTION;
-            case ASSIGNMENT: return DatabaseStringConstants.ASSIGNMENT_COLLECTION;
-            case COURSE_PROBLEM: return DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
-            case BANK_PROBLEM: return DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
-            default: return "NO_COLLECTION";
-        }
-    }
-
-    /**
      * Returns the {@code ItemType} that created the given {@code ItemType}.
      *
      * A course item type returns itself.

@@ -5,6 +5,7 @@ import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationChecker;
@@ -29,6 +30,8 @@ import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
 import static database.DatabaseStringConstants.REGISTRATION_KEY;
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -114,8 +117,8 @@ public class CourseManagerTest {
         defaultCourse.setName(VALID_NAME);
         String courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE, true), new ObjectId(courseId));
-        final DBObject mongoCourse = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject mongoCourse = collection.findOne(convertStringToObjectId(courseId));
 
         Assert.assertEquals(mongoCourse.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.NAME), VALID_NAME);

@@ -24,7 +24,6 @@ import java.util.List;
 import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
-import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
 import static database.DatabaseStringConstants.IS_SLIDE;
 import static database.DatabaseStringConstants.IS_UNLOCKED;
@@ -110,7 +109,7 @@ public final class CourseProblemManager {
      */
     public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection courseProblemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
 
         // Make sure person is mod or admin for the assignment.
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
@@ -159,8 +158,9 @@ public final class CourseProblemManager {
      */
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, convertStringToObjectId(problemId));
-        final DBObject cursor = myDbRef.fetch();
+
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(problemId));
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
         }
@@ -263,15 +263,15 @@ public final class CourseProblemManager {
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, convertStringToObjectId(problemId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(problemId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
         }
 
         final BasicDBObject updateObj = new BasicDBObject();
-        final DBCollection problemCollection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -317,9 +317,9 @@ public final class CourseProblemManager {
      *         The list of id groupings that contain the ids being copied over.
      */
     static void mongoInsertDefaultGroupId(final DB dbs, final String courseProblemId, final List<String>... ids) {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(courseProblemId));
+        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.COURSE_PROBLEM), new ObjectId(courseProblemId));
         final DBObject corsor = myDbRef.fetch();
-        final DBCollection problems = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+        final DBCollection problems = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
 
         final BasicDBObject updateQuery = new BasicDBObject(); //MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 

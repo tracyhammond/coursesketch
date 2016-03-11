@@ -40,6 +40,7 @@ enum ItemType {
     ASSIGNMENT = 1;
     COURSE_PROBLEM = 2;
     BANK_PROBLEM = 3;
+    SLIDE = 5;
 }
 
 
