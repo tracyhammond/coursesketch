@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static database.DatabaseStringConstants.*;
+import static database.DbSchoolUtility.getCollectionFromType;
 
 /**
  * Lets break DATABASES!!!!!!!!
@@ -66,7 +67,7 @@ public final class BreakDatabase {
         String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
         mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
-        DBCollection collection = database.getCollection(COURSE_COLLECTION);
+        DBCollection collection = database.getCollection(getCollectionFromType(School.ItemType.COURSE));
         collection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
@@ -80,7 +81,7 @@ public final class BreakDatabase {
         String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
         mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
-        DBCollection collection = database.getCollection(COURSE_COLLECTION);
+        DBCollection collection = database.getCollection(getCollectionFromType(School.ItemType.COURSE));
         DBObject dbCourse = collection.findOne();
         collection.update(dbCourse, new BasicDBObject(SET_COMMAND, new BasicDBObject(ADMIN, new ArrayList<>())));
         String[] returnID = {user.getUsername(), courseID};

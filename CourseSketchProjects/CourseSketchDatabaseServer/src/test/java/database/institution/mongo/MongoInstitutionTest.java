@@ -7,6 +7,7 @@ import com.github.fakemongo.junit.FongoRule;
 import com.google.common.collect.Lists;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationChecker;
@@ -35,10 +36,11 @@ import protobuf.srl.utils.Util;
 
 import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
-import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
 import static database.DatabaseStringConstants.REGISTRATION_KEY;
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -209,8 +211,8 @@ public class MongoInstitutionTest {
 
         String problemBankId = institution.insertBankProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, bankProblem.build());
 
-        final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
 
         Assert.assertTrue(mongoBankProblem.containsField(REGISTRATION_KEY));
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
@@ -239,8 +241,8 @@ public class MongoInstitutionTest {
 
         String courseId = institution.insertCourse(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultCourse.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE, true), new ObjectId(courseId));
-        final DBObject mongoCourse = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject mongoCourse = collection.findOne(convertStringToObjectId(courseId));
 
         Assert.assertTrue(mongoCourse.containsField(REGISTRATION_KEY));
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.NAME), VALID_NAME);
@@ -272,8 +274,8 @@ public class MongoInstitutionTest {
 
         assignmentId = institution.insertAssignment(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultAssignment.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.ASSIGNMENT, true), new ObjectId(assignmentId));
-        final DBObject mongoAssignment = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
@@ -300,8 +302,8 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE_PROBLEM, true), new ObjectId(courseProblemId));
-        final DBObject mongoProblem = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.PROBLEM_BANK_ID), bankProblemId);
@@ -328,8 +330,8 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.COURSE_PROBLEM, true), new ObjectId(courseProblemId));
-        final DBObject mongoProblem = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.PROBLEM_BANK_ID), bankProblemId);

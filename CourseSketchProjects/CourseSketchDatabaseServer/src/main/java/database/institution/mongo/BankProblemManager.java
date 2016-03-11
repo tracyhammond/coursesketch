@@ -6,7 +6,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
@@ -29,7 +28,6 @@ import static database.DatabaseStringConstants.COURSE_ACCESS;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
-import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
 import static database.DatabaseStringConstants.REGISTRATION_KEY;
@@ -41,6 +39,7 @@ import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.SUB_TOPIC;
 import static database.DatabaseStringConstants.USERS;
+import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
@@ -74,7 +73,7 @@ public final class BankProblemManager {
      *         Not currently thrown but may be thrown in the future.
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
-        final DBCollection problemBankCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
+        final DBCollection problemBankCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
         final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
                 .append(IMAGE, problem.getImage())
                 .append(SOLUTION_ID, problem.getSolutionId())
@@ -122,8 +121,8 @@ public final class BankProblemManager {
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
         if (mongoBankProblem == null) {
             throw new DatabaseAccessException("bank problem can not be found with id: " + problemBankId);
         }
@@ -215,8 +214,8 @@ public final class BankProblemManager {
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problemBankId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(problemBankId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Bank Problem was not found with the following ID: " + problemBankId);
@@ -227,7 +226,7 @@ public final class BankProblemManager {
                 .build();
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
-        final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
 
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -329,7 +328,7 @@ public final class BankProblemManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final DBCollection problemCollection = database.getCollection(PROBLEM_BANK_COLLECTION);
+        final DBCollection problemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
         final DBCursor dbCursor = problemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
         final List<SrlBankProblem> results = new ArrayList<>();
         while (dbCursor.hasNext()) {
@@ -361,8 +360,8 @@ public final class BankProblemManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
             final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(database, PROBLEM_BANK_COLLECTION, convertStringToObjectId(bankProblemId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection collection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(bankProblemId));
         if (cursor == null) {
             throw new DatabaseAccessException("BankProblem was not found with the following ID " + bankProblemId);
         }

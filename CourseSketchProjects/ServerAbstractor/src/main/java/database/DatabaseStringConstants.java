@@ -21,14 +21,11 @@ public final class DatabaseStringConstants {
     public static final String OWNER_ID = "OWNER";
 
     // collections
-    public static final String COURSE_COLLECTION = "Courses";
-    public static final String ASSIGNMENT_COLLECTION = "Assignments";
-    public static final String PROBLEM_BANK_COLLECTION = "ProblemBank";
-    public static final String COURSE_PROBLEM_COLLECTION = "Problems";
     public static final String LECTURE_COLLECTION = "Lectures";
     public static final String SLIDE_COLLECTION = "Slides";
     public static final String GRADE_COLLECTION = "Grades";
     public static final String GRADING_POLICY_COLLECTION = "GradingPolicies";
+
     // also contains groups for admins and mods
     public static final String USER_GROUP_COLLECTION = "UserGroups";
     public static final String USER_COLLECTION = "Users";

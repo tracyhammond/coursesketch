@@ -4,6 +4,7 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
@@ -31,14 +32,15 @@ import java.util.List;
 
 import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
-import static database.DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
 import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DatabaseStringConstants.SCRIPT;
+import static database.DbSchoolUtility.getCollectionFromType;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -102,8 +104,9 @@ public class BankProblemManagerTest {
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
+
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
 
         Assert.assertEquals(mongoBankProblem.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
@@ -122,9 +125,10 @@ public class BankProblemManagerTest {
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        final DBRef myDbRef = new DBRef(db, PROBLEM_BANK_COLLECTION, new ObjectId(problemBankId));
-        final DBObject mongoBankProblem = myDbRef.fetch();
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject cursor = collection.findOne(convertStringToObjectId(problemBankId));
 
+        Assert.assertNotNull(cursor);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -429,7 +433,7 @@ public class BankProblemManagerTest {
         bankProblem.setScript(FAKE_SCRIPT);
 
         mongoInsertBankProblem(db, bankProblem.build());
-        DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
+        DBCursor curse = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).find();
         System.out.println(curse);
         DBObject obj = curse.next();
         String testString = obj.get(SCRIPT).toString();
@@ -443,7 +447,7 @@ public class BankProblemManagerTest {
         bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
         mongoInsertBankProblem(db, bankProblem.build());
-        DBCursor curse = db.getCollection(PROBLEM_BANK_COLLECTION).find();
+        DBCursor curse = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).find();
         System.out.println(curse);
         DBObject obj = curse.next();
         Commands.SrlUpdateList UpdateList = Commands.SrlUpdateList.parseFrom((byte[]) obj.get(BASE_SKETCH));

@@ -2,6 +2,7 @@ package database;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationException;
@@ -11,6 +12,7 @@ import handlers.ResultBuilder;
 import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import protobuf.srl.query.Data;
+import protobuf.srl.school.School;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -27,6 +29,8 @@ import static database.DatabaseStringConstants.TIME;
 import static database.DatabaseStringConstants.UPDATEID;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Hanldes updates for the user so that the system can do heavy caching on the client.
@@ -141,8 +145,8 @@ public final class UserUpdateHandler {
 
         for (String group : users) {
             if (group.startsWith(GROUP_PREFIX)) {
-                final DBRef myDbRef = new DBRef(database, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
-                final DBObject corsor = myDbRef.fetch();
+                final DBCollection collection = database.getCollection(USER_GROUP_COLLECTION);
+                final DBObject corsor = collection.findOne(convertStringToObjectId(group.substring(GROUP_PREFIX_LENGTH)));
                 final ArrayList<String> list = (ArrayList<String>) corsor.get(USER_LIST);
                 insertUpdates(database, list, objectAffectedId, classification);
             } else {

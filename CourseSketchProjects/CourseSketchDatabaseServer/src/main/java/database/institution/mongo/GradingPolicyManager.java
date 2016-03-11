@@ -41,6 +41,8 @@ import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Interfaces with mongo database to manage grading policies.
@@ -172,8 +174,9 @@ public final class GradingPolicyManager {
      */
     static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, GRADING_POLICY_COLLECTION, new ObjectId(courseId));
-        final DBObject policyObject = myDbRef.fetch();
+        final DBCollection collection = dbs.getCollection(GRADING_POLICY_COLLECTION);
+        final DBObject policyObject = collection.findOne(convertStringToObjectId(courseId));
+
         if (policyObject == null) {
             throw new DatabaseAccessException("Grading policy was not found for course with ID " + courseId);
         }
