@@ -371,7 +371,9 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
-        defaultProblem.setProblemInfo(bankProblem);
+
+        // Add bank problem information
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder().setProblem(bankProblem));
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -397,7 +399,7 @@ public class CourseProblemManagerTest {
         CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem.build());
 
         // change the data contained in the update problem bc it should now contain new data.
-        updatedProblem.setProblemInfo(bankProblem2.setId(bankProblemId2));
+        updatedProblem.addSubgroups()
 
         Problem.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
                 ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);

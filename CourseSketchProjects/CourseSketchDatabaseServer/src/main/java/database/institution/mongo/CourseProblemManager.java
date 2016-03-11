@@ -1,5 +1,6 @@
 package database.institution.mongo;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -26,7 +27,6 @@ import static database.DatabaseStringConstants.ADD_SET_COMMAND;
 import static database.DatabaseStringConstants.ASSIGNMENT_ID;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
-import static database.DatabaseStringConstants.IS_SLIDE;
 import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DatabaseStringConstants.NAME;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
@@ -121,10 +121,11 @@ public final class CourseProblemManager {
         }
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, problem.getCourseId()).append(ASSIGNMENT_ID, problem.getAssignmentId())
-                .append(PROBLEM_BANK_ID, problem.getProblemBankId())
                 .append(GRADE_WEIGHT, problem.getGradeWeight())
                 .append(NAME, problem.getName())
                 .append(PROBLEM_NUMBER, problem.getProblemNumber());
+
+
 
         courseProblemCollection.insert(query);
         final String selfId = query.get(SELF_ID).toString();
@@ -230,83 +231,6 @@ public final class CourseProblemManager {
         return exactProblem.build();
     }
 
-    /**
-     * Extracts the problem data from the {@link DBObject} into the {@link SrlProblem}.
-     *
-     * @param dbProblem Contains the data from the database.
-     * @return An {@link SrlProblem} problem that is being filled with the data.
-     */
-    private static SrlProblem.Builder extractProblemData(final DBObject dbProblem) {
-        final SrlProblem.Builder problem = SrlProblem.newBuilder();
-        problem.setCourseId((String) dbProblem.get(COURSE_ID));
-        problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
-        problem.setProblemBankId((String) dbProblem.get(PROBLEM_BANK_ID));
-        problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
-        problem.setName((String) dbProblem.get(NAME));
-        problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
-
-        return problem;
-    }
-
-    /**
-     *
-     * @param authenticator
-     * @param database
-     * @param authId
-     * @param checkTime
-     * @param slideObjects
-     * @return
-     * @throws AuthenticationException
-     * @throws DatabaseAccessException
-     */
-    static List<SrlProblem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final DB database, final String authId,
-            final String courseId, final long checkTime, final List<DBObject> slideObjects) throws AuthenticationException, DatabaseAccessException {
-        final List<SrlProblem.ProblemSlideHolder> list = new ArrayList<>();
-        for (int i = 0; i < slideObjects.size(); i++) {
-            final DBObject dbObject = slideObjects.get(i);
-            list.add(createProblemSlideHolder(authenticator, database, authId, courseId, checkTime, dbObject, i));
-        }
-        return list;
-    }
-
-    /**
-     *
-     * @param authenticator
-     * @param database
-     * @param authId
-     * @param checkTime
-     * @param data
-     * @param index
-     * @return
-     * @throws AuthenticationException
-     * @throws DatabaseAccessException
-     */
-    private static SrlProblem.ProblemSlideHolder createProblemSlideHolder(final Authenticator authenticator, final DB database,
-            final String authId, final String courseId, final long checkTime, final DBObject data, final int index)
-            throws AuthenticationException, DatabaseAccessException {
-        final SrlProblem.ProblemSlideHolder.Builder holder = SrlProblem.ProblemSlideHolder.newBuilder();
-        holder.setIndex(index);
-
-        if (!(Boolean) data.get(DatabaseStringConstants.IS_UNLOCKED)) {
-            // Future: add the other conditions for checking if an item is unlocked
-            holder.setUnlocked(false);
-            return holder.build();
-        }
-        holder.setUnlocked(true);
-
-        final String id = data.get(DatabaseStringConstants.ITEM_ID).toString();
-
-        if ((Boolean) data.get(DatabaseStringConstants.IS_SLIDE)) {
-            final Lecturedata.LectureSlide lectureSlide = SlideManager
-                    .mongoGetLectureSlide(authenticator, database, authId, id, checkTime);
-            holder.setSlide(lectureSlide);
-        } else {
-            final SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, database, courseId, id);
-            holder.setProblem(problem);
-        }
-
-        return holder.build();
-    }
 
     /**
      * @param authenticator
@@ -356,26 +280,172 @@ public final class CourseProblemManager {
             updateObj.append(GRADE_WEIGHT, problem.getGradeWeight());
             update = true;
         }
-        if (problem.hasProblemBankId()) {
-            updateObj.append(PROBLEM_BANK_ID, problem.getProblemBankId());
+        // Only allows you to set them.
+        if (problem.getSubgroupsCount() > 0) {
+            updateObj.append(DatabaseStringConstants.PROBLEM_LIST, createProblemHolderList(problem.getSubgroupsList()));
             update = true;
         }
         if (update) {
-            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            final BasicDBObject setData = new BasicDBObject();
+            if (updateObj.size() > 0) {
+                setData.append(SET_COMMAND, updateObj);
+            }
+
+            // We only replace the list right now instead of adding new objects.  There are other methods for that.
+            /*
+            if (problem.getSubgroupsCount() > 0) {
+                final BasicDBObject problemList = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
+                        createProblemHolderList(problem.getSubgroupsList()));
+                setData.append(ADD_SET_COMMAND, problemList);
+            }
+            */
+
+            problemCollection.update(cursor, setData);
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
         return true;
     }
 
     /**
+     * Creates a mongo object query for the list of {@link protobuf.srl.school.Problem.SrlProblem.ProblemSlideHolder}.
+     * @param holder
+     *      The list of problems that are being inserted into the database.
+     * @return
+     *      A mongo object that represents the list passed in.
+     * @throws DatabaseAccessException Thrown if there are problems creating the list.
+     */
+    private static DBObject createProblemHolderList(final List<SrlProblem.ProblemSlideHolder> holder) throws DatabaseAccessException {
+        final BasicDBList basicDBList = new BasicDBList();
+        for (SrlProblem.ProblemSlideHolder problemSlideHolder: holder) {
+            try {
+                basicDBList.add(createSlideProblemHolderQuery(problemSlideHolder.getId(),
+                        problemSlideHolder.getItemType(), problemSlideHolder.getUnlocked()));
+            } catch (DatabaseAccessException e) {
+                throw new DatabaseAccessException("Invalid query for slide or problem: " + problemSlideHolder.getId(), e);
+            }
+        }
+        return basicDBList;
+    }
+
+    /**
+     * Extracts the problem data from the {@link DBObject} into the {@link SrlProblem}.
+     *
+     * @param dbProblem Contains the data from the database.
+     * @return An {@link SrlProblem} problem that is being filled with the data.
+     */
+    private static SrlProblem.Builder extractProblemData(final DBObject dbProblem) {
+        final SrlProblem.Builder problem = SrlProblem.newBuilder();
+        problem.setCourseId((String) dbProblem.get(COURSE_ID));
+        problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
+        problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
+        problem.setName((String) dbProblem.get(NAME));
+        problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
+
+        return problem;
+    }
+
+    /**
      *
      * @param authenticator
-     * @param dbs
+     *         The object that is performing authentication.
+     * @param database
+     *         The database where the assignment is being stored.
      * @param authId
-     * @param problemId
-     * @param bankProblemId
+     *         The user requesting the problem.
+     * @param courseId
+     *         Used to authenticate the course for the bank problem.
+     * @param checkTime
+     *         The time that the assignment was asked to be grabbed. (used to
+     *         check if the assignment is valid)
+     * @param slideObjects
+     *         A list of Slide objects or problem objects that need to be decoded.
+     * @return A protobuf representation of a problem slide holder.
      * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the course problem.
      * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
+     */
+    static List<SrlProblem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final DB database, final String authId,
+            final String courseId, final long checkTime, final List<DBObject> slideObjects) throws AuthenticationException, DatabaseAccessException {
+        final List<SrlProblem.ProblemSlideHolder> list = new ArrayList<>();
+        for (int i = 0; i < slideObjects.size(); i++) {
+            final DBObject dbObject = slideObjects.get(i);
+            list.add(createProblemSlideHolder(authenticator, database, authId, courseId, checkTime, dbObject, i));
+        }
+        return list;
+    }
+
+    /**
+     *
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param database
+     *         The database where the assignment is being stored.
+     * @param authId
+     *         The user requesting the problem.
+     * @param courseId
+     *         Used to authenticate the course for the bank problem.
+     * @param checkTime
+     *         The time that the assignment was asked to be grabbed. (used to
+     *         check if the assignment is valid)
+     * @param data
+     *         The data from the database about a specific problem or slide.
+     * @param index
+     *         The location of the slide or problem in the list.
+     * @return A protobuf representation of a problem slide holder.
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
+     */
+    private static SrlProblem.ProblemSlideHolder createProblemSlideHolder(final Authenticator authenticator, final DB database,
+            final String authId, final String courseId, final long checkTime, final DBObject data, final int index)
+            throws AuthenticationException, DatabaseAccessException {
+        final SrlProblem.ProblemSlideHolder.Builder holder = SrlProblem.ProblemSlideHolder.newBuilder();
+        holder.setIndex(index);
+
+        if (!(Boolean) data.get(DatabaseStringConstants.IS_UNLOCKED)) {
+            // Future: add the other conditions for checking if an item is unlocked
+            holder.setUnlocked(false);
+            return holder.build();
+        }
+        holder.setUnlocked(true);
+
+        final String id = data.get(DatabaseStringConstants.ITEM_ID).toString();
+
+        final School.ItemType itemType = School.ItemType.valueOf((int) data.get(DatabaseStringConstants.SCHOOL_ITEM_TYPE));
+        switch (itemType) {
+            case BANK_PROBLEM:
+                final SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, database, courseId, id);
+                holder.setProblem(problem);
+                break;
+            case SLIDE:
+                final Lecturedata.LectureSlide lectureSlide = SlideManager
+                        .mongoGetLectureSlide(authenticator, database, authId, id, checkTime);
+                holder.setSlide(lectureSlide);
+                break;
+            default:
+                throw new DatabaseAccessException("Invalid item type is present: " + itemType.name());
+        }
+
+        return holder.build();
+    }
+
+    /**
+     * @param authenticator
+     *         The object that is performing authentication.
+     * @param dbs
+     *         The database where the assignment is being stored.
+     * @param authId
+     *         The user requesting the problem.
+     * @param problemId
+     *         The id of the problem that the data is being inserted into.
+     * @param bankProblemId
+     *         The id of the bank problem being inserted
+     * @throws AuthenticationException
+     *         Thrown if the user does not have permission to update the course problem.
+     * @throws DatabaseAccessException
+     *         Thrown if there is data that is missing.
      */
     public static void insertNewProblemPart(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final String bankProblemId) throws AuthenticationException, DatabaseAccessException {
@@ -405,11 +475,6 @@ public final class CourseProblemManager {
     }
 
     /**
-     * NOTE: This is meant for internal use do not make this method public.
-     * <p/>
-     * With that being said this allows a course to be updated adding the
-     * slideId to its list of items.
-     *
      *
      * @param authenticator
      *         The object that is performing authentication.
@@ -420,17 +485,16 @@ public final class CourseProblemManager {
      *@param assignmentId
      *         The assignment into which the slide is being inserted into.
      * @param problemGroupId
- *         The courseProblem the slide is being inserted into.
+     *         The courseProblem the slide is being inserted into.
      * @param slideId
-*         The assignment that is being inserted into the course.
+     *         The assignment that is being inserted into the course.
      * @param unlocked
-*         A boolean that is true if the object is unlocked.     @return true if the assignment was inserted correctly.
+     *         A boolean that is true if the object is unlocked.     @return true if the assignment was inserted correctly.
      * @throws AuthenticationException The user does not have permission to update the lecture.
      * @throws DatabaseAccessException The lecture does not exist.
      */
-    static boolean mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
-            final String problemGroupId,
-            final String slideId, final boolean unlocked)
+    public static boolean mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final DB dbs, final String authId,
+            final String assignmentId, final String problemGroupId, final String slideId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
@@ -448,7 +512,7 @@ public final class CourseProblemManager {
         }
 
         final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
-                createSlideProblemHolder(slideId, true, unlocked));
+                createSlideProblemHolderQuery(slideId, School.ItemType.SLIDE, unlocked));
         collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
@@ -475,14 +539,14 @@ public final class CourseProblemManager {
      * @throws AuthenticationException The user does not have permission to update the lecture.
      * @throws DatabaseAccessException The lecture does not exist.
      */
-    static boolean mongoInsertBankProblemIntoProblemGroup(final DB dbs, final String assignmentId, final String problemGroupId,
+    private static boolean mongoInsertBankProblemIntoProblemGroup(final DB dbs, final String assignmentId, final String problemGroupId,
             final String bankProblemId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
 
         final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
-                createSlideProblemHolder(bankProblemId, false, unlocked));
+                createSlideProblemHolderQuery(bankProblemId, School.ItemType.BANK_PROBLEM, unlocked));
         collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
@@ -496,13 +560,20 @@ public final class CourseProblemManager {
      *
      * @param itemId
      *         the itemId of the slide or bank problem that used to create the message
-     * @param isSlide
-     *         a boolean that is true if the slideId param belongs to a slide
+     * @param itemType
+     *         the type of subitem it is.  Which can be either a slide or a bank problem.
      * @param isUnlocked
      *         a boolean that is true if the user trying to access this slide is allowed
      * @return a BasicDBObject of the message type IdInLecture
+     * @throws DatabaseAccessException An invalid ItemType was attempted to be inserted.
      */
-    private static BasicDBObject createSlideProblemHolder(final String itemId, final boolean isSlide, final boolean isUnlocked) {
-        return new BasicDBObject(DatabaseStringConstants.ITEM_ID, itemId).append(IS_SLIDE, isSlide).append(IS_UNLOCKED, isUnlocked);
+    private static BasicDBObject createSlideProblemHolderQuery(final String itemId, final School.ItemType itemType, final boolean isUnlocked)
+            throws DatabaseAccessException {
+        if (itemType != School.ItemType.SLIDE && itemType != School.ItemType.BANK_PROBLEM) {
+            throw new DatabaseAccessException("Attempting to create query with invalid item type: " + itemType.name());
+        }
+        return new BasicDBObject(DatabaseStringConstants.ITEM_ID, itemId)
+                .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, itemType.getNumber())
+                .append(IS_UNLOCKED, isUnlocked);
     }
 }

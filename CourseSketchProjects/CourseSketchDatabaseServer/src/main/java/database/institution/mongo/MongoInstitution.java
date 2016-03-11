@@ -381,8 +381,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             DatabaseAccessException {
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, authId, problem);
 
-        if (problem.hasProblemBankId()) {
-            putCourseInBankProblem(authId, problem.getCourseId(), problem.getProblemBankId(), null);
+        if (problem.getSubgroupsCount() > 0) {
+            for (SrlProblem.ProblemSlideHolder holder : problem.getSubgroupsList()) {
+                if (holder.getItemType() == School.ItemType.BANK_PROBLEM) {
+                    putCourseInBankProblem(authId, problem.getCourseId(), holder.getId(), null);
+                }
+            }
         }
 
         try {
@@ -445,8 +449,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public void updateCourseProblem(final String authId, final SrlProblem srlProblem) throws AuthenticationException, DatabaseAccessException {
         CourseProblemManager.mongoUpdateCourseProblem(auth, database, authId, srlProblem.getId(), srlProblem);
 
-        if (srlProblem.hasProblemBankId()) {
-            putCourseInBankProblem(authId, srlProblem.getCourseId(), srlProblem.getProblemBankId(), null);
+        if (srlProblem.getSubgroupsCount() > 0) {
+            for (SrlProblem.ProblemSlideHolder holder : srlProblem.getSubgroupsList()) {
+                if (holder.getItemType() == School.ItemType.BANK_PROBLEM) {
+                    putCourseInBankProblem(authId, srlProblem.getCourseId(), holder.getId(), null);
+                }
+            }
         }
     }
 

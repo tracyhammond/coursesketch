@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.commands.Commands;
+import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
 import protobuf.srl.school.Problem.SrlBankProblem;
@@ -101,7 +102,6 @@ public class BankProblemManagerTest {
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         bankProblem.setCourseTopic(FAKE_QUESTION_TEXT);
         bankProblem.setQuestionType(FAKE_QUESTION_TYPE);
-        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
@@ -283,7 +283,6 @@ public class BankProblemManagerTest {
 
         Problem.SrlBankProblem resultBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, USER_USER, problemBankId);
 
-        Assert.assertFalse(resultBankProblem.hasAccessPermission());
     }
 
     @Test
@@ -318,9 +317,6 @@ public class BankProblemManagerTest {
         bankProblem.setQuestionText(FAKE_QUESTION_TEXT);
         Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
         permissionBuilder.addAdminPermission(ADMIN_USER);
-
-
-        bankProblem.setAccessPermission(permissionBuilder);
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
@@ -379,7 +375,6 @@ public class BankProblemManagerTest {
         Problem.SrlBankProblem updatedProblem = Problem.SrlBankProblem.newBuilder(bankProblem.build())
                 .setQuestionText("New QuestionText")
                 .setCourseTopic("New course topic")
-                .setImage("image")
                 .addOtherKeywords("Keywords")
                 .setSubTopic("Topic")
                 .setSource("New source")
@@ -445,7 +440,6 @@ public class BankProblemManagerTest {
     public void testSetBaseSketch() throws Exception {
         Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
-        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
 
         mongoInsertBankProblem(db, bankProblem.build());
         DBCursor curse = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).find();
@@ -479,7 +473,13 @@ public class BankProblemManagerTest {
     public void testGetBaseSketch() throws Exception {
         Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
-        bankProblem.setBaseSketch(FAKE_UPDATELIST.build());
+        final Lecturedata.LectureElement.Builder lectureElement = Lecturedata.LectureElement.newBuilder();
+
+        // sets the base sketch data
+        lectureElement.setSketchArea(Lecturedata.SketchArea.newBuilder().setRecorededSketch(FAKE_UPDATELIST));
+
+        // sets the base sketch data
+        bankProblem.setSpecialQuestionData(lectureElement);
 
         String problemBankId = mongoInsertBankProblem(db, bankProblem.build());
 
@@ -487,8 +487,8 @@ public class BankProblemManagerTest {
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, ADMIN_USER, problemBankId);
-        Commands.SrlUpdateList testUpdateList = getProblem.getBaseSketch();
-        Assert.assertEquals(FAKE_UPDATELIST.build(), testUpdateList);
+        final Lecturedata.LectureElement specialQuestionData = getProblem.getSpecialQuestionData();
+        new ProtobufComparisonBuilder().build().equals(lectureElement.build(), specialQuestionData);
     }
 
     /*
