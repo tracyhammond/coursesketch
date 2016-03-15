@@ -318,14 +318,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    protected void reconnect() {
-        // does nothing by default
-    }
-
-    /**
-     * {@inheritDoc}
      *
      * @return A new instance of a {@link ISocketInitializer}.
      * */

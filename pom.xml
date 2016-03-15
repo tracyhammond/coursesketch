@@ -509,8 +509,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>DEBUG</token>
-                                        <value>INFO</value>
+                                        <token>root level="DEBUG"</token>
+                                        <value>root level="INFO"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -525,8 +525,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>INFO</token>
-                                        <value>DEBUG</value>
+                                        <token>root level="INFO"</token>
+                                        <value>root level="DEBUG"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -572,7 +572,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- version -->
-        <jettyVersion>9.3.0.M2</jettyVersion>
+        <jettyVersion>9.2.3.v20140905</jettyVersion>
         <!-- 9.2.2.v20140723 -->
         <protobufVersion>[2.6.1,)</protobufVersion>
         <jodaVersion>[2.1,)</jodaVersion>

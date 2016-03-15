@@ -129,6 +129,18 @@ module.exports = function(grunt) {
             }
         },
         copy: {
+            proto: {
+                files: [
+                    {
+                        filter: 'isFile',
+                        expand: true,
+                        flatten: true,
+                        cwd: '../ProtoFiles/src/main/',
+                        src: [ 'proto/**/**.proto' ],
+                        dest: 'src/main/resources/other/protobuf'
+                    }
+                ]
+            },
             main: {
                 files: [
                     {
@@ -341,6 +353,13 @@ module.exports = function(grunt) {
         ]);
     });
 
+    // sets up tasks needed before any checking happens.  (which in this case is changing proto files)
+    grunt.registerTask('install', function() {
+        grunt.task.run([
+            'copy:proto'
+        ]);
+    });
+
     // sets up tasks related to checkstyle
     grunt.registerTask('checkstyle', function() {
         grunt.task.run([
@@ -409,5 +428,5 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'jsdoc', 'build' ]);
+    grunt.registerTask('default', [ 'install', 'checkstyle', 'jsdoc', 'build' ]);
 };

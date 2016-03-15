@@ -250,13 +250,13 @@ public class MultiConnectionManager {
      * @return A valid connection.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public AbstractClientWebSocket getBestConnection(final Class<? extends AbstractClientWebSocket> connectionType) {
-        final ArrayList<AbstractClientWebSocket> cons = connections.get(connectionType);
+    public <T extends AbstractClientWebSocket> T getBestConnection(final Class<T> connectionType) {
+        final ArrayList<? extends AbstractClientWebSocket> cons = connections.get(connectionType);
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
         LOG.info("getting Connection: {}", connectionType.getSimpleName());
-        return cons.get(0); // lame best connection.
+        return (T) cons.get(0); // lame best connection.
     }
 
     /**
