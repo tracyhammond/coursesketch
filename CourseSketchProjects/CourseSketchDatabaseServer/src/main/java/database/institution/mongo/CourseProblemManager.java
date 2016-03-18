@@ -29,7 +29,6 @@ import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.GRADE_WEIGHT;
 import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DatabaseStringConstants.NAME;
-import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.PROBLEM_NUMBER;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
@@ -57,8 +56,14 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  *
  *     // The problems contained within this group.
  *     bankProblems: [
- *         { slide: slideUUID },
- *         { problem: problemUUID },
+ *         { id: sludeUUID,
+ *           type: slideType,
+ *           isUnlocked: true
+ *         }
+ *         { id: problemUUID,
+ *           type: problemType,
+ *           isUnlocked: false
+ *         },
  *         ...
  *     ],
  *     nextGroupId: (if blank it goes through next problem group in list)
@@ -121,11 +126,17 @@ public final class CourseProblemManager {
         }
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, problem.getCourseId()).append(ASSIGNMENT_ID, problem.getAssignmentId())
-                .append(GRADE_WEIGHT, problem.getGradeWeight())
-                .append(NAME, problem.getName())
-                .append(PROBLEM_NUMBER, problem.getProblemNumber());
+                .append(NAME, problem.getName());
 
+        if (problem.hasGradeWeight()) {
+            query.append(GRADE_WEIGHT, problem.getGradeWeight());
+        }
 
+        if (problem.hasProblemNumber()) {
+            query.append(PROBLEM_NUMBER, problem.getProblemNumber());
+        }
+
+        query.append(DatabaseStringConstants.PROBLEM_LIST, createProblemHolderList(problem.getSubgroupsList()));
 
         courseProblemCollection.insert(query);
         final String selfId = query.get(SELF_ID).toString();
@@ -207,8 +218,10 @@ public final class CourseProblemManager {
         exactProblem.setId(problemId);
 
         if (cursor.containsField(DatabaseStringConstants.PROBLEM_LIST)) {
-            createProblemSlideHolderList(authenticator, dbs, authId, exactProblem.getCourseId(), checkTime,
+            final List<SrlProblem.ProblemSlideHolder> problemSlideHolderList = createProblemSlideHolderList(authenticator, dbs, authId,
+                    exactProblem.getCourseId(), checkTime,
                     (List<DBObject>) cursor.get(DatabaseStringConstants.PROBLEM_LIST));
+            exactProblem.addAllSubgroups(problemSlideHolderList);
         }
 
         return exactProblem.build();
@@ -320,9 +333,16 @@ public final class CourseProblemManager {
         final SrlProblem.Builder problem = SrlProblem.newBuilder();
         problem.setCourseId((String) dbProblem.get(COURSE_ID));
         problem.setAssignmentId((String) dbProblem.get(ASSIGNMENT_ID));
-        problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
+
         problem.setName((String) dbProblem.get(NAME));
-        problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
+
+        if (dbProblem.containsField(GRADE_WEIGHT)) {
+            problem.setGradeWeight((String) dbProblem.get(GRADE_WEIGHT));
+        }
+
+        if (dbProblem.containsField(PROBLEM_NUMBER)) {
+            problem.setProblemNumber((Integer) dbProblem.get(PROBLEM_NUMBER));
+        }
 
         return problem;
     }
@@ -395,8 +415,10 @@ public final class CourseProblemManager {
         holder.setUnlocked(true);
 
         final String id = data.get(DatabaseStringConstants.ITEM_ID).toString();
+        holder.setId(id);
 
         final School.ItemType itemType = School.ItemType.valueOf((int) data.get(DatabaseStringConstants.SCHOOL_ITEM_TYPE));
+        holder.setItemType(itemType);
         switch (itemType) {
             case BANK_PROBLEM:
                 final SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, database, courseId, id);

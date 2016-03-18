@@ -14,7 +14,7 @@ message LectureSlide {
 
 message LectureElement {
     //id of this element
-    required string id = 2;
+    optional string id = 2;
     optional int32 x_position = 3;
     optional int32 y_position = 4;
     optional int32 x_dimension = 5;

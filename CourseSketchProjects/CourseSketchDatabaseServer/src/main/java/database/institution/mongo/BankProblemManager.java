@@ -263,10 +263,6 @@ public final class BankProblemManager {
 
         if (update) {
             problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-            final List<String> users = (List) cursor.get(USERS);
-            for (int i = 0; i < users.size(); i++) {
-                UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
-            }
         }
         return true;
     }

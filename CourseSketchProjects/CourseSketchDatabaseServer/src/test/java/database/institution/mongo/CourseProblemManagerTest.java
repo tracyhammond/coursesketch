@@ -4,10 +4,10 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,8 +15,6 @@ import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import database.DbSchoolUtility;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,6 +28,9 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
+import java.util.List;
+
+import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
@@ -67,6 +68,7 @@ public class CourseProblemManagerTest {
     private AuthenticationDataCreator dataCreator;
 
     private Problem.SrlBankProblem.Builder bankProblem;
+    private Problem.SrlBankProblem expectedBankProblem;
 
     // TODO TESTS
     // To be done in second refactor
@@ -136,6 +138,8 @@ public class CourseProblemManagerTest {
 
         dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, true);
         dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
+
+        expectedBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, courseId, bankProblemId);
     }
 
     public void updateProblemIds(String courseId, String assignmentId, String bankProblemId) {
@@ -147,6 +151,7 @@ public class CourseProblemManagerTest {
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
+                .setUnlocked(true)
                 .setItemType(School.ItemType.BANK_PROBLEM));
     }
 
@@ -179,6 +184,34 @@ public class CourseProblemManagerTest {
         final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
+    }
+
+    @Test
+    public void insertCourseProblemSetsDataCorrectly() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        defaultProblem.setName(VALID_NAME);
+
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+
+        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
+
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.COURSE_ID), courseId);
+        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.ASSIGNMENT_ID), assignmentId);
+
+        List<DBObject> dbObjectList = (List<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
+
+        Assert.assertEquals(1, dbObjectList.size());
+
+        DBObject expected = new BasicDBObject(DatabaseStringConstants.ITEM_ID, bankProblem.getId())
+        .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, School.ItemType.BANK_PROBLEM_VALUE)
+                .append(IS_UNLOCKED, false);
+
+        Assert.assertEquals(expected, dbObjectList.get(0));
     }
 
     // GETTING TEST
@@ -281,7 +314,9 @@ public class CourseProblemManagerTest {
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(School.ItemType.BANK_PROBLEM)
-                .setProblem(bankProblem));
+                .setProblem(expectedBankProblem)
+                .setUnlocked(true)
+                .setIndex(0));
 
         final Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
@@ -354,18 +389,25 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
+        // inserts the problem
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
-
-        // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
-                .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM));
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
+
+        defaultProblem.clearSubgroups();
+
+        // Add bank problem information
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem.getId())
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setProblem(expectedBankProblem)
+                .setUnlocked(true)
+                .setIndex(0));
+
         new ProtobufComparisonBuilder()
                 .build().equals(defaultProblem.build(), problem);
 
@@ -384,7 +426,7 @@ public class CourseProblemManagerTest {
     }
 
     @Test
-    public void updateCourseProblemAsInstructorWithNewBankId() throws Exception {
+         public void updateCourseProblemWithReplacedBankId() throws Exception {
         insertCourseAndAssignment();
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
@@ -392,18 +434,10 @@ public class CourseProblemManagerTest {
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
-                .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM));
-
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder()
-                .build().equals(defaultProblem.build(), problem);
-
+        // INSERTING NEW BANK PROBLEM
         final Problem.SrlBankProblem.Builder bankProblem2 = Problem.SrlBankProblem.newBuilder();
         bankProblem2.setId("NOT REAL ID");
         bankProblem2.setQuestionText(FAKE_QUESTION_TEXT + "NEW");
@@ -413,19 +447,83 @@ public class CourseProblemManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId2, courseId,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
+        final Problem.SrlBankProblem bankProblem2Expected = BankProblemManager.mongoGetBankProblem(authenticator, db, courseId, bankProblemId2);
+
+        // CHANGING COURSE PROBLEM
         Problem.SrlProblem.Builder updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
                 .setGradeWeight("NEW GRADE WEIGHT");
         updatedProblem.clearSubgroups();
 
         final Problem.SrlProblem.ProblemSlideHolder.Builder holderBuilder = Problem.SrlProblem.ProblemSlideHolder.newBuilder()
-                .setId(bankProblem2.getId())
+                .setId(bankProblem2Expected.getId())
+                .setUnlocked(true)
+                .setIndex(0)
                 .setItemType(School.ItemType.BANK_PROBLEM);
         updatedProblem.addSubgroups(holderBuilder);
 
         CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem.build());
 
         // change the data contained in the update problem bc it should now contain new data.
-        holderBuilder.setProblem(bankProblem2);
+        holderBuilder.setProblem(bankProblem2Expected);
+
+        updatedProblem.clearSubgroups();
+        updatedProblem.addSubgroups(holderBuilder);
+
+        Problem.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
+                ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
+        new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .build().equals(updatedProblem.build(), updatedProblemResult);
+    }
+
+    @Test
+    public void updateCourseProblemWithAddedBankId() throws Exception {
+        insertCourseAndAssignment();
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+                null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        // INSERTING NEW BANK PROBLEM
+        final Problem.SrlBankProblem.Builder bankProblem2 = Problem.SrlBankProblem.newBuilder();
+        bankProblem2.setId("NOT REAL ID");
+        bankProblem2.setQuestionText(FAKE_QUESTION_TEXT + "NEW");
+
+        String bankProblemId2 = BankProblemManager.mongoInsertBankProblem(db, bankProblem2.build());
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId2, courseId,
+                null, Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        final Problem.SrlBankProblem bankProblem2Expected = BankProblemManager.mongoGetBankProblem(authenticator, db, courseId, bankProblemId2);
+
+        // CHANGING COURSE PROBLEM
+        Problem.SrlProblem.Builder updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
+                .setGradeWeight("NEW GRADE WEIGHT");
+
+        final Problem.SrlProblem.ProblemSlideHolder.Builder holderBuilder = Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem2Expected.getId())
+                .setUnlocked(true)
+                .setItemType(School.ItemType.BANK_PROBLEM);
+        updatedProblem.addSubgroups(holderBuilder);
+
+        CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem.build());
+
+        // change the data contained in the update problem bc it should now contain new data.
+        holderBuilder.setProblem(bankProblem2Expected)
+                .setIndex(1);
+
+        updatedProblem.clearSubgroups();
+        updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem.getId())
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setProblem(expectedBankProblem)
+                .setUnlocked(true)
+                .setIndex(0));
+        updatedProblem.addSubgroups(holderBuilder);
 
         Problem.SrlProblem updatedProblemResult = CourseProblemManager.mongoGetCourseProblem(authenticator, db,
                 ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);

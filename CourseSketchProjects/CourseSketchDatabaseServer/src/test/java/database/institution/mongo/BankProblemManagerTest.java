@@ -14,6 +14,7 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -105,7 +106,6 @@ public class BankProblemManagerTest {
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-
         final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
         final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
 
@@ -113,8 +113,6 @@ public class BankProblemManagerTest {
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(COURSE_TOPIC), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TYPE), FAKE_QUESTION_TYPE.getNumber());
-        Assert.assertEquals(Commands.SrlUpdateList.parseFrom((byte[]) mongoBankProblem.get(BASE_SKETCH)),
-                FAKE_UPDATELIST.build());
     }
 
     // TODO: test insertion of permissions
@@ -441,11 +439,19 @@ public class BankProblemManagerTest {
         Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
 
+        final Lecturedata.LectureElement.Builder lectureElement = Lecturedata.LectureElement.newBuilder();
+
+        // sets the base sketch data
+        lectureElement.setSketchArea(Lecturedata.SketchArea.newBuilder().setRecorededSketch(FAKE_UPDATELIST));
+        bankProblem.setSpecialQuestionData(lectureElement);
+
         mongoInsertBankProblem(db, bankProblem.build());
         DBCursor curse = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).find();
         System.out.println(curse);
         DBObject obj = curse.next();
-        Commands.SrlUpdateList UpdateList = Commands.SrlUpdateList.parseFrom((byte[]) obj.get(BASE_SKETCH));
+        final Lecturedata.LectureElement elementFromQuery = SlideManager
+                .createElementFromQuery((DBObject) obj.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA));
+        Commands.SrlUpdateList UpdateList = elementFromQuery.getSketchArea().getRecorededSketch();
         Assert.assertEquals(FAKE_UPDATELIST.build(), UpdateList);
     }
 
