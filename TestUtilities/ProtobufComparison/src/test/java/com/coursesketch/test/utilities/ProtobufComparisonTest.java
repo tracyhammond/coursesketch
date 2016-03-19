@@ -12,7 +12,7 @@ import protobuf.srl.request.Message;
  * Created by gigemjt on 9/6/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProtobufComparisonTester {
+public class ProtobufComparisonTest {
     @Test
     public void testComparisonOfSameProtoObjects() {
         ProtobufComparison comp = new ProtobufComparisonBuilder().build();
