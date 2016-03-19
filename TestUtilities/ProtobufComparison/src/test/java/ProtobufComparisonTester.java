@@ -48,7 +48,7 @@ public class ProtobufComparisonTester {
     }
 
     @Test
-    public void testListsWithSameValuesButDifferentOrder() {
+    public void testListsWithSameValuesButDifferentOrderIgnoreOrder() {
         ProtobufComparison comp = new ProtobufComparisonBuilder()
                 .setIgnoreListOrder(true).build();
         final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
@@ -62,6 +62,69 @@ public class ProtobufComparisonTester {
     }
 
     @Test
+    public void testListsWithSameValuesSameOrder() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(false).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+            builder2.addItemId("" + i);
+        }
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testListsWithExtraItemsIgnoreOrder() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setIgnoreListOrder(true).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+            builder2.addItemId("" + (10 - i));
+        }
+        builder2.addItemId("12");
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testListsWithSameValuesSameOrderExtraItems() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(false).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+            builder2.addItemId("" + i);
+        }
+
+        builder2.addItemId("" + 11);
+
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testListsWithSameValuesButDifferentOrder() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(false).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+            builder2.addItemId("" + (10 - i));
+        }
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
     public void testListsSomeSimilarValuesButSomeDifferentValues() {
         ProtobufComparison comp = new ProtobufComparisonBuilder()
                 .setFailAtFirstMisMatch(false)
