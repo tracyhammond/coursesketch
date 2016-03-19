@@ -188,7 +188,7 @@ public final class DatabaseStringConstants {
 
     // lecture specific
     public static final String SLIDES = "Slides";
-    public static final String IS_UNLOCKED = "isLocked";
+    public static final String IS_UNLOCKED = "isUnlocked";
     public static final String ELEMENT_LIST = "Elements";
     public static final String IDS_IN_LECTURE = "idsInLecture";
     public static final String X_POSITION = "X";

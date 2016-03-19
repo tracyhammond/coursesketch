@@ -209,7 +209,7 @@ public class CourseProblemManagerTest {
 
         DBObject expected = new BasicDBObject(DatabaseStringConstants.ITEM_ID, bankProblem.getId())
         .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, School.ItemType.BANK_PROBLEM_VALUE)
-                .append(IS_UNLOCKED, false);
+                .append(IS_UNLOCKED, true);
 
         Assert.assertEquals(expected, dbObjectList.get(0));
     }
@@ -363,7 +363,7 @@ public class CourseProblemManagerTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder().build()
+        new ProtobufComparisonBuilder().setFailAtFirstMisMatch(false).build()
                 .equals(defaultProblem.build(), problem);
     }
 
