@@ -1,3 +1,5 @@
+package com.coursesketch.test.utilities;
+
 import com.coursesketch.test.utilities.ProtobufComparison;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import org.junit.Test;
