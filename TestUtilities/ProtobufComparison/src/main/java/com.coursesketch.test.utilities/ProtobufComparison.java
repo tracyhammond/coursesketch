@@ -5,7 +5,9 @@ import com.google.protobuf.Descriptors;
 import com.google.protobuf.GeneratedMessage;
 import org.junit.Assert;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -227,8 +229,34 @@ public class ProtobufComparison {
      */
     private void compareRepeatedFields(final Object expectedValue, final Object actualValue, final Descriptors.FieldDescriptor field,
             final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields) {
+
+        if (expectedValue == null || actualValue == null) {
+            throw new IllegalArgumentException("Null lists are not supported");
+        }
+
         final List expectedList = Lists.newArrayList((Iterable) expectedValue);
         final List actualList = Lists.newArrayList((Iterable) actualValue);
+
+        // Checking list values themselves
+        if (expectedList.size() == 0 && actualList.size() > 0) {
+            if (failAtFirstMisMatch) {
+                Assert.fail(createFailMessage(field, null, actualValue));
+            } else {
+                addIncorrectField(incorrectFields, field, null, actualValue);
+            }
+            return;
+        }
+
+        // Checking list values themselves
+        if (actualList.size() == 0 && expectedList.size() > 0) {
+            if (failAtFirstMisMatch) {
+                Assert.fail(createFailMessage(field, expectedValue, null));
+            } else {
+                addIncorrectField(incorrectFields, field, expectedValue, null);
+            }
+            return;
+        }
+
         Iterator actualListIterator = actualList.iterator();
         for (Object expectedValueItem : expectedList) {
             if (ignoreListOrder) {
@@ -316,14 +344,14 @@ public class ProtobufComparison {
      */
     private String createFailListMessage(final Descriptors.FieldDescriptor field, final Object expectedValue, final Object actualValue) {
         if (expectedValue == null && actualValue != null) {
-            if (actualValue instanceof Iterator) {
-                return "Expected no value for field [" + field.getFullName() + "] but instead got value <" + actualValue + ">";
+            if (actualValue instanceof Iterable) {
+                return "Expected no value for field [" + field.getFullName() + "] but instead got list <" + actualValue + ">";
             } else {
                 return "Extra value <" + actualValue + "> found in list for field [" + field.getFullName() + "]";
             }
         } else if (expectedValue != null && actualValue == null) {
-            if (expectedValue instanceof Iterator) {
-                return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
+            if (expectedValue instanceof Iterable) {
+                return "Expected list <" + expectedValue + "> but got <" + null + "> for field [" + field.getFullName() + "]";
             } else {
                 return "Expected value <" + expectedValue + "> was not found in the actual list for field [" + field.getFullName() + "]";
             }
