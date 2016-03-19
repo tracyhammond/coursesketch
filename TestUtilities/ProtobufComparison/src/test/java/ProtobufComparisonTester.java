@@ -138,4 +138,32 @@ public class ProtobufComparisonTester {
         }
         comp.equals(builder1.build(), builder2.build());
     }
+
+    @Test(expected = AssertionError.class)
+    public void testOnlyExpectedListSet() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(true).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+        }
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testOnlyActualListSet() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(true).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder2.addItemId("" + i);
+        }
+        comp.equals(builder1.build(), builder2.build());
+    }
 }
