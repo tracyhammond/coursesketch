@@ -45,6 +45,11 @@ public class ProtobufComparisonBuilder {
     private boolean failAtFirstMisMatch = true;
 
     /**
+     * If true then the list order is ignored when comparing protobuf objects otherwise the list is not ignored when comparing protobuf objects.
+     */
+    private boolean ignoreListOrder;
+
+    /**
      * Creates a new instance of the ProtobufComparisonBuilder.
      */
     public ProtobufComparisonBuilder() {
@@ -91,7 +96,8 @@ public class ProtobufComparisonBuilder {
      */
     @SuppressWarnings("checkstyle:designforextension")
     public ProtobufComparison build() {
-        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields, failAtFirstMisMatch);
+        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields, failAtFirstMisMatch,
+                ignoreListOrder);
     }
 
     /**
@@ -151,6 +157,19 @@ public class ProtobufComparisonBuilder {
     @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setIgnoreNonSetFields(final boolean ignoreNonSetFields) {
         this.ignoreNonSetFields = ignoreNonSetFields;
+        return this;
+    }
+
+    /**
+     * Sets if lists should ignore order.
+     *
+     * This value is false by default.
+     * @param ignoreListOrder True if lists comparison should ignore order false otherwise.
+     * @return Itself.
+     */
+    @SuppressWarnings("checkstyle:hiddenfield")
+    public final ProtobufComparisonBuilder setIgnoreListOrder(final boolean ignoreListOrder) {
+        this.ignoreListOrder = ignoreListOrder;
         return this;
     }
 }
