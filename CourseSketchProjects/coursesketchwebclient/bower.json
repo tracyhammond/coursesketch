@@ -11,7 +11,7 @@
     "dialog-polyfill": "0.4.2",
     "MathJax": "2.5.3",
     "paper": "v0.9.25",
-    "protobufjs": "dcodeIO/protobuf.js#4.1.2"
+    "protobufjs": "dcodeIO/protobuf.js#5.0.1"
   },
   "devDependencies": {
     "blanket": "1.1.7"

@@ -174,9 +174,6 @@ function ProtobufSetup() {
      */
     function buildAssignments() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'assignment.proto');
-        console.log("BUILDING ASSIGNMENTS");
-        console.log(builder);
-        console.log(builder.build(PROTOBUF_PACKAGE).srl.school);
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
         assignValues(ProtoSubmissionBuilder);
     }
@@ -188,9 +185,6 @@ function ProtobufSetup() {
      */
     function buildProblems() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'problem.proto');
-        console.log("BUILDING PROBLEMS");
-        console.log(builder);
-        console.log(builder.build(PROTOBUF_PACKAGE).srl.school);
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
         assignValues(ProtoSubmissionBuilder);
     }
