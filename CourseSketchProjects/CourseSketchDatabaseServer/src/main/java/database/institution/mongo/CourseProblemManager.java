@@ -82,7 +82,7 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.UselessParentheses",
-        "PMD.CommentSize", "PMD.NPathComplexity" })
+        "PMD.CommentSize", "PMD.NPathComplexity", "PMD.TooManyMethods" })
 public final class CourseProblemManager {
 
     /**
@@ -185,7 +185,7 @@ public final class CourseProblemManager {
                 .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, checkTime, authType);
 
         if (!responder.hasAccess()) {
-            throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For course problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
         }
 
         // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
@@ -264,7 +264,7 @@ public final class CourseProblemManager {
                 .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
-            throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For courseProblem: " + problemId, AuthenticationException.INVALID_PERMISSION);
         }
 
         // Past this point the user is at least a moderator.
@@ -408,25 +408,26 @@ public final class CourseProblemManager {
         holder.setIndex(index);
 
         if (!(Boolean) data.get(DatabaseStringConstants.IS_UNLOCKED)) {
+            LOG.warn("The slide or problem is not unlocked");
             // Future: add the other conditions for checking if an item is unlocked
             holder.setUnlocked(false);
             return holder.build();
         }
         holder.setUnlocked(true);
 
-        final String id = data.get(DatabaseStringConstants.ITEM_ID).toString();
-        holder.setId(id);
+        final String itemId = data.get(DatabaseStringConstants.ITEM_ID).toString();
+        holder.setId(itemId);
 
         final School.ItemType itemType = School.ItemType.valueOf((int) data.get(DatabaseStringConstants.SCHOOL_ITEM_TYPE));
         holder.setItemType(itemType);
         switch (itemType) {
             case BANK_PROBLEM:
-                final SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, database, courseId, id);
+                final SrlBankProblem problem = BankProblemManager.mongoGetBankProblem(authenticator, database, courseId, itemId);
                 holder.setProblem(problem);
                 break;
             case SLIDE:
                 final Lecturedata.LectureSlide lectureSlide = SlideManager
-                        .mongoGetLectureSlide(authenticator, database, authId, id, checkTime);
+                        .mongoGetLectureSlide(authenticator, database, authId, itemId, checkTime);
                 holder.setSlide(lectureSlide);
                 break;
             default:
@@ -469,7 +470,7 @@ public final class CourseProblemManager {
                 .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
-            throw new AuthenticationException("For problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
+            throw new AuthenticationException("For  problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
         }
 
         mongoInsertBankProblemIntoProblemGroup(dbs, cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString(),

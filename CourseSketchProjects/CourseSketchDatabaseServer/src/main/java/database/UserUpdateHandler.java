@@ -4,15 +4,12 @@ import com.mongodb.BasicDBList;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.institution.mongo.UpdateManager;
 import handlers.ResultBuilder;
 import org.bson.BasicBSONObject;
-import org.bson.types.ObjectId;
 import protobuf.srl.query.Data;
-import protobuf.srl.school.School;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -29,7 +26,6 @@ import static database.DatabaseStringConstants.TIME;
 import static database.DatabaseStringConstants.UPDATEID;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
-import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
