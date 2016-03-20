@@ -276,8 +276,8 @@ public class CourseProblemManagerTest {
         CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
     }
 
-    @Test(expected = DatabaseAccessException.class)
-    public void getCourseProblemAsStudentWithNoBankProblemId() throws Exception {
+    @Test
+    public void getCourseProblemAsStudentWithNoSubGroupsWorks() throws Exception {
         insertCourseAndAssignment();
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
