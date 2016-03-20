@@ -246,7 +246,9 @@
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
-                    dataManager.getCourse(fakeID);
+                    dataManager.getCourse(fakeID, function() {
+                        // Does nothing, but getCourse can not take in a null callback!
+                    });
                 }); // end waitForDatabase
             });
 
@@ -276,8 +278,9 @@
                                 assert.equal(id, course.id, "The course is not found locally so instead we search in the server.");
                                 QUnit.start();
                             };
-                            // We don't expect this to be called so we don't pass in any callback
-                            dataManager.getCourse(course.id);
+                            dataManager.getCourse(course.id, function () {
+                                // Does nothing as the callback is not needed.
+                            });
                         });
                     });
                 }); // end waitForDatabase

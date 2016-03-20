@@ -47,23 +47,6 @@ function ProtobufSetup() {
     var enumList = [];
 
     /**
-     * @returns {ProtobufSetup} an instance of itself.
-     */
-    this.initializeBuf = function() {
-        buildUtil();
-        buildMessage();
-        buildSchool();
-        buildSketch();
-        buildUpdateList();
-        buildDataQuery();
-        buildTutorial();
-        buildSubmissions();
-        buildLectures();
-        buildGrade();
-        return localScope;
-    };
-
-    /**
      * Builds the Utility protobuf files.
      *
      * These can be used by all other protobuf files.
@@ -145,7 +128,7 @@ function ProtobufSetup() {
      *
      * These contain all of the little actions that can occur
      */
-    function buildUpdateList() {
+    function buildIdentity() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'identity.proto');
         var ProtoIdentityServiceBuilder = builder.build(PROTOBUF_PACKAGE).srl.services.identity;
         assignValues(ProtoIdentityServiceBuilder);
@@ -184,6 +167,23 @@ function ProtobufSetup() {
         assignValues(ProtoSubmissionBuilder);
     }
 
+    /**
+     * @returns {ProtobufSetup} an instance of itself.
+     */
+    this.initializeBuf = function() {
+        buildUtil();
+        buildMessage();
+        buildSchool();
+        buildSketch();
+        buildUpdateList();
+        buildIdentity();
+        buildDataQuery();
+        buildTutorial();
+        buildSubmissions();
+        buildLectures();
+        buildGrade();
+        return localScope;
+    };
 
     /**
      * @function assignValues
@@ -263,7 +263,6 @@ function ProtobufSetup() {
                 }
             });
         }
-
     }
 
     /**
