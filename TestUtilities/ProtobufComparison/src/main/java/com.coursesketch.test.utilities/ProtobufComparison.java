@@ -293,11 +293,12 @@ public class ProtobufComparison {
                 }
                 final Object actualValueItem = actualListIterator.next();
                 final boolean resultOfComparison = compareDataOfRepeatedField(expectedValueItem, actualValueItem, field, incorrectFields);
-                if (!resultOfComparison && failAtFirstMisMatch) {
-                    Assert.fail(createFailMessage(field, expectedValueItem, actualValueItem));
-                } else if (!failAtFirstMisMatch) {
-                    addIncorrectField(incorrectFields, field, expectedValueItem, actualValueItem);
-                    continue;
+                if (!resultOfComparison) {
+                    if (failAtFirstMisMatch) {
+                        Assert.fail(createFailMessage(field, expectedValueItem, actualValueItem));
+                    } else {
+                        addIncorrectField(incorrectFields, field, expectedValueItem, actualValueItem);
+                    }
                 }
             }
         }
