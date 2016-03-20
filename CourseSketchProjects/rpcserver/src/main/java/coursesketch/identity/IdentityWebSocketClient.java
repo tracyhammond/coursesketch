@@ -10,7 +10,7 @@ import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.identity.Identity;
 
 import java.net.URI;
@@ -64,7 +64,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         super(iDestination, iParentServer);
     }
 
-    @Override public void createNewItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    @Override public void createNewItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final String parentId, final Authenticator authChecker)
             throws AuthenticationException {
 
@@ -81,7 +81,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
 
         final Identity.IdentityCreationRequest.Builder creationRequestBuilder = Identity.IdentityCreationRequest.newBuilder()
                 .setItemRequest(request);
-        if (parentId == null && School.ItemType.COURSE != itemType && School.ItemType.BANK_PROBLEM != itemType) {
+        if (parentId == null && Util.ItemType.COURSE != itemType && Util.ItemType.BANK_PROBLEM != itemType) {
             throw new AuthenticationException("Parent Id can only be null when inserting a course", AuthenticationException.NO_AUTH_SENT);
         }
         if (parentId != null) {
@@ -103,7 +103,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         }
     }
 
-    @Override public void registerUserInItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    @Override public void registerUserInItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
         if (identityService == null) {
             identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
@@ -131,7 +131,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         }
     }
 
-    @Override public Map<String, String> getItemRoster(final String authId, final String itemId, final School.ItemType itemType,
+    @Override public Map<String, String> getItemRoster(final String authId, final String itemId, final Util.ItemType itemType,
             final Collection<String> userIdsList, final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
         if (identityService == null) {
             identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());
@@ -192,7 +192,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         return result;
     }
 
-    @Override public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    @Override public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
         if (identityService == null) {
             identityService = Identity.IdentityService.newBlockingStub(getRpcChannel());

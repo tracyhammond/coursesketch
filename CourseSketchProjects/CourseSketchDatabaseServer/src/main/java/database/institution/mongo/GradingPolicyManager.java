@@ -15,7 +15,7 @@ import protobuf.srl.grading.Grading.DroppedProblems;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.grading.Grading.PolicyCategory;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ public final class GradingPolicyManager {
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckingAdmin(true);
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, policy.getCourseId(), userId, 0, auth.build());
+                .checkAuthentication(Util.ItemType.COURSE, policy.getCourseId(), userId, 0, auth.build());
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to insert grade policy", AuthenticationException.INVALID_PERMISSION);
         }
@@ -182,7 +182,7 @@ public final class GradingPolicyManager {
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckAccess(true);
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId, userId, 0, auth.build());
+                .checkAuthentication(Util.ItemType.COURSE, courseId, userId, 0, auth.build());
         if (!responder.hasAccess()) {
             throw new AuthenticationException("User does not have permission to insert grade policy", AuthenticationException.INVALID_PERMISSION);
         }

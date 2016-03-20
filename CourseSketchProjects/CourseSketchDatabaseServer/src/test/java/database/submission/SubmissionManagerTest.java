@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 
@@ -129,7 +129,7 @@ public class SubmissionManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void getSubmissionThrowsWhenDatabaseIsEmpty() throws DatabaseAccessException, AuthenticationException {
         // when(submissionManagerInterface.getSubmission(USER_USER, any(Authenticator.class), SUBMISSION_ID))
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, USER_USER, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
 
@@ -143,7 +143,7 @@ public class SubmissionManagerTest {
 
         SubmissionManager.mongoInsertSubmission(db, hashedUserId, PROBLEM_ID, SUBMISSION_ID, true);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, USER_USER, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
@@ -187,7 +187,7 @@ public class SubmissionManagerTest {
     public void getSubmissionHandlesDatabaseExceptionCorrectly() throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
@@ -216,7 +216,7 @@ public class SubmissionManagerTest {
     public void getExperimentsAsInstructorThrowsWhenNoExperimentsExist() throws DatabaseAccessException, AuthenticationException {
         SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         final List<Submission.SrlExperiment> experiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
                 ADMIN_USER, PROBLEM_ID, submissionManagerInterface, identityManagerInterface);
@@ -228,7 +228,7 @@ public class SubmissionManagerTest {
         List<Submission.SrlExperiment> experiments = new ArrayList<>();
         Map<String, String> userIdList = new HashMap<>();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
@@ -247,14 +247,14 @@ public class SubmissionManagerTest {
             userIdList.put(hashedUserId, userName);
         }
 
-        when(identityManagerInterface.getItemRoster(anyString(), anyString(), any(School.ItemType.class), anyList(), any(Authenticator.class)))
+        when(identityManagerInterface.getItemRoster(anyString(), anyString(), any(Util.ItemType.class), anyList(), any(Authenticator.class)))
                 .thenReturn(userIdList);
 
         when(submissionManagerInterface.getSubmission(anyString(), any(Authenticator.class), anyString(),
                 Mockito.argThat(CourseSketchMatcher.iterableEqualAnyOrder(submissionIds))))
                         .thenReturn(experiments);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         final List<Submission.SrlExperiment> actualExperiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
                 ADMIN_USER, PROBLEM_ID, submissionManagerInterface, identityManagerInterface);

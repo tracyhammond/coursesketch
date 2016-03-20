@@ -1,7 +1,7 @@
 package coursesketch.database.auth;
 
 import database.DatabaseAccessException;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 /**
  * Checks a bunch of miscellaneous parts for authentication.  These are things that do not require the authenticationId.
@@ -41,12 +41,12 @@ public interface AuthenticationOptionChecker {
     boolean isItemPublished(final AuthenticationDataCreator dataCreator) throws DatabaseAccessException;
 
     /**
-     * Creates a data grabber based on the {@link School.ItemType} using the itemId to find the data.
+     * Creates a data grabber based on the {@link Util.ItemType} using the itemId to find the data.
      *
      * @param collectionType The type of item it is ex: Course, Assignment, Problem.
      * @param itemId The id of the item used for looking it up in the database.
      * @return A {@link AuthenticationDataCreator} that grabs the data for any other uses by the option checker.
      * @throws DatabaseAccessException Thrown if there is a problem creating the data from the database.
      */
-    AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId) throws DatabaseAccessException;
+    AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId) throws DatabaseAccessException;
 }

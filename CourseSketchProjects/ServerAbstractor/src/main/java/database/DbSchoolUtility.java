@@ -1,6 +1,6 @@
 package database;
 
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 /**
  * A set of utility methods to make it easier for dealing with school items.
@@ -19,10 +19,10 @@ public final class DbSchoolUtility {
      * Returns a string representing the type of school item it is based on the enum.
      *
      * This method is used to make it easier to handle upgrades or changes to protobuf names.
-     * @param type {@link protobuf.srl.school.School.ItemType}.
+     * @param type {@link protobuf.srl.school.Util.ItemType}.
      * @return A string representing the ItemType.
      */
-    public static String getCollectionFromType(final School.ItemType type) {
+    public static String getCollectionFromType(final Util.ItemType type) {
         return type.name();
     }
 
@@ -31,15 +31,15 @@ public final class DbSchoolUtility {
      *
      * A course item type returns itself.
      * A bank problem also returns itself.
-     * @param item {@link protobuf.srl.school.School.ItemType}.
+     * @param item {@link protobuf.srl.school.Util.ItemType}.
      * @return The item type that is supposed to be the parent.
      */
-    public static School.ItemType getParentItemType(final School.ItemType item) {
+    public static Util.ItemType getParentItemType(final Util.ItemType item) {
         switch (item) {
-            case COURSE: return School.ItemType.COURSE;
-            case ASSIGNMENT: return School.ItemType.COURSE;
-            case COURSE_PROBLEM: return School.ItemType.ASSIGNMENT;
-            case BANK_PROBLEM: return School.ItemType.BANK_PROBLEM;
+            case COURSE: return Util.ItemType.COURSE;
+            case ASSIGNMENT: return Util.ItemType.COURSE;
+            case COURSE_PROBLEM: return Util.ItemType.ASSIGNMENT;
+            case BANK_PROBLEM: return Util.ItemType.BANK_PROBLEM;
             default: return null;
         }
     }

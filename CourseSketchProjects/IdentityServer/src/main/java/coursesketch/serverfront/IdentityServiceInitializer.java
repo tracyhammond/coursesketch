@@ -13,7 +13,7 @@ import coursesketch.services.IdentityService;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +115,7 @@ public final class IdentityServiceInitializer extends ServerWebSocketInitializer
              *
              * This instance throws an exception.
              */
-            @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
+            @Override public AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId)
                     throws DatabaseAccessException {
                 throw new UnsupportedOperationException();
             }

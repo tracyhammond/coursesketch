@@ -30,8 +30,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.school.Assignment;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
-import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
+import protobuf.srl.services.authentication.Authentication;
 import utilities.TimeManager;
 
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
@@ -40,7 +40,6 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 /**
  * Created by gigemjt on 3/22/15.
@@ -119,13 +118,13 @@ public class AssignmentManagerTest {
         final School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
         course.setId(FAKE_ID);
         courseId = CourseManager.mongoInsertCourse(db, course.build());
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // creating assignment
         defaultAssignment.setCourseId(courseId);
 
-        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
+        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
     }
 
     // INSERTION TESTS
@@ -134,7 +133,7 @@ public class AssignmentManagerTest {
         insertCourse();
 
         // reset permission level to be no permisison
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
         AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
     }
@@ -156,7 +155,7 @@ public class AssignmentManagerTest {
         defaultAssignment.setId(FAKE_ID);
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ACCESS_DATE), TimeManager.getSystemTime());
@@ -194,7 +193,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
@@ -214,7 +213,7 @@ public class AssignmentManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void getAssignmentWithInvalidObjectId() throws Exception {
         insertCourse();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
@@ -233,7 +232,7 @@ public class AssignmentManagerTest {
     @Test(expected = AuthenticationException.class)
     public void getAssignmentWithInvalidPermission() throws Exception {
         insertCourse();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
@@ -247,7 +246,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         AssignmentManager.mongoGetAssignment(authenticator, db, USER_USER, assignmentId, FAKE_INVALID_DATE);
@@ -259,7 +258,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         AssignmentManager.mongoGetAssignment(authenticator, db, USER_USER, assignmentId, FAKE_VALID_DATE);
@@ -272,10 +271,10 @@ public class AssignmentManagerTest {
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
         defaultAssignment.setId(assignmentId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         final Assignment.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, USER_USER, assignmentId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
@@ -289,7 +288,7 @@ public class AssignmentManagerTest {
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
         defaultAssignment.setId(assignmentId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         for (int i = 0; i < 5; i++) {
@@ -302,10 +301,10 @@ public class AssignmentManagerTest {
             defaultAssignment.addProblemGroups(problemId);
         }
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         final Assignment.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, USER_USER, assignmentId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
@@ -319,7 +318,7 @@ public class AssignmentManagerTest {
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
         defaultAssignment.setId(assignmentId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         for (int i = 0; i < 5; i++) {
@@ -332,13 +331,13 @@ public class AssignmentManagerTest {
                             .build());
         }
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        dataCreator = AuthenticationHelper.setMockPublished(optionChecker, null, School.ItemType.ASSIGNMENT, assignmentId, true);
+        dataCreator = AuthenticationHelper.setMockPublished(optionChecker, null, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         // makes the assignment closed
-        AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, false);
+        AuthenticationHelper.setMockDate(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, false);
 
         final Assignment.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, USER_USER, assignmentId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
@@ -354,7 +353,7 @@ public class AssignmentManagerTest {
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
         defaultAssignment.setId(assignmentId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Assignment.SrlAssignment problem = AssignmentManager.mongoGetAssignment(authenticator, db, ADMIN_USER, assignmentId, FAKE_INVALID_DATE);
@@ -368,7 +367,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         defaultAssignment.setId(assignmentId);
 
@@ -382,14 +381,14 @@ public class AssignmentManagerTest {
             defaultAssignment.addProblemGroups(problemId);
         }
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         final Assignment.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, ADMIN_USER, assignmentId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
                 .setIsDeepEquals(false)
                 .build().equals(defaultAssignment.build(), srlAssignment);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, false);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, false);
     }
 
     @Test
@@ -398,7 +397,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         defaultAssignment.setId(assignmentId);
 
@@ -411,7 +410,7 @@ public class AssignmentManagerTest {
                             .build());
             defaultAssignment.addProblemGroups(problemId);
         }
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, false);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, false);
 
         final Assignment.SrlAssignment srlAssignment = AssignmentManager.mongoGetAssignment(authenticator, db, ADMIN_USER, assignmentId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder().setIsDeepEquals(false).build()
@@ -424,7 +423,7 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         defaultAssignment.setId(assignmentId);
 
@@ -438,7 +437,7 @@ public class AssignmentManagerTest {
             defaultAssignment.addProblemGroups(problemId);
         }
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, false);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, false);
 
         final Assignment.SrlAssignment srlAssignment3 = AssignmentManager.mongoGetAssignment(authenticator, db, ADMIN_USER, assignmentId,
                 FAKE_INVALID_DATE);
@@ -452,7 +451,7 @@ public class AssignmentManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void updateAssignmentWithInvalidObjectId() throws Exception {
         insertCourse();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
@@ -469,7 +468,7 @@ public class AssignmentManagerTest {
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
         defaultAssignment.setId(assignmentId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Assignment.SrlAssignment problem = AssignmentManager.mongoGetAssignment(authenticator, db, ADMIN_USER, assignmentId, FAKE_INVALID_DATE);
@@ -500,13 +499,13 @@ public class AssignmentManagerTest {
     @Test
     public void updateAssignmentDoesNotUpdateProblemList() throws Exception {
         insertCourse();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
         defaultAssignment.setId(assignmentId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Assignment.SrlAssignment assignment = AssignmentManager.mongoGetAssignment(authenticator, db, ADMIN_USER, assignmentId, FAKE_INVALID_DATE);
@@ -531,7 +530,7 @@ public class AssignmentManagerTest {
     @Test(expected = AuthenticationException.class)
     public void updateAssignmentAsStudentFails() throws Exception {
         insertCourse();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());

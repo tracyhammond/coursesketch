@@ -58,3 +58,16 @@ message State {
     optional bool completed = 5; // Student has saved/submitted work on all parts of school item
     optional bool graded = 6; // Instructor has finished grading the school item
 }
+
+/**
+ * Specifies the type of item something is.
+ *
+ * NOTE: the names are used for the collection name for some databases.
+ */
+enum ItemType {
+    COURSE = 0;
+    ASSIGNMENT = 1;
+    COURSE_PROBLEM = 2;
+    BANK_PROBLEM = 3;
+    SLIDE = 5;
+}

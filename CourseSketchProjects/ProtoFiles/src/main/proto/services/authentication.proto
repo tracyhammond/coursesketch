@@ -1,6 +1,6 @@
 package protobuf.srl.services.authentication;
 
-import "school.proto";
+import "util.proto";
 import "message.proto";
 
 option java_generic_services = true;
@@ -85,7 +85,7 @@ message UserRegistration {
 message AuthRequest {
     required string authId = 1;
     required string itemId = 2;
-    required protobuf.srl.school.ItemType itemType = 3;
+    required protobuf.srl.utils.ItemType itemType = 3;
     optional AuthType authParams = 4;
 }
 

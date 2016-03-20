@@ -121,7 +121,7 @@ public class CourseProblemManagerTest {
         final School.SrlCourse.Builder course = School.SrlCourse.newBuilder();
         course.setId("ID");
         courseId = CourseManager.mongoInsertCourse(db, course.build());
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // creating assignment
@@ -133,11 +133,11 @@ public class CourseProblemManagerTest {
         updateProblemIds(courseId, assignmentId, bankProblemId);
 
         // sets the course able to use the bank problem
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.BANK_PROBLEM, bankProblemId, courseId,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, true);
-        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
+        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, FAKE_VALID_DATE, true);
+        dataCreator = AuthenticationHelper.setMockDate(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
 
         expectedBankProblem = BankProblemManager.mongoGetBankProblem(authenticator, db, courseId, bankProblemId);
     }
@@ -152,14 +152,14 @@ public class CourseProblemManagerTest {
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setUnlocked(true)
-                .setItemType(School.ItemType.BANK_PROBLEM));
+                .setItemType(Util.ItemType.BANK_PROBLEM));
     }
 
 
     // INSERTION TESTS
     @Test(expected = DatabaseAccessException.class)
     public void insertCourseProblemFailsWithNoAssignmentData() throws Exception {
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
     }
@@ -173,14 +173,14 @@ public class CourseProblemManagerTest {
     @Test
     public void insertCourseProblemIntoAssignmentWithValidPermission() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.setName(VALID_NAME);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
@@ -189,14 +189,14 @@ public class CourseProblemManagerTest {
     @Test
     public void insertCourseProblemSetsDataCorrectly() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.setName(VALID_NAME);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
@@ -208,7 +208,7 @@ public class CourseProblemManagerTest {
         Assert.assertEquals(1, dbObjectList.size());
 
         DBObject expected = new BasicDBObject(DatabaseStringConstants.ITEM_ID, bankProblem.getId())
-        .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, School.ItemType.BANK_PROBLEM_VALUE)
+        .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, Util.ItemType.BANK_PROBLEM_VALUE)
                 .append(IS_UNLOCKED, true);
 
         Assert.assertEquals(expected, dbObjectList.get(0));
@@ -220,7 +220,7 @@ public class CourseProblemManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void getCourseProblemWithInvalidObjectId() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.clearSubgroups();
@@ -240,7 +240,7 @@ public class CourseProblemManagerTest {
     @Test(expected = AuthenticationException.class)
     public void getCourseProblemWithInvalidPermission() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
@@ -251,12 +251,12 @@ public class CourseProblemManagerTest {
     @Test(expected = AuthenticationException.class)
     public void getCourseProblemWithStudentPermissionButOutSideOfSchoolHours() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_INVALID_DATE);
@@ -265,12 +265,12 @@ public class CourseProblemManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void getCourseProblemWithStudentPermissionButNotPublished() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
@@ -279,17 +279,17 @@ public class CourseProblemManagerTest {
     @Test
     public void getCourseProblemAsStudentWithNoSubGroupsWorks() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.clearSubgroups();
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         CourseProblemManager.mongoGetCourseProblem(authenticator, db, USER_USER, courseProblemId, FAKE_VALID_DATE);
     }
@@ -297,23 +297,23 @@ public class CourseProblemManagerTest {
     @Test
     public void getCourseProblemAsStudentWithValidDatePublishedAndBankProblemId() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         defaultProblem.clearSubgroups();
 
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(expectedBankProblem)
                 .setUnlocked(true)
                 .setIndex(0));
@@ -328,17 +328,17 @@ public class CourseProblemManagerTest {
     @Test
     public void getCourseProblemAsInstructorWithNoBankProblemIdShouldWork() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.clearSubgroups();
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.ASSIGNMENT, assignmentId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.ASSIGNMENT, assignmentId, true);
 
         Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder().build()
@@ -348,7 +348,7 @@ public class CourseProblemManagerTest {
     @Test
     public void getCourseProblemAsInstructorWithWrongDateAndNotPublishedShouldWork() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
@@ -358,12 +358,12 @@ public class CourseProblemManagerTest {
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setIndex(0)
                 .setUnlocked(true)
                 .setProblem(expectedBankProblem));
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
@@ -376,7 +376,7 @@ public class CourseProblemManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void updateCourseProblemWithInvalidObjectId() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.clearSubgroups();
@@ -390,14 +390,14 @@ public class CourseProblemManagerTest {
     @Test
     public void updateCourseProblemAsInstructor() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // inserts the problem
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
@@ -407,7 +407,7 @@ public class CourseProblemManagerTest {
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(expectedBankProblem)
                 .setUnlocked(true)
                 .setIndex(0));
@@ -432,13 +432,13 @@ public class CourseProblemManagerTest {
     @Test
          public void updateCourseProblemWithReplacedBankId() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // INSERTING NEW BANK PROBLEM
@@ -448,7 +448,7 @@ public class CourseProblemManagerTest {
 
         String bankProblemId2 = BankProblemManager.mongoInsertBankProblem(db, bankProblem2.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId2, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.BANK_PROBLEM, bankProblemId2, courseId,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         final Problem.SrlBankProblem bankProblem2Expected = BankProblemManager.mongoGetBankProblem(authenticator, db, courseId, bankProblemId2);
@@ -462,7 +462,7 @@ public class CourseProblemManagerTest {
                 .setId(bankProblem2Expected.getId())
                 .setUnlocked(true)
                 .setIndex(0)
-                .setItemType(School.ItemType.BANK_PROBLEM);
+                .setItemType(Util.ItemType.BANK_PROBLEM);
         updatedProblem.addSubgroups(holderBuilder);
 
         CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem.build());
@@ -483,13 +483,13 @@ public class CourseProblemManagerTest {
     @Test
     public void updateCourseProblemWithAddedBankId() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // INSERTING NEW BANK PROBLEM
@@ -499,7 +499,7 @@ public class CourseProblemManagerTest {
 
         String bankProblemId2 = BankProblemManager.mongoInsertBankProblem(db, bankProblem2.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.BANK_PROBLEM, bankProblemId2, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.BANK_PROBLEM, bankProblemId2, courseId,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         final Problem.SrlBankProblem bankProblem2Expected = BankProblemManager.mongoGetBankProblem(authenticator, db, courseId, bankProblemId2);
@@ -511,7 +511,7 @@ public class CourseProblemManagerTest {
         final Problem.SrlProblem.ProblemSlideHolder.Builder holderBuilder = Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem2Expected.getId())
                 .setUnlocked(true)
-                .setItemType(School.ItemType.BANK_PROBLEM);
+                .setItemType(Util.ItemType.BANK_PROBLEM);
         updatedProblem.addSubgroups(holderBuilder);
 
         CourseProblemManager.mongoUpdateCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, updatedProblem.build());
@@ -523,7 +523,7 @@ public class CourseProblemManagerTest {
         updatedProblem.clearSubgroups();
         updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(expectedBankProblem)
                 .setUnlocked(true)
                 .setIndex(0));
@@ -539,7 +539,7 @@ public class CourseProblemManagerTest {
     @Test(expected = AuthenticationException.class)
     public void updateCourseProblemAsStudentFails() throws Exception {
         insertCourseAndAssignment();
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, assignmentId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());

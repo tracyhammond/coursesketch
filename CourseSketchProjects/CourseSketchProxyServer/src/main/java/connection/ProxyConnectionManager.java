@@ -20,17 +20,17 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     /**
      * IP address for login server.
      */
-    private static final String LOGIN_ADDRESS = "LOGIN_IP_PROP";
+    private static final String LOGIN_ADDRESS = "192.168.56.200";
 
     /**
      * IP address for database server.
      */
-    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
+    private static final String DATABASE_ADDRESS = "192.168.56.201";
 
     /**
      * IP address for answer checker server.
      */
-    private static final String ANSWER_ADDRESS = "ANSWER_IP_PROP";
+    private static final String ANSWER_ADDRESS = "192.168.56.203";
 
     /**
      * Declaration and Definition of Logger.

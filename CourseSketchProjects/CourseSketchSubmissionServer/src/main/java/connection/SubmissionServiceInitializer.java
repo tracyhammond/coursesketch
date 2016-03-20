@@ -14,7 +14,7 @@ import database.SubmissionDatabaseClient;
 import handlers.SubmissionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import services.SubmissionService;
 
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public final class SubmissionServiceInitializer extends ServerWebSocketInitializ
              *
              * This instance throws an exception.
              */
-            @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
+            @Override public AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId)
                     throws DatabaseAccessException {
                 throw new UnsupportedOperationException();
             }

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.net.UnknownHostException;
@@ -56,9 +56,9 @@ public class IdentityManagerTest {
     private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
     private static final String INVALID_USERNAME = "NOT VALID USERNAME";
 
-    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.BANK_PROBLEM;
-    public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
-    public static final School.ItemType VALID_ITEM_CHILD_TYPE = School.ItemType.ASSIGNMENT;
+    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.BANK_PROBLEM;
+    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
+    public static final Util.ItemType VALID_ITEM_CHILD_TYPE = Util.ItemType.ASSIGNMENT;
 
     public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
     public static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
@@ -113,7 +113,7 @@ public class IdentityManagerTest {
         dbAuthChecker = new Authenticator(authChecker, optionChecker);
     }
 
-    public void insertValidObject(School.ItemType itemType, String itemId, String... groupId) {
+    public void insertValidObject(Util.ItemType itemType, String itemId, String... groupId) {
         List<Object> list = new BasicDBList();
         Collections.addAll(list, groupId);
         db.getCollection(getCollectionFromType(itemType)).insert(
@@ -253,10 +253,10 @@ public class IdentityManagerTest {
     @Test
     public void testInsertingBankItem() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         final String courseId = "COURSE_ID";
-        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, courseId, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, Util.ItemType.BANK_PROBLEM, courseId, null);
 
         // looks for item data
-        final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.PROBLEM_BANK_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
@@ -296,10 +296,10 @@ public class IdentityManagerTest {
     @Test
     public void testInsertingBankItemWithNoCourse() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         final String courseId = "COURSE_ID";
-        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, null, null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, Util.ItemType.BANK_PROBLEM, null, null);
 
         // looks for item data
-        final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.PROBLEM_BANK_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 
@@ -337,10 +337,10 @@ public class IdentityManagerTest {
     @Test
     public void testInsertingBankItemWithEmptyCourse() throws AuthenticationException, DatabaseAccessException, NoSuchAlgorithmException {
         final String courseId = "COURSE_ID";
-        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, School.ItemType.BANK_PROBLEM, "", null);
+        identityManager.createNewItem(TEACHER_USER_ID, TEACHER_AUTH_ID, VALID_ITEM_ID, Util.ItemType.BANK_PROBLEM, "", null);
 
         // looks for item data
-        final DBObject dbItemObject = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
+        final DBObject dbItemObject = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).findOne(new ObjectId(VALID_ITEM_ID));
         Assert.assertEquals(VALID_ITEM_ID, dbItemObject.get(DatabaseStringConstants.PROBLEM_BANK_ID).toString());
         Assert.assertEquals(TEACHER_USER_ID, dbItemObject.get(DatabaseStringConstants.OWNER_ID).toString());
 

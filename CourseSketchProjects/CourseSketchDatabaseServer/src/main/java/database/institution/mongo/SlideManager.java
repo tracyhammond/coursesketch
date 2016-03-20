@@ -12,7 +12,7 @@ import coursesketch.database.auth.Authenticator;
 import database.DatabaseStringConstants;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.tutorial.TutorialOuterClass;
 
@@ -66,7 +66,7 @@ public final class SlideManager {
      */
     public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String authId, final LectureSlide slide)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection newUser = dbs.getCollection(getCollectionFromType(School.ItemType.SLIDE));
+        final DBCollection newUser = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
@@ -76,7 +76,7 @@ public final class SlideManager {
 
         // Checks the course problem if the user has permission to insert a slide
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, slide.getCourseProblemId(), authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, slide.getCourseProblemId(), authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -151,7 +151,7 @@ public final class SlideManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static LectureSlide mongoGetLectureSlide(final Authenticator authenticator, final DB dbs, final String userId, final String slideId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.SLIDE));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
         final DBObject cursor = collection.findOne(convertStringToObjectId(slideId));
         if (cursor == null) {
             throw new DatabaseAccessException("Slide was not found with the following ID " + slideId, true);
@@ -164,7 +164,7 @@ public final class SlideManager {
                 .build();
         // FUTURE: figure out lecture slide permissions
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), userId, 0, authType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), userId, 0, authType);
 
         // FUTURE Fix this! maybe make the lecture a user? not really sure for now everyone is a user.
         // authenticator.checkAuthentication(userId, (List<String>) cursor.get(USERS));
@@ -220,14 +220,14 @@ public final class SlideManager {
     public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.SLIDE));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
         final DBObject cursor = collection.findOne(convertStringToObjectId(lectureSlide.getId()));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, userId, 0, authType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, assignmentId, userId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);

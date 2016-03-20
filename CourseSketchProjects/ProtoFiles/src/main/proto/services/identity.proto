@@ -1,6 +1,6 @@
 package protobuf.srl.services.identity;
 
-import "school.proto";
+import "util.proto";
 import "message.proto";
 
 option java_generic_services = true;
@@ -14,7 +14,7 @@ message IdentityRequest {
     // the item that is involved in the request
     optional string itemId = 2;
     // the item type that is involved in the request
-    optional protobuf.srl.school.ItemType itemType = 3;
+    optional protobuf.srl.utils.ItemType itemType = 3;
     // used in the case that authentication is required
     optional string authId = 4;
 }

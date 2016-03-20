@@ -14,9 +14,9 @@ import database.UserUpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata;
-import protobuf.srl.school.School;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
+import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.State;
 import protobuf.srl.services.authentication.Authentication;
 
@@ -113,14 +113,14 @@ public final class CourseProblemManager {
      */
     public static String mongoInsertCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final SrlProblem problem)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
 
         // Make sure person is mod or admin for the assignment.
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, problem.getAssignmentId(), authId, 0, courseAuthType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, problem.getAssignmentId(), authId, 0, courseAuthType);
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For assignment: " + problem.getAssignmentId(), AuthenticationException.INVALID_PERMISSION);
         }
@@ -171,7 +171,7 @@ public final class CourseProblemManager {
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
 
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(problemId));
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
@@ -182,7 +182,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, checkTime, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, checkTime, authType);
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException("For course problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
@@ -194,7 +194,7 @@ public final class CourseProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), authId, checkTime, assignmentAuthType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, (String) cursor.get(ASSIGNMENT_ID), authId, checkTime, assignmentAuthType);
 
         // Throws an exception if a user (only) is trying to get an problem when the assignment is closed.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
@@ -248,7 +248,7 @@ public final class CourseProblemManager {
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject cursor = problemCollection.findOne(convertStringToObjectId(problemId));
 
         if (cursor == null) {
@@ -261,7 +261,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For courseProblem: " + problemId, AuthenticationException.INVALID_PERMISSION);
@@ -418,7 +418,7 @@ public final class CourseProblemManager {
         final String itemId = data.get(DatabaseStringConstants.ITEM_ID).toString();
         holder.setId(itemId);
 
-        final School.ItemType itemType = School.ItemType.valueOf((int) data.get(DatabaseStringConstants.SCHOOL_ITEM_TYPE));
+        final Util.ItemType itemType = Util.ItemType.valueOf((int) data.get(DatabaseStringConstants.SCHOOL_ITEM_TYPE));
         holder.setItemType(itemType);
         switch (itemType) {
             case BANK_PROBLEM:
@@ -456,7 +456,7 @@ public final class CourseProblemManager {
     public static void insertNewProblemPart(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final String bankProblemId) throws AuthenticationException, DatabaseAccessException {
 
-        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject cursor = problemCollection.findOne(convertStringToObjectId(problemId));
 
         if (cursor == null) {
@@ -467,7 +467,7 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For  problem: " + problemId, AuthenticationException.INVALID_PERMISSION);
@@ -502,7 +502,7 @@ public final class CourseProblemManager {
     public static boolean mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final DB dbs, final String authId,
             final String assignmentId, final String problemGroupId, final String slideId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
@@ -511,14 +511,14 @@ public final class CourseProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemGroupId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemGroupId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
-                createSlideProblemHolderQuery(slideId, School.ItemType.SLIDE, unlocked));
+                createSlideProblemHolderQuery(slideId, Util.ItemType.SLIDE, unlocked));
         collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
@@ -548,11 +548,11 @@ public final class CourseProblemManager {
     private static boolean mongoInsertBankProblemIntoProblemGroup(final DB dbs, final String assignmentId, final String problemGroupId,
             final String bankProblemId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE_PROBLEM));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
 
         final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
-                createSlideProblemHolderQuery(bankProblemId, School.ItemType.BANK_PROBLEM, unlocked));
+                createSlideProblemHolderQuery(bankProblemId, Util.ItemType.BANK_PROBLEM, unlocked));
         collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
@@ -573,9 +573,9 @@ public final class CourseProblemManager {
      * @return a BasicDBObject of the message type IdInLecture
      * @throws DatabaseAccessException An invalid ItemType was attempted to be inserted.
      */
-    private static BasicDBObject createSlideProblemHolderQuery(final String itemId, final School.ItemType itemType, final boolean isUnlocked)
+    private static BasicDBObject createSlideProblemHolderQuery(final String itemId, final Util.ItemType itemType, final boolean isUnlocked)
             throws DatabaseAccessException {
-        if (itemType != School.ItemType.SLIDE && itemType != School.ItemType.BANK_PROBLEM) {
+        if (itemType != Util.ItemType.SLIDE && itemType != Util.ItemType.BANK_PROBLEM) {
             throw new DatabaseAccessException("Attempting to create query with invalid item type: " + itemType.name());
         }
         return new BasicDBObject(DatabaseStringConstants.ITEM_ID, itemId)

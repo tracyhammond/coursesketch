@@ -2,7 +2,6 @@ import "util.proto";
 import "grading.proto";
 import "commands.proto";
 import "lecturedata.proto";
-import "school.proto"; // for item type
 
 package protobuf.srl.school;
 
@@ -29,7 +28,7 @@ message SrlProblem {
     message ProblemSlideHolder {
         // the id of the item being held
         optional string id = 1;
-        optional ItemType itemType = 2;
+        optional protobuf.srl.utils.ItemType itemType = 2;
         oneof problemSlide {
             SrlBankProblem problem = 3;
             protobuf.srl.lecturedata.LectureSlide slide = 4;

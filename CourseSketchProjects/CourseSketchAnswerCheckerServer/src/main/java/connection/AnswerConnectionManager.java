@@ -24,7 +24,7 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     /**
      * IP address.
      */
-    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
+    private static final String SUBMISSION_ADDRESS = "192.168.56.202";
 
     /**
      * Port number.

@@ -17,7 +17,7 @@ import protobuf.srl.school.Assignment;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.utils.Util.State;
 import protobuf.srl.grading.Grading.LatePolicy;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import utilities.TimeManager;
 
@@ -132,12 +132,12 @@ public final class AssignmentManager {
      */
     public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String authId, final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, assignment.getCourseId().trim(), authId, 0, courseAuthType);
+                .checkAuthentication(Util.ItemType.COURSE, assignment.getCourseId().trim(), authId, 0, courseAuthType);
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For course: " + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
         }
@@ -290,7 +290,7 @@ public final class AssignmentManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
@@ -303,7 +303,7 @@ public final class AssignmentManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, authId, checkTime, authType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, assignmentId, authId, checkTime, authType);
 
         if (!responder.hasAccess()) {
             throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
@@ -313,7 +313,7 @@ public final class AssignmentManager {
                 .setCheckDate(true)
                 .build();
         final AuthenticationResponder courseResponder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, (String) cursor.get(COURSE_ID), authId, checkTime, courseAuthType);
+                .checkAuthentication(Util.ItemType.COURSE, (String) cursor.get(COURSE_ID), authId, checkTime, courseAuthType);
 
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !courseResponder.isItemOpen()) {
@@ -481,14 +481,14 @@ public final class AssignmentManager {
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
 
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
 
         final BasicDBObject updateQuery = new BasicDBObject();
 
@@ -496,7 +496,7 @@ public final class AssignmentManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.ASSIGNMENT, assignmentId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, assignmentId, authId, 0, authType);
 
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
@@ -549,10 +549,10 @@ public final class AssignmentManager {
      */
     static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
 
-        final DBCollection courses = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection courses = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
         courses.update(cursor, new BasicDBObject("$addToSet", updateObj));
 

@@ -1,7 +1,7 @@
 package coursesketch.database.auth;
 
 import database.DatabaseAccessException;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 /**
@@ -26,7 +26,7 @@ public interface AuthenticationChecker {
      * @throws AuthenticationException
      *            Thrown if there are problems creating the auth response.
      */
-    Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId,
+    Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId,
             final String userId, final Authentication.AuthType checkType)
             throws DatabaseAccessException, AuthenticationException;
 }

@@ -117,7 +117,7 @@ public class CourseManagerTest {
         defaultCourse.setName(VALID_NAME);
         String courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
         final DBObject mongoCourse = collection.findOne(convertStringToObjectId(courseId));
 
         Assert.assertEquals(mongoCourse.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
@@ -133,7 +133,7 @@ public class CourseManagerTest {
     // Precondition tests
     @Test(expected = DatabaseAccessException.class)
     public void getCourseWithInvalidObjectId() throws Exception {
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
@@ -161,7 +161,7 @@ public class CourseManagerTest {
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         CourseManager.mongoGetCourse(authenticator, db, USER_USER, courseId, FAKE_VALID_DATE);
@@ -173,10 +173,10 @@ public class CourseManagerTest {
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
         defaultCourse.setId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, true);
 
         final School.SrlCourse srlCourse = CourseManager.mongoGetCourse(authenticator, db, USER_USER, courseId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
@@ -190,7 +190,7 @@ public class CourseManagerTest {
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
         defaultCourse.setId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         for (int i = 0; i < 5; i++) {
@@ -202,11 +202,11 @@ public class CourseManagerTest {
             defaultCourse.addAssignmentList(assignmentId);
         }
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        dataCreator = AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, true);
-        AuthenticationHelper.setMockDate(optionChecker, dataCreator, School.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
+        dataCreator = AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, true);
+        AuthenticationHelper.setMockDate(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, FAKE_VALID_DATE, true);
 
         final School.SrlCourse srlCourse = CourseManager.mongoGetCourse(authenticator, db, USER_USER, courseId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
@@ -220,7 +220,7 @@ public class CourseManagerTest {
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
         defaultCourse.setId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         for (int i = 0; i < 5; i++) {
@@ -232,10 +232,10 @@ public class CourseManagerTest {
                             .build());
         }
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, USER_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, USER_USER,
                 null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        dataCreator = AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, true);
+        dataCreator = AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, true);
 
         final School.SrlCourse srlCourse = CourseManager.mongoGetCourse(authenticator, db, USER_USER, courseId, FAKE_INVALID_DATE);
         new ProtobufComparisonBuilder()
@@ -251,7 +251,7 @@ public class CourseManagerTest {
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
         defaultCourse.setId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         School.SrlCourse problem = CourseManager.mongoGetCourse(authenticator, db, ADMIN_USER, courseId, FAKE_INVALID_DATE);
@@ -264,7 +264,7 @@ public class CourseManagerTest {
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         defaultCourse.setId(courseId);
 
@@ -277,14 +277,14 @@ public class CourseManagerTest {
             defaultCourse.addAssignmentList(assignmentId);
         }
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, true);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, true);
 
         final School.SrlCourse srlCourse = CourseManager.mongoGetCourse(authenticator, db, ADMIN_USER, courseId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
                 .setIsDeepEquals(false)
                 .build().equals(defaultCourse.build(), srlCourse);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, false);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, false);
     }
 
 
@@ -293,7 +293,7 @@ public class CourseManagerTest {
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         defaultCourse.setId(courseId);
 
@@ -305,7 +305,7 @@ public class CourseManagerTest {
                             .build());
             defaultCourse.addAssignmentList(assignmentId);
         }
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, false);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, false);
 
         final School.SrlCourse srlCourse = CourseManager.mongoGetCourse(authenticator, db, ADMIN_USER, courseId, FAKE_VALID_DATE);
         new ProtobufComparisonBuilder()
@@ -318,7 +318,7 @@ public class CourseManagerTest {
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         defaultCourse.setId(courseId);
 
@@ -331,7 +331,7 @@ public class CourseManagerTest {
             defaultCourse.addAssignmentList(assignmentId);
         }
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE, courseId, false);
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE, courseId, false);
 
         final School.SrlCourse srlCourse3 = CourseManager.mongoGetCourse(authenticator, db, ADMIN_USER, courseId,
                 FAKE_INVALID_DATE);
@@ -344,7 +344,7 @@ public class CourseManagerTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void updateCourseWithInvalidObjectId() throws Exception {
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
@@ -360,7 +360,7 @@ public class CourseManagerTest {
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
         defaultCourse.setId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         School.SrlCourse problem = CourseManager.mongoGetCourse(authenticator, db, ADMIN_USER, courseId, FAKE_INVALID_DATE);
@@ -388,13 +388,13 @@ public class CourseManagerTest {
 
     @Test
     public void updateCourseDoesNotUpdateAssignmentList() throws Exception {
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
         defaultCourse.setId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         School.SrlCourse course = CourseManager.mongoGetCourse(authenticator, db, ADMIN_USER, courseId, FAKE_INVALID_DATE);
@@ -418,7 +418,7 @@ public class CourseManagerTest {
 
     @Test(expected = AuthenticationException.class)
     public void updateCourseAsStudentFails() throws Exception {
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, ADMIN_USER,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
@@ -438,7 +438,7 @@ public class CourseManagerTest {
 
         String courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE,
                 courseId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String key = CourseManager.mongoGetRegistrationKey(authenticator, db, USER_USER, courseId, true);
@@ -453,7 +453,7 @@ public class CourseManagerTest {
 
         String courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE,
                 courseId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String key = CourseManager.mongoGetRegistrationKey(authenticator, db, USER_USER, courseId, false);
@@ -468,10 +468,10 @@ public class CourseManagerTest {
 
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        AuthenticationHelper.setMockRegistrationRequired(optionChecker, null, School.ItemType.COURSE,
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, null, Util.ItemType.COURSE,
                 courseId, false);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE,
                 courseId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String key = CourseManager.mongoGetRegistrationKey(authenticator, db, USER_USER, courseId, true);
@@ -486,13 +486,13 @@ public class CourseManagerTest {
 
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        AuthenticationHelper.setMockRegistrationRequired(optionChecker, null, School.ItemType.COURSE,
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, null, Util.ItemType.COURSE,
                 courseId, true);
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE,
                 courseId, true);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE,
                 courseId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String key = CourseManager.mongoGetRegistrationKey(authenticator, db, USER_USER, courseId, true);
@@ -507,13 +507,13 @@ public class CourseManagerTest {
 
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE,
                 courseId, true);
 
-        AuthenticationHelper.setMockRegistrationRequired(optionChecker, dataCreator, School.ItemType.COURSE,
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, dataCreator, Util.ItemType.COURSE,
                 courseId, false);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE,
                 courseId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String key = CourseManager.mongoGetRegistrationKey(authenticator, db, USER_USER, courseId, true);
@@ -528,13 +528,13 @@ public class CourseManagerTest {
 
         String courseId = CourseManager.mongoInsertCourse(db, course.build());
 
-        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPublished(optionChecker, dataCreator, Util.ItemType.COURSE,
                 courseId, true);
 
-        AuthenticationHelper.setMockRegistrationRequired(optionChecker, dataCreator, School.ItemType.COURSE,
+        AuthenticationHelper.setMockRegistrationRequired(optionChecker, dataCreator, Util.ItemType.COURSE,
                 courseId, false);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE,
                 courseId, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String key = CourseManager.mongoGetRegistrationKey(authenticator, db, USER_USER, courseId, false);

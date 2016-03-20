@@ -12,10 +12,9 @@ import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.services.authentication.Authentication;
-import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,7 @@ public final class BankProblemManager {
      *         Not currently thrown but may be thrown in the future.
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
-        final DBCollection problemBankCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection problemBankCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
                 .append(SOLUTION_ID, problem.getSolutionId())
                 .append(COURSE_TOPIC, problem.getCourseTopic())
@@ -113,7 +112,7 @@ public final class BankProblemManager {
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
         if (mongoBankProblem == null) {
             throw new DatabaseAccessException("bank problem can not be found with id: " + problemBankId);
@@ -124,7 +123,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
 
         // if registration is not required for bank problem any course can use it!
         if (!responder.hasStudentPermission() && responder.isRegistrationRequired()) {
@@ -199,7 +198,7 @@ public final class BankProblemManager {
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(problemBankId));
 
         if (cursor == null) {
@@ -210,8 +209,8 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
-        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
+        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
 
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -290,12 +289,12 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE, courseId, authId, 0, authType);
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final DBCollection problemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection problemCollection = database.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBCursor dbCursor = problemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
         final List<SrlBankProblem> results = new ArrayList<>();
         while (dbCursor.hasNext()) {
@@ -327,7 +326,7 @@ public final class BankProblemManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
             final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection collection = database.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBObject cursor = collection.findOne(convertStringToObjectId(bankProblemId));
         if (cursor == null) {
             throw new DatabaseAccessException("BankProblem was not found with the following ID " + bankProblemId);
@@ -339,7 +338,7 @@ public final class BankProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, bankProblemId.trim(), authId, 0, authType);
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, bankProblemId.trim(), authId, 0, authType);
 
         if ((!responder.isRegistrationRequired() && responder.isItemPublished()) || responder.hasTeacherPermission()) {
             return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);

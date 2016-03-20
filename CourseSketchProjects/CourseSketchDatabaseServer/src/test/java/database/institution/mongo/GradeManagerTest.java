@@ -158,7 +158,7 @@ public class GradeManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoGrade.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -175,7 +175,7 @@ public class GradeManagerTest {
         fakeProtoGrade.clearAssignmentId();
         fakeProtoGrade.clearProblemId();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -200,7 +200,7 @@ public class GradeManagerTest {
         fakeProtoGrade.setCourseId(courseId);
         fakeProtoGrade.setExternalGrade(true);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -211,7 +211,7 @@ public class GradeManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoGrade.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -223,7 +223,7 @@ public class GradeManagerTest {
         fakeProtoGrade.setCourseId(courseId);
         fakeProtoGrade.clearProblemId();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, FAKE_ASGN_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, FAKE_ASGN_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -236,7 +236,7 @@ public class GradeManagerTest {
         fakeProtoGrade.clearProblemId();
         fakeProtoGrade.clearAssignmentId();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -248,7 +248,7 @@ public class GradeManagerTest {
         fakeProtoGrade.setCourseId(courseId);
         fakeProtoGrade.clearGradeHistory();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -261,7 +261,7 @@ public class GradeManagerTest {
         fakeProtoGrade.setCourseId(courseId);
         fakeProtoGrade.clearCurrentGrade();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -280,7 +280,7 @@ public class GradeManagerTest {
         fakeProtoGrade.addGradeHistory(fakeProtoHistory2);
         fakeProtoGrade.addGradeHistory(fakeProtoHistory1);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -330,10 +330,10 @@ public class GradeManagerTest {
         fakeProtoGrade.setCourseId(courseId);
         protoGradeGrabber.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -355,10 +355,10 @@ public class GradeManagerTest {
         fakeProtoGrade.clearAssignmentId();
         fakeProtoGrade.clearProblemId();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
 
@@ -383,10 +383,10 @@ public class GradeManagerTest {
         fakeProtoGrade.setCourseId(courseId);
         protoGradeGrabber.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -399,7 +399,7 @@ public class GradeManagerTest {
 
         Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.PEER_TEACHER);
 
         ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
@@ -413,10 +413,10 @@ public class GradeManagerTest {
         protoGradeGrabber.setCourseId(courseId);
         // Not adding grade here like previous tests so we can get the exception!
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID, FAKE_USER_ID,
@@ -427,7 +427,7 @@ public class GradeManagerTest {
     public void getAllAssignmentGradesInstructorTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, FAKE_ASGN_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, FAKE_ASGN_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<ProtoGrade> expectedGrades = new ArrayList<>();
@@ -441,7 +441,7 @@ public class GradeManagerTest {
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
         expectedGrades.add(fakeProtoGrade.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesInstructor(authenticator, db, courseId, FAKE_ADMIN_ID);
@@ -452,7 +452,7 @@ public class GradeManagerTest {
     public void getAllAssignmentGradesInstructorThrowsWhenNoCourseAuthEvenThoughTheyAddedAssignment() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, FAKE_ASGN_ID,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, FAKE_ASGN_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<ProtoGrade> expectedGrades = new ArrayList<>();
@@ -483,7 +483,7 @@ public class GradeManagerTest {
     public void getAllAssignmentGradesInstructorNoGradesTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesInstructor(authenticator, db, courseId, FAKE_ADMIN_ID);
@@ -493,7 +493,7 @@ public class GradeManagerTest {
     public void getAllAssignmentGradesStudentTest() throws Exception {
 
         // for all assignments teacher permission
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, null,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.ASSIGNMENT, null,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
@@ -510,7 +510,7 @@ public class GradeManagerTest {
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
         expectedGrades.add(fakeProtoGrade.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, courseId, FAKE_USER_ID, FAKE_USER_ID);
@@ -527,7 +527,7 @@ public class GradeManagerTest {
     public void getAllAssignmentGradesStudentNoGradesTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, courseId, FAKE_USER_ID, FAKE_USER_ID);
