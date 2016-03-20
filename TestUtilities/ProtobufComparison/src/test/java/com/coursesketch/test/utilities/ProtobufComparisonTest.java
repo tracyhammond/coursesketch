@@ -112,6 +112,42 @@ public class ProtobufComparisonTest {
     }
 
     @Test(expected = AssertionError.class)
+    public void testListsWithSameValuesSameOrderMissingItems() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(false).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+            builder2.addItemId("" + i);
+        }
+
+        builder1.addItemId("" + 11);
+
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testListsWithSameValuesIgnoreOrderMissingItems() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false)
+                .setIgnoreListOrder(true).build();
+        final Data.ItemRequest.Builder builder1 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+        final Data.ItemRequest.Builder builder2 = Data.ItemRequest.newBuilder().setQuery(Data.ItemQuery.ASSIGNMENT);
+
+        for (int i = 0; i <= 10; i++) {
+            builder1.addItemId("" + i);
+            builder2.addItemId("" + i);
+        }
+
+        builder1.addItemId("" + 11);
+
+        comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test(expected = AssertionError.class)
     public void testListsWithSameValuesButDifferentOrder() {
         ProtobufComparison comp = new ProtobufComparisonBuilder()
                 .setFailAtFirstMisMatch(false)

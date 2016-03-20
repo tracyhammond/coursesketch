@@ -283,6 +283,14 @@ public class ProtobufComparison {
                 // Need to remove items from the list as they are matched!0
 
             } else {
+                if (!actualListIterator.hasNext()) {
+                    if (failAtFirstMisMatch) {
+                        Assert.fail(createFailMessage(field, expectedValueItem, null));
+                    } else {
+                        addIncorrectField(incorrectFields, field, expectedValueItem, null);
+                    }
+                    continue;
+                }
                 final Object actualValueItem = actualListIterator.next();
                 final boolean resultOfComparison = compareDataOfRepeatedField(expectedValueItem, actualValueItem, field, incorrectFields);
                 if (!resultOfComparison && failAtFirstMisMatch) {
