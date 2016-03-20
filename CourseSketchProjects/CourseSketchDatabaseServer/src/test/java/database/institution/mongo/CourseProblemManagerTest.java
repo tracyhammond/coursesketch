@@ -357,13 +357,14 @@ public class CourseProblemManagerTest {
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
-                .setItemType(School.ItemType.BANK_PROBLEM));
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setProblem(expectedBankProblem));
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         Problem.SrlProblem problem = CourseProblemManager.mongoGetCourseProblem(authenticator, db, ADMIN_USER, courseProblemId, FAKE_INVALID_DATE);
-        new ProtobufComparisonBuilder().setFailAtFirstMisMatch(false).build()
+        new ProtobufComparisonBuilder().setFailAtFirstMisMatch(false).setIgnoreListOrder(false).build()
                 .equals(defaultProblem.build(), problem);
     }
 
