@@ -379,20 +379,22 @@ public class MongoInstitutionTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, assignmentId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        courseProblemId = institution.insertCourseProblem(null, TEACHER_AUTH_ID, defaultProblem.build());
-        defaultProblem.setId(courseProblemId);
-
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(School.ItemType.BANK_PROBLEM)
+                .setUnlocked(true)
                 .setProblem(bankProblem));
+
+        courseProblemId = institution.insertCourseProblem(null, TEACHER_AUTH_ID, defaultProblem.build());
+        defaultProblem.setId(courseProblemId);
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
+        // checking insertion
         Problem.SrlProblem problem = institution.getCourseProblem(TEACHER_AUTH_ID, Lists.newArrayList(courseProblemId)).get(0);
-        new ProtobufComparisonBuilder()
+        new ProtobufComparisonBuilder().setFailAtFirstMisMatch(false).ignoreField(Problem.SrlProblem.getDescriptor().findFieldByName("subgroups"))
                 .build().equals(defaultProblem.build(), problem);
 
         bankProblem = Problem.SrlBankProblem.newBuilder();
