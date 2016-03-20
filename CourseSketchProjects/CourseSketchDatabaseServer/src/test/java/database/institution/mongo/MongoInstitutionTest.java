@@ -10,6 +10,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.sun.tools.javac.util.List;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -224,8 +225,6 @@ public class MongoInstitutionTest {
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(COURSE_TOPIC), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TYPE), FAKE_QUESTION_TYPE.getNumber());
-        Assert.assertEquals(Commands.SrlUpdateList.parseFrom((byte[]) mongoBankProblem.get(BASE_SKETCH)),
-                FAKE_UPDATELIST.build());
 
         String registrationKey = (String) mongoBankProblem.get(REGISTRATION_KEY);
 
@@ -305,6 +304,11 @@ public class MongoInstitutionTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.setName(VALID_NAME);
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem.getId())
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setUnlocked(true)
+                .setProblem(bankProblem));
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
@@ -312,7 +316,10 @@ public class MongoInstitutionTest {
         final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
-        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.PROBLEM_BANK_ID), bankProblemId);
+        final Iterable<DBObject> list = (Iterable<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
+
+        final DBObject dbObject = list.iterator().next();
+        Assert.assertEquals(bankProblemId, dbObject.get(DatabaseStringConstants.ITEM_ID));
 
         verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(courseProblemId), eq(School.ItemType.COURSE_PROBLEM),
                 eq(assignmentId),
@@ -333,6 +340,11 @@ public class MongoInstitutionTest {
                 bankProblemId, TEACHER_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.setName(VALID_NAME);
+        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+                .setId(bankProblem.getId())
+                .setItemType(School.ItemType.BANK_PROBLEM)
+                .setUnlocked(true)
+                .setProblem(bankProblem));
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
@@ -340,7 +352,10 @@ public class MongoInstitutionTest {
         final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
-        Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.PROBLEM_BANK_ID), bankProblemId);
+        final Iterable<DBObject> list = (Iterable<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
+
+        final DBObject dbObject = list.iterator().next();
+        Assert.assertEquals(bankProblemId, dbObject.get(DatabaseStringConstants.ITEM_ID));
 
         verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(courseProblemId), eq(School.ItemType.COURSE_PROBLEM),
                 eq(assignmentId),
@@ -440,10 +455,6 @@ public class MongoInstitutionTest {
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, TEACHER_AUTH_ID,
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
-
-        Problem.SrlProblem problem = institution.getCourseProblem(TEACHER_AUTH_ID, Lists.newArrayList(courseProblemId)).get(0);
-        new ProtobufComparisonBuilder()
-                .build().equals(defaultProblem.build(), problem);
 
         Problem.SrlProblem.Builder updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
                 .setGradeWeight("NEW GRADE WEIGHT")
