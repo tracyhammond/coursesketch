@@ -78,7 +78,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
     /**
      * This is called when the reconnect command is executed.
      *
-     * By default this drops all connections then creates new ones for the databases and any remote servers
+     * By default this drops all connections then creates new ones for the databases and any remote servers.
      *
      * @see coursesketch.server.interfaces.MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
      */
