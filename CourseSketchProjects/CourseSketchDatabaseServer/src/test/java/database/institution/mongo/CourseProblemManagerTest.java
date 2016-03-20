@@ -353,11 +353,14 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
         defaultProblem.setId(courseProblemId);
+        defaultProblem.clearSubgroups();
 
         // Add bank problem information
         defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(School.ItemType.BANK_PROBLEM)
+                .setIndex(0)
+                .setUnlocked(true)
                 .setProblem(expectedBankProblem));
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, courseProblemId, ADMIN_USER,
