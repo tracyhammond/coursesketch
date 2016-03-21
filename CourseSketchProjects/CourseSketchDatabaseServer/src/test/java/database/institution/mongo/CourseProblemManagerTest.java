@@ -149,7 +149,7 @@ public class CourseProblemManagerTest {
         defaultProblem.clearSubgroups();
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setUnlocked(true)
                 .setItemType(Util.ItemType.BANK_PROBLEM));
@@ -311,7 +311,7 @@ public class CourseProblemManagerTest {
         defaultProblem.clearSubgroups();
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(expectedBankProblem)
@@ -356,7 +356,7 @@ public class CourseProblemManagerTest {
         defaultProblem.clearSubgroups();
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setIndex(0)
@@ -405,7 +405,7 @@ public class CourseProblemManagerTest {
         defaultProblem.clearSubgroups();
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(expectedBankProblem)
@@ -458,7 +458,7 @@ public class CourseProblemManagerTest {
                 .setGradeWeight("NEW GRADE WEIGHT");
         updatedProblem.clearSubgroups();
 
-        final Problem.SrlProblem.ProblemSlideHolder.Builder holderBuilder = Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        final Problem.ProblemSlideHolder.Builder holderBuilder = Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem2Expected.getId())
                 .setUnlocked(true)
                 .setIndex(0)
@@ -508,7 +508,7 @@ public class CourseProblemManagerTest {
         Problem.SrlProblem.Builder updatedProblem = Problem.SrlProblem.newBuilder(defaultProblem.build())
                 .setGradeWeight("NEW GRADE WEIGHT");
 
-        final Problem.SrlProblem.ProblemSlideHolder.Builder holderBuilder = Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        final Problem.ProblemSlideHolder.Builder holderBuilder = Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem2Expected.getId())
                 .setUnlocked(true)
                 .setItemType(Util.ItemType.BANK_PROBLEM);
@@ -521,7 +521,7 @@ public class CourseProblemManagerTest {
                 .setIndex(1);
 
         updatedProblem.clearSubgroups();
-        updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        updatedProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(expectedBankProblem)

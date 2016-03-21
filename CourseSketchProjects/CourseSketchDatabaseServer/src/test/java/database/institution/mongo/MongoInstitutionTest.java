@@ -201,7 +201,7 @@ public class MongoInstitutionTest {
         defaultProblem.clearSubgroups();
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblemId)
                 .setItemType(Util.ItemType.BANK_PROBLEM));
     }
@@ -304,7 +304,7 @@ public class MongoInstitutionTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.setName(VALID_NAME);
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setUnlocked(true)
@@ -340,7 +340,7 @@ public class MongoInstitutionTest {
                 bankProblemId, TEACHER_AUTH_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         defaultProblem.setName(VALID_NAME);
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setUnlocked(true)
@@ -395,7 +395,7 @@ public class MongoInstitutionTest {
                 null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setUnlocked(true)
@@ -425,7 +425,7 @@ public class MongoInstitutionTest {
                 .setGradeWeight("NEW GRADE WEIGHT");
 
         // Add bank problem information
-        updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        updatedProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(newBankProblemId)
                 .setItemType(Util.ItemType.BANK_PROBLEM));
 
@@ -448,7 +448,7 @@ public class MongoInstitutionTest {
         defaultProblem.setId(courseProblemId);
 
         // Add bank problem information
-        defaultProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        defaultProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(bankProblem.getId())
                 .setItemType(Util.ItemType.BANK_PROBLEM)
                 .setProblem(bankProblem));
@@ -461,7 +461,7 @@ public class MongoInstitutionTest {
                 .clearSubgroups();
 
         // Add bank problem information
-        updatedProblem.addSubgroups(Problem.SrlProblem.ProblemSlideHolder.newBuilder()
+        updatedProblem.addSubgroups(Problem.ProblemSlideHolder.newBuilder()
                 .setId(DatabaseHelper.createNonExistentObjectId(bankProblemId))
                 .setItemType(Util.ItemType.BANK_PROBLEM));
 
