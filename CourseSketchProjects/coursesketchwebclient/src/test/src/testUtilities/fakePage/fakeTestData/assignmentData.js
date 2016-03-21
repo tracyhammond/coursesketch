@@ -30,7 +30,8 @@
     assignment2.courseId = '1';
     assignment2.id = '2';
     assignment2.name = 'Test HW1';
-    assignment2.type = CourseSketch.prutil.AssignmentType.HOMEWORK;
+    // Graded is used by some tests so do not change this value!
+    assignment2.type = CourseSketch.prutil.AssignmentType.GRADED;
     assignment2.other = '';
     assignment2.description = 'This was a triumph test';
     assignment2.links = 'http://en.wikipedia.org/wiki/Moose';
