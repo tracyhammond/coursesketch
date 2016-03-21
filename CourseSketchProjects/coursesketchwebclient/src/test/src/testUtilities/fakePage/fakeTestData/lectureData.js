@@ -50,7 +50,6 @@
 		idLists[i].id = '' + (i * 10 + 1);
 		idLists[i].assignmentId = '' + (i * 10 + 1);
 		idLists[i].courseId = '' + Math.ceil((i + 1) / 2);
-		console.log('idlist course id', idLists[i].courseId);
 
 		// slide id fixing
 		slides[i * 2].assignmentId = idLists[i].assignmentId;
