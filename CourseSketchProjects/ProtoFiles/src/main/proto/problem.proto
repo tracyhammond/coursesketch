@@ -23,22 +23,24 @@ message SrlProblem {
     repeated ProblemSlideHolder subgroups = 15;
     repeated QuestionAction actions = 16;
     repeated ProblemRestriction restrictions = 17;
+}
 
-    // Holds a single slide or problem and a boolean on if it is unlocked
-    message ProblemSlideHolder {
-        // the id of the item being held
-        optional string id = 1;
-        optional protobuf.srl.utils.ItemType itemType = 2;
-        oneof problemSlide {
-            SrlBankProblem problem = 3;
-            protobuf.srl.lecturedata.LectureSlide slide = 4;
-        }
-
-        optional bool unlocked = 5;
-
-        // The index of the item inside this group
-        optional int32 index = 6;
+/**
+ * Holds a problem, a boolean on if it was set as unlocked or locked, the type and the id.
+ */
+message ProblemSlideHolder {
+    // the id of the item being held
+    optional string id = 1;
+    optional protobuf.srl.utils.ItemType itemType = 2;
+    oneof problemSlide {
+        SrlBankProblem problem = 3;
+        protobuf.srl.lecturedata.LectureSlide slide = 4;
     }
+
+    optional bool unlocked = 5;
+
+    // The index of the item inside this group
+    optional int32 index = 6;
 }
 
 message QuestionAction {
