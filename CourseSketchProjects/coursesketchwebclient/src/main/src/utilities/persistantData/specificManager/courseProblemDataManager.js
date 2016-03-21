@@ -303,6 +303,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             if (courseProblemCallbackComplete) {
                 courseProblemCallbackComplete(new DatabaseException('The given id is not assigned', 'getting CourseProblem: ' + courseProblemIdList));
             }
+            return;
         }
 
         var barrier = courseProblemIdList.length;
