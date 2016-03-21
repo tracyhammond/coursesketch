@@ -14,6 +14,7 @@ import database.UserUpdateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.utils.Util;
@@ -218,7 +219,7 @@ public final class CourseProblemManager {
         exactProblem.setId(problemId);
 
         if (cursor.containsField(DatabaseStringConstants.PROBLEM_LIST)) {
-            final List<SrlProblem.ProblemSlideHolder> problemSlideHolderList = createProblemSlideHolderList(authenticator, dbs, authId,
+            final List<Problem.ProblemSlideHolder> problemSlideHolderList = createProblemSlideHolderList(authenticator, dbs, authId,
                     exactProblem.getCourseId(), checkTime,
                     (List<DBObject>) cursor.get(DatabaseStringConstants.PROBLEM_LIST));
             exactProblem.addAllSubgroups(problemSlideHolderList);
@@ -303,16 +304,16 @@ public final class CourseProblemManager {
     }
 
     /**
-     * Creates a mongo object query for the list of {@link protobuf.srl.school.Problem.SrlProblem.ProblemSlideHolder}.
+     * Creates a mongo object query for the list of {@link protobuf.srl.school.Problem.ProblemSlideHolder}.
      * @param holder
      *      The list of problems that are being inserted into the database.
      * @return
      *      A mongo object that represents the list passed in.
      * @throws DatabaseAccessException Thrown if there are problems creating the list.
      */
-    private static DBObject createProblemHolderList(final List<SrlProblem.ProblemSlideHolder> holder) throws DatabaseAccessException {
+    private static DBObject createProblemHolderList(final List<Problem.ProblemSlideHolder> holder) throws DatabaseAccessException {
         final BasicDBList basicDBList = new BasicDBList();
-        for (SrlProblem.ProblemSlideHolder problemSlideHolder: holder) {
+        for (Problem.ProblemSlideHolder problemSlideHolder: holder) {
             try {
                 basicDBList.add(createSlideProblemHolderQuery(problemSlideHolder.getId(),
                         problemSlideHolder.getItemType(), problemSlideHolder.getUnlocked()));
@@ -368,9 +369,9 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    static List<SrlProblem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final DB database, final String authId,
+    static List<Problem.ProblemSlideHolder> createProblemSlideHolderList(final Authenticator authenticator, final DB database, final String authId,
             final String courseId, final long checkTime, final List<DBObject> slideObjects) throws AuthenticationException, DatabaseAccessException {
-        final List<SrlProblem.ProblemSlideHolder> list = new ArrayList<>();
+        final List<Problem.ProblemSlideHolder> list = new ArrayList<>();
         for (int i = 0; i < slideObjects.size(); i++) {
             final DBObject dbObject = slideObjects.get(i);
             list.add(createProblemSlideHolder(authenticator, database, authId, courseId, checkTime, dbObject, i));
@@ -401,10 +402,10 @@ public final class CourseProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there is data that is missing.
      */
-    private static SrlProblem.ProblemSlideHolder createProblemSlideHolder(final Authenticator authenticator, final DB database,
+    private static Problem.ProblemSlideHolder createProblemSlideHolder(final Authenticator authenticator, final DB database,
             final String authId, final String courseId, final long checkTime, final DBObject data, final int index)
             throws AuthenticationException, DatabaseAccessException {
-        final SrlProblem.ProblemSlideHolder.Builder holder = SrlProblem.ProblemSlideHolder.newBuilder();
+        final Problem.ProblemSlideHolder.Builder holder = Problem.ProblemSlideHolder.newBuilder();
         holder.setIndex(index);
 
         if (!(Boolean) data.get(DatabaseStringConstants.IS_UNLOCKED)) {

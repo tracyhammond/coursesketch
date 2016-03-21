@@ -28,6 +28,7 @@ import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
+import protobuf.srl.school.Problem;
 import protobuf.srl.utils.Util;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
@@ -382,7 +383,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, authId, problem);
 
         if (problem.getSubgroupsCount() > 0) {
-            for (SrlProblem.ProblemSlideHolder holder : problem.getSubgroupsList()) {
+            for (Problem.ProblemSlideHolder holder : problem.getSubgroupsList()) {
                 if (holder.getItemType() == Util.ItemType.BANK_PROBLEM) {
                     putCourseInBankProblem(authId, problem.getCourseId(), holder.getId(), null);
                 }
@@ -450,7 +451,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         CourseProblemManager.mongoUpdateCourseProblem(auth, database, authId, srlProblem.getId(), srlProblem);
 
         if (srlProblem.getSubgroupsCount() > 0) {
-            for (SrlProblem.ProblemSlideHolder holder : srlProblem.getSubgroupsList()) {
+            for (Problem.ProblemSlideHolder holder : srlProblem.getSubgroupsList()) {
                 if (holder.getItemType() == Util.ItemType.BANK_PROBLEM) {
                     putCourseInBankProblem(authId, srlProblem.getCourseId(), holder.getId(), null);
                 }
