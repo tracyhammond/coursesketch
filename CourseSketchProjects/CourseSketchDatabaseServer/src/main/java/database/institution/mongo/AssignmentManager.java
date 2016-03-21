@@ -376,9 +376,17 @@ public final class AssignmentManager {
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject cursor) {
         exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
         exactAssignment.setName((String) cursor.get(NAME));
-        exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
-        exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
-        exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
+        if (cursor.containsField(ASSIGNMENT_TYPE)) {
+            exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
+        }
+        if (cursor.containsField(NAVIGATION_TYPE)) {
+            exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
+        }
+        if (cursor.containsField(ASSIGNMENT_CATEGORY)) {
+            exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
+        } else {
+            exactAssignment.setAssignmentCatagory(DatabaseStringConstants.HOMEWORK_CATEGORY);
+        }
         exactAssignment.setDescription((String) cursor.get(DESCRIPTION));
         if (cursor.containsField(GRADE_WEIGHT)) {
             exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
