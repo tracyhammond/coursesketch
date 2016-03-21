@@ -151,7 +151,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         // If assignment is random, ignore the index and choose a random assignment.
         var assignmentType = this.getAssignmentType();
         var navigationType = this.getNavigationType();
-        if (isRandomNavigation(assignmentType, navigationType) ) {
+        if (isRandomNavigation(assignmentType, navigationType)) {
             //Pull problems at random for Game
             var numberOfQuestions = getProblemListSize();
             var randomNumber = Math.random();
@@ -182,8 +182,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     /**
      * Returns true if navigation is random.
      *
-     * @param assignmentType The {@link AssignmentType}
-     * @param navigationType The {@link NavigationType}
+     * @param {AssignmentType} assignmentType The {@link AssignmentType}
+     * @param {NavigationType} navigationType The {@link NavigationType}
      */
     function isRandomNavigation(assignmentType, navigationType) {
         return navigationType === CourseSketch.prutil.NavigationType.RANDOM ||
