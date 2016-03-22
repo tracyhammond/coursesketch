@@ -157,8 +157,8 @@ public final class AssignmentManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
@@ -346,14 +346,12 @@ public final class AssignmentManager {
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
-
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
 
         final BasicDBObject updateObj = new BasicDBObject();
 
@@ -462,14 +460,13 @@ public final class AssignmentManager {
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
+    static boolean mongoInsertProblemGroupIntoAssignment(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));;
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
-        final DBCollection courses = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
         final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
-        courses.update(cursor, new BasicDBObject("$addToSet", updateObj));
+        assignmentCollection.update(cursor, new BasicDBObject("$addToSet", updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         return true;
@@ -492,12 +489,12 @@ public final class AssignmentManager {
     static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
         final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.ASSIGNMENT), new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
-        final DBCollection assignments = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
 
         final BasicDBObject updateQuery = new BasicDBObject(); // MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: ", updateQuery);
-        assignments.update(corsor, updateQuery);
+        assignmentCollection.update(corsor, updateQuery);
     }
 
     /**

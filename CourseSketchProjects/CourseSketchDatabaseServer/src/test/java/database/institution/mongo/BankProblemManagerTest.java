@@ -105,8 +105,8 @@ public class BankProblemManagerTest {
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
-        final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
+        final DBCollection bankProblemCollection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject mongoBankProblem = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
 
         Assert.assertEquals(mongoBankProblem.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
@@ -125,8 +125,8 @@ public class BankProblemManagerTest {
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(problemBankId));
+        final DBCollection bankProblemCollection = db.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject cursor = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
 
         Assert.assertNotNull(cursor);
     }

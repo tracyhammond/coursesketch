@@ -121,8 +121,8 @@ public final class BankProblemManager {
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
-        final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
+        final DBCollection bankProblemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject mongoBankProblem = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
         if (mongoBankProblem == null) {
             throw new DatabaseAccessException("bank problem can not be found with id: " + problemBankId);
         }
@@ -214,8 +214,8 @@ public final class BankProblemManager {
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(problemBankId));
+        final DBCollection bankProblemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject cursor = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Bank Problem was not found with the following ID: " + problemBankId);
@@ -360,8 +360,8 @@ public final class BankProblemManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
             final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(bankProblemId));
+        final DBCollection bankProblemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBObject cursor = bankProblemCollection.findOne(convertStringToObjectId(bankProblemId));
         if (cursor == null) {
             throw new DatabaseAccessException("BankProblem was not found with the following ID " + bankProblemId);
         }
