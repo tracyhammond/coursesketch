@@ -193,8 +193,8 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject mongoAssignment = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);

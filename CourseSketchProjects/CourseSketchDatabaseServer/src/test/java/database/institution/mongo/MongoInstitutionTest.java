@@ -218,8 +218,8 @@ public class MongoInstitutionTest {
 
         String problemBankId = institution.insertBankProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, bankProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
-        final DBObject mongoBankProblem = collection.findOne(convertStringToObjectId(problemBankId));
+        final DBCollection bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
+        final DBObject mongoBankProblem = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
 
         Assert.assertTrue(mongoBankProblem.containsField(REGISTRATION_KEY));
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
@@ -246,8 +246,8 @@ public class MongoInstitutionTest {
 
         String courseId = institution.insertCourse(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultCourse.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
-        final DBObject mongoCourse = collection.findOne(convertStringToObjectId(courseId));
+        final DBCollection courseCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        final DBObject mongoCourse = courseCollection.findOne(convertStringToObjectId(courseId));
 
         Assert.assertTrue(mongoCourse.containsField(REGISTRATION_KEY));
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.NAME), VALID_NAME);
@@ -279,8 +279,8 @@ public class MongoInstitutionTest {
 
         assignmentId = institution.insertAssignment(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultAssignment.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject mongoAssignment = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
@@ -312,8 +312,8 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
+        final DBCollection courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = courseProblemCollection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
         final Iterable<DBObject> list = (Iterable<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
@@ -348,8 +348,8 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
+        final DBCollection courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = courseProblemCollection.findOne(convertStringToObjectId(courseProblemId));
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
         final Iterable<DBObject> list = (Iterable<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);

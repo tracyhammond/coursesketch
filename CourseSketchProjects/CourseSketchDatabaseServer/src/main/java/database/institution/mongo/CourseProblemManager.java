@@ -143,7 +143,7 @@ public final class CourseProblemManager {
         final String selfId = query.get(SELF_ID).toString();
 
         // inserts the id into the previous the course
-        AssignmentManager.mongoInsert(dbs, problem.getAssignmentId(), selfId);
+        AssignmentManager.mongoInsertProblemGroupIntoAssignment(dbs, problem.getAssignmentId(), selfId);
 
         return selfId;
     }
@@ -172,8 +172,8 @@ public final class CourseProblemManager {
     public static SrlProblem mongoGetCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
 
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(problemId));
+        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = courseProblemCollection.findOne(convertStringToObjectId(problemId));
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID " + problemId);
         }
@@ -249,8 +249,8 @@ public final class CourseProblemManager {
     public static boolean mongoUpdateCourseProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemId,
             final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject cursor = problemCollection.findOne(convertStringToObjectId(problemId));
+        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = courseProblemCollection.findOne(convertStringToObjectId(problemId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Course problem was not found with the following ID: " + problemId);
@@ -297,7 +297,7 @@ public final class CourseProblemManager {
             }
             */
 
-            problemCollection.update(cursor, setData);
+            courseProblemCollection.update(cursor, setData);
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
         return true;
@@ -503,8 +503,8 @@ public final class CourseProblemManager {
     public static boolean mongoInsertSlideIntoSlideGroup(final Authenticator authenticator, final DB dbs, final String authId,
             final String assignmentId, final String problemGroupId, final String slideId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
+        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = courseProblemCollection.findOne(convertStringToObjectId(problemGroupId));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
@@ -520,7 +520,7 @@ public final class CourseProblemManager {
 
         final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
                 createSlideProblemHolderQuery(slideId, Util.ItemType.SLIDE, unlocked));
-        collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+        courseProblemCollection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
         return true;
@@ -549,12 +549,12 @@ public final class CourseProblemManager {
     private static boolean mongoInsertBankProblemIntoProblemGroup(final DB dbs, final String assignmentId, final String problemGroupId,
             final String bankProblemId, final boolean unlocked)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(problemGroupId));
+        final DBCollection courseProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject cursor = courseProblemCollection.findOne(convertStringToObjectId(problemGroupId));
 
         final DBObject updateObj = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
                 createSlideProblemHolderQuery(bankProblemId, Util.ItemType.BANK_PROBLEM, unlocked));
-        collection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+        courseProblemCollection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.LECTURE_CLASSIFICATION);
         return true;
@@ -582,5 +582,6 @@ public final class CourseProblemManager {
         return new BasicDBObject(DatabaseStringConstants.ITEM_ID, itemId)
                 .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, itemType.getNumber())
                 .append(IS_UNLOCKED, isUnlocked);
+
     }
 }
