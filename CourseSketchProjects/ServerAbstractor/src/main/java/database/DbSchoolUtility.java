@@ -39,10 +39,10 @@ public final class DbSchoolUtility {
             return getCollectionFromType(type);
         }
         switch (type) {
-            case COURSE: return DatabaseStringConstants.COURSE_COLLECTION;
-            case ASSIGNMENT: return DatabaseStringConstants.ASSIGNMENT_COLLECTION;
-            case COURSE_PROBLEM: return DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
-            case BANK_PROBLEM: return DatabaseStringConstants.PROBLEM_BANK_COLLECTION;
+            case COURSE: return null;
+            case ASSIGNMENT: return null;
+            case COURSE_PROBLEM: return null;
+            case BANK_PROBLEM: return null;
             case LECTURE: return DatabaseStringConstants.LECTURE_COLLECTION;
             default: return "NO_COLLECTION";
         }

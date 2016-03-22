@@ -5,8 +5,8 @@ import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -27,6 +27,8 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -143,8 +145,8 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBRef myDbRef = new DBRef(db, DbSchoolUtility.getCollectionFromType(School.ItemType.ASSIGNMENT, true), new ObjectId(assignmentId));
-        final DBObject mongoAssignment = myDbRef.fetch();
+        final DBCollection assignmentCollection = db.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject mongoAssignment = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);

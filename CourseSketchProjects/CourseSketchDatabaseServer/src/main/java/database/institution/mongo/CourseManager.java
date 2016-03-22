@@ -33,7 +33,6 @@ import static database.DatabaseStringConstants.ADMIN_GROUP_ID;
 import static database.DatabaseStringConstants.ASSIGNMENT_LIST;
 import static database.DatabaseStringConstants.CLOSE_DATE;
 import static database.DatabaseStringConstants.COURSE_ACCESS;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_SEMESTER;
 import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.IMAGE;
@@ -47,6 +46,7 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.USERS;
 import static database.DatabaseStringConstants.USER_GROUP_ID;
+import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
@@ -77,7 +77,7 @@ public final class CourseManager {
      * @return The id of the course that was inserted.
      */
     static String mongoInsertCourse(final DB dbs, final SrlCourse course) {
-        final DBCollection courseCollection = dbs.getCollection(COURSE_COLLECTION);
+        final DBCollection courseCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
 
         final BasicDBObject query = new BasicDBObject(DESCRIPTION, course.getDescription()).append(NAME, course.getName())
                 .append(COURSE_ACCESS, course.getAccess().getNumber()).append(COURSE_SEMESTER, course.getSemester())
@@ -121,8 +121,9 @@ public final class CourseManager {
     static SrlCourse mongoGetCourse(final Authenticator authenticator, final DB dbs, final String authId, final String courseId,
             final long checkTime)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection courseCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject cursor = courseCollection.findOne(convertStringToObjectId(courseId));
+
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
         }
@@ -221,15 +222,14 @@ public final class CourseManager {
     static boolean mongoUpdateCourse(final Authenticator authenticator, final DB dbs, final String authId, final String courseId,
             final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection courseCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject cursor = courseCollection.findOne(convertStringToObjectId(courseId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID: " + courseId);
         }
 
         final BasicDBObject updateObj = new BasicDBObject();
-        final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -292,7 +292,7 @@ public final class CourseManager {
 
         // get user list send updates
         if (update) {
-            courses.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            courseCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
         }
         return true;
@@ -319,16 +319,15 @@ public final class CourseManager {
      */
     static boolean mongoInsertAssignmentIntoCourse(final DB dbs, final String courseId, final String assignmentId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
-        final DBObject corsor = myDbRef.fetch();
+        final DBCollection courseCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject cursor = courseCollection.findOne(convertStringToObjectId(courseId));
+
         DBObject updateObj = null;
-        final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
         updateObj = new BasicDBObject(ASSIGNMENT_LIST, assignmentId);
-        courses.update(corsor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+        courseCollection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
-        UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
+        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
         return true;
-
     }
 
     /**
@@ -351,12 +350,12 @@ public final class CourseManager {
      */
     static boolean mongoInsertLectureIntoCourse(final DB dbs, final String courseId, final String lectureId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, convertStringToObjectId(courseId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection courseCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject cursor = courseCollection.findOne(convertStringToObjectId(courseId));
+
         DBObject updateObj = null;
-        final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
         updateObj = new BasicDBObject(LECTURE_LIST, lectureId);
-        courses.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
+        courseCollection.update(cursor, new BasicDBObject(ADD_SET_COMMAND, updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), courseId, UserUpdateHandler.COURSE_CLASSIFICATION);
         return true;
@@ -372,7 +371,7 @@ public final class CourseManager {
      * the database.
      */
     public static List<SrlCourse> mongoGetAllPublicCourses(final DB dbs) {
-        final DBCollection courseTable = dbs.getCollection(COURSE_COLLECTION);
+        final DBCollection courseTable = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
 
         final List<SrlCourse> resultList = new ArrayList<SrlCourse>();
 
@@ -426,13 +425,13 @@ public final class CourseManager {
      */
     static void mongoInsertDefaultGroupId(final DB dbs, final String courseId, final String userGroupId, final String modGroupId,
             final String adminGroupId) {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.COURSE), new ObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
-        final DBCollection courses = dbs.getCollection(COURSE_COLLECTION);
+        final DBCollection courseCollection = dbs.getCollection(getCollectionFromType(School.ItemType.COURSE));
         final BasicDBObject listQueries = new BasicDBObject(ADMIN_GROUP_ID, adminGroupId).append(MOD_GROUP_ID, modGroupId).append(USER_GROUP_ID,
                 userGroupId);
         final DBObject courseQuery = new BasicDBObject(SET_COMMAND, listQueries);
-        courses.update(corsor, courseQuery);
+        courseCollection.update(corsor, courseQuery);
     }
 
     /**
@@ -449,7 +448,7 @@ public final class CourseManager {
      * @return a list of usergroups.
      */
     static List<String>[] mongoGetDefaultGroupList(final DB dbs, final String courseId) {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.COURSE), new ObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
         final ArrayList<String>[] returnValue = new ArrayList[PERMISSION_LEVELS];
         returnValue[0] = (ArrayList) corsor.get(ADMIN);
@@ -472,7 +471,7 @@ public final class CourseManager {
      * @return a list of user group ids.
      */
     static String[] mongoGetDefaultGroupId(final DB dbs, final String courseId) {
-        final DBRef myDbRef = new DBRef(dbs, COURSE_COLLECTION, new ObjectId(courseId));
+        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.COURSE), new ObjectId(courseId));
         final DBObject corsor = myDbRef.fetch();
         final String[] returnValue = new String[PERMISSION_LEVELS];
         returnValue[0] = corsor.get(ADMIN_GROUP_ID).toString();
@@ -503,8 +502,8 @@ public final class CourseManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database, final String authId, final String courseId,
             final boolean checkTeacher)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(database, COURSE_COLLECTION, convertStringToObjectId(courseId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection courseCollection = database.getCollection(getCollectionFromType(School.ItemType.COURSE));
+        final DBObject cursor = courseCollection.findOne(convertStringToObjectId(courseId));
         if (cursor == null) {
             throw new DatabaseAccessException("Course was not found with the following ID " + courseId);
         }

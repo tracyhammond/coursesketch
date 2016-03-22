@@ -26,7 +26,6 @@ import java.util.List;
 
 import static database.DatabaseStringConstants.ACCESS_DATE;
 import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
 import static database.DatabaseStringConstants.ASSIGNMENT_OTHER_TYPE;
 import static database.DatabaseStringConstants.ASSIGNMENT_RESOURCES;
 import static database.DatabaseStringConstants.ASSIGNMENT_TYPE;
@@ -48,6 +47,7 @@ import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
+import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
@@ -89,7 +89,7 @@ public final class AssignmentManager {
      */
     public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String authId, final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -157,8 +157,8 @@ public final class AssignmentManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
@@ -346,14 +346,12 @@ public final class AssignmentManager {
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
-        final DBObject cursor = myDbRef.fetch();
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
-
-        final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
 
         final BasicDBObject updateObj = new BasicDBObject();
 
@@ -462,15 +460,13 @@ public final class AssignmentManager {
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
+    static boolean mongoInsertProblemGroupIntoAssignment(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
-        final DBObject cursor = myDbRef.fetch();
-
-        final DBCollection courses = dbs.getCollection(ASSIGNMENT_COLLECTION);
         final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
-        courses.update(cursor, new BasicDBObject("$addToSet", updateObj));
+        assignmentCollection.update(cursor, new BasicDBObject("$addToSet", updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         return true;
@@ -491,14 +487,14 @@ public final class AssignmentManager {
      */
     // package-private
     static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.ASSIGNMENT), new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
-        final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(School.ItemType.ASSIGNMENT));
 
         final BasicDBObject updateQuery = new BasicDBObject(); // MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
 
         LOG.info("Updated Query: ", updateQuery);
-        assignments.update(corsor, updateQuery);
+        assignmentCollection.update(corsor, updateQuery);
     }
 
     /**
@@ -515,7 +511,7 @@ public final class AssignmentManager {
      * @return A list of id groups.
      */
     static List<String>[] mongoGetDefaultGroupId(final DB dbs, final String assignmentId) {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, getCollectionFromType(School.ItemType.ASSIGNMENT), new ObjectId(assignmentId));
         final DBObject corsor = myDbRef.fetch();
         final ArrayList<String>[] returnValue = new ArrayList[PERMISSION_LEVELS];
         returnValue[0] = (ArrayList) corsor.get(ADMIN);

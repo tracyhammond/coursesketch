@@ -71,6 +71,7 @@ enum ItemType {
     COURSE_PROBLEM = 2;
     BANK_PROBLEM = 3;
     LECTURE = 4;
+    SLIDE = 5;
 }
 
 message SrlProblem {
