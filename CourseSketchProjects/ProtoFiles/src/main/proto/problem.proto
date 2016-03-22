@@ -27,6 +27,8 @@ message SrlProblem {
 
 /**
  * Holds a problem, a boolean on if it was set as unlocked or locked, the type and the id.
+ *
+ * If the type is an assignment then that assignment is substitued in.
  */
 message ProblemSlideHolder {
     // the id of the item being held
