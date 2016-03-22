@@ -226,7 +226,6 @@ public final class BankProblemManager {
                 .build();
         final AuthenticationResponder responder = authenticator
                 .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
-        final DBCollection problemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
 
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -289,7 +288,7 @@ public final class BankProblemManager {
         }
 
         if (update) {
-            problemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            bankProblemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             final List<String> users = (List) cursor.get(USERS);
             for (int i = 0; i < users.size(); i++) {
                 UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
@@ -328,8 +327,8 @@ public final class BankProblemManager {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final DBCollection problemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
-        final DBCursor dbCursor = problemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
+        final DBCollection bankProblemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCursor dbCursor = bankProblemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
         final List<SrlBankProblem> results = new ArrayList<>();
         while (dbCursor.hasNext()) {
             final DBObject dbObject = dbCursor.next();

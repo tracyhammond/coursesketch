@@ -15,7 +15,7 @@
         </rollingPolicy>
     </appender>
     <logger name="com.googlecode.protobuf.pro.duplex.timeout.TimeoutChecker" level="INFO" />
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="file"/>
     </root>
