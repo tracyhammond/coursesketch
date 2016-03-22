@@ -34,7 +34,7 @@
      *
      * @param {List<String>} assignmentList List of assignment IDs.
      * @param {List<ProtoGrade>} gradeList List of grades from the server.
-     * @param {Map<String:String>} idToNameMap Map of key: studentId and value: username
+     * @param {Map<String, String>} idToNameMap Map of key: studentId and value: username
      * @param {HTMLTable} table The grade table on the webpage.
      */
     CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, idToNameMap, table) {
