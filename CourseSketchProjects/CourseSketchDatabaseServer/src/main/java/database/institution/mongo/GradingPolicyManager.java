@@ -172,8 +172,8 @@ public final class GradingPolicyManager {
      */
     static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(GRADING_POLICY_COLLECTION);
-        final DBObject policyObject = collection.findOne(convertStringToObjectId(courseId));
+        final DBCollection gradePolicyCollection = dbs.getCollection(GRADING_POLICY_COLLECTION);
+        final DBObject policyObject = gradePolicyCollection.findOne(convertStringToObjectId(courseId));
 
         if (policyObject == null) {
             throw new DatabaseAccessException("Grading policy was not found for course with ID " + courseId);
