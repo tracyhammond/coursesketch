@@ -27,13 +27,13 @@
  *              If the visited stack is not empty you go in an and start at the end of that subgroup.
  *
  * A subgroup part can be an assignment which would be a nested assignment.
- * @param {UUID} assignmentId the id that the problem is created with.
+ * @param {UUID} startingAssignmentId the id that the problem is created with.
  * @param {Number} preferredIndex The starting index to start problems at.
  * @param {Boolean} navigateAtSubgroupLevel if True then the navigation happens at the subgroup level and not the subgroupPart level.
  *                      Not setting this gives it a value of false.
  * @class AssignmentNavigator
  */
-function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLevel) {
+function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSubgroupLevel) {
 
     /**
      * Controls weather navigation happens at the subgroup level (SrlProblem) or the subgroup part level (SrlBankProblem, SrlSlide).
@@ -45,7 +45,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * The current id of the assignment that is being navigated.
      * @type {UUID}
      */
-    var currentAssignmentId = assignmentId;
+    var currentAssignmentId = startingAssignmentId;
 
     /**
      * The current assignment object that is being navigated.
@@ -77,7 +77,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * Holder for current subgroup part
      * @type {ProblemSlideHolder}
      */
-    var currentSubgroupPartHolder;
+    var currentSubgroupPartHolder = undefined;
 
     /**
      * A list of callbacks that are called when the navigation changes problem part / problem or slide.
@@ -134,8 +134,14 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
     var assignmentIdStack = [];
 
     /**
-     * The stack of indexes that the assignments navigate to once an embedded assignment has been completed
-     * @type {Array<Number>}
+     * The stack of indexes that the assignments navigate to once an nested assignment has been completed.
+     *
+     * Each item contains an AssignmentLocation which is the following format:
+     * {
+     *      part: Number,
+     *      group: Number
+     * }
+     * @type {Array<{group: Number, part: Number}>}
      */
     var indicesStack = [];
 
@@ -187,7 +193,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * Changes the problem to the current index.
      *
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.refresh = function() {
         changeSubgroup(currentIndex);
@@ -196,19 +202,18 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
     /**
      * @return {Boolean} true if the problems have been loaded into memory.
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.isDataLoaded = function() {
         return dataLoaded;
     };
-
 
     /**
      * Sets the knowledge of if the navigator ui has been loaded.
      *
      * @param {Boolean} value true if the ui has been loaded.
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.setUiLoaded = function(value) {
         uiLoaded = value;
@@ -216,7 +221,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
 
     /**
      * @returns {Number} the number of subgroups in the list.
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.getSubgroupSize = function getSubgroupSize() {
         return subgroupList.length;
@@ -224,7 +229,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
 
     /**
      * @returns {BankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     function getCurrentInfo() {
         return currentSubgroupPart;
@@ -236,7 +241,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * This way the browser is not locked up by callbacks.
      * @instance
      * @access private
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     function callBacker(scopedIndex) {
         setTimeout(function() {
@@ -245,7 +250,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
     }
 
     /**
-     * Returns true if navigation is random.
+     * Returns {Boolean} True if navigation is random.
      */
     function isRandomNavigation() {
         var assignmentType = currentAssignment.assignmentType;
@@ -255,11 +260,40 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
     }
 
     /**
-     * @returns {Number} the number of problems in the list.
+     * @return {Boolean} True if the assignment is able to be looped.
+     */
+    function isLoopable() {
+        return currentAssignment.navigationType === CourseSketch.prutil.ItemType.LOOPING;
+    }
+
+    /**
+     * Loads an assignment given the assignmentId and sets it as the new current assignment.
+     *
+     * This also sets the subgroupList.
+     * Calls the callback after the local data is set.
+     * @param {UUID} assignmentId
+     * @param {Function} [callback] A callback function called to set the 
+     */
+    function loadAssignment(assignmentId, callback) {
+        function setData(assignment) {
+            currentAssignment = assignment;
+            subgroupList = currentAssignment.problemGroups;
+            currentAssignmentId = assignment.id;
+            if (!isUndefined(callback)) {
+                callback();
+            }
+        }
+        CourseSketch.dataManager.getAssignment(assignmentId, setData, setData);
+    }
+
+    /**
+     * Reloads the assignment from the id and assigns it to the currentAssignment.
+     *
+     * @instance
      * @memberof ProblemNavigator
      */
-    this.getProblemListSize = function getSubgroupListSize() {
-        return subgroupList.size();
+    this.reloadAssignment = function() {
+        loadAssignment(currentAssignmentId);
     };
 
     /*******************************
@@ -271,7 +305,7 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      *
      * @param {Number} index {Number} the problem that we want to switch to.
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.goToSubgroup = function goToSubgroup(index) {
         changeSubgroup(index);
@@ -281,12 +315,13 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * Attempts to change to the next problem or slide.
      *
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.gotoNext = function() {
         if (isSubgroupNavigation) {
             changeSubgroup(currentIndex + 1);
         } else {
+            goToNextSubgroupPart();
         }
     };
 
@@ -294,12 +329,13 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * Attempts to change to the previous problem or slide.
      *
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.gotoPrevious = function() {
         if (isSubgroupNavigation) {
             changeSubgroup(currentIndex - 1);
         } else {
+            goToPreviousSubgroupPart();
         }
     };
 
@@ -315,6 +351,46 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
     }
 
     /**
+     * Creates an assignment location
+     * @param {Number} subGroupIndex
+     * @param {Number} partIndex
+     * @returns {{group: Number, part: Number}}
+     */
+    function createAssignmentLocation(subGroupIndex, partIndex) {
+        return {
+            'group': subGroupIndex,
+            'part': partIndex
+        };
+    }
+
+
+
+    /**
+     * Navigate from an nested assignment to the one that contains it.
+     */
+    function navigateFromNested() {
+        var nextAssignmentLocation = indicesStack.pop();
+        var nextAssignmentId = assignmentIdStack.pop();
+        while (nextAssignmentLocation.group === -1 && indicesStack.length > 0) {
+            nextAssignmentLocation = indicesStack.pop();
+            nextAssignmentId = assignmentIdStack.pop();
+        }
+    }
+
+    function navigateToPreviousNested() {
+    }
+
+    /**
+     * Loads a nested assignment.
+     *
+     * Pushes the startingAssignmentId onto the stack and pushes the next location onto the indices stack.
+     * @param {String} assignmentId
+     */
+    function loadNestedAssignment(assignmentId) {
+
+    }
+
+    /**
      * Changes the problem to the given index.
      *
      * @param {Number} index the index we want to switch to.
@@ -324,16 +400,16 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
      * Order of the callbacks is not guaranteed.
      * @instance
      * @access private
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     function changeSubgroup(index) {
         if (index < 0 || index >= subgroupList.length && !isLoopable() && !isRandomNavigation()) {
             if (index < 0 && visitedAssignmentIdStack.length > 0) {
-                navigateToPreviousStack();
+                navigateToPreviousNested();
                 return;
             }
             if (index >= subgroupList.length && assignmentIdStack.length > 0) {
-                navigateToNextStack();
+                navigateFromNested();
                 return;
             }
             if (index >= subgroupList.length) {
@@ -350,12 +426,11 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
 
             index = randomNumber % numberOfQuestions;
         } else if (isLoopable()) {
-                if (index < 0) {
-                    index = problemList.length - 1;
-                }
-                if (index >= problemList.length) {
-                    index = 0;
-                }
+            if (index < 0) {
+                index = problemList.length - 1;
+            }
+            if (index >= problemList.length) {
+                index = 0;
             }
         }
         currentIndex = index;
@@ -417,35 +492,34 @@ function AssignmentNavigator(assignmentId, preferredIndex, navigateAtSubgroupLev
     }
 
     /**
-     * Goes to the next slide.
+     * Goes to the next slide or problem part.
      *
      * Navigation rules are at the top of this file!
+     * @memberof AssignmentNavigator
      */
     function goToNextSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex >= subgroupPartLength) {
             currentSubgroupPartIndex = 0;
-            goToNextSubgroup();
+            changeSubgroup(currentIndex + 1);
             return;
         }
         gotoSubgroupPart(currentSubgroupPartIndex + 1);
+    }
 
-        /*
-        if (idMessage.nav.nextSlide === -1 && (idMessage.nav.nextLectureId === null || isUndefined(idMessage.nav.nextLectureId))) {
-            if (indicesStack.length === 0) {
-                isDone = true;
-                callCallback();
-                return;
-            } else {
-                popUp();
-            }
-        } else {
-            if (idMessage.nav.nextLectureId !== null && !isUndefined(idMessage.nav.nextLectureId)) {
-                loadLecture(idMessage.nav.nextLectureId, idMessage.nav.nextSlide);
-            } else {
-                loadSlide(currentLecture.idList[idMessage.nav.nextSlide].id, idMessage.nav.nextSlide);
-            }
+    /**
+     * Goes to the next slide.
+     *
+     * Navigation rules are at the top of this file!
+     * @memberof AssignmentNavigator
+     */
+    function goToPreviousSubgroupPart() {
+        var subgroupPartLength = currentSubgroup.subgroups.length;
+        if (currentSubgroupPartIndex >= subgroupPartLength) {
+            currentSubgroupPartIndex = 0;
+            changeSubgroup(currentIndex - 1);
+            return;
         }
-        */
+        gotoSubgroupPart(currentSubgroupPartIndex - 1);
     }
 }
