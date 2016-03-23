@@ -4,6 +4,7 @@
 
 /**
  * A class that allows a user to register.
+ *
  * @class RegisterSystem
  */
 function RegisterSystem() {
@@ -22,6 +23,7 @@ function RegisterSystem() {
 
     /**
      * Creates a new connection object and stores it locally.
+     *
      * @param {String} location - Url to connect to.
      * @param {Boolean} encrypted - True if the connection should occur over ssl
      * @param {Boolean} attemptReconnections - True if the connection should be reattempted till success.
@@ -56,11 +58,8 @@ function RegisterSystem() {
     };
 
     /**
-     * @param {document}document
-     *            The document in which the node is being imported
-     *            to.
-     * @param {Element} templateClone
-     *            an element representing the data inside tag, its
+     * @param {document}document - The document in which the node is being imported to.
+     * @param {Element} templateClone - An element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -79,6 +78,7 @@ function RegisterSystem() {
     function setupLoginScript() {
         /**
          * Called when the server responds to an attempt to login.
+         *
          * @param {Event} evt - the event that caused the successful login
          * @param {Message} message - The protobuf message sent from the server.
          */
@@ -121,15 +121,17 @@ function RegisterSystem() {
     }
 
     /**
+     * The function used for submitting register information.
+     * Also the only difference between {@code login.js and register.js}
+     *
      * @access private
      * @memberof LoginSystem
      * @function formSubmit
-     * the function used for submitting register information.
-     * Also the only difference between login.js and register.js
      */
     function formSubmit() {
         /**
          * Called to send the login.
+         *
          * @param {String} arg1 - username
          * @param {String} arg2 - hashed password
          * @param {String} email - the users Email
@@ -177,8 +179,9 @@ function RegisterSystem() {
     }
 
     /**
-     * @function setupCallbacks
      * Setups up the callback for the register button and the lost password button.
+     *
+     * @function setupCallbacks
      */
     function setupCallbacks() {
         /**
@@ -191,8 +194,10 @@ function RegisterSystem() {
         };
     }
     /**
-     * @function setOnSuccessLogin
      * The callback is called with one parameter.
+     *
+     * @param {Function} callback - Called when login is successful.
+     * @function setOnSuccessLogin
      * @callbackParam {Connection} An instance of the connection object object.
      */
     this.setOnSuccessLogin = function(callback) {
@@ -207,15 +212,16 @@ function RegisterSystem() {
     };
 
     /**
-     * @function setCancelCallback
      * The callback is called when the register button is pressed.
+     *
+     * @param {Function} callback - Called when registration is canceled.
+     * @function setCancelCallback
      */
     this.setCancelCallback = function(callback) {
         cancelCallback = callback;
     };
     /**
-     * Removes all stored variables. so that hopefully most of this object can
-     * be garbe collected
+     * Removes all stored variables. So that hopefully most of this object can be garbage collected.
      */
     this.finalize = function() {
         connection = undefined;

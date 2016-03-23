@@ -225,7 +225,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
 
     /**
      * Stores the course ids locally in the database.
-     * @param {List<String>} idList the list of ids the user currently have in their courses.
+     * @param {List<String>} idList - the list of ids the user currently have in their courses.
      */
     function setCourseIdList(idList) {
         database.putInCourses(COURSE_LIST, idList); // no call back needed!
@@ -245,7 +245,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
          * Called when the server responds.
          *
          * @param {Event} evt - websocket event
-         * @param {ItemResult | BaseException} item The result from the server.
+         * @param {ItemResult | BaseException} item - The result from the server.
          */
         var callback = function(evt, item) {
             if (isException(item)) {

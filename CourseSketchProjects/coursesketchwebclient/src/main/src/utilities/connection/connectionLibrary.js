@@ -2,6 +2,10 @@
  * Creates a new connection to the wsUri.
  *
  * With this connection you can send information which is encoded via protobufs.
+ *
+ * @param {URL} uri - The url where the websocket server is located.
+ * @param {Boolean} encrypted - True if encryption should be usec.
+ * @param {Boolean} attemptReconnect - True if a reconnection should be attempted if connection initially failed.
  */
 function Connection(uri, encrypted, attemptReconnect) {
 
@@ -171,10 +175,17 @@ function Connection(uri, encrypted, attemptReconnect) {
     /**
      * Sets the listeners for the different functions:
      *
-     * On Open - called when the connection is open. Recieves event object.  (called after everything is set up too)
-     * On Close - called when the connection is closed. Recieves event object.
-     * On Recieve - called the client recieves a message. Recieves event object and message Object.
-     * On Error - called when an error is thrown. Recieves event object.  It may be passed an error object.
+     * <ul>
+     * <li>On Open - called when the connection is open. Recieves event object.  (called after everything is set up too)</li>
+     * <li>On Close - called when the connection is closed. Recieves event object.</li>
+     * <li>On Recieve - called the client recieves a message. Recieves event object and message Object.</li>
+     * <li>On Error - called when an error is thrown. Recieves event object.  It may be passed an error object.</li>
+     * </ul>
+     *
+     * @param {Function} open - A listener for opening the connection.
+     * @param {Function} close - A listener for closing the connection.
+     * @param {Function} message - A listener for every message received by the connection.
+     * @param {Function} error - A listener for every error caused by the connection.
      */
     this.setListeners = function(open, close, message, error) {
         onOpen = open;
@@ -268,6 +279,8 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Given a Request object (message defined in proto), send it over the wire.
      *
      * The message must be a protobuf object.
+     *
+     * @param {Request} message - The message to be sent to the server.
      */
     this.sendRequest = function(message) {
         try {
@@ -286,6 +299,8 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Only the data is the same right now.
      * The message is delayed but the function returns immediately.
      * TODO: complete the entirety of the event that can be spoofed.
+     *
+     * @param {Request} message - The message to be sent to the client pretending to be the server.
      */
     this.sendSelf = function(message) {
         setTimeout(function() {
@@ -334,7 +349,8 @@ function Connection(uri, encrypted, attemptReconnect) {
      * Computes the time difference and returns a request for the latency.
      *
      * Called when the server returns the request for the time difference.
-     * @param {Request} req - the time request
+     *
+     * @param {Request} req - The time request
      * @returns {Request} A request that specifies a request to the server to return latency.
      */
     function clientReciveTimeDiff(req) {

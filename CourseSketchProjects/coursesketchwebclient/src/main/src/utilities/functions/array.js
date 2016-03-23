@@ -14,6 +14,11 @@
 
 /**
  * Creates an ArrayException object that returns exception values.
+ *
+ * @class ArrayException
+ * @extends BaseException
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function ArrayException(message, cause) {
     this.name = 'ArrayException';
@@ -29,6 +34,8 @@ if (isUndefined(removeObjectFromArray)) {
     /**
      * Removes the object from an array.
      *
+     * @param {Array<*>} array - The array that the object is being removed from.
+     * @param {*} object - The object that is being removed from the array.
      * @return {*} the object that was removed if it exist.
      */
     function removeObjectFromArray(array, object) {
@@ -47,6 +54,8 @@ if (isUndefined(removeObjectByIndex)) {
     /**
      * Removes the object from an array.
      *
+     * @param {Array<*>} array - The array that the object is being removed from.
+     * @param {Number} index - The index at which the item is being removed.
      * @return {*} the object that was removed if it exist.
      */
     function removeObjectByIndex(array, index) {
@@ -64,6 +73,7 @@ if (isUndefined(isArray)) {
     /**
      * Checks to see if an item is an instance of an array.
      *
+     * @param {Object} object - The item that is being checked.
      * @returns {Boolean} true if it is an array, (hopefully).
      */
     function isArray(object) {

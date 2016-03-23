@@ -14,6 +14,7 @@ var CourseSketch = parent.CourseSketch;
 
     /**
      * Adds a namespace to the {@link CourseSketch} global namespace.
+     *
      * @param {String} namespaceName - The name of the namespace that is being added.
      */
     CourseSketch.addNamespace = function(namespaceName) {

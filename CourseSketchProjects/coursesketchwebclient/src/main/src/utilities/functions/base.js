@@ -1,12 +1,14 @@
 // jshint undef:false
 // jshint latedef:false
+// jscs:disable jsDoc
 
 // in case it was not defined before
 var CourseSketch = CourseSketch || {};
 
 if (typeof isUndefined === 'undefined') {
     /**
-     * Returns true if an object is not defined
+     * Returns true if an object is not defined.
+     *
      * @param {Object} object - the object that is being tested.
      * @returns {Boolean} true if the object is not defined.  (Only not defined being null will return false)
      */
@@ -71,7 +73,7 @@ if (isUndefined(isFunction)) {
     /**
      * Checks to see if the given object is a function.
      *
-     * @param {*} object Object that is being checked if it is a function.
+     * @param {*} object - Object that is being checked if it is a function.
      * @returns {Boolean} true if the input object is a function, false otherwise.
      */
     function isFunction(object) {
@@ -93,7 +95,8 @@ if (isUndefined(make2Digits)) {
     /**
      * Given a number that could be 1 or 2 digits returns a 2 digit version of that number.
      *
-     * ex: 1 -> 01, or 15 -> 15
+     * {@code ex: 1 -> 01, or 15 -> 15}
+     *
      * @param {Number} num - the number that is needed to be forced into 2 digits.
      */
     function make2Digits(num) {
@@ -119,7 +122,7 @@ if (isUndefined(getFormattedDateTime)) {
     /**
      * Creates and return a formatted date time.
      *
-     * ex: 01-18-1994 10:50PM
+     * {@code ex: 01-18-1994 10:50PM}
      *
      * @param {Date} dateTime - uses the default Date object in the browser to return.
      * @return {String} A formatted date time.
@@ -173,8 +176,8 @@ if (isUndefined(BaseException)) {
 
         /**
          * Sets the message of the Exception.
-         * @param {messageValue} messageValue
-         *          is a string that contains the description
+         *
+         * @param {messageValue} messageValue - is a string that contains the description
          *          of the the exception that occurred.
          */
         this.setMessage = function(messageValue) {
@@ -205,8 +208,8 @@ if (isUndefined(BaseException)) {
 
         /**
          * Sets the cause of baseException to the causeValue passed in.
-         * @param {causeValue} causeValue
-         *          is the cause of the exception.
+         *
+         * @param {causeValue} causeValue - Is the cause of the exception.
          */
         this.setCause = function(causeValue) {
             if (!isUndefined(causeValue)) {
@@ -242,7 +245,7 @@ if (isUndefined(isException)) {
     /**
      * Checks to see if the input is an exception.
      *
-     * @param {*} exception What we want to see is an exception.
+     * @param {*} exception - What we want to see is an exception.
      * @return {Boolean} True if the input is an exception or error. False otherwise.
      */
     function isException(exception) {
@@ -268,7 +271,7 @@ if (isUndefined(getTypeName)) {
     /**
      * Gets the name of the object.  Also gets the name of the constructor if the constructor.
      *
-     * @param {*} value The object that we want to get the type of.
+     * @param {*} value - The object that we want to get the type of.
      * @returns {String} The name of the type of the object sent in.
      */
     function getTypeName(value) {
@@ -305,6 +308,7 @@ if (isUndefined(getTypeName)) {
 if (isUndefined(loadJs)) {
     /**
      * Loads the javascript file given its src.
+     *
      * @param {String} src - the address of the script to load.
      */
     function loadJs(src) {
@@ -318,7 +322,7 @@ if (isUndefined(loadJs)) {
 
 if (isUndefined(validateFirstRun)) {
     /**
-     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides).
      * And prevents further execution of the script.  This is limited to the document it is contained in.
      *
      * @param {Script} scriptObject
@@ -354,7 +358,7 @@ if (isUndefined(validateFirstRun)) {
 
 if (isUndefined(validateFirstGlobalRun)) {
     /**
-     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides).
      * And prevents further execution of the script. This is limited to CourseSketch running.
      *
      * @param {Script} scriptObject

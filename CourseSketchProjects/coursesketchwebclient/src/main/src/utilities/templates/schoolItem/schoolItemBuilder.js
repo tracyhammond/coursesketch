@@ -54,7 +54,7 @@ function SchoolItemBuilder() {
                 /**
                  * Allows the setting of custom values.
                  *
-                 * @param {*} value The value that is wanted to be set in the school Item.
+                 * @param {*} value - The value that is wanted to be set in the school Item.
                  * @returns {SchoolItemBuilder} Returns This same object.
                  */
                 scope[setName] = function(value) {
@@ -81,7 +81,7 @@ function SchoolItemBuilder() {
     /**
      * Builds the list given the settings.
      *
-     * @param {String|Element} id the element or string of the id of the element.
+     * @param {String|Element} id - the element or string of the id of the element.
      */
     this.build = function(id) {
 

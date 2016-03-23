@@ -89,13 +89,13 @@ function Question() {
 
     /**
      * Loads slides into a slide select element.
-     * @param {List<String>} idList list of 'idsInLecture' containing the slides to load
+     * @param {List<String>} idList - list of 'idsInLecture' containing the slides to load
      * @param {Element} slideSelect - select element to load the slides into
      */
     this.loadSlides = function(idList, slideSelect) {
         /**
          * Called when lecture slides have been loaded.
-         * @param {List<SrlSlide>} slides Slides that have been loaded from the server.
+         * @param {List<SrlSlide>} slides - Slides that have been loaded from the server.
          */
         var callback = function(slides) {
             slideSelect.innerHTML = '';

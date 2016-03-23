@@ -3,19 +3,14 @@
  * Attempts to use data as a database, pulls data from the server if it does not
  * exist
  *
- * @param {String} userId
- *            The user that this database is associated with.
- * @param {AdvanceDataListener} advanceDataListener
- *            An instance of {@link AdvanceDataListener} this is used for
+ * @param {String} userId - The user that this database is associated with.
+ * @param {AdvanceDataListener} advanceDataListener - An instance of {@link AdvanceDataListener} this is used for
  *            responses to queries made by the database server
- * @param {Connection} connection
- *            The connection to the server which will handle all connections
+ * @param {Connection} connection - The connection to the server which will handle all connections
  *            relating to certain queries.
- * @param {Request} Request
- *            The class representing the Request protobuf used to get the
+ * @param {Request} Request - The class representing the Request protobuf used to get the
  *            message type.
- * @param {ByteBuffer} ByteBuffer
- *            The static instance that is used for encoding and decoding data.
+ * @param {ByteBuffer} ByteBuffer - The static instance that is used for encoding and decoding data.
  */
 function SchoolDataManager(userId, advanceDataListener, connection, Request, ByteBuffer) {
     var LAST_UPDATE_TIME = 'LAST_UPDATE_TIME';
@@ -44,7 +39,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     /**
      * Returns true if the database is ready false otherwise.
      *
-     * it is placed this far up so that it can be called even before most of the
+     * It is placed this far up so that it can be called even before most of the
      * database is set up.
      */
     this.isDatabaseReady = function() {
@@ -75,6 +70,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         /**
          * Add function for adding elements to the database.
          *
+         * @param {DataStore} store - The specific table to add the data to
+         * @param {UUID} objectId - The id of the object being added.
+         * @param {String} objectToAdd - The data of the object being added.
          * @returns {Transaction} The transaction from storing the data in the database.
          */
         var addFunction = function(store, objectId, objectToAdd) {
@@ -126,9 +124,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * retrieves all the assignments for a given course.
+     * Retrieves all the assignments for a given course.
      *
-     * The callback is called with a list of assignment objects
+     * The callback is called with a list of assignment objects.
+     *
+     * @param {UUID} courseId - The course id the assignments are being grabbed for.
+     * @param {Function} assignmentCallback - Called when the assignment is grabbed.
      */
     this.getAllAssignmentsFromCourse = function(courseId, assignmentCallback) {
         var getAssignments = this.getAssignments;
@@ -144,9 +145,12 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * retrieves all the assignments for a given course.
+     * Retrieves all the assignments for a given course.
      *
-     * The callback is called with a list of assignment objects
+     * The callback is called with a list of assignment objects.
+     *
+     * @param {UUID} assignmentId - The id of the assignment the problems belong to.
+     * @param {Function} problemCallback - Called when all of the problems are grabbed.
      */
     this.getAllProblemsFromAssignment = function(assignmentId, problemCallback) {
         var getCourseProblems = this.getCourseProblems;
@@ -159,14 +163,16 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * Polls the server for updates, after all items
+     * Polls the server for updates, after all items.
+     *
+     * @param {Function} callback - called after the updated are polled.
      */
     this.pollUpdates = function(callback) {
         /**
          * Called from the server.
          *
          * @param {Event} evt - websocket event.
-         * @param {ItemResult | BaseException} item The response from the server.
+         * @param {ItemResult | BaseException} item - The response from the server.
          */
         var updateListener = function(evt, item) {
             if (isException(item)) {
@@ -191,8 +197,10 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * Adds the ability to set and remove state objects (for the use of
-     * transitioning from one page to the next!)
+     * Adds the ability to set and remove state objects, for the use of transitioning from one page to the next!
+     *
+     * @param {*} key - Key
+     * @param {*} value - Value
      */
     this.addState = function(key, value) {
         stateMachine.set(key, value);
@@ -200,6 +208,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns the state at the given key.
+     *
      * @param {String} key - The unique identifier for the state.
      */
     this.getState = function(key) {
@@ -224,7 +233,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * Returns the current id that is being used with the database
+     * Returns the current id that is being used with the database.
      */
     this.getCurrentId = function() {
         return localUserId;
@@ -236,6 +245,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * A helper function for testing that waits for the database to be loaded before calling a callback.
+     *
      * @param {Function} callback - Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {

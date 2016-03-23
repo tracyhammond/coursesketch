@@ -71,7 +71,7 @@
             /**
              * Handles an exception or error then shows it on the client.
              *
-             * @param {BaseException|Error} exception The exception that was thrown.
+             * @param {BaseException|Error} exception - The exception that was thrown.
              */
             function showClientSideException(exception) {
                 console.log(exception);

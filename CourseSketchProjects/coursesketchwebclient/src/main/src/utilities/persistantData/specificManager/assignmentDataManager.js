@@ -381,7 +381,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
         /**
          * Ensures that the callback is only called once.
          *
-         * @param {List<Assignments>} assignmentList The assignments that were loaded.
+         * @param {List<Assignments>} assignmentList - The assignments that were loaded.
          */
         function callOnce(assignmentList) {
             if (!called) {

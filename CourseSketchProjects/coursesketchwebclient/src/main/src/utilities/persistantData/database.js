@@ -3,7 +3,12 @@
  * opened.
  *
  * It will also create all the functions needed for the specific database.
+ *
  * @class ProtoDatabase
+ *
+ * @param {String} databaseName - The name of the database.
+ * @param {String} version - The version of the database.  (Must always be increasing)
+ * @param {Function} openCallback - called when the database is ready.
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     CourseSketch = CourseSketch || {};
@@ -50,13 +55,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * }
      * </code>
      *
-     * @param {String} tableName
-     *            The name of the specific table to be created.
-     * @param {String} keyValue
-     *            This is the key for that specific table
-     * @param {Function} addingFunction
-     *            Takes in a store and then creates and returns a request see
-     *            sample above.
+     * @param {String} tableName - The name of the specific table to be created.
+     * @param {String} keyValue - This is the key for that specific table
+     * @param {Function} addingFunction - Takes in a store and then creates and returns a request see sample above.
      */
     this.createTable = function(tableName, keyValue, addingFunction) {
         return {
@@ -138,7 +139,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * creates a bunch of functions for the table which are created upon successful database creation.
+     * Creates a bunch of functions for the table which are created upon successful database creation.
      */
     function createTableFunctions() {
         if (upgradeTables === null) {
@@ -211,6 +212,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.delete(objectId);
                     /**
                      * Called when the transaction is complete.
+                     *
                      * @param {Event} e - A success event.
                      */
                     trans.oncomplete = function(e) {
@@ -221,6 +223,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
+                     *
                      * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
@@ -252,6 +255,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.get(objectId);
                     /**
                      * Called when the transaction is complete.
+                     *
                      * @param {Event} e - A success event.
                      */
                     request.onsuccess = function(e) {
@@ -262,6 +266,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
+                     *
                      * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
@@ -288,6 +293,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * This is supposed to empty out the database.
      *
      * Currently does not work.
+     *
+     * @param {String} databaseName - The name of the database.
      */
     function emptyDB(databaseName) {
         try {

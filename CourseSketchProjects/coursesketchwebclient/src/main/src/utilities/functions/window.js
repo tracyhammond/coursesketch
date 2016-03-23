@@ -1,6 +1,7 @@
 /* depends on base.js */
 // jshint undef:false
 // jshint latedef:false
+// jscs:disable jsDoc
 
 /**
  **************************************************************
