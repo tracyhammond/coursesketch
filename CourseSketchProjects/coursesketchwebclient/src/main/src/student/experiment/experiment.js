@@ -26,6 +26,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Loads the problem, called every time a user navigates to a different problem.
+     *
+     * @param {Navigator} navigator - The assignment navigator.
      */
     function loadProblem(navigator) {
         var problemType = navigator.getProblemType();
@@ -78,7 +80,9 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * loads the typing from the submission.
+     * Loads the typing from the submission.
+     *
+     * @param {Navigator} navigator - The assignment navigator.
      */
     function loadTyping(navigator) {
         var typingSurface = document.createElement('textarea');
@@ -103,6 +107,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
+     *
+     * @param {Navigator} navigator - The assignment navigator.
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement('sketch-surface');

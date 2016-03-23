@@ -150,6 +150,8 @@ if (isUndefined(BaseException)) {
     /**
      * @class BaseException
      * Defines the base exception class that can be extended by all other exceptions.
+     *
+     * @param {String} [optionalMessage] - The message to show for the exception.
      */
     function BaseException(optionalMessage) {
         this.name = 'BaseException';

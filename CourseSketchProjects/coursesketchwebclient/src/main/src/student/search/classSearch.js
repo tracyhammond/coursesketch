@@ -12,6 +12,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Listens for the search result and displays the result given to it.
+     *
+     * @param {List<SrlCourse>} item - The search results.
      */
     var searchCallback =  function(item) {
         var courseList = [];
