@@ -3,7 +3,7 @@
  *
  * Created by gigemjt on 5/12/15.
  *
- * @param {CourseSketchDatabase} parent
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - An object that makes sending data much easier.
  * @param {IndexedDB} parentDatabase - (Not used in this manager)
  * @param {SrlRequest} Request - A shortcut to a request
@@ -17,6 +17,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, Request, 
      *
      * The protograde specifies how you are inserting a grade.
      * The userId says who the grade is affecting.
+     *
      * @param {ProtoGrade} protoGrade - used to help create the query.  This should be similar to what you would expect it to return.
      * @param {Function} callback - called after the grade has been set.
      */
@@ -33,6 +34,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, Request, 
      * Returns a grade from the database.
      *
      * @param {ProtoGrade} protoGrade - The grade in a similar format to what you want back.
+     * @param {Function} callback - Called after the grade has been retrieved.
      */
     parent.getGrade = function(protoGrade, callback) {
         if (isUndefined(callback)) {
@@ -71,8 +73,9 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, Request, 
 
     /**
      * Gets all of the student grades.
-     * @param {String} courseId
-     * @param {Function} callback
+     *
+     * @param {String} courseId - The id of the course where the grades are being retrieved from.
+     * @param {Function} callback - Called after all of the grades are retrieved.
      */
     parent.getAllAssignmentGrades = function(courseId, callback) {
         if (isUndefined(callback)) {

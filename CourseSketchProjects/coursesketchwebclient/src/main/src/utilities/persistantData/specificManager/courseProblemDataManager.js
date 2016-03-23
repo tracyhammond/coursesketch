@@ -13,10 +13,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
     /**
      * Sets a courseProblem in local database.
      *
-     * @param {SrlCourseProblem} courseProblem
-     *                courseproblem object to set
-     * @param {Function} courseProblemCallback
-     *                function to be called after the courseProblem setting is done
+     * @param {SrlCourseProblem} courseProblem - courseproblem object to set
+     * @param {Function} courseProblemCallback - function to be called after the courseProblem setting is done
      */
     function setCourseProblem(courseProblem, courseProblemCallback) {
         parentDatabase.putInCourseProblems(courseProblem.id, courseProblem.toBase64(), function(e, request) {
@@ -48,10 +46,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
     /**
      * Gets a courseProblem from the local database.
      *
-     * @param {String} courseProblemId
-     *                ID of the courseProblem to get
-     * @param {Function} courseProblemCallback
-     *                function to be called after getting is complete, parameter
+     * @param {String} courseProblemId - ID of the courseProblem to get
+     * @param {Function} courseProblemCallback - Function to be called after getting is complete, parameter
      *                is the courseProblem object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getCourseProblemLocal(courseProblemId, courseProblemCallback) {
@@ -108,16 +104,13 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
     }
 
     /**
-     * updates a course problem in both local and server databases.
+     * Updates a course problem in both local and server databases.
      * Updates an existing course problem into the database. This courseProblem must already
      * exist.
      *
-     * @param {SrlCourseProblem} courseProblem
-     *                courseProblem object to set
-     * @param {Function} localCallback
-     *                function to be called after local courseProblem setting is done
-     * @param {Function} serverCallback
-     *                function to be called after server courseProblem setting is done
+     * @param {SrlCourseProblem} courseProblem - CourseProblem object to set
+     * @param {Function} localCallback - Function to be called after local courseProblem setting is done
+     * @param {Function} serverCallback - Function to be called after server courseProblem setting is done
      */
     function updateCourseProblem(courseProblem, localCallback, serverCallback) {
         setCourseProblem(courseProblem, function() {
@@ -140,16 +133,13 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
     parent.updateCourseProblem = updateCourseProblem;
 
     /**
-     * updates a bankProblem in both local and server databases.
+     * Updates a bankProblem in both local and server databases.
      * Updates an existing bankProblem into the database. This bankProblem must already
      * exist.
      *
-     * @param {SrlBankProblem} bankProblem
-     *                bankProblem object to set
-     * @param {Function} localCallback
-     *                function to be called after local bankProblem setting is done
-     * @param {Function} serverCallback
-     *                function to be called after server bankProblem setting is done
+     * @param {SrlBankProblem} bankProblem - BankProblem object to set
+     * @param {Function} localCallback - Function to be called after local bankProblem setting is done
+     * @param {Function} serverCallback - Function to be called after server bankProblem setting is done
      */
     function updateBankProblem(bankProblem, localCallback, serverCallback) {
         if (!isUndefined(localCallback)) {
@@ -161,7 +151,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                     'updating bank problem ' + bankProblem,  item));
                 return;
             }
-             // we do not need to make server changes we just need to make sure it was successful.
+            // we do not need to make server changes we just need to make sure it was successful.
             if (!isUndefined(serverCallback)) {
                 serverCallback(item);
             }
@@ -269,12 +259,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      *
      * @param {List<String>} courseProblemIdList
      *            list of IDs of the courseproblems to get
-     * @param {Function} courseProblemCallbackPartial
-     *            {Function} called when course problems are grabbed from the local
+     * @param {Function} courseProblemCallbackPartial - called when course problems are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
-     * @param {Function} courseProblemCallbackComplete
-     *            {Function} called when the complete list of course problems are
+     * @param {Function} courseProblemCallbackComplete - called when the complete list of course problems are
      *            grabbed.
      */
     function getCourseProblems(courseProblemIdList, courseProblemCallbackPartial, courseProblemCallbackComplete) {
@@ -371,13 +359,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      * If the server is polled and the courseProblem still does not exist the function will call the callback with an exception.
      *
      * @param {String} courseProblemId - The id of the courseProblem we want to find.
-     * @param {Function} courseProblemLocalCallback
-     *            called when course problems are grabbed from the local
+     * @param {Function} courseProblemLocalCallback - called when course problems are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local course problems.
-     * @param {Function} courseProblemServerCallback
-     *            called when the complete list of course problems are
-     *            grabbed.
+     * @param {Function} courseProblemServerCallback - called when the complete list of course problems are grabbed.
      */
     function getCourseProblem(courseProblemId, courseProblemLocalCallback, courseProblemServerCallback) {
         getCourseProblems([ courseProblemId ], function(courseProblemList) {

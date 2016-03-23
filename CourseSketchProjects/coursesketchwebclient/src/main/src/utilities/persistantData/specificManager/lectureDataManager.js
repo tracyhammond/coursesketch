@@ -1,3 +1,4 @@
+// jscs:disable jsDoc
 /**
  * A manager for lectires that talks with the remote server.
  *

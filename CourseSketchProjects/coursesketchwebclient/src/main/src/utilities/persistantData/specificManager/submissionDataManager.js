@@ -14,16 +14,13 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
     var localScope = parent;
 
     /**
-     * Returns a submission.  but right now only treats it as an exerpiment.
+     * Returns a submission.  But right now only treats it as an exerpiment.
      * TODO: have it be able to get solutions as well.
-     * of Ids.
      *
      * This does attempt to pull experiment from the server!
      *
-     * @param {String} problemId
-     *            submission
-     * @param {Function} submissionCallback
-     *            called when experiment is grabbed from the database.
+     * @param {String} problemId - submission
+     * @param {Function} submissionCallback - called when experiment is grabbed from the database.
      *              This is only called once.  Either it exists in the local database or it is grabbed from the server database.
      */
     function getSubmission(problemId, submissionCallback) {
@@ -67,6 +64,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
     /**
      * Attempts to get all experiments from the specific problem id.
+     *
      * @param {String} problemId - the problem we are currently looking at.
      * @param {Function} submissionCallback - called after the server responds with all experiments.
      */
