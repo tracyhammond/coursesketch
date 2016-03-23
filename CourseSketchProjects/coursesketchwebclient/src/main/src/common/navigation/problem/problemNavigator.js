@@ -1,3 +1,5 @@
+// jscs:disable
+
 /**
  * How this works is a polling system.
  *
@@ -277,8 +279,8 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @instance
      * @memberof ProblemNavigator
      */
-    this.setAssignmentId = function(currentAssignmentId) {
-        assignmentId = currentAssignmentId;
+    this.setAssignmentId = function(newAssignmentId) {
+        assignmentId = newAssignmentId;
     };
 
     /**

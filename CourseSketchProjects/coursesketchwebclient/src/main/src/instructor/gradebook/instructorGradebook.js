@@ -1,4 +1,5 @@
 (function() {
+    var keyEventHandler;
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
@@ -12,7 +13,8 @@
 
     /**
      * Loads grades for the given course.
-     * @param {String} courseId The id of the course.
+     *
+     * @param {String} courseId - The id of the course.
      */
     CourseSketch.gradeBook.loadGrades = function(courseId) {
         CourseSketch.dataManager.getCourse(courseId, function(course) {
@@ -32,10 +34,10 @@
     /**
      * Initializes a table from the given values.
      *
-     * @param {List<String>} assignmentList List of assignment IDs.
-     * @param {List<ProtoGrade>} gradeList List of grades from the server.
-     * @param {Map<String, String>} idToNameMap Map of key: studentId and value: username
-     * @param {HTMLTable} table The grade table on the webpage.
+     * @param {List<String>} assignmentList - List of assignment IDs.
+     * @param {List<ProtoGrade>} gradeList - List of grades from the server.
+     * @param {Map<String, String>} idToNameMap - Map of key: studentId and value: username
+     * @param {HTMLTable} table - The grade table on the webpage.
      */
     CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, idToNameMap, table) {
         table.innerHTML = '';
@@ -58,9 +60,10 @@
     /**
      * Creates a new tr with the number of assignments and adds it to the student map.
      *
-     * @param {Map<String,Element>} idToRowMap This is a map of studentId's to table rows.
-     * @param {String} studentId The student's ID number.
-     * @param {Integer} assignmentList The list of assignments for the course.
+     * @param {Map<String,Element>} idToRowMap - This is a map of studentId's to table rows.
+     * @param {String} studentId - The student's ID number.
+     * @param {Integer} assignmentList - The list of assignments for the course.
+     * @param {Element} table - The table the rows are being added to.
      */
     function addNewStudent(idToRowMap, studentId, assignmentList, table) {
         var row = document.createElement('tr');
@@ -84,10 +87,10 @@
     /**
      * This populates the map of grades for each student and, calls student adding function if student has not been added yet.
      *
-     * @param {List<ProtoGrade>} listGrades The list of grades from the server.
-     * @param {Map<String, Integer>} idToRowMap This is a map of studentIds to table rows.
-     * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
-     * @param {HTMLTable} table The grade table on the webpage.
+     * @param {List<ProtoGrade>} listGrades - The list of grades from the server.
+     * @param {Map<String, Integer>} idToRowMap - This is a map of studentIds to table rows.
+     * @param {Map<String, Integer>} assignmentMap - This is a map of assignmentIds to table columns.
+     * @param {HTMLTable} table - The grade table on the webpage.
      * @return {List<ProtoGrade>} grades that were not displayed.
      *          This is because the users do not exist anymore in the course roster.
      */
@@ -113,9 +116,9 @@
     /**
      * Creates the assignment header while populating the assignment map.
      *
-     * @param {List<String>} assignmentList List of assignments for the course.
-     * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
-     * @param {Element} table The grade table on the webpage.
+     * @param {List<String>} assignmentList - List of assignments for the course.
+     * @param {Map<String, Integer>} assignmentMap - This is a map of assignmentIds to table columns.
+     * @param {Element} table - The grade table on the webpage.
      */
     function createAssignmentHeader(assignmentList, assignmentMap, table) {
         var header = document.createElement('thead');
@@ -164,7 +167,7 @@
     /**
      * Adds the student names to the first column of every row.
      *
-     * @param {Map<String, Element>} idToRowMap This is a map of studentIds to table rows.
+     * @param {Map<String, Element>} idToRowMap - This is a map of studentIds to table rows.
      */
     function populateStudentNames(idToRowMap) {
         console.log(idToRowMap);
@@ -186,8 +189,8 @@
     /**
      * This creates tabs, one for each grading category.
      *
-     * @param {List<String>} gradeCategories The list of categories for grades in the gradebook.
-     * @param {element} tabholder The element that will hold the tabs.
+     * @param {List<String>} gradeCategories - The list of categories for grades in the gradebook.
+     * @param {element} tabholder - The element that will hold the tabs.
      */
     CourseSketch.gradeBook.createTabs = function(gradeCategories, tabholder) {
         tabholder.innerHTML = '';
@@ -230,7 +233,7 @@
      *
      * In this state, instructors can input their grades. This state has the input field.
      *
-     * @param {Event} event The event that triggered the function.
+     * @param {Event} event - The event that triggered the function.
      */
     function gradeCellSelected(event) {
         if (this.querySelector('input') === null) {
@@ -267,7 +270,7 @@
             /**
              * Clears validity message for checking that the user only entered numbers.
              *
-             * setCustomValidity must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
+             * {@code setCustomValidity} must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
              */
             input.oninput = function() {
                 this.setCustomValidity('');
@@ -288,7 +291,7 @@
     /**
      * Adds a comment to a grade.
      *
-     * @param {HTMLTableCell} cell The cell that the comment is being added for.
+     * @param {HTMLTableCell} cell - The cell that the comment is being added for.
      */
     function addComment(cell) {
         console.log(cell);
@@ -303,7 +306,7 @@
      *
      * This may also trigger a grade save.
      *
-     * @param {Element} cell the selected cell whose code is being removed.
+     * @param {Element} cell - The selected cell whose code is being removed.
      */
     function unselectCell(cell) {
         var oldGrade = cell.dataset.old_grade;
@@ -329,7 +332,7 @@
         }
     }
 
-    var keyEventHandler = undefined;
+    keyEventHandler = undefined;
     // we scope the time stamp for throttling the key presses.
     (function() {
 
@@ -342,7 +345,8 @@
          * When Tab is pressed, moves the selection to the right 1 cell.
          * When Enter is pressed, moves the selection down 1 cell.
          * Has a minimum time of 50ms between key events.
-         * @param {Event} event The event that triggers the function.
+         *
+         * @param {Event} event - The event that triggers the function.
          */
         keyEventHandler = function(event) {
             if (event.timeStamp - previousTimeStamp < 50) {
@@ -371,7 +375,7 @@
      * TODO: Make this work if we need it. Currently we are not using it.
      * Moves selection one cell to the left.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move left from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move left from.
      */
     function moveLeft(cell) {
         unselectCell(cell);
@@ -380,7 +384,7 @@
     /**
      * Moves selection one cell to the right.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move right from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move right from.
      */
     function moveRight(cell) {
         unselectCell(cell);
@@ -399,7 +403,7 @@
     /**
      * Moves selection one cell down.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move down from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move down from.
      */
     function moveDown(cell) {
         unselectCell(cell);
@@ -422,7 +426,7 @@
      * TODO: Make this work if we need it. Currently we are not using it.
      * Moves selection one cell up.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move up from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move up from.
      */
     function moveUp(cell) {
         unselectCell(cell);
@@ -431,9 +435,9 @@
     /**
      * Builds a ProtoGrade for a selected cell to send to the server.
      *
-     * @param {HTMLTableCell} cell The cell the grade is coming from.
-     * @param {String} grade The value of the grade. String because input.value returns a string.
-     * @param {String} comment The comment for the grade.
+     * @param {HTMLTableCell} cell - The cell the grade is coming from.
+     * @param {String} grade - The value of the grade. String because input.value returns a string.
+     * @param {String} comment - The comment for the grade.
      * @returns {ProtoGrade} The ProtoGrade from the selected cell.
      */
     CourseSketch.gradeBook.buildProtoGrade = function(cell, grade, comment) {
@@ -461,6 +465,8 @@
 
     /**
      * Returns the index of an element in reference to its parent element.
+     *
+     * @param {Element} element - The element that the index is being found for.
      */
     function getChildIndex(element) {
         var k = -1;

@@ -1,6 +1,7 @@
 /**
  * Only one of these can be on a page at a time.
- * [We assume only one of these elements can exist at a time]
+ * [We assume only one of these elements can exist at a time].
+ *
  * @class ProblemSelectionPanel
  */
 function ProblemSelectionPanel() {
@@ -64,7 +65,7 @@ function ProblemSelectionPanel() {
     /**
      * Makes the exit button close the box and enables dragging.
      *
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box.
+     * @param {Node} templateClone - Is a clone of the custom HTML Element for the text box.
      * @memberof ProblemSelectionPanel
      */
     this.initializeElement = function(templateClone) {
@@ -80,7 +81,7 @@ function ProblemSelectionPanel() {
         };
 
         /**
-         * Called when the user rejects the selected problems
+         * Called when the user rejects the selected problems.
          */
         shadowRoot.querySelector('#cancel').onclick = function() {
             localScope.canceledCallback(selectedBankProblems);
@@ -95,6 +96,8 @@ function ProblemSelectionPanel() {
 
         /**
          * Called to stop the event from going up to the outer-dialog onclick function.
+         *
+         * @param {Event} event - The event that is being stopped.
          */
         shadowRoot.querySelector('.inner-dialog').onclick = function(event) {
             event.stopPropagation();
@@ -102,6 +105,8 @@ function ProblemSelectionPanel() {
 
         /**
          * Called to signify the user rejecting the selected problems.
+         *
+         * @param {Event} event - The event that was created by clicking the element.
          */
         this.onclick = function(event) {
             localScope.canceledCallback(selectedBankProblems);
@@ -157,11 +162,12 @@ ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);
 
 /**
  * Creates a request for asking about bank problems.
- * @param {String} courseId - the id of the course the problem is being requested for.
- * @param {String} assignmentId - the id of the assignment the problem is being requested for.
- * @param {Integer} page - to make it easier we do not grab every single bank problem instead we grab them in batches
+ *
+ * @param {String} courseId - The id of the course the problem is being requested for.
+ * @param {String} assignmentId - The id of the assignment the problem is being requested for.
+ * @param {Integer} page - To make it easier we do not grab every single bank problem instead we grab them in batches
  *              (this process is called pagination)
- * @returns {SrlRequest} the request that is ready to be sent to the server.
+ * @returns {SrlRequest} The request that is ready to be sent to the server.
  * @memberof ProblemSelectionPanel
  */
 ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId, page) {
@@ -181,7 +187,8 @@ ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId,
 
 /**
  * Sets the canceled callback.
- * @param {Function} callback - the function that is called when an a canceled action is performed.
+ *
+ * @param {Function} callback - The function that is called when an a canceled action is performed.
  * @memberof ProblemSelectionPanel
  */
 ProblemSelectionPanel.prototype.setCanceledCallback = function(callback) {
@@ -190,7 +197,8 @@ ProblemSelectionPanel.prototype.setCanceledCallback = function(callback) {
 
 /**
  * Sets the canceled callback.
- * @param {Function} callback - the function that is called when an a canceled action is performed.
+ *
+ * @param {Function} callback - The function that is called when an a canceled action is performed.
  * @memberof ProblemSelectionPanel
  */
 ProblemSelectionPanel.prototype.setAcceptedCallback = function(callback) {

@@ -1,3 +1,5 @@
+// jscs:disable
+
 /**
  * A navigator for navigating lectures.
  *
