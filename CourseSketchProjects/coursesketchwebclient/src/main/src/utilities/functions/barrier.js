@@ -25,7 +25,7 @@ CallbackBarrier.prototype.getCallback = function() {
 
 /**
  * Creates a function that is called to decrement the barrier but is only called once.
- * @param {Number} amount The number of times the result is called before the callback is called.
+ * @param {Number} amount - The number of times the result is called before the callback is called.
  */
 CallbackBarrier.prototype.getCallbackAmount = function(amount) {
     if (this.finalized) {
@@ -64,7 +64,7 @@ CallbackBarrier.prototype.finalize = function(callback) {
  *       b.complete();
  *     });
  * </pre>
- * @param {Function} callback called after complete is called
+ * @param {Function} callback - called after complete is called
  */
 CallbackBarrier.prototype.once = function(callback) {
     var result = this.getCallbackAmount(1);

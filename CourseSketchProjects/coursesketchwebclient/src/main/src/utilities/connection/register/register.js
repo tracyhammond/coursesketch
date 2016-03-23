@@ -22,9 +22,9 @@ function RegisterSystem() {
 
     /**
      * Creates a new connection object and stores it locally.
-     * @param {String} location Url to connect to.
-     * @param {Boolean} encrypted True if the connection should occur over ssl
-     * @param {Boolean} attemptReconnections True if the connection should be reattempted till success.
+     * @param {String} location - Url to connect to.
+     * @param {Boolean} encrypted - True if the connection should occur over ssl
+     * @param {Boolean} attemptReconnections - True if the connection should be reattempted till success.
      */
     this.createConnection = function(location, encrypted, attemptReconnections) {
         connection = new Connection(location, encrypted, attemptReconnections);
@@ -79,8 +79,8 @@ function RegisterSystem() {
     function setupLoginScript() {
         /**
          * Called when the server responds to an attempt to login.
-         * @param {Event} evt the event that caused the successful login
-         * @param {Message} message The protobuf message sent from the server.
+         * @param {Event} evt - the event that caused the successful login
+         * @param {Message} message - The protobuf message sent from the server.
          */
         function onLogin(evt, message) {
             var userId = undefined;
@@ -130,10 +130,10 @@ function RegisterSystem() {
     function formSubmit() {
         /**
          * Called to send the login.
-         * @param {String} arg1 username
-         * @param {String} arg2 hashed password
-         * @param {String} email the users Email
-         * @param {Boolean} isInstructor true if the user wants to default to loggin in as an instructor.
+         * @param {String} arg1 - username
+         * @param {String} arg2 - hashed password
+         * @param {String} email - the users Email
+         * @param {Boolean} isInstructor - true if the user wants to default to loggin in as an instructor.
          */
         function sendLogin(arg1, arg2, email, isInstructor) {
             if (!connection.isConnected()) {

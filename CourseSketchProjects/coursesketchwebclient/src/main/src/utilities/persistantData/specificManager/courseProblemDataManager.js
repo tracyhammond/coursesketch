@@ -1,11 +1,11 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener for the database.
- * @param {IndexedDB} parentDatabase  The local database
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} parentDatabase -  The local database
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
@@ -315,7 +315,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             /**
              * The purpose of this function is purely to scope the courseProblemId so that it changes.
              *
-             * @param {String} courseProblemId The id of a single courseProblem.
+             * @param {String} courseProblemId - The id of a single courseProblem.
              */
             function loopContainer(courseProblemId) {
                 getCourseProblemLocal(courseProblemId, function(courseProblem) {
@@ -370,7 +370,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
      *
      * If the server is polled and the courseProblem still does not exist the function will call the callback with an exception.
      *
-     * @param {String} courseProblemId The id of the courseProblem we want to find.
+     * @param {String} courseProblemId - The id of the courseProblem we want to find.
      * @param {Function} courseProblemLocalCallback
      *            called when course problems are grabbed from the local
      *            database only. This list may not be complete. This may also

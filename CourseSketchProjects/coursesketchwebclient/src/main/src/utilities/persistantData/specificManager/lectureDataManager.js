@@ -1,12 +1,12 @@
 /**
  * A manager for lectires that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener for the database.
- * @param {IndexedDB} parentDatabase  The local database
- * @param {Function} sendData A function that makes sending data much easier
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} parentDatabase -  The local database
+ * @param {Function} sendData - A function that makes sending data much easier
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function LectureDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {

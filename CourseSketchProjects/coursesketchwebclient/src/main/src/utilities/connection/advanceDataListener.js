@@ -40,7 +40,7 @@ function AdvanceDataListener(Request, defListener) {
     /**
      * Sets a listener that is called when an error occurs.
      *
-     * @param {Function} func A function that is called when an error occurs.
+     * @param {Function} func - A function that is called when an error occurs.
      */
     this.setErrorListener = function(func) {
         errorListener = func;
@@ -49,10 +49,10 @@ function AdvanceDataListener(Request, defListener) {
     /**
      * Sets the listener to listen for server response.
      *
-     * @param {String} messageType The message type of the request.
-     * @param {String} requestId The unique identifier for the request.
-     * @param {Function} func The function that is called as a result of listening.
-     * @param {Number} [times] the number of times you want the function to be called before it is removed.
+     * @param {String} messageType - The message type of the request.
+     * @param {String} requestId - The unique identifier for the request.
+     * @param {Function} func - The function that is called as a result of listening.
+     * @param {Number} [times] - the number of times you want the function to be called before it is removed.
      */
     function setListener(messageType, requestId, func, times) {
         console.log('Creating a listener for requestID ', requestId);
@@ -68,10 +68,10 @@ function AdvanceDataListener(Request, defListener) {
      * Sets the listener to listen for database code.
      *
      * And it also unwraps the DataResult type.
-     * @param {MessageType} messageType The message type of the request.
-     * @param {String} requestId The unique identifier for the request.
-     * @param {Function} func The function that is called as a result of listening.
-     * @param {Number} [times] the number of times you want the function to be called before it is removed.
+     * @param {MessageType} messageType - The message type of the request.
+     * @param {String} requestId - The unique identifier for the request.
+     * @param {Function} func - The function that is called as a result of listening.
+     * @param {Number} [times] - the number of times you want the function to be called before it is removed.
      */
     this.setDataResultListener = function(messageType, requestId, func, times) {
         setListener(messageType, requestId, queryWrap(func), times);
@@ -89,7 +89,7 @@ function AdvanceDataListener(Request, defListener) {
     /**
      * Returns a function that is wrapped to process data results.
      *
-     * @param {Function} func The function that is wrapper to process data results.
+     * @param {Function} func - The function that is wrapper to process data results.
      * @returns {Function} A wrapped function that processes data results.
      */
     function queryWrap(func) {
@@ -143,8 +143,8 @@ function AdvanceDataListener(Request, defListener) {
      * Gets the message type and the query type and finds the correct listener.
      *
      * If the correct type does not exist then the defaultListener is called instead.
-     * @param {Event} evt This is websocket event regarding the receive event of the message.
-     * @param {Request} msg This is the request object that was received.
+     * @param {Event} evt - This is websocket event regarding the receive event of the message.
+     * @param {Request} msg - This is the request object that was received.
      */
     function decode(evt, msg) {
         var messageType = msg.requestType;
@@ -179,9 +179,9 @@ function AdvanceDataListener(Request, defListener) {
     /**
      * Sends a request that will timeout after the server.
      *
-     * @param {Request} request The protobuf request being sent to the server.
-     * @param {Function} callback The function that is called as a result of listening.
-     * @param {Number} [times] The number of times you want the function to be called before it is removed.
+     * @param {Request} request - The protobuf request being sent to the server.
+     * @param {Function} callback - The function that is called as a result of listening.
+     * @param {Number} [times] - The number of times you want the function to be called before it is removed.
      */
     this.sendRequestWithTimeout = function(request, callback, times) {
         var callbackCalled = false;
@@ -193,9 +193,9 @@ function AdvanceDataListener(Request, defListener) {
          * If the regular function is called the timeout is cleared.
          * If the timeout version is called then it will not call the regular version.
          * This is called for every item result.
-         * @param {Event} evt WebsocketEvent
+         * @param {Event} evt - WebsocketEvent
          * @param {Request|BaseException} msg The protobuf request object sent from the server or an exception that occured along the way.
-         * @param {Function} listener The user function that is called as a result of listening.
+         * @param {Function} listener - The user function that is called as a result of listening.
          */
         var wrappedCallback = function(evt, msg, listener) {
             if ((isUndefined(msg) || msg.otherData === TIMEOUT_CONST || msg instanceof BaseException) && !callbackCalled) {
@@ -238,9 +238,9 @@ function AdvanceDataListener(Request, defListener) {
      * This sends a data request
      * (this will automatically time out after 5 seconds)
      * @param {ItemRequest | List<ItemRequest>} itemRequest This can be either a single item request or a list of itme requests.
-     * @param {Function} callback The function that is called as a result of listening.
-     * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
-     * @param {Number} [times] The number of times you want the function to be called before it is removed;
+     * @param {Function} callback - The function that is called as a result of listening.
+     * @param {String} [requestId] - The id that is unique to this request to identify what callback is from what request.
+     * @param {Number} [times] - The number of times you want the function to be called before it is removed;
      */
     this.sendDataRequest = function sendDataRequest(itemRequest, callback, requestId, times) {
         if (isUndefined(callback)) {
@@ -259,11 +259,11 @@ function AdvanceDataListener(Request, defListener) {
      * Inserts data into the server database.
      *
      * (only inserts a single one right now)
-     * @param {ItemQuery} queryType The type of query it is.
-     * @param {ByteArray} data The protobuf bytes that are being sent to the server.
-     * @param {Function} callback The function that is called as a result of listening.
-     * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
-     * @param {Number} [times] The number of times you want the function to be called before it is removed;
+     * @param {ItemQuery} queryType - The type of query it is.
+     * @param {ByteArray} data - The protobuf bytes that are being sent to the server.
+     * @param {Function} callback - The function that is called as a result of listening.
+     * @param {String} [requestId] - The id that is unique to this request to identify what callback is from what request.
+     * @param {Number} [times] - The number of times you want the function to be called before it is removed;
      */
     this.sendDataInsert = function sendDataInsert(queryType, data, callback, requestId, times) {
         var dataSend = CourseSketch.prutil.DataSend();
@@ -280,11 +280,11 @@ function AdvanceDataListener(Request, defListener) {
     /**
      * Sends an update to the server for the data to be updated.
      *
-     * @param {ItemQuery} queryType The type of query it is.
-     * @param {ByteArray} data The protobuf bytes that are being sent to the server.
-     * @param {Function} callback The function that is called as a result of listening.
-     * @param {String} [requestId] The id that is unique to this request to identify what callback is from what request.
-     * @param {Number} [times] The number of times you want the function to be called before it is removed;
+     * @param {ItemQuery} queryType - The type of query it is.
+     * @param {ByteArray} data - The protobuf bytes that are being sent to the server.
+     * @param {Function} callback - The function that is called as a result of listening.
+     * @param {String} [requestId] - The id that is unique to this request to identify what callback is from what request.
+     * @param {Number} [times] - The number of times you want the function to be called before it is removed;
      */
     this.sendDataUpdate = function sendDataUpdate(queryType, data, callback, requestId, times) {
         var dataSend = CourseSketch.prutil.DataSend();

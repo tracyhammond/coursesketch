@@ -4,8 +4,8 @@
  * A navigator for navigating lectures.
  *
  * Takes in the perferredIndex and a lecture Id.
- * @param {String} lectureId the id to start the lecture at
- * @param {Number} preferredIndex the number slide to start at.
+ * @param {String} lectureId - the id to start the lecture at
+ * @param {Number} preferredIndex - the number slide to start at.
  * @constructor
  */
 function LectureNavigator(lectureId, preferredIndex) {
@@ -21,7 +21,7 @@ function LectureNavigator(lectureId, preferredIndex) {
     /**
      * Goes to a slide at the specific index in the current lecture.
      *
-     * @param {Number} index The index to navigate the lecture to.
+     * @param {Number} index - The index to navigate the lecture to.
      */
     this.goToSlide = function goToSlide(index) {
         changeSlide(index);
@@ -40,7 +40,7 @@ function LectureNavigator(lectureId, preferredIndex) {
 
         /**
          * Called when the lecture is loaded.
-         * @param {SrlLecture} lecture a proto lecture object.
+         * @param {SrlLecture} lecture - a proto lecture object.
          */
         function hasLecture(lecture) {
             if (nextSlideIndex === -1) {
@@ -128,13 +128,13 @@ function LectureNavigator(lectureId, preferredIndex) {
 
     /**
      * Loads a slide with an id and the index at which this slide exist.
-     * @param {String} nextSlideId the id of the next slide that will become the current slide.
-     * @param {Integer} index The new index that will become the current index.
+     * @param {String} nextSlideId - the id of the next slide that will become the current slide.
+     * @param {Integer} index - The new index that will become the current index.
      */
     function loadSlide(nextSlideId, index) {
         /**
          * Called when the slide has been loaded.
-         * @param {SrlSlide} slide the protobuf slide object.
+         * @param {SrlSlide} slide - the protobuf slide object.
          */
         function hasSlide(slide) {
             currentSlide = slide;
@@ -156,7 +156,7 @@ function LectureNavigator(lectureId, preferredIndex) {
         indicesStack.push(index);
         /**
          * Called when the lecture has loaded from the server.
-         * @param {SrlLecture} lecture the lecture protobuf object from the server.
+         * @param {SrlLecture} lecture - the lecture protobuf object from the server.
          */
         function hasLecture(lecture) {
             currentLecture = lecture;
@@ -172,7 +172,7 @@ function LectureNavigator(lectureId, preferredIndex) {
 
     /**
      * Callback that is called after a slide has been loaded.
-     * @param {Function} callback called after the function has been loaded.
+     * @param {Function} callback - called after the function has been loaded.
      */
     this.addCallback = function(callback) {
         callbackList.push(callback);
@@ -253,7 +253,7 @@ function LectureNavigator(lectureId, preferredIndex) {
         /**
          * Called when the lecture has loaded from the server.
          *
-         * @param {SrlLecture} lecture the lecture protobuf object from the server.
+         * @param {SrlLecture} lecture - the lecture protobuf object from the server.
          */
         function hasLecture(lecture) {
             currentLecture = lecture;

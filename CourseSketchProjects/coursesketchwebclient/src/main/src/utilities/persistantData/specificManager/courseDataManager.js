@@ -1,11 +1,11 @@
 /**
  * A manager for courses that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener and sender for the database
- * @param {IndexedDB} database The local database
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the database
+ * @param {IndexedDB} database - The local database
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function CourseDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
@@ -235,8 +235,8 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      * Returns a list of all of the courses in database.
      *
      * This does attempt to pull courses from the server!
-     * @param {Function} courseCallback called when the courses are loaded (this may be called more than once)
-     * @param {Boolean} onlyLocal true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
+     * @param {Function} courseCallback - called when the courses are loaded (this may be called more than once)
+     * @param {Boolean} onlyLocal - true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
      */
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
@@ -244,7 +244,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         /**
          * Called when the server responds.
          *
-         * @param {Event} evt websocket event
+         * @param {Event} evt - websocket event
          * @param {ItemResult | BaseException} item The result from the server.
          */
         var callback = function(evt, item) {
@@ -374,8 +374,8 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      * The callback is mandatory at the moment because callbacks to the server are asynchronous.
      * If this method simply returned the roster as a map, it would likely return after a subsequent server call is sent.
      * The subsequent server call would then be passing a null map as the roster instead of the actual roster.
-     * @param {String} courseId The id of the course to retrieve the course roster for.
-     * @param {Function} callback A callback is called with a list of userIds
+     * @param {String} courseId - The id of the course to retrieve the course roster for.
+     * @param {Function} callback - A callback is called with a list of userIds
      */
     function getCourseRoster(courseId, callback) {
         if (isUndefined(callback)) {
@@ -449,7 +449,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
 
     /**
      * Searches the course list.
-     * @param {Function} callback called with a list of all courses meeting the search requirements.
+     * @param {Function} callback - called with a list of all courses meeting the search requirements.
      */
     parent.searchCourses = function(callback) {
         var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE_SEARCH);

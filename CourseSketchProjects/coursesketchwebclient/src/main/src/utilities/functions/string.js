@@ -17,9 +17,9 @@ if (isUndefined(replaceAll)) {
     /**
      * Replaces all strings with a different value.
      *
-     * @param {String} src The string that the replace is happening in.
-     * @param {RegularExpression} find the expression that is being looked for.
-     * @param {String} replace what is being replaced with.
+     * @param {String} src - The string that the replace is happening in.
+     * @param {RegularExpression} find - the expression that is being looked for.
+     * @param {String} replace - what is being replaced with.
      *
      * @returns {String} A string with the replaced values.
      */
@@ -56,7 +56,7 @@ if (isUndefined(cssEscapeId)) {
     /**
      * Does a very simple escaping of the id for css purposes.
      * A more complicated version is found here: https://mothereff.in/css-escapes
-     * @param {String} inputId The id we want escaped.
+     * @param {String} inputId - The id we want escaped.
      * @return {String} An escaped value is returned.
      *
      * Example:

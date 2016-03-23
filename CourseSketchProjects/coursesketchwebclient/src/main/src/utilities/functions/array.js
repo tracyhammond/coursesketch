@@ -76,7 +76,7 @@ if (isUndefined(getMapAsList)) {
     /**
      * Makes a list out of an object map.
      *
-     * @param {Object} map The map that you want to convert into a list. (Note this is an object and not ES6 Map
+     * @param {Object} map - The map that you want to convert into a list. (Note this is an object and not ES6 Map
      * @returns {Array} A list of the values in the object.
      */
     function getMapAsList(map) {

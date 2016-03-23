@@ -26,7 +26,7 @@ if (isUndefined(convertHexToRgb)) {
     /**
      * Given a hex value convert it to rgb values.
      *
-     * @param {String} hex A hexcode string representing the color.
+     * @param {String} hex - A hexcode string representing the color.
      * @returns {{r: (*|Number), g: (*|Number), b: (*|Number)}} An object that contains rgb values.
      */
     function convertHexToRgb(hex) {

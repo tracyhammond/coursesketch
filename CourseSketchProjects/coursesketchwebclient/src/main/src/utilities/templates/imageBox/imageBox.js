@@ -3,7 +3,7 @@
  */
 function ImageBox() {
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -14,7 +14,7 @@ function ImageBox() {
 
     /**
      * Sets the source of the image.
-     * @param {String} src The source data of the image (or url).
+     * @param {String} src - The source data of the image (or url).
      */
     this.setSrc = function(src) {
         this.shadowRoot.querySelector('.image').src = src;
@@ -23,7 +23,7 @@ function ImageBox() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function
+     * @param {Event} event - event that triggered this function
      * @return {ImageProto} the created protobuf object
      */
     this.saveData = function(event) {
@@ -47,7 +47,7 @@ function ImageBox() {
     };
 
     /**
-     * @param {ProtoCommand} imageProto is the data to be loaded from the proto
+     * @param {ProtoCommand} imageProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -68,7 +68,7 @@ function ImageBox() {
 
     /**
      * Sets a listener.
-     * @param {Function} listener Called when the data is finished saving.
+     * @param {Function} listener - Called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;

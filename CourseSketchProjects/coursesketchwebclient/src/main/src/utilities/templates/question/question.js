@@ -5,7 +5,7 @@ function Question() {
     this.lectures = [];
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -15,7 +15,7 @@ function Question() {
 
         /**
          * Called when the actions event has been clicked.
-         * @param {Event} event On Click event.
+         * @param {Event} event - On Click event.
          */
         shadowRoot.getElementById('actions').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = true;
@@ -23,7 +23,7 @@ function Question() {
 
         /**
          * Called to closed the question dialog.
-         * @param {Event} event On Click event.
+         * @param {Event} event - On Click event.
          */
         shadowRoot.getElementById('dialog-close').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = false;
@@ -31,7 +31,7 @@ function Question() {
 
         /**
          * Called when the correct button has been pressed.
-         * @param {Event} event On Change event.
+         * @param {Event} event - On Change event.
          */
         shadowRoot.getElementById('correct-lecture').onchange = function(event) {
             var value = event.srcElement.value;
@@ -42,7 +42,7 @@ function Question() {
 
         /**
          * Called when the incorrect button has been pressed.
-         * @param {Event} event On Change event.
+         * @param {Event} event - On Change event.
          */
         shadowRoot.getElementById('incorrect-lecture').onchange = function(event) {
             var value = event.srcElement.value;
@@ -54,7 +54,7 @@ function Question() {
 
     /**
      * Loads the lectures that can be navigated to in the question.
-     * @param {String} lectureIds list of lecture IDs to load
+     * @param {String} lectureIds - list of lecture IDs to load
      */
     this.loadLectures = function(lectureIds) {
         var localScope = this;
@@ -90,7 +90,7 @@ function Question() {
     /**
      * Loads slides into a slide select element.
      * @param {List<String>} idList list of 'idsInLecture' containing the slides to load
-     * @param {Element} slideSelect select element to load the slides into
+     * @param {Element} slideSelect - select element to load the slides into
      */
     this.loadSlides = function(idList, slideSelect) {
         /**
@@ -118,7 +118,7 @@ function Question() {
 
     /**
      * Adds multiple choice content to the question
-     * @param {Element} answerContent the MultiChoice element to add
+     * @param {Element} answerContent - the MultiChoice element to add
      */
     this.addAnswerContent = function(answerContent) {
         answerContent.className = 'answer';
@@ -128,7 +128,7 @@ function Question() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function
+     * @param {Event} event - event that triggered this function
      * @return {SrlQuestion} the created protobuf object.
      */
     this.saveData = function(event) {
@@ -192,7 +192,7 @@ function Question() {
     };
 
     /**
-     * @param {ProtoCommand} questionProto is the data to be loaded from the proto
+     * @param {ProtoCommand} questionProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      *
@@ -233,7 +233,7 @@ function Question() {
 
     /**
      * Sets the listener
-     * @param {Function} listener called when the data is finished saving.
+     * @param {Function} listener - called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;

@@ -165,7 +165,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         /**
          * Called from the server.
          *
-         * @param {Event} evt websocket event.
+         * @param {Event} evt - websocket event.
          * @param {ItemResult | BaseException} item The response from the server.
          */
         var updateListener = function(evt, item) {
@@ -200,7 +200,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * Returns the state at the given key.
-     * @param {String} key The unique identifier for the state.
+     * @param {String} key - The unique identifier for the state.
      */
     this.getState = function(key) {
         return stateMachine.get(key);
@@ -209,7 +209,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     /**
      * Returns true if the given key is a valid state, false otherwise.
      *
-     * @param {String} key The unique identifier for the state.
+     * @param {String} key - The unique identifier for the state.
      * @returns {Boolean} true if the state exists false otherwise.
      */
     this.hasState = function(key) {
@@ -236,7 +236,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * A helper function for testing that waits for the database to be loaded before calling a callback.
-     * @param {Function} callback Called when the database is ready.
+     * @param {Function} callback - Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
         var interval = setInterval(function() {

@@ -2,7 +2,7 @@
 
 /**
  * Any exception that occurs relating to protobufs.
- * @param {String} message A custom message for the user.
+ * @param {String} message - A custom message for the user.
  * @param {BaseException|Error} [cause] Optional exception that caused this instance.
  * @constructor
  */
@@ -221,8 +221,8 @@ function ProtobufSetup() {
      *
      * @param {Function|Enum} ClassType the actual data that represents the protobuf data.
      * If the classType is not a function then we treat it like an enum.
-     * @param {String} messageName the name of the message.
-     * @param {String} preString a string that is used to preprend the messageName.
+     * @param {String} messageName - the name of the message.
+     * @param {String} preString - a string that is used to preprend the messageName.
      * This can be used to prevent conflicts. The value must not be undefined.
      */
     function createProtoMethod(ClassType, messageName, preString) {
@@ -440,9 +440,9 @@ function ProtobufSetup() {
     /**
      * Creates an itemRequest from the given data.
      *
-     * @param {ItemQuery} queryType The query type of the object.
+     * @param {ItemQuery} queryType - The query type of the object.
      * @param {String | List<String>} [idList] A list of ids used for retrieving data from the database.
-     * @param {ByteArray} [advanceQuery] A protobuf object used to represent more complex queries.
+     * @param {ByteArray} [advanceQuery] - A protobuf object used to represent more complex queries.
      * @returns {ItemRequest} An item request from the data.
      */
     this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
@@ -484,11 +484,11 @@ function ProtobufSetup() {
 
     /**
      * Creates a new sketch command.
-     * @param {String} id the id of the sketch, undefined if you want a random id given.
-     * @param {Number} x the x location of the sketch as an offset of its parent sketch.
-     * @param {Number} y the y location of the sketch as an offset of its parent sketch.
-     * @param {Number} width the width of the sketch.
-     * @param {Number} height the height of the sketch.
+     * @param {String} id - the id of the sketch, undefined if you want a random id given.
+     * @param {Number} x - the x location of the sketch as an offset of its parent sketch.
+     * @param {Number} y - the y location of the sketch as an offset of its parent sketch.
+     * @param {Number} width - the width of the sketch.
+     * @param {Number} height - the height of the sketch.
      *
      * @return {SrlCommand} a create sketch command
      */
@@ -581,8 +581,8 @@ function ProtobufSetup() {
      * The purpose of cleaning is in case you want to prototype a protobuf object but the object was created on an old version of objects.
      * Then the protubf would not correctly apply to this new object.
      *
-     * @param {ProtobufObject} protobuf An object that we want to "clean".
-     * @param {ProtobufMessage} protobufType A class representing the object we want to "clean".
+     * @param {ProtobufObject} protobuf - An object that we want to "clean".
+     * @param {ProtobufMessage} protobufType - A class representing the object we want to "clean".
      * @returns {ProyobufObject} A clean version of the object we sent in.
      */
     this.cleanProtobuf = function(protobuf, protobufType) {

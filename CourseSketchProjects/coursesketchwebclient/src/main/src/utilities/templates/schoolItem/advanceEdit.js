@@ -1,7 +1,7 @@
 (function() {
 
     /**
-     * @param {ShadowRoot} parent the root of the parent.
+     * @param {ShadowRoot} parent - the root of the parent.
      * @return {Map} A map of the data mapped to the element.
      */
     function getInput(parent) {
@@ -202,9 +202,9 @@
     /**
      * Loads the data from the school item into the edit panel.
      *
-     * @param {Element} schoolItemElement the school Item that is currently being edited.
-     * @param {Map} schoolItemData A mpa containing the school item.
-     * @param {Element} editPanel a panel that displays the editable material.
+     * @param {Element} schoolItemElement - the school Item that is currently being edited.
+     * @param {Map} schoolItemData - A mpa containing the school item.
+     * @param {Element} editPanel - a panel that displays the editable material.
      * @returns {Map} A map that contains the field of the school proto boject and the loaded value of the proto object.
      */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
@@ -233,9 +233,9 @@
     /**
      * Sets up the advance edit panel for editing advance data.
      *
-     * @param {Element} element The edit button that opens up the panel when clicked.
-     * @param {SchoolItem} localScope  The school item that this advance panel is associated with.
-     * @param {Node} parentNode The node that is a parent to the button.  This is used to get the school item after saving.
+     * @param {Element} element - The edit button that opens up the panel when clicked.
+     * @param {SchoolItem} localScope -  The school item that this advance panel is associated with.
+     * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
      */
     SchoolItem.prototype.createAdvanceEditPanel = function(element, localScope, parentNode) {
         $(element).click(function(event) {
@@ -291,7 +291,7 @@
             /**
              * Called to cancel the editing process.
              *
-             * @param {Element} event  On Click event.
+             * @param {Element} event -  On Click event.
              * @returns {Boolean} false if the element clicked is the host dialog.
              */
             function close(event) {

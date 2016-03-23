@@ -7,7 +7,7 @@ var CourseSketch = CourseSketch || {};
 if (typeof isUndefined === 'undefined') {
     /**
      * Returns true if an object is not defined
-     * @param {Object} object the object that is being tested.
+     * @param {Object} object - the object that is being tested.
      * @returns {Boolean} true if the object is not defined.  (Only not defined being null will return false)
      */
     function isUndefined(object) {
@@ -94,7 +94,7 @@ if (isUndefined(make2Digits)) {
      * Given a number that could be 1 or 2 digits returns a 2 digit version of that number.
      *
      * ex: 1 -> 01, or 15 -> 15
-     * @param {Number} num the number that is needed to be forced into 2 digits.
+     * @param {Number} num - the number that is needed to be forced into 2 digits.
      */
     function make2Digits(num) {
         return ('0' + Number(num)).slice(-2);
@@ -105,7 +105,7 @@ if (isUndefined(getMilitaryFormattedDateTime)) {
     /**
      * Returns the date formatted as Military Time.
      *
-     * @param {Date} dateTime the date that is being formatted.
+     * @param {Date} dateTime - the date that is being formatted.
      * @returns {String} The formatted result.
      */
     function getMilitaryFormattedDateTime(dateTime) {
@@ -121,7 +121,7 @@ if (isUndefined(getFormattedDateTime)) {
      *
      * ex: 01-18-1994 10:50PM
      *
-     * @param {Date} dateTime uses the default Date object in the browser to return.
+     * @param {Date} dateTime - uses the default Date object in the browser to return.
      * @return {String} A formatted date time.
      */
     function getFormattedDateTime(dateTime) {
@@ -305,7 +305,7 @@ if (isUndefined(getTypeName)) {
 if (isUndefined(loadJs)) {
     /**
      * Loads the javascript file given its src.
-     * @param {String} src the address of the script to load.
+     * @param {String} src - the address of the script to load.
      */
     function loadJs(src) {
         var head = document.getElementsByTagName('head')[0];
@@ -336,7 +336,7 @@ if (isUndefined(validateFirstRun)) {
             /**
              * The listener that ignores the event.
              *
-             * @param {Event} event the error event that was thrown.
+             * @param {Event} event - the error event that was thrown.
              * @memberof validateFirstRun
              */
             var listener = function(event) {
@@ -372,7 +372,7 @@ if (isUndefined(validateFirstGlobalRun)) {
             /**
              * The listener that ignores the event.
              *
-             * @param {Event} event the error event that was thrown.
+             * @param {Event} event - the error event that was thrown.
              * @memberof validateFirstGlobalRun
              */
             var listener = function(event) {
@@ -393,8 +393,8 @@ if (isUndefined(safeLoad)) {
     /**
      * Loads a script but only once.
      *
-     * @param {String} url The url that is being loaded.
-     * @param {Object} uniqueGlobalObject a global object that is unique to the script that will be undefined if the script does not exist.
+     * @param {String} url - The url that is being loaded.
+     * @param {Object} uniqueGlobalObject - a global object that is unique to the script that will be undefined if the script does not exist.
      */
     function safeLoad(url, uniqueGlobalObject) {
         if (typeof window[uniqueGlobalObject] === 'undefined') {

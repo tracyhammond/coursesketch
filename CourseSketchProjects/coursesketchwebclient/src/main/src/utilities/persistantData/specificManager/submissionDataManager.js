@@ -1,12 +1,12 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener for the database.
- * @param {IndexedDB} parentDatabase The local database
- * @param {Function} sendData A function that makes sending data much easier
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} parentDatabase - The local database
+ * @param {Function} sendData - A function that makes sending data much easier
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function SubmissionDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
@@ -67,8 +67,8 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
 
     /**
      * Attempts to get all experiments from the specific problem id.
-     * @param {String} problemId the problem we are currently looking at.
-     * @param {Function} submissionCallback called after the server responds with all experiments.
+     * @param {String} problemId - the problem we are currently looking at.
+     * @param {Function} submissionCallback - called after the server responds with all experiments.
      */
     function getAllExperiments(problemId, submissionCallback) {
 
@@ -110,9 +110,9 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
     parent.getAllExperiments = getAllExperiments;
 
     /**
-     * @param {String} problemId the id to which this submission is being added.
-     * @param {SrlSubmission} submission the submission that is being added.
-     * @param {Function} submissionCallback called when the submission is saved.
+     * @param {String} problemId - the id to which this submission is being added.
+     * @param {SrlSubmission} submission - the submission that is being added.
+     * @param {Function} submissionCallback - called when the submission is saved.
      */
     function setSubmission(problemId, submission, submissionCallback) {
         database.putInSubmissions(problemId, submission.toBase64(), function(e, request) {

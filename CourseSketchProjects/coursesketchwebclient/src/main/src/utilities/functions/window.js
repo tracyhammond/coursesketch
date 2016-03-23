@@ -147,7 +147,7 @@ if (isUndefined(makeNotFullScreen)) {
     /**
      * Stops the element from being full screen.
      *
-     * @param {Element} element The element that full screen is being removed from.
+     * @param {Element} element - The element that full screen is being removed from.
      */
     function makeNotFullScreen(element) {
         if (element.cancelFullscreen) {

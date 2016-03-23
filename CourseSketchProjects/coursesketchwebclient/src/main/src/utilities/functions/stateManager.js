@@ -48,9 +48,9 @@ function Redirector(scope, affectedWindow) {
     /**
      * Replaces all strings with a different value.
      *
-     * @param {String} str The string that the replace is happening in.
-     * @param {RegularExpression} find the expression that is being looked for.
-     * @param {String} replace what is being replaced with.
+     * @param {String} str - The string that the replace is happening in.
+     * @param {RegularExpression} find - the expression that is being looked for.
+     * @param {String} replace - what is being replaced with.
      *
      * @returns {String} A string with the replaced values.
      */

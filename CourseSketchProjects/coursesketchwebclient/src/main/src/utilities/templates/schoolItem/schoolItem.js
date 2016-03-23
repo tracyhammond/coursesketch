@@ -2,7 +2,7 @@
  * This method traverses up the parent chain until it reaches a null node. It then returns the host.
  * This is used to find the parent of a shadow root which contains the given node.
  *
- * @param {Node} parent the parent of a node contained within a school item shadow dom.
+ * @param {Node} parent - the parent of a node contained within a school item shadow dom.
  * @return {Node} the host element that contains this node.
  */
 var getHostElement = function(parent) {
@@ -170,7 +170,7 @@ function SchoolItem() {
                 /**
                  * Called when an edit button has been pressed to toggle editing.
                  *
-                 * @param {Event} event On Click event.
+                 * @param {Event} event - On Click event.
                  * @returns {Boolean} returns false.
                  */
                 element.onclick = function(event) {

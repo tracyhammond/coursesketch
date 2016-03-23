@@ -5,7 +5,7 @@ function VoiceRecording() {
 
     /**
      * Initialize the VoiceRecording
-     * @param {Node} templateClone is a clone of the custom HTML Element for the voice Recording
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the voice Recording
      */
     this.initializeElement = function(templateClone) {
         var localScope = this;
@@ -30,7 +30,7 @@ function VoiceRecording() {
 
         /**
          * Blink the elem passed in
-         * @param {Element} element The element that needs to blink
+         * @param {Element} element - The element that needs to blink
          */
         this.blink = function(element) {
             this.voiceBtnTimer = setInterval(function() {

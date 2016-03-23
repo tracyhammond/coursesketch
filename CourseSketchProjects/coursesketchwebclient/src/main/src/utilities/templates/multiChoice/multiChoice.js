@@ -6,8 +6,8 @@ function MultiChoice() {
 
     /**
      * Removes an answer choice from this multiple choice element.
-     * @param {Event} event the event that triggered this function
-     * @param {Element} answer the answer element to be removed
+     * @param {Event} event - the event that triggered this function
+     * @param {Element} answer - the answer element to be removed
      */
     this.removeAnswer = function(event, answer) {
         this.shadowRoot.querySelector('#answer-choices').removeChild(answer);
@@ -15,8 +15,8 @@ function MultiChoice() {
 
     /**
      * Marks an answer choice as correct.
-     * @param {Event} event the event that triggered this function
-     * @param {Element} answer the answer element to set as the correct answer
+     * @param {Event} event - the event that triggered this function
+     * @param {Element} answer - the answer element to set as the correct answer
      */
     this.setCorrectAnswer = function(event, answer) {
         var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
@@ -29,7 +29,7 @@ function MultiChoice() {
 
     /**
      * Adds an answer choice to this multiple choice element.
-     * @param {Event} event the event that triggered this function
+     * @param {Event} event - the event that triggered this function
      */
     this.addAnswer = function(event) {
         // Set up the parent
@@ -65,7 +65,7 @@ function MultiChoice() {
         correct.className = 'correct';
         /**
          * Called to say that a check box is correct.
-         * @param {Event} event On Click event.
+         * @param {Event} event - On Click event.
          */
         correct.onclick = function(event) {
             localScope.setCorrectAnswer(event, answer);
@@ -78,7 +78,7 @@ function MultiChoice() {
         close.textContent = '×';
         /**
          * Called to remove the answer choice.
-         * @param {Event} event On Click event.
+         * @param {Event} event - On Click event.
          */
         close.onclick = function(event) {
             localScope.removeAnswer(event, answer);
@@ -90,7 +90,7 @@ function MultiChoice() {
     };
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -109,7 +109,7 @@ function MultiChoice() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function.
+     * @param {Event} event - event that triggered this function.
      * @return {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
@@ -140,7 +140,7 @@ function MultiChoice() {
     };
 
     /**
-     * @param {ProtoCommand} mcProto is the data to be loaded from the proto
+     * @param {ProtoCommand} mcProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -169,7 +169,7 @@ function MultiChoice() {
 
     /**
      * Sets the listener
-     * @param {Function} listener called when the data is finished saving.
+     * @param {Function} listener - called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;

@@ -11,7 +11,7 @@ function ClickSelectionManager() {
 
     /**
      * Adds a selected element to the list of selected elements.
-     * @param {Element} element An element to be highlighted.
+     * @param {Element} element - An element to be highlighted.
      */
     this.addSelectedItem = function(element) {
         this.selectedItems.push(element);

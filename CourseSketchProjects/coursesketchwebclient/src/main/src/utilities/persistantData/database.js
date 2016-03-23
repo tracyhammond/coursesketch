@@ -30,7 +30,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     /**
      * Sets the upgrade table to the input table.
      *
-     * @param {Table} tables A list of tables that are being stored in the database.
+     * @param {Table} tables - A list of tables that are being stored in the database.
      */
     this.setTables = function(tables) {
         upgradeTables = tables;
@@ -79,7 +79,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             /**
              * Called if an upgrade is required
              *
-             * @param {Event} e An upgrade event.
+             * @param {Event} e - An upgrade event.
              */
             request.onupgradeneeded = function(e) {
                 var db = e.target.result;
@@ -101,7 +101,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             /**
              * Called when the database is succesfuly upgraded.
              *
-             * @param {Event} e A success event.
+             * @param {Event} e - A success event.
              */
             request.onsuccess = function(e) {
                 console.log('Database has opened');
@@ -114,7 +114,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             /**
              * Called if there is an error in opening the database.
              *
-             * @param {Event} e An error event.
+             * @param {Event} e - An error event.
              */
             request.onerror = function(e) {
                 console.log(e);
@@ -154,9 +154,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for adding items to the database.
                  *
-                 * @param {String} objectId the Key of the object when added to the database.
-                 * @param {String} objectToAdd A string representing the object in the database.
-                 * @param {Function} callback Called when the object is successfully added to the database.
+                 * @param {String} objectId - the Key of the object when added to the database.
+                 * @param {String} objectToAdd - A string representing the object in the database.
+                 * @param {Function} callback - Called when the object is successfully added to the database.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -174,7 +174,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     /**
                      * Called when the transaction is complete.
                      *
-                     * @param {Event} e A success event.
+                     * @param {Event} e - A success event.
                      */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
@@ -185,7 +185,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     /**
                      * Called if there is an error during the transaction.
                      *
-                     * @param {Event} e An error event.
+                     * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -195,8 +195,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for deleting items from the database.
                  *
-                 * @param {String} objectId The id of the object we are trying to delete from the database.
-                 * @param {Function} callback The function that is called after deleting the item.
+                 * @param {String} objectId - The id of the object we are trying to delete from the database.
+                 * @param {Function} callback - The function that is called after deleting the item.
                  */
                 localScope[ 'deleteFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -211,7 +211,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.delete(objectId);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e A success event.
+                     * @param {Event} e - A success event.
                      */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
@@ -221,7 +221,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e An error event.
+                     * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -231,8 +231,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for deleting items from the database.
                  *
-                 * @param {String} objectId The id of the object we are trying to get from the database.
-                 * @param {Function} callback The function that is called after retrieving the item.
+                 * @param {String} objectId - The id of the object we are trying to get from the database.
+                 * @param {Function} callback - The function that is called after retrieving the item.
                  */
                 localScope[ 'getFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -252,7 +252,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.get(objectId);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e A success event.
+                     * @param {Event} e - A success event.
                      */
                     request.onsuccess = function(e) {
                         if (callback) {
@@ -262,7 +262,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e An error event.
+                     * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -297,7 +297,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Called if emptying is succesful.
                  *
-                 * @param {Event} event A success event.
+                 * @param {Event} event - A success event.
                  */
                 dbreq.onsuccess = function(event) {
                     output_trace('indexedDB: ' + databaseName + ' deleted');
@@ -305,7 +305,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Called if there is an error emptying the database.
                  *
-                 * @param {Event} event An error event.
+                 * @param {Event} event - An error event.
                  */
                 dbreq.onerror = function(event) {
                     output_trace('indexedDB.delete Error: ' + event.message);

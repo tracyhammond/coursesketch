@@ -2,7 +2,7 @@
     /**
      * Creates a notification from the exception that is passed in.
      *
-     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
+     * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
      */
     CourseSketch.showShallowException = function notifyMe(protoEx) {
         // Let's check if the browser supports notifications
@@ -26,7 +26,7 @@
      *
      * User can click on the notification to see the full stack trace or the notification will disappear after 7 seconds.
      *
-     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
+     * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
      */
     function createShallowNotification(protoEx) {
         try {
@@ -38,7 +38,7 @@
 
             /**
              * Called when the html5 notification is clicked.
-             * @param {Event} event On Click event.
+             * @param {Event} event - On Click event.
              */
             notification.onclick = function(event) {
                 console.log(event);
@@ -57,8 +57,8 @@
      *
      * Then calls loadProtoException() to load the StackTrace on 'exception-notification'.
      *
-     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
-     * @param {Element} parentElement is the element to which the element we create will be appended to.
+     * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
+     * @param {Element} parentElement - is the element to which the element we create will be appended to.
      */
     function createDeepNotification(protoEx, parentElement) {
         var detailedNotification = document.createElement('exception-notification');
@@ -95,7 +95,7 @@ function ExceptionNotification() {
     /**
      * Makes the exit button close the box and enables dragging.
      *
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box.
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box.
      */
     this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
@@ -105,7 +105,7 @@ function ExceptionNotification() {
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
         /**
          * Removes the element when clicked.
-         * @param {Event} event On Click event.
+         * @param {Event} event - On Click event.
          * @returns {Boolean} false.
          */
         document.body.querySelector('#lean-overlay').onclick = function(event) {
@@ -118,7 +118,7 @@ function ExceptionNotification() {
         /**
          * Removes the element when clicked.
          *
-         * @param {Event} event On Click event.
+         * @param {Event} event - On Click event.
          */
         this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
             $(document.body.querySelector('#lean-overlay')).fadeOut(250);
@@ -142,7 +142,7 @@ function ExceptionNotification() {
      * Then displays the entire StackTrace of the ProtoException.
      * Lastly displays the cause if it exists.
      *
-     * @param {ProtoException} protoEx is a ProtoException passed is so the contents can be displayed.
+     * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
      */
     this.loadProtoException = function(protoEx) {
         var header = document.createElement('h4');
