@@ -1,3 +1,4 @@
+// jscs:disable
 /**
  * Sets up and saves recordings.
  */

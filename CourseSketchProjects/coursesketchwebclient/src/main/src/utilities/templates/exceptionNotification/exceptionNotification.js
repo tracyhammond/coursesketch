@@ -13,7 +13,7 @@
             createShallowNotification(protoEx);
         } else if (Notification.permission !== 'denied') {
             Notification.requestPermission(function(permission) {
-            // If the user is okay, let's create a notification
+                // If the user is okay, let's create a notification
                 if (permission === 'granted') {
                     createShallowNotification(protoEx);
                 }
@@ -38,6 +38,7 @@
 
             /**
              * Called when the html5 notification is clicked.
+             *
              * @param {Event} event - On Click event.
              */
             notification.onclick = function(event) {
@@ -105,6 +106,7 @@ function ExceptionNotification() {
         $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
         /**
          * Removes the element when clicked.
+         *
          * @param {Event} event - On Click event.
          * @returns {Boolean} false.
          */

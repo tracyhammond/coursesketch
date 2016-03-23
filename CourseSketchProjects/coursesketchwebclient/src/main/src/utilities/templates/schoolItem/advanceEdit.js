@@ -1,3 +1,4 @@
+// jscs:disable jsDoc
 (function() {
 
     /**
@@ -20,11 +21,12 @@
     var loaderObject = {};
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
+     *
      * @return {Undefined|String} the name or undefined.
      */
     loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -48,11 +50,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
+     *
      * @return {Undefined|String} undefined or the description.
      */
     loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -76,11 +79,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
+     *
      * @return {Null} This returns null to differentiate it from other possible values as this is not saveable.
      */
     loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -99,11 +103,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a functiontype object from the schoolItem.
+     *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -125,11 +130,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a time frame object from the schoolItem.
+     *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -151,11 +157,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a subtraction object from the schoolItem.
+     *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -177,11 +184,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads an Assignment type object from the schoolItem.
+     *
      * @return {Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill) {

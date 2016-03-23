@@ -14,6 +14,7 @@ function ImageBox() {
 
     /**
      * Sets the source of the image.
+     *
      * @param {String} src - The source data of the image (or url).
      */
     this.setSrc = function(src) {
@@ -68,6 +69,7 @@ function ImageBox() {
 
     /**
      * Sets a listener.
+     *
      * @param {Function} listener - Called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {

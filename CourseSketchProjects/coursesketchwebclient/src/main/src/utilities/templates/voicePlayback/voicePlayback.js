@@ -1,3 +1,4 @@
+// jscs:disable
 /**
  * Sets up and saves recordings.
  * Calls playback.js and starts music when play button is pushed.

@@ -1,3 +1,4 @@
+// jscs:disable jsDoc
 /**
  * Takes in a school item object (which is a course, assignment ... etc) and
  * creates an item card as a result.

@@ -6,6 +6,7 @@ function MultiChoice() {
 
     /**
      * Removes an answer choice from this multiple choice element.
+     *
      * @param {Event} event - the event that triggered this function
      * @param {Element} answer - the answer element to be removed
      */
@@ -15,6 +16,7 @@ function MultiChoice() {
 
     /**
      * Marks an answer choice as correct.
+     *
      * @param {Event} event - the event that triggered this function
      * @param {Element} answer - the answer element to set as the correct answer
      */
@@ -29,6 +31,7 @@ function MultiChoice() {
 
     /**
      * Adds an answer choice to this multiple choice element.
+     *
      * @param {Event} event - the event that triggered this function
      */
     this.addAnswer = function(event) {
@@ -65,6 +68,7 @@ function MultiChoice() {
         correct.className = 'correct';
         /**
          * Called to say that a check box is correct.
+         *
          * @param {Event} event - On Click event.
          */
         correct.onclick = function(event) {
@@ -78,6 +82,7 @@ function MultiChoice() {
         close.textContent = '×';
         /**
          * Called to remove the answer choice.
+         *
          * @param {Event} event - On Click event.
          */
         close.onclick = function(event) {
@@ -101,7 +106,7 @@ function MultiChoice() {
         /**
          * Bind addAnswer to click.
          */
-        localScope.shadowRoot.querySelector('#add').onclick = function(event) {
+        localScope.shadowRoot.querySelector('#add').onclick = function(event) {// jscs:ignore jsDoc
             localScope.addAnswer(event);
         };
     };
@@ -168,7 +173,8 @@ function MultiChoice() {
     };
 
     /**
-     * Sets the listener
+     * Sets the listener.
+     *
      * @param {Function} listener - called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {

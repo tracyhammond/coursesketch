@@ -14,6 +14,7 @@ function EmbeddedHtml() {
 
     /**
      * Sets the html source that is being embedded.
+     *
      * @param {String} html - html code.
      */
     this.setHtml = function(html) {

@@ -20,8 +20,7 @@ var getHostElement = function(parent) {
 function SchoolItem() {
 
     /**
-     * @param {Element} templateClone
-     *            an element representing the data inside tag, its
+     * @param {Element} templateClone - an element representing the data inside tag, its
      *            content has already been imported and then added to this
      *            element.
      */
@@ -75,7 +74,7 @@ function SchoolItem() {
      * Given an allowed width, text and font it returns true if the element is
      * over 3 lines long.
      */
-    function checkTextOverflow(widthAllowed, text, font) {
+    function checkTextOverflow(widthAllowed, text, font) {// jscs:ignore jsDoc
         var totalWidth = getTextWidth(text, font);
         var lines = totalWidth / widthAllowed;
         var numberOfLines = Math.round(lines);
@@ -199,8 +198,10 @@ function SchoolItem() {
 
     /**
      * Should create a special editor element based on its state.
+     *
+     * @return {Element} an input element.
      */
-    function getEditorElement(parentNode) {
+    function getEditorElement() {
         return document.createElement('input');
     }
 
