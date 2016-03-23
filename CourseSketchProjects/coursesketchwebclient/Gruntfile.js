@@ -51,7 +51,7 @@ module.exports = function(grunt) {
             options: {
                 config: 'config/jscs.conf.jscsrc',
                 reporterOutput: 'target/jscsReport.txt',
-                maxErrors: 200
+                maxErrors: 1000
             }
         },
         /*
