@@ -69,10 +69,10 @@ function MultiChoice() {
         /**
          * Called to say that a check box is correct.
          *
-         * @param {Event} event - On Click event.
+         * @param {Event} onClickEvent - On Click event.
          */
-        correct.onclick = function(event) {
-            localScope.setCorrectAnswer(event, answer);
+        correct.onclick = function(onClickEvent) {
+            localScope.setCorrectAnswer(onClickEvent, answer);
         };
         answer.appendChild(correct);
 
@@ -83,10 +83,10 @@ function MultiChoice() {
         /**
          * Called to remove the answer choice.
          *
-         * @param {Event} event - On Click event.
+         * @param {Event} onClickEvent - On Click event.
          */
-        close.onclick = function(event) {
-            localScope.removeAnswer(event, answer);
+        close.onclick = function(onClickEvent) {
+            localScope.removeAnswer(onClickEvent, answer);
         };
         answer.appendChild(close);
 

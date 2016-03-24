@@ -85,7 +85,7 @@ function Connection(uri, encrypted, attemptReconnect) {
              * @param {Event} evt - An event containing data about receiving a message.
              */
             websocket.onmessage = function(evt) {
-                /*jshint maxcomplexity:15 */
+                /*jshint maxcomplexity:16 */
                 try {
                     var MessageType = CourseSketch.prutil.getRequestClass().MessageType;
                     // Decode the Request

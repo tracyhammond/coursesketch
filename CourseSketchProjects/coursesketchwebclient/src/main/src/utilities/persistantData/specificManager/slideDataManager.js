@@ -198,9 +198,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
         for (var i = 0; i < slideIds.length; i++) {
             var currentSlideId = slideIds[i];
             (function(slideId) {
-                getSlideLocal(slideId, function(slide) {
-                    if (!isUndefined(slide) && !(slide instanceof DatabaseException)) {
-                        slidesFound.push(slide);
+                getSlideLocal(slideId, function(localSlide) {
+                    if (!isUndefined(localSlide) && !(localSlide instanceof DatabaseException)) {
+                        slidesFound.push(localSlide);
                     } else {
                         slideIdsNotFound.push(slideId);
                     }
@@ -219,9 +219,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                                             CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                                     return;
                                 }  // end if
-                                for (var i = 0; i < school.slides.length; i++) {
-                                    localScope.setSlide(school.slides[i]);
-                                    slidesFound.push(school.slides[i]);
+                                for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
+                                    localScope.setSlide(school.slides[slideIndex]);
+                                    slidesFound.push(school.slides[slideIndex]);
                                 } // end for
                                 if (!isUndefined(serverCallback)) {
                                     serverCallback(slidesFound);

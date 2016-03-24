@@ -299,14 +299,14 @@
             /**
              * Called to cancel the editing process.
              *
-             * @param {Element} event -  On Click event.
+             * @param {Element} closeEvent -  On Click event.
              * @returns {Boolean} false if the element clicked is the host dialog.
              */
-            function close(event) {
-                if (event.toElement === host) {
+            function close(closeEvent) {
+                if (closeEvent.toElement === host) {
                     return false;
                 }
-                event.stopPropagation();
+                closeEvent.stopPropagation();
                 document.body.removeEventListener('click', close);
                 try {
                     document.body.removeChild(host);

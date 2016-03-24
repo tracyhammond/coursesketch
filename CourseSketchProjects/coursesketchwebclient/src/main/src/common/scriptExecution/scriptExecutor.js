@@ -9,14 +9,14 @@ validateFirstRun(document.currentScript);
  */
 function mergeApi(originalApi, objectApi){
     var result = {};
-    for (var key in originalApi) {
-        if (originalApi.hasOwnProperty(key)) {
-            result[key] = originalApi[key];
+    for (var originalKey in originalApi) {
+        if (originalApi.hasOwnProperty(originalKey)) {
+            result[originalKey] = originalApi[originalKey];
         }
     }
-    for (var key in objectApi) {
-        if (objectApi.hasOwnProperty(key)) {
-            result[key] = objectApi[key];
+    for (var objectKey in objectApi) {
+        if (objectApi.hasOwnProperty(objectKey)) {
+            result[objectKey] = objectApi[objectKey];
         }
     }
     return result;

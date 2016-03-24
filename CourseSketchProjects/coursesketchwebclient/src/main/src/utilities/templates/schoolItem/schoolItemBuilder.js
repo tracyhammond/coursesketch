@@ -46,7 +46,7 @@ function SchoolItemBuilder() {
      **************************************************************************/
     for (var obj in this) {
         if (obj !== this.resetValues && ('' + obj) !== 'resetValues') {
-            var objectName = '' + obj;
+            var nameOfObject = '' + obj;
             // scopes the loop so that the memory of the object stays
             (function(objectName, scope) {
                 // capitalizes only the first letter.
@@ -62,7 +62,7 @@ function SchoolItemBuilder() {
                     scope[objectName] = value;
                     return scope;
                 };
-            })(objectName, this);
+            })(nameOfObject, this);
         }
     }
 

@@ -332,8 +332,8 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                                             assignmentIdList));
                                     return;
                                 }
-                                for (var i = 0; i < item.data.length; i++) {
-                                    var decodedAssignment = CourseSketch.prutil.decodeProtobuf(item.data[i],
+                                for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                                    var decodedAssignment = CourseSketch.prutil.decodeProtobuf(item.data[dataIndex],
                                         CourseSketch.prutil.getSrlAssignmentClass());
                                     localScope.setAssignment(decodedAssignment);
                                     assignmentList.push(decodedAssignment);

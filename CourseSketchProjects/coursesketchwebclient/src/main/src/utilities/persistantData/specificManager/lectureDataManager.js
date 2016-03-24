@@ -242,9 +242,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
         for (var i = 0; i < lectureIds.length; i++) {
             var currentLectureId = lectureIds[i];
             (function(lectureId) {
-                getLectureLocal(lectureId, function(lecture) {
-                    if (!isUndefined(lecture) && !(lecture instanceof DatabaseException)) {
-                        lecturesFound.push(lecture);
+                getLectureLocal(lectureId, function(localLecture) {
+                    if (!isUndefined(localLecture) && !(localLecture instanceof DatabaseException)) {
+                        lecturesFound.push(localLecture);
                     } else {
                         lectureIdsNotFound.push(lectureId);
                     }
@@ -272,9 +272,9 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase, sendDat
                                     }
                                     return;
                                 } // end error check
-                                for (var i = 0; i < school.lectures.length; i++) {
-                                    localScope.setLecture(school.lectures[i]);
-                                    lecturesFound.push(school.lectures[i]);
+                                for (var lectureIndex = 0; lectureIndex < school.lectures.length; lectureIndex++) {
+                                    localScope.setLecture(school.lectures[lectureIndex]);
+                                    lecturesFound.push(school.lectures[lectureIndex]);
                                 } // end for
                                 if (!isUndefined(serverCallback)){
                                     serverCallback(lecturesFound);

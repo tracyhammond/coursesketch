@@ -153,11 +153,11 @@
 
         // Remove this code once the single request method has been resolved.
         CourseSketch.dataManager.getAssignments(assignmentList, undefined, function(assignments) {
-            for (var i = 0; i < assignments.length; i++) {
+            for (var assignmentIndex = 0; assignmentIndex < assignments.length; assignmentIndex++) {
                 // The order in the assigmment list may not match the order in the list of assigments.
                 // this is used to match the order together so the right name goes with the correct button.
-                var index = assignmentList.indexOf(assignments[i].id);
-                buttonList[index].textContent = assignments[i].name;
+                var index = assignmentList.indexOf(assignments[assignmentIndex].id);
+                buttonList[index].textContent = assignments[assignmentIndex].name;
             }
         });
         header.appendChild(row);

@@ -110,8 +110,8 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             throw new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId);
         }
 
-        getCourseLocal(courseId, function(course) {
-            if (isUndefined(course) || course instanceof DatabaseException) {
+        getCourseLocal(courseId, function(localCourse) {
+            if (isUndefined(localCourse) || localCourse instanceof DatabaseException) {
                 var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE, [ courseId ]);
                 advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
                     if (isException(item)) {
@@ -134,7 +134,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
                 });
             } else {
                 // get course local calls state callback so it is not needed here if it exists.
-                courseCallback(course);
+                courseCallback(localCourse);
             }
         });
     }
@@ -264,8 +264,8 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             var setCourseCallback = createBarrier(courseList.length, function() {
                 courseCallback(courseList);
             });
-            for (var i = 0; i < courseList.length; i++) {
-                var course = courseList[i];
+            for (var dataIndex = 0; dataIndex < courseList.length; dataIndex++) {
+                var course = courseList[dataIndex];
                 setCourse(course, setCourseCallback); // no callback is needed
             }
         };

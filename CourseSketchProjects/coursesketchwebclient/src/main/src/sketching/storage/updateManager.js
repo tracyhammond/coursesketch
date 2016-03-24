@@ -354,9 +354,9 @@ function UpdateManager(sketchManager, onError) {
             updateList.push(update);
             currentEndingIndex += 1;
             netCount += 1;
-            var redraw = redoUpdate(updateList[currentUpdateIndex]);
+            var redrawRedo = redoUpdate(updateList[currentUpdateIndex]);
             currentUpdateIndex += 1;
-            return redraw;
+            return redrawRedo;
         } else if (command === CourseSketch.prutil.CommandType.UNDO) {
             lastUpdateType = -1;
             if (currentUpdateIndex <= 0) {
@@ -369,17 +369,17 @@ function UpdateManager(sketchManager, onError) {
             netCount -= 1;
             updateList.push(update);
             currentEndingIndex += 1;
-            var redraw = undoUpdate(updateList[currentUpdateIndex - 1]);
+            var redrawUndo = undoUpdate(updateList[currentUpdateIndex - 1]);
             currentUpdateIndex -= 1;
-            return redraw;
+            return redrawUndo;
         } else {
             lastUpdateType = 0;
             // A normal update
             currentEndingIndex += 1;
             updateList.push(update);
-            var redraw = redoUpdate(update);
+            var redrawExecute = redoUpdate(update);
             currentUpdateIndex += 1;
-            return redraw;
+            return redrawExecute;
         }
     }
 
@@ -421,19 +421,19 @@ function UpdateManager(sketchManager, onError) {
             // For undo we need the sketch id before we switch
             command.decodedData = currentSketchId;
             var sketchData = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getActionCreateSketchClass());
-            var id = sketchData.sketchId.idChain[0];
+            var newSketchId = sketchData.sketchId.idChain[0];
             if (!isUndefined(sketchManager) &&
-                    (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id !== id) ||
+                    (!isUndefined(sketchManager.getCurrentSketch()) && sketchManager.getCurrentSketch().id !== newSketchId) ||
                     isUndefined(sketchManager.getCurrentSketch())) {
-                sketchManager.createSketch(id, sketchData);
+                sketchManager.createSketch(newSketchId, sketchData);
             }
-            switchToSketch(id);
+            switchToSketch(newSketchId);
         // This can have other commands with its update.
         } else if (command.commandType === CourseSketch.prutil.CommandType.SWITCH_SKETCH) {
             // For undoing
             command.decodedData = currentSketchId;
-            var id = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getIdChainClass()).idChain[0];
-            switchToSketch(id);
+            var sketchId = CourseSketch.prutil.decodeProtobuf(command.commandData, CourseSketch.prutil.getIdChainClass()).idChain[0];
+            switchToSketch(sketchId);
         }
         return update.redo();
     }

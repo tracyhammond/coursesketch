@@ -252,15 +252,15 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var db = dbNameSpace.indexedDB.db;
                     var trans = db.transaction([ localTable.name ]);
                     var store = trans.objectStore(localTable.name);
-                    var request = store.get(objectId);
+                    var result = store.get(objectId);
                     /**
                      * Called when the transaction is complete.
                      *
                      * @param {Event} e - A success event.
                      */
-                    request.onsuccess = function(e) {
+                    result.onsuccess = function(e) {
                         if (callback) {
-                            callback(e, request, request.result);
+                            callback(e, result, result.result);
                         }
                     };
 
@@ -269,7 +269,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                      *
                      * @param {Event} e - An error event.
                      */
-                    request.onerror = function(e) {
+                    result.onerror = function(e) {
                         console.log(e.value);
                     };
                 };
@@ -294,20 +294,20 @@ function ProtoDatabase(databaseName, version, openCallback) {
      *
      * Currently does not work.
      *
-     * @param {String} databaseName - The name of the database.
+     * @param {String} newDatabaseName - The name of the database.
      */
-    function emptyDB(databaseName) {
+    function emptyDB(newDatabaseName) {
         try {
             var result = confirm('Do you want to empty all of the local data?');
             if (result === true) {
-                var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
+                var dbreq = dbNameSpace.indexedDB.deleteDatabase(newDatabaseName);
                 /**
                  * Called if emptying is succesful.
                  *
                  * @param {Event} event - A success event.
                  */
                 dbreq.onsuccess = function(event) {
-                    output_trace('indexedDB: ' + databaseName + ' deleted');
+                    output_trace('indexedDB: ' + newDatabaseName + ' deleted');
                 };
                 /**
                  * Called if there is an error emptying the database.

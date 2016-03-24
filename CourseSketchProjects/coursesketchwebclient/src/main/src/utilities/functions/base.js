@@ -146,7 +146,7 @@ if (isUndefined(getFormattedDateTime)) {
 }
 
 if (CourseSketch && isUndefined(BaseException) && !isUndefined(CourseSketch.BaseException)) {
-    BaseException = CourseSketch.BaseException;
+    BaseException = CourseSketch.BaseException; // jshint ignore:line
 }
 
 if (isUndefined(BaseException)) {
@@ -238,7 +238,7 @@ if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
 }
 
 if (CourseSketch && isUndefined(isException) && !isUndefined(CourseSketch.isException)) {
-    isException = CourseSketch.isException;
+    isException = CourseSketch.isException; // jshint ignore:line
 }
 
 if (isUndefined(isException)) {

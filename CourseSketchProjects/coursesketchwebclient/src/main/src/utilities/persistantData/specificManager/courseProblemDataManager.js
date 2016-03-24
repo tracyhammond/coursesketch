@@ -329,8 +329,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                                     return;
                                 }
 
-                                for (var i = 0; i < item.data.length; i++) {
-                                    var decodedCourseProblem = CourseSketch.prutil.getSrlProblemClass().decode(item.data[i]);
+                                for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
+                                    var decodedCourseProblem = CourseSketch.prutil.getSrlProblemClass().decode(item.data[dataIndex]);
                                     parent.setCourseProblem(decodedCourseProblem);
                                     courseProblemList.push(decodedCourseProblem);
                                 }
