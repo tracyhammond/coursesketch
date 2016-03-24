@@ -1,5 +1,6 @@
 validateFirstRun(document.currentScript);
 
+
 /**
  * @namespace "lecturePage/student"
  */
@@ -10,9 +11,7 @@ validateFirstRun(document.currentScript);
         /**
          * Selects a specific lecture slide.
          *
-         * @param {Integer} slideIndex
-         *            index of the slide in the current lecture's protobuf
-         *            object.
+         * @param {Integer} slideIndex - Index of the slide in the current lecture's protobuf object.
          * @memberof "lecturePage/student"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {

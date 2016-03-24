@@ -86,8 +86,8 @@ validateFirstRun(document.currentScript);
                 .clearAllSelectedItems();
             CourseSketch.lectureSelection.courseSelectionManager
                 .addSelectedItem(document.getElementById(courseid));
-            CourseSketch.dataManager.getCourse(courseid, function(course) {
-                CourseSketch.dataManager.getCourseLectures(course.lectureList,
+            CourseSketch.dataManager.getCourse(courseid, function(foundCourse) {
+                CourseSketch.dataManager.getCourseLectures(foundCourse.lectureList,
                     CourseSketch.lectureSelection.displayLectures,
                     CourseSketch.lectureSelection.displayLectures);
             });
@@ -98,6 +98,7 @@ validateFirstRun(document.currentScript);
          *
          * @param {event} evt
          *                event from click (or other) action
+         * @param {Function} addLectureCallback - A function that is called after the lecture is added.
          * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
@@ -109,6 +110,7 @@ validateFirstRun(document.currentScript);
 
             /**
              * Called after inserting a lecture into the database.
+             *
              * @memberof lectureSelection
              */
             var insertCallback = function() {
@@ -129,7 +131,7 @@ validateFirstRun(document.currentScript);
         /**
          * Renders a list of courses to the screen.
          *
-         * @param {List<SrlCourse>} courseList list of courses to display.
+         * @param {List<SrlCourse>} courseList - List of courses to display.
          * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.showCourses = function(courseList) {
@@ -144,6 +146,7 @@ validateFirstRun(document.currentScript);
         /**
          * Loads the courses from the database.
          *
+         * @param {List<SrlCourse>} courseList - List of courses to display.
          * @memberof lectureSelection
          */
         var loadCourses = function(courseList) {

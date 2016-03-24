@@ -33,7 +33,7 @@ function NavigationPanel() {
     };
 
     /**
-     * @param {ProblemNavigator} nav sets bindings and disables buttons if they can not do anything.
+     * @param {ProblemNavigator} nav - Sets bindings and disables buttons if they can not do anything.
      * @instance
      * @memberof NavigationPanel
      * @function setUpButtons
@@ -65,7 +65,7 @@ function NavigationPanel() {
     */
 
     /**
-     * @param {node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {node} templateClone - Is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      * @instance
      * @memberof NavigationPanel
@@ -84,7 +84,8 @@ function NavigationPanel() {
 
     /**
      * Sets the navigator if one is to be used.
-     * @param {ProblemNavigator} navPanel the nav panel that is being used.
+     *
+     * @param {ProblemNavigator} navPanel - The nav panel that is being used.
      * @instance
      * @memberof NavigationPanel
      * @function setNavigator

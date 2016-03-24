@@ -9,8 +9,9 @@
 
     /**
      * Sets up scrolling for the current table.
-     * @param {Element} table
-     * @param {Object} startPosition
+     *
+     * @param {Element} table - The table that contains the grades.
+     * @param {Object} startPosition - The start potion of the view.
      */
     CourseSketch.gradeBook.initializeTableScrolling = function(table, startPosition) {
         var oldHead = document.querySelector('.fixedHead');
@@ -28,7 +29,7 @@
     };
 
     /**
-     * Scrolling code for tables
+     * Scrolling code for tables.
      */
     $(document).ready(function() {
         // independent of which table is active
@@ -87,8 +88,8 @@
     /**
      * Makes column widths the same.
      *
-     * @param {HTMLElement} clonedElement
-     * @param {HTMLElement} originalElement
+     * @param {HTMLElement} clonedElement - The element that was cloned.
+     * @param {HTMLElement} originalElement - The element that was not cloned.
      */
     function synchronizeFirstColumnWidth(clonedElement, originalElement) {
         var clonedFirstDiv = clonedElement.querySelector('div');

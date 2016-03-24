@@ -33,6 +33,8 @@ function Redirector(scope, affectedWindow) {
      * Sets the hash url to the file location.
      *
      * This allows us to find the url if something were to happen.
+     *
+     * @param {URL} url - The url where the redirection is happening.
      */
     this.setRedirect = function setRedirect(url) {
         var shortUrl = replaceAll(url, FILE_ENDINGS, ''); // Remove html from file
@@ -48,9 +50,9 @@ function Redirector(scope, affectedWindow) {
     /**
      * Replaces all strings with a different value.
      *
-     * @param {String} str The string that the replace is happening in.
-     * @param {RegularExpression} find the expression that is being looked for.
-     * @param {String} replace what is being replaced with.
+     * @param {String} str - The string that the replace is happening in.
+     * @param {RegularExpression} find - the expression that is being looked for.
+     * @param {String} replace - what is being replaced with.
      *
      * @returns {String} A string with the replaced values.
      */
@@ -60,7 +62,8 @@ function Redirector(scope, affectedWindow) {
 
     /**
      * Gets the redirection url of the page from the hash.
-     * @returns {String}
+     *
+     * @returns {String} The redirect with slashes added.
      */
     this.getRedirect = function getRedirect() {
         var starting = scope.location.hash.substring(1);
@@ -70,7 +73,8 @@ function Redirector(scope, affectedWindow) {
 
     /**
      * Changes the window address and adds a browser event.
-     * @param {String} url
+     *
+     * @param {String} url - The new url to redirect to.
      */
     this.moveWindow = function(url) {
         affectedWindow.src = url;
@@ -78,6 +82,8 @@ function Redirector(scope, affectedWindow) {
 
     /**
      * Redirects the window but does not actually add an event.
+     *
+     * @param {String} url - The new url to redirect to.
      */
     this.changeSourceNoEvent = function(url) {
         var docWindow = affectedWindow.documentWindow || affectedWindow.contentDocument;
