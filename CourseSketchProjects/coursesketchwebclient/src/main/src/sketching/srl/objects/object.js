@@ -1,5 +1,6 @@
 /* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
+//jscs:disable
 
 /**
  * ******************************
