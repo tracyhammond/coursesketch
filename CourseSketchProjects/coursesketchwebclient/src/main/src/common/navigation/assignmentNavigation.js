@@ -399,7 +399,23 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     function loadNestedAssignment(assignmentId) {
         assignmentIdStack.push(currentAssignmentId);
+        if (currentSubgroupPartIndex + 1 >= currentSubgroup.subgroups.length) {
+            currentSubgroupPartIndex = 0;
+            currentIndex = 0;
+        } else {
+            currentSubgroupPartIndex += 1;
+        }
+
+        if (currentIndex >= subgroupList.length) {
+            currentIndex = -1;
+        }
+
         indicesStack.push(createAssignmentLocation(currentIndex, currentSubgroupPartIndex));
+        loadAssignment(assignmentId, function() {
+            goToSubgroup(0);
+            gotoSubgroupPart(0);
+            doneNavigating();
+        });
     }
 
     /**
