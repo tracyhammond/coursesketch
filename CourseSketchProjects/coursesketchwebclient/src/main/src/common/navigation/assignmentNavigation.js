@@ -1,35 +1,37 @@
 /**
  * How this works is a polling system.
  *
- * when a problem/assignment/course in assignment view is changed all the parts are notify via a callback at which point they can poll
+ * When a problem/assignment/course in assignment view is changed all the parts are notify via a callback at which point they can poll
  * different parts of the system.
  * Callbacks are not guaranteed in any order.
  *
- * How navigation works!
+ * How navigation works.
  *
  * If you are navigating at subgroup part level:
- *     Goto next:
- *         If there is a next part navigate to it
- *         If there is not a next part then gotoNext at subgroup level
- *     Goto previous:
+ * <ul>
+ *     <li>Goto next:<ul>
+ *         <li>If there is a next part navigate to it</li>
+ *         <li>If there is not a next part then gotoNext at subgroup level</li></ul></li>
+ *     <li>Goto previous:
  *         If there is a previous part then navigate to it
- *         If there is not a previous part then gotoPrevious at subgroup level
- * If you are navigating at subgroup level:
- *      Goto next:
- *         If there is a next subgroup navigate to it
- *         If there is not a next subgroup:
- *              If the stack is empty you reached the end!
- *              If the stack is not empty you pop up and navigate to the index specified on the list
- *      Goto previous:
- *         If there is a previous subgroup navigate to it
- *         If there is not a previos usgroup:
- *              If the visisted stack is empty you reached the beginning!
- *              If the visited stack is not empty you go in an and start at the end of that subgroup.
+ *         If there is not a previous part then gotoPrevious at subgroup level</li></ul></li>
+ * <li>If you are navigating at subgroup level:<ul>
+ *      <li>Goto next:<ul>
+ *         <li>If there is a next subgroup navigate to it
+ *         <li>If there is not a next subgroup:<ul>
+ *              <li>If the stack is empty you reached the end!
+ *              <li>If the stack is not empty you pop up and navigate to the index specified on the list</li></ul></li><
+ *      <li>Goto previous:
+ *         <li>If there is a previous subgroup navigate to it
+ *         <li>If there is not a previos usgroup:
+ *              <li>If the visisted stack is empty you reached the beginning!
+ *              <li>If the visited stack is not empty you go in an and start at the end of that subgroup.
  *
  * A subgroup part can be an assignment which would be a nested assignment.
- * @param {UUID} startingAssignmentId the id that the problem is created with.
- * @param {Number} preferredIndex The starting index to start problems at.
- * @param {Boolean} navigateAtSubgroupLevel if True then the navigation happens at the subgroup level and not the subgroupPart level.
+ *
+ * @param {UUID} startingAssignmentId - The id that the problem is created with.
+ * @param {Number} preferredIndex - The starting index to start problems at.
+ * @param {Boolean} navigateAtSubgroupLevel - If True then the navigation happens at the subgroup level and not the subgroupPart level.
  *                      Not setting this gives it a value of false.
  * @class AssignmentNavigator
  */
@@ -87,13 +89,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
     /**
      * The current index In the assignment where the navigator is.
-     * @type {number}
+     * @type {Number}
      */
     var currentIndex = 0;
 
     /**
      * The current index in the problem or slide set where the navigator is.
-     * @type {number}
+     * @type {Number}
      */
     var currentSubgroupPartIndex = 0;
 
@@ -113,13 +115,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
     /**
      * True once the data assignment has been loaded.
-     * @type {boolean}
+     * @type {Boolean}
      */
     var dataLoaded = false;
 
     /**
      * True if the ui that uses the information for the problem or slide has been loaded.
-     * @type {boolean}
+     * @type {Boolean}
      */
     var uiLoaded = false;
 
@@ -155,12 +157,12 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * True once the top level assignment has been navigated to the last index.
      *
      * (true even if looping is on).
-     * @type {boolean}
+     * @type {Boolean}
      */
     var isDone = false;
 
     // some initialization
-    (function () {
+    (function() {
         // Sets the current index.
         if (!isUndefined(preferredIndex)) {
             try {
@@ -211,7 +213,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Sets the knowledge of if the navigator ui has been loaded.
      *
-     * @param {Boolean} value true if the ui has been loaded.
+     * @param {Boolean} value - True if the ui has been loaded.
      * @instance
      * @memberof AssignmentNavigator
      */
@@ -239,6 +241,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Scopes the index for the callbackList.
      *
      * This way the browser is not locked up by callbacks.
+     *
+     * @param {Number} scopedIndex - The index from the callbackList to call.
      * @instance
      * @access private
      * @memberof AssignmentNavigator
@@ -271,11 +275,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * This also sets the subgroupList.
      * Calls the callback after the local data is set.
-     * @param {UUID} assignmentId
-     * @param {Function} [callback] A callback function called to set the 
+     *
+     * @param {UUID} assignmentId - The id of the asignment to load.
+     * @param {Function} [callback] - A callback function called when the assignment is loaded.
      */
     function loadAssignment(assignmentId, callback) {
-        function setData(assignment) {
+
+        function setData(assignment) { // jscs:ignore jsDoc
             currentAssignment = assignment;
             subgroupList = currentAssignment.problemGroups;
             currentAssignmentId = assignment.id;
@@ -303,7 +309,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Changes the index to point at this new problem.
      *
-     * @param {Number} index {Number} the problem that we want to switch to.
+     * @param {Number} index - The problem that we want to switch to.
      * @instance
      * @memberof AssignmentNavigator
      */
@@ -351,10 +357,12 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     }
 
     /**
-     * Creates an assignment location
-     * @param {Number} subGroupIndex
-     * @param {Number} partIndex
-     * @returns {{group: Number, part: Number}}
+     * Creates an assignment location.
+     *
+     * @param {Number} subGroupIndex - The index of problem subgroup.
+     * @param {Number} partIndex - The index of the subgroup part.
+     *
+     * @returns {{group: Number, part: Number}} An assignment location.
      */
     function createAssignmentLocation(subGroupIndex, partIndex) {
         return {
@@ -362,8 +370,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             'part': partIndex
         };
     }
-
-
 
     /**
      * Navigate from an nested assignment to the one that contains it.
@@ -377,6 +383,10 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         }
     }
 
+    /**
+     *
+     * Navigates to the previously nested lecture that the user has navigated to.
+     */
     function navigateToPreviousNested() {
     }
 
@@ -384,20 +394,23 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Loads a nested assignment.
      *
      * Pushes the startingAssignmentId onto the stack and pushes the next location onto the indices stack.
-     * @param {String} assignmentId
+     *
+     * @param {String} assignmentId - The id of the nested assignment.
      */
     function loadNestedAssignment(assignmentId) {
-
+        assignmentIdStack.push(currentAssignmentId);
+        indicesStack.push(createAssignmentLocation(currentIndex, currentSubgroupPartIndex));
     }
 
     /**
      * Changes the problem to the given index.
      *
-     * @param {Number} index the index we want to switch to.
      * If looping is set to false then if given an index out of bounds this function returns immediately.
      * Otherwise the index is set to either 0 or the end of the list depending on how it is out of bounds.
      * After changing the index all of the set callbacks are called.
      * Order of the callbacks is not guaranteed.
+     *
+     * @param {Number} index - the index we want to switch to.
      * @instance
      * @access private
      * @memberof AssignmentNavigator
@@ -441,7 +454,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Loads the subpart based on the holder.
      *
-     * @param subgroupPartHolder
+     * @param {ProblemSlideHolder} subgroupPartHolder - The holder that contains the information for the assignment.
      */
     function loadSubgroupPart(subgroupPartHolder) {
         var id = subgroupPartHolder.id;
@@ -454,7 +467,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
         if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.BANK_PROBLEM) {
             if (isUndefined(subgroupPartHolder.problem)) {
-                CourseSketch.dataManager.getBankProblem(subgroupPartHolder.id, function (bankProblem) {
+                CourseSketch.dataManager.getBankProblem(subgroupPartHolder.id, function(bankProblem) {
                     currentSubgroup = bankProblem;
                     currentSubgroupPartHolder.problem = bankProblem;
                     doneNavigating();
@@ -464,7 +477,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             }
         } else if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.SLIDE) {
             if (isUndefined(subgroupPartHolder.slide)) {
-                CourseSketch.dataManager.getLectureSlide(subgroupPartHolder.id, function (lectureSlide) {
+                CourseSketch.dataManager.getLectureSlide(subgroupPartHolder.id, function(lectureSlide) {
                     currentSubgroup = lectureSlide;
                     currentSubgroupPartHolder.slide = bankProblem;
                     doneNavigating();
@@ -479,7 +492,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Navigates to a specific subgroup part.
      *
      * Assumptions that index is a valid index.
-     * @param {Number} index
+     *
+     * @param {Number} index - The index of the next subgroup part.
      */
     function gotoSubgroupPart(index) {
         var subgroupPartLength = currentSubgroup.subgroups.length;
@@ -495,6 +509,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Goes to the next slide or problem part.
      *
      * Navigation rules are at the top of this file!
+     *
      * @memberof AssignmentNavigator
      */
     function goToNextSubgroupPart() {
@@ -511,6 +526,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Goes to the next slide.
      *
      * Navigation rules are at the top of this file!
+     *
      * @memberof AssignmentNavigator
      */
     function goToPreviousSubgroupPart() {
