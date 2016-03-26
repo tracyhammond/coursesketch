@@ -275,7 +275,7 @@ public class ProtobufComparison {
                 if (!foundOneMatch) {
                     if (failAtFirstMisMatch) {
                         Assert.fail(createFailMessage(field, expectedValueItem, null));
-                    } else if (!failAtFirstMisMatch) {
+                    } else {
                         addIncorrectField(incorrectFields, field, expectedValueItem, null);
                     }
                 }
