@@ -586,6 +586,9 @@ public interface Institution {
      * For example, if looking for a particular assignment grade, pass in null for the problemId parameter.
      * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
      *
+     *
+     * @param userId
+     *         The id of the user requesting the grade. This is required.
      * @param authId
      *         The id of the user requesting the grade. This is required.
      * @param gradeData
@@ -596,7 +599,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if a grade is not found in the database matching the requested parameters.
      */
-    ProtoGrade getGrade(final String authId, final ProtoGrade gradeData)
+    ProtoGrade getGrade(final String userId, final String authId, final ProtoGrade gradeData)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
