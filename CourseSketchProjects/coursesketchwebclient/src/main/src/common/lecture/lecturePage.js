@@ -11,7 +11,7 @@ validateFirstRun(document.currentScript);
     /**
      * Resizes the element that was affected by the event.
      *
-     * @param {Event} event the event that contains the element needing a resize.
+     * @param {Event} event - The event that contains the element needing a resize.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.doResize = function(event) {
@@ -31,7 +31,7 @@ validateFirstRun(document.currentScript);
     /**
      * Creates a new text box and loads data into it.
      *
-     * @param {TextBoxProto} textBox the data needed for the text box.
+     * @param {TextBoxProto} textBox - The data needed for the text box.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.loadTextBox = function(textBox) {
@@ -42,7 +42,7 @@ validateFirstRun(document.currentScript);
     /**
      * Creates a new question element and loads data into it.
      *
-     * @param {QuestionProto} question the data needed for the question.
+     * @param {QuestionProto} question - The data needed for the question.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.loadMultiChoiceQuestion = function(question) {
@@ -53,7 +53,7 @@ validateFirstRun(document.currentScript);
     /**
      * Creates a new imageBox element and loads data into it.
      *
-     * @param {ImageProto} imageBox the data needed for the image.
+     * @param {ImageProto} imageBox - The data needed for the image.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.loadImageBox = function(imageBox) {
@@ -64,7 +64,7 @@ validateFirstRun(document.currentScript);
     /**
      * Creates a new embeddedHtml element and loads data into it.
      *
-     * @param {embeddedHtmlProto} embeddedHtml the data needed for the embedded html page.
+     * @param {embeddedHtmlProto} embeddedHtml - The data needed for the embedded html page.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.loadEmbeddedHtml = function(embeddedHtml) {
@@ -106,7 +106,7 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a new image to the currently selected slide.
      *
-     * @param {element} input the input element from the form specifying the image.
+     * @param {element} input - The input element from the form specifying the image.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.newImage = function(input) {
@@ -132,7 +132,7 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a new embedded HTML element to the currently selected slide.
      *
-     * @param {element} form the form that contains the HTML element to be added.
+     * @param {element} form - The form that contains the HTML element to be added.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
@@ -162,7 +162,7 @@ validateFirstRun(document.currentScript);
     /**
      * Renders a slide to the DOM.
      *
-     * @param {protoObject} slide protobuf slide element to be rendered.
+     * @param {protoObject} slide - Protobuf slide element to be rendered.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.renderSlide = function(slide) {
@@ -213,7 +213,7 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a slide thumbnail to the DOM.
      *
-     * @param {Integer} slideIndex index of the slide in the current lecture's protobuf object.
+     * @param {Integer} slideIndex - Index of the slide in the current lecture's protobuf object.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.addSlideToDom = function(slideIndex) {

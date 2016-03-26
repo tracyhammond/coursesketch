@@ -55,7 +55,7 @@ public class ProtobufComparison {
 
     /**
      * Constructor for setting values.
-     *  @param ignoredFields {@link #ignoredFields}.
+     * @param ignoredFields {@link #ignoredFields}.
      * @param ignoredMessages {@link #ignoredMessages}.
      * @param isDeepEquals {@link #isDeepEquals}.
      * @param ignoreNonSetFields {@link #ignoreNonSetFields}.
@@ -192,7 +192,6 @@ public class ProtobufComparison {
             if (isDeepEquals) {
                 equals((GeneratedMessage) expectedValue, (GeneratedMessage) actualValue, incorrectFieldClone);
             }
-
             if (incorrectFieldClone.size() > 0) {
                 if (this.ignoreListOrder) {
                     return false;
@@ -235,7 +234,7 @@ public class ProtobufComparison {
         final List expectedList = Lists.newArrayList((Iterable) expectedValue);
         final List actualList = Lists.newArrayList((Iterable) actualValue);
 
-        // Checking list values themselves
+        // Checking list values themselves (expected is 0 but actual is not)
         if (expectedList.size() == 0 && actualList.size() > 0) {
             if (failAtFirstMisMatch) {
                 Assert.fail(createFailMessage(field, null, actualValue));
@@ -245,7 +244,7 @@ public class ProtobufComparison {
             return;
         }
 
-        // Checking list values themselves
+        // Checking list values themselves (checks the opposite! that actual is empty but expected is not empty.)
         if (actualList.size() == 0 && expectedList.size() > 0) {
             if (failAtFirstMisMatch) {
                 Assert.fail(createFailMessage(field, expectedValue, null));

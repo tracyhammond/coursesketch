@@ -1,12 +1,13 @@
+// jscs:disable jsDoc
 /**
  * A manager for slides that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener for the database.
- * @param {IndexedDB} database The local database
- * @param {Function} sendData A function that makes sending data much easier
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} database - The local database
+ * @param {Function} sendData - A function that makes sending data much easier
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
 function SlideDataManager(parent, advanceDataListener, database, sendData, Request, ByteBuffer) {
@@ -15,9 +16,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Sets a slide in the local database
      *
-     * @param {SrlSlide} slide is a slide object
+     * @param {SrlSlide} slide - is a slide object
      *
-     * @param {Function} slideCallback function to be called after the slide setting is done
+     * @param {Function} slideCallback - function to be called after the slide setting is done
      */
     function setSlide(slide, slideCallback) {
         database.putInSlides(slide.id, slide.toBase64(), function(e, request) {
@@ -31,8 +32,8 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Sets a slide in the server database
      *
-     * @param {SrlSlide} slide is a slide object
-     * @param {Function} slideCallback function to be called after the slide setting is done
+     * @param {SrlSlide} slide - is a slide object
+     * @param {Function} slideCallback - function to be called after the slide setting is done
      */
     function insertSlideServer(slide, slideCallback) {
         advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURESLIDE, function(evt, item) {
@@ -83,9 +84,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      * Adds a new slide to both local and server databases. Also updates the
      * corresponding slide given by the lecture's courseId.
      *
-     * @param {SrlSlide} slide slide object to insert
-     * @param {Function} localCallback function to be called after local insert is done
-     * @param {Function} serverCallback function to be called after server insert is done
+     * @param {SrlSlide} slide - slide object to insert
+     * @param {Function} localCallback - function to be called after local insert is done
+     * @param {Function} serverCallback - function to be called after server insert is done
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function(e, request) {
@@ -124,8 +125,8 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Deletes a slide from local database.
      *
-     * @param {String} slideId ID of the lecture to delete
-     * @param {Function} slideCallback function to be called after the deletion is done
+     * @param {String} slideId - ID of the lecture to delete
+     * @param {Function} slideCallback - function to be called after the deletion is done
      */
     function deleteSlide (slideId, slideCallback) {
         database.deleteFromSlides(slideId, function(e, request) {
@@ -139,9 +140,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Gets a slide from the local database.
      *
-     * @param {String} slideId ID of the slide to get
+     * @param {String} slideId - ID of the slide to get
      *
-     * @param {Function} slideCallback function to be called after getting is complete,
+     * @param {Function} slideCallback - function to be called after getting is complete,
      *                paramater is the slide object
      */
     function getSlideLocal (slideId, slideCallback) {
@@ -161,10 +162,10 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Gets a slide from the local and server databases.
      *
-     * @param {String} slideId ID of the slide to get.
-     * @param {Function} localCallback function to be called after getting is complete,
+     * @param {String} slideId - ID of the slide to get.
+     * @param {Function} localCallback - function to be called after getting is complete,
      *                paramater is the slide object.
-     * @param {Function} serverCallback function to be called after looking in the server for the slide.
+     * @param {Function} serverCallback - function to be called after looking in the server for the slide.
      */
     function getLectureSlide(slideId, localCallback, serverCallback) {
         getLectureSlides([ slideId ], isUndefined(localCallback) ? undefined : function(slideList) {
@@ -178,10 +179,10 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Gets a list of slides from the local and server databases.
      *
-     * @param {String} slideIds IDs of the slides to get
-     * @param {Function} localCallback function to be called after getting is complete,
+     * @param {String} slideIds - IDs of the slides to get
+     * @param {Function} localCallback - function to be called after getting is complete,
      *              paramater is a list of slide objects.
-     * @param {Function} serverCallback function to be called after looking in the server for the slide.
+     * @param {Function} serverCallback - function to be called after looking in the server for the slide.
      */
     function getLectureSlides (slideIds, localCallback, serverCallback) {
         if (isUndefined (slideIds) || slideIds === null || slideIds.length === 0) {
@@ -197,9 +198,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
         for (var i = 0; i < slideIds.length; i++) {
             var currentSlideId = slideIds[i];
             (function(slideId) {
-                getSlideLocal(slideId, function(slide) {
-                    if (!isUndefined(slide) && !(slide instanceof DatabaseException)) {
-                        slidesFound.push(slide);
+                getSlideLocal(slideId, function(localSlide) {
+                    if (!isUndefined(localSlide) && !(localSlide instanceof DatabaseException)) {
+                        slidesFound.push(localSlide);
                     } else {
                         slideIdsNotFound.push(slideId);
                     }
@@ -218,9 +219,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                                             CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                                     return;
                                 }  // end if
-                                for (var i = 0; i < school.slides.length; i++) {
-                                    localScope.setSlide(school.slides[i]);
-                                    slidesFound.push(school.slides[i]);
+                                for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
+                                    localScope.setSlide(school.slides[slideIndex]);
+                                    slidesFound.push(school.slides[slideIndex]);
                                 } // end for
                                 if (!isUndefined(serverCallback)) {
                                     serverCallback(slidesFound);

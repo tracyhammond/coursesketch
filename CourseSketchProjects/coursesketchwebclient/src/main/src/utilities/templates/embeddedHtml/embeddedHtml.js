@@ -3,7 +3,7 @@
  */
 function EmbeddedHtml() {
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -14,7 +14,8 @@ function EmbeddedHtml() {
 
     /**
      * Sets the html source that is being embedded.
-     * @param {String} html html code.
+     *
+     * @param {String} html - html code.
      */
     this.setHtml = function(html) {
         this.shadowRoot.innerHTML = html;
@@ -23,7 +24,7 @@ function EmbeddedHtml() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function
+     * @param {Event} event - event that triggered this function
      * @return {EmbeddedHtml} the created protobuf object.
      */
     this.saveData = function(event) {
@@ -47,7 +48,7 @@ function EmbeddedHtml() {
     };
 
     /**
-     * @param {ProtoCommand} embeddedHtmlProto is the data to be loaded from the proto
+     * @param {ProtoCommand} embeddedHtmlProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -69,7 +70,7 @@ function EmbeddedHtml() {
     /**
      * Sets the listener.
      *
-     * @param {Function} listener Called when the data is finished saving.
+     * @param {Function} listener - Called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
