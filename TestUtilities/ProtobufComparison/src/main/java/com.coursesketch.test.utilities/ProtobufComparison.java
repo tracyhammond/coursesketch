@@ -335,12 +335,10 @@ public class ProtobufComparison {
     private String createFailMessage(final Descriptors.FieldDescriptor field, final Object expectedValue, final Object actualValue) {
         if (field.isRepeated()) {
             return createFailListMessage(field, expectedValue, actualValue);
-        } else {
-            if (expectedValue == null) {
-                return "Expected no value for field [" + field.getFullName() + "] but instead got value <" + actualValue + ">";
-            }
-            return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
+        } else if (expectedValue == null) {
+            return "Expected no value for field [" + field.getFullName() + "] but instead got value <" + actualValue + ">";
         }
+        return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
     }
 
     /**
@@ -364,12 +362,11 @@ public class ProtobufComparison {
             } else {
                 return "Expected value <" + expectedValue + "> was not found in the actual list for field [" + field.getFullName() + "]";
             }
-        } else {
-            if (expectedValue instanceof Iterator || actualValue instanceof Iterator) {
-                return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
-            }
-            return "Expected <" + expectedValue + "> but got <" + actualValue + "> for a list item in field [" + field.getFullName() + "]";
+        } else if (expectedValue instanceof Iterator || actualValue instanceof Iterator) {
+            return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
+
         }
+        return "Expected <" + expectedValue + "> but got <" + actualValue + "> for a list item in field [" + field.getFullName() + "]";
     }
 
     private void addIncorrectField(final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields,
