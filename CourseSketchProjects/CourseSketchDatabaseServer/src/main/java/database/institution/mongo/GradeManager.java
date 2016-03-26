@@ -381,7 +381,7 @@ public final class GradeManager {
      * @param courseId
      *         The course that the grades are being retrieved for.
      * @param authId
-     *         The user that is requesting the grades.
+     *         The id used to authenticate the user getting the all of the grades
      * @param userId
      *         The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
