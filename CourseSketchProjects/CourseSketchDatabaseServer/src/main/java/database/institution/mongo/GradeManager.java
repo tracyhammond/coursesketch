@@ -96,7 +96,7 @@ public final class GradeManager {
      * @param dbs
      *         The database that the grade is being added to.
      * @param authId
-     *         The Id of the person trying to add the grade.
+     *         The id used to authenticate the user adding the grade to ensure the user has valid permission.
      * @param grade
      *         The ProtoObject representing the grade to be added.
      * @throws AuthenticationException
@@ -177,7 +177,7 @@ public final class GradeManager {
      * Course grade or external grade checks course collection.
      *
      * @param authenticator The object that is performing authentication.
-     * @param authId The authenticationId that is being checked.
+     * @param authId The id used to authenticate the person checking if the user exist for the specific grade.
      * @param auth The authentication being performed.
      * @param grade The grade object the authentication is being performed on.
      * @return {@link AuthenticationResponder} that contains the authentication of the user.
@@ -250,7 +250,7 @@ public final class GradeManager {
      * @param dbs
      *         The database that the grades are being retrieved from.
      * @param authId
-     *         The id of the user requesting the grade. This is required.
+     *         The id used to authenticate the user getting the grade to ensure the user has valid permission.
      * @param userId
      *         The id of the user that the grade is for. This is required. This value is at itemId(3).
      * @param grade
@@ -324,7 +324,7 @@ public final class GradeManager {
      * @param courseId
      *         The course that the grades are being retrieved for.
      * @param authId
-     *         The user that is requesting the grades. Only users with admin access can get all grades.
+     *         The id used to authenticate the user getting the grade to ensure the user has valid permission.  Only admin can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
