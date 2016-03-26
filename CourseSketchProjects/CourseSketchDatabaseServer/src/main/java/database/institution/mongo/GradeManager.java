@@ -252,7 +252,8 @@ public final class GradeManager {
      * @param authId
      *         The id used to authenticate the user getting the grade to ensure the user has valid permission.
      * @param userId
-     *         The id of the user that the grade is for. This is required. This value is at itemId(3).
+     *         The id of the user requesting the grade.
+     *         This is a check so that users can get their own grade but other users can not get other's grade.
      * @param grade
      *         A grade object that contains the data needed to get a grade for similar parameters.
      * @return ProtoGrade object representing the grade requested.
@@ -280,7 +281,7 @@ public final class GradeManager {
         }
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, userId);
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, grade.getUserId());
 
         // Adds to query to look for documents without assignmentId field if assignmentId is not given.
         if (!Strings.isNullOrEmpty(grade.getAssignmentId())) {

@@ -84,11 +84,7 @@ public final class GradingRequestHandler {
                     .setAssignmentId(request.getItemId(ASSIGNMENT_INDEX))
                     .setProblemId(request.getItemId(PROBLEM_INDEX))
                     .build();
-            if (instructor && singleGrade) {
-                returnList.add(institution.getGrade(authId, gradeData));
-            } else if (student && singleGrade) {
-                returnList.add(institution.getGrade(authId, gradeData));
-            }
+            returnList.add(institution.getGrade(authId, gradeData));
         }
         return returnList;
     }
