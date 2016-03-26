@@ -42,6 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.SELF_ID;
@@ -551,8 +552,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ProtoGradingPolicy getGradingPolicy(final String courseId, final String userId) throws AuthenticationException, DatabaseAccessException {
-        return GradingPolicyManager.getGradingPolicy(auth, database, courseId, userId);
+    public ProtoGradingPolicy getGradingPolicy(final String courseId, final String authId) throws AuthenticationException, DatabaseAccessException {
+        return GradingPolicyManager.getGradingPolicy(auth, database, courseId, authId);
     }
 
     @Override
@@ -579,32 +580,35 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String authId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllAssignmentGradesInstructor(auth, database, courseId, userId);
+        return GradeManager.getAllAssignmentGradesInstructor(auth, database, courseId, authId);
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, userId);
+        return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, authId, authId);
     }
 
     @Override
-    public void addGrade(final String adderId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException {
-        GradeManager.addGrade(auth, database, adderId, grade);
+    public void addGrade(final String authId, final ProtoGrade grade) throws AuthenticationException, DatabaseAccessException {
+        GradeManager.addGrade(auth, database, authId, grade);
     }
 
     @Override
-    public ProtoGrade getGrade(final String requesterId, final String userId, final String courseId, final String assignmentId,
-            final String problemId) throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getGrade(auth, database, requesterId, userId, courseId, assignmentId, problemId);
+    public ProtoGrade getGrade(final String authId, final ProtoGrade gradeData) throws AuthenticationException, DatabaseAccessException {
+        return GradeManager.getGrade(auth, database, authId, authId, gradeData);
     }
 
     @Override
-    public List<String> getCourseRoster(final String userId, final String courseId)
+    public List<String> getCourseRoster(final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
-        return CourseManager.mongoGetCourseRoster(auth, database, userId, courseId);
+        final Set<String> userIds = identityManager.getItemRoster(authId, courseId, School.ItemType.COURSE,
+                null, null).keySet();
+        final List<String> resultList = new ArrayList<>();
+        resultList.addAll(userIds);
+        return resultList;
     }
 
 }

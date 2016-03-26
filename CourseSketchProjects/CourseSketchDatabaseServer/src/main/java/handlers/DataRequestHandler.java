@@ -202,12 +202,12 @@ public final class DataRequestHandler {
                         }
                         break;
                         case GRADE: {
-                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, userId);
+                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, authId);
                             results.add(ResultBuilder.buildResult(ItemQuery.GRADE, gradeList));
                         }
                         break;
                         case COURSE_ROSTER: {
-                            final List<String> userList = instance.getCourseRoster(userId, itemRequest.getItemId(0));
+                            final List<String> userList = instance.getCourseRoster(authId, itemRequest.getItemId(0));
                             final Util.IdChain.Builder idChain = Util.IdChain.newBuilder();
                             idChain.addAllIdChain(userList);
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, idChain.build()));
