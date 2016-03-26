@@ -571,7 +571,7 @@ public interface Institution {
      * )
      * </code></pre>
      * @param authId
-     *         The Id of the person trying to add the grade.
+     *         The id used to authenticate the user adding the grade to ensure correct permissions.
      * @param grade
      *         The ProtoObject representing the grade to be added.
      * @throws AuthenticationException
@@ -590,7 +590,7 @@ public interface Institution {
      * @param userId
      *         The id of the user requesting the grade. This is required.
      * @param authId
-     *         The id of the user requesting the grade. This is required.
+     *         The id used to authenticate the user getting the grade to ensure correct permissions.
      * @param gradeData
      *         Grade data that contains information about the grade that is wanted (courseId, userId, assignmentId, problemId).
      * @return ProtoGrade object representing the grade requested.
@@ -604,7 +604,7 @@ public interface Institution {
 
     /**
      * @param authId
-     *         The id of the user requesting the courseRoster
+     *         The id used to authenticate the user getting the course roster.
      * @param courseId
      *         The id of what courseRoster is being grabbed
      * @return a list of users in the course

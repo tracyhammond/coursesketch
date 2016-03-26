@@ -341,11 +341,34 @@ public class GradeManagerTest {
         // Tests that both the user of the grade and a course admin can get a valid problem grade.
         ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID,
                 FAKE_USER_ID, protoGradeGrabber.build());
-        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_USER_ID,
+
+        // admin getting the grade!
+        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
                 protoGradeGrabber.build());
 
         Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
         Assert.assertEquals(fakeProtoGrade.build(), testAdminGrade);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void getProbGradeTestOtherUserShouldThrowException() throws Exception {
+        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
+        fakeProtoGrade.setCourseId(courseId);
+        protoGradeGrabber.setCourseId(courseId);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+                FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+                FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
+
+        // Tests that both the user of the grade and a course admin can get a valid problem grade.
+        ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID,
+                FAKE_USER_ID + "Different", protoGradeGrabber.build());
+
+        Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
     }
 
     @Test
@@ -371,7 +394,7 @@ public class GradeManagerTest {
         // Tests that both the user of the grade and a course admin can get a valid course grade.
         ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID, FAKE_USER_ID,
                 protoGradeGrabber.build());
-        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_USER_ID,
+        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
                 protoGradeGrabber.build());
         Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
         Assert.assertEquals(fakeProtoGrade.build(), testAdminGrade);
