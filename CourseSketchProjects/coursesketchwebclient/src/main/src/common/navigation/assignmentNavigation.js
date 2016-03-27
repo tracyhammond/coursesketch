@@ -1,4 +1,21 @@
 /**
+ * @class NavigationException
+ * @extends BaseException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
+ */
+function NavigationException(message, cause) {
+    this.name = 'NavigationException';
+    this.setMessage(message);
+    this.message = '';
+    this.setCause(cause);
+    this.createStackTrace();
+}
+
+NavigationException.prototype = new BaseException();
+
+/**
  * How this works is a polling system.
  *
  * When a problem/assignment/course in assignment view is changed all the parts are notify via a callback at which point they can poll
@@ -7,26 +24,26 @@
  *
  * How navigation works.
  *
- * If you are navigating at subgroup part level:
  * <ul>
+ * <li>If you are navigating at subgroup part level:<ul>
  *     <li>Goto next:<ul>
  *         <li>If there is a next part navigate to it</li>
  *         <li>If there is not a next part then gotoNext at subgroup level</li></ul></li>
- *     <li>Goto previous:
- *         If there is a previous part then navigate to it
- *         If there is not a previous part then gotoPrevious at subgroup level</li></ul></li>
+ *     <li>Goto previous:<ul>
+ *         <li>If there is a previous part then navigate to it<li>
+ *         <li>If there is not a previous part then gotoPrevious at subgroup level</li></ul></li></ul></li>
  * <li>If you are navigating at subgroup level:<ul>
  *      <li>Goto next:<ul>
- *         <li>If there is a next subgroup navigate to it
+ *         <li>If there is a next subgroup navigate to it</li>
  *         <li>If there is not a next subgroup:<ul>
- *              <li>If the stack is empty you reached the end!
- *              <li>If the stack is not empty you pop up and navigate to the index specified on the list</li></ul></li><
- *      <li>Goto previous:
- *         <li>If there is a previous subgroup navigate to it
- *         <li>If there is not a previos usgroup:
- *              <li>If the visisted stack is empty you reached the beginning!
- *              <li>If the visited stack is not empty you go in an and start at the end of that subgroup.
- *
+ *              <li>If the stack is empty you reached the end!</li>
+ *              <li>If the stack is not empty you pop up and navigate to the index specified on the list</li></ul></li></ul></li>
+ *      <li>Goto previous:<ul>
+ *         <li>If there is a previous subgroup navigate to it</li>
+ *         <li>If there is not a previous group:<ul>
+ *              <li>If the nested stack is empty you reached the beginning!</li>
+ *              <li>If the nested stack is not empty you go in an and start at the end of that subgroup.</li></ul></li></ul></li></ul></li>
+ * </ul>
  * A subgroup part can be an assignment which would be a nested assignment.
  *
  * @param {UUID} startingAssignmentId - The id that the problem is created with.
@@ -36,7 +53,6 @@
  * @class AssignmentNavigator
  */
 function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSubgroupLevel) {
-
     /**
      * Controls weather navigation happens at the subgroup level (SrlProblem) or the subgroup part level (SrlBankProblem, SrlSlide).
      * @type {Boolean}
@@ -131,7 +147,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Every level
      *
      * This is processed like a stack.
-     * @type {Array<String>}
+     * @type {Array<UUID>}
      */
     var assignmentIdStack = [];
 
@@ -160,6 +176,20 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @type {Boolean}
      */
     var isDone = false;
+
+    /**
+     * The event constant for submitting a problem.
+     *
+     * @type {String}
+     */
+    this.SUBMIT_EVENT = 'submit';
+
+    /**
+     * The event constant for completing a problem.
+     *
+     * @type {String}
+     */
+    this.COMPLETED_PROBLEM_EVENT = 'completion';
 
     // some initialization
     (function() {
@@ -198,7 +228,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @memberof AssignmentNavigator
      */
     this.refresh = function() {
-        changeSubgroup(currentIndex);
+        changeSubgroup(currentIndex, 0);
     };
 
     /**
@@ -230,12 +260,78 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {Number} the number of parts in the subgroup list.
+     * @memberof AssignmentNavigator
+     */
+    this.getSubgroupPartSize = function getSubgroupSize() {
+        return currentSubgroup.subgroups.length;
+    };
+
+    /**
+     * @return {SrlAssignment} the current assignment stored in this navigator..
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.getCurrentAssignment = function() {
+        return currentAssignment;
+    };
+
+    /**
      * @returns {BankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
      * @memberof AssignmentNavigator
      */
-    function getCurrentInfo() {
+    this.getCurrentInfo = function getCurrentInfo() {
         return currentSubgroupPart;
-    }
+    };
+
+    /**
+     * @return {QuestionType} the type of the base problem.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.getProblemType = function() {
+        var type = getCurrentInfo().questionType;
+        return type;
+    };
+
+    /**
+     * @return {ItemType} the type of current part.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.getPartType = function() {
+        return currentSubgroupPartHolder.itemType;
+    };
+
+    /**
+     * @returns {Number} the current problem number in a human readable format.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.getCurrentNumber = function() {
+        if (isSubgroupNavigation) {
+            return currentIndex + 1;
+        }
+        return currentSubgroupPartIndex + 1;
+    };
+
+    /**
+     * @returns {Number} the current index of the subgroup.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.getCurrentSubgroupIndex = function() {
+        return currentIndex;
+    };
+
+    /**
+     * @returns {Number} the current index of the subgroup.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.getCurrentPartIndex = function() {
+        return currentSubgroupPartIndex;
+    };
 
     /**
      * Scopes the index for the callbackList.
@@ -280,14 +376,21 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {Function} [callback] - A callback function called when the assignment is loaded.
      */
     function loadAssignment(assignmentId, callback) {
+        dataLoaded = false;
 
         function setData(assignment) { // jscs:ignore jsDoc
             currentAssignment = assignment;
-            subgroupList = currentAssignment.problemGroups;
             currentAssignmentId = assignment.id;
-            if (!isUndefined(callback)) {
-                callback();
-            }
+            CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
+                subgroupList = [];
+                for (var i = 0; i < problems.length; i++) {
+                    subgroupList.push(problems[i]);
+                }
+                if (!isUndefined(callback)) {
+                    callback();
+                }
+                dataLoaded = true; // this one will take longer so we do this one second.
+            });
         }
         CourseSketch.dataManager.getAssignment(assignmentId, setData, setData);
     }
@@ -296,10 +399,12 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Reloads the assignment from the id and assigns it to the currentAssignment.
      *
      * @instance
-     * @memberof ProblemNavigator
+     * @memberof AssignmentNavigator
      */
     this.reloadAssignment = function() {
-        loadAssignment(currentAssignmentId);
+        loadAssignment(currentAssignmentId, function() {
+            localScope.refresh();
+        });
     };
 
     /*******************************
@@ -314,7 +419,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @memberof AssignmentNavigator
      */
     this.goToSubgroup = function goToSubgroup(index) {
-        changeSubgroup(index);
+        changeSubgroup(index, 0);
     };
 
     /**
@@ -325,7 +430,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.gotoNext = function() {
         if (isSubgroupNavigation) {
-            changeSubgroup(currentIndex + 1);
+            changeSubgroup(currentIndex + 1, 1);
         } else {
             goToNextSubgroupPart();
         }
@@ -339,7 +444,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.gotoPrevious = function() {
         if (isSubgroupNavigation) {
-            changeSubgroup(currentIndex - 1);
+            changeSubgroup(currentIndex - 1, -1);
         } else {
             goToPreviousSubgroupPart();
         }
@@ -359,15 +464,19 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Creates an assignment location.
      *
-     * @param {Number} subGroupIndex - The index of problem subgroup.
+     * @param {Number} subgroupIndex - The index of problem subgroup.
      * @param {Number} partIndex - The index of the subgroup part.
+     * @param {Number} oldSubgroupIndex - The index of problem subgroup for navigating backwords.
+     * @param {Number} oldPartIndex - The index of the subgroup part for navigating backwords.
      *
-     * @returns {{group: Number, part: Number}} An assignment location.
+     * @returns {{group: Number, part: Number, backGroup: Number, backPart: Number}} An assignment location.
      */
-    function createAssignmentLocation(subGroupIndex, partIndex) {
+    function createAssignmentLocation(subgroupIndex, partIndex, oldSubgroupIndex, oldPartIndex) {
         return {
-            'group': subGroupIndex,
-            'part': partIndex
+            'group': subgroupIndex,
+            'part': partIndex,
+            'backGroup': oldSubgroupIndex,
+            'backPart': oldPartIndex
         };
     }
 
@@ -381,13 +490,34 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             nextAssignmentLocation = indicesStack.pop();
             nextAssignmentId = assignmentIdStack.pop();
         }
+        currentAssignmentId = nextAssignmentId;
+        currentIndex = nextAssignmentLocation.group;
+        currentSubgroupPartIndex = nextAssignmentLocation.part;
+        loadAssignment(currentAssignmentId, function() {
+            changeSubgroup(currentIndex, 0);
+            gotoSubgroupPart(currentSubgroupPartIndex, 0);
+            doneNavigating();
+        });
     }
 
     /**
-     *
      * Navigates to the previously nested lecture that the user has navigated to.
      */
-    function navigateToPreviousNested() {
+    function navigateFromNestedBackwards() {
+        var nextAssignmentLocation = indicesStack.pop();
+        var nextAssignmentId = assignmentIdStack.pop();
+        while (nextAssignmentLocation.backGroup === -1 && indicesStack.length > 0) {
+            nextAssignmentLocation = indicesStack.pop();
+            nextAssignmentId = assignmentIdStack.pop();
+        }
+        currentAssignmentId = nextAssignmentId;
+        currentIndex = nextAssignmentLocation.group;
+        currentSubgroupPartIndex = nextAssignmentLocation.part;
+        loadAssignment(assignmentId, function() {
+            goToSubgroup(currentIndex);
+            gotoSubgroupPart(currentSubgroupPartIndex);
+            doneNavigating();
+        });
     }
 
     /**
@@ -396,9 +526,18 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Pushes the startingAssignmentId onto the stack and pushes the next location onto the indices stack.
      *
      * @param {String} assignmentId - The id of the nested assignment.
+     * @param {Number} direction - The direction of navigation.
      */
-    function loadNestedAssignment(assignmentId) {
+    function loadNestedAssignment(assignmentId, direction) {
         assignmentIdStack.push(currentAssignmentId);
+
+        var oldSubgroupPartIndex = currentSubgroupPartIndex - 1;
+        var oldSubgroupIndex = currentIndex;
+        if (oldSubgroupPartIndex < 0) {
+            oldSubgroupPartIndex = 0;
+            oldSubgroupIndex -= 1;
+        }
+
         if (currentSubgroupPartIndex + 1 >= currentSubgroup.subgroups.length) {
             currentSubgroupPartIndex = 0;
             currentIndex = 0;
@@ -410,12 +549,40 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             currentIndex = -1;
         }
 
-        indicesStack.push(createAssignmentLocation(currentIndex, currentSubgroupPartIndex));
+        indicesStack.push(createAssignmentLocation(currentIndex, currentSubgroupPartIndex, oldSubgroupIndex, oldSubgroupPartIndex));
         loadAssignment(assignmentId, function() {
-            goToSubgroup(0);
-            gotoSubgroupPart(0);
+            if (direction < 0) {
+                changeSubgroup(subgroupList.length - 1, direction);
+            } else {
+                changeSubgroup(0, direction);
+            }
             doneNavigating();
         });
+    }
+
+    /**
+     * Handles the navigation of nested assignments and non looping exceptions.
+     *
+     * @param {Number} index - the index we want to switch to.
+     * @param {Number} direction - The direction of navigation.
+     */
+    function cantThinkOfFunctionName(index, direction) {
+        if (index < 0 && assignmentIdStack.length > 0) {
+            navigateFromNestedBackwards();
+            return;
+        }
+        if (index >= subgroupList.length && assignmentIdStack.length > 0) {
+            navigateFromNested();
+            return;
+        }
+        if (index >= subgroupList.length) {
+            isDone = true;
+        }
+
+        if (direction !== 0) {
+            // TODO: change this to a navigation exception.
+            throw new NavigationException('Index is not valid: [' + index + ' out of ' + getSubgroupListSize + ']');
+        }
     }
 
     /**
@@ -427,26 +594,15 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Order of the callbacks is not guaranteed.
      *
      * @param {Number} index - the index we want to switch to.
+     * @param {Number} direction - The direction of navigation.
      * @instance
      * @access private
      * @memberof AssignmentNavigator
      */
-    function changeSubgroup(index) {
+    function changeSubgroup(index, direction) {
         if (index < 0 || index >= subgroupList.length && !isLoopable() && !isRandomNavigation()) {
-            if (index < 0 && visitedAssignmentIdStack.length > 0) {
-                navigateToPreviousNested();
-                return;
-            }
-            if (index >= subgroupList.length && assignmentIdStack.length > 0) {
-                navigateFromNested();
-                return;
-            }
-            if (index >= subgroupList.length) {
-                isDone = true;
-            }
-
-            // TODO: change this to a navigation expection.
-            throw new CourseSketch.BaseException('Index is not valid: ' + index + ' out of ' + getSubgroupListSize);
+            cantThinkOfFunctionName(index, direction);
+            return;
         }
         if (isRandomNavigation()) {
             //Pull problems at random for Game
@@ -464,23 +620,30 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         }
         currentIndex = index;
         currentSubgroup = subgroupList[index];
-        gotoSubgroupPart(0);
+        if (direction < 0) {
+            gotoSubgroupPart(currentSubgroup.subgroups.length - 1, direction);
+        } else if (direction === 0) {
+            // The subgroup did not change
+            gotoSubgroupPart(currentSubgroupPartIndex, direction);
+        } else {
+            gotoSubgroupPart(0, direction);
+        }
     }
 
     /**
      * Loads the subpart based on the holder.
      *
      * @param {ProblemSlideHolder} subgroupPartHolder - The holder that contains the information for the assignment.
+     * @param {Number} direction - The direction of navigation.
      */
-    function loadSubgroupPart(subgroupPartHolder) {
+    function loadSubgroupPart(subgroupPartHolder, direction) {
         var id = subgroupPartHolder.id;
         if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.ASSIGNMENT) {
-            loadNestedAssignment(id);
+            loadNestedAssignment(id, direction);
             return;
         }
 
         currentSubgroupPartHolder = subgroupPartHolder;
-
         if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.BANK_PROBLEM) {
             if (isUndefined(subgroupPartHolder.problem)) {
                 CourseSketch.dataManager.getBankProblem(subgroupPartHolder.id, function(bankProblem) {
@@ -510,15 +673,16 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Assumptions that index is a valid index.
      *
      * @param {Number} index - The index of the next subgroup part.
+     * @param {Number} direction - The direction of navigation.
      */
-    function gotoSubgroupPart(index) {
+    function gotoSubgroupPart(index, direction) {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (index >= subgroupPartLength || index < 0) {
             // TODO: change this to a navigation expection.
-            throw new CourseSketch.BaseException('Index is not valid: ' + index);
+            throw new NavigationException('Index is not valid: [' + index + ' out of ' + subgroupPartLength + ']');
         }
         currentSubgroupPartIndex = index;
-        loadSubgroupPart(currentSubgroup.subgroups[index]);
+        loadSubgroupPart(currentSubgroup.subgroups[index], direction);
     }
 
     /**
@@ -532,10 +696,10 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex >= subgroupPartLength) {
             currentSubgroupPartIndex = 0;
-            changeSubgroup(currentIndex + 1);
+            changeSubgroup(currentIndex + 1, 1);
             return;
         }
-        gotoSubgroupPart(currentSubgroupPartIndex + 1);
+        gotoSubgroupPart(currentSubgroupPartIndex + 1, 1);
     }
 
     /**
@@ -549,9 +713,82 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex >= subgroupPartLength) {
             currentSubgroupPartIndex = 0;
-            changeSubgroup(currentIndex - 1);
+            changeSubgroup(currentIndex - 1, -1);
             return;
         }
-        gotoSubgroupPart(currentSubgroupPartIndex - 1);
+        gotoSubgroupPart(currentSubgroupPartIndex - 1, -1);
     }
+
+    /********
+     * EVENTS
+     *******/
+
+    /**
+     * Add an event mapping for a specific callback.
+     *
+     * @param {*} key - The key of the event mapping.
+     * @param {Function} funct - The function called when the event is called.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.addEventMapping = function(key, funct) {
+        if (isUndefined(eventMappingCallback[key])) {
+            var list = [];
+            list.push(funct);
+            eventMappingCallback[key] = list;
+        } else {
+            eventMappingCallback[key].push(funct);
+        }
+    };
+
+    /**
+     * Attempts to remove the event from the current event map.
+     *
+     * @param {*} key - The key of the event mapping.
+     * @param {Function} funct - The function that is being removed.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.removeEventMapping = function(key, funct) {
+        if (isUndefined(eventMappingCallback[key])) {
+            return;
+        }
+        removeObjectFromArray(eventMappingCallback[key], funct);
+    };
+
+    /**
+     * Clears all mappings of event callbacks.
+     *
+     * @param {*} key - The key of the event mapping.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.clearAllMappings = function(key) {
+        eventMappingCallback[key] = undefined;
+    };
+
+    /**
+     * Attempts to execute all of the events.
+     *
+     * The failure of one event should not affect the other events.
+     * The order of events firing is not guaranteed.
+     *
+     * @param {*} key - The key of the event mapping.
+     * @param {Array<*>} funcArgs - A list of arguments to call the function with.
+     * @instance
+     * @memberof AssignmentNavigator
+     */
+    this.executeEvent = function(key, funcArgs) {
+        var list = eventMappingCallback[key];
+        if (isUndefined(eventMappingCallback[key])) {
+            return;
+        }
+        for (var i = 0; i < list.length; i++) {
+            (function(funct, args) {
+                setTimeout(function() {
+                    funct(args);
+                }, 10);
+            })(list[i], funcArgs);
+        }
+    };
 }
