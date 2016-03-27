@@ -34,6 +34,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
 
@@ -42,7 +43,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import static database.DatabaseStringConstants.DATABASE;
 import static database.DatabaseStringConstants.SELF_ID;
@@ -547,12 +548,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void insertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
-        GradingPolicyManager.insertGradingPolicy(auth, database, userId, policy);
+    public void insertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
+        GradingPolicyManager.insertGradingPolicy(auth, database, authId, policy);
     }
 
     @Override
-    public ProtoGradingPolicy getGradingPolicy(final String courseId, final String authId) throws AuthenticationException, DatabaseAccessException {
+    public ProtoGradingPolicy getGradingPolicy(final String authId, final String courseId) throws AuthenticationException, DatabaseAccessException {
         return GradingPolicyManager.getGradingPolicy(auth, database, courseId, authId);
     }
 
@@ -580,15 +581,15 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String authId)
+    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException {
         return GradeManager.getAllAssignmentGradesInstructor(auth, database, courseId, authId);
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId)
+    public List<ProtoGrade> getAllAssignmentGradesStudent(final String userId, final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, authId, authId);
+        return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, authId, userId);
     }
 
     @Override
@@ -597,18 +598,29 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ProtoGrade getGrade(final String authId, final ProtoGrade gradeData) throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getGrade(auth, database, authId, authId, gradeData);
+    public ProtoGrade getGrade(final String userId, final String authId, final ProtoGrade gradeData)
+            throws AuthenticationException, DatabaseAccessException {
+        return GradeManager.getGrade(auth, database, authId, userId, gradeData);
     }
 
     @Override
-    public List<String> getCourseRoster(final String authId, final String courseId)
+    public Identity.UserNameResponse getCourseRoster(final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException {
-        final Set<String> userIds = identityManager.getItemRoster(authId, courseId, School.ItemType.COURSE,
-                null, null).keySet();
-        final List<String> resultList = new ArrayList<>();
-        resultList.addAll(userIds);
-        return resultList;
+        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, courseId, School.ItemType.COURSE, null, null);
+        final Identity.UserNameResponse.Builder builder = Identity.UserNameResponse.newBuilder();
+        for (Map.Entry<String, String> stringStringEntry : itemRoster.entrySet()) {
+            builder.addUserNames(Identity.UserNameResponse.MapFieldEntry.newBuilder()
+                    .setKey(stringStringEntry.getKey())
+                    .setValue(stringStringEntry.getValue())
+                    .build());
+        }
+        return builder.build();
+    }
+
+    @Override
+    public String getUserNameForIdentity(final String userId, final String authId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException {
+        return identityManager.getUserName(userId, authId, courseId, School.ItemType.COURSE, null).values().iterator().next();
     }
 
 }

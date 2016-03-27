@@ -14,6 +14,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
 import java.util.List;
@@ -480,7 +481,7 @@ public interface Institution {
      * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
-     * @param userId
+     * @param authId
      *         The id of the user asking for the state.
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
@@ -489,22 +490,22 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    void insertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
+    void insertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets the grading policy for a course from the mongoDb.
      *
-     * @param courseId
-     *         The gradingPolicy we will get is from this course.
      * @param authId
      *         The id of the user asking for the state.
+     * @param courseId
+     *         The gradingPolicy we will get is from this course.
      * @return The protoObject representing the gradingPolicy.
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException
      *         Thrown if connecting to database causes an error.
      */
-    ProtoGradingPolicy getGradingPolicy(final String courseId, final String authId) throws AuthenticationException, DatabaseAccessException;
+    ProtoGradingPolicy getGradingPolicy(final String authId, final String courseId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets all bank problems in the database by a page.
@@ -522,10 +523,10 @@ public interface Institution {
      * Gets all grades for a certain course. Sorted in ascending order by assignmentId and then userId.
      * This does not mean the list will be in chronological or alphabetical order.
      *
+     * @param authId
+     *         The user that is requesting the grades. Only users with admin access can get all grades.
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param userId
-     *         The user that is requesting the grades. Only users with admin access can get all grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
@@ -533,17 +534,19 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String userId)
+    List<ProtoGrade> getAllAssignmentGradesInstructor(final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets all grades for a certain student in a certain course. Sorted in ascending order by assignmentId and then authId.
      * This does not mean the list will be in chronological or alphabetical order.
      *
+     * @param userId
+     *         The user that is requesting the grades (used for identification purposes).
+     * @param authId
+     *         The id used to authenticate the student getting the grade.
      * @param courseId
      *         The course that the grades are being retrieved for.
-     * @param authId
-     *         The user that is requesting the grades.
      * @return The list of ProtoGrades for the course. Each ProtoGrade is an individual assignment grade for an individual student.
      *         More sorting should be done by whoever implements this method.
      * @throws AuthenticationException
@@ -551,7 +554,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if grades are not found in the database.
      */
-    List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId)
+    List<ProtoGrade> getAllAssignmentGradesStudent(final String userId, final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -583,6 +586,9 @@ public interface Institution {
      * For example, if looking for a particular assignment grade, pass in null for the problemId parameter.
      * If looking for a specific problem grade, you must pass in the assignmentId as well as the problemId.
      *
+     *
+     * @param userId
+     *         The id of the user requesting the grade. This is required.
      * @param authId
      *         The id used to authenticate the user getting the grade to ensure correct permissions.
      * @param gradeData
@@ -593,7 +599,7 @@ public interface Institution {
      * @throws DatabaseAccessException
      *         Thrown if a grade is not found in the database matching the requested parameters.
      */
-    ProtoGrade getGrade(final String authId, final ProtoGrade gradeData)
+    ProtoGrade getGrade(final String userId, final String authId, final ProtoGrade gradeData)
             throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -607,6 +613,19 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    List<String> getCourseRoster(final String authId, final String courseId)
+    Identity.UserNameResponse getCourseRoster(final String authId, final String courseId)
+            throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Gets the username for the userId.
+     *
+     * @param userId The userId that is being exchanged for the userName.
+     * @param authId The authentication of the user that is exchanging the userId.
+     * @param courseId The course the username is being asked for.
+     * @return The username if the permissions are successful.
+     * @throws DatabaseAccessException Thrown if the user does not exist or there are problems getting the username.
+     * @throws AuthenticationException Thrown if the user does not have the authentication to get the username.
+     */
+    String getUserNameForIdentity(final String userId, final String authId, final String courseId)
             throws DatabaseAccessException, AuthenticationException;
 }
