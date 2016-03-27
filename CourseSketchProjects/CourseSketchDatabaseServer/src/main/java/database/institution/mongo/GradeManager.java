@@ -122,7 +122,7 @@ public final class GradeManager {
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
 
         final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId())
-                .append(USER_ID, HashManager.toHex(grade.getUserId().getBytes()));
+                .append(USER_ID, HashManager.toHex(grade.getUserId()));
         final BasicDBObject setOnInsertFields = new BasicDBObject(query); // Initially setOnInsertFields and query are the same.
 
         // If the protoGrade has an assignmentId, add it to the query and setOnInsertFields.
@@ -294,7 +294,7 @@ public final class GradeManager {
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId())
-                .append(USER_ID, HashManager.toHex(grade.getUserId().getBytes()));
+                .append(USER_ID, HashManager.toHex(grade.getUserId()));
 
         // Adds to query to look for documents without assignmentId field if assignmentId is not given.
         if (!Strings.isNullOrEmpty(grade.getAssignmentId())) {
@@ -424,7 +424,7 @@ public final class GradeManager {
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
-                .append(USER_ID, HashManager.toHex(hashedUserId.getBytes()))
+                .append(USER_ID, HashManager.toHex(hashedUserId))
                 .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1); // Sort by assignmentId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
@@ -461,8 +461,8 @@ public final class GradeManager {
 
         final ProtoGrade.Builder protoGrade = ProtoGrade.newBuilder();
         protoGrade.setCourseId(grade.get(COURSE_ID).toString());
-        final byte[] bytes = HashManager.fromHex(grade.get(USER_ID).toString());
-        protoGrade.setUserId(new String(bytes));
+        final String decodedVersion = HashManager.fromHexString(grade.get(USER_ID).toString());
+        protoGrade.setUserId(decodedVersion);
 
         if (grade.containsField(ASSIGNMENT_ID)) {
             protoGrade.setAssignmentId(grade.get(ASSIGNMENT_ID).toString());
