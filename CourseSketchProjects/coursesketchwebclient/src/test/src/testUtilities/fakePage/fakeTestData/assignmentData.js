@@ -131,6 +131,7 @@
     assignment9.name = 'make course sketch';
     assignment9.description = 'not a big assignment, I just want you to program a MOOC using sketch recognition. You have one week.';
     assignment9.problemList = ['13', '14'];
+    assignment9.navigationType = CourseSketch.prutil.NavigationType.LOOPING;
     CourseSketch.fakeAssignments.push(assignment9);
 
     assignment10.courseId = '5';

@@ -21,6 +21,8 @@
     CourseSketch.dataManager.getAssignment = function(assignmentID, callback) {
         if (assignmentID == "randomTest1234") {
             callback(CourseSketch.fakeAssignments[9]);
+        } else if(assignmentID == "looping") {
+            callback(CourseSketch.fakeAssignments[8]);
         } else {
             callback(CourseSketch.fakeAssignments[1]);
         }
@@ -79,6 +81,18 @@
             var index = testNavigator.getCurrentSubgroupIndex();
             testNavigator.goToSubgroup(index + 1);
             assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+        });
+
+        test("looping", function(assert) {
+            var testNavigator = new AssignmentNavigator("looping", 0, true);
+            testNavigator.reloadAssignment();
+            var index = testNavigator.getCurrentSubgroupIndex();
+            testNavigator.gotoNext();
+            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+            testNavigator.gotoNext();
+            assert.equal(0, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly resetting to zero");
+            testNavigator.gotoPrevious();
+            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly navigating back to the end");
         });
 </script>
 </body>

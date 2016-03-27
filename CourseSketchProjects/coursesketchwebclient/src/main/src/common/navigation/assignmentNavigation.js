@@ -363,7 +363,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @return {Boolean} True if the assignment is able to be looped.
      */
     function isLoopable() {
-        return currentAssignment.navigationType === CourseSketch.prutil.ItemType.LOOPING;
+        return currentAssignment.navigationType === CourseSketch.prutil.NavigationType.LOOPING;
     }
 
     /**
@@ -600,7 +600,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @memberof AssignmentNavigator
      */
     function changeSubgroup(index, direction) {
-        if (index < 0 || index >= subgroupList.length && !isLoopable() && !isRandomNavigation()) {
+        if ((index < 0 || index >= subgroupList.length) && (!isLoopable() && !isRandomNavigation())) {
             cantThinkOfFunctionName(index, direction);
             return;
         }
@@ -612,9 +612,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             index = randomNumber % numberOfQuestions;
         } else if (isLoopable()) {
             if (index < 0) {
-                index = problemList.length - 1;
+                index = subgroupList.length - 1;
             }
-            if (index >= problemList.length) {
+            if (index >= subgroupList.length) {
                 index = 0;
             }
         }
