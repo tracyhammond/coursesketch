@@ -10,6 +10,7 @@ import com.mongodb.DBObject;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
+import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,7 +121,8 @@ public final class GradeManager {
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
 
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, grade.getUserId());
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId())
+                .append(USER_ID, HashManager.toHex(grade.getUserId().getBytes()));
         final BasicDBObject setOnInsertFields = new BasicDBObject(query); // Initially setOnInsertFields and query are the same.
 
         // If the protoGrade has an assignmentId, add it to the query and setOnInsertFields.
@@ -278,12 +281,20 @@ public final class GradeManager {
             throw new AuthenticationException("User does not have permission to see this grade", AuthenticationException.INVALID_PERMISSION);
         }
 
-        if (!responder.hasModeratorPermission() && !userId.equals(grade.getUserId())) {
+        String hashedUserId = null;
+        try {
+            hashedUserId = HashManager.createHash(userId, HashManager.generateUnSecureSalt(grade.getCourseId()));
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Exception trying to hash userid while getting all of the assignment grades for a student", e);
+        }
+
+        if (!responder.hasModeratorPermission() && !grade.getUserId().equals(hashedUserId)) {
             throw new AuthenticationException("User does not have permission to see this grade", AuthenticationException.INVALID_PERMISSION);
         }
 
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId()).append(USER_ID, grade.getUserId());
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, grade.getCourseId())
+                .append(USER_ID, HashManager.toHex(grade.getUserId().getBytes()));
 
         // Adds to query to look for documents without assignmentId field if assignmentId is not given.
         if (!Strings.isNullOrEmpty(grade.getAssignmentId())) {
@@ -404,9 +415,16 @@ public final class GradeManager {
                     AuthenticationException.INVALID_PERMISSION);
         }
 
+        String hashedUserId = null;
+        try {
+            hashedUserId = HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId));
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Exception trying to hash userid while getting all of the assignment grades for a student", e);
+        }
+
         final DBCollection gradeCollection = dbs.getCollection(GRADE_COLLECTION);
         final BasicDBObject query = new BasicDBObject(COURSE_ID, courseId)
-                .append(USER_ID, userId)
+                .append(USER_ID, HashManager.toHex(hashedUserId.getBytes()))
                 .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1); // Sort by assignmentId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
@@ -443,7 +461,8 @@ public final class GradeManager {
 
         final ProtoGrade.Builder protoGrade = ProtoGrade.newBuilder();
         protoGrade.setCourseId(grade.get(COURSE_ID).toString());
-        protoGrade.setUserId(grade.get(USER_ID).toString());
+        final byte[] bytes = HashManager.fromHex(grade.get(USER_ID).toString());
+        protoGrade.setUserId(new String(bytes));
 
         if (grade.containsField(ASSIGNMENT_ID)) {
             protoGrade.setAssignmentId(grade.get(ASSIGNMENT_ID).toString());
