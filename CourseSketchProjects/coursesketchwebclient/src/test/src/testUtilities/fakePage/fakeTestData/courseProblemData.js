@@ -45,6 +45,7 @@
     problem1.state.completed = false;
     problem1.state.graded = true;
     problem1.problemInfo = bankProblem1;
+
     bankProblem1.id = problem1.id;
     bankProblem1.questionText = 'Please write your name.' +
         ' $\\left [ – \\frac{\\hbar^2}{2 m} \\frac{\\partial^2}{\\partial x^2} + V \\right ] \\Psi = i \\hbar \\frac{\\partial}{\\partial t} \\Psi$';
@@ -226,19 +227,31 @@
     CourseSketch.fakeProblems.push(problem14);
     CourseSketch.fakeBankProblems.push(bankProblem14);
 
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
-	       var problemLoop = CourseSketch.prutil.SrlProblem();
-		   var bankProblemLoop = CourseSketch.prutil.SrlBankProblem();
-		   problemLoop.courseId = '8';
-		   problemLoop.assignmentId = '' + (11 + i);
-		   problemLoop.id = '' + (11 + i * 10 + j);
-		   problemLoop.name = 'problem' + j;
-		   bankProblemLoop.id = problemLoop.id;
-		   bankProblemLoop.questionText = 'Please add ' + i + ' + ' + j;
-		   CourseSketch.fakeProblems.push(problemLoop);
-		   CourseSketch.fakeBankProblems.push(bankProblemLoop);
-	    }
-	}
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            var problemLoop = CourseSketch.prutil.SrlProblem();
+            var bankProblemLoop = CourseSketch.prutil.SrlBankProblem();
+            problemLoop.courseId = '8';
+            problemLoop.assignmentId = '' + (11 + i);
+            problemLoop.id = '' + (11 + i * 10 + j);
+            problemLoop.name = 'problem' + j;
+            bankProblemLoop.id = problemLoop.id;
+            bankProblemLoop.questionText = 'Please add ' + i + ' + ' + j;
+            CourseSketch.fakeProblems.push(problemLoop);
+            CourseSketch.fakeBankProblems.push(bankProblemLoop);
+        }
+    }
 
+    for (var k = 0; k < CourseSketch.fakeProblems.length; k++) {
+        var problem = CourseSketch.fakeProblems[k];
+        var problemHolder1 = CourseSketch.prutil.ProblemSlideHolder();
+        problemHolder1.id = problem.id;
+        problemHolder1.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
+        problemHolder1.unlocked = true;
+        problemHolder1.problem = CourseSketch.fakeBankProblems[k];
+        problem.subgroups = [ problemHolder1 ];
+        // console.log('problem: ', problem.id, problem.subgroups);
+    }
+
+    // console.log(CourseSketch.fakeProblems);
 })();
