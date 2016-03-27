@@ -31,7 +31,7 @@
     assignment2.id = '2';
     assignment2.name = 'Test HW1';
     // Graded is used by some tests so do not change this value!
-    assignment2.type = CourseSketch.prutil.AssignmentType.GRADED;
+    assignment2.assignmentType = CourseSketch.prutil.AssignmentType.GRADED;
     assignment2.other = '';
     assignment2.description = 'This was a triumph test';
     assignment2.links = 'http://en.wikipedia.org/wiki/Moose';
@@ -58,7 +58,7 @@
     assignment3.id = '3';
     assignment3.name = 'Quiz 101';
     assignment3.description = 'We will gracefully guide you through a quiz because we are nice';
-    assignment3.type = CourseSketch.prutil.AssignmentType.PRACTICE;
+    assignment3.assignmentType = CourseSketch.prutil.AssignmentType.PRACTICE;
     assignment3.state = CourseSketch.prutil.State();
     assignment3.state.published = true;
     assignment3.state.accessible = false;
@@ -73,7 +73,7 @@
     assignment4.id = '4';
     assignment4.name = 'Quantum entanglement';
     assignment4.description = 'tests you over your tanglement';
-    assignment4.type = CourseSketch.prutil.AssignmentType.GRADED;
+    assignment4.assignmentType = CourseSketch.prutil.AssignmentType.GRADED;
     assignment4.state = CourseSketch.prutil.State();
     assignment4.state.published = true; //closed
     assignment4.state.accessible = false;
@@ -136,7 +136,8 @@
     assignment10.courseId = '5';
     assignment10.id = '10';
     assignment10.name = 'random problem loading';
-    assignment10.type = CourseSketch.prutil.AssignmentType.FLASHCARD;
+    assignment10.assignmentType = CourseSketch.prutil.AssignmentType.FLASHCARD;
+    assignment10.navigationType = CourseSketch.prutil.NavigationType.RANDOM;
     assignment10.problemList = ['1', '2', '3', '4', '5', '6', '7', '8', '14'];
     CourseSketch.fakeAssignments.push(assignment10);
 

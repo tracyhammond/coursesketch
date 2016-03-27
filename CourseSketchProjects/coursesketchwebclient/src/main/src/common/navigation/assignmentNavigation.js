@@ -263,7 +263,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @returns {Number} the number of parts in the subgroup list.
      * @memberof AssignmentNavigator
      */
-    this.getSubgroupPartSize = function getSubgroupSize() {
+    this.getSubgroupPartSize = function getSubgroupPartSize() {
         return currentSubgroup.subgroups.length;
     };
 
@@ -581,7 +581,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
         if (direction !== 0) {
             // TODO: change this to a navigation exception.
-            throw new NavigationException('Index is not valid: [' + index + ' out of ' + getSubgroupListSize + ']');
+            throw new NavigationException('Index is not valid: [' + index + ' out of ' + currentSubgroup.subgroups.length + ']');
         }
     }
 
@@ -606,8 +606,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         }
         if (isRandomNavigation()) {
             //Pull problems at random for Game
-            var numberOfQuestions = getSubgroupListSize();
-            var randomNumber = Math.random();
+            var numberOfQuestions = subgroupList.length;
+            var randomNumber = Math.floor(Math.random() * numberOfQuestions);
 
             index = randomNumber % numberOfQuestions;
         } else if (isLoopable()) {
