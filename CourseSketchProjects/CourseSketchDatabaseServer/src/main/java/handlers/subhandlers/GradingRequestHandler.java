@@ -56,7 +56,7 @@ public final class GradingRequestHandler {
      *
      * @param institution The database interface.
      * @param request The request being sent.
-     * @param authId The Id of the user who sent the request used for authentication purposes.
+     * @param authId The id used to authenticate the user.
      * @param userId The id of the user who sent the request used for identification purposes.
      * @return List of the grades. The list is length 1 if it is only a single grade.
      * @throws AuthenticationException Thrown if user does not have correct permission to retrieve grade.
@@ -75,9 +75,9 @@ public final class GradingRequestHandler {
         LOG.debug("Query State instructor: {}, student: {}, allGrades: {}, singleGrade: {}", instructor, student, allGrades, singleGrade);
         List<ProtoGrade> returnList = new ArrayList<>();
         if (instructor && allGrades) {
-            returnList = institution.getAllAssignmentGradesInstructor(request.getItemId(COURSE_INDEX), authId);
+            returnList = institution.getAllAssignmentGradesInstructor(authId, request.getItemId(COURSE_INDEX));
         } else if (student && allGrades) {
-            returnList = institution.getAllAssignmentGradesStudent(request.getItemId(COURSE_INDEX), authId, userId);
+            returnList = institution.getAllAssignmentGradesStudent(userId, authId, request.getItemId(COURSE_INDEX));
         } else {
             final ProtoGrade gradeData = ProtoGrade.newBuilder()
                     .setUserId(request.getItemId(USER_INDEX))
@@ -85,11 +85,7 @@ public final class GradingRequestHandler {
                     .setAssignmentId(request.getItemId(ASSIGNMENT_INDEX))
                     .setProblemId(request.getItemId(PROBLEM_INDEX))
                     .build();
-            if (instructor && singleGrade) {
-                returnList.add(institution.getGrade(authId, gradeData));
-            } else if (student && singleGrade) {
-                returnList.add(institution.getGrade(authId, gradeData));
-            }
+            returnList.add(institution.getGrade(userId, authId, gradeData));
         }
         return returnList;
     }
