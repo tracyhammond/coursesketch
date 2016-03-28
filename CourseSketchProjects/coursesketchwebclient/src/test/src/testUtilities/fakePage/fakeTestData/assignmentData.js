@@ -24,7 +24,7 @@
     assignment1.state.started = false;
     assignment1.state.completed = false;
     assignment1.state.graded = true;
-    assignment1.problemList = ['1', '2'];
+    assignment1.problemGroups = ['1', '2'];
     CourseSketch.fakeAssignments.push(assignment1);
 
     assignment2.courseId = '1';
@@ -45,7 +45,7 @@
     assignment2.state.started = true;
     assignment2.state.completed = false;
     assignment2.state.graded = false;
-    assignment2.problemList = ['3', '4'];
+    assignment2.problemGroups = ['3', '4'];
 
     //assignment2.accessDate = CourseSketch.prutil.DateTime(2015, 9, 01, 1200,0,0, new Date().getTime());
     //assignment2.dueDate = CourseSketch.prutil.DateTime(2015, 11, 01, 1200, 0, 0, new Date().getTime());
@@ -66,7 +66,7 @@
     assignment3.state.started = false;
     assignment3.state.completed = false;
     assignment3.state.graded = false;
-    assignment3.problemList = ['5', '6'];
+    assignment3.problemGroups = ['5', '6'];
     CourseSketch.fakeAssignments.push(assignment3);
 
     assignment4.courseId = '3';
@@ -81,7 +81,7 @@
     assignment4.state.started = false;
     assignment4.state.completed = false;
     assignment4.state.graded = false;
-    assignment4.problemList = ['7'];
+    assignment4.problemGroups = ['7'];
     CourseSketch.fakeAssignments.push(assignment4);
 
     assignment5.courseId = '3';
@@ -95,7 +95,7 @@
     assignment5.state.started = true;
     assignment5.state.completed = true;
     assignment5.state.graded = false;
-    assignment5.problemList = ['8'];
+    assignment5.problemGroups = ['8'];
     CourseSketch.fakeAssignments.push(assignment5);
 
     assignment6.courseId = '4';
@@ -109,28 +109,28 @@
     assignment6.state.started = false;
     assignment6.state.completed = false;
     assignment6.state.graded = false;
-    assignment6.problemList = ['9'];
+    assignment6.problemGroups = ['9'];
     CourseSketch.fakeAssignments.push(assignment6);
 
     assignment7.courseId = '5';
     assignment7.id = '7';
     assignment7.name = 'underwater breathing';
     assignment7.description = 'how long can you hold your breath?';
-    assignment7.problemList = ['10'];
+    assignment7.problemGroups = ['10'];
     CourseSketch.fakeAssignments.push(assignment7);
 
     assignment8.courseId = '6';
     assignment8.id = '8';
     assignment8.name = 'style quiz';
     assignment8.description = 'do you know how to code??';
-    assignment8.problemList = ['11', '12'];
+    assignment8.problemGroups = ['11', '12'];
     CourseSketch.fakeAssignments.push(assignment8);
 
     assignment9.courseId = '6';
     assignment9.id = '9';
     assignment9.name = 'make course sketch';
     assignment9.description = 'not a big assignment, I just want you to program a MOOC using sketch recognition. You have one week.';
-    assignment9.problemList = ['13', '14'];
+    assignment9.problemGroups = ['13', '14'];
     assignment9.navigationType = CourseSketch.prutil.NavigationType.LOOPING;
     CourseSketch.fakeAssignments.push(assignment9);
 
@@ -139,7 +139,7 @@
     assignment10.name = 'random problem loading';
     assignment10.assignmentType = CourseSketch.prutil.AssignmentType.FLASHCARD;
     assignment10.navigationType = CourseSketch.prutil.NavigationType.RANDOM;
-    assignment10.problemList = ['1', '2', '3', '4', '5', '6', '7', '8', '14'];
+    assignment10.problemGroups = ['1', '2', '3', '4', '5', '6', '7', '8', '14'];
     CourseSketch.fakeAssignments.push(assignment10);
 
     for (var i = 0; i < 4; i++) {
@@ -148,9 +148,9 @@
         assignmentLoop.id = '' + (11 + i);
         assignmentLoop.name = 'homework' + i;
         assignmentLoop.description = 'This is a homework that contains 10 problems!';
-        assignmentLoop.problemList = [];
+        assignmentLoop.problemGroups = [];
         for (var j = 0; j < 4; j++) {
-            assignmentLoop.problemList.push('' + (11 + i * 10 + j));
+            assignmentLoop.problemGroups.push('' + (11 + i * 10 + j));
         }
         CourseSketch.fakeAssignments.push(assignmentLoop);
     }

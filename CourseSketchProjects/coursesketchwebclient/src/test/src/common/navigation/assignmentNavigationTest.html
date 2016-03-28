@@ -16,56 +16,53 @@
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 
+<script>
 
-<script>
-    CourseSketch.dataManager.getAssignment = function(assignmentID, callback) {
-        if (assignmentID == "randomTest1234") {
-            callback(CourseSketch.fakeAssignments[9]);
-        } else if(assignmentID == "looping") {
-            callback(CourseSketch.fakeAssignments[8]);
-        } else {
-            callback(CourseSketch.fakeAssignments[1]);
-        }
-    }
-</script>
-<script>
         QUnit.module("navigation index changing (problem style!)");
-        test("randomAssignment", function(assert) {
-            var testNavigator = new AssignmentNavigator("randomTest1234", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.gotoNext();
-            assert.notEqual(undefined, testNavigator.getCurrentSubgroupIndex(), "testing randomness");
-            var randomnessHappened = 0;
-            var previousIndex = index;
-            for (var k = 0; k < 100; k++) {
-                // use goto next
+        QUnit.test("randomAssignment", function(assert) {
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("10", 0, true);
+            testNavigator.addCallback(function () {
+                var index = testNavigator.getCurrentSubgroupIndex();
                 testNavigator.gotoNext();
-                var newIndex = testNavigator.getCurrentSubgroupIndex();
-                // ensures it is not staying at the same problem and not just going up by 1
-                if (newIndex !== previousIndex + 1 && newIndex !== previousIndex) {
-                    randomnessHappened++;
+                assert.notEqual(undefined, testNavigator.getCurrentSubgroupIndex(), "testing randomness");
+                var randomnessHappened = 0;
+                var previousIndex = index;
+                for (var k = 0; k < 100; k++) {
+                    // use goto next
+                    testNavigator.gotoNext();
+                    var newIndex = testNavigator.getCurrentSubgroupIndex();
+                    // ensures it is not staying at the same problem and not just going up by 1
+                    if (newIndex !== previousIndex + 1 && newIndex !== previousIndex) {
+                        randomnessHappened++;
+                    }
+                    previousIndex = newIndex;
                 }
-                previousIndex = newIndex;
-            }
 
-            if (randomnessHappened > 50) {
-                assert.ok(true, 'random happened sufficiently');
-            } else {
-                assert.ok(false, 'random only happened less than 50 times: ' + randomnessHappened);
-            }
-        });
-
-        test("gradedAssignmentNavigationForward", function(assert) {
-            var testNavigator = new AssignmentNavigator("graded", 0, true);
+                if (randomnessHappened > 50) {
+                    assert.ok(true, 'random happened sufficiently');
+                } else {
+                    assert.ok(false, 'random only happened less than 50 times: ' + randomnessHappened);
+                }
+                done();
+            });
             testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.gotoNext();
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
         });
 
-        test("gradedAssignmentNavigationPrevious", function(assert) {
-            var testNavigator = new AssignmentNavigator("graded", 0, true);
+        test("AssignmentNavigationForward", function(assert) {
+            var testNavigator = new AssignmentNavigator("1", 0, true);
+            var done = assert.async();
+            testNavigator.addCallback(function () {
+                var index = testNavigator.getCurrentSubgroupIndex();
+                testNavigator.gotoNext();
+                assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+                done();
+            });
+            testNavigator.reloadAssignment();
+        });
+
+        test("AssignmentNavigationPrevious", function(assert) {
+            var testNavigator = new AssignmentNavigator("1", 0, true);
             testNavigator.reloadAssignment();
             var index = testNavigator.getCurrentSubgroupIndex();
             testNavigator.gotoNext();
@@ -76,7 +73,7 @@
         });
 
         test("goToProblem", function(assert) {
-            var testNavigator = new AssignmentNavigator("graded", 0, true);
+            var testNavigator = new AssignmentNavigator("1", 0, true);
             testNavigator.reloadAssignment();
             var index = testNavigator.getCurrentSubgroupIndex();
             testNavigator.goToSubgroup(index + 1);
@@ -84,7 +81,7 @@
         });
 
         test("looping", function(assert) {
-            var testNavigator = new AssignmentNavigator("looping", 0, true);
+            var testNavigator = new AssignmentNavigator("9", 0, true);
             testNavigator.reloadAssignment();
             var index = testNavigator.getCurrentSubgroupIndex();
             testNavigator.gotoNext();
@@ -95,14 +92,37 @@
             assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly navigating back to the end");
         });
         QUnit.module("basic callbacks");
-        QUnit.asyncTest("basic reload", function(assert) {
+        QUnit.test("basic reload", function(assert) {
             expect(1);
-            var testNavigator = new AssignmentNavigator("graded", 0, true);
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("9", 0, true);
             testNavigator.addCallback(function () {
                 assert.ok(true);
-                QUnit.start();
+                done();
             });
             testNavigator.reloadAssignment();
+        });
+        QUnit.test("next works", function(assert) {
+            var done = assert.async(2);
+            var testNavigator = new AssignmentNavigator("9", 0, true);
+            testNavigator.reloadAssignment();
+            testNavigator.addCallback(function () {
+                assert.ok(true);
+                done();
+            });
+            var index = testNavigator.getCurrentSubgroupIndex();
+            console.log('index');
+            testNavigator.gotoNext();
+        });
+        QUnit.test("previous works", function(assert) {
+            var done = assert.async(2);
+            var testNavigator = new AssignmentNavigator("9", 0, true);
+            testNavigator.reloadAssignment();
+            testNavigator.addCallback(function () {
+                assert.ok(true);
+                done();
+            });
+            testNavigator.gotoNext();
         });
 </script>
 </body>

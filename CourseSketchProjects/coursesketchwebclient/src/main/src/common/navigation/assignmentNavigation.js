@@ -339,7 +339,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {Number} scopedIndex - The index from the callbackList to call.
      * @instance
      * @access private
-     * @memberof AssignmentNavigator
+     *
      */
     function callBacker(scopedIndex) {
         setTimeout(function() {
@@ -413,7 +413,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * @param {Number} index - The problem that we want to switch to.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.goToSubgroup = function goToSubgroup(index) {
         changeSubgroup(index, 0);
@@ -423,7 +422,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Attempts to change to the next problem or slide.
      *
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.gotoNext = function() {
         if (isSubgroupNavigation) {
@@ -437,7 +435,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Attempts to change to the previous problem or slide.
      *
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.gotoPrevious = function() {
         if (isSubgroupNavigation) {
@@ -594,7 +591,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {Number} direction - The direction of navigation.
      * @instance
      * @access private
-     * @memberof AssignmentNavigator
+     *
      */
     function changeSubgroup(index, direction) {
         if ((index < 0 || index >= subgroupList.length) && (!isLoopable() && !isRandomNavigation())) {
@@ -687,7 +684,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * Navigation rules are at the top of this file!
      *
-     * @memberof AssignmentNavigator
+     *
      */
     function goToNextSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
@@ -704,7 +701,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * Navigation rules are at the top of this file!
      *
-     * @memberof AssignmentNavigator
+     *
      */
     function goToPreviousSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
@@ -726,7 +723,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {*} key - The key of the event mapping.
      * @param {Function} funct - The function called when the event is called.
      * @instance
-     * @memberof AssignmentNavigator
+     *
      */
     this.addEventMapping = function(key, funct) {
         if (isUndefined(eventMappingCallback[key])) {
@@ -744,7 +741,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {*} key - The key of the event mapping.
      * @param {Function} funct - The function that is being removed.
      * @instance
-     * @memberof AssignmentNavigator
+     *
      */
     this.removeEventMapping = function(key, funct) {
         if (isUndefined(eventMappingCallback[key])) {
@@ -758,7 +755,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * @param {*} key - The key of the event mapping.
      * @instance
-     * @memberof AssignmentNavigator
+     *
      */
     this.clearAllMappings = function(key) {
         eventMappingCallback[key] = undefined;
@@ -773,7 +770,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {*} key - The key of the event mapping.
      * @param {Array<*>} funcArgs - A list of arguments to call the function with.
      * @instance
-     * @memberof AssignmentNavigator
+     *
      */
     this.executeEvent = function(key, funcArgs) {
         var list = eventMappingCallback[key];

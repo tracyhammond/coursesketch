@@ -10,13 +10,13 @@
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
 
-    // barriers have been tested and work as expected with this function.
+    // barriers have been tested and work as expected with these function.
     var loadLectures = function() {
         var localBarrier = new CallbackBarrier();
         var lectureLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeLectures.length);
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
+            CourseSketch.dataManager.setAssignment(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
         }
     };
 
@@ -87,17 +87,17 @@
                 }
             }
             callback(results);
-        }
+        };
 
         barrier.finalize(function() {
             console.log("DATABASE HAS ITS DATA LOADED");
             CourseSketch.dataManager.testDataLoaded = true;
         });
         loadCourses();
-        loadLectures();
         loadSlides();
-        loadAssignments();
         loadProblems();
+        loadAssignments();
+        loadLectures();
     }
 
     // waits till the database is ready to set up our loading process
