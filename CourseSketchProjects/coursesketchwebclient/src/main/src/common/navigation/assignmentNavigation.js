@@ -225,7 +225,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Changes the problem to the current index.
      *
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.refresh = function() {
         changeSubgroup(currentIndex, 0);
@@ -234,7 +233,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @return {Boolean} true if the problems have been loaded into memory.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.isDataLoaded = function() {
         return dataLoaded;
@@ -245,7 +243,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * @param {Boolean} value - True if the ui has been loaded.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.setUiLoaded = function(value) {
         uiLoaded = value;
@@ -253,7 +250,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
     /**
      * @returns {Number} the number of subgroups in the list.
-     * @memberof AssignmentNavigator
      */
     this.getSubgroupSize = function getSubgroupSize() {
         return subgroupList.length;
@@ -261,7 +257,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
     /**
      * @returns {Number} the number of parts in the subgroup list.
-     * @memberof AssignmentNavigator
      */
     this.getSubgroupPartSize = function getSubgroupPartSize() {
         return currentSubgroup.subgroups.length;
@@ -270,7 +265,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @return {SrlAssignment} the current assignment stored in this navigator..
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.getCurrentAssignment = function() {
         return currentAssignment;
@@ -278,7 +272,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
     /**
      * @returns {BankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
-     * @memberof AssignmentNavigator
      */
     this.getCurrentInfo = function getCurrentInfo() {
         return currentSubgroupPart;
@@ -287,7 +280,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @return {QuestionType} the type of the base problem.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.getProblemType = function() {
         var type = getCurrentInfo().questionType;
@@ -297,7 +289,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @return {ItemType} the type of current part.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.getPartType = function() {
         return currentSubgroupPartHolder.itemType;
@@ -306,7 +297,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @returns {Number} the current problem number in a human readable format.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.getCurrentNumber = function() {
         if (isSubgroupNavigation) {
@@ -318,7 +308,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @returns {Number} the current index of the subgroup.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.getCurrentSubgroupIndex = function() {
         return currentIndex;
@@ -327,10 +316,19 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * @returns {Number} the current index of the subgroup.
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.getCurrentPartIndex = function() {
         return currentSubgroupPartIndex;
+    };
+
+    /**
+     * Adds a callback that is called when changing problem index.
+     *
+     * @param {Function} callback - a callback that is called when the navigator is done navigating and everything is ready.
+     * @instance
+     */
+    this.addCallback = function(callback) {
+        callbackList.push(callback);
     };
 
     /**
@@ -399,7 +397,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Reloads the assignment from the id and assigns it to the currentAssignment.
      *
      * @instance
-     * @memberof AssignmentNavigator
      */
     this.reloadAssignment = function() {
         loadAssignment(currentAssignmentId, function() {

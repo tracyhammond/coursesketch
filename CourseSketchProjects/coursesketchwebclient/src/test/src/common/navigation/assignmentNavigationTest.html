@@ -94,5 +94,15 @@
             testNavigator.gotoPrevious();
             assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly navigating back to the end");
         });
+        QUnit.module("basic callbacks");
+        QUnit.asyncTest("basic reload", function(assert) {
+            expect(1);
+            var testNavigator = new AssignmentNavigator("graded", 0, true);
+            testNavigator.addCallback(function () {
+                assert.ok(true);
+                QUnit.start();
+            });
+            testNavigator.reloadAssignment();
+        });
 </script>
 </body>
