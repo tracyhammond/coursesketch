@@ -332,6 +332,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * Clears the callback list so that it does not call anymore callbacks
+     */
+    this.clearAllCallbacks = function() {
+        callbackList = [];
+    };
+
+    /**
      * Scopes the index for the callbackList.
      *
      * This way the browser is not locked up by callbacks.
