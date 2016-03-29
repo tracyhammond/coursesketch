@@ -16,6 +16,7 @@
         var lectureLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeLectures.length);
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
+            console.log(CourseSketch.fakeLectures[i]);
             CourseSketch.dataManager.setAssignment(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
         }
     };

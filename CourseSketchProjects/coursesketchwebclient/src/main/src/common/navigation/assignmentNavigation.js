@@ -107,13 +107,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * The current index In the assignment where the navigator is.
      * @type {Number}
      */
-    var currentIndex = 0;
+    var currentIndex = undefined;
 
     /**
      * The current index in the problem or slide set where the navigator is.
      * @type {Number}
      */
-    var currentSubgroupPartIndex = 0;
+    var currentSubgroupPartIndex = undefined;
 
     /**
      * Used for scoping.
@@ -332,7 +332,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * Clears the callback list so that it does not call anymore callbacks
+     * Clears the callback list so that it does not call anymore callbacks.
      */
     this.clearAllCallbacks = function() {
         callbackList = [];
@@ -625,6 +625,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             gotoSubgroupPart(currentSubgroup.subgroups.length - 1, direction);
         } else if (direction === 0) {
             // The subgroup did not change
+            if (isUndefined(currentSubgroupPartIndex)) {
+                currentSubgroupPartIndex = 0;
+            }
             gotoSubgroupPart(currentSubgroupPartIndex, direction);
         } else {
             gotoSubgroupPart(0, direction);
@@ -652,8 +655,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
                     currentSubgroupPartHolder.problem = bankProblem;
                     doneNavigating();
                 });
-            } else {
-                doneNavigating();
+                return;
             }
         } else if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.SLIDE) {
             if (isUndefined(subgroupPartHolder.slide)) {
@@ -662,10 +664,10 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
                     currentSubgroupPartHolder.slide = bankProblem;
                     doneNavigating();
                 });
-            } else {
-                doneNavigating();
+                return;
             }
         }
+        doneNavigating();
     }
 
     /**
@@ -690,8 +692,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Goes to the next slide or problem part.
      *
      * Navigation rules are at the top of this file!
-     *
-     *
      */
     function goToNextSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
