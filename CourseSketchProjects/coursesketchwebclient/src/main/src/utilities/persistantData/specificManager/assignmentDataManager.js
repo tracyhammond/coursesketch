@@ -242,7 +242,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                     var bytes = ByteBuffer.fromBase64(result.data);
                     stateCallback(CourseSketch.prutil.getSrlAssignmentClass().decode(bytes), assignmentCallback);
                 } catch (exception) {
-                    console.error(exception);
+                    console.error('error parsing local assignment', assignmentId, exception);
                     assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
                 }
             }
