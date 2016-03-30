@@ -154,20 +154,20 @@ validateFirstRun(document.currentScript);
 	}
 
 	// FORMAT FOR THIS LECTURE
-	// GROUP 1
+	// GROUP 2210
 	// SLIDE 2210
-	// Lecture 1
+	// Lecture 1000
 	// SLIDE 2211
-	// GROUP 2
+	// GROUP 2230
 	// SLIDE 2220
-	// Lecture 2
-	// Lecture 3
+	// Lecture 2000
+	// Lecture 3000
 	// SLIDE 2221
-	// GROUP 3
-	// Lecture 1
+	// GROUP 2230
+	// Lecture 1000
 	// SLIDE 2230
 	// Lecture 2
-	// GROUP 4
+	// GROUP 2240
 	// SLIDE 2240
     // BankProblem 2241
 	var lecture11 = CourseSketch.prutil.SrlAssignment();
@@ -179,7 +179,7 @@ validateFirstRun(document.currentScript);
 
 	// GROUP 1
 	var group = CourseSketch.prutil.SrlProblem();
-	group.id = '210';
+	group.id = '2210';
     group.assignemntId = lecture11.id;
     group.subgroups = [];
 
@@ -220,7 +220,7 @@ validateFirstRun(document.currentScript);
 
 	// GROUP 2
 	group = CourseSketch.prutil.SrlProblem();
-	group.id = '220';
+	group.id = '2220';
     group.assignemntId = lecture11.id;
     group.subgroups = [];
 
@@ -269,7 +269,7 @@ validateFirstRun(document.currentScript);
 
 	// GROUP 3
 	group = CourseSketch.prutil.SrlProblem();
-	group.id = '230';
+	group.id = '2230';
     group.assignemntId = lecture11.id;
     group.subgroups = [];
 
@@ -299,7 +299,7 @@ validateFirstRun(document.currentScript);
 
 	// GROUP 4
 	group = CourseSketch.prutil.SrlProblem();
-	group.id = '240';
+	group.id = '2240';
     group.assignemntId = lecture11.id;
     group.subgroups = [];
 

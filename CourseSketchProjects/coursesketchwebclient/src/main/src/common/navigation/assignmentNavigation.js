@@ -329,6 +329,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {Number} The number of nested assignments that have been navigated.
+     */
+    this.getCurrentNestedLevel = function() {
+        return assignmentIdStack.length;
+    };
+
+    /**
      * Adds a callback that is called when changing problem index.
      *
      * @param {Function} callback - a callback that is called when the navigator is done navigating and everything is ready.
@@ -687,23 +694,27 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
         currentSubgroupPartHolder = subgroupPartHolder;
         if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.BANK_PROBLEM) {
-            if (isUndefined(subgroupPartHolder.problem)) {
+            if (isUndefined(subgroupPartHolder.problem) || subgroupPartHolder.problem === null) {
                 CourseSketch.dataManager.getBankProblem(subgroupPartHolder.id, function(bankProblem) {
                     currentSubgroup = bankProblem;
                     currentSubgroupPartHolder.problem = bankProblem;
+                    currentSubgroupPart = bankProblem;
                     doneNavigating();
                 });
                 return;
             }
+            currentSubgroupPart = currentSubgroupPartHolder.problem;
         } else if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.SLIDE) {
-            if (isUndefined(subgroupPartHolder.slide)) {
+            if (isUndefined(subgroupPartHolder.slide)|| subgroupPartHolder.slide === null) {
                 CourseSketch.dataManager.getLectureSlide(subgroupPartHolder.id, function(lectureSlide) {
                     currentSubgroup = lectureSlide;
-                    currentSubgroupPartHolder.slide = bankProblem;
+                    currentSubgroupPartHolder.slide = lectureSlide;
+                    currentSubgroupPart = lectureSlide;
                     doneNavigating();
                 });
                 return;
             }
+            currentSubgroupPart = currentSubgroupPartHolder.slide;
         }
         doneNavigating();
     }
