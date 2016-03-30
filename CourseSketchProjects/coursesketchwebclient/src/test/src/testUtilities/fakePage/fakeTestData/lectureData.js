@@ -78,11 +78,12 @@ validateFirstRun(document.currentScript);
 		CourseSketch.fakeProblems.push(idLists[i]);
 	}
 
+    // Has 2 problem subgroups in it
 	lecture1.id = '1000';
 	lecture1.courseId = '1';
 	lecture1.name = 'Test lecture title!';
 	lecture1.description = 'I am a test lecture description!';
-	lecture1.problemGroups = [ idList1.id ];
+	lecture1.problemGroups = [ idList1.id, idList2.id ];
 	CourseSketch.fakeLectures.push(lecture1);
 
 	lecture2.id = '1100';

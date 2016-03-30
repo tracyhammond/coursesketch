@@ -104,6 +104,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     var callbackList = [];
 
     /**
+     * A map of temporary callbacks.
+     *
+     * @type {Map<Function>}
+     */
+    var temporaryCallbackList = [];
+
+    /**
      * The current index In the assignment where the navigator is.
      * @type {Number}
      */
@@ -403,13 +410,28 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Reloads the assignment from the id and assigns it to the currentAssignment.
      *
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
      * @instance
      */
-    this.reloadAssignment = function() {
+    this.reloadAssignment = function(callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
         loadAssignment(currentAssignmentId, function() {
             localScope.refresh();
         });
     };
+
+    /**
+     * Creates a temporary callback.
+     *
+     * Manages a queue right now.  (A better way should be created).
+     *
+     * @param {Function} callback - A temporary callback that should only be called when this navigation is finished.
+     */
+    function createTemporaryCallback(callback) {
+        temporaryCallbackList.push(callback);
+    }
 
     /*******************************
      * START OF NAVIGATION LOGIC
@@ -419,18 +441,26 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Changes the index to point at this new problem.
      *
      * @param {Number} index - The problem that we want to switch to.
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
      * @instance
      */
-    this.goToSubgroup = function goToSubgroup(index) {
+    this.goToSubgroup = function goToSubgroup(index, callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
         changeSubgroup(index, 0);
     };
 
     /**
      * Attempts to change to the next problem or slide.
      *
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
      * @instance
      */
-    this.gotoNext = function() {
+    this.gotoNext = function(callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
         if (isSubgroupNavigation) {
             changeSubgroup(currentIndex + 1, 1);
         } else {
@@ -441,9 +471,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Attempts to change to the previous problem or slide.
      *
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
      * @instance
      */
-    this.gotoPrevious = function() {
+    this.gotoPrevious = function(callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
         if (isSubgroupNavigation) {
             changeSubgroup(currentIndex - 1, -1);
         } else {
@@ -457,6 +491,10 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Currently just calls the callbacks.
      */
     function doneNavigating() {
+        if (temporaryCallbackList.length > 0) {
+            var callback = temporaryCallbackList.shift();
+            callback();
+        }
         for (var i = 0; i < callbackList.length; i++) {
             callBacker(i);
         }
@@ -695,7 +733,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     function goToNextSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
-        if (currentSubgroupPartIndex >= subgroupPartLength) {
+        if (currentSubgroupPartIndex + 1 >= subgroupPartLength) {
             currentSubgroupPartIndex = 0;
             changeSubgroup(currentIndex + 1, 1);
             return;
@@ -712,7 +750,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     function goToPreviousSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
-        if (currentSubgroupPartIndex >= subgroupPartLength) {
+        if (currentSubgroupPartIndex - 1 < 0) {
             currentSubgroupPartIndex = 0;
             changeSubgroup(currentIndex - 1, -1);
             return;

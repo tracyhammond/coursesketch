@@ -109,34 +109,106 @@
 
         QUnit.test("previous works", function(assert) {
             var done = assert.async();
-            var testNavigator = new AssignmentNavigator("700", 0, true);
+            var testNavigator = new AssignmentNavigator("800", 0, true);
             testNavigator.reloadAssignment();
             testNavigator.addCallback(function () {
                 assert.ok(true);
                 done();
             });
-            testNavigator.gotoNext();
+            testNavigator.gotoPrevious();
         });
 
-        QUnit.module("Part navigation");
+        QUnit.test("basic reload with temp", function(assert) {
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("800", 0, true);
+            testNavigator.reloadAssignment(function () {
+                assert.ok(true);
+                done();
+            });
+        });
+
+        QUnit.test("next works with temp", function(assert) {
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("700", 0, true);
+            testNavigator.reloadAssignment();
+            var index = testNavigator.getCurrentSubgroupIndex();
+            console.log('index');
+            testNavigator.gotoNext(function () {
+                assert.ok(true);
+                done();
+            });
+        });
+
+        QUnit.test("previous works with temp", function(assert) {
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("800", 0, true);
+            testNavigator.reloadAssignment();
+            testNavigator.gotoPrevious(function () {
+                assert.ok(true);
+                done();
+            });
+        });
+
+        QUnit.test("nested calls with temp", function(assert) {
+            var done = assert.async(3);
+            var testNavigator = new AssignmentNavigator("800", 0, true);
+            testNavigator.reloadAssignment(function () {
+                assert.ok(true);
+                done();
+                testNavigator.gotoNext(function () {
+                    assert.ok(true);
+                    done();
+                    testNavigator.gotoPrevious(function () {
+                        assert.ok(true);
+                        done();
+                    });
+                });
+            });
+        });
+
+        QUnit.module("navigation index changing (lecture style!)");
         QUnit.test("part navigation forward", function (assert) {
             var done = assert.async();
             var testNavigator = new AssignmentNavigator("1000", 0, false);
-            testNavigator.addCallback(function () {
+            testNavigator.reloadAssignment(function () {
                 console.log("FINISHED RELOADING");
                 testNavigator.clearAllCallbacks();
                 var partIndex = testNavigator.getCurrentPartIndex();
                 var groupIndex = testNavigator.getCurrentSubgroupIndex();
-                testNavigator.addCallback(function () {
+                testNavigator.gotoNext(function () {
                     var newPartIndex = testNavigator.getCurrentPartIndex();
                     var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
                     assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
                     assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
                     done();
                 });
-                testNavigator.gotoNext()
             });
-            testNavigator.reloadAssignment();
+        });
+
+        QUnit.test("part navigation forward twice (changing subgroup)", function (assert) {
+            var done = assert.async(2);
+            var testNavigator = new AssignmentNavigator("1000", 0, false);
+            testNavigator.reloadAssignment(function () {
+                console.log("FINISHED RELOADING");
+                testNavigator.clearAllCallbacks();
+                var partIndex = testNavigator.getCurrentPartIndex();
+                var groupIndex = testNavigator.getCurrentSubgroupIndex();
+                testNavigator.gotoNext(function () {
+                    var newPartIndex = testNavigator.getCurrentPartIndex();
+                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
+                    done();
+
+                    testNavigator.gotoNext(function () {
+                        var newPartIndex = testNavigator.getCurrentPartIndex();
+                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                        assert.equal(newGroupIndex, groupIndex + 1, "The group does not change indexes");
+                        assert.equal(newPartIndex, 0, "The part index is one larger");
+                        done();
+                    });
+                });
+            });
         });
 </script>
 </body>
