@@ -745,8 +745,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Goes to the next slide.
      *
      * Navigation rules are at the top of this file!
-     *
-     *
      */
     function goToPreviousSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
