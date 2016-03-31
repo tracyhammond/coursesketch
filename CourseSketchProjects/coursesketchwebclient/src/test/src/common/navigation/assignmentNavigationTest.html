@@ -53,6 +53,14 @@
             assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
         });
 
+        test("GotoAssignmentEnd", function(assert) {
+            var testNavigator = new AssignmentNavigator("000", 0, true);
+            testNavigator.reloadAssignment();
+            var index = testNavigator.getCurrentSubgroupIndex();
+            testNavigator.gotoEndOfSubgroup();
+            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+        });
+
         test("AssignmentNavigationPrevious", function(assert) {
             var testNavigator = new AssignmentNavigator("000", 0, true);
             testNavigator.reloadAssignment();
@@ -262,7 +270,6 @@
             var done = assert.async(3);
             var testNavigator = new AssignmentNavigator("2000", 0, false);
             testNavigator.reloadAssignment(function () {
-
                 assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
                 done();
                 testNavigator.gotoNext(function () {
@@ -276,7 +283,7 @@
                         assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
                         assert.equal(newAssignmentId, '2000', "The old assignment is loaded");
                         assert.equal(newGroupIndex, 0, "The new group index is 0");
-                        assert.equal(newPartIndex, 2, "The new subpart index is 0");
+                        assert.equal(newPartIndex, 0, "The new subpart index is 0");
                         assert.notEqual(newPart, undefined, 'the new subgroup is defined');
                         assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
                         assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');

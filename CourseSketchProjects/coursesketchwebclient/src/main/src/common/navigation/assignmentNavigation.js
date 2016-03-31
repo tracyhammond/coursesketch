@@ -555,8 +555,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             nextAssignmentId = assignmentIdStack.pop();
         }
         currentAssignmentId = nextAssignmentId;
-        currentIndex = nextAssignmentLocation.group;
-        currentSubgroupPartIndex = nextAssignmentLocation.part;
+        currentIndex = nextAssignmentLocation.backGroup;
+        currentSubgroupPartIndex = nextAssignmentLocation.backPart;
         loadAssignment(currentAssignmentId, function() {
             changeSubgroup(currentIndex, 0);
         });
