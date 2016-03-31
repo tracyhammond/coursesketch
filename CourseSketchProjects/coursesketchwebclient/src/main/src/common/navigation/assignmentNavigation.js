@@ -445,7 +445,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      ******************************/
 
     /**
-     * Changes the index to point at this new problem.
+     * Changes the index to point at this new subgroup.
      *
      * @param {Number} index - The problem that we want to switch to.
      * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
@@ -456,6 +456,20 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             createTemporaryCallback(callback);
         }
         changeSubgroup(index, 0);
+    };
+
+    /**
+     * Changes the index to point at this new subgroup part
+     *
+     * @param {Number} index - The problem that we want to switch to.
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
+     * @instance
+     */
+    this.goToSubgroupPart = function goToSubgroupPart(index, callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
+        changeSubgroupPart(index, 0);
     };
 
     /**
@@ -519,7 +533,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         }
         var lastIndex = currentSubgroup.subgroups.length - 1;
         var direction = currentSubgroupPartIndex === lastIndex ? 0 : 1;
-        gotoSubgroupPart(lastIndex, direction);
+        changeSubgroupPart(lastIndex, direction);
     };
 
     /**
@@ -693,15 +707,15 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         currentIndex = index;
         currentSubgroup = subgroupList[index];
         if (direction < 0) {
-            gotoSubgroupPart(currentSubgroup.subgroups.length - 1, direction);
+            changeSubgroupPart(currentSubgroup.subgroups.length - 1, direction);
         } else if (direction === 0) {
             // The subgroup did not change
             if (isUndefined(currentSubgroupPartIndex)) {
                 currentSubgroupPartIndex = 0;
             }
-            gotoSubgroupPart(currentSubgroupPartIndex, direction);
+            changeSubgroupPart(currentSubgroupPartIndex, direction);
         } else {
-            gotoSubgroupPart(0, direction);
+            changeSubgroupPart(0, direction);
         }
     }
 
@@ -751,10 +765,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {Number} index - The index of the next subgroup part.
      * @param {Number} direction - The direction of navigation.
      */
-    function gotoSubgroupPart(index, direction) {
+    function changeSubgroupPart(index, direction) {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (index >= subgroupPartLength || index < 0) {
-            // TODO: change this to a navigation expection.
             throw new NavigationException('Index is not valid: [' + index + ' out of ' + subgroupPartLength + ']');
         }
         currentSubgroupPartIndex = index;
@@ -773,7 +786,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             changeSubgroup(currentIndex + 1, 1);
             return;
         }
-        gotoSubgroupPart(currentSubgroupPartIndex + 1, 1);
+        changeSubgroupPart(currentSubgroupPartIndex + 1, 1);
     }
 
     /**
@@ -788,7 +801,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             changeSubgroup(currentIndex - 1, -1);
             return;
         }
-        gotoSubgroupPart(currentSubgroupPartIndex - 1, -1);
+        changeSubgroupPart(currentSubgroupPartIndex - 1, -1);
     }
 
     /********

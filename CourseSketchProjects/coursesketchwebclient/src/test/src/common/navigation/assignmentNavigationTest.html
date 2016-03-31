@@ -211,6 +211,24 @@
             });
         });
 
+        QUnit.test("go to specific subgroup part", function (assert) {
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("1000", 0, false);
+            testNavigator.reloadAssignment(function () {
+                console.log("FINISHED RELOADING");
+                testNavigator.clearAllCallbacks();
+                var partIndex = testNavigator.getCurrentPartIndex();
+                var groupIndex = testNavigator.getCurrentSubgroupIndex();
+                testNavigator.goToSubgroupPart(1, function () {
+                    var newPartIndex = testNavigator.getCurrentPartIndex();
+                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
+                    done();
+                });
+            });
+        });
+
         QUnit.test("part navigation forward twice (changing subgroup)", function (assert) {
             var done = assert.async(2);
             var testNavigator = new AssignmentNavigator("1000", 0, false);
@@ -260,7 +278,7 @@
         });
 
         QUnit.module("nested navigation");
-        QUnit.test("navigation into an assignment", function (assert) {
+        QUnit.test("navigation into an assignment forward", function (assert) {
             var done = assert.async(2);
             var testNavigator = new AssignmentNavigator("2000", 0, false);
             testNavigator.reloadAssignment(function () {
@@ -337,6 +355,32 @@
                                 done();
                             });
                         });
+                    });
+                });
+            });
+        });
+
+        QUnit.test("navigation into an assignment backwards", function (assert) {
+            var done = assert.async(2);
+            var testNavigator = new AssignmentNavigator("2000", 0, false);
+            testNavigator.reloadAssignment(function () {
+                var subgroupPart = testNavigator.getCurrentInfo();
+                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                done();
+                testNavigator.goToSubgroupPart(2, function () {
+                    testNavigator.gotoPrevious(function () {
+                        var newPartIndex = testNavigator.getCurrentPartIndex();
+                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                        var newAssignmentId = testNavigator.getCurrentAssignment().id;
+                        var newPart = testNavigator.getCurrentInfo();
+                        assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
+                        assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
+                        assert.equal(newGroupIndex, 1, "The new group index is 0");
+                        assert.equal(newPartIndex, 1, "The new subpart index is 0");
+                        assert.notEqual(newPart, undefined, 'the new subgroup is defined');
+                        assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
+                        assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
+                        done();
                     });
                 });
             });
