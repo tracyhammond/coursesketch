@@ -310,5 +310,36 @@
                 });
             });
         });
+
+        QUnit.test("navigation into an assignment then forward out", function (assert) {
+            var done = assert.async(2);
+            var testNavigator = new AssignmentNavigator("2000", 0, false);
+            testNavigator.reloadAssignment(function () {
+                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                done();
+                var assignmentId = testNavigator.getCurrentAssignment().id;
+                // navigate into assignment.
+                testNavigator.gotoNext(function () {
+                    // navigate into end of nested assignment
+                    testNavigator.gotoEndOfSubgroup(function () {
+                        // navigate into end of nested assignment
+                        testNavigator.gotoEndOfSubgroupPart(function () {
+                            // go out of nested assignment
+                            testNavigator.gotoNext(function () {
+                                var newPartIndex = testNavigator.getCurrentPartIndex();
+                                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                                var newAssignmentId = testNavigator.getCurrentAssignment().id;
+                                var newPart = testNavigator.getCurrentInfo();
+                                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
+                                assert.equal(newAssignmentId, assignmentId, "The old assignment is loaded");
+                                assert.equal(newGroupIndex, 0, "The new group index is 0");
+                                assert.equal(newPartIndex, 2, "The new subpart index is 0");
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
 </script>
 </body>
