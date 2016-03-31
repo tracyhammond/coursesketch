@@ -493,6 +493,36 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * Attempts to go to the last subgroup.
+     *
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
+     * @instance
+     */
+    this.gotoEndOfSubgroup = function(callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
+        var lastIndex = subgroupList.length - 1;
+        var direction = currentIndex === lastIndex ? 0 : 1;
+        changeSubgroup(lastIndex, direction);
+    };
+
+    /**
+     * Attempts to go to the last subgroup part.
+     *
+     * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
+     * @instance
+     */
+    this.gotoEndOfSubgroupPart = function(callback) {
+        if (!isUndefined(callback)) {
+            createTemporaryCallback(callback);
+        }
+        var lastIndex = currentSubgroup.subgroups.length - 1;
+        var direction = currentSubgroupPartIndex === lastIndex ? 0 : 1;
+        gotoSubgroupPart(lastIndex, direction);
+    };
+
+    /**
      * Called when navigation is finished.
      *
      * Currently just calls the callbacks.

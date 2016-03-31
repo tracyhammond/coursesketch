@@ -193,6 +193,24 @@
             });
         });
 
+        QUnit.test("go to the end of the subgroup part", function (assert) {
+            var done = assert.async();
+            var testNavigator = new AssignmentNavigator("1000", 0, false);
+            testNavigator.reloadAssignment(function () {
+                console.log("FINISHED RELOADING");
+                testNavigator.clearAllCallbacks();
+                var partIndex = testNavigator.getCurrentPartIndex();
+                var groupIndex = testNavigator.getCurrentSubgroupIndex();
+                testNavigator.gotoEndOfSubgroupPart(function () {
+                    var newPartIndex = testNavigator.getCurrentPartIndex();
+                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
+                    done();
+                });
+            });
+        });
+
         QUnit.test("part navigation forward twice (changing subgroup)", function (assert) {
             var done = assert.async(2);
             var testNavigator = new AssignmentNavigator("1000", 0, false);
