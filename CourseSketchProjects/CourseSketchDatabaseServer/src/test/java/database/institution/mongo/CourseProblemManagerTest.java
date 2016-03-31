@@ -180,8 +180,9 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
+        final DBCollection courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final DBObject mongoProblem = courseProblemCollection.findOne(convertStringToObjectId(courseProblemId));
+
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
     }

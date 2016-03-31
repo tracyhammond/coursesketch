@@ -55,7 +55,7 @@ public class ProtobufComparison {
 
     /**
      * Constructor for setting values.
-     *  @param ignoredFields {@link #ignoredFields}.
+     * @param ignoredFields {@link #ignoredFields}.
      * @param ignoredMessages {@link #ignoredMessages}.
      * @param isDeepEquals {@link #isDeepEquals}.
      * @param ignoreNonSetFields {@link #ignoreNonSetFields}.
@@ -192,7 +192,6 @@ public class ProtobufComparison {
             if (isDeepEquals) {
                 equals((GeneratedMessage) expectedValue, (GeneratedMessage) actualValue, incorrectFieldClone);
             }
-
             if (incorrectFieldClone.size() > 0) {
                 if (this.ignoreListOrder) {
                     return false;
@@ -235,7 +234,7 @@ public class ProtobufComparison {
         final List expectedList = Lists.newArrayList((Iterable) expectedValue);
         final List actualList = Lists.newArrayList((Iterable) actualValue);
 
-        // Checking list values themselves
+        // Checking list values themselves (expected is 0 but actual is not)
         if (expectedList.size() == 0 && actualList.size() > 0) {
             if (failAtFirstMisMatch) {
                 Assert.fail(createFailMessage(field, null, actualValue));
@@ -245,7 +244,7 @@ public class ProtobufComparison {
             return;
         }
 
-        // Checking list values themselves
+        // Checking list values themselves (checks the opposite! that actual is empty but expected is not empty.)
         if (actualList.size() == 0 && expectedList.size() > 0) {
             if (failAtFirstMisMatch) {
                 Assert.fail(createFailMessage(field, expectedValue, null));
@@ -274,7 +273,7 @@ public class ProtobufComparison {
                 if (!foundOneMatch) {
                     if (failAtFirstMisMatch) {
                         Assert.fail(createFailMessage(field, expectedValueItem, null));
-                    } else if (!failAtFirstMisMatch) {
+                    } else {
                         addIncorrectField(incorrectFields, field, expectedValueItem, null);
                     }
                 }
@@ -334,12 +333,10 @@ public class ProtobufComparison {
     private String createFailMessage(final Descriptors.FieldDescriptor field, final Object expectedValue, final Object actualValue) {
         if (field.isRepeated()) {
             return createFailListMessage(field, expectedValue, actualValue);
-        } else {
-            if (expectedValue == null) {
-                return "Expected no value for field [" + field.getFullName() + "] but instead got value <" + actualValue + ">";
-            }
-            return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
+        } else if (expectedValue == null) {
+            return "Expected no value for field [" + field.getFullName() + "] but instead got value <" + actualValue + ">";
         }
+        return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
     }
 
     /**
@@ -363,12 +360,11 @@ public class ProtobufComparison {
             } else {
                 return "Expected value <" + expectedValue + "> was not found in the actual list for field [" + field.getFullName() + "]";
             }
-        } else {
-            if (expectedValue instanceof Iterator || actualValue instanceof Iterator) {
-                return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
-            }
-            return "Expected <" + expectedValue + "> but got <" + actualValue + "> for a list item in field [" + field.getFullName() + "]";
+        } else if (expectedValue instanceof Iterator || actualValue instanceof Iterator) {
+            return "Expected <" + expectedValue + "> but got <" + actualValue + "> for field [" + field.getFullName() + "]";
+
         }
+        return "Expected <" + expectedValue + "> but got <" + actualValue + "> for a list item in field [" + field.getFullName() + "]";
     }
 
     private void addIncorrectField(final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields,
