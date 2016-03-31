@@ -250,11 +250,38 @@
                     assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
                     assert.equal(newGroupIndex, 0, "The new group index is 0");
                     assert.equal(newPartIndex, 0, "The new subpart index is 0");
-                    assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
                     assert.notEqual(newPart, undefined, 'the new subgroup is defined');
                     assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
                     assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
                     done();
+                });
+            });
+        });
+
+        QUnit.test("navigation into an assignment then back out", function (assert) {
+            var done = assert.async(3);
+            var testNavigator = new AssignmentNavigator("2000", 0, false);
+            testNavigator.reloadAssignment(function () {
+
+                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                done();
+                testNavigator.gotoNext(function () {
+                    var subgroupPart = testNavigator.getCurrentInfo();
+                    done();
+                    testNavigator.gotoPrevious(function () {
+                        var newPartIndex = testNavigator.getCurrentPartIndex();
+                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                        var newAssignmentId = testNavigator.getCurrentAssignment().id;
+                        var newPart = testNavigator.getCurrentInfo();
+                        assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
+                        assert.equal(newAssignmentId, '2000', "The old assignment is loaded");
+                        assert.equal(newGroupIndex, 0, "The new group index is 0");
+                        assert.equal(newPartIndex, 2, "The new subpart index is 0");
+                        assert.notEqual(newPart, undefined, 'the new subgroup is defined');
+                        assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
+                        assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
+                        done();
+                    });
                 });
             });
         });

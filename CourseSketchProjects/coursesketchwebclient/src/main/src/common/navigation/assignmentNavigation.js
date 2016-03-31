@@ -532,7 +532,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     function navigateFromNested() {
         var nextAssignmentLocation = indicesStack.pop();
         var nextAssignmentId = assignmentIdStack.pop();
-        while (nextAssignmentLocation.group === -1 && indicesStack.length > 0) {
+        while (nextAssignmentLocation.group !== -1 && indicesStack.length > 0) {
             nextAssignmentLocation = indicesStack.pop();
             nextAssignmentId = assignmentIdStack.pop();
         }
@@ -541,8 +541,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         currentSubgroupPartIndex = nextAssignmentLocation.part;
         loadAssignment(currentAssignmentId, function() {
             changeSubgroup(currentIndex, 0);
-            gotoSubgroupPart(currentSubgroupPartIndex, 0);
-            doneNavigating();
         });
     }
 
@@ -552,17 +550,15 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     function navigateFromNestedBackwards() {
         var nextAssignmentLocation = indicesStack.pop();
         var nextAssignmentId = assignmentIdStack.pop();
-        while (nextAssignmentLocation.backGroup === -1 && indicesStack.length > 0) {
+        while (nextAssignmentLocation.backGroup !== -1 && indicesStack.length > 0) {
             nextAssignmentLocation = indicesStack.pop();
             nextAssignmentId = assignmentIdStack.pop();
         }
         currentAssignmentId = nextAssignmentId;
         currentIndex = nextAssignmentLocation.group;
         currentSubgroupPartIndex = nextAssignmentLocation.part;
-        loadAssignment(assignmentId, function() {
-            goToSubgroup(currentIndex);
-            gotoSubgroupPart(currentSubgroupPartIndex);
-            doneNavigating();
+        loadAssignment(currentAssignmentId, function() {
+            changeSubgroup(currentIndex, 0);
         });
     }
 
@@ -696,7 +692,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.BANK_PROBLEM) {
             if (isUndefined(subgroupPartHolder.problem) || subgroupPartHolder.problem === null) {
                 CourseSketch.dataManager.getBankProblem(subgroupPartHolder.id, function(bankProblem) {
-                    currentSubgroup = bankProblem;
                     currentSubgroupPartHolder.problem = bankProblem;
                     currentSubgroupPart = bankProblem;
                     doneNavigating();
@@ -707,7 +702,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         } else if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.SLIDE) {
             if (isUndefined(subgroupPartHolder.slide)|| subgroupPartHolder.slide === null) {
                 CourseSketch.dataManager.getLectureSlide(subgroupPartHolder.id, function(lectureSlide) {
-                    currentSubgroup = lectureSlide;
                     currentSubgroupPartHolder.slide = lectureSlide;
                     currentSubgroupPart = lectureSlide;
                     doneNavigating();
