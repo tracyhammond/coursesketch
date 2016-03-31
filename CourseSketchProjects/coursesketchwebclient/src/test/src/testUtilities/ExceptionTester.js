@@ -11,7 +11,6 @@
  */
 function createExceptionComparator(exceptionType, message) {
     return function(error) {
-        console.log(error);
         if (isUndefined(error)) {
             return false;
         }

@@ -22,6 +22,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var eventMappingCallback = {};
     var dataLoaded = false;
     var uiLoaded = false;
+    var changeProblem;
 
     /**
      * Changes the index to point at this new problem.
@@ -112,7 +113,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @memberof ProblemNavigator
      */
     this.getProblemListSize = function getProblemListSize() {
-        return problemList.size();
+        return problemList.length;
     };
 
     /**
@@ -149,13 +150,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @access private
      * @memberof ProblemNavigator
      */
-    var changeProblem = function(index) {
+    changeProblem = function(index) {
         // If assignment is random, ignore the index and choose a random assignment.
         var assignmentType = this.getAssignmentType();
         var navigationType = this.getNavigationType();
         if (isRandomNavigation(assignmentType, navigationType)) {
             //Pull problems at random for Game
-            var numberOfQuestions = getProblemListSize();
+            var numberOfQuestions = this.getProblemListSize();
             var randomNumber = Math.random();
 
             index = randomNumber % numberOfQuestions;
