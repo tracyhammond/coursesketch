@@ -13,11 +13,9 @@ function NavigationPanel() {
      * Sets up the navigator callback and binds the buttons.
      *
      * @instance
-     * @memberof NavigationPanel
      * @function setUpNavigator
      */
     this.setUpNavigator = function() {
-        console.log(this.itemNavigator);
         this.itemNavigator.addCallback(function(nav) {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
@@ -30,12 +28,12 @@ function NavigationPanel() {
         }.bind(this));
 
         this.setUpButtons(this.itemNavigator);
+        this.itemNavigator.reloadAssignment();
     };
 
     /**
-     * @param {ProblemNavigator} nav - Sets bindings and disables buttons if they can not do anything.
+     * @param {AssignmentNavigator} nav - Sets bindings and disables buttons if they can not do anything.
      * @instance
-     * @memberof NavigationPanel
      * @function setUpButtons
      */
     this.setUpButtons = function(nav) {
@@ -68,7 +66,6 @@ function NavigationPanel() {
      * @param {node} templateClone - Is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      * @instance
-     * @memberof NavigationPanel
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
@@ -76,18 +73,17 @@ function NavigationPanel() {
         this.shadowRoot.appendChild(templateClone);
 
         if (isUndefined(this.itemNavigator)) {
-            this.itemNavigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);
+            this.itemNavigator = new AssignmentNavigator(this.dataset.assignment_id, this.dataset.index, true);
         }
-        this.setUpNavigator();
         this.itemNavigator.setUiLoaded(true);
+        this.itemNavigator.reloadAssignment();
     };
 
     /**
      * Sets the navigator if one is to be used.
      *
-     * @param {ProblemNavigator} navPanel - The nav panel that is being used.
+     * @param {AssignmentNavigator} navPanel - The nav panel that is being used.
      * @instance
-     * @memberof NavigationPanel
      * @function setNavigator
      */
     this.setNavigator = function(navPanel) {
@@ -95,9 +91,8 @@ function NavigationPanel() {
     };
 
     /**
-     * @return {ProblemNavigator}.
+     * @return {AssignmentNavigator}.
      * @instance
-     * @memberof NavigationPanel
      * @function getNavigator
      */
     this.getNavigator = function() {
