@@ -385,5 +385,47 @@
                 });
             });
         });
+
+        QUnit.module("Exceptions");
+        QUnit.test("reach end of assignment (lecture style navigation)", function (assert) {
+            var done = assert.async(4);
+            var testNavigator = new AssignmentNavigator("2000", 0, false);
+            testNavigator.reloadAssignment(function () {
+                done();
+                testNavigator.setLoadSubpartData(false);
+                testNavigator.gotoEndOfSubgroup(function () {
+                    done();
+                    testNavigator.gotoEndOfSubgroupPart(function () {
+                        done();
+                        testNavigator.setLoadSubpartData(true);
+                        assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                        assert.throws(function () {
+                            testNavigator.gotoNext();
+                            console.log()
+                        }, createExceptionComparator(NavigationException), "Navigation exception is thrown when the end is reached.");
+                        done();
+                    });
+                });
+            });
+        });
+
+        QUnit.test("reach end of assignment (problem style navigation)", function (assert) {
+            var done = assert.async(3);
+            var testNavigator = new AssignmentNavigator("2000", 0, true);
+            testNavigator.reloadAssignment(function () {
+                done();
+                testNavigator.setLoadSubpartData(false);
+                testNavigator.gotoEndOfSubgroup(function () {
+                    done();
+                    testNavigator.setLoadSubpartData(true);
+                    assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                    assert.throws(function () {
+                        testNavigator.gotoNext();
+                        console.log()
+                    }, createExceptionComparator(NavigationException), "Navigation exception is thrown when the end is reached.");
+                    done();
+                });
+            });
+        });
 </script>
 </body>

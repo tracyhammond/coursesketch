@@ -185,6 +185,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     var isDone = false;
 
     /**
+     * If this is set to false then the subpart data will not be parsed or loaded and will instead be set to undefined.
+     *
+     * @type {Boolean}
+     */
+    var loadSubpartData = true;
+
+    /**
      * The event constant for submitting a problem.
      *
      * @type {String}
@@ -338,6 +345,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Adds a callback that is called when changing problem index.
      *
+     *
      * @param {Function} callback - a callback that is called when the navigator is done navigating and everything is ready.
      * @instance
      */
@@ -350,6 +358,18 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.clearAllCallbacks = function() {
         callbackList = [];
+    };
+
+    /**
+     * Changes the behavior of loading subpart data.
+     *
+     * True if the subpart data is loaded (This does not affect indexing or navigation), False if the data should not be loaded.
+     * This value is true by default.
+     *
+     * @param {Boolean} loadSubpart - True if the subpart data is loaded (This does not affect indexing or navigation)
+     */
+    this.setLoadSubpartData = function(loadSubpart) {
+        loadSubpartData = loadSubpart;
     };
 
     /**
@@ -542,12 +562,22 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * Currently just calls the callbacks.
      */
     function doneNavigating() {
+        var tempException = undefined;
         if (temporaryCallbackList.length > 0) {
             var callback = temporaryCallbackList.shift();
-            callback();
+            try {
+                callback();
+            } catch (exception) {
+                tempException = exception;
+                console.error(exception);
+            }
         }
         for (var i = 0; i < callbackList.length; i++) {
             callBacker(i);
+        }
+
+        if (!isUndefined(tempException)) {
+            throw tempException;
         }
     }
 
@@ -770,8 +800,17 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         if (index >= subgroupPartLength || index < 0) {
             throw new NavigationException('Index is not valid: [' + index + ' out of ' + subgroupPartLength + ']');
         }
+
+        // clean up old data
+        currentSubgroupPart = undefined;
+
         currentSubgroupPartIndex = index;
-        loadSubgroupPart(currentSubgroup.subgroups[index], direction);
+        if (loadSubpartData) {
+            loadSubgroupPart(currentSubgroup.subgroups[index], direction);
+        } else {
+            currentSubgroupPart = undefined;
+            doneNavigating();
+        }
     }
 
     /**
