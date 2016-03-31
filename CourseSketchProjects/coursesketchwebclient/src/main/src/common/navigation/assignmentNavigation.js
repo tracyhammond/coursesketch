@@ -361,6 +361,25 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {Boolean} True if there is a next problem that can be navigated to.
+     * @instance
+     */
+    this.hasNext = function() {
+        return assignmentIdStack.length !== 0 || isLoopable() ||
+            (currentIndex + 1 < subgroupList.length ||
+            (currentSubgroupPartIndex + 1 < this.getSubgroupPartSize() && !isSubgroupNavigation));
+    };
+
+    /**
+     * @returns {Boolean} True if there is a previous problem that can be navigated to.
+     * @instance
+     */
+    this.hasPrevious = function() {
+        return assignmentIdStack.length !== 0 ||
+            isLoopable() || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation));
+    };
+
+    /**
      * Changes the behavior of loading subpart data.
      *
      * True if the subpart data is loaded (This does not affect indexing or navigation), False if the data should not be loaded.
@@ -566,7 +585,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         if (temporaryCallbackList.length > 0) {
             var callback = temporaryCallbackList.shift();
             try {
-                callback();
+                callback(localScope);
             } catch (exception) {
                 tempException = exception;
                 console.error(exception);
