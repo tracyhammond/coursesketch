@@ -20,11 +20,10 @@ function NavigationPanel() {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
             this.setUpButtons(nav);
-            var totalNumber = nav.getLength();
+            var totalNumber = nav.getSubgroupSize();
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;
             }
-
         }.bind(this));
 
         this.setUpButtons(this.itemNavigator);
@@ -52,16 +51,6 @@ function NavigationPanel() {
         /* jscs:enable jsDoc */
     };
 
-    /*
-    Window.onresize = function() {
-        var navWidth = document.getElementById('navPanel').offsetWidth;
-        var navHeight = document.getElementById('navPanel').offsetHeight;
-        var textWidth = document.getElementById('panelWrapper').offsetWidth - navWidth;
-        document.getElementById('problemPanel').style.width = (textWidth - 15) +'px';
-        document.getElementById('problemPanel').style.height = (navHeight -15) +'px';
-    }
-    */
-
     /**
      * @param {node} templateClone - Is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
@@ -76,7 +65,7 @@ function NavigationPanel() {
             this.itemNavigator = new AssignmentNavigator(this.dataset.assignment_id, this.dataset.index, true);
         }
         this.itemNavigator.setUiLoaded(true);
-        this.itemNavigator.reloadAssignment();
+        this.setUpNavigator();
     };
 
     /**

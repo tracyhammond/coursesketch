@@ -412,6 +412,23 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * Sets the information about a specific submission.
+     *
+     * @param {SrlExperiment | SrlSolution} submissionWrapper - This is either an experiment or solution this is NOT a submission object.
+     * @param {Boolean} isExperiment - True if the submission is an experiment false otherwise.
+     * @instance
+     */
+    this.setSubmissionInformation = function(submissionWrapper, isExperiment) {
+        if (isExperiment) {
+            submissionWrapper.courseId = currentSubgroup.getCourseId();
+            submissionWrapper.assignmentId = currentSubgroup.getAssignmentId();
+            submissionWrapper.problemId = currentSubgroup.getId();
+        } else {
+            submissionWrapper.problemBankId = getCurrentInfo().getId();
+        }
+    };
+
+    /**
      * Scopes the index for the callbackList.
      *
      * This way the browser is not locked up by callbacks.

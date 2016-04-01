@@ -256,23 +256,6 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     };
 
     /**
-     * Sets the information about a specific submission.
-     *
-     * @param {SrlExperiment | SrlSolution} submissionWrapper this is either an experiment or solution this is NOT a submission object.
-     * @instance
-     * @memberof ProblemNavigator
-     */
-    this.setSubmissionInformation = function(submissionWrapper, isExperiment) {
-        if (isExperiment) {
-            submissionWrapper.courseId = currentProblem.courseId;
-            submissionWrapper.assignmentId = currentProblem.assignmentId;
-            submissionWrapper.problemId = currentProblem.id;
-        } else {
-            submissionWrapper.problemBankId = getProblemInfo().id;
-        }
-    };
-
-    /**
      * @returns {String} the Id of the current problem.
      * @instance
      * @memberof ProblemNavigator
