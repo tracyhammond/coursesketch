@@ -290,8 +290,8 @@ public final class AssignmentManager {
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
     public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
@@ -376,9 +376,17 @@ public final class AssignmentManager {
     private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject cursor) {
         exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
         exactAssignment.setName((String) cursor.get(NAME));
-        exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
-        exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
-        exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
+        if (cursor.containsField(ASSIGNMENT_TYPE)) {
+            exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
+        }
+        if (cursor.containsField(NAVIGATION_TYPE)) {
+            exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
+        }
+        if (cursor.containsField(ASSIGNMENT_CATEGORY)) {
+            exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
+        } else {
+            exactAssignment.setAssignmentCatagory(DatabaseStringConstants.HOMEWORK_CATEGORY);
+        }
         exactAssignment.setDescription((String) cursor.get(DESCRIPTION));
         if (cursor.containsField(GRADE_WEIGHT)) {
             exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
@@ -481,14 +489,12 @@ public final class AssignmentManager {
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
-
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
 
         final BasicDBObject updateQuery = new BasicDBObject();
 
@@ -547,17 +553,15 @@ public final class AssignmentManager {
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId)
+    static boolean mongoInsertProblemGroupIntoAssignment(final DB dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(assignmentId));
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
-        final DBCollection courses = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
-        courses.update(cursor, new BasicDBObject("$addToSet", updateObj));
+        assignmentCollection.update(cursor, new BasicDBObject("$addToSet", updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         return true;
     }
-
 }

@@ -1,11 +1,13 @@
+// jscs:disable
+
 /**
  * How this works is a polling system.
  *
  * when a problem/assignment/course in assignment view is changed all the parts are notify via a callback at which point they can poll
  * different parts of the system.
  * Callbacks are not guaranteed in any order.
- * @param {UUID} assignmentId the id that the problem is created with.
- * @param {Boolean} loop true if the problems should loop, false otherwise.
+ * @param {UUID} assignmentId - the id that the problem is created with.
+ * @param {Boolean} loop - true if the problems should loop, false otherwise.
  * @param  {Number}preferredIndex The starting index to start problems at.
  * @class ProblemNavigator
  */
@@ -20,11 +22,12 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     var eventMappingCallback = {};
     var dataLoaded = false;
     var uiLoaded = false;
+    var changeProblem;
 
     /**
      * Changes the index to point at this new problem.
      *
-     * @param {Number} index {Number} the problem that we want to switch to.
+     * @param {Number} index - {Number} the problem that we want to switch to.
      * @instance
      * @memberof ProblemNavigator
      */
@@ -97,7 +100,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     /**
      * Sets the knowledge of if the navigator ui has been loaded.
      *
-     * @param {Boolean} value true if the ui has been loaded.
+     * @param {Boolean} value - true if the ui has been loaded.
      * @instance
      * @memberof ProblemNavigator
      */
@@ -110,7 +113,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @memberof ProblemNavigator
      */
     this.getProblemListSize = function getProblemListSize() {
-        return problemList.size();
+        return problemList.length;
     };
 
     /**
@@ -138,7 +141,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
     /**
      * Changes the problem to the given index.
      *
-     * @param {Number} index the index we want to switch to.
+     * @param {Number} index - the index we want to switch to.
      * If looping is set to false then if given an index out of bounds this function returns immediately.
      * Otherwise the index is set to either 0 or the end of the list depending on how it is out of bounds.
      * After changing the index all of the set callbacks are called.
@@ -147,13 +150,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @access private
      * @memberof ProblemNavigator
      */
-    var changeProblem = function(index) {
+    changeProblem = function(index) {
         // If assignment is random, ignore the index and choose a random assignment.
         var assignmentType = this.getAssignmentType();
         var navigationType = this.getNavigationType();
         if (isRandomNavigation(assignmentType, navigationType)) {
             //Pull problems at random for Game
-            var numberOfQuestions = getProblemListSize();
+            var numberOfQuestions = this.getProblemListSize();
             var randomNumber = Math.random();
 
             index = randomNumber % numberOfQuestions;
@@ -292,12 +295,12 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * Sets the new Id for the assignment, this does not refresh the navigator.
      *
      * Refreshing the navigator can be done by calling {@link #reloadProblems}.
-     * @param {String} currentAssignmentId The new assignmentid.
+     * @param {String} currentAssignmentId - The new assignmentid.
      * @instance
      * @memberof ProblemNavigator
      */
-    this.setAssignmentId = function(currentAssignmentId) {
-        assignmentId = currentAssignmentId;
+    this.setAssignmentId = function(newAssignmentId) {
+        assignmentId = newAssignmentId;
     };
 
     /**
@@ -305,7 +308,7 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      *
      * This does not change what the current index is.  This function is only useful when first creating the problem navigator.
      *
-     * @param {Number} selectedIndex sets the preferred index to start the problem at.
+     * @param {Number} selectedIndex - sets the preferred index to start the problem at.
      * @instance
      * @memberof ProblemNavigator
      */

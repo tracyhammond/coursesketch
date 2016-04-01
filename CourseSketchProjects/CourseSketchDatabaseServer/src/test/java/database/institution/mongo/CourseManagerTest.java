@@ -117,8 +117,9 @@ public class CourseManagerTest {
         defaultCourse.setName(VALID_NAME);
         String courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
-        final DBObject mongoCourse = collection.findOne(convertStringToObjectId(courseId));
+        final DBCollection courseCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        final DBObject mongoCourse = courseCollection.findOne(convertStringToObjectId(courseId));
+
 
         Assert.assertEquals(mongoCourse.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.NAME), VALID_NAME);

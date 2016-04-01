@@ -11,6 +11,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Removes all elements of the sketch.
+     *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
@@ -116,7 +117,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Undoes adding a shape command which basically means it removes the shape
+     * Undoes adding a shape command which basically means it removes the shape.
      *
      * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.
@@ -132,7 +133,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Removes an object from the this.getLocalSketchSurface().
+     * Removes an object from the {@code this.getLocalSketchSurface()}.
      *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
@@ -149,7 +150,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Undoes removing an object from the sketch Removes an object from the
-     * this.getLocalSketchSurface().
+     * {@code this.getLocalSketchSurface()}.
      *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
@@ -225,9 +226,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     /**
      * Moves the shapes from the old container to the new container.
      *
-     * @param {SrlSketch} sketch
-     *            the sketch object that is being affected by these
-     *            changes.
+     * @param {SrlSketch} sketch - The sketch object that is being affected by these changes.
      */
     CourseSketch.prutil.getActionPackageShapeClass().prototype.redo = function(sketch) {
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
@@ -249,9 +248,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
      *
      * This is a reverse of the process used in redo.
      *
-     * @param {SrlSketch} sketch
-     *            the sketch object that is being affected by these
-     *            changes.
+     * @param {SrlSketch} sketch - The sketch object that is being affected by these changes.
      */
     CourseSketch.prutil.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());

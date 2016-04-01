@@ -24,7 +24,7 @@ function HeaderHandler() {
         } else { // Open header
             header.animate({
                 top: '0px'
-                }, 300, function() {
+            }, 300, function() {
                     open = true;
                 }
             );
@@ -38,7 +38,7 @@ function HeaderHandler() {
      * @instance
      * @function
      * @memberof HeaderHandler
-     * @param {String} titleText what the title is changing to
+     * @param {String} titleText - what the title is changing to
      */
     this.changeText = function(titleText) {
         document.getElementById('nameBlock').textContent = titleText;

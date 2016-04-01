@@ -3,6 +3,7 @@
 // jshint latedef:false
 
 // jshint bitwise:false
+
 /*******************************************************************************
  *
  * Color Functions
@@ -15,6 +16,10 @@ if (isUndefined(convertRGBtoHex)) {
     /**
      * Converts RGB to a hex value.
      *
+     * @param {Number} a - Alpha
+     * @param {Number} r - Red
+     * @param {Number} g - Green
+     * @param {Number} b - Blue
      * @returns {String} A hexcode string representing the color.
      */
     function convertRGBtoHex(a, r, g, b) {
@@ -26,7 +31,7 @@ if (isUndefined(convertHexToRgb)) {
     /**
      * Given a hex value convert it to rgb values.
      *
-     * @param {String} hex A hexcode string representing the color.
+     * @param {String} hex - A hexcode string representing the color.
      * @returns {{r: (*|Number), g: (*|Number), b: (*|Number)}} An object that contains rgb values.
      */
     function convertHexToRgb(hex) {

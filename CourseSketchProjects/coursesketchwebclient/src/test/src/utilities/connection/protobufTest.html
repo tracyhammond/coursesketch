@@ -77,12 +77,10 @@
             var array = CourseSketch.prutil.getSupportedObjects();
             for (var i = 0; i < array.length; i++) {
                 var object = array[i];
-                var spy = this.spy(CourseSketch.prutil, object);
-                try {
-                    spy("arg1");
-                } catch (exception) {
-                }
-                assert.ok(spy.threw("ProtobufException"));
+                assert.throws(function () {
+                    CourseSketch.prutil[object]('arg1')
+                }, createExceptionComparator(ProtobufException),
+                'exception is thrown when trying to create an object with parameters');
             }
         });
 
@@ -94,7 +92,6 @@
                 var object = this.prutil[object]();
             }
             ok(true);
-
         });
 
         test("protobuf throws exception when object is called with arguments", function(assert) {
@@ -102,17 +99,14 @@
             var array = this.prutil.getSupportedObjects();
             for (var i = 0; i < array.length; i++) {
                 var object = array[i];
-                var spy = this.spy(this.prutil, object);
-                try {
-                    spy("arg1");
-                } catch (exception) {
-                }
-                assert.ok(spy.threw("ProtobufException"));
+                assert.throws(function () {
+                    this.prutil[object]('arg1')
+                }, createExceptionComparator(ProtobufException),
+                'exception is thrown when trying to create an object with parameters');
             }
         });
 
-        QUnit.module("converters", {
-        });
+        QUnit.module("converters");
         QUnit.test("createBaseCommand", function(assert) {
             this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
             var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);

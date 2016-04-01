@@ -559,12 +559,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void insertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
-        GradingPolicyManager.insertGradingPolicy(auth, database, userId, policy);
+    public void insertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
+        GradingPolicyManager.insertGradingPolicy(auth, database, authId, policy);
     }
 
     @Override
-    public ProtoGradingPolicy getGradingPolicy(final String courseId, final String authId) throws AuthenticationException, DatabaseAccessException {
+    public ProtoGradingPolicy getGradingPolicy(final String authId, final String courseId) throws AuthenticationException, DatabaseAccessException {
         return GradingPolicyManager.getGradingPolicy(auth, database, courseId, authId);
     }
 
@@ -592,13 +592,13 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String courseId, final String authId)
+    public List<ProtoGrade> getAllAssignmentGradesInstructor(final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException {
         return GradeManager.getAllAssignmentGradesInstructor(auth, database, courseId, authId);
     }
 
     @Override
-    public List<ProtoGrade> getAllAssignmentGradesStudent(final String courseId, final String authId, final String userId)
+    public List<ProtoGrade> getAllAssignmentGradesStudent(final String userId, final String authId, final String courseId)
             throws AuthenticationException, DatabaseAccessException {
         return GradeManager.getAllAssignmentGradesStudent(auth, database, courseId, authId, userId);
     }
@@ -609,8 +609,9 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public ProtoGrade getGrade(final String authId, final ProtoGrade gradeData) throws AuthenticationException, DatabaseAccessException {
-        return GradeManager.getGrade(auth, database, authId, authId, gradeData);
+    public ProtoGrade getGrade(final String userId, final String authId, final ProtoGrade gradeData)
+            throws AuthenticationException, DatabaseAccessException {
+        return GradeManager.getGrade(auth, database, authId, userId, gradeData);
     }
 
     @Override

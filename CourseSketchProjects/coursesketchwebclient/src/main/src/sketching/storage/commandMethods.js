@@ -1,8 +1,8 @@
 validateFirstGlobalRun(document.currentScript, CourseSketch);
 
 /**
- * Adds a couple of really useful methods to the commands. depends on
- * /src/utilities/connection/protobufInclude.html
+ * Adds a couple of really useful methods to the commands. Depends on
+ * {@code /src/utilities/connection/protobufInclude.html}.
  */
 (function() {
     /**
@@ -63,6 +63,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
      *
      * <b>Note</b> that we do not add the methods we added in redo.
      * This is because we assert that you can not undo something until it has been redone first.  So the methods already exist.
+     *
      * @returns {Boolean} true if the sketch needs to be redrawn, false otherwise.
      *
      * @memberof SrlUpdate
@@ -102,6 +103,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Redoes the specific command.  How the command is redone depends on the command type.
+     *
      * @memberof SrlCommand
      * @function redo
      * @instance
@@ -117,6 +119,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Undoes the specific command.  How the command is undone depends on the command type.
+     *
      * @memberof SrlCommand
      * @function undo
      * @instance
@@ -132,9 +135,12 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     *
      * @memberof SrlCommand
      * @static
      * @function addRedoMethod
+     * @param {CommandType} commandType - The type of command that is being added.
+     * @param {Function} func - The function that is called when redo method is called.
      */
     CourseSketch.prutil.getSrlCommandClass().addRedoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
@@ -148,9 +154,11 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     *
      * @memberof SrlCommand
      * @static
      * @function removeRedoMethod
+     * @param {CommandType} commandType - The type of command that is being removed.
      */
     CourseSketch.prutil.getSrlCommandClass().removeRedoMethod = function(commandType) {
         if (isUndefined(commandType)) {
@@ -164,9 +172,12 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     *
      * @memberof SrlCommand
      * @static
      * @function addUndoMethod
+     * @param {CommandType} commandType - The type of command that is being added.
+     * @param {Function} func - The function that is called when undo method is called.
      */
     CourseSketch.prutil.getSrlCommandClass().addUndoMethod = function(commandType, func) {
         if (isUndefined(commandType)) {
@@ -180,9 +191,11 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Allows one to dynamically add and remove methods to the command type.
+     *
      * @memberof SrlCommand
      * @static
      * @function removeUndoMethod
+     * @param {CommandType} commandType - The type of command that is being removed.
      */
     CourseSketch.prutil.getSrlCommandClass().removeUndoMethod = function(commandType) {
         if (isUndefined(commandType)) {

@@ -2,8 +2,9 @@
 
 /**
  * Any exception that occurs relating to protobufs.
- * @param {String} message A custom message for the user.
- * @param {BaseException|Error} [cause] Optional exception that caused this instance.
+ *
+ * @param {String} message - A custom message for the user.
+ * @param {BaseException|Error} [cause] - Optional exception that caused this instance.
  * @constructor
  */
 function ProtobufException(message, cause) {
@@ -211,12 +212,8 @@ function ProtobufSetup() {
 
     /**
      * @function assignValues
-     * @param {String} protoPackage
-     *            the package that the protofiles live in (this should basically
-     *            hold a list of protoObjects)
-     * @param {String} namePrefix
-     *            allows a string to be precede the name of the function being
-     *            created.
+     * @param {String} protoPackage - The package that the protofiles live in (this should basically hold a list of protoObjects)
+     * @param {String} namePrefix - Allows a string to be precede the name of the function being created.
      */
     function assignValues(protoPackage, namePrefix) {
         var preString = namePrefix;
@@ -243,10 +240,10 @@ function ProtobufSetup() {
      * This second method only exist for messages and does not exist for enums.
      * an example is: <code>prutil.getRequestClass()</code></li>
      *
-     * @param {Function|Enum} ClassType the actual data that represents the protobuf data.
+     * @param {Function|Enum} ClassType - the actual data that represents the protobuf data.
      * If the classType is not a function then we treat it like an enum.
-     * @param {String} messageName the name of the message.
-     * @param {String} preString a string that is used to preprend the messageName.
+     * @param {String} messageName - the name of the message.
+     * @param {String} preString - a string that is used to preprend the messageName.
      * This can be used to prevent conflicts. The value must not be undefined.
      */
     function createProtoMethod(ClassType, messageName, preString) {
@@ -290,17 +287,14 @@ function ProtobufSetup() {
     }
 
     /**
-     * Given a protobuf Command array a Request is created with a single
-     * SrlUpdate.
-     *
-     * It is important to node that an SrlUpdate implies that the commands
-     * happened at the same time.
+     * Given a protobuf Command array a Request is created with a single {@code SrlUpdate}.
+     * it is important to node that an SrlUpdate implies that the commands happened at the same time.
      *
      * @param {Array<SrlCommand>} commands
      *            a list of commands stored as an array.
      * @param {MessageType} requestType
      *            the type that the request is.
-     * @return {Request}
+     * @return {Request} A request that holds the list of commands.
      */
     this.createRequestFromCommands = function createRequestFromCommands(commands, requestType) {
         return this.createRequestFromUpdate(this.createUpdateFromCommands(commands), requestType);
@@ -315,7 +309,7 @@ function ProtobufSetup() {
      *              The message type of the request.
      * @param {String} [requestId]
      *              An id that is required for every request.
-     * @return {Request}
+     * @return {Request} Creates a request from the binary data given.
      */
     this.createRequestFromData = function(data, requestType, requestId) {
         var request = this.Request();
@@ -336,7 +330,7 @@ function ProtobufSetup() {
      *
      * @param {Exception} exception
      *              An custom exception that extends BaseException.
-     * @return {ProtoException}
+     * @return {ProtoException} A protobuf exception.
      */
     this.createProtoException = function(exception) {
         if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass()) &&
@@ -360,7 +354,7 @@ function ProtobufSetup() {
      *
      * @param {error} anError
      *              An JS error that has occurred or been defined.
-     * @return {ProtoException}
+     * @return {ProtoException} A protobuf exception.
      */
     this.errorToProtoException = function(anError) {
         var pException = CourseSketch.prutil.ProtoException();
@@ -389,9 +383,8 @@ function ProtobufSetup() {
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
      *
-     * @param {Array<SrlCommand>} commands
-     *            a list of commands stored as an array.
-     * @return {SrlUpdate}
+     * @param {Array<SrlCommand>} commands - A list of commands stored as an array.
+     * @return {SrlUpdate} An update that holds the list of given commands.
      */
     this.createUpdateFromCommands = function createUpdateFromCommands(commands) {
         /*
@@ -414,7 +407,7 @@ function ProtobufSetup() {
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
      *
-     * @return {SrlUpdate}
+     * @return {SrlUpdate} An empty update.
      */
     this.createBaseUpdate = function createBaseUpdate() {
         var update = this.SrlUpdate();
@@ -428,10 +421,8 @@ function ProtobufSetup() {
     /**
      * @function
      * Given an SrlUpdate a Request is created.
-     * @param {SrlUpdate} update
-     *            a valid and complete object.
-     * @param {MessageType} requestType
-     *            the type that the request is.
+     * @param {SrlUpdate} update - A valid and complete object.
+     * @param {MessageType} requestType - The type that the request is.
      * @return {Request} used for all requesting needs
      */
     this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
@@ -445,13 +436,11 @@ function ProtobufSetup() {
     /**
      * Creates a command given the commandType and if the user created.
      *
-     * @param {CommandType} commandType
-     *            the enum object of the commandType (found at
+     * @param {CommandType} commandType - The enum object of the commandType (found at
      *            CourseSketch.prutil.CommandType).
-     * @param {Boolean} userCreated
-     *            true if the user created this command, false if the
+     * @param {Boolean} userCreated - True if the user created this command, false if the
      *            command is system created.
-     * @returns {SrlCommand}
+     * @returns {SrlCommand} Creates a command with basic data.
      */
     this.createBaseCommand = function createBaseCommand(commandType, userCreated) {
         var command = this.SrlCommand();
@@ -464,9 +453,9 @@ function ProtobufSetup() {
     /**
      * Creates an itemRequest from the given data.
      *
-     * @param {ItemQuery} queryType The query type of the object.
-     * @param {String | List<String>} [idList] A list of ids used for retrieving data from the database.
-     * @param {ByteArray} [advanceQuery] A protobuf object used to represent more complex queries.
+     * @param {ItemQuery} queryType - The query type of the object.
+     * @param {String | List<String>} [idList] - A list of ids used for retrieving data from the database.
+     * @param {ByteArray} [advanceQuery] - A protobuf object used to represent more complex queries.
      * @returns {ItemRequest} An item request from the data.
      */
     this.createItemRequest = function createItemRequest(queryType, idList, advanceQuery) {
@@ -485,7 +474,7 @@ function ProtobufSetup() {
     /**
      * Creates a protobuf date time object.
      *
-     * @param {Number|Date|Long} inputDateTime representing the time that this object should be created with.
+     * @param {Number|Date|Long} inputDateTime - representing the time that this object should be created with.
      * @return {DateTime} A protobuf date time objct that can be used for date stuff.
      */
     this.createProtoDateTime = function(inputDateTime) {
@@ -508,11 +497,12 @@ function ProtobufSetup() {
 
     /**
      * Creates a new sketch command.
-     * @param {String} id the id of the sketch, undefined if you want a random id given.
-     * @param {Number} x the x location of the sketch as an offset of its parent sketch.
-     * @param {Number} y the y location of the sketch as an offset of its parent sketch.
-     * @param {Number} width the width of the sketch.
-     * @param {Number} height the height of the sketch.
+     *
+     * @param {String} id - the id of the sketch, undefined if you want a random id given.
+     * @param {Number} x - the x location of the sketch as an offset of its parent sketch.
+     * @param {Number} y - the y location of the sketch as an offset of its parent sketch.
+     * @param {Number} width - the width of the sketch.
+     * @param {Number} height - the height of the sketch.
      *
      * @return {SrlCommand} a create sketch command
      */
@@ -558,11 +548,9 @@ function ProtobufSetup() {
      *
      * @param {ArrayBuffer} data
      *            a compiled set of data in the protobuf object.
-     * @param {ProtobufClass} proto
-     *            The protobuf object that is being decoded.
+     * @param {ProtobufClass} proto - The protobuf object that is being decoded.
      *            This can be grabbed by using CourseSketch.prutil.get<objectName>Class();
-     * @param {Function} [onError]
-     *            A callback that is called when an error occurs regarding marking and resetting.
+     * @param {Function} [onError] - A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
      *
      * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
@@ -605,8 +593,8 @@ function ProtobufSetup() {
      * The purpose of cleaning is in case you want to prototype a protobuf object but the object was created on an old version of objects.
      * Then the protubf would not correctly apply to this new object.
      *
-     * @param {ProtobufObject} protobuf An object that we want to "clean".
-     * @param {ProtobufMessage} protobufType A class representing the object we want to "clean".
+     * @param {ProtobufObject} protobuf - An object that we want to "clean".
+     * @param {ProtobufMessage} protobufType - A class representing the object we want to "clean".
      * @returns {ProyobufObject} A clean version of the object we sent in.
      */
     this.cleanProtobuf = function(protobuf, protobufType) {
