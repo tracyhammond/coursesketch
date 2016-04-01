@@ -275,6 +275,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {UUID} The current Assignment Id.
+     */
+    this.getAssignmentId = function() {
+        return currentAssignmentId;
+    };
+
+    /**
      * Sets the knowledge of if the navigator ui has been loaded.
      *
      * @param {Boolean} value - True if the ui has been loaded.
