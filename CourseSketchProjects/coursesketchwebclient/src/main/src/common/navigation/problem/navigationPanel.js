@@ -27,7 +27,9 @@ function NavigationPanel() {
         }.bind(this));
 
         this.setUpButtons(this.itemNavigator);
-        this.itemNavigator.reloadAssignment();
+        if (!this.itemNavigator.isDataLoaded() && !isUndefined(this.itemNavigator.getAssignmentId())) {
+            this.itemNavigator.reloadAssignment();
+        }
     };
 
     /**

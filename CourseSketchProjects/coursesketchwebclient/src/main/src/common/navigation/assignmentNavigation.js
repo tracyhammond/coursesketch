@@ -275,6 +275,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {UUID} The current Assignment Id.
+     */
+    this.getAssignmentId = function() {
+        return currentAssignmentId;
+    }
+
+    /**
      * Sets the knowledge of if the navigator ui has been loaded.
      *
      * @param {Boolean} value - True if the ui has been loaded.
@@ -385,9 +392,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @instance
      */
     this.hasNext = function() {
-        return assignmentIdStack.length !== 0 || isLoopable() ||
+        return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 || isLoopable() ||
             (currentIndex + 1 < subgroupList.length ||
-            (currentSubgroupPartIndex + 1 < this.getSubgroupPartSize() && !isSubgroupNavigation));
+            (currentSubgroupPartIndex + 1 < this.getSubgroupPartSize() && !isSubgroupNavigation)));
     };
 
     /**
@@ -395,8 +402,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @instance
      */
     this.hasPrevious = function() {
-        return assignmentIdStack.length !== 0 ||
-            isLoopable() || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation));
+        return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 ||
+            isLoopable() || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation)));
     };
 
     /**
