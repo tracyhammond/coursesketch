@@ -7,7 +7,6 @@ validateFirstRun(document.currentScript);
 
 (function() {
     $(document).ready(function() {
-
         /**
          * Selects a specific lecture slide.
          *
@@ -24,9 +23,6 @@ validateFirstRun(document.currentScript);
                 });
                 $('#' + slideIndex + '.slide-thumb').addClass('selected');
                 CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
-                CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
-                    .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
-                    CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
             };
             if (!isUndefined(CourseSketch.lecturePage.currentSlide)) {
@@ -45,9 +41,7 @@ validateFirstRun(document.currentScript);
         $(document).keydown(function(e) {
             switch (e.which) {
                 case 37: { // left
-                    if (CourseSketch.lecturePage.selectedSlideIndex > 0) {
-                        CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex - 1);
-                    }
+                    CourseSketch.lecturePage.navigation.gotoPrevious();
                 }
                 break;
 
@@ -55,9 +49,7 @@ validateFirstRun(document.currentScript);
                 break;
 
                 case 39: { // right
-                    if (CourseSketch.lecturePage.selectedSlideIndex < CourseSketch.lecturePage.lecture.idList.length - 1) {
-                        CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex + 1);
-                    }
+                    CourseSketch.lecturePage.navigation.gotoNext();
                 }
                 break;
 
@@ -73,18 +65,23 @@ validateFirstRun(document.currentScript);
             e.preventDefault(); // prevent the default action (scroll / move caret)
         });
 
-        // Do setup
-        if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
-            CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
+        /**
+         * Sets up the lecture for registering and displaying the slides.
+         */
+        function setup() {
+            CourseSketch.lecturePage.lectureId = CourseSketch.dataManager.getState('currentLecture');
+            CourseSketch.lecturePage.navigation.resetNavigation(CourseSketch.lecturePage.lectureId);
             CourseSketch.dataManager.clearStates();
-            CourseSketch.lecturePage.displaySlides();
+        }
+
+        // Do setup
+        if (CourseSketch.dataManager.isDatabaseReady() && !isUndefined(CourseSketch.lecturePage.lectureId)) {
+            setup();
         } else {
             var intervalVar = setInterval(function() {
-                if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
+                if (CourseSketch.dataManager.isDatabaseReady() && !isUndefined(CourseSketch.lecturePage.lectureId)) {
                     clearInterval(intervalVar);
-                    CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
-                    CourseSketch.dataManager.clearStates();
-                    CourseSketch.lecturePage.displaySlides();
+                    setup();
                 }
             }, 100);
         }

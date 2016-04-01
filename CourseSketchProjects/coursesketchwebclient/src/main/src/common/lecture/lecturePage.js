@@ -6,7 +6,7 @@ validateFirstRun(document.currentScript);
 (function() {
     CourseSketch.lecturePage = [];
     CourseSketch.lecturePage.waitScreenManager = new WaitScreenManager();
-    CourseSketch.lecturePage.selectedSlideIndex = undefined;
+    CourseSketch.lecturePage.navigation = new AssignmentNavigator();
 
     /**
      * Resizes the element that was affected by the event.
@@ -162,10 +162,11 @@ validateFirstRun(document.currentScript);
     /**
      * Renders a slide to the DOM.
      *
-     * @param {protoObject} slide - Protobuf slide element to be rendered.
+     * @param {LectureSlide | SrlBankProblem} slide - Protobuf slide element to be rendered.
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.renderSlide = function(slide) {
+        console.log('Rendering slide', slide);
         document.getElementById('slide-content').innerHTML = '';
         CourseSketch.lecturePage.currentSlide = slide;
         for (var i = 0; i < slide.elements.length; ++i) {
@@ -187,6 +188,16 @@ validateFirstRun(document.currentScript);
             }
         }
     };
+
+    /**
+     * @param {AssignmentNavigator} nav - The navigator used to select the slide.
+     * @memberof lecturePage
+     */
+    CourseSketch.lecturePage.navigationCallback = function(nav) {
+        CourseSketch.lecturePage.renderSlide(nav.getCurrentInfo());
+    };
+
+    CourseSketch.lecturePage.navigation.addCallback(CourseSketch.lecturePage.navigationCallback);
 
     /**
      * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
@@ -223,7 +234,7 @@ validateFirstRun(document.currentScript);
         slideThumb.textContent = slideIndex + 1;
         /* jscs:disable jsDoc */
         slideThumb.onclick = function() {
-            CourseSketch.lecturePage.selectSlide(slideIndex);
+            CourseSketch.lecturePage.navigation.goToSubgroupPart(slideIndex);
         };
         /* jscs:enable jsDoc */
         document.querySelector('#slides>.content').appendChild(slideThumb);
@@ -235,21 +246,27 @@ validateFirstRun(document.currentScript);
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.displaySlides = function() {
-        $('#lecture-title').text(CourseSketch.lecturePage.lecture.name);
-        $('.slide-thumb:not("#add")').each(function() {
-            $(this).remove();
-        });
-        for (var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
-            CourseSketch.lecturePage.addSlideToDom(i);
-        }
-        if (CourseSketch.lecturePage.lecture.idList.length > 0) {
-            if (!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
-                CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
-            } else {
-                CourseSketch.lecturePage.selectSlide(0);
+        CourseSketch.dataManager.getAssignment(CourseSketch.lecturePage.lectureId, function () {
+            $('#lecture-title').text(CourseSketch.lecturePage.lecture.name);
+            $('.slide-thumb:not("#add")').each(function() {
+                $(this).remove();
+            });
+            /*
+            for (var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
+                CourseSketch.lecturePage.addSlideToDom(i);
             }
-        } else {
-            CourseSketch.lecturePage.newSlide();
-        }
+            */
+            /*
+            if (CourseSketch.lecturePage.lecture.idList.length > 0) {
+                if (!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
+                    CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
+                } else {
+                    CourseSketch.lecturePage.selectSlide(0);
+                }
+            } else {
+                CourseSketch.lecturePage.newSlide();
+            }
+            */
+        });
     };
 })();
