@@ -279,7 +279,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.getAssignmentId = function() {
         return currentAssignmentId;
-    }
+    };
 
     /**
      * Sets the knowledge of if the navigator ui has been loaded.
