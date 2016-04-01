@@ -222,6 +222,28 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     })();
 
     /**
+     * Resets the location of the navigation to the specific indexes.
+     *
+     * @param {UUID} assignmentId - The new assignment to be loaded.
+     * @param {Number} [groupIndex] - The index of the group to be loaded.
+     * @param {Number} [partIndex] - The index of the part to be loaded.
+     */
+    this.resetNavigation = function(assignmentId, groupIndex, partIndex) {
+        assignmentIdStack = [];
+        indicesStack = [];
+        currentAssignmentId = assignmentId;
+        currentIndex = groupIndex;
+        currentSubgroupPartIndex = partIndex;
+        if (isUndefined(partIndex)) {
+            currentSubgroupPartIndex = 0;
+        }
+        if (isUndefined(groupIndex)) {
+            currentIndex = 0;
+        }
+        this.reloadAssignment();
+    };
+
+    /**
      * @return {Number} assignment type of the current problem.
      */
     this.getAssignmentType = function getAssignmentType() {
@@ -292,12 +314,10 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {QuestionType} the type of the base problem.
-     * @instance
+     * @returns {UUID} the id of the subgroup (An {@link SrlProblem}).
      */
-    this.getProblemType = function() {
-        var type = getCurrentInfo().questionType;
-        return type;
+    this.getGroupId = function() {
+        return currentSubgroup.id;
     };
 
     /**
