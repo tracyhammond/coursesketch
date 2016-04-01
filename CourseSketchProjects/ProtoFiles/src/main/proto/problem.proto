@@ -1,0 +1,94 @@
+import "util.proto";
+import "grading.proto";
+import "commands.proto";
+import "lecturedata.proto";
+
+package protobuf.srl.school;
+
+message SrlProblem {
+    required string id = 1; // This must be unique within an assignment.
+    optional string courseId = 2; // To know who the grandParent is.
+    optional string assignmentId = 3; // To know who the parent is.
+
+    // display info 5 - 9
+    optional string name = 5;
+    optional int32 problemNumber = 6; // the order in which the problem appears in the assignment.
+    optional protobuf.srl.utils.State state = 7;
+
+    // grade data 10 - 14
+    optional string gradeWeight = 10; // Percentage of assignment grade
+    optional float grade = 11; // Calculated grade of all subproblems for this problem
+
+    // problem and navigation data 15 - 19
+    repeated ProblemSlideHolder subgroups = 15;
+    repeated QuestionAction actions = 16;
+    repeated ProblemRestriction restrictions = 17;
+}
+
+/**
+ * Holds a problem, a boolean on if it was set as unlocked or locked, the type and the id.
+ *
+ * If the type is an assignment then that assignment is substitued in.
+ */
+message ProblemSlideHolder {
+    // the id of the item being held
+    optional string id = 1;
+    optional protobuf.srl.utils.ItemType itemType = 2;
+    oneof problemSlide {
+        SrlBankProblem problem = 3;
+        protobuf.srl.lecturedata.LectureSlide slide = 4;
+    }
+
+    optional bool unlocked = 5;
+
+    // The index of the item inside this group
+    optional int32 index = 6;
+}
+
+message QuestionAction {
+    optional protobuf.srl.lecturedata.LectureNavigator lectureNavigation = 1;
+}
+
+message ProblemRestriction {
+    // The next answer (or slide) can not be moved until the answer is correct.
+    optional bool onlyUntilCorrect = 1;
+}
+
+message SrlBankProblem {
+    required string id = 1;
+    optional string questionText = 2;
+    optional protobuf.srl.utils.QuestionType questionType = 3 [default=SKETCH];
+    optional string solutionId = 4;
+    optional string registrationKey = 5;
+
+    // question data 6 - 14
+    optional string script = 6; // a script string that is used for custom setups in experiments
+
+    // used for containing special information like images or embedded elements
+    optional protobuf.srl.lecturedata.LectureElement specialQuestionData = 7;
+
+    // solutions to bank problems (only shown to instructors)
+    // 15 - 24
+    oneof solutionData {
+        MultipleChoice multipleChoice = 15;
+        protobuf.srl.commands.SrlUpdateList solutionSketch = 16; // the base sketch the instructor will make for assignments (or the solution sketch)
+        string longForm = 17;
+    }
+
+    // meta data 25 - 34
+    optional string courseTopic = 25;
+    optional string subTopic = 26;
+    optional string source = 27;
+    repeated string otherKeywords = 28;
+}
+
+message MultipleChoice {
+    repeated AnswerChoice answerChoices = 1;
+    // only shown to instructor
+    optional string correctId = 2;
+}
+
+message AnswerChoice {
+    required string id = 1;
+    optional string text = 2;
+}

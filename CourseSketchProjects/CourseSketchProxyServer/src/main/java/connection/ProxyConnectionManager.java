@@ -55,7 +55,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     /**
      * Creates a manager for the proxy connections.
      * @param parent
-     *            {@link serverfront.ProxyServerWebSocketHandler}
+     *            {@link coursesketch.serverfront.ProxyServerWebSocketHandler}
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
     public ProxyConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
@@ -67,7 +67,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *
      * @param serv
      *            an instance of the local server (
-     *            {@link serverfront.ProxyServerWebSocketHandler}) in this case.
+     *            {@link coursesketch.serverfront.ProxyServerWebSocketHandler}) in this case.
      */
     @Override
     public void connectServers(final AbstractServerWebSocketHandler serv) {
@@ -109,6 +109,7 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
     public static Request createClientRequest(final Request request) {
         final Request.Builder build = ProtobufUtilities.createBaseResponse(request, true);
         build.clearServersideId();
+        build.clearServerUserId();
         build.clearSessionInfo();
         return build.build();
     }
@@ -123,16 +124,22 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
      *            the session of the connection the message is being sent to.
      * @param connectionType
      *            the type that the connection is being sent to.
+     * @param authId
+     *            the sever side authentication id.
      * @param userId
-     *            the sever side id.
+     *            The server side identification id.
      * @throws ConnectionException
      *             thrown if there are problems sending the message.
      */
-    public void send(final Request req, final String sessionId, final Class<? extends AbstractClientWebSocket> connectionType, final String userId)
+    public void send(final Request req, final String sessionId, final Class<? extends AbstractClientWebSocket> connectionType, final String authId,
+            final String userId)
             throws ConnectionException {
         final Request.Builder builder = ProtobufUtilities.createBaseResponse(req, true);
         builder.clearServersideId();
-        builder.setServersideId(userId);
+        builder.setServersideId(authId);
+
+        builder.clearServerUserId();
+        builder.setServerUserId(userId);
         super.send(builder.build(), sessionId, connectionType);
     }
 }

@@ -12,9 +12,9 @@ import org.bson.types.ObjectId;
 
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
-import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.submission.Submission.SrlChecksum;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSubmission;
@@ -29,13 +29,13 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class RemoveDuplicates {
 	static DBCollection trash;
 	static DBCollection experiments;
-	public static void main(String args[]) throws UnknownHostException, AuthenticationException, DatabaseAccessException, InterruptedException {		
+	public static void main(String args[]) throws UnknownHostException, AuthenticationException, DatabaseAccessException, InterruptedException {
 		System.out.println("Starting program");
 		String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
 		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
@@ -46,13 +46,13 @@ public class RemoveDuplicates {
 		ArrayList<String> couresId = new ArrayList<String>();
 		couresId.add("52d55a580364615fe8a4496c");
 		ArrayList<SrlCourse> courses = Institution.mongoGetCourses(couresId, mastId);
-		
+
 		for (int k = 0; k < courses.size(); k++) {
 			String courseId = courses.get(k).getId();
 			System.out.println(courses.get(k).getAssignmentListList());
 			ArrayList<SrlAssignment> assignments = Institution.mongoGetAssignment(courses.get(k).getAssignmentListList(), mastId);
 			System.out.println("number of assignments found: " + assignments.size());
-			
+
 			for (int q = 0; q < assignments.size(); q++) { // 3rd and 4th are fine (which are 0 and 1)
 				String assignmentId = assignments.get(q).getId();
 				System.out.println("\n\nLooking at assignment " + assignments.get(q).getName() + " " + assignmentId);

@@ -8,6 +8,7 @@ validateFirstRun(document.currentScript);
  * The element that handles the waiting icon.
  *
  * [TODO change docs to custom element]
+ *
  * @memberof courseManagement
  */
 CourseSketch.courseManagement.waitingIcon = (function() {
@@ -17,6 +18,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 })();
 (function() {
 
+    var courseSelectionManager = new ClickSelectionManager();
+    var assignmentSelectionManager = new ClickSelectionManager();
+    var problemSelectionManager = new ClickSelectionManager();
+
     var waitingIcon = CourseSketch.courseManagement.waitingIcon;
     var courseManagement = CourseSketch.courseManagement;
 
@@ -25,6 +30,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      *
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
+     *
      * @name initializeCourseManagment
      * @memberof courseManagement
      */
@@ -37,6 +43,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
         /**
          * Helper function to stop the waiting icon and show the courses once that database is ready.
+         *
+         * @param {Array<SrlCourse>} courseList - a list of courses.
          * @memberof courseManagement
          */
         var loadCourses = function(courseList) {
@@ -46,16 +54,22 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             courseManagement.showCourses(courseList);
         };
         if (CourseSketch.dataManager.isDatabaseReady()) {
+            CourseSketch.dataManager.getAllCourses(loadCourses);
+            /*
             CourseSketch.dataManager.pollUpdates(function() {
-                CourseSketch.dataManager.getAllCourses(loadCourses);
+
             });
+            */
         } else {
             var intervalVar = setInterval(function() {
                 if (CourseSketch.dataManager.isDatabaseReady()) {
                     clearInterval(intervalVar);
+                    CourseSketch.dataManager.getAllCourses(loadCourses);
+                    /*
                     CourseSketch.dataManager.pollUpdates(function() {
-                        CourseSketch.dataManager.getAllCourses(loadCourses);
+
                     });
+                    */
                 }
             }, 100);
         }
@@ -64,6 +78,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Given a list of {@link SrlCourse} a bunch of school items are built then added to the class_list_column div.
      *
+     * @param {Array<SrlCourse>} courseList - a list of courses.
      * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
@@ -71,7 +86,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             CourseSketch.clientException(courseList);
         }
         var builder = new SchoolItemBuilder();
-        if (CourseSketch.connection.isInstructor === true) {
+        if (CourseSketch.connection.isInstructor === true && !courseManagement.gradebookMode) {
             builder.setInstructorCard(true);
         }
         builder.showImage = false;
@@ -93,13 +108,17 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
         builder.setList(courseList);
         builder.build(document.querySelector('#class_list_column'));
-        setNotSelectedMessage(2);
+        if (!courseManagement.gradebookMode) {
+            setNotSelectedMessage(2);
+        }
     };
 
     /**
      * Called when a user clicks on a course school item.
      *
      * This loads the assignments from the database then calls 'showAssignments' to display them.
+     *
+     * @param {SrlCourse} course - the course that was clicked.
      * @memberof courseManagement
      */
     courseManagement.courseClicked = function(course) {
@@ -130,6 +149,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Called to show a specific set of assignments with the given list.
      *
+     * @param {Array<SrlAssignment>} assignmentList - a list of assignments.
+     * @param {SrlCourse} course - the course that holds the list.
      * @memberof courseManagement
      */
     courseManagement.showAssignments = function(assignmentList, course) {
@@ -163,6 +184,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Called when an assignment is clicked.
      *
+     * @param {SrlAssignment} assignment - the assignment that was clicked.
      * @memberof courseManagement
      */
     courseManagement.assignmentClicked = function(assignment) {
@@ -173,7 +195,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         // waiting icon
         document.getElementById('problem_list_column').appendChild(waitingIcon);
         waitingIcon.startWaiting();
-        CourseSketch.dataManager.getCourseProblems(assignment.problemList, function(problemList) {
+        CourseSketch.dataManager.getCourseProblems(assignment.problemGroups, function(problemList) {
             courseManagement.showProblems(problemList, assignment);
         }, function(problemList) {
             courseManagement.showProblems(problemList, assignment);
@@ -187,8 +209,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Displays the list of problems for the user to pick from.
      *
-     * @param {list} problemList The list of problems that are wanting to be showed
-     * @param {assignment} assignment (optional) The assignment that created this problem list
+     * @param {list} problemList - The list of problems that are wanting to be showed
+     * @param {assignment} [assignment] - The assignment that created this problem list
      * @memberof courseManagement
      */
     courseManagement.showProblems = function(problemList, assignment) {
@@ -215,8 +237,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     };
 
     /**
-     * Called when a problem is displayed.
+     * Called when a problem is clicked.
      *
+     * @param {SrlCourseProblem} problem - the problem that was clicked.
      * @memberof courseManagement
      */
     courseManagement.problemClicked = function(problem) {
@@ -236,33 +259,6 @@ CourseSketch.courseManagement.waitingIcon = (function() {
                 CourseSketch.redirectContent('/src/student/experiment/experiment.html', 'Starting Problem');
             }
         } else {
-            // TODO: find a more lightweight popup library
-            /*
-            var element = document.getElementById(id);
-            var myOpenTip = new Opentip(element, {
-                target : element,
-                tipJoint : 'bottom'
-            });
-            myOpenTip.prepareToShow(); // Shows the tooltip after the given
-            // delays. This could get interrupted
-
-            if (CourseSketch.dataManager.getState('isInstructor')) {
-                myOpenTip.setContent('Click again to edit the solution'); // Updates
-                // Opentips
-                // content
-            } else {
-                myOpenTip.setContent('Click again to open up a problem'); // Updates
-                // Opentips
-                // content
-            }
-
-            var pastToolTip = problemSelectionManager['currentToolTip'];
-            if (pastToolTip) {
-                pastToolTip.deactivate();
-            }
-            problemSelectionManager['currentToolTip'] = myOpenTip;
-            */
-            // note that queryselector is not allowed on these types of ids
             changeSelection(clickedElement, problemSelectionManager);
         }
     };
@@ -270,6 +266,7 @@ CourseSketch.courseManagement.waitingIcon = (function() {
     /**
      * Sets the message to hint that the previous column is selectable and gives prompts to action.
      *
+     * @param {Number} number - The column number that is after the last clicked column.
      * @memberof courseManagement
      */
     function setNotSelectedMessage(number) {
@@ -290,14 +287,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * A helper method to simplify the code for changing the selection.
      *
      * Clears the existing selection then selects the given id.
+     *
+     * @param {UUID} id - the id of the school item being selected.
+     * @param {ClickSelectionManager} selectionManager - the object that manages selection.
      * @memberof courseManagement
      */
     function changeSelection(id, selectionManager) {
         selectionManager.clearAllSelectedItems();
         selectionManager.addSelectedItem(id);
     }
-
-    var courseSelectionManager = new ClickSelectionManager();
-    var assignmentSelectionManager = new ClickSelectionManager();
-    var problemSelectionManager = new ClickSelectionManager();
 })();
