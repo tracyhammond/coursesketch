@@ -70,16 +70,20 @@ validateFirstRun(document.currentScript);
          */
         function setup() {
             CourseSketch.lecturePage.lectureId = CourseSketch.dataManager.getState('currentLecture');
-            CourseSketch.lecturePage.navigation.resetNavigation(CourseSketch.lecturePage.lectureId);
-            CourseSketch.dataManager.clearStates();
+            CourseSketch.dataManager.getAssignment(CourseSketch.lecturePage.lectureId, function(lecture) {
+                CourseSketch.lecturePage.lecture = lecture;
+                CourseSketch.lecturePage.navigation.resetNavigation(CourseSketch.lecturePage.lectureId, 0, 0);
+                CourseSketch.dataManager.clearStates();
+                CourseSketch.lecturePage.displaySlides();
+            });
         }
 
         // Do setup
-        if (CourseSketch.dataManager.isDatabaseReady() && !isUndefined(CourseSketch.lecturePage.lectureId)) {
+        if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lectureId)) {
             setup();
         } else {
             var intervalVar = setInterval(function() {
-                if (CourseSketch.dataManager.isDatabaseReady() && !isUndefined(CourseSketch.lecturePage.lectureId)) {
+                if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lectureId)) {
                     clearInterval(intervalVar);
                     setup();
                 }
