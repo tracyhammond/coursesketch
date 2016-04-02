@@ -246,27 +246,43 @@ validateFirstRun(document.currentScript);
      * @memberof lecturePage
      */
     CourseSketch.lecturePage.displaySlides = function() {
-        CourseSketch.dataManager.getAssignment(CourseSketch.lecturePage.lectureId, function () {
-            $('#lecture-title').text(CourseSketch.lecturePage.lecture.name);
-            $('.slide-thumb:not("#add")').each(function() {
-                $(this).remove();
-            });
-            /*
-            for (var i = 0; i < CourseSketch.lecturePage.lecture.idList.length; ++i) {
+        CourseSketch.lecturePage.loadDisplayData(CourseSketch.lecturePage.navigation, 10, function(slideDataList) {
+            for (var i = 0; i < slideDataList.length; ++i) {
                 CourseSketch.lecturePage.addSlideToDom(i);
             }
-            */
-            /*
-            if (CourseSketch.lecturePage.lecture.idList.length > 0) {
-                if (!isUndefined(CourseSketch.lecturePage.selectedSlideIndex)) {
-                    CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex);
-                } else {
-                    CourseSketch.lecturePage.selectSlide(0);
+        });
+    };
+
+
+    /**
+     * Loads the data for the next {@code amountToNavigate} number of info.
+     *
+     * This can be used to render the thumbnail or used for just queueing the data in the client.
+     *
+     * @param {AssignmentNavigator} navigator - The navigator
+     * @param {Number} amountToNavigate - the number of elements to grab (including the one in the current position)
+     * @param {Function} callback - The callback called with the list of data.
+     * @memberof lecturePage
+     */
+    CourseSketch.lecturePage.loadDisplayData = function(navigator, amountToNavigate, callback) {
+        var assignmentId = navigator.getAssignmentId();
+        var currentIndex = navigator.getCurrentSubgroupIndex();
+        var currentPartIndex = navigator.getCurrentSubgroupIndex();
+
+        var listData = [];
+        var copyNavigator = new AssignmentNavigator(assignmentId, currentIndex, currentPartIndex);
+        copyNavigator.reloadAssignment(function() {
+            function loadData() { // jscs:ignore jsDoc
+                listData.push(copyNavigator.getCurrentInfo());
+
+                if (!copyNavigator.hasNext() || listData.length === amountToNavigate) {
+                    callback(listData);
+                    copyNavigator = null;
+                    return;
                 }
-            } else {
-                CourseSketch.lecturePage.newSlide();
+                copyNavigator.gotoNext(loadData);
             }
-            */
+            loadData();
         });
     };
 })();
