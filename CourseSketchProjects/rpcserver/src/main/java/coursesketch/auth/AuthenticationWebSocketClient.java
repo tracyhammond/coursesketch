@@ -39,9 +39,9 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
-     * <p/>
-     * Note that this does not actually try and connect the wrapper you have to
-     * either explicitly call {@link coursesketch.server.interfaces.AbstractClientWebSocket#connect()}.
+     *
+     * Note that this does not actually try and connect the wrapper. You have to
+     * explicitly call {@link coursesketch.server.interfaces.AbstractClientWebSocket#connect()}.
      *
      * @param iDestination
      *         The location the server is going as a URI. ex:
@@ -54,19 +54,18 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
     }
 
     /**
-     * Checks to make sure that the user is authenticated for all values that
-     * are true.
+     * Checks to make sure the user is authenticated for all values that are true.
      *
      * @param collectionType
-     *         The table / collection where this data is store.
+     *         The table / collection where this data is stored.
      * @param itemId
      *         The Id of the object we are checking against.
      * @param userId
-     *         The user we are checking is valid
+     *         The user we are checking is valid.
      * @param checkType
      *         The rules at that give a correct or false response.
-     * @return True if all checked values are valid
-     *         thrown if there are issues grabbing data for the authenticator.
+     * @return True if all checked values are valid.
+     *
      * @throws AuthenticationException Thrown if there is a problem creating the auth response.
      */
     @Override public final Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId,
@@ -164,7 +163,6 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
                 throw authExcep;
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
             throw new AuthenticationException(e);
         }
     }

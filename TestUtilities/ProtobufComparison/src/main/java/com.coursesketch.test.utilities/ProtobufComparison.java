@@ -11,6 +11,8 @@ import java.util.Map;
 
 /**
  * Compares two protobuf objects.
+ *
+ * Throws an assertion error if the objects are not equal.
  * Created by gigemjt on 9/6/15.
  */
 public class ProtobufComparison {
@@ -46,6 +48,7 @@ public class ProtobufComparison {
 
     /**
      * Constructor for setting values.
+     *
      * @param ignoredFields {@link #ignoredFields}.
      * @param ignoredMessages {@link #ignoredMessages}.
      * @param isDeepEquals {@link #isDeepEquals}.
@@ -65,6 +68,7 @@ public class ProtobufComparison {
 
     /**
      * Compares two Protobuf Messages.
+     *
      * @param expected The expected message that is being compared against.
      * @param actual The protobuf that was generated during the test.
      */
@@ -76,9 +80,9 @@ public class ProtobufComparison {
         if (!failAtFirstMisMatch && incorrectFields.size() > 0) {
             final StringBuilder message = new StringBuilder();
             message.append("There were " + incorrectFields.size() + " mismatches in this protobuf:");
-            for (Descriptors.FieldDescriptor field : incorrectFields.keySet()) {
-                final ExpectationPair<Object, Object> pair = incorrectFields.get(field);
-                message.append("\n").append(createFailMessage(field, pair.getExpected(), pair.getActual()));
+            for (Map.Entry<Descriptors.FieldDescriptor, ExpectationPair<Object, Object>> field : incorrectFields.entrySet()) {
+                final ExpectationPair<Object, Object> pair = field.getValue();
+                message.append("\n").append(createFailMessage(field.getKey(), pair.getExpected(), pair.getActual()));
             }
             Assert.fail(message.toString());
         }
@@ -86,6 +90,7 @@ public class ProtobufComparison {
 
     /**
      * Compares two Protobuf Messages.
+     *
      * @param expected The expected message that is being compared against.
      * @param actual The protobuf that was generated during the test.
      * @param incorrectFields A map containing fields that were found to be incorrect.
@@ -130,6 +135,7 @@ public class ProtobufComparison {
 
     /**
      * Compares two fields to each other.
+     *
      * @param expectedValue The expected value for this specific field.
      * @param actualValue The actual value for this specific field.
      * @param field The field that is being compared.
@@ -157,6 +163,7 @@ public class ProtobufComparison {
 
     /**
      * Creates a fail message.
+     *
      * @param field The field that failed.
      * @param expectedValue If this value is null we assume that it was not set in the expected protobuf.
      * @param actualValue The value that failed to match the expected value.

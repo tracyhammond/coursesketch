@@ -81,7 +81,7 @@ public final class LectureManager {
             throws AuthenticationException, DatabaseAccessException {
         final DBCollection newUser = dbs.getCollection(LECTURE_COLLECTION);
 
-        // make sure person is mod or admin for the assignment
+        // Make sure user is a mod or admin for the assignment.
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -190,19 +190,19 @@ public final class LectureManager {
         }
 
 
-        // Throws an exception if a user (only) is trying to get a course problem when the class is not in session.
+        // Throws an exception if a student (only) is trying to get a course problem when the class is not in session.
         final Authentication.AuthType assignmentAuthType = Authentication.AuthType.newBuilder()
                 .setCheckDate(true)
                 .build();
         final AuthenticationResponder assignmentResponder = authenticator
                 .checkAuthentication(School.ItemType.COURSE, (String) corsor.get(COURSE_ID), userId, checkTime, assignmentAuthType);
 
-        // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
+        // Throws an exception if a student (only) is trying to get an assignment when the class is not in session.
         if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !assignmentResponder.isItemOpen()) {
             throw new AuthenticationException("For lecture: " + lectureId, AuthenticationException.INVALID_DATE);
         }
 
-        // states
+        // Sets the states (if it has been viewed or not).
         final School.State.Builder stateBuilder = School.State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
@@ -220,9 +220,9 @@ public final class LectureManager {
 
         setLectureStateAndDate(exactLecture, corsor);
 
-        // if you are a user, the lecture must be open to view the insides
-        if (responder.hasModeratorPermission() || (responder.hasAccess()
-                && Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate()))) {
+        // If you are a student, the lecture must be open to view the insides.
+        final boolean lectureOpen = Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate());
+        if (responder.hasModeratorPermission() || (responder.hasAccess() && lectureOpen)) {
             if (corsor.get(SLIDES) != null) {
                 for (BasicDBObject obj : (List<BasicDBObject>) corsor.get(SLIDES)) {
                     final Lecturedata.IdsInLecture.Builder builder = Lecturedata.IdsInLecture.newBuilder();
@@ -232,9 +232,8 @@ public final class LectureManager {
                     exactLecture.addIdList(builder.build());
                 }
             }
-
             stateBuilder.setAccessible(true);
-        } else if (responder.hasAccess() && !Authenticator.isTimeValid(checkTime, exactLecture.getAccessDate(), exactLecture.getCloseDate())) {
+        } else if (responder.hasAccess() && !lectureOpen) {
             stateBuilder.setAccessible(false);
             LOG.info("USER LECTURE TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactLecture.getAccessDate().getMillisecond(),
@@ -245,11 +244,13 @@ public final class LectureManager {
 
         final SrlPermission.Builder permissions = SrlPermission.newBuilder();
         if (responder.hasTeacherPermission()) {
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
+            // Admins can change these permissions.
+            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN));
+            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD));
         }
         if (responder.hasModeratorPermission()) {
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // mod
+            // Moderators can change these permissions.
+            permissions.addAllUserPermission((ArrayList) corsor.get(USERS));
             exactLecture.setAccessPermission(permissions.build());
         }
         return exactLecture.build();
@@ -321,55 +322,30 @@ public final class LectureManager {
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For lecture: " + lectureId, AuthenticationException.INVALID_PERMISSION);
         }
-        final BasicDBObject updated = new BasicDBObject();
-        if (responder.hasModeratorPermission()) {
-            if (lecture.hasName()) {
-                updateObj = new BasicDBObject(NAME, lecture.getName());
-                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (lecture.hasDescription()) {
-                updateObj = new BasicDBObject(DESCRIPTION, lecture.getDescription());
-                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (lecture.getIdListCount() > 0) {
-                updateObj = new BasicDBObject(IDS_IN_LECTURE, lecture.getIdListList());
-                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (lecture.hasAccessDate()) {
-                updateObj = new BasicDBObject(ACCESS_DATE, lecture.getAccessDate().getMillisecond());
-                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (lecture.hasCloseDate()) {
-                updateObj = new BasicDBObject(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
-                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (lecture.hasAccessPermission()) {
-                final SrlPermission permissions = lecture.getAccessPermission();
-                if (responder.hasTeacherPermission()) {
-                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                    if (permissions.getAdminPermissionCount() > 0) {
-                        updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
-                        updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                        lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                    }
-                    if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                        lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                    }
-                }
-                if (permissions.getUserPermissionCount() > 0) {
-                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                }
-            }
+        if (lecture.hasName()) {
+            updateObj = new BasicDBObject(NAME, lecture.getName());
+            lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            update = true;
+        }
+        if (lecture.hasDescription()) {
+            updateObj = new BasicDBObject(DESCRIPTION, lecture.getDescription());
+            lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            update = true;
+        }
+        if (lecture.getIdListCount() > 0) {
+            updateObj = new BasicDBObject(IDS_IN_LECTURE, lecture.getIdListList());
+            lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            update = true;
+        }
+        if (lecture.hasAccessDate()) {
+            updateObj = new BasicDBObject(ACCESS_DATE, lecture.getAccessDate().getMillisecond());
+            lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            update = true;
+        }
+        if (lecture.hasCloseDate()) {
+            updateObj = new BasicDBObject(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
+            lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
+            update = true;
         }
         if (update) {
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), lectureId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);

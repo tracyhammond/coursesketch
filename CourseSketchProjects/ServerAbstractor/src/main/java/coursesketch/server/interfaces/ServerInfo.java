@@ -133,6 +133,7 @@ public class ServerInfo {
 
     /**
      * Adds a url that can be used to reach the database.
+     *
      * @param address An address that is used to connect to the mongoclient.
      */
     /* package-private */ final void addDatabaseUrl(final ServerAddress address) {
@@ -141,6 +142,7 @@ public class ServerInfo {
 
     /**
      * Sets the list of addresses that the database can be at to.
+     *
      * @param databaseUrl A list of addresses the database could be at.
      */
     /* package-private */ final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
@@ -148,6 +150,8 @@ public class ServerInfo {
     }
 
     /**
+     * Gets the database name.
+     *
      * @return The name of the database.
      */
     public final String getDatabaseName() {
@@ -155,7 +159,9 @@ public class ServerInfo {
     }
 
     /**
-     * @param databaseName Sets the name of the database.
+     * Sets the name of the database.
+     *
+     * @param databaseName The name of the database.
      */
     public final void setDatabaseName(final String databaseName) {
         this.databaseName = databaseName;
@@ -163,6 +169,7 @@ public class ServerInfo {
 
     /**
      * This can really only be used for testing purposes because it contains invalid values.
+     *
      * @return a default {@link ServerInfo}
      */
     public static ServerInfo createDefaultServerInfo() {

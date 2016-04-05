@@ -46,8 +46,18 @@ handlers:
 - url: /other
   static_dir: src/main/resources/other
 
-- url: /*
-  script: testFiles.app
-
 - url: /bower_components
   static_dir: bower_components
+
+# Math jax short cuts
+- url: /extensions
+  static_dir: bower_components/MathJax/extensions
+
+- url: /jax
+  static_dir: bower_components/MathJax/jax
+
+- url: /fonts
+  static_dir: bower_components/MathJax/fonts
+
+- url: /*
+  script: testFiles.app

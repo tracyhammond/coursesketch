@@ -32,8 +32,14 @@ public class ProtobufComparisonTester {
     }
 
     @Test
-    public void testComparisonOfSameP2rotoObjects() {
+    public void testComparisonOfSameProtoObjects2() {
         ProtobufComparison comp = new ProtobufComparisonBuilder().build();
         comp.equals(Message.Request.getDefaultInstance(), Message.Request.getDefaultInstance());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testComparisonOfSameProtoObjectsThrowsException() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder().build();
+        comp.equals(Message.LoginInformation.getDefaultInstance(), Message.Request.getDefaultInstance());
     }
 }
