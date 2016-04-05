@@ -26,7 +26,7 @@ CourseSketch.AdvanceListenerException = AdvanceListenerException;
  * <li>an ItemResult - this is specified by the protobuf file data.js</li>
  * </ul>
  */
-function AdvanceDataListener(connection, Request, defListener) {
+function AdvanceDataListener(Request, defListener) {
     var requestMap = {};
     requestMap[Request.MessageType.DATA_REQUEST] = {};
     requestMap[Request.MessageType.DATA_INSERT] = {};
@@ -165,9 +165,16 @@ function AdvanceDataListener(connection, Request, defListener) {
         }
     }
 
-    connection.setSchoolDataListener(function(evt, msg) {
-        decode(evt, msg);
-    });
+    /**
+     * Assigns a local function to the global connection object.
+     */
+    this.setupConnectionListeners = function() {
+        CourseSketch.connection.setSchoolDataListener(function(evt, msg) {
+            decode(evt, msg);
+        });
+    };
+
+    this.setupConnectionListeners();
 
     /**
      * Sends a request that will timeout after the server.
@@ -207,8 +214,14 @@ function AdvanceDataListener(connection, Request, defListener) {
         // set listener
         this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times);
 
+        if (!CourseSketch.connection.isConnected()) {
+            console.log('The server is not connected all messages will be queued till reconnection is made.');
+            CourseSketch.pushServerMessage(request, callback, times);
+            CourseSketch.createReconnection();
+            return;
+        }
         // send request
-        connection.sendRequest(request);
+        CourseSketch.connection.sendRequest(request);
 
         // set timeout
         timeoutVariable = setTimeout(function() {

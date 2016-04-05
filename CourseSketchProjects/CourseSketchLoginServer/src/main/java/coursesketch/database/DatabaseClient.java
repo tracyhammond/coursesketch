@@ -1,5 +1,6 @@
 package coursesketch.database;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -7,8 +8,10 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import connection.LoginServerWebSocketHandler;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseStringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +35,7 @@ import static database.DatabaseStringConstants.USER_NAME;
 /**
  * A client for the login database.
  */
-public class DatabaseClient {
+public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
 
     /**
      * Declaration and Definition of Logger.
@@ -40,10 +43,24 @@ public class DatabaseClient {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseClient.class);
 
     /**
-     * A single instance of the database client.
+     * Max number of login times we store.
      */
-    @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
-    private static volatile DatabaseClient instance;
+    private static final int MAX_LOGIN_TIME_LENGTH = 10;
+
+    /**
+     * The key for the client id in the returned value for logging in.
+     */
+    public static final String CLIENT_ID = "ClientId";
+
+    /**
+     * The key for the server id in the returned value for logging in.
+     */
+    public static final String SERVER_ID = "ServerId";
+
+    /**
+     * The key for if the user is logged in as an instructor in the returned value for logging in.
+     */
+    public static final String IS_INSTRUCTOR = "IsInstructor";
 
     /**
      * a private database.
@@ -52,27 +69,10 @@ public class DatabaseClient {
     private DB database = null;
 
     /**
-     * @param url
-     *            the location at which the database is created.
+     * @param info Server information..
      */
-    private DatabaseClient(final String url) {
-        MongoClient mongoClient = null;
-        try {
-            mongoClient = new MongoClient(url);
-        } catch (UnknownHostException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        if (mongoClient == null) {
-            return;
-        }
-        database = mongoClient.getDB(LOGIN_DATABASE);
-    }
-
-    /**
-     * Creates the database at a specific url.
-     */
-    private DatabaseClient() {
-        this("localhost");
+    public DatabaseClient(final ServerInfo info) {
+        super(info);
     }
 
     /**
@@ -80,13 +80,14 @@ public class DatabaseClient {
      * instance that can only access a test database.
      *
      * @param testOnly
-     *            if true it uses the test database. Otherwise it uses the real
-     *            name of the database.
+     *         if true it uses the test database. Otherwise it uses the real
+     *         name of the database.
      * @param fakeDB
-     *            uses a fake DB for its unit tests. This is typically used for
-     *            unit test.
+     *         uses a fake DB for its unit tests. This is typically used for
+     *         unit test.
      */
     public DatabaseClient(final boolean testOnly, final DB fakeDB) {
+        super(null);
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
@@ -105,24 +106,17 @@ public class DatabaseClient {
                 database = mongoClient.getDB(LOGIN_DATABASE);
             }
         }
-        instance = this;
     }
 
     /**
-     * @return An instance of the mongo client. Creates it if it does not exist.
+     * {@inheritDoc}
+     *
+     * Creates a database if one does not already exist.
      */
-    @SuppressWarnings("checkstyle:innerassignment")
-    public static DatabaseClient getInstance() {
-        DatabaseClient result = instance;
-        if (result == null) {
-            synchronized (DatabaseClient.class) {
-                if (result == null) {
-                    result = instance;
-                    instance = result = new DatabaseClient();
-                }
-            }
-        }
-        return result;
+    @Override protected void onStartDatabase() {
+        final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
+        database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        super.setDatabaseStarted();
     }
 
     /**
@@ -131,21 +125,26 @@ public class DatabaseClient {
      * specified.
      *
      * @param user
-     *            the user name that is attempting to login.
+     *         the user name that is attempting to login.
      * @param password
-     *            the password of the user that is attempting to log in.
+     *         the password of the user that is attempting to log in.
      * @param loginAsDefault
-     *            true if the system will log in as the default account.
+     *         true if the system will log in as the default account.
      * @param loginAsInstructor
-     *            true if the system will log in as the instructor (not used if
-     *            loginAsDefault is true).
-     * @return The server side userid : the client side user id.
+     *         true if the system will log in as the instructor (not used if
+     *         loginAsDefault is true).
+     * @return A basic db object with a set of values:
+     *          {
+     *              CLIENT_ID: clientId,
+     *              SERVER_ID: serverId,
+     *              IS_INSTRUCTOR: boolean
+     *          }
      * @throws LoginException
-     *             thrown if there is a problem loggin in.
+     *         thrown if there is a problem loggin in.
      */
-    public static final String mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
+    public BasicDBObject mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
             throws LoginException {
-        final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
+        final DBCollection table = database.getCollection(LOGIN_COLLECTION);
         final BasicDBObject query = new BasicDBObject(USER_NAME, user);
 
         final DBObject cursor = table.findOne(query);
@@ -172,7 +171,7 @@ public class DatabaseClient {
             }
         } catch (GeneralSecurityException | AuthenticationException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            throw new LoginException("An error occured while comparing passwords", e);
+            throw new LoginException("An error occurred while comparing passwords", e);
         }
     }
 
@@ -180,13 +179,19 @@ public class DatabaseClient {
      * Updates the password to the new value using the hash manager.
      *
      * This method is private on purpose please leave it that way.
-     * @param table The collection that the password is being updated in.
-     * @param query The user that the password is being updated for.
-     * @param newPassword The new password.
-     * @throws AuthenticationException Thrown if an invalid key is set
-     * @throws NoSuchAlgorithmException Thrown if the specified algorithm does not exist.
+     *
+     * @param table
+     *         The collection that the password is being updated in.
+     * @param query
+     *         The user that the password is being updated for.
+     * @param newPassword
+     *         The new password.
+     * @throws AuthenticationException
+     *         Thrown if an invalid key is set
+     * @throws NoSuchAlgorithmException
+     *         Thrown if the specified algorithm does not exist.
      */
-    private static void updatePassword(final DBCollection table, final DBObject query, final String newPassword)
+    private void updatePassword(final DBCollection table, final DBObject query, final String newPassword)
             throws AuthenticationException, NoSuchAlgorithmException {
         final String newHash = HashManager.createHash(newPassword);
         table.update(query, new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
@@ -197,24 +202,33 @@ public class DatabaseClient {
      * correctly.
      *
      * @param cursor
-     *            a pointer to the database object.
+     *         a pointer to the database object.
      * @param loginAsDefault
-     *            true if the system will log in as the default account.
+     *         true if the system will log in as the default account.
      * @param loginAsInstructor
-     *            true if the system will log in as the instructor (not used if
-     *            loginAsDefault is true).
-     * @return A string representing the user id.
+     *         true if the system will log in as the instructor (not used if
+     *         loginAsDefault is true).
+     * @return A {@link BasicDBObject} with a set of values:
+     *          {
+     *              CLIENT_ID: clientId,
+     *              SERVER_ID: serverId,
+     *              IS_INSTRUCTOR: boolean
+     *          }
      * @throws LoginException
-     *             Thrown if the user ids are not able to be grabbed.
+     *         Thrown if the user ids are not able to be grabbed.
      */
     @SuppressWarnings("PMD.UselessParentheses")
-    private static String getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
-        String result;
+    private BasicDBObject getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
+        final BasicDBObject result =  new BasicDBObject();
         final boolean defaultAccountIsInstructor = (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
+        result.append(DatabaseClient.IS_INSTRUCTOR,
+                (loginAsDefault && defaultAccountIsInstructor) || (!loginAsDefault && loginAsInstructor));
         if ((loginAsDefault && defaultAccountIsInstructor) || (!loginAsDefault && loginAsInstructor)) {
-            result = cursor.get(INSTRUCTOR_ID) + ":" + cursor.get(INSTRUCTOR_CLIENT_ID);
+            result.append(DatabaseClient.CLIENT_ID, cursor.get(INSTRUCTOR_CLIENT_ID));
+            result.append(DatabaseClient.SERVER_ID, cursor.get(INSTRUCTOR_ID));
         } else if ((loginAsDefault && !defaultAccountIsInstructor) || (!loginAsDefault && !loginAsInstructor)) {
-            result = cursor.get(STUDENT_ID) + ":" + cursor.get(STUDENT_CLIENT_ID);
+            result.append(DatabaseClient.CLIENT_ID, cursor.get(STUDENT_CLIENT_ID));
+            result.append(DatabaseClient.SERVER_ID, cursor.get(STUDENT_ID));
         } else {
             throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
@@ -225,21 +239,23 @@ public class DatabaseClient {
      * Adds a new user to the database.
      *
      * @param user
-     *            The user name to be added.
+     *         The user name to be added.
      * @param password
-     *            the password of the user to be added to the DB.
+     *         the password of the user to be added to the DB.
      * @param email
-     *            The email of the user.
+     *         The email of the user.
      * @param isInstructor
-     *            If the default account is an instructor
-     * @throws AuthenticationException Thrown if an invalid key is set
-     * @throws NoSuchAlgorithmException Thrown if the specified algorithm does not exist.
+     *         If the default account is an instructor
+     * @throws AuthenticationException
+     *         Thrown if an invalid key is set
+     * @throws NoSuchAlgorithmException
+     *         Thrown if the specified algorithm does not exist.
      * @throws RegistrationException
-     *             Thrown if the user already exist in the system.
+     *         Thrown if the user already exist in the system.
      */
-    public static final void createUser(final String user, final String password, final String email, final boolean isInstructor)
+    public void createUser(final String user, final String password, final String email, final boolean isInstructor)
             throws AuthenticationException, NoSuchAlgorithmException, RegistrationException {
-        final DBCollection loginCollection = getInstance().database.getCollection(LOGIN_COLLECTION);
+        final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
         BasicDBObject query = new BasicDBObject(USER_NAME, user);
         final DBObject cursor = loginCollection.findOne(query);
         if (cursor == null) {
@@ -254,21 +270,48 @@ public class DatabaseClient {
     }
 
     /**
-     * @param user
-     *            the username of the account that is being checked.
-     * @return true if the default account for the user is an instructor
-     *         account.
+     * Adds The last login time for the user.
+     *
+     * This is limited to the last {@code MAX_LOGIN_TIME_LENGTH} number of times.
+     * Searches for the user first.
+     *
+     * @param username The username of the person logging in.
+     * @param authId The authentication of the person logging in.  (To ensure that they have actually logged in.)
+     * @param isInstructor True if the user is logging in as an instructor.
+     * @param systemTime
+     *         A list of system times.
+     *         This should almost always be a single time but is in a vararg format to make it easier for inserting a list.
      */
-    public static final boolean defaultIsInstructor(final String user) {
-        final DBCollection table = getInstance().database.getCollection(LOGIN_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(USER_NAME, user);
+    public void userLoggedInSuccessfully(final String username, final String authId, final boolean isInstructor, final long... systemTime) {
+        final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
+        final BasicDBObject query = new BasicDBObject(USER_NAME, username).append(isInstructor ? INSTRUCTOR_ID : STUDENT_ID, authId);
 
-        final DBObject cursor = table.findOne(query);
-        if (cursor == null) {
-            LOG.info("Unable to find user!");
-            return false;
+        // FUTURE: remove this once https://github.com/fakemongo/fongo/issues/156 is resolved and use systemTime in mongo directly.
+        final BasicDBList timeList = new BasicDBList();
+        for (long time: systemTime) {
+            timeList.add(time);
         }
-        return (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
-    }
 
+        /*
+            $push: {
+                LAST_LOGIN_TIMES: {
+                    $each: [ systemTime ],
+                    $sort: -1,
+                    $slice: MAX_LOGIN_TIME_LENGTH
+                }
+            },
+            $inc: {
+                LOGIN_AMOUNT_FIELD: 1
+            }
+         */
+        final BasicDBObject update = new BasicDBObject(DatabaseStringConstants.PUSH_COMMAND,
+                new BasicDBObject(DatabaseStringConstants.LAST_LOGIN_TIMES,
+                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, timeList)
+                                .append(DatabaseStringConstants.SORT_COMMAND, -1)
+                                .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)))
+                .append(DatabaseStringConstants.INCREMENT_COMMAND,
+                        new BasicDBObject(DatabaseStringConstants.LOGIN_AMOUNT_FIELD, 1));
+
+        loginCollection.update(query, update);
+    }
 }

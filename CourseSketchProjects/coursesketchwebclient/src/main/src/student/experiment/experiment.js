@@ -41,6 +41,10 @@ validateFirstRun(document.currentScript);
             loadTyping(navigator);
         }
 
+        var questionText = document.querySelector('problem-text-panel');
+        questionText.setProblemText(navigator.getProblemText());
+        console.log('a problem has been loaded with question text', navigator.getProblemText());
+
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
         parentPanel.refreshPanel();
