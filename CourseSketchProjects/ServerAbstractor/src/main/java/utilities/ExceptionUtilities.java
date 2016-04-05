@@ -31,6 +31,11 @@ public final class ExceptionUtilities {
         }
         if (tException.getCause() != null) {
             pException.setCause(createProtoException(tException.getCause()));
+        } else if (tException instanceof CourseSketchException) {
+            final Message.ProtoException exception = ((CourseSketchException) tException).getProtoException();
+            if (exception != null) {
+                pException.setCause(exception);
+            }
         }
 
         // gets the class name of the exception.

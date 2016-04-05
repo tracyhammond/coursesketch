@@ -167,6 +167,27 @@ public class AuthenticatorTest {
     }
 
     @Test
+    public void authenticatorDoesNotRegistrationIfItIsAssignment() throws Exception {
+
+        authenticator.checkAuthentication(School.ItemType.ASSIGNMENT, "", "", 0, Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .build());
+
+        verify(optionChecker, never()).isItemPublished(any(AuthenticationDataCreator.class));
+        verify(optionChecker, never()).isItemRegistrationRequired(any(AuthenticationDataCreator.class));
+    }
+
+    @Test
+    public void authenticatorDoesNotCheckPublishedIfItIsCourseProblem() throws Exception {
+        authenticator.checkAuthentication(School.ItemType.COURSE_PROBLEM, "", "", 0, Authentication.AuthType.newBuilder()
+                .setCheckIsRegistrationRequired(true)
+                .build());
+
+        verify(optionChecker, never()).isItemPublished(any(AuthenticationDataCreator.class));
+        verify(optionChecker, never()).isItemRegistrationRequired(any(AuthenticationDataCreator.class));
+    }
+
+    @Test
     public void authenticatorDoesNotCheckDateAndRegistration() throws Exception {
 
         authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()

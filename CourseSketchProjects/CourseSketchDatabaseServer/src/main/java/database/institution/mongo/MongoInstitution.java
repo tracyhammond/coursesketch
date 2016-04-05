@@ -1,34 +1,31 @@
 package database.institution.mongo;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationUpdater;
+import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
-import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.auth.Authenticator;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
-import database.user.GroupManager;
 import database.user.UserClient;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlGroup;
 import protobuf.srl.school.School.SrlProblem;
-import protobuf.srl.utils.Util.SrlPermission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
@@ -36,12 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.DATABASE;
-import static database.DatabaseStringConstants.GROUP_PREFIX;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.UPDATE_COLLECTION;
 import static database.DatabaseStringConstants.USER_COLLECTION;
-import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
-import static database.DatabaseStringConstants.USER_LIST;
 
 /**
  * A Mongo implementation of the Institution it inserts and gets courses as
@@ -69,6 +63,11 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     private Authenticator auth;
 
     /**
+     * Used to change authentication values.
+     */
+    private final AuthenticationUpdater updater;
+
+    /**
      * A private Database that stores all of the data used by mongo.
      */
     private DB database;
@@ -78,10 +77,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      *
      * @param info Server information.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @param updater Used to change authentication data.
      */
-    public MongoInstitution(final ServerInfo info, final Authenticator authenticator) {
+    public MongoInstitution(final ServerInfo info, final Authenticator authenticator, final AuthenticationUpdater updater) {
         super(info);
         auth = authenticator;
+        this.updater = updater;
     }
 
     /**
@@ -99,7 +100,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             synchronized (MongoInstitution.class) {
                 if (result == null) {
                     result = instance;
-                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator);
+                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator, null);
                     result.auth = authenticator;
                 }
             }
@@ -114,7 +115,6 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      */
     @Override protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-
         database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
@@ -129,9 +129,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      *         name of the database.
      * @param fakeDB The fake database.
      * @param authenticator What is used to authenticate access to the different resources.
+     * @param updater Used to change authentication data.
      */
-    public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator) {
-        super(null);
+    public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator, final AuthenticationUpdater updater) {
+        this(null, authenticator, updater);
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
@@ -170,6 +171,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
         for (String courseId : courseIds) {
             allCourses.add(CourseManager.mongoGetCourse(auth, database, courseId, userId, currentTime));
         }
+        LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), userId);
         return allCourses;
     }
 
@@ -285,55 +287,21 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public String insertCourse(final String userId, final SrlCourse course) throws DatabaseAccessException {
+        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        // Creates the default permissions for the courses.
-        SrlPermission permission = null;
-        if (course.hasAccessPermission()) {
-            permission = course.getAccessPermission();
+        LOG.debug("Course is being inserted with registration key {}", registrationId);
+        // we first add the registration key before we add it to the database.
+        final String resultId = CourseManager.mongoInsertCourse(database, SrlCourse.newBuilder(course).setRegistrationKey(registrationId).build());
+
+        try {
+            updater.createNewItem(School.ItemType.COURSE, resultId, null, userId, registrationId);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new DatabaseAccessException("Problem creating authentication data", e);
         }
-
-        final SrlGroup.Builder courseGroup = SrlGroup.newBuilder();
-        courseGroup.addAdmin(userId);
-        courseGroup.setGroupName(course.getName() + "_User");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getUserPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getUserPermissionList());
-        }
-        final String userGroupId = GroupManager.mongoInsertGroup(database, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Mod");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getModeratorPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getModeratorPermissionList());
-        }
-        final String modGroupId = GroupManager.mongoInsertGroup(database, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Admin");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getAdminPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getAdminPermissionList());
-        }
-        courseGroup.addUserId(userId); // an admin will always exist
-        final String adminGroupId = GroupManager.mongoInsertGroup(database, courseGroup.buildPartial());
-
-        // overwrites the existing permissions with the new user specific course
-        // permission
-        final SrlCourse.Builder builder = SrlCourse.newBuilder(course);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        permissions.addAdminPermission(GROUP_PREFIX + adminGroupId);
-        permissions.addModeratorPermission(GROUP_PREFIX + modGroupId);
-        permissions.addUserPermission(GROUP_PREFIX + userGroupId);
-        builder.setAccessPermission(permissions.build());
-        final String resultId = CourseManager.mongoInsertCourse(database, builder.buildPartial());
-
-        // links the course to the group!
-        CourseManager.mongoInsertDefaultGroupId(database, resultId, userGroupId, modGroupId, adminGroupId);
 
         // adds the course to the users list
-        final boolean success = this.putUserInCourse(resultId, userId);
-        if (!success) {
-            throw new DatabaseAccessException("No success: ", false);
-        }
+        UserClient.addCourseToUser(userId, resultId);
 
         // FUTURE: try to undo what has been done! (and more error handling!)
 
@@ -344,8 +312,12 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public String insertAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         final String resultId = AssignmentManager.mongoInsertAssignment(auth, database, userId, assignment);
 
-        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(database, assignment.getCourseId());
-        AssignmentManager.mongoInsertDefaultGroupId(database, resultId, ids);
+        try {
+            updater.createNewItem(School.ItemType.ASSIGNMENT, resultId, assignment.getCourseId(), userId, null);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to create auth data while inserting assignment", e);
+        }
 
         return resultId;
     }
@@ -369,24 +341,33 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public String insertCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
         final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, userId, problem);
 
-        final List<String>[] ids = AssignmentManager.mongoGetDefaultGroupId(database, problem.getAssignmentId());
-        CourseProblemManager.mongoInsertDefaultGroupId(database, resultId, ids);
+        if (problem.hasProblemBankId()) {
+            putCourseInBankProblem(problem.getCourseId(), problem.getProblemBankId(), userId, null);
+        }
+
+        try {
+            updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getAssignmentId(), userId, null);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to create auth data while inserting course problem", e);
+        }
+
         return resultId;
     }
 
     @Override
     public String insertBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException {
-        final SrlBankProblem.Builder builder = SrlBankProblem.newBuilder(problem);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder(problem.getAccessPermission());
 
-        // sanitize admin permissions.
-        permissions.clearAdminPermission();
+        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        // add the person creating the problem the admin
-        permissions.addAdminPermission(userId);
+        LOG.debug("Course is being inserted with registration key {}", registrationId);
+        // we first add the registration key before we add it to the database.
+        final String resultId = BankProblemManager.mongoInsertBankProblem(database, SrlBankProblem.newBuilder(problem)
+                .setRegistrationKey(registrationId).build());
 
-        builder.setAccessPermission(permissions);
-        return BankProblemManager.mongoInsertBankProblem(database, builder.build());
+        updater.createNewItem(School.ItemType.BANK_PROBLEM, resultId, null, userId, registrationId);
+
+        return resultId;
     }
 
     @Override
@@ -407,6 +388,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public void updateCourseProblem(final String userId, final SrlProblem srlProblem) throws AuthenticationException, DatabaseAccessException {
         CourseProblemManager.mongoUpdateCourseProblem(auth, database, srlProblem.getId(), userId, srlProblem);
+
+        if (srlProblem.hasProblemBankId()) {
+            putCourseInBankProblem(srlProblem.getCourseId(), srlProblem.getProblemBankId(), userId, null);
+        }
     }
 
     @Override
@@ -420,26 +405,41 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
-        // This actually requires getting the data from the course itself.
-        final String userGroupId = CourseManager.mongoGetDefaultGroupId(database, courseId)[2]; // user group!
+     public boolean putUserInCourse(final String courseId, final String userId, final String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException {
 
-        // FIXME: when mongo version 2.5.5 java client comes out please change this!
-        /*
-        final ArrayList<String> hack = new ArrayList<String>();
-        hack.add(GROUP_PREFIX + userGroupId);
-        if (getInstance(null).auth.checkAuthentication(userId, hack)) {
-            return false;
+        String registrationKey = clientRegistrationKey;
+        if (Strings.isNullOrEmpty(clientRegistrationKey)) {
+            LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
+            registrationKey = CourseManager.mongoGetRegistrationKey(auth, database, courseId, userId, false);
         }
-        */
-        // DO NOT USE THIS CODE ANY WHERE ESLE
-        final DBRef myDbRef = new DBRef(database, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
-        final DBObject corsor = myDbRef.fetch();
-        final DBCollection courses = database.getCollection(USER_GROUP_COLLECTION);
-        final BasicDBObject object = new BasicDBObject("$addToSet", new BasicDBObject(USER_LIST, userId));
-        courses.update(corsor, object);
-
+        try {
+            LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
+            updater.registerUser(School.ItemType.COURSE, courseId, userId, registrationKey);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to register the user in the course", e);
+        }
         UserClient.addCourseToUser(userId, courseId);
+        return true;
+    }
+
+    @Override
+    public boolean putCourseInBankProblem(final String courseId, final String bankProblemId, final String userId, final String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException {
+
+        String registrationKey = clientRegistrationKey;
+        if (Strings.isNullOrEmpty(clientRegistrationKey)) {
+            LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
+            registrationKey = BankProblemManager.mongoGetRegistrationKey(auth, database, bankProblemId, userId);
+        }
+        try {
+            LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
+            updater.registerUser(School.ItemType.BANK_PROBLEM, bankProblemId, courseId, registrationKey);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to register the user in the course", e);
+        }
         return true;
     }
 
