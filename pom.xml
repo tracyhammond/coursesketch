@@ -26,24 +26,24 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+        <pluginRepository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -512,8 +512,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>DEBUG</token>
-                                        <value>INFO</value>
+                                        <token>root level="DEBUG"</token>
+                                        <value>root level="INFO"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -528,8 +528,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>INFO</token>
-                                        <value>DEBUG</value>
+                                        <token>root level="INFO"</token>
+                                        <value>root level="DEBUG"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>

@@ -56,7 +56,7 @@ public class DbAuthCheckerTest {
     @Before
     public void before() throws Exception {
 
-        db = fongo.getDB(); // new MongoClient("localhost").getDB("test");
+        db = fongo.getDB(); // Equivalent to new MongoClient("localhost").getDB("test");
         authChecker = new DbAuthChecker(db);
         insertValidObject(VALID_ITEM_TYPE, VALID_ITEM_ID, VALID_GROUP_ID);
         String salt = null;
@@ -105,7 +105,7 @@ public class DbAuthCheckerTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void databaseExceptionThrownWhenWrongTypeGiven() throws Exception {
-        authChecker.isAuthenticated(INVALID_ITEM_TYPE, INVALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.newBuilder()
+        authChecker.isAuthenticated(INVALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_ID, Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .build());
     }

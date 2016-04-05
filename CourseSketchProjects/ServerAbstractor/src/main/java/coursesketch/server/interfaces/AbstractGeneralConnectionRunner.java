@@ -581,6 +581,8 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
+     * Returns a list of valid {@link ServerAddress} the database can connect to.
+     *
      * @return An unmodifiable list that represents the addresses the database can connect to.
      */
     private List<ServerAddress> getDatabaseUrl() {
@@ -597,13 +599,15 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
         if (!setup) {
-            throw new IllegalStateException("Can only set this variable during valid times");
+            throw new IllegalStateException("Can only set this variable during setup");
         }
         this.databaseUrl = databaseUrl;
     }
 
     /**
-     * @return Gets the database name.
+     * Gets the database name.
+     *
+     * @return The database name.
      */
     private String getDatabaseName() {
         return databaseName;
@@ -616,7 +620,7 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     protected final void setDatabaseName(final String databaseName) {
         if (!setup) {
-            throw new IllegalStateException("Can only set this variable during valid times");
+            throw new IllegalStateException("Can only set this variable during setup");
         }
         this.databaseName = databaseName;
     }
