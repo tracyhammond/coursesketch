@@ -1,6 +1,5 @@
 package coursesketch.database;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -48,43 +47,42 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     private static final int MAX_LOGIN_TIME_LENGTH = 10;
 
     /**
-     * The key for the client id in the returned value for logging in.
+     * The key for the client id in the value returned for logging in.
      */
     public static final String CLIENT_ID = "ClientId";
 
     /**
-     * The key for the server id in the returned value for logging in.
+     * The key for the server id in the value returned by logging in.
      */
     public static final String SERVER_ID = "ServerId";
 
     /**
-     * The key for if the user is logged in as an instructor in the returned value for logging in.
+     * The key for if the user is logged in as an instructor in the value returned for logging in.
      */
     public static final String IS_INSTRUCTOR = "IsInstructor";
 
     /**
-     * a private database.
+     * A private database.
      */
     @SuppressWarnings("PMD.UnusedPrivateField")
     private DB database = null;
 
     /**
-     * @param info Server information..
+     * Constructor for the database client.
+     *
+     * @param info Server information.
      */
     public DatabaseClient(final ServerInfo info) {
         super(info);
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Used only for the purpose of testing overwrite the instance with a test instance that can only access a test database.
      *
      * @param testOnly
-     *         if true it uses the test database. Otherwise it uses the real
-     *         name of the database.
+     *         If true it uses the test database. Otherwise it uses the real name of the database.
      * @param fakeDB
-     *         uses a fake DB for its unit tests. This is typically used for
-     *         unit test.
+     *         Uses a fake DB for its unit tests. This is typically used for unit testing.
      */
     public DatabaseClient(final boolean testOnly, final DB fakeDB) {
         super(null);
@@ -120,19 +118,18 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     }
 
     /**
-     * Logs in the user. Attempts to log in as the default account if that
-     * option is specified otherwise it will login as the type that is
-     * specified.
+     * Logs in the user.
+     *
+     * Attempts to log in as the default account if that option is specified otherwise it will login as the type that is specified.
      *
      * @param user
-     *         the user name that is attempting to login.
+     *         The user name that is attempting to login.
      * @param password
-     *         the password of the user that is attempting to log in.
+     *         The password of the user that is attempting to log in.
      * @param loginAsDefault
-     *         true if the system will log in as the default account.
+     *         True if the system will log in as the default account.
      * @param loginAsInstructor
-     *         true if the system will log in as the instructor (not used if
-     *         loginAsDefault is true).
+     *         True if the system will log in as the instructor (not used if loginAsDefault is true).
      * @return A basic db object with a set of values:
      *          {
      *              CLIENT_ID: clientId,
@@ -140,7 +137,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *              IS_INSTRUCTOR: boolean
      *          }
      * @throws LoginException
-     *         thrown if there is a problem loggin in.
+     *         Thrown if there is a problem loggin in.
      */
     public BasicDBObject mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
             throws LoginException {
@@ -182,32 +179,31 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *
      * @param table
      *         The collection that the password is being updated in.
-     * @param query
+     * @param userDatabaseObject
      *         The user that the password is being updated for.
      * @param newPassword
      *         The new password.
      * @throws AuthenticationException
-     *         Thrown if an invalid key is set
+     *         Thrown if an invalid key is set.
      * @throws NoSuchAlgorithmException
      *         Thrown if the specified algorithm does not exist.
      */
-    private void updatePassword(final DBCollection table, final DBObject query, final String newPassword)
+    private void updatePassword(final DBCollection table, final DBObject userDatabaseObject, final String newPassword)
             throws AuthenticationException, NoSuchAlgorithmException {
         final String newHash = HashManager.createHash(newPassword);
-        table.update(query, new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
+        table.update(userDatabaseObject,
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
     }
 
     /**
-     * Gets the user information. This assumes that the user was able to log in
-     * correctly.
+     * Gets the user information. This assumes that the user was able to log in correctly.
      *
      * @param cursor
-     *         a pointer to the database object.
+     *         A pointer to the database object.
      * @param loginAsDefault
-     *         true if the system will log in as the default account.
+     *         True if the system will log in as the default account.
      * @param loginAsInstructor
-     *         true if the system will log in as the instructor (not used if
-     *         loginAsDefault is true).
+     *         True if the system will log in as the instructor (not used if loginAsDefault is true).
      * @return A {@link BasicDBObject} with a set of values:
      *          {
      *              CLIENT_ID: clientId,
@@ -221,12 +217,18 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
     private BasicDBObject getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
         final BasicDBObject result =  new BasicDBObject();
         final boolean defaultAccountIsInstructor = (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
-        result.append(DatabaseClient.IS_INSTRUCTOR,
-                (loginAsDefault && defaultAccountIsInstructor) || (!loginAsDefault && loginAsInstructor));
-        if ((loginAsDefault && defaultAccountIsInstructor) || (!loginAsDefault && loginAsInstructor)) {
+
+        final boolean isDefaultInstructor = loginAsDefault && defaultAccountIsInstructor;
+        final boolean isNonDefaultInstructor = !loginAsDefault && loginAsInstructor;
+
+        final boolean isDefaultStudent = loginAsDefault && !defaultAccountIsInstructor;
+        final boolean isNonDefaultStudent = !loginAsDefault && !loginAsInstructor;
+
+        result.append(DatabaseClient.IS_INSTRUCTOR, isDefaultInstructor || isNonDefaultInstructor);
+        if (isDefaultInstructor || isNonDefaultInstructor) {
             result.append(DatabaseClient.CLIENT_ID, cursor.get(INSTRUCTOR_CLIENT_ID));
             result.append(DatabaseClient.SERVER_ID, cursor.get(INSTRUCTOR_ID));
-        } else if ((loginAsDefault && !defaultAccountIsInstructor) || (!loginAsDefault && !loginAsInstructor)) {
+        } else if (isDefaultStudent || isNonDefaultStudent) {
             result.append(DatabaseClient.CLIENT_ID, cursor.get(STUDENT_CLIENT_ID));
             result.append(DatabaseClient.SERVER_ID, cursor.get(STUDENT_ID));
         } else {
@@ -241,13 +243,13 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @param user
      *         The user name to be added.
      * @param password
-     *         the password of the user to be added to the DB.
+     *         The password of the user to be added to the DB.
      * @param email
      *         The email of the user.
      * @param isInstructor
-     *         If the default account is an instructor
+     *         If the default account is an instructor.
      * @throws AuthenticationException
-     *         Thrown if an invalid key is set
+     *         Thrown if an invalid key is set.
      * @throws NoSuchAlgorithmException
      *         Thrown if the specified algorithm does not exist.
      * @throws RegistrationException
@@ -286,12 +288,6 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
         final BasicDBObject query = new BasicDBObject(USER_NAME, username).append(isInstructor ? INSTRUCTOR_ID : STUDENT_ID, authId);
 
-        // FUTURE: remove this once https://github.com/fakemongo/fongo/issues/156 is resolved and use systemTime in mongo directly.
-        final BasicDBList timeList = new BasicDBList();
-        for (long time: systemTime) {
-            timeList.add(time);
-        }
-
         /*
             $push: {
                 LAST_LOGIN_TIMES: {
@@ -306,7 +302,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
          */
         final BasicDBObject update = new BasicDBObject(DatabaseStringConstants.PUSH_COMMAND,
                 new BasicDBObject(DatabaseStringConstants.LAST_LOGIN_TIMES,
-                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, timeList)
+                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, systemTime)
                                 .append(DatabaseStringConstants.SORT_COMMAND, -1)
                                 .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)))
                 .append(DatabaseStringConstants.INCREMENT_COMMAND,
