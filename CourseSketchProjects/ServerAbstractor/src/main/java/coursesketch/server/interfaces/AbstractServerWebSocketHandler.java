@@ -294,6 +294,7 @@ public abstract class AbstractServerWebSocketHandler {
 
     /**
      * Creates a CourseSketchDatabaseReader if it is needed.
+     *
      * @param info Information about the server.
      * @return {@link AbstractCourseSketchDatabaseReader}.
      */
