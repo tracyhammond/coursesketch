@@ -1,8 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CourseSketch" type="Multirun" factoryName="Multirun" separateTabs="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false" delayTime="1">
+  <configuration default="false" name="CourseSketch" type="Multirun" factoryName="Multirun" separateTabs="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false">
+    <runConfiguration name="AuthenticationRunner" type="Application" />
+    <runConfiguration name="IdentityRunner" type="Application" />
+    <runConfiguration name="SubmissionRunner" type="Application" />
     <runConfiguration name="LoginRunner" type="Application" />
     <runConfiguration name="DatabaseRunner" type="Application" />
-    <runConfiguration name="SubmissionRunner" type="Application" />
     <runConfiguration name="AnswerRunner" type="Application" />
     <runConfiguration name="ProxyRunner" type="Application" />
     <method />

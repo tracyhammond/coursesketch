@@ -51,6 +51,7 @@ module.exports = function(grunt) {
         }, function() {
             grunt.log.writeln('Running server');
             selenium.start(
+                // Use as an example for the drivers.
           /*{
                 spawnOptions: {
                     stdio: 'inherit'
