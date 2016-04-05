@@ -160,7 +160,7 @@ function AdvanceDataListener(Request, defListener) {
                 CourseSketch.clientException(exception);
             }
         } else {
-            console.log('Listener for request id:', msg.requestId, 'not found', msg);
+            console.log('Listener for request id: ', msg.requestId, 'not found', msg);
             defListener(evt, msg);
         }
     }

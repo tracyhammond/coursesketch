@@ -176,6 +176,18 @@ module.exports = function(grunt) {
             }
         },
         copy: {
+            proto: {
+                files: [
+                    {
+                        filter: 'isFile',
+                        expand: true,
+                        flatten: true,
+                        cwd: '../ProtoFiles/src/main/',
+                        src: [ 'proto/**/**.proto' ],
+                        dest: 'src/main/resources/other/protobuf'
+                    }
+                ]
+            },
             main: {
                 files: [
                     {
@@ -408,11 +420,19 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // sets up tasks related to setting the system for the rests of the tasks
+    // Sets up tasks related to setting the system for the rest of the tasks.
     grunt.registerTask('setup', function() {
         printTaskGroup();
         grunt.task.run([
             'mkdir'
+        ]);
+    });
+
+    // sets up tasks needed before any checking happens.  (which in this case is changing proto files)
+    grunt.registerTask('install', function() {
+        printTaskGroup();
+        grunt.task.run([
+            'copy:proto'
         ]);
     });
 
@@ -491,5 +511,5 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'checkstyle', 'documentation', 'setup', 'test', 'build' ]);
+    grunt.registerTask('default', [ 'install', 'checkstyle', 'documentation', 'setup', 'test', 'build' ]);
 };

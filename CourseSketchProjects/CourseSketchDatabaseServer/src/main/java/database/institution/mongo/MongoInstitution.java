@@ -353,7 +353,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
             updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getAssignmentId(), userId, null);
         } catch (AuthenticationException e) {
             // Revert the adding of the course to the database!
-            throw new AuthenticationException("Faild to create auth data while inserting course problem", e);
+            throw new AuthenticationException("Failed to create auth data while inserting course problem", e);
         }
 
         return resultId;
