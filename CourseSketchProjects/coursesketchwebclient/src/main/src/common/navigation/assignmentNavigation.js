@@ -430,8 +430,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             submissionWrapper.courseId = currentSubgroup.getCourseId();
             submissionWrapper.assignmentId = currentSubgroup.getAssignmentId();
             submissionWrapper.problemId = currentSubgroup.getId();
+            submissionWrapper.partId = currentSubgroupPartIndex;
         } else {
-            submissionWrapper.problemBankId = getCurrentInfo().getId();
+            submissionWrapper.problemBankId = currentSubgroupPart.getId();
         }
     };
 
