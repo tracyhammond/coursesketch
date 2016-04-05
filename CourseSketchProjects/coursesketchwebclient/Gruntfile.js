@@ -420,7 +420,7 @@ module.exports = function(grunt) {
         ]);
     });
 
-    // sets up tasks related to setting the system for the rests of the tasks
+    // Sets up tasks related to setting the system for the rest of the tasks.
     grunt.registerTask('setup', function() {
         printTaskGroup();
         grunt.task.run([
@@ -430,6 +430,7 @@ module.exports = function(grunt) {
 
     // sets up tasks needed before any checking happens.  (which in this case is changing proto files)
     grunt.registerTask('install', function() {
+        printTaskGroup();
         grunt.task.run([
             'copy:proto'
         ]);
