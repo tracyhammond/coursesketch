@@ -1,32 +1,30 @@
 package database.institution.mongo;
 
+import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import com.mongodb.MongoClient;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationUpdater;
+import coursesketch.database.auth.Authenticator;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
-import database.user.GroupManager;
 import database.user.UserClient;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
+import protobuf.srl.school.School;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlGroup;
-import protobuf.srl.utils.Util.SrlPermission;
 import protobuf.srl.school.School.SrlProblem;
 import utilities.LoggingConstants;
 
@@ -35,12 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.DATABASE;
-import static database.DatabaseStringConstants.GROUP_PREFIX;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.UPDATE_COLLECTION;
 import static database.DatabaseStringConstants.USER_COLLECTION;
-import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
-import static database.DatabaseStringConstants.USER_LIST;
 
 /**
  * A Mongo implementation of the Institution it inserts and gets courses as
@@ -49,7 +44,7 @@ import static database.DatabaseStringConstants.USER_LIST;
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CommentRequired", "PMD.TooManyMethods" })
-public final class MongoInstitution implements Institution {
+public final class MongoInstitution extends AbstractCourseSketchDatabaseReader implements Institution {
 
     /**
      * Declaration and Definition of Logger.
@@ -68,51 +63,76 @@ public final class MongoInstitution implements Institution {
     private Authenticator auth;
 
     /**
+     * Used to change authentication values.
+     */
+    private final AuthenticationUpdater updater;
+
+    /**
      * A private Database that stores all of the data used by mongo.
      */
     private DB database;
 
     /**
-     * A private institution that accepts a url for the database location.
+     * Creates a mongo institution based on the server info.
      *
-     * @param url
-     *         The location that the server is taking place.
+     * @param info Server information.
+     * @param authenticator What is used to authenticate access to the different resources.
+     * @param updater Used to change authentication data.
      */
-    private MongoInstitution(final String url) {
-        MongoClient mongoClient = null;
-        try {
-            mongoClient = new MongoClient(url);
-        } catch (UnknownHostException e) {
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }
-        if (mongoClient == null) {
-            return;
-        }
-        database = mongoClient.getDB(DATABASE);
+    public MongoInstitution(final ServerInfo info, final Authenticator authenticator, final AuthenticationUpdater updater) {
+        super(info);
+        auth = authenticator;
+        this.updater = updater;
     }
 
     /**
-     * A default constructor that creates an instance at a specific database
-     * location.
+     * This is only used for testing and references the test database not the real database.
+     *
+     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
+     * @param authenticator What is used to authenticate access to the different resources.
+     * @return An instance of the mongo client. Creates it if it does not exist.
      */
-    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    private MongoInstitution() {
-        this("192.168.56.201");
-        // this("localhost");
+    @Deprecated
+    @SuppressWarnings("checkstyle:innerassignment")
+    public static MongoInstitution getInstance(final Authenticator authenticator) {
+        MongoInstitution result = instance;
+        if (result == null) {
+            synchronized (MongoInstitution.class) {
+                if (result == null) {
+                    result = instance;
+                    instance = result = new MongoInstitution(ServerInfo.createDefaultServerInfo(), authenticator, null);
+                    result.auth = authenticator;
+                }
+            }
+        }
+        return result;
     }
 
     /**
-     * Used only for the purpose of testing overwrite the instance with a test
-     * instance that can only access a test database.
+     * Called when startDatabase is called if the database has not already been started.
      *
+     * This method should be synchronous.
+     */
+    @Override protected void onStartDatabase() {
+        final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
+        database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        super.setDatabaseStarted();
+    }
+
+    /**
+     * Used only for the purpose of testing. Overwrites the instance with a test instance that has access to a test database.
+     *
+     * Because we only want the database set once it has to be set in the constructor.
+     * We also want the class to be final so the test code has to be here.
      * @param testOnly
      *         if true it uses the test database. Otherwise it uses the real
      *         name of the database.
-     * @param fakeDB
-     *         uses a fake DB for its unit tests. This is typically used for
-     *         unit test.
+     * @param fakeDB The fake database.
+     * @param authenticator What is used to authenticate access to the different resources.
+     * @param updater Used to change authentication data.
      */
-    public MongoInstitution(final boolean testOnly, final DB fakeDB) {
+    public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator, final AuthenticationUpdater updater) {
+        this(null, authenticator, updater);
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
@@ -133,27 +153,7 @@ public final class MongoInstitution implements Institution {
             }
         }
         instance = this;
-        instance.auth = new Authenticator(new MongoAuthenticator(instance.database));
-    }
-
-    /**
-     * @return An instance of the mongo client. Creates it if it does not exist.
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
-     */
-    @SuppressWarnings("checkstyle:innerassignment")
-    public static MongoInstitution getInstance() {
-        MongoInstitution result = instance;
-        if (result == null) {
-            synchronized (MongoInstitution.class) {
-                if (result == null) {
-                    result = instance;
-                    instance = result = new MongoInstitution();
-                    result.auth = new Authenticator(new MongoAuthenticator(instance.database));
-                }
-            }
-        }
-        return result;
+        instance.auth = authenticator;
     }
 
     @Override
@@ -169,8 +169,9 @@ public final class MongoInstitution implements Institution {
         final long currentTime = System.currentTimeMillis();
         final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
         for (String courseId : courseIds) {
-            allCourses.add(CourseManager.mongoGetCourse(getInstance().auth, getInstance().database, courseId, userId, currentTime));
+            allCourses.add(CourseManager.mongoGetCourse(auth, database, courseId, userId, currentTime));
         }
+        LOG.debug("{} Courses were loaded from the database for user {}", allCourses.size(), userId);
         return allCourses;
     }
 
@@ -181,8 +182,8 @@ public final class MongoInstitution implements Institution {
         final ArrayList<SrlProblem> allCourses = new ArrayList<SrlProblem>();
         for (int index = 0; index < problemID.size(); index++) {
             try {
-                allCourses.add(CourseProblemManager.mongoGetCourseProblem(getInstance().auth, getInstance().database, problemID.get(index), userId,
-                        currentTime));
+                allCourses.add(CourseProblemManager.mongoGetCourseProblem(
+                        auth, database, problemID.get(index), userId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -204,8 +205,8 @@ public final class MongoInstitution implements Institution {
         final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
         for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
-                allAssignments.add(AssignmentManager.mongoGetAssignment(getInstance().auth, getInstance().database, assignmentID.get(assignments),
-                        userId, currentTime));
+                allAssignments.add(AssignmentManager.mongoGetAssignment(
+                        auth, database, assignmentID.get(assignments), userId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 if (!e.isRecoverable()) {
@@ -227,7 +228,7 @@ public final class MongoInstitution implements Institution {
         final ArrayList<Lecture> allLectures = new ArrayList<Lecture>();
         for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
             try {
-                allLectures.add(LectureManager.mongoGetLecture(getInstance().auth, getInstance().database, lectureId.get(lectures),
+                allLectures.add(LectureManager.mongoGetLecture(auth, database, lectureId.get(lectures),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -251,7 +252,7 @@ public final class MongoInstitution implements Institution {
         final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
         for (int slides = slideId.size() - 1; slides >= 0; slides--) {
             try {
-                allSlides.add(SlideManager.mongoGetLectureSlide(getInstance().auth, getInstance().database, slideId.get(slides),
+                allSlides.add(SlideManager.mongoGetLectureSlide(auth, database, slideId.get(slides),
                         userId, currentTime));
             } catch (DatabaseAccessException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -269,70 +270,38 @@ public final class MongoInstitution implements Institution {
     }
 
     @Override
-    public ArrayList<SrlBankProblem> getProblem(final List<String> problemID, final String userId) throws AuthenticationException {
+    public ArrayList<SrlBankProblem> getProblem(final List<String> problemID, final String userId)
+            throws AuthenticationException, DatabaseAccessException {
         final ArrayList<SrlBankProblem> allProblems = new ArrayList<>();
         for (int problem = problemID.size() - 1; problem >= 0; problem--) {
-            allProblems.add(BankProblemManager.mongoGetBankProblem(getInstance().auth, getInstance().database, problemID.get(problem), userId));
+            allProblems.add(BankProblemManager.mongoGetBankProblem(
+                    auth, database, problemID.get(problem), userId));
         }
         return allProblems;
     }
 
     @Override
     public List<SrlCourse> getAllPublicCourses() {
-        return CourseManager.mongoGetAllPublicCourses(getInstance().database);
+        return CourseManager.mongoGetAllPublicCourses(database);
     }
 
     @Override
     public String insertCourse(final String userId, final SrlCourse course) throws DatabaseAccessException {
+        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        // Creates the default permissions for the courses.
-        SrlPermission permission = null;
-        if (course.hasAccessPermission()) {
-            permission = course.getAccessPermission();
+        LOG.debug("Course is being inserted with registration key {}", registrationId);
+        // we first add the registration key before we add it to the database.
+        final String resultId = CourseManager.mongoInsertCourse(database, SrlCourse.newBuilder(course).setRegistrationKey(registrationId).build());
+
+        try {
+            updater.createNewItem(School.ItemType.COURSE, resultId, null, userId, registrationId);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new DatabaseAccessException("Problem creating authentication data", e);
         }
-
-        final SrlGroup.Builder courseGroup = SrlGroup.newBuilder();
-        courseGroup.addAdmin(userId);
-        courseGroup.setGroupName(course.getName() + "_User");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getUserPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getUserPermissionList());
-        }
-        final String userGroupId = GroupManager.mongoInsertGroup(getInstance().database, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Mod");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getModeratorPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getModeratorPermissionList());
-        }
-        final String modGroupId = GroupManager.mongoInsertGroup(getInstance().database, courseGroup.buildPartial());
-
-        courseGroup.setGroupName(course.getName() + "_Admin");
-        courseGroup.clearUserId();
-        if (permission != null && permission.getAdminPermissionCount() > 0) {
-            courseGroup.addAllUserId(permission.getAdminPermissionList());
-        }
-        courseGroup.addUserId(userId); // an admin will always exist
-        final String adminGroupId = GroupManager.mongoInsertGroup(getInstance().database, courseGroup.buildPartial());
-
-        // overwrites the existing permissions with the new user specific course
-        // permission
-        final SrlCourse.Builder builder = SrlCourse.newBuilder(course);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        permissions.addAdminPermission(GROUP_PREFIX + adminGroupId);
-        permissions.addModeratorPermission(GROUP_PREFIX + modGroupId);
-        permissions.addUserPermission(GROUP_PREFIX + userGroupId);
-        builder.setAccessPermission(permissions.build());
-        final String resultId = CourseManager.mongoInsertCourse(getInstance().database, builder.buildPartial());
-
-        // links the course to the group!
-        CourseManager.mongoInsertDefaultGroupId(getInstance().database, resultId, userGroupId, modGroupId, adminGroupId);
 
         // adds the course to the users list
-        final boolean success = this.putUserInCourse(resultId, userId);
-        if (!success) {
-            throw new DatabaseAccessException("No success: ", false);
-        }
+        UserClient.addCourseToUser(userId, resultId);
 
         // FUTURE: try to undo what has been done! (and more error handling!)
 
@@ -341,104 +310,136 @@ public final class MongoInstitution implements Institution {
 
     @Override
     public String insertAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
-        final String resultId = AssignmentManager.mongoInsertAssignment(getInstance().auth, getInstance().database, userId, assignment);
+        final String resultId = AssignmentManager.mongoInsertAssignment(auth, database, userId, assignment);
 
-        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, assignment.getCourseId());
-        AssignmentManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
+        try {
+            updater.createNewItem(School.ItemType.ASSIGNMENT, resultId, assignment.getCourseId(), userId, null);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to create auth data while inserting assignment", e);
+        }
 
         return resultId;
     }
 
     @Override
     public String insertLecture(final String userId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
-        final String resultId = LectureManager.mongoInsertLecture(getInstance().auth, getInstance().database, userId, lecture);
+        final String resultId = LectureManager.mongoInsertLecture(auth, database, userId, lecture);
 
-        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(getInstance().database, lecture.getCourseId());
-        LectureManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
+        final List<String>[] ids = CourseManager.mongoGetDefaultGroupList(database, lecture.getCourseId());
+        LectureManager.mongoInsertDefaultGroupId(database, resultId, ids);
 
         return resultId;
     }
 
     @Override
     public String insertLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        return SlideManager.mongoInsertSlide(getInstance().auth, getInstance().database, userId, lectureSlide);
+        return SlideManager.mongoInsertSlide(auth, database, userId, lectureSlide);
     }
 
     @Override
     public String insertCourseProblem(final String userId, final SrlProblem problem) throws AuthenticationException, DatabaseAccessException {
-        final String resultId = CourseProblemManager.mongoInsertCourseProblem(getInstance().auth, getInstance().database, userId, problem);
+        final String resultId = CourseProblemManager.mongoInsertCourseProblem(auth, database, userId, problem);
 
-        final List<String>[] ids = AssignmentManager.mongoGetDefaultGroupId(getInstance().database, problem.getAssignmentId());
-        CourseProblemManager.mongoInsertDefaultGroupId(getInstance().database, resultId, ids);
+        if (problem.hasProblemBankId()) {
+            putCourseInBankProblem(problem.getCourseId(), problem.getProblemBankId(), userId, null);
+        }
+
+        try {
+            updater.createNewItem(School.ItemType.COURSE_PROBLEM, resultId, problem.getAssignmentId(), userId, null);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to create auth data while inserting course problem", e);
+        }
+
         return resultId;
     }
 
     @Override
     public String insertBankProblem(final String userId, final SrlBankProblem problem) throws AuthenticationException {
-        final SrlBankProblem.Builder builder = SrlBankProblem.newBuilder(problem);
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder(problem.getAccessPermission());
 
-        // sanitize admin permissions.
-        permissions.clearAdminPermission();
+        final String registrationId = AbstractServerWebSocketHandler.Encoder.nextID().toString();
 
-        // add the person creating the problem the admin
-        permissions.addAdminPermission(userId);
+        LOG.debug("Course is being inserted with registration key {}", registrationId);
+        // we first add the registration key before we add it to the database.
+        final String resultId = BankProblemManager.mongoInsertBankProblem(database, SrlBankProblem.newBuilder(problem)
+                .setRegistrationKey(registrationId).build());
 
-        builder.setAccessPermission(permissions);
-        return BankProblemManager.mongoInsertBankProblem(getInstance().database, builder.build());
+        updater.createNewItem(School.ItemType.BANK_PROBLEM, resultId, null, userId, registrationId);
+
+        return resultId;
     }
 
     @Override
     public void updateLecture(final String userId, final Lecture lecture) throws AuthenticationException, DatabaseAccessException {
-        LectureManager.mongoUpdateLecture(getInstance().auth, getInstance().database, lecture.getId(), userId, lecture);
+        LectureManager.mongoUpdateLecture(auth, database, lecture.getId(), userId, lecture);
     }
 
     @Override
     public void updateCourse(final String userId, final SrlCourse course) throws AuthenticationException, DatabaseAccessException {
-        CourseManager.mongoUpdateCourse(getInstance().auth, getInstance().database, course.getId(), userId, course);
+        CourseManager.mongoUpdateCourse(auth, database, course.getId(), userId, course);
     }
 
     @Override
     public void updateAssignment(final String userId, final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
-        AssignmentManager.mongoUpdateAssignment(getInstance().auth, getInstance().database, assignment.getId(), userId, assignment);
+        AssignmentManager.mongoUpdateAssignment(auth, database, assignment.getId(), userId, assignment);
     }
 
     @Override
     public void updateCourseProblem(final String userId, final SrlProblem srlProblem) throws AuthenticationException, DatabaseAccessException {
-        CourseProblemManager.mongoUpdateCourseProblem(getInstance().auth, getInstance().database, srlProblem.getId(), userId, srlProblem);
+        CourseProblemManager.mongoUpdateCourseProblem(auth, database, srlProblem.getId(), userId, srlProblem);
+
+        if (srlProblem.hasProblemBankId()) {
+            putCourseInBankProblem(srlProblem.getCourseId(), srlProblem.getProblemBankId(), userId, null);
+        }
     }
 
     @Override
     public void updateBankProblem(final String userId, final SrlBankProblem srlBankProblem) throws AuthenticationException, DatabaseAccessException {
-        BankProblemManager.mongoUpdateBankProblem(getInstance().auth, getInstance().database, srlBankProblem.getId(), userId, srlBankProblem);
+        BankProblemManager.mongoUpdateBankProblem(auth, database, srlBankProblem.getId(), userId, srlBankProblem);
     }
 
     @Override
     public void updateLectureSlide(final String userId, final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
-        SlideManager.mongoUpdateLectureSlide(getInstance().auth, getInstance().database, lectureSlide.getId(), userId, lectureSlide);
+        SlideManager.mongoUpdateLectureSlide(auth, database, lectureSlide.getId(), userId, lectureSlide);
     }
 
     @Override
-    public boolean putUserInCourse(final String courseId, final String userId) throws DatabaseAccessException {
-        // this actually requires getting the data from the course itself
-        final String userGroupId = CourseManager.mongoGetDefaultGroupId(getInstance().database, courseId)[2]; // user
-        // group!
+     public boolean putUserInCourse(final String courseId, final String userId, final String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException {
 
-        // FIXME: when mongo version 2.5.5 java client comes out please change
-        // this!
-        final ArrayList<String> hack = new ArrayList<String>();
-        hack.add(GROUP_PREFIX + userGroupId);
-        if (getInstance().auth.checkAuthentication(userId, hack)) {
-            return false;
+        String registrationKey = clientRegistrationKey;
+        if (Strings.isNullOrEmpty(clientRegistrationKey)) {
+            LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
+            registrationKey = CourseManager.mongoGetRegistrationKey(auth, database, courseId, userId, false);
         }
-        // DO NOT USE THIS CODE ANY WHERE ESLE
-        final DBRef myDbRef = new DBRef(getInstance().database, USER_GROUP_COLLECTION, new ObjectId(userGroupId));
-        final DBObject corsor = myDbRef.fetch();
-        final DBCollection courses = getInstance().database.getCollection(USER_GROUP_COLLECTION);
-        final BasicDBObject object = new BasicDBObject("$addToSet", new BasicDBObject(USER_LIST, userId));
-        courses.update(corsor, object);
-
+        try {
+            LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
+            updater.registerUser(School.ItemType.COURSE, courseId, userId, registrationKey);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to register the user in the course", e);
+        }
         UserClient.addCourseToUser(userId, courseId);
+        return true;
+    }
+
+    @Override
+    public boolean putCourseInBankProblem(final String courseId, final String bankProblemId, final String userId, final String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException {
+
+        String registrationKey = clientRegistrationKey;
+        if (Strings.isNullOrEmpty(clientRegistrationKey)) {
+            LOG.debug("Registration key was not sent from client.  Trying to get it from course itself.");
+            registrationKey = BankProblemManager.mongoGetRegistrationKey(auth, database, bankProblemId, userId);
+        }
+        try {
+            LOG.debug("Registration user with registration key {} into course {}", registrationKey, courseId);
+            updater.registerUser(School.ItemType.BANK_PROBLEM, bankProblemId, courseId, registrationKey);
+        } catch (AuthenticationException e) {
+            // Revert the adding of the course to the database!
+            throw new AuthenticationException("Failed to register the user in the course", e);
+        }
         return true;
     }
 
@@ -451,7 +452,7 @@ public final class MongoInstitution implements Institution {
     public void insertSubmission(final String userId, final String problemId, final String submissionId,
             final boolean experiment)
             throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(getInstance().database, userId, problemId, submissionId, experiment);
+        SubmissionManager.mongoInsertSubmission(database, userId, problemId, submissionId, experiment);
     }
 
     @Override
@@ -459,19 +460,19 @@ public final class MongoInstitution implements Institution {
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
-        SubmissionManager.mongoGetExperiment(getInstance().database, userId, problemId, sessionInfo, internalConnections);
+        SubmissionManager.mongoGetExperiment(database, userId, problemId, sessionInfo, internalConnections);
     }
 
     @Override
     public void getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoGetAllExperimentsAsInstructor(getInstance().auth, getInstance().database, userId, problemId, sessionInfo,
+        SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId, sessionInfo,
                 internalConnections, review);
     }
 
     @Override
     public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page)
             throws AuthenticationException, DatabaseAccessException {
-        return BankProblemManager.mongoGetAllBankProblems(getInstance().auth, getInstance().database, userId, courseId, page);
+        return BankProblemManager.mongoGetAllBankProblems(auth, database, userId, courseId, page);
     }
 }

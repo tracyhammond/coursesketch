@@ -28,7 +28,7 @@ message Request {
         FEEDBACK = 8; // answer checking feedback!
         CLOSE = 9; // sent to tell the server to close the connection rs
         ERROR = 10;
-        TIME = 11; // used for sycnrhonizing the time between the servers.
+        TIME = 11; // used for synchronizing the time between the servers.
     }
 }
 
@@ -50,6 +50,14 @@ message ProtoException {
     repeated string stackTrace = 2; // the stacktrace of the exception.
     optional string exceptionType = 3; // this will be the class name in java.
     optional ProtoException cause = 4; // the stackTrace might have a cause that is another protoException.
+}
+
+/**
+ * This is the default response to return from rpc calls if a more detailed response is not needed.
+ */
+message DefaultResponse {
+    optional bool successful = 1;
+    optional ProtoException exception = 2;
 }
 
 service RequestService {

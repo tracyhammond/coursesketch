@@ -55,6 +55,7 @@ function AdvanceDataListener(connection, Request, defListener) {
      * @param {Number} [times] the number of times you want the function to be called before it is removed.
      */
     function setListener(messageType, requestId, func, times) {
+        console.log('Creating a listener for requestID ', requestId);
         var localMap = requestMap[messageType];
 
         localMap[requestId] = {
@@ -149,6 +150,7 @@ function AdvanceDataListener(connection, Request, defListener) {
         var messageType = msg.requestType;
         var localMap = requestMap[messageType];
         var listener = localMap[msg.requestId];
+        console.log('decoding message request for message with id: ' + msg.requestId, listener);
         if (!isUndefined(listener)) {
             var func = listener.func;
             try {
@@ -158,6 +160,7 @@ function AdvanceDataListener(connection, Request, defListener) {
                 CourseSketch.clientException(exception);
             }
         } else {
+            console.log('Listener for request id: ', msg.requestId, 'not found', msg);
             defListener(evt, msg);
         }
     }
@@ -169,7 +172,7 @@ function AdvanceDataListener(connection, Request, defListener) {
     /**
      * Sends a request that will timeout after the server.
      *
-     * @param {Request} request The request being sent to the server.
+     * @param {Request} request The protobuf request being sent to the server.
      * @param {Function} callback The function that is called as a result of listening.
      * @param {Number} [times] The number of times you want the function to be called before it is removed.
      */
