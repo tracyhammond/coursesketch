@@ -322,7 +322,6 @@ public final class LectureManager {
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("For lecture: " + lectureId, AuthenticationException.INVALID_PERMISSION);
         }
-        final BasicDBObject updated = new BasicDBObject();
         if (lecture.hasName()) {
             updateObj = new BasicDBObject(NAME, lecture.getName());
             lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
@@ -347,28 +346,6 @@ public final class LectureManager {
             updateObj = new BasicDBObject(CLOSE_DATE, lecture.getCloseDate().getMillisecond());
             lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
             update = true;
-        }
-
-        // Optimization: have something to do with pulling values of an
-        // array and pushing values to an array
-        if (lecture.hasAccessPermission()) {
-            final SrlPermission permissions = lecture.getAccessPermission();
-            if (responder.hasTeacherPermission()) {
-                // Only admins can change admin or mod permissions.
-                if (permissions.getAdminPermissionCount() > 0) {
-                    updated.append(SET_COMMAND, new BasicDBObject(ADMIN, permissions.getAdminPermissionList()));
-                    updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                    lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                }
-                if (permissions.getModeratorPermissionCount() > 0) {
-                    updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                    lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-                }
-            }
-            if (permissions.getUserPermissionCount() > 0) {
-                updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                lectures.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-            }
         }
         if (update) {
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), lectureId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);

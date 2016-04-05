@@ -272,14 +272,14 @@ public class MultiConnectionManager {
     public final void dropAllConnection(final boolean clearTypes, final boolean debugPrint) {
         synchronized (connections) {
             // <? extends ConnectionWrapper> // for safe keeping
-            for (Class<?> conKey : connections.keySet()) {
-                for (AbstractClientWebSocket connection : connections.get(conKey)) {
+            for (Map.Entry<Class<?>, ArrayList<AbstractClientWebSocket>> conKey : connections.entrySet()) {
+                for (AbstractClientWebSocket connection : conKey.getValue()) {
                     if (debugPrint) {
                         LOG.info("Connection URI: {}", connection.getURI());
                     }
                     connection.close();
                 }
-                connections.get(conKey).clear();
+                conKey.getValue().clear();
             }
             if (clearTypes) {
                 connections.clear();

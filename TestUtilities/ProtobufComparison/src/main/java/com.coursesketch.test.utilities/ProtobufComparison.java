@@ -80,9 +80,9 @@ public class ProtobufComparison {
         if (!failAtFirstMisMatch && incorrectFields.size() > 0) {
             final StringBuilder message = new StringBuilder();
             message.append("There were " + incorrectFields.size() + " mismatches in this protobuf:");
-            for (Descriptors.FieldDescriptor field : incorrectFields.keySet()) {
-                final ExpectationPair<Object, Object> pair = incorrectFields.get(field);
-                message.append("\n").append(createFailMessage(field, pair.getExpected(), pair.getActual()));
+            for (Map.Entry<Descriptors.FieldDescriptor, ExpectationPair<Object, Object>> field : incorrectFields.entrySet()) {
+                final ExpectationPair<Object, Object> pair = field.getValue();
+                message.append("\n").append(createFailMessage(field.getKey(), pair.getExpected(), pair.getActual()));
             }
             Assert.fail(message.toString());
         }
