@@ -1,4 +1,4 @@
 language: java
 before_install:
  - sudo apt-get -qq update
- - ./config/setup_instructions/linux/install-protobuf.sh
+ - ./config/setup_instructions/linux/installProtobuf.sh
