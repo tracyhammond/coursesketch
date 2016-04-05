@@ -510,5 +510,5 @@ module.exports = function(grunt) {
      ******************************************/
 
     // 'test'  wait till browsers are better supported
-    grunt.registerTask('default', [ 'install', 'checkstyle', 'documentation', 'setup', 'test','build' ]);
+    grunt.registerTask('default', [ 'install', 'checkstyle', 'documentation', 'setup', 'test', 'build' ]);
 };
