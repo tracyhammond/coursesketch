@@ -2,3 +2,5 @@ language: java
 before_install:
  - sudo apt-get -qq update
  - ./config/setup_instructions/linux/installProtobuf.sh
+ - sh -e /etc/init.d/xvfb start
+ - ./config/setup_instructions/linux/installChrome.sh 
