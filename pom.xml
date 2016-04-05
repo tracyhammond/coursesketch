@@ -583,7 +583,7 @@
         <mockitoVersion>1.9.5</mockitoVersion>
         <puppyVersion>[5.6,)</puppyVersion>
         <junitVersion>4.11</junitVersion>
-        <fongoVersion>1.5.9</fongoVersion>
+        <fongoVersion>1.6.5</fongoVersion>
         <slf4jVersion>1.7.9</slf4jVersion>
         <log4jVersion>2.1</log4jVersion>
         <logbackVersion>1.1.1</logbackVersion>

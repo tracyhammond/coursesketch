@@ -107,15 +107,16 @@ function getFailedLineNumbers($) {
 }
 
 /**
- * Removes an undefined objects from the array
- * @param actual
- * @returns {Array}
+ * Removes an undefined objects from the array.
+ *
+ * @param dirtyArray An array that may contain undefined objects.
+ * @returns {Array} An array that does not contain undefined objects.
  */
-function cleanArray(actual) {
+function cleanArray(dirtyArray) {
     var newArray = [];
-    for (var i = 0; i < actual.length; i++) {
-        if (actual[i]) {
-            newArray.push(actual[i]);
+    for (var i = 0; i < dirtyArray.length; i++) {
+        if (dirtyArray[i]) {
+            newArray.push(dirtyArray[i]);
         }
     }
     return newArray;
