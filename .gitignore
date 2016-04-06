@@ -73,3 +73,7 @@ CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
 config/local/*
 !config/local/*_default.prop
 !config/local/README
+
+# linux binaries
+*.deb
+fonts.dir

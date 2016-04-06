@@ -258,7 +258,7 @@ public final class DbAuthManager {
         final String databaseRegistrationKey = (String) result.get(DatabaseStringConstants.REGISTRATION_KEY);
         if (!registrationKey.equals(databaseRegistrationKey)) {
             throw new AuthenticationException("Invalid Registration key [" + registrationKey + "]"
-                    + " is not equal to stored registration key [" + databaseRegistrationKey + "]", AuthenticationException.INVALID_PERMISSION);
+                    + " is not equal to stored registration key [" + databaseRegistrationKey + "] ", AuthenticationException.INVALID_PERMISSION);
         }
         final List<String> userGroups = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
         insertUserIntoGroup(authId, userGroups.get(0), Authentication.AuthResponse.PermissionLevel.STUDENT);
