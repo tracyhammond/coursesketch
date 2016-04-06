@@ -24,11 +24,12 @@ before_install:
  - "sudo chown root:root $CHROME_SANDBOX; sudo chmod 4755 $CHROME_SANDBOX"
  - "sudo md5sum $CHROME_SANDBOX"
  - "sudo chmod 1777 /dev/shm"
- 
+
 install:
  - "set -o pipefail"
  - "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dcobertura.skip | grep -v 'Download.*: http'"
 
 script:
  - "set -o pipefail"
- - "maven --batch-mode clean install | grep -v 'Download.*: http'"
+ - "mvn -B -V test | grep -v 'Download.*: http'"
+ 
