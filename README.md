@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dtracers/coursesketch.svg?branch=master)](https://travis-ci.org/dtracers/coursesketch)
+[![Build Status](https://travis-ci.org/tracyhammond/coursesketch.svg?branch=master)](https://travis-ci.org/tracyhammond/coursesketch)
 
 coursesketch
 
