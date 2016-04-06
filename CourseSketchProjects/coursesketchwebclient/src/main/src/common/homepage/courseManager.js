@@ -55,21 +55,11 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         };
         if (CourseSketch.dataManager.isDatabaseReady()) {
             CourseSketch.dataManager.getAllCourses(loadCourses);
-            /*
-            CourseSketch.dataManager.pollUpdates(function() {
-
-            });
-            */
         } else {
             var intervalVar = setInterval(function() {
                 if (CourseSketch.dataManager.isDatabaseReady()) {
                     clearInterval(intervalVar);
                     CourseSketch.dataManager.getAllCourses(loadCourses);
-                    /*
-                    CourseSketch.dataManager.pollUpdates(function() {
-
-                    });
-                    */
                 }
             }, 100);
         }
