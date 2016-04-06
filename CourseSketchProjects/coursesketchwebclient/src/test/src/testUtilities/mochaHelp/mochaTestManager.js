@@ -75,10 +75,11 @@ module.exports = {
         });
     },
     createTests: function(browser, filePath, fileName, done) {
-        console.log('creating tests from failures');
+        console.log('creating information about the test that just occurred.');
 
         var decodeTests = this.decodeTests.bind(this);
         browser.getHTML(failedElement, false).then(function (failedAssertions) {
+            console.log('there were at least ', failedAssertions, 'failed assertions that occured');
             browser.getHTML(passedAssertions, false).then(function(passedAssertions) {
                 var writeStream;
                 if (passedAssertions == 0 && failedAssertions == 0) {
@@ -106,12 +107,14 @@ module.exports = {
     },
 
     decodeTests: function(browser, filePath, fileName, failedAssertions, done) {
+        console.log('decoding tests');
         var writeStream;
         browser.getHTML(codeCoverage).then(function (codeCoverage) {
             console.log('getting test results');
             browser.getHTML(testResults).then(function (results) {
                 qunitFileParser.parseFile(results, function (resultList) {
                     if (failedAssertions > 0) {
+                        console.log('There were at least [', failedAssertions, '] failed assertions');
                         writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
                         writeStream.write('// ' + filePath);
                         writeStream.write('\n[\n');
