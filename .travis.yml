@@ -1,3 +1,5 @@
+#use http://lint.travis-ci.org/ to validate yaml
+
 language: java
 before_install:
  - "sudo apt-get -qq update"
@@ -22,7 +24,7 @@ before_install:
  - "sudo chown root:root $CHROME_SANDBOX; sudo chmod 4755 $CHROME_SANDBOX"
  - "sudo md5sum $CHROME_SANDBOX"
  - "sudo chmod 1777 /dev/shm"
- 
- script:
-  - "set -o pipefail"
-  - "maven --batch-mode clean install -U | grep -v 'Download.*: http'"
+
+script:
+ - "set -o pipefail"
+ - "maven --batch-mode clean install -U | grep -v 'Download.*: http'"
