@@ -6,6 +6,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import coursesketch.database.auth.*;
+import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import org.junit.Assert;
@@ -23,6 +24,7 @@ import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 import protobuf.srl.school.School.SrlCourse;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +91,7 @@ public class GradeManagerTest {
     public static final long FAKE_NEW_MILLISECONDS = 223456;
 
     @Before
-    public void before() {
+    public void before() throws NoSuchAlgorithmException, AuthenticationException {
         db = fongo.getDB();
 
         try {
@@ -120,12 +122,13 @@ public class GradeManagerTest {
         fakeProtoHistory2.setGradeValue(FAKE_NEW_GRADE).setComment(FAKE_COMMENT + "2").setWhoChanged(FAKE_ADMIN_ID)
                 .setGradedDate(RequestConverter.getProtoFromMilliseconds(FAKE_NEW_MILLISECONDS));
 
-        fakeProtoGrade.setCourseId(FAKE_COURSE_ID).setUserId(FAKE_USER_ID).setAssignmentId(FAKE_ASGN_ID)
+        final String userIdHash = HashManager.createHash(FAKE_USER_ID, HashManager.generateUnSecureSalt(FAKE_COURSE_ID));
+        fakeProtoGrade.setCourseId(FAKE_COURSE_ID).setUserId(userIdHash).setAssignmentId(FAKE_ASGN_ID)
                 .setProblemId(FAKE_PROB_ID).setCurrentGrade(FAKE_CURRENT_GRADE).setExternalGrade(FAKE_EXTERNAL_GRADE);
         fakeProtoGrade.addGradeHistory(fakeProtoHistory1.build());
         fakeProtoGrade.addGradeHistory(fakeProtoHistory2.build());
 
-        protoGradeGrabber.setCourseId(FAKE_COURSE_ID).setUserId(FAKE_USER_ID).setAssignmentId(FAKE_ASGN_ID)
+        protoGradeGrabber.setCourseId(FAKE_COURSE_ID).setUserId(userIdHash).setAssignmentId(FAKE_ASGN_ID)
                 .setProblemId(FAKE_PROB_ID);
 
         /**
@@ -140,7 +143,7 @@ public class GradeManagerTest {
         fakeMongoHistory.add(mongoHistory1);
         fakeMongoHistory.add(mongoHistory2);
 
-        fakeMongoGrade.append(COURSE_ID, FAKE_COURSE_ID).append(USER_ID, FAKE_USER_ID).append(ASSIGNMENT_ID, FAKE_ASGN_ID)
+        fakeMongoGrade.append(COURSE_ID, FAKE_COURSE_ID).append(USER_ID, HashManager.toHex(userIdHash.getBytes())).append(ASSIGNMENT_ID, FAKE_ASGN_ID)
                 .append(COURSE_PROBLEM_ID, FAKE_PROB_ID).append(CURRENT_GRADE, FAKE_CURRENT_GRADE)
                 .append(GRADE_HISTORY, fakeMongoHistory).append(EXTERNAL_GRADE, FAKE_EXTERNAL_GRADE);
 
@@ -326,6 +329,29 @@ public class GradeManagerTest {
 
     @Test
     public void getProbGradeTest() throws Exception {
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+                FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
+                FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
+
+        // Tests that both the user of the grade and a course admin can get a valid problem grade.
+        ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID,
+                FAKE_USER_ID, protoGradeGrabber.build());
+
+        // admin getting the grade!
+        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
+                protoGradeGrabber.build());
+
+        Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
+        Assert.assertEquals(fakeProtoGrade.build(), testAdminGrade);
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void getProbGradeTestOtherUserShouldThrowException() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoGrade.setCourseId(courseId);
         protoGradeGrabber.setCourseId(courseId);
@@ -340,38 +366,30 @@ public class GradeManagerTest {
 
         // Tests that both the user of the grade and a course admin can get a valid problem grade.
         ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID,
-                FAKE_USER_ID, protoGradeGrabber.build());
-        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_USER_ID,
-                protoGradeGrabber.build());
+                FAKE_USER_ID + "Different", protoGradeGrabber.build());
 
         Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
-        Assert.assertEquals(fakeProtoGrade.build(), testAdminGrade);
     }
 
     @Test
     public void getCourseGradeTest() throws Exception {
-        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
-        fakeProtoGrade.setCourseId(courseId);
         fakeProtoGrade.clearAssignmentId();
         fakeProtoGrade.clearProblemId();
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, FAKE_COURSE_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, FAKE_COURSE_ID,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
         protoGradeGrabber.clearAssignmentId().clearProblemId();
-        protoGradeGrabber.setCourseId(courseId);
-
-
 
         // Tests that both the user of the grade and a course admin can get a valid course grade.
         ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID, FAKE_USER_ID,
                 protoGradeGrabber.build());
-        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_USER_ID,
+        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
                 protoGradeGrabber.build());
         Assert.assertEquals(fakeProtoGrade.build(), testUserGrade);
         Assert.assertEquals(fakeProtoGrade.build(), testAdminGrade);
@@ -408,9 +426,6 @@ public class GradeManagerTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void gradeNotInDatabaseTest() throws Exception {
-        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
-        fakeProtoGrade.setCourseId(courseId);
-        protoGradeGrabber.setCourseId(courseId);
         // Not adding grade here like previous tests so we can get the exception!
 
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
@@ -496,9 +511,7 @@ public class GradeManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.ASSIGNMENT, null,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         List<ProtoGrade> expectedGrades = new ArrayList<>();
-        fakeProtoGrade.setCourseId(courseId);
         fakeProtoGrade.setAssignmentId(FAKE_ASGN_ID + "1");
         fakeProtoGrade.clearProblemId();
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
@@ -510,17 +523,16 @@ public class GradeManagerTest {
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
         expectedGrades.add(fakeProtoGrade.build());
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId,
+        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, FAKE_COURSE_ID,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, courseId, FAKE_USER_ID, FAKE_USER_ID);
+        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, FAKE_COURSE_ID, FAKE_USER_ID, FAKE_USER_ID);
         Assert.assertEquals(expectedGrades, testGrades);
     }
 
     @Test(expected = AuthenticationException.class)
     public void getAllAssignmentGradesStudentNotInCourseTest() throws Exception {
-        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
-        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, courseId, FAKE_USER_ID, FAKE_USER_ID);
+        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, FAKE_COURSE_ID, FAKE_USER_ID, FAKE_USER_ID);
     }
 
     @Test(expected = DatabaseAccessException.class)
