@@ -20,6 +20,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadTasks('config/gruntTasks/');
 
+    var gruntOptions = {
+        skipTests: (process.env.GRUNT_SKIP_TESTS || false) === 'true'
+    };
+
+    console.log(gruntOptions);
+
     /******************************************
      * GRUNT INIT
      ******************************************/
@@ -404,6 +410,10 @@ module.exports = function(grunt) {
 
     // sets up tasks related to testing
     grunt.registerTask('test', function() {
+        if (gruntOptions.skipTests) {
+            grunt.log.write('\n===========\n=========== SKIPPING UNIT TESTS ===========\n===========\n');
+            return;
+        }
         printTaskGroup();
         grunt.task.run([
             'server',

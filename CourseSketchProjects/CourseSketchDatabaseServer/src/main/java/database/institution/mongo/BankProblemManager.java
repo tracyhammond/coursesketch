@@ -83,7 +83,6 @@ public final class BankProblemManager {
                 .append(QUESTION_TYPE, problem.getQuestionType().getNumber())
                 .append(SCRIPT, problem.getScript())
                 .append(KEYWORDS, problem.getOtherKeywordsList())
-                        // FUTURE: fix access issues for bank problems
                 .append(REGISTRATION_KEY, problem.getRegistrationKey())
                 .append(STATE_PUBLISHED, true)
                 .append(COURSE_ACCESS, 0);

@@ -17,8 +17,8 @@ exports.parseFile = function(testResults, callback) {
         var html = testResults[index];
         jsdom.env(html,[], function(err, window) {
             var $ = require('jquery')(window);
-            var passingTests = $('.fail');
-            var html = $(passingTests).html();
+            var failingTests = $('.fail');
+            var html = $(failingTests).html();
             if (typeof html !== "undefined") {
                 // Tests that failed
                 testObject.push(createFailingTest(getModuleName($), getTestName($), getTestTime($), $));
@@ -66,16 +66,24 @@ function createFailingTest(moduleName, testName, runtime, $) {
         globalTest = true;
     }
     var message = $('.test-message').first().html();
-    return {
+    var result = {
         passing: false,
         message: message,
         moduleName: moduleName,
         testName: testName,
         runtime: runtime,
-        stackTrace: globalTest? [] : getFailedLineNumbers($)
-    }
+        stackTrace: getFailedLineNumbers($)
+    };
+    console.log('failed test', result);
+    return result;
 }
 
+/**
+ * Gets the line numbers of where the tests failed.
+ *
+ * @param $
+ * @returns {Array}
+ */
 function getFailedLineNumbers($) {
     var source = $('.test-source pre').html();
     if (typeof source == 'undefined') {
