@@ -17,6 +17,17 @@
 				<protocLocation>${env.protoc}</protocLocation>
 			</properties>
 		</profile>
+		<profile>
+			<id>proto-not-local</id>
+			<activation>
+				<file>
+					<exists>/usr/bin/protoc</exists>
+				</file>
+			</activation>
+			<properties>
+				<protocLocation>/usr/bin/protoc</protocLocation>
+			</properties>
+		</profile>
 	</profiles>
 
 	<parent>
