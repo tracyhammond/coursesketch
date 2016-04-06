@@ -27,7 +27,7 @@ before_install:
 
 install:
  - "set -o pipefail"
- - "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dcobertura.skip | grep -v 'Download.*: http'"
+ - "GRUNT_SKIP_TESTS=true mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dcobertura.skip | grep -v 'Download.*: http'"
 
 script:
  - "set -o pipefail"
