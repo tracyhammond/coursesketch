@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Holy shit batman!
 # https://github.com/travis-ci/travis-ci/issues/938
 # https://github.com/travis-ci/travis-ci/issues/2555
 
