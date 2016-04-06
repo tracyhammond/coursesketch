@@ -164,7 +164,6 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
                 throw authExcep;
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
             throw new AuthenticationException(e);
         }
     }

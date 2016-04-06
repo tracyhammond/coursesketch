@@ -450,7 +450,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
 
             // there was an error getting the user classes.
             if (isUndefined(item.data) || item.data === null) {
-                callback(new DatabaseException('The was no data sent back from the server for searching courses'));
+                callback(new DatabaseException('There was no data sent back from the server for searching courses'));
                 return;
             }
             var courseList = [];
