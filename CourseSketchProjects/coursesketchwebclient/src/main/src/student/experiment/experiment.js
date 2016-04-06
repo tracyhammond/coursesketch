@@ -47,7 +47,7 @@ validateFirstRun(document.currentScript);
 
         var questionText = document.querySelector('problem-text-panel');
         questionText.setProblemText(bankProblem.getQuestionText());
-        console.log(bankProblem.getQuestionText());
+        console.log('a problem has been loaded with question text', bankProblem.getQuestionText());
 
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
