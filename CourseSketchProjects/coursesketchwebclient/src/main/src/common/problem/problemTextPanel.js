@@ -13,8 +13,9 @@ function ProblemTextPanel() {
     var textViewQuery = '#visual';
 
     /**
-     * @param {node} templateClone - Is a clone of the custom HTML Element for the text box
-     * Makes the exit button close the box and enables dragging
+     * Makes the exit button close the box and enables dragging.
+     *
+     * @param {node} templateClone - Is a clone of the custom HTML Element for the text box.
      * @instance
      * @function intializeElement
      */

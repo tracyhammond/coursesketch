@@ -102,11 +102,11 @@
     }
 
     // waits till the database is ready to set up our loading process
-    if (CourseSketch.dataManager.realDatabaseReady()) {
+    if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
         databaseIsReadForLoading();
     } else {
         var intervalVar = setInterval(function() {
-            if (CourseSketch.dataManager.realDatabaseReady()) {
+            if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
                 clearInterval(intervalVar);
                 databaseIsReadForLoading();
             }

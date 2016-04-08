@@ -121,7 +121,6 @@ validateFirstRun(document.currentScript);
      * @param {UUID} id - The id of the class being registered for.
      */
     CourseSketch.classSearch.registerClass = function(id) {
-
         CourseSketch.dataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.REGISTER, courseProtoMap[id].toArrayBuffer(), function(evt, item) {
             if (isException(item)) {
                 var exception = new DatabaseException('registration failed for course parent.getCurrentId()', '', item);

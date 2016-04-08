@@ -38,6 +38,7 @@ import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
 import static database.DatabaseStringConstants.FIRST_STROKE_TIME;
 import static database.DatabaseStringConstants.FIRST_SUBMISSION_TIME;
 import static database.DatabaseStringConstants.IS_PRACTICE_PROBLEM;
+import static database.DatabaseStringConstants.ITEM_ID;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
@@ -166,8 +167,8 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
                 .append(USER_ID, experiment.getUserId());
 
-        if (experiment.hasBankProblemId()) {
-            findQuery.append(PROBLEM_BANK_ID, experiment.getBankProblemId());
+        if (experiment.hasPartId()) {
+            findQuery.append(ITEM_ID, experiment.getPartId());
         }
         LOG.info("Searching for existing solutions {}", findQuery);
         final DBCursor multipleObjectCursor = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
@@ -205,7 +206,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
             final BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
                     .append(ASSIGNMENT_ID, experiment.getAssignmentId())
                     .append(COURSE_PROBLEM_ID, experiment.getProblemId())
-                    .append(PROBLEM_BANK_ID, experiment.getBankProblemId())
+                    .append(ITEM_ID, experiment.getPartId())
                     .append(USER_ID, experiment.getUserId())
                     .append(SUBMISSION_TIME, submissionTime);
             query.putAll(submissionObject);
@@ -608,7 +609,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         LOG.info("Setting up an index");
         LOG.info("Experiment Index command: {}", new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
         database.getCollection(EXPERIMENT_COLLECTION).createIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1)
-                .append(PROBLEM_BANK_ID, 1)
+                .append(ITEM_ID, 1)
                 .append(USER_ID, 1)
                 .append("unique", true));
         database.getCollection(SOLUTION_COLLECTION).createIndex(new BasicDBObject(PROBLEM_BANK_ID, 1).append("unique", true));
