@@ -454,6 +454,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         Thrown if no users are found.
      */
+    @SuppressWarnings("unused")
     private Map<String, String> getUserNames(final Collection<String> identity) throws DatabaseAccessException {
         final List<ObjectId> identityList = new ArrayList<>();
         for (String userId : identity) {
