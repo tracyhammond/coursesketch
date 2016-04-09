@@ -1,0 +1,94 @@
+package coursesketch.connection;
+
+import coursesketch.database.auth.AuthenticationDataCreator;
+import coursesketch.database.auth.AuthenticationOptionChecker;
+import coursesketch.database.auth.Authenticator;
+import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.server.rpc.CourseSketchRpcService;
+import coursesketch.server.rpc.ServerWebSocketHandler;
+import coursesketch.server.rpc.ServerWebSocketInitializer;
+import database.DatabaseAccessException;
+import database.SubmissionDatabaseClient;
+import handlers.SubmissionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.utils.Util;
+import services.SubmissionService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ */
+@SuppressWarnings("serial")
+public final class SubmissionServiceInitializer extends ServerWebSocketInitializer {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionServiceInitializer.class);
+
+    /**
+     * Submission manager.
+     */
+    private final SubmissionManagerInterface manager;
+
+    /**
+     * Identity manager.
+     */
+    private final SubmissionDatabaseClient databaseClient;
+
+    /**
+     * Constructor for AuthenticationServiceInitializer.
+     *
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
+     */
+    public SubmissionServiceInitializer(final ServerInfo serverInfo) {
+        super(serverInfo);
+        databaseClient = new SubmissionDatabaseClient(serverInfo);
+        manager = new SubmissionManager(databaseClient);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ServerWebSocketHandler createServerSocket() {
+        return new DefaultWebSocketHandler(this, this.getServerInfo());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<CourseSketchRpcService> getRpcServices() {
+        final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
+        services.add(new SubmissionService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
+        return services;
+    }
+
+    /**
+     * Sets the authentication websocket as an authenticator.
+     */
+    @Override
+    protected void onReconnect() {
+        try {
+            databaseClient.startDatabase();
+        } catch (DatabaseAccessException e) {
+            LOG.error("Error starting database", e);
+        }
+        // Does nothing by default
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return {@link null}.
+     */
+    @Override
+    public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
+        return null;
+    }
+}

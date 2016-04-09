@@ -1,9 +1,10 @@
-package response;
+package coursesketch.update.command;
 
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
 
+import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;
 import srl.core.sketch.SComponent;

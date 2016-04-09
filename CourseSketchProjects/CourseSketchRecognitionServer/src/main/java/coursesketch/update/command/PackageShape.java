@@ -1,4 +1,4 @@
-package response;
+package coursesketch.update.command;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.google.protobuf.ByteString;
 
+import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.IdChain;

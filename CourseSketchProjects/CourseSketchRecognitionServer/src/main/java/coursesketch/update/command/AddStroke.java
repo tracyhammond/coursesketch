@@ -1,9 +1,10 @@
-package response;
+package coursesketch.update.command;
 
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
 
+import coursesketch.update.Command;
 import srl.core.sketch.Point;
 import srl.core.sketch.Sketch;
 import srl.core.sketch.Stroke;

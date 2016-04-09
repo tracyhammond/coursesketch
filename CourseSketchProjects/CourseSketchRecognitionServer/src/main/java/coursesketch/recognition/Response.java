@@ -1,8 +1,12 @@
-package response;
+package coursesketch.recognition;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import coursesketch.update.Command;
+import coursesketch.update.Update;
+import coursesketch.update.UpdateDeque;
+import coursesketch.update.command.*;
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.IdChain;
 import protobuf.srl.commands.Commands.Marker;

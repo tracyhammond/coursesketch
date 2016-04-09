@@ -1,9 +1,11 @@
-package response;
+package coursesketch.update;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import coursesketch.update.command.AddShape;
+import coursesketch.update.command.AddStroke;
 import protobuf.srl.commands.Commands.CommandType;
 
 import srl.core.sketch.Shape;

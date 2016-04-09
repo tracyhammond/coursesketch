@@ -1,6 +1,7 @@
-package response;
+package coursesketch.update.command;
 import com.google.protobuf.ByteString;
 
+import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.CommandType;
 import srl.core.sketch.Sketch;
 
