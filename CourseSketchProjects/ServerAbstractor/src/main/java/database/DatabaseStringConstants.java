@@ -139,6 +139,7 @@ public final class DatabaseStringConstants {
     public static final String LOGIN_AMOUNT_FIELD = "LoginCount";
 
     // user group specific
+    public static final String NON_USER_LIST = "NonUserList"; // used for moderators, peer teachers, and admins
     public static final String USER_LIST = "UserList";
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
@@ -153,6 +154,7 @@ public final class DatabaseStringConstants {
     public static final String SORT_COMMAND = "$sort";
     public static final String SLICE_COMMAND = "$slice";
     public static final String INCREMENT_COMMAND = "$inc";
+    public static final String IN_COMMAND = "$in";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";

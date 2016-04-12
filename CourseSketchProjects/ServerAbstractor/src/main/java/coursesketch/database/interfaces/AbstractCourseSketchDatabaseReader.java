@@ -1,6 +1,7 @@
 package coursesketch.database.interfaces;
 
 import coursesketch.server.interfaces.ServerInfo;
+import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +38,10 @@ public abstract class AbstractCourseSketchDatabaseReader {
      * Called to start the database.
      *
      * This uses double check locking on the object when initialing the database.
+     *
+     * @throws DatabaseAccessException thrown if the database can not be started correctly.
      */
-    public final void startDatabase() {
+    public final void startDatabase() throws DatabaseAccessException {
         if (!databaseStarted) {
             synchronized (this) {
                 if (!databaseStarted) {
@@ -53,8 +56,10 @@ public abstract class AbstractCourseSketchDatabaseReader {
      * Called when startDatabase is called if the database has not already been started.
      *
      * This method should be synchronous.
+     *
+     * @throws DatabaseAccessException thrown if a subclass throws an exception while starting the database.
      */
-    protected abstract void onStartDatabase();
+    protected abstract void onStartDatabase() throws DatabaseAccessException;
 
     /**
      * Called when the database has started.
