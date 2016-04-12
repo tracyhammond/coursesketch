@@ -525,7 +525,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * Changes the index to point at this new subgroup part
+     * Changes the index to point at this new subgroup part.
      *
      * @param {Number} index - The problem that we want to switch to.
      * @param {Function} [callback] - A temporary callback that should only be called when this navigation is finished.
