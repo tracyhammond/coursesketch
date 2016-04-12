@@ -270,7 +270,7 @@ public final class GradingPolicyManager {
         protoCategory.setName(dbCategory.get(GRADE_CATEGORY_NAME).toString());
 
         if (dbCategory.containsField(GRADE_CATEGORY_WEIGHT)) {
-            protoCategory.setWeight((float) dbCategory.get(GRADE_CATEGORY_WEIGHT));
+            protoCategory.setWeight((float) Double.parseDouble(dbCategory.get(GRADE_CATEGORY_WEIGHT).toString()));
         }
 
         if (dbCategory.containsField(LATE_POLICY)) {
@@ -312,7 +312,7 @@ public final class GradingPolicyManager {
         final LatePolicy.Builder protoPolicy = LatePolicy.newBuilder();
         protoPolicy.setFunctionType(LatePolicy.FunctionType.valueOf((int) dbPolicy.get(LATE_POLICY_FUNCTION_TYPE)));
         protoPolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((int) dbPolicy.get(LATE_POLICY_TIME_FRAME_TYPE)));
-        protoPolicy.setRate((float) dbPolicy.get(LATE_POLICY_RATE));
+        protoPolicy.setRate((float) Double.parseDouble(dbPolicy.get(LATE_POLICY_RATE).toString()));
         protoPolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((int) dbPolicy.get(LATE_POLICY_SUBTRACTION_TYPE)));
         protoPolicy.setApplyOnlyToLateProblems((boolean) dbPolicy.get(APPLY_ONLY_TO_LATE_PROBLEMS));
         return protoPolicy.build();
