@@ -1,6 +1,8 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.ProtobufComparison;
+import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -102,9 +104,9 @@ public class GradingPolicyManagerTest {
     public static final String FAKE_ASGN_ID = "assignmentId";
     public static final String FAKE_PROB_ID = "problemId";
     public static final String FAKE_CATEGORY_NAME = "category";
-    public static final float FAKE_CATEGORY_WEIGHT = 25;
+    public static final double FAKE_CATEGORY_WEIGHT = 25;
     public static final int FAKE_ENUM = 1;
-    public static final float FAKE_LATE_RATE = 25;
+    public static final double FAKE_LATE_RATE = 25;
     public static final boolean FAKE_BOOL = true;
 
     @Before
@@ -204,7 +206,7 @@ public class GradingPolicyManagerTest {
     @Test
     public void buildProtoLatePolicyTest() {
         LatePolicy testLatePolicy = GradingPolicyManager.buildProtoLatePolicy(fakeMongoLate);
-        Assert.assertEquals(fakeProtoLate.build(), testLatePolicy);
+        new ProtobufComparisonBuilder().build().equals(fakeProtoLate.build(), testLatePolicy);
     }
 
     @Test
@@ -223,7 +225,7 @@ public class GradingPolicyManagerTest {
     @Test
     public void buildProtoCategoryTest() {
         PolicyCategory testProtoCategory = GradingPolicyManager.buildProtoCategory(fakeMongoCategory1);
-        Assert.assertEquals(fakeProtoCategory1.build(), testProtoCategory);
+        new ProtobufComparisonBuilder().build().equals(fakeProtoCategory1.build(), testProtoCategory);
     }
 
     @Test
@@ -261,7 +263,7 @@ public class GradingPolicyManagerTest {
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
-        Assert.assertEquals(fakeProtoPolicy.build(), testPolicy);
+        new ProtobufComparisonBuilder().build().equals(fakeProtoPolicy.build(), testPolicy);
     }
 
     @Test(expected = AuthenticationException.class)
