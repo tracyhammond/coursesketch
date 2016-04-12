@@ -288,15 +288,6 @@ public final class CourseProblemManager {
                 setData.append(SET_COMMAND, updateObj);
             }
 
-            // We only replace the list right now instead of adding new objects.  There are other methods for that.
-            /*
-            if (problem.getSubgroupsCount() > 0) {
-                final BasicDBObject problemList = new BasicDBObject(DatabaseStringConstants.PROBLEM_LIST,
-                        createProblemHolderList(problem.getSubgroupsList()));
-                setData.append(ADD_SET_COMMAND, problemList);
-            }
-            */
-
             courseProblemCollection.update(cursor, setData);
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), problemId, UserUpdateHandler.COURSE_PROBLEM_CLASSIFICATION);
         }
@@ -349,6 +340,7 @@ public final class CourseProblemManager {
     }
 
     /**
+     * Creates a list of problem holder data from the database versions.
      *
      * @param authenticator
      *         The object that is performing authentication.
