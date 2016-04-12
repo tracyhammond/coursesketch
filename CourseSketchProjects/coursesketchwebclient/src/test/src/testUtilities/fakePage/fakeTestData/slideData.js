@@ -22,65 +22,45 @@
     var slide19 = CourseSketch.prutil.LectureSlide();
     var slide20 = CourseSketch.prutil.LectureSlide();
 
-    slide1.id = "1";
-    slide1.lectureId = "1";
+    slide1.id = '1';
 
-    slide2.id = "2"
-    slide2.lectureId = "1";
+    slide2.id = '2';
 
-    slide3.id = "3"
-    slide3.lectureId = "2";
+    slide3.id = '3';
 
-    slide4.id = "4"
-    slide4.lectureId = "2";
+    slide4.id = '4';
 
-    slide5.id = "5"
-    slide5.lectureId = "3";
+    slide5.id = '5';
 
-    slide6.id = "6"
-    slide6.lectureId = "3";
+    slide6.id = '6';
 
-    slide7.id = "7"
-    slide7.lectureId = "4";
+    slide7.id = '7';
 
-    slide8.id = "8"
-    slide8.lectureId = "4";
+    slide8.id = '8';
 
-    slide9.id = "9"
-    slide9.lectureId = "5";
+    slide9.id = '9';
 
-    slide10.id = "10"
-    slide10.lectureId = "5";
+    slide10.id = '10';
 
-    slide11.id = "11"
-    slide11.lectureId = "6";
+    slide11.id = '11';
 
-    slide12.id = "12"
-    slide12.lectureId = "6";
+    slide12.id = '12';
 
-    slide13.id = "13"
-    slide13.lectureId = "7";
+    slide13.id = '13';
 
-    slide14.id = "14"
-    slide14.lectureId = "7";
+    slide14.id = '14';
 
-    slide15.id = "15"
-    slide15.lectureId = "8";
+    slide15.id = '15';
 
-    slide16.id = "16"
-    slide16.lectureId = "8";
+    slide16.id = '16';
 
-    slide17.id = "17"
-    slide17.lectureId = "9";
+    slide17.id = '17';
 
-    slide18.id = "18"
-    slide18.lectureId = "9";
+    slide18.id = '18';
 
-    slide19.id = "19"
-    slide19.lectureId = "10";
+    slide19.id = '19';
 
-    slide20.id = "20"
-    slide20.lectureId = "10";
+    slide20.id = '20';
 
     CourseSketch.fakeSlides.push(slide1);
     CourseSketch.fakeSlides.push(slide2);

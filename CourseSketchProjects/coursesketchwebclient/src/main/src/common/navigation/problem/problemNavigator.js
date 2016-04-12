@@ -61,6 +61,13 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
         return currentAssignment.assignmentType;
     };
 
+    /**
+     * @return {Number} assignment type of the current problem.
+     */
+    this.getNavigationType = function getNavigationType() {
+        return currentAssignment.navigationType;
+    };
+
     // Sets the current index.
     if (!isUndefined(preferredIndex)) {
         try {
@@ -142,26 +149,25 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
      * @access private
      * @memberof ProblemNavigator
      */
-    function changeProblem(index) {
+    var changeProblem = function(index) {
         // If assignment is random, ignore the index and choose a random assignment.
-        var type = currentAssignment.assignmentType;
-        if (type !== CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.GAME) {
-            if (index < 0 || index >= problemList.length && !loop) {
-                return;
-            } else if (loop) {
-                if (index < 0) {
-                    index = problemList.length - 1;
-                }
-                if (index >= problemList.length) {
-                    index = 0;
-                }
-            }
-        } else {
+        var assignmentType = this.getAssignmentType();
+        var navigationType = this.getNavigationType();
+        if (isRandomNavigation(assignmentType, navigationType)) {
             //Pull problems at random for Game
             var numberOfQuestions = getProblemListSize();
             var randomNumber = Math.random();
 
             index = randomNumber % numberOfQuestions;
+        } else if (index < 0 || index >= problemList.length && !loop) {
+            return;
+        } else if (loop) {
+            if (index < 0) {
+                index = problemList.length - 1;
+            }
+            if (index >= problemList.length) {
+                index = 0;
+            }
         }
 
         if ((index >= 0 && index < problemList.length)) {
@@ -171,6 +177,17 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
                 callBacker(i);
             }
         }
+    }.bind(this);
+
+    /**
+     * Returns true if navigation is random.
+     *
+     * @param {AssignmentType} assignmentType The {@link AssignmentType}
+     * @param {NavigationType} navigationType The {@link NavigationType}
+     */
+    function isRandomNavigation(assignmentType, navigationType) {
+        return navigationType === CourseSketch.prutil.NavigationType.RANDOM ||
+            (navigationType === CourseSketch.prutil.NavigationType.DEFAULT && assignmentType === CourseSketch.prutil.AssignmentType.FLASHCARD);
     }
 
     /**

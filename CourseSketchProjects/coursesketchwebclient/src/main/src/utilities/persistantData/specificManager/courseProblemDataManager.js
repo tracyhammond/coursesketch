@@ -216,7 +216,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
                 }
                 insertCourseProblemServer(courseProblem, function(courseProblemUpdated) {
                     parent.getAssignment(courseProblem.assignmentId, function(assignment) {
-                        var courseProblemList = assignment.problemList;
+                        var courseProblemList = assignment.problemGroups;
 
                         // remove old Id (if it exists)
                         if (courseProblemList.indexOf(courseProblem.id) >= 0) {
@@ -291,6 +291,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, R
             if (courseProblemCallbackComplete) {
                 courseProblemCallbackComplete(new DatabaseException('The given id is not assigned', 'getting CourseProblem: ' + courseProblemIdList));
             }
+            return;
         }
 
         var barrier = courseProblemIdList.length;

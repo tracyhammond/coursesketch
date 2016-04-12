@@ -169,6 +169,28 @@ function ProtobufSetup() {
     }
 
     /**
+     * Builds the Assignment protobuf files.
+     *
+     * These ares used for Assignment data.
+     */
+    function buildAssignments() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'assignment.proto');
+        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
+        assignValues(ProtoSubmissionBuilder);
+    }
+
+    /**
+     * Builds the Problem protobuf files.
+     *
+     * These ares used for Problems data.
+     */
+    function buildProblems() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'problem.proto');
+        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
+        assignValues(ProtoSubmissionBuilder);
+    }
+
+    /**
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
@@ -182,6 +204,8 @@ function ProtobufSetup() {
         buildTutorial();
         buildSubmissions();
         buildLectures();
+        buildAssignments();
+        buildProblems();
         buildGrade();
         return localScope;
     };

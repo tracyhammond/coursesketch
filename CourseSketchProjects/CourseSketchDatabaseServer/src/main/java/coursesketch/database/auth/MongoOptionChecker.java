@@ -9,6 +9,7 @@ import database.DatabaseStringConstants;
 import database.DbSchoolUtility;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 /**
  * Checks the database for auxiliary permission data.
@@ -86,9 +87,9 @@ public final class MongoOptionChecker implements AuthenticationOptionChecker {
      * {@inheritDoc}
      * @return a new instance of data creator that interfaces with mongo and grabs the data for any other uses by the option checker.
      */
-    @Override public AuthenticationDataCreator createDataGrabber(final School.ItemType collectionType, final String itemId)
+    @Override public AuthenticationDataCreator createDataGrabber(final Util.ItemType collectionType, final String itemId)
             throws DatabaseAccessException {
-        final String collectionName = DbSchoolUtility.getCollectionFromType(collectionType, true);
+        final String collectionName = DbSchoolUtility.getCollectionFromType(collectionType);
         final DBObject result = database.getCollection(collectionName).findOne(new ObjectId(itemId));
         if (result == null) {
             throw new DatabaseAccessException(DbSchoolUtility.getCollectionFromType(collectionType) + " Was not found in " + collectionName

@@ -22,17 +22,49 @@
 
 <script>
     CourseSketch.dataManager.getAssignment = function(assignmentID, callback) {
-        callback(CourseSketch.fakeAssignments[9]);
+        if (assignmentID == "randomTest1234") {
+            callback(CourseSketch.fakeAssignments[9]);
+        } else {
+            callback(CourseSketch.fakeAssignments[1]);
+        }
     }
 </script>
 <script>
-        QUnit.module("testModule2");
+        QUnit.module("navigation index changing");
         test("randomAssignment", function(assert) {
             var testNavigator = new ProblemNavigator("randomTest1234", false, 0);
-            var index = testNavigator.currentIndex;
+            var index = testNavigator.getCurrentNumber();
             console.log(testNavigator);
             testNavigator.gotoNext();
-            assert.notEqual("2", testNavigator.currentIndex, "testing randomness");
+            assert.notEqual(undefined, testNavigator.getCurrentNumber(), "testing randomness");
+            assert.notEqual(index, testNavigator.getCurrentNumber(), "testing randomness");
+        });
+
+        test("gradedAssignmentNavigationForward", function(assert) {
+            var testNavigator = new ProblemNavigator("graded", false, 0);
+            var index = testNavigator.getCurrentNumber();
+            console.log(testNavigator);
+            testNavigator.gotoNext();
+            assert.equal(index + 1, testNavigator.getCurrentNumber(), "testing that this assignment is in face correctly moving over");
+        });
+
+        test("gradedAssignmentNavigationPrevious", function(assert) {
+            var testNavigator = new ProblemNavigator("graded", false, 0);
+            var index = testNavigator.getCurrentNumber();
+            console.log(testNavigator);
+            testNavigator.gotoNext();
+            assert.equal(index + 1, testNavigator.getCurrentNumber(), "testing that this assignment is in face correctly moving over");
+
+            testNavigator.gotoPrevious()
+            assert.equal(index, testNavigator.getCurrentNumber(), "testing that this assignment is in face correctly moving over");
+        });
+
+        test("goToProblem", function(assert) {
+            var testNavigator = new ProblemNavigator("graded", false, 0);
+            var index = testNavigator.getCurrentNumber() - 1;
+            console.log(testNavigator);
+            testNavigator.goToProblem(index + 1);
+            assert.equal(index + 1, testNavigator.getCurrentNumber() - 1, "testing that this assignment is in face correctly moving over");
         });
 </script>
 </body>

@@ -1,6 +1,5 @@
 package database.institution.mongo;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -11,22 +10,17 @@ import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import database.UserUpdateHandler;
-import protobuf.srl.commands.Commands;
-import protobuf.srl.school.School;
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.services.authentication.Authentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.utils.Util;
-import protobuf.srl.utils.Util.SrlPermission;
+import protobuf.srl.school.Problem.SrlBankProblem;
+import protobuf.srl.services.authentication.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_ACCESS;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
-import static database.DatabaseStringConstants.IMAGE;
 import static database.DatabaseStringConstants.KEYWORDS;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
@@ -38,7 +32,6 @@ import static database.DatabaseStringConstants.SOLUTION_ID;
 import static database.DatabaseStringConstants.SOURCE;
 import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.SUB_TOPIC;
-import static database.DatabaseStringConstants.USERS;
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
@@ -49,6 +42,11 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
 public final class BankProblemManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(MongoInstitution.class);
 
     /**
      * The amount of problems that are allowed to show at the same time.
@@ -73,9 +71,8 @@ public final class BankProblemManager {
      *         Not currently thrown but may be thrown in the future.
      */
     public static String mongoInsertBankProblem(final DB dbs, final SrlBankProblem problem) throws AuthenticationException {
-        final DBCollection problemBankCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection problemBankCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final BasicDBObject insertObject = new BasicDBObject(QUESTION_TEXT, problem.getQuestionText())
-                .append(IMAGE, problem.getImage())
                 .append(SOLUTION_ID, problem.getSolutionId())
                 .append(COURSE_TOPIC, problem.getCourseTopic())
                 .append(SUB_TOPIC, problem.getSubTopic())
@@ -87,14 +84,8 @@ public final class BankProblemManager {
                 .append(STATE_PUBLISHED, true)
                 .append(COURSE_ACCESS, 0);
 
-        if (problem.getBaseSketch() != null) {
-            insertObject.append(BASE_SKETCH, problem.getBaseSketch().toByteArray());
-        }
-        if (!problem.hasAccessPermission()) {
-            insertObject.append(ADMIN, new ArrayList()).append(USERS, new ArrayList());
-        } else {
-            insertObject.append(ADMIN, problem.getAccessPermission().getAdminPermissionList())
-                    .append(USERS, problem.getAccessPermission().getUserPermissionList());
+        if (problem.hasSpecialQuestionData()) {
+            insertObject.append(DatabaseStringConstants.SPECIAL_QUESTION_DATA, SlideManager.createQueryFromElement(problem.getSpecialQuestionData()));
         }
 
         problemBankCollection.insert(insertObject);
@@ -120,7 +111,7 @@ public final class BankProblemManager {
      */
     public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection bankProblemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection bankProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBObject mongoBankProblem = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
         if (mongoBankProblem == null) {
             throw new DatabaseAccessException("bank problem can not be found with id: " + problemBankId);
@@ -131,7 +122,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
 
         // if registration is not required for bank problem any course can use it!
         if (!responder.hasStudentPermission() && responder.isRegistrationRequired()) {
@@ -151,7 +142,7 @@ public final class BankProblemManager {
      *         The id of problem bank
      * @param isAdmin
      *         true if the user is an admin
-     * @return {@link protobuf.srl.school.School.SrlBankProblem}.
+     * @return {@link protobuf.srl.school.Problem.SrlBankProblem}.
      */
     private static SrlBankProblem extractBankProblem(final DBObject dbObject, final String problemBankId, final boolean isAdmin) {
 
@@ -159,7 +150,6 @@ public final class BankProblemManager {
 
         exactProblem.setId(problemBankId);
         exactProblem.setQuestionText((String) dbObject.get(QUESTION_TEXT));
-        exactProblem.setImage((String) dbObject.get(IMAGE));
         if (isAdmin) {
             exactProblem.setSolutionId((String) dbObject.get(SOLUTION_ID));
         }
@@ -168,21 +158,14 @@ public final class BankProblemManager {
         exactProblem.setSource((String) dbObject.get(SOURCE));
         exactProblem.setQuestionType(Util.QuestionType.valueOf((Integer) dbObject.get(QUESTION_TYPE)));
         try {
-            if (dbObject.get(BASE_SKETCH) != null) {
-                exactProblem.setBaseSketch(Commands.SrlUpdateList.parseFrom((byte[]) dbObject.get(BASE_SKETCH)));
+            if (dbObject.containsField(DatabaseStringConstants.SPECIAL_QUESTION_DATA)) {
+                exactProblem.setSpecialQuestionData(
+                        SlideManager.createElementFromQuery((DBObject) dbObject.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA)));
             }
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
+        } catch (DatabaseAccessException e) {
+            LOG.error("Error parsing lecture element", e);
         }
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
-        // arraylist
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (isAdmin) {
-            permissions.addAllAdminPermission((ArrayList) dbObject.get(ADMIN)); // admin
-            permissions.addAllUserPermission((ArrayList) dbObject.get(USERS)); // admin
-            exactProblem.setAccessPermission(permissions.build());
-        }
-
         if (dbObject.get(SCRIPT) != null) {
             exactProblem.setScript((String) dbObject.get(SCRIPT));
         }
@@ -213,7 +196,7 @@ public final class BankProblemManager {
     public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection bankProblemCollection = dbs.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection bankProblemCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBObject cursor = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
 
         if (cursor == null) {
@@ -224,7 +207,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
 
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -234,10 +217,7 @@ public final class BankProblemManager {
             updateObj.append(QUESTION_TEXT, problem.getQuestionText());
             update = true;
         }
-        if (problem.hasImage()) {
-            updateObj.append(IMAGE, problem.getImage());
-            update = true;
-        }
+
         // Optimization: have something to do with pulling values of an
         // array and pushing values to an array
         if (problem.hasSolutionId()) {
@@ -264,8 +244,9 @@ public final class BankProblemManager {
             updateObj.append(SCRIPT, problem.getScript());
             update = true;
         }
-        if (problem.hasBaseSketch()) {
-            updateObj.append(BASE_SKETCH, problem.getBaseSketch().toByteArray());
+        if (problem.hasSpecialQuestionData()) {
+            updateObj.append(DatabaseStringConstants.SPECIAL_QUESTION_DATA, SlideManager.createQueryFromElement(problem.getSpecialQuestionData()));
+            update = true;
         }
         if (problem.getOtherKeywordsCount() > 0) {
             updateObj.append(KEYWORDS, problem.getOtherKeywordsList());
@@ -273,25 +254,9 @@ public final class BankProblemManager {
         }
         // Optimization: have something to do with pulling values of an
         // array and pushing values to an array
-        if (problem.hasAccessPermission()) {
-            final SrlPermission permissions = problem.getAccessPermission();
-            if (responder.hasTeacherPermission()) {
-                // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                if (permissions.getAdminPermissionCount() > 0) {
-                    updateObj.append(ADMIN, permissions.getAdminPermissionList());
-                }
-                if (permissions.getUserPermissionCount() > 0) {
-                    updateObj.append(USERS, permissions.getUserPermissionList());
-                }
-            }
-        }
 
         if (update) {
             bankProblemCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateObj));
-            final List<String> users = (List) cursor.get(USERS);
-            for (int i = 0; i < users.size(); i++) {
-                UserUpdateHandler.insertUpdate(dbs, users.get(i), problemBankId, "PROBLEM");
-            }
         }
         return true;
     }
@@ -309,7 +274,7 @@ public final class BankProblemManager {
      *         The course the user is wanting to possibly be associated with the bank problem.
      * @param page
      *         the bank problems are limited to ensure that the database is not overwhelmed.
-     * @return a list of {@link protobuf.srl.school.School.SrlBankProblem}.
+     * @return a list of {@link protobuf.srl.school.Problem.SrlBankProblem}.
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to retrieve any bank problems.
      * @throws DatabaseAccessException
@@ -321,13 +286,14 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE, courseId, authId, 0, authType);
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final DBCollection bankProblemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection bankProblemCollection = database.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBCursor dbCursor = bankProblemCollection.find().limit(PAGE_LENGTH).skip(page * PAGE_LENGTH);
+
         final List<SrlBankProblem> results = new ArrayList<>();
         while (dbCursor.hasNext()) {
             final DBObject dbObject = dbCursor.next();
@@ -358,7 +324,7 @@ public final class BankProblemManager {
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
             final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection bankProblemCollection = database.getCollection(getCollectionFromType(School.ItemType.BANK_PROBLEM));
+        final DBCollection bankProblemCollection = database.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
         final DBObject cursor = bankProblemCollection.findOne(convertStringToObjectId(bankProblemId));
         if (cursor == null) {
             throw new DatabaseAccessException("BankProblem was not found with the following ID " + bankProblemId);
@@ -370,7 +336,7 @@ public final class BankProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, bankProblemId.trim(), authId, 0, authType);
+                .checkAuthentication(Util.ItemType.BANK_PROBLEM, bankProblemId.trim(), authId, 0, authType);
 
         if ((!responder.isRegistrationRequired() && responder.isItemPublished()) || responder.hasTeacherPermission()) {
             return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);

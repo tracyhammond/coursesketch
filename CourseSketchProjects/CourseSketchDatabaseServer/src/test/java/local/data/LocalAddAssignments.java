@@ -5,7 +5,7 @@ import database.RequestConverter;
 import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
-import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.Date;
@@ -29,9 +29,6 @@ public class LocalAddAssignments {
 			d.setDate(21);
 			d.setHours(0);
 			testBuilder.setDueDate(RequestConverter.getProtoFromMilliseconds(d.getTime()));
-			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-
-			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
 
 			// testing inserting course

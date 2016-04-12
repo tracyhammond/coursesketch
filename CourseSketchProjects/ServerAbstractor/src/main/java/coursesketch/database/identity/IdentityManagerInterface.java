@@ -3,7 +3,7 @@ package coursesketch.database.identity;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 import java.util.Collection;
 import java.util.Map;
@@ -37,7 +37,7 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the item, group, or users do not exist.
      */
-    Map<String, String> getItemRoster(final String authId, final String itemId, final School.ItemType itemType,
+    Map<String, String> getItemRoster(final String authId, final String itemId, final Util.ItemType itemType,
             final Collection<String> userIdsList, final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException;
 
     /**
@@ -72,7 +72,7 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the username does not exist.
      */
-    Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    Map<String, String> getUserName(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final Authenticator authChecker)
             throws AuthenticationException, DatabaseAccessException;
 
@@ -101,7 +101,7 @@ public interface IdentityManagerInterface {
      * @param itemId
      *         The id of the item being inserted
      * @param itemType
-     *         The type of item that is being inserted, EX: {@link protobuf.srl.school.School.ItemType#COURSE}
+     *         The type of item that is being inserted, EX: {@link protobuf.srl.school.Util.ItemType#COURSE}
      * @param parentId
      *         The id of the parent object EX: parent points to course if item is an Assignment.
      *         If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
@@ -113,7 +113,7 @@ public interface IdentityManagerInterface {
      * @throws AuthenticationException
      *         Thrown if there is data that can not be found in the database.
      */
-    void createNewItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    void createNewItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final String parentId, final Authenticator authChecker) throws DatabaseAccessException, AuthenticationException;
 
     /**
@@ -128,8 +128,8 @@ public interface IdentityManagerInterface {
      * @param itemId
      *         The Id of the course or bank problem the user is being added to.
      * @param itemType
-     *         The type of item the user is registering for (Only {@link protobuf.srl.school.School.ItemType#COURSE}
-     *         and (Only {@link protobuf.srl.school.School.ItemType#BANK_PROBLEM} are valid types.
+     *         The type of item the user is registering for (Only {@link protobuf.srl.school.Util.ItemType#COURSE}
+     *         and (Only {@link protobuf.srl.school.Util.ItemType#BANK_PROBLEM} are valid types.
      * @param authChecker
      *         Used to check permissions in the database.
      * @throws AuthenticationException
@@ -137,6 +137,6 @@ public interface IdentityManagerInterface {
      * @throws DatabaseAccessException
      *         Thrown if the item can not be found.
      */
-    void registerUserInItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    void registerUserInItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException;
 }

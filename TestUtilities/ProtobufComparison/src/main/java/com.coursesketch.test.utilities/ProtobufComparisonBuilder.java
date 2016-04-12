@@ -103,6 +103,8 @@ public class ProtobufComparisonBuilder {
     /**
      * Sets if a deep comparison should happen.
      *
+     * {@link #isDeepEquals} is true by default.
+     *
      * @param isDeepEquals true if a deep equals comparison should happen. False otherwise.
      * @return Itself.
      */

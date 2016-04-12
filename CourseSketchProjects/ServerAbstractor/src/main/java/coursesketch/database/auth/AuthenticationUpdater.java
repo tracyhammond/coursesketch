@@ -1,6 +1,6 @@
 package coursesketch.database.auth;
 
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 /**
  * An interface that is required for any item wanting to update or modify Authentication data.
@@ -23,11 +23,11 @@ public interface AuthenticationUpdater {
      *         The id of the parent item.  This may not exist for certain {@code itemType}.
      * @param registrationKey
      *         A registration key that is required to register new users in this auth group.  It is currently only used by
-     *         {@link School.ItemType#COURSE} and {@link School.ItemType#BANK_PROBLEM}
+     *         {@link Util.ItemType#COURSE} and {@link Util.ItemType#BANK_PROBLEM}
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to create this new item group.
      */
-    void createNewItem(String authId, String itemId, School.ItemType itemType, String parentId, String registrationKey)
+    void createNewItem(String authId, String itemId, Util.ItemType itemType, String parentId, String registrationKey)
             throws AuthenticationException;
 
     /**
@@ -47,5 +47,5 @@ public interface AuthenticationUpdater {
      * @throws AuthenticationException
      *         Thrown if the user does not have permission to register for this item.  (Typically that means the key is wrong)
      */
-    void registerUser(String authId, String itemId, School.ItemType itemType, String registrationKey) throws AuthenticationException;
+    void registerUser(String authId, String itemId, Util.ItemType itemType, String registrationKey) throws AuthenticationException;
 }
