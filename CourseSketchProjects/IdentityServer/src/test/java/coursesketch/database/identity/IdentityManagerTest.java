@@ -105,9 +105,7 @@ public class IdentityManagerTest {
 
             when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
                     .thenReturn(true);
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (DatabaseAccessException | AuthenticationException e) {
             e.printStackTrace();
         }
         dbAuthChecker = new Authenticator(authChecker, optionChecker);
@@ -147,9 +145,7 @@ public class IdentityManagerTest {
         String hash = null;
         try {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (NoSuchAlgorithmException | AuthenticationException e) {
             e.printStackTrace();
         }
 
@@ -165,7 +161,6 @@ public class IdentityManagerTest {
 
         DBObject studentGroup = (DBObject) dbObject.get(DatabaseStringConstants.USER_LIST);
         Assert.assertEquals(students, studentGroup);
-
     }
 
     @Test
@@ -186,9 +181,7 @@ public class IdentityManagerTest {
         String hash = null;
         try {
             hash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (NoSuchAlgorithmException | AuthenticationException e) {
             e.printStackTrace();
         }
 
@@ -230,9 +223,7 @@ public class IdentityManagerTest {
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
             courseHash = HashManager.toHex(HashManager.createHash(courseId, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (NoSuchAlgorithmException | AuthenticationException e) {
             e.printStackTrace();
         }
 
@@ -278,9 +269,7 @@ public class IdentityManagerTest {
         String teacherHash = null;
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (NoSuchAlgorithmException | AuthenticationException e) {
             e.printStackTrace();
         }
 
@@ -355,9 +344,7 @@ public class IdentityManagerTest {
         try {
             teacherHash = HashManager.toHex(HashManager.createHash(TEACHER_USER_ID, salt).getBytes());
             moderatorHash = HashManager.toHex(HashManager.createHash(MOD_USER_ID, salt).getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
+        } catch (NoSuchAlgorithmException | AuthenticationException e) {
             e.printStackTrace();
         }
 
