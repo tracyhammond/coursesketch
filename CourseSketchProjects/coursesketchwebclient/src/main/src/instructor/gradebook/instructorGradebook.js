@@ -12,6 +12,7 @@
 
     /**
      * Loads grades for the given course.
+     *
      * @param {String} courseId The id of the course.
      */
     CourseSketch.gradeBook.loadGrades = function(courseId) {
