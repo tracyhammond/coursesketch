@@ -240,5 +240,4 @@
 		   CourseSketch.fakeBankProblems.push(bankProblemLoop);
 	    }
 	}
-
 })();

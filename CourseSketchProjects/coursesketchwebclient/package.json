@@ -23,14 +23,15 @@
     "mocha-qunit-ui": "^0.1.2",
     "webdriverio" : "3.4.0",
     "grunt-webdriver": "1.0.0",
-    "selenium-standalone": "4.7.1",
+    "selenium-standalone": "5.1.0",
     "mocha": "2.3.3",
     "xunit-file": "0.0.9",
     "grunt-mkdir": "0.1.2",
     "jquery": "2.1.4",
     "jsdom": "7.0.0",
     "barrier": "dtracers/node-barrier#v1.0.1",
-    "chai": "*"
+    "chai": "*",
+    "hooker": "0.2.3"
   }
 }
 
