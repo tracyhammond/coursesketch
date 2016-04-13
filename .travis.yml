@@ -30,7 +30,7 @@ before_install:
 
 install:
  - "set -o pipefail"
- - "GRUNT_SKIP_TESTS=true mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dcobertura.skip"
+ - "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dcobertura.skip"
 
 script:
  - "set -o pipefail"
