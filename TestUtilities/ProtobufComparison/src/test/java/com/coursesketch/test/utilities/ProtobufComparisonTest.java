@@ -2,9 +2,11 @@ package com.coursesketch.test.utilities;
 
 import com.coursesketch.test.utilities.ProtobufComparison;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import protobuf.srl.commands.Commands;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
 
@@ -175,6 +177,20 @@ public class ProtobufComparisonTest {
             builder2.addItemId("" + (11 - i));
         }
         comp.equals(builder1.build(), builder2.build());
+    }
+
+    @Test
+    public void testDeepEqualsDoesNotFaillInstantlyWithIgnoreListOrder() {
+        ProtobufComparison comp = new ProtobufComparisonBuilder()
+                .setIgnoreListOrder(true).build();
+        final Commands.SrlUpdateList.Builder updateList1 = Commands.SrlUpdateList.newBuilder();
+        final Commands.SrlUpdateList.Builder updateList2 = Commands.SrlUpdateList.newBuilder();
+
+        for (int i = 0; i <= 10; i++) {
+            updateList1.addList(Commands.SrlUpdate.newBuilder().setTime(i* 30).setUpdateId("" + i));
+        }
+        updateList2.addAllList(Lists.reverse(updateList1.getListList()));
+        comp.equals(updateList1.build(), updateList2.build());
     }
 
     @Test(expected = AssertionError.class)
