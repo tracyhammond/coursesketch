@@ -4,6 +4,7 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.ProtobufComparison;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
+import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
@@ -263,7 +264,10 @@ public class GradingPolicyManagerTest {
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
-        new ProtobufComparisonBuilder().setIgnoreListOrder(true).build().equals(fakeProtoPolicy.build(), testPolicy);
+
+        new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false).setIgnoreListOrder(true)
+                .build().equals(fakeProtoPolicy.build(), testPolicy);
     }
 
     @Test(expected = AuthenticationException.class)
