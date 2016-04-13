@@ -219,7 +219,7 @@ public class GradingPolicyManagerTest {
     public void buildProtoDroppedProblemsTest() {
         DroppedProblems.Builder testDroppedProblem = GradingPolicyManager.buildProtoDroppedProblems(fakeDroppedProblems.get(FAKE_ASGN_ID + "1"));
         testDroppedProblem.setAssignmentId(FAKE_ASGN_ID + "1");
-        Assert.assertEquals(fakeProtoDropProbs1.build(), testDroppedProblem.build());
+        new ProtobufComparisonBuilder().setIgnoreListOrder(true).build().equals(fakeProtoDropProbs1.build(), testDroppedProblem.build());
     }
 
     @Test
@@ -263,7 +263,7 @@ public class GradingPolicyManagerTest {
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
-        new ProtobufComparisonBuilder().build().equals(fakeProtoPolicy.build(), testPolicy);
+        new ProtobufComparisonBuilder().setIgnoreListOrder(true).build().equals(fakeProtoPolicy.build(), testPolicy);
     }
 
     @Test(expected = AuthenticationException.class)
