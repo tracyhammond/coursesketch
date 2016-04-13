@@ -105,8 +105,12 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      *            asynchronous)
      */
     function getCourse(courseId, courseCallback) {
+        if (isUndefined(courseCallback)) {
+            throw new DatabaseException('Calling getCourse with an undefined callback');
+        }
+
         if (isUndefined(courseId) || courseId === null) {
-            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
+            throw new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId);
         }
 
         getCourseLocal(courseId, function(course) {
@@ -365,8 +369,12 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
     parent.insertCourse = insertCourse;
 
     /**
-     * Gets the course roster.
-     * @param {String} courseId
+     * Gets the course roster then calls the callback with the map of userId: username.
+     *
+     * The callback is mandatory at the moment because callbacks to the server are asynchronous.
+     * If this method simply returned the roster as a map, it would likely return after a subsequent server call is sent.
+     * The subsequent server call would then be passing a null map as the roster instead of the actual roster.
+     * @param {String} courseId The id of the course to retrieve the course roster for.
      * @param {Function} callback A callback is called with a list of userIds
      */
     function getCourseRoster(courseId, callback) {
@@ -390,8 +398,14 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
                 return;
             }
 
-            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getIdChainClass());
-            callback(decodedRoster.idChain);
+
+            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.prutil.getUserNameResponseClass());
+            var userMap = new Map();
+            for (var i = 0; i < decodedRoster.userNames.length; i++) {
+                // Since proto doesn't officially have maps, we must create the map this way
+                userMap.set(decodedRoster.userNames[i].key, decodedRoster.userNames[i].value);
+            }
+            callback(userMap);
         });
 
     }

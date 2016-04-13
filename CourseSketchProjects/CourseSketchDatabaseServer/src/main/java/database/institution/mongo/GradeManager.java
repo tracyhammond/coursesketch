@@ -362,11 +362,13 @@ public final class GradeManager {
                 .append(COURSE_PROBLEM_ID, new BasicDBObject(EXISTS, false));
         final BasicDBObject sortMethod = new BasicDBObject(ASSIGNMENT_ID, 1).append(USER_ID, 1); // Sort by assignmentId then userId
         final DBCursor cursor = gradeCollection.find(query).sort(sortMethod);
+
+        final List<ProtoGrade> grades = new ArrayList<>();
+
         if (!cursor.hasNext()) {
             throw new DatabaseAccessException("Grades were not found for course with ID " + courseId);
         }
 
-        final List<ProtoGrade> grades = new ArrayList<>();
         while (cursor.hasNext()) {
             grades.add(buildProtoGrade(cursor.next()));
         }

@@ -8,6 +8,7 @@
 	var course5 = CourseSketch.prutil.SrlCourse();
 	var course6 = CourseSketch.prutil.SrlCourse();
 	var course7 = CourseSketch.prutil.SrlCourse();
+	var course8 = CourseSketch.PROTOBUF_UTIL.SrlCourse();
 	var twentyMinutes = 20 * 60 * 1000;
 
 	course1.id = "1";
@@ -68,5 +69,18 @@
     course7.accessDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() - twentyMinutes));
     course7.closeDate = CourseSketch.prutil.createProtoDateTime(new Date());
     CourseSketch.fakeCourses.push(course7);
+	
+	course8.id = "8";
+	course8.name = "Large Full Course";
+	course8.description = "This Course has 10 assignments which each have 10 problems to simulate a very large course";
+	course8.assignmentList = [];
+	course8.lectureList = [];
+	for (var i = 0; i < 10; i++) {
+		course8.assignmentList.push('' + (i + 11));
+		course8.lectureList.push('' + (i + 11));
+	}
+	course8.accessDate = CourseSketch.PROTOBUF_UTIL.createProtoDateTime(new Date(new Date().getTime() - twentyMinutes));
+	course8.closeDate = CourseSketch.PROTOBUF_UTIL.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes * 50));
+	CourseSketch.fakeCourses.push(course8);
 }
 )();

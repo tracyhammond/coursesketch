@@ -89,7 +89,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
         builder.setList(courseList);
         builder.build(document.querySelector('#class_list_column'));
-        setNotSelectedMessage(2);
+        if (!courseManagement.gradebookMode) {
+            setNotSelectedMessage(2);
+        }
     };
 
     /**
