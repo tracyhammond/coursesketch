@@ -42,6 +42,11 @@ module.exports = {
             var unitTestsRan = false;
 
             it('running test for ' + fileUrl, function (done) {
+                browser.on('error', function(e) {
+                    console.log('error occured while running tests for ' + filePath, JSON.stringify(e));
+                    assert.isOk(false, 'a browser error occured when running test [' + filePath + ']\n' + JSON.stringify(e));
+                });
+
                 this.timeout(1000 + timeout);
                 browser.url(fileUrl).then(function () {
                     browser.waitForExist(failedElement, timeout).then(function (result) {

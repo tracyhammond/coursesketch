@@ -37,13 +37,13 @@ public final class GradingUpsertHandler {
             throws AuthenticationException, DatabaseAccessException, InvalidProtocolBufferException {
         final Grading.ProtoGrade grade = Grading.ProtoGrade.parseFrom(itemSet.getData());
         final Grading.ProtoGrade.Builder clone =  Grading.ProtoGrade.newBuilder(grade);
-        final List<Grading.GradeHistory.Builder> gradeHistroy = clone.getGradeHistoryBuilderList();
-        if (gradeHistroy.size() == 1) {
-            final Grading.GradeHistory.Builder newestHistroy = gradeHistroy.get(0);
+        final List<Grading.GradeHistory.Builder> gradeHistory = clone.getGradeHistoryBuilderList();
+        if (gradeHistory.size() == 1) {
+            final Grading.GradeHistory.Builder newestHistory = gradeHistory.get(0);
             final Util.DateTime.Builder date = Util.DateTime.newBuilder();
             date.setMillisecond(gradedTime);
-            newestHistroy.setGradedDate(date);
-            newestHistroy.setWhoChanged(authId);
+            newestHistory.setGradedDate(date);
+            newestHistory.setWhoChanged(authId);
         }
         institution.addGrade(authId, clone.build());
     }
