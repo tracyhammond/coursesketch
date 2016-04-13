@@ -11,8 +11,12 @@ before_install:
  - "sh -e /etc/init.d/xvfb start"
  - "sudo apt-get remove -y chromium-browser"
  - "sudo apt-get -qq update"
- - "echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections"
+ - "echo \"deb http://us-west-2.ec2.archive.ubuntu.com/ubuntu/ trusty multiverse
+ deb http://us-west-2.ec2.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+ deb http://us-west-2.ec2.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse\" | sudo tee /etc/apt/sources.list.d/multiverse.list"
+ - "sudo apt-get update"
  - "sudo apt-get install -qq ttf-mscorefonts-installer"
+ - "echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections"
  - "sudo apt-get install -qq x-ttcidfont-conf"
  - "sudo mkfontdir"
  - "sudo apt-get install -qq defoma libgl1-mesa-dri xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic libappindicator1"
