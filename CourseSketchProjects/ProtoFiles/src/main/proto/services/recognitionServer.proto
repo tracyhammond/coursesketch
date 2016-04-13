@@ -1,0 +1,50 @@
+package protobuf.srl.services.recognition;
+
+import "message.proto";
+import "commands.proto";
+import "sketch.proto";
+import "submission.proto";
+
+option java_generic_services = true;
+
+message AddUpdateRequest {
+    /**
+     * The id of the base sketch the update belongs to.
+     *
+     * Note that this is the base sketch and not and newer sketch.
+     */
+    required string recognitionId = 1;
+
+    /**
+     * The update being added.
+     */
+    optional protobuf.srl.commands.SrlUpdate update = 2;
+}
+
+message RecognitionResponse {
+    /**
+     * This is the list of changes that need to be made as suggested by the recognition server.
+     */
+    optional protobuf.srl.commands.SrlUpdateList changes = 1;
+}
+
+/**
+ * A service that handles messages to the recogntion server and from the recognition server.
+ */
+service SubmissionService {
+
+    /**
+     * Gets the submissions. given the ids.
+     */
+    rpc addUpdate(SubmissionRequest) returns (ExperimentResponse);
+
+    /**
+     * Inserts the experiment into the submission server.
+     */
+    rpc insertExperiment(ExperimentInsert) returns (SubmissionResponse);
+
+    /**
+     * Inserts the solution into the submission server.
+     */
+    rpc insertSolution(SolutionInsert) returns (SubmissionResponse);
+}

@@ -9,7 +9,7 @@ import database.DatabaseStringConstants;
  * A subclass of the runner and sets up some special information for running the
  * environment.
  */
-public final class SubmissionRunner extends GeneralConnectionRunner {
+public final class RecognitionRunner extends GeneralConnectionRunner {
 
     /** 30 minutes * 60 seconds * 1000 milliseconds. */
     private static final long TIMEOUT_TIME = 30 * 60 * 1000;
@@ -22,7 +22,7 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      *            arguments from the command line.
      */
     public static void main(final String... args) {
-        final SubmissionRunner run = new SubmissionRunner(args);
+        final RecognitionRunner run = new RecognitionRunner(args);
         run.start();
     }
 
@@ -31,7 +31,7 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-        super.setDatabaseName(DatabaseStringConstants.SUBMISSION_DATABASE);
+        super.setDatabaseName(DatabaseStringConstants.RECOGNITION_DATABASE);
     }
 
     /**
@@ -50,7 +50,7 @@ public final class SubmissionRunner extends GeneralConnectionRunner {
      * @param args
      *            arguments from the command line.
      */
-    public SubmissionRunner(final String... args) {
+    public RecognitionRunner(final String... args) {
         super(args);
         super.setPort(RECOGNITION);
         super.setTimeoutTime(TIMEOUT_TIME);
