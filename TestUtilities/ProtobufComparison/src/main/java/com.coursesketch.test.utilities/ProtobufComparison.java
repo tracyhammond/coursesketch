@@ -265,7 +265,7 @@ public class ProtobufComparison {
 
         Iterator actualListIterator = actualList.iterator();
         ProtobufComparison nestedComartor = this;
-        if (!ignoreListOrder) {
+        if (ignoreListOrder) {
             nestedComartor = new ProtobufComparisonBuilder(nestedBuilder).setFailAtFirstMisMatch(false).build();
         }
         for (Object expectedValueItem : expectedList) {
