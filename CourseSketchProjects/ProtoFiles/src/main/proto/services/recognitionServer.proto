@@ -13,12 +13,35 @@ message AddUpdateRequest {
      *
      * Note that this is the base sketch and not and newer sketch.
      */
-    required string recognitionId = 1;
+    optional string recognitionId = 1;
 
     /**
      * The update being added.
      */
     optional protobuf.srl.commands.SrlUpdate update = 2;
+}
+
+message RecognitionUpdateList {
+    /**
+     * The id of the base sketch the update belongs to.
+     *
+     * Note that this is the base sketch and not and newer sketch.
+     */
+    required string recognitionId = 1;
+
+    /**
+     * The update list that is being set.
+     */
+    optional protobuf.srl.commands.SrlUpdateList updateList = 1;
+}
+
+message RecognitionTemplate {
+    optional string templateId = 1;
+    oneof TemplateType {
+        protobuf.srl.sketch.SrlStroke stroke = 2;
+        protobuf.srl.sketch.SrlShape shape = 3;
+        protobuf.srl.sketch.SrlSketch sketch = 4;
+    }
 }
 
 message RecognitionResponse {
@@ -34,17 +57,17 @@ message RecognitionResponse {
 service SubmissionService {
 
     /**
-     * Gets the submissions. given the ids.
+     * Adds a single update to be recognized.
      */
-    rpc addUpdate(SubmissionRequest) returns (ExperimentResponse);
+    rpc addUpdate(AddUpdateRequest) returns (RecognitionResponse);
 
     /**
      * Inserts the experiment into the submission server.
      */
-    rpc insertExperiment(ExperimentInsert) returns (SubmissionResponse);
+    rpc createUpdateList(RecognitionUpdateList) returns (SubmissionResponse);
 
     /**
      * Inserts the solution into the submission server.
      */
-    rpc insertSolution(SolutionInsert) returns (SubmissionResponse);
+    rpc addTemplate(RecognitionTemplate) returns (SubmissionResponse);
 }
