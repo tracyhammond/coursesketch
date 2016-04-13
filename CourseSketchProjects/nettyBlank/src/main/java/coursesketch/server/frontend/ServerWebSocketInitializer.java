@@ -71,13 +71,13 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      */
     @Override
     public void stop() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**
      * This is called when the reconnect command is executed.
      *
-     * By default this drops all connections then creates new ones for the databases and any remote servers
+     * By default this drops all connections then creates new ones for the databases and any remote servers.
      *
      * @see coursesketch.server.interfaces.MultiConnectionManager#connectServers(coursesketch.server.interfaces.AbstractServerWebSocketHandler)
      */
@@ -165,7 +165,7 @@ public class ServerWebSocketInitializer extends ChannelInitializer<SocketChannel
      * Called after reconnecting the connections.
      */
     protected void onReconnect() {
-        // Does nothing by default.
+        // Defined by specific implementations.
     }
 
     /**

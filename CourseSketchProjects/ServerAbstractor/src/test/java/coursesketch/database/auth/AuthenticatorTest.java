@@ -156,7 +156,7 @@ public class AuthenticatorTest {
     }
 
     @Test
-     public void authenticatorDoesNotIfPublishedAndRegistrationIfItIsNotSet() throws Exception {
+    public void authenticatorDoesNotIfPublishedAndRegistrationIfItIsNotSet() throws Exception {
 
         authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckDate(true)

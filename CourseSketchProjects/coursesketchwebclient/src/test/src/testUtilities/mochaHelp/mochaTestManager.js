@@ -20,10 +20,10 @@ module.exports = {
     /**
      * Runs the generic unit test for the given file.
      *
-     * @param browser The browser the html tests will run in
-     * @param describe The mocha instance
-     * @param filePath The specific file that is being tested
-     * @param timeout The amount of time to wait for the html tests to finish.
+     * @param browser {Object} The browser the html tests will run in.
+     * @param describe {Object} The mocha instance.
+     * @param filePath {String} The specific file that is being tested.
+     * @param timeout {Long} The amount of time to wait for the html tests to finish.
      */
     run: function(browser, describe, filePath, timeout) {
         var filePath = filePath.replace(/[\\\/]/g, '/');
@@ -42,6 +42,11 @@ module.exports = {
             var unitTestsRan = false;
 
             it('running test for ' + fileUrl, function (done) {
+                browser.on('error', function(e) {
+                    console.log('error occured while running tests for ' + filePath, JSON.stringify(e));
+                    assert.isOk(false, 'a browser error occured when running test [' + filePath + ']\n' + JSON.stringify(e));
+                });
+
                 this.timeout(1000 + timeout);
                 browser.url(fileUrl).then(function () {
                     browser.waitForExist(failedElement, timeout).then(function (result) {
@@ -75,11 +80,11 @@ module.exports = {
         });
     },
     createTests: function(browser, filePath, fileName, done) {
-        console.log('creating tests from failures');
+        console.log('creating information about the test that just occurred.');
 
         var decodeTests = this.decodeTests.bind(this);
         browser.getHTML(failedElement, false).then(function (failedAssertions) {
-            // console.log('the number of failed tests ' + failedAssertions);
+            console.log('there were at least ', failedAssertions, 'failed assertions that occured');
             browser.getHTML(passedAssertions, false).then(function(passedAssertions) {
                 var writeStream;
                 if (passedAssertions == 0 && failedAssertions == 0) {
@@ -107,13 +112,14 @@ module.exports = {
     },
 
     decodeTests: function(browser, filePath, fileName, failedAssertions, done) {
+        console.log('decoding tests');
         var writeStream;
         browser.getHTML(codeCoverage).then(function (codeCoverage) {
             console.log('getting test results');
             browser.getHTML(testResults).then(function (results) {
-                // console.log('the test results', results);
                 qunitFileParser.parseFile(results, function (resultList) {
                     if (failedAssertions > 0) {
+                        console.log('There were at least [', failedAssertions, '] failed assertions');
                         writeStream = fs.createWriteStream(output + '/' + fileName + 'on');
                         writeStream.write('// ' + filePath);
                         writeStream.write('\n[\n');

@@ -45,6 +45,11 @@ public class ProtobufComparisonBuilder {
     private boolean failAtFirstMisMatch = true;
 
     /**
+     * If true then the list order is ignored when comparing protobuf objects otherwise the list is not ignored when comparing protobuf objects.
+     */
+    private boolean ignoreListOrder;
+
+    /**
      * Creates a new instance of the ProtobufComparisonBuilder.
      */
     public ProtobufComparisonBuilder() {
@@ -79,7 +84,8 @@ public class ProtobufComparisonBuilder {
      */
     @SuppressWarnings("checkstyle:designforextension")
     public ProtobufComparison build() {
-        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields, failAtFirstMisMatch);
+        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields, failAtFirstMisMatch,
+                ignoreListOrder);
     }
 
     /**
@@ -108,16 +114,17 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
-     * If true it will ignore if the expected has fields not set but the actual protobuf has the fields set but they are set to the same values
-     * as the default protobuf.
-     * <p/>
+     * If this value is true, the comparison will also accept the default value for a field when it is expecting a blank value.
+     * If this value is false, it will throw an exception if the expected blank fields are not blank
+     *
      * <pre>
      * EX:
-     * expected protobuf does not have field A which is a string set.
-     * actual protobuf does have the field set but it is set to what the message returns for a default value.
-     * This will not through an assertion error.
+     * Expected protobuf does not have field A (which is a string) set.
+     * Actual protobuf does have field A set, but it is set to the default value.
+     * This will not throw an assertion error.
      * </pre>
-     * @param ignoreSetDefaultFields false to throw an assertion if the expected has no value but the actual does.  This is true by default.
+     * @param ignoreSetDefaultFields False to throw an assertion error if the expected field has no value, but the actual field has a default value.
+     *                               The param is true by default (and thus accepts the default field value for a blank expected value).
      * @return Itself.
      */
     @SuppressWarnings("checkstyle:hiddenfield")
@@ -127,18 +134,30 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
-     * If true this will ignore any field where the expected has no value but the actual protobuf does have a value.
+     * If true, this will ignore fields where the expected protobuf has no value even if the actual protobuf has a value.
+     * If false, this will throw an assertion error if the expected protobuf has no value for a field
+     * and the actual protobuf has a value for that field.
      *
-     * <p/>
-     * (Basically it ignores any field not set on the expected protobuf)
-     *
-     * If this is false it will consider this a mismatch and throw an assertion error.
+     * Basically, if true it only compares fields that are set in the expected protobuf.
      * @param ignoreNonSetFields True to ignore any field that is not set on the expected protobuf.  This is false by default.
      * @return Itself.
      */
     @SuppressWarnings("checkstyle:hiddenfield")
     public final ProtobufComparisonBuilder setIgnoreNonSetFields(final boolean ignoreNonSetFields) {
         this.ignoreNonSetFields = ignoreNonSetFields;
+        return this;
+    }
+
+    /**
+     * Sets if lists should ignore order.
+     *
+     * This value is false by default.
+     * @param ignoreListOrder True if lists comparison should ignore order false otherwise.
+     * @return Itself.
+     */
+    @SuppressWarnings("checkstyle:hiddenfield")
+    public final ProtobufComparisonBuilder setIgnoreListOrder(final boolean ignoreListOrder) {
+        this.ignoreListOrder = ignoreListOrder;
         return this;
     }
 }

@@ -17,8 +17,8 @@ exports.parseFile = function(testResults, callback) {
         var html = testResults[index];
         jsdom.env(html,[], function(err, window) {
             var $ = require('jquery')(window);
-            var passingTests = $('.fail');
-            var html = $(passingTests).html();
+            var failingTests = $('.fail');
+            var html = $(failingTests).html();
             if (typeof html !== "undefined") {
                 // Tests that failed
                 testObject.push(createFailingTest(getModuleName($), getTestName($), getTestTime($), $));
@@ -66,16 +66,24 @@ function createFailingTest(moduleName, testName, runtime, $) {
         globalTest = true;
     }
     var message = $('.test-message').first().html();
-    return {
+    var result = {
         passing: false,
         message: message,
         moduleName: moduleName,
         testName: testName,
         runtime: runtime,
-        stackTrace: globalTest? [] : getFailedLineNumbers($)
-    }
+        stackTrace: getFailedLineNumbers($)
+    };
+    console.log('failed test', result);
+    return result;
 }
 
+/**
+ * Gets the line numbers of where the tests failed.
+ *
+ * @param $
+ * @returns {Array}
+ */
 function getFailedLineNumbers($) {
     var source = $('.test-source pre').html();
     if (typeof source == 'undefined') {
@@ -107,15 +115,16 @@ function getFailedLineNumbers($) {
 }
 
 /**
- * Removes an undefined objects from the array
- * @param actual
- * @returns {Array}
+ * Removes an undefined objects from the array.
+ *
+ * @param dirtyArray An array that may contain undefined objects.
+ * @returns {Array} An array that does not contain undefined objects.
  */
-function cleanArray(actual) {
+function cleanArray(dirtyArray) {
     var newArray = [];
-    for (var i = 0; i < actual.length; i++) {
-        if (actual[i]) {
-            newArray.push(actual[i]);
+    for (var i = 0; i < dirtyArray.length; i++) {
+        if (dirtyArray[i]) {
+            newArray.push(dirtyArray[i]);
         }
     }
     return newArray;

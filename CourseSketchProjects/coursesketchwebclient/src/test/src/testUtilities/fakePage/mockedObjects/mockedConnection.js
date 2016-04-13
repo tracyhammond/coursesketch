@@ -4,6 +4,9 @@
     connection.setOnCloseListener(function(){});
     connection.reconnect();
     CourseSketch.connection = connection;
+    CourseSketch.connection.isConnected = function () {
+        return true;
+    };
     CourseSketch.connectionPure = connection; // in case you need to replace the mock.
 
     CourseSketch.getCurrentTime = function() {

@@ -126,9 +126,8 @@ public final class AssignmentManager {
 
         assignmentCollection.insert(query);
         final String selfId = query.get(SELF_ID).toString();
-        // final DBObject cursor = assignmentCollection.findOne(query);
 
-        // inserts the id into the previous the course
+        // Inserts the id into the parent course.
         CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), selfId);
 
         return selfId;
@@ -347,7 +346,7 @@ public final class AssignmentManager {
     public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, convertStringToObjectId(assignmentId));
         final DBObject cursor = myDbRef.fetch();
 
         if (cursor == null) {

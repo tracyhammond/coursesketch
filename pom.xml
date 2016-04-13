@@ -26,24 +26,24 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+        <pluginRepository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -242,6 +242,21 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/CourseSketchProjects/coursesketchwebclient/src/main/resources/other</directory>
+                            <includes>
+                                <include>**/*.proto</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -512,8 +527,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>DEBUG</token>
-                                        <value>INFO</value>
+                                        <token>root level="DEBUG"</token>
+                                        <value>root level="INFO"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -528,8 +543,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>INFO</token>
-                                        <value>DEBUG</value>
+                                        <token>root level="INFO"</token>
+                                        <value>root level="DEBUG"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -583,7 +598,7 @@
         <mockitoVersion>1.9.5</mockitoVersion>
         <puppyVersion>[5.6,)</puppyVersion>
         <junitVersion>4.11</junitVersion>
-        <fongoVersion>1.5.9</fongoVersion>
+        <fongoVersion>1.6.5</fongoVersion>
         <slf4jVersion>1.7.9</slf4jVersion>
         <log4jVersion>2.1</log4jVersion>
         <logbackVersion>1.1.1</logbackVersion>
