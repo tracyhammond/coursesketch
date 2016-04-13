@@ -56,6 +56,11 @@ public class ProtobufComparison {
     private final boolean ignoreListOrder;
 
     /**
+     * Used for nested objects (mainly deep equals of repeated fields).
+     */
+    private ProtobufComparisonBuilder nestedBuilder;
+
+    /**
      * Constructor for setting values.
      * @param ignoredFields {@link #ignoredFields}.
      * @param ignoredMessages {@link #ignoredMessages}.
@@ -185,14 +190,16 @@ public class ProtobufComparison {
      * @param actualValue The actual value for this specific field.
      * @param field The field that is being compared.
      * @param incorrectFields A map containing fields that were found to be incorrect.
+     * @param nestedComparator A comparator used when comparing nested objects.
      * @return True if the data is equal, false otherwise.
      */
     private boolean compareDataOfRepeatedField(final Object expectedValue, final Object actualValue, final Descriptors.FieldDescriptor field,
-            final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields) {
+            final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFields,
+            final ProtobufComparison nestedComparator) {
         if (expectedValue instanceof GeneratedMessage) {
             final Map<Descriptors.FieldDescriptor, List<ExpectationPair<Object, Object>>> incorrectFieldClone = new HashMap<>();
             if (isDeepEquals) {
-                equals((GeneratedMessage) expectedValue, (GeneratedMessage) actualValue, incorrectFieldClone);
+                nestedComparator.equals((GeneratedMessage) expectedValue, (GeneratedMessage) actualValue, incorrectFieldClone);
             }
             if (incorrectFieldClone.size() > 0) {
                 if (this.ignoreListOrder) {
@@ -257,6 +264,10 @@ public class ProtobufComparison {
         }
 
         Iterator actualListIterator = actualList.iterator();
+        ProtobufComparison nestedComartor = this;
+        if (ignoreListOrder) {
+            nestedComartor = new ProtobufComparisonBuilder(nestedBuilder).setFailAtFirstMisMatch(false).build();
+        }
         for (Object expectedValueItem : expectedList) {
             if (ignoreListOrder) {
                 actualListIterator = actualList.iterator();
@@ -264,7 +275,8 @@ public class ProtobufComparison {
                 Object actualValueItem = null;
                 while (actualListIterator.hasNext()) {
                     actualValueItem = actualListIterator.next();
-                    final boolean resultOfComparison = compareDataOfRepeatedField(expectedValueItem, actualValueItem, field, incorrectFields);
+                    final boolean resultOfComparison = compareDataOfRepeatedField(expectedValueItem, actualValueItem,
+                            field, incorrectFields, nestedComartor);
                     if (!resultOfComparison) {
                         continue;
                     }
@@ -291,7 +303,8 @@ public class ProtobufComparison {
                     continue;
                 }
                 final Object actualValueItem = actualListIterator.next();
-                final boolean resultOfComparison = compareDataOfRepeatedField(expectedValueItem, actualValueItem, field, incorrectFields);
+                final boolean resultOfComparison = compareDataOfRepeatedField(expectedValueItem, actualValueItem,
+                        field, incorrectFields, nestedComartor);
                 if (!resultOfComparison) {
                     if (failAtFirstMisMatch) {
                         Assert.fail(createFailMessage(field, expectedValueItem, actualValueItem));
@@ -390,5 +403,14 @@ public class ProtobufComparison {
             list.addAll(expectationPairs);
             incorrectFields.put(field, list);
         }
+    }
+
+    /**
+     * Sets a builder that is used for nested purposes.
+     *
+     * @param nestedBuilder The builder that is used on nested objects.
+     */
+    public final void setNestedBuilder(final ProtobufComparisonBuilder nestedBuilder) {
+        this.nestedBuilder = nestedBuilder;
     }
 }

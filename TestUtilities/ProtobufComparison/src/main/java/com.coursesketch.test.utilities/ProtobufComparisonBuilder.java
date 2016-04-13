@@ -58,6 +58,23 @@ public class ProtobufComparisonBuilder {
     }
 
     /**
+     * Creates a copy of the existing instance.
+     *
+     * @param copy An existing instance of the protobuf comaprison.
+     */
+    public ProtobufComparisonBuilder(final ProtobufComparisonBuilder copy) {
+        this();
+        ignoredFields.addAll(copy.ignoredFields);
+        ignoredMessages.addAll(copy.ignoredMessages);
+        this.ignoreListOrder = copy.ignoreListOrder;
+        this.isDeepEquals = copy.isDeepEquals;
+        this.ignoreNonSetFields = copy.ignoreNonSetFields;
+        this.ignoreSetDefaultFields = copy.ignoreSetDefaultFields;
+        this.failAtFirstMisMatch = copy.failAtFirstMisMatch;
+        this.ignoreListOrder = copy.ignoreListOrder;
+    }
+
+    /**
      * Ignores the field when comparing protobufs.
      *
      * @param ignoreField A field that will be ignored by the Comparison.
@@ -84,8 +101,11 @@ public class ProtobufComparisonBuilder {
      */
     @SuppressWarnings("checkstyle:designforextension")
     public ProtobufComparison build() {
-        return new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields, ignoreSetDefaultFields, failAtFirstMisMatch,
+        final ProtobufComparison protobufComparison = new ProtobufComparison(ignoredFields, ignoredMessages, isDeepEquals, ignoreNonSetFields,
+                ignoreSetDefaultFields, failAtFirstMisMatch,
                 ignoreListOrder);
+        protobufComparison.setNestedBuilder(this);
+        return protobufComparison;
     }
 
     /**
