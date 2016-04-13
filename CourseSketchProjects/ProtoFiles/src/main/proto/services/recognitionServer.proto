@@ -54,7 +54,7 @@ message RecognitionResponse {
 /**
  * A service that handles messages to the recogntion server and from the recognition server.
  */
-service SubmissionService {
+service RecognitionService {
 
     /**
      * Adds a single update to be recognized.

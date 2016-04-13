@@ -22,6 +22,7 @@
         <module>CourseSketchProjects/CourseSketchProxyServer</module>
         <module>CourseSketchProjects/CourseSketchSubmissionServer</module>
         <module>CourseSketchProjects/CourseSketchAnswerCheckerServer</module>
+        <module>CourseSketchProjects/CourseSketchRecognitionServer</module>
         <module>TestUtilities/Integration</module>
     </modules>
 
@@ -789,6 +790,16 @@
             <artifactId>easymock</artifactId>
             <version>${easymock.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ServerAbstractor</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>RpcServer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

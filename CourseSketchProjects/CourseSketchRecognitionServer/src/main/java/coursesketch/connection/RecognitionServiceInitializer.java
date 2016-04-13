@@ -1,5 +1,6 @@
 package coursesketch.connection;
 
+import coursesketch.database.RecognitionDatabaseClient;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
@@ -24,32 +25,32 @@ import java.util.List;
  *
  */
 @SuppressWarnings("serial")
-public final class SubmissionServiceInitializer extends ServerWebSocketInitializer {
+public final class RecognitionServiceInitializer extends ServerWebSocketInitializer {
 
     /**
      * Declaration and Definition of Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(SubmissionServiceInitializer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RecognitionServiceInitializer.class);
 
     /**
      * Submission manager.
      */
-    private final SubmissionManagerInterface manager;
+    private final RecognitionManagerInterface manager;
 
     /**
      * Identity manager.
      */
-    private final SubmissionDatabaseClient databaseClient;
+    private final RecognitionDatabaseClient databaseClient;
 
     /**
      * Constructor for AuthenticationServiceInitializer.
      *
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public SubmissionServiceInitializer(final ServerInfo serverInfo) {
+    public RecognitionServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
-        databaseClient = new SubmissionDatabaseClient(serverInfo);
-        manager = new SubmissionManager(databaseClient);
+        databaseClient = new RecognitionDatabaseClient(serverInfo);
+        manager = new RecognitionManager(databaseClient);
     }
 
     /**
@@ -66,7 +67,7 @@ public final class SubmissionServiceInitializer extends ServerWebSocketInitializ
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        services.add(new SubmissionService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
+        services.add(new RecognitionService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
         return services;
     }
 
