@@ -1,17 +1,51 @@
 var selenium = require('selenium-standalone');
+var hooker = require('hooker');
 
 module.exports = function(grunt) {
 
-    grunt.util.hooker.hook(grunt.fail, function() {
+    /**
+     * Used to censor circular references.
+     *
+     * @param circularObject
+     * @returns {Function}
+     */
+    function filter(circularObject) {
+        var i = 0;
+
+        return function(key, value) {
+            if(i !== 0 && typeof(circularObject) === 'object' && typeof(value) == 'object' && circularObject == value)
+                return '[Circular]';
+
+            if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
+                return '[Unknown]';
+
+            ++i; // so we know we aren't using the original object anymore
+
+            return value;
+        };
+    }
+
+    /**
+     * Performs a json stringify but removes circular references.
+     *
+     * @param item
+     * @param censor
+     * @param space
+     */
+    function stringify(item, censor, space) {
+        return JSON.stringify(item, censor ? censor : filter(item), space);
+    }
+
+    hooker.hook(grunt.fail, function() {
         // Clean up selenium if we left it running after a failure.
-        grunt.log.writeln('Attempting to clean up running selenium server.');
+        grunt.log.writeln('Attempting to clean up running selenium server. as the grun process has failed');
         var seleniumChildProcesses = global['seleniumChildProcesses'];
         if (seleniumChildProcesses && seleniumChildProcesses.kill) {
             grunt.log.writeln('Child is killable');
             seleniumChildProcesses.kill();
             grunt.log.writeln('Child is dead');
         }
-        grunt.log.writeln('Server Gas been cleaned');
+        grunt.log.writeln('Server Has been cleaned');
     });
 
     grunt.registerMultiTask('seleniumKill', 'kills selenium', function() {
@@ -31,13 +65,13 @@ module.exports = function(grunt) {
         selenium.install({
             // check for more recent versions of selenium here:
             // http://selenium-release.storage.googleapis.com/index.html
-            version: '2.47.1',
+            version: '2.53.0',
             baseURL: 'http://selenium-release.storage.googleapis.com',
             drivers: {
                 chrome: {
                     // check for more recent versions of chrome driver here:
                     // http://chromedriver.storage.googleapis.com/index.html
-                    version: '2.9',
+                    version: '2.21',
                     arch: process.arch,
                     baseURL: 'http://chromedriver.storage.googleapis.com'
                 }
@@ -50,9 +84,7 @@ module.exports = function(grunt) {
             }
         }, function() {
             grunt.log.writeln('Running server');
-            selenium.start(
-                // Use as an example for the drivers.
-          /*{
+            selenium.start({
                 spawnOptions: {
                     stdio: 'inherit'
                 },
@@ -60,19 +92,20 @@ module.exports = function(grunt) {
                     chrome: {
                         // check for more recent versions of chrome driver here:
                         // http://chromedriver.storage.googleapis.com/index.html
-                        version: '2.9',
+                        version: '2.21',
                         arch: process.arch,
                         baseURL: 'http://chromedriver.storage.googleapis.com'
                     }
                 }
-            },*/
+            },
             function(err, child) {
-                if (err) return done(err);
+                if (err) {
+                    grunt.log.writeln('error:' + err);
+                    return done(err);
+                }
                 grunt.log.writeln('Server should hopefully be running unless there is an error');
                 global['seleniumChildProcesses'] = child;
-                child.stderr.on('data', function(data) {
-                    grunt.log.write(data.toString());
-                });
+                grunt.log.writeln(stringify(child));
                 done();
             });
         });
