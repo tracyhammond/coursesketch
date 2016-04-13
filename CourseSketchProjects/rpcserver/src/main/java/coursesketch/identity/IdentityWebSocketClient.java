@@ -98,7 +98,7 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
                 throw authExcep;
             }
         } catch (ServiceException e) {
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Service exception occurred when talking to the identity database.", e);
         }
     }
 

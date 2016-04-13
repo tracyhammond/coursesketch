@@ -142,12 +142,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             client.createUser(login.getUsername(), login.getPassword(), login.getEmail(), login.getIsInstructor());
             // login user after registering user.
             loginUser(conn, req, login);
-        } catch (GeneralSecurityException | AuthenticationException e) {
-            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            send(conn, createLoginResponse(req, login, false, e.getMessage(), null));
-        } catch (RegistrationException | DatabaseAccessException e) {
+        } catch (GeneralSecurityException | AuthenticationException | RegistrationException | DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

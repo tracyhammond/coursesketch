@@ -47,10 +47,10 @@ message LoginInformation {
  * Creates a protobuf object that inherits the properties of an exception.
  */
 message ProtoException {
-    required string mssg = 1; // the message that the exception has.
-    repeated string stackTrace = 2; // the stacktrace of the exception.
-    optional string exceptionType = 3; // this will be the class name in java.
-    optional ProtoException cause = 4; // the stackTrace might have a cause that is another protoException.
+    required string mssg = 1; // The message that the exception has.
+    repeated string stackTrace = 2; // The stacktrace of the exception.
+    optional string exceptionType = 3; // This will be the class name in java.
+    optional ProtoException cause = 4; // The stackTrace might have a cause that is another protoException.
 }
 
 /**
