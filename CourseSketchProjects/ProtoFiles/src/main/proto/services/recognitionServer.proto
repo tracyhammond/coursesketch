@@ -3,7 +3,6 @@ package protobuf.srl.services.recognition;
 import "message.proto";
 import "commands.proto";
 import "sketch.proto";
-import "submission.proto";
 
 option java_generic_services = true;
 
@@ -32,7 +31,7 @@ message RecognitionUpdateList {
     /**
      * The update list that is being set.
      */
-    optional protobuf.srl.commands.SrlUpdateList updateList = 1;
+    optional protobuf.srl.commands.SrlUpdateList updateList = 2;
 }
 
 message RecognitionTemplate {
@@ -49,6 +48,7 @@ message RecognitionResponse {
      * This is the list of changes that need to be made as suggested by the recognition server.
      */
     optional protobuf.srl.commands.SrlUpdateList changes = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
 }
 
 /**
@@ -64,10 +64,10 @@ service SubmissionService {
     /**
      * Inserts the experiment into the submission server.
      */
-    rpc createUpdateList(RecognitionUpdateList) returns (SubmissionResponse);
+    rpc createUpdateList(RecognitionUpdateList) returns (RecognitionResponse);
 
     /**
      * Inserts the solution into the submission server.
      */
-    rpc addTemplate(RecognitionTemplate) returns (SubmissionResponse);
+    rpc addTemplate(RecognitionTemplate) returns (protobuf.srl.request.DefaultResponse);
 }
