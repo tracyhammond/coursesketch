@@ -1,6 +1,7 @@
 package coursesketch.database.identity;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -122,12 +123,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
-        }
-
-        if (itemType.equals(Util.ItemType.BANK_PROBLEM)) {
+        } else if (itemType.equals(Util.ItemType.BANK_PROBLEM)) {
             final String groupId = createNewGroup(userId, itemId);
-            final List<String> groupList = new ArrayList<>();
-            groupList.add(groupId);
+            final List<String> groupList = Lists.newArrayList(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
 
             if (!Strings.isNullOrEmpty(parentId)) {
@@ -156,9 +154,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         if (Util.ItemType.COURSE.equals(itemType)) {
             query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, userId);
-        }
-        if (Util.ItemType.BANK_PROBLEM.equals(itemType)) {
-            query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
+        } else if (Util.ItemType.BANK_PROBLEM.equals(itemType)) {
+            query.append(DatabaseStringConstants.PROBLEM_BANK_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, userId);
         }
         return query;
@@ -214,7 +211,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             final String unsecuredSalt = HashManager.generateUnSecureSalt(courseId);
             hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt).getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Invalid algorithm when creating a new group", e);
         }
         final BasicDBObject nonStudent = new BasicDBObject();
         nonStudent.append(userId, hash);
@@ -261,7 +258,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             hash = HashManager.toHex(HashManager.createHash(userId, unsecuredSalt)
                     .getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Invalid algorithm when inserting a user into group", e);
         }
 
         if (hash == null) {
@@ -316,8 +313,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         try {
             hashPassword = HashManager.createHash(userPassword);
         } catch (NoSuchAlgorithmException e) {
-            LOG.error("Algorithm could not be found", e);
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Invalid algorithm when creating a new user", e);
         }
         final DBCollection userCollection = database.getCollection(DatabaseStringConstants.USER_COLLECTION);
         final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.USER_NAME, userName);
@@ -472,6 +468,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         Thrown if no users are found.
      */
+    @SuppressWarnings("unused")
     private Map<String, String> getUserNames(final Collection<String> identity) throws DatabaseAccessException {
         final List<ObjectId> identityList = new ArrayList<>();
         for (String userId : identity) {
@@ -487,8 +484,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         }
 
         final Map<String, String> userNameMap = new HashMap<>();
-        while (cursor.hasNext()) {
-            final DBObject userName = cursor.next();
+        for (DBObject userName: cursor) {
             userNameMap.put(userName.get(DatabaseStringConstants.SELF_ID).toString(),
                     userName.get(DatabaseStringConstants.USER_NAME).toString());
         }

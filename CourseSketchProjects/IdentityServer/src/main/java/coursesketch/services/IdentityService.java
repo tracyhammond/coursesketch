@@ -87,7 +87,6 @@ public final class IdentityService extends Identity.IdentityService implements C
         }
 
         done.run(response.build());
-        // does nothing yet
     }
 
     /**

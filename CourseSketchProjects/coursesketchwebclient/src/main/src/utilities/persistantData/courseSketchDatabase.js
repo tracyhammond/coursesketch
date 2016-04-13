@@ -197,7 +197,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * Adds the ability to set and remove state objects, for the use of transitioning from one page to the next!
+     * Adds the ability to set and remove state objects, for the use of transitioning from one page to the next.
      *
      * @param {*} key - Key
      * @param {*} value - Value
