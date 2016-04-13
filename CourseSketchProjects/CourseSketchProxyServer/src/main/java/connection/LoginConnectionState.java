@@ -1,11 +1,18 @@
 package connection;
 
 import coursesketch.server.interfaces.MultiConnectionState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Holds special information about a user being logged in.
  */
 public class LoginConnectionState extends MultiConnectionState {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ProxyConnectionManager.class);
 
     /**
      * true if the user is logged in.
@@ -24,8 +31,14 @@ public class LoginConnectionState extends MultiConnectionState {
     private int loginTries = 0;
 
     /**
-     * The server side id that uniquely identifies this particular user.
+     * The server side id that is used by this particular user for authentication purposes only.
      * (Also called the authentication id)
+     */
+    private String serverAuthId = null;
+
+    /**
+     * The server side id that is used by this particular user for identification purposes only.
+     * (Also called the identity id)
      */
     private String serverUserId = null;
 
@@ -51,13 +64,15 @@ public class LoginConnectionState extends MultiConnectionState {
      *
      * @param instructorFlag
      *            true if the user is an instructor.
-     * @param iSessionId
-     *            the userid from the server for this specific login state.
+     * @param authId The authentication id for this specific login state
+     * @param userIdentity The userIdentity for this specific login state
      */
-    /* package-private */final void logIn(final boolean instructorFlag, final String iSessionId) {
+    /* package-private */ final void logIn(final boolean instructorFlag, final String authId, final String userIdentity) {
+        LOG.debug("logging in user {}", userIdentity);
         loggedIn = true;
         instructor = instructorFlag;
-        this.serverUserId = iSessionId;
+        this.serverAuthId = authId;
+        this.serverUserId = userIdentity;
     }
 
     /**
@@ -82,7 +97,14 @@ public class LoginConnectionState extends MultiConnectionState {
     }
 
     /**
-     * @return the session id of the user who logged in (its user id)
+     * @return the authentication id of the user who logged in (its auth id)
+     */
+    protected final String getServerAuthId() {
+        return serverAuthId;
+    }
+
+    /**
+     * @return the identification id of the user who logged in (its user id)
      */
     protected final String getServerUserId() {
         return serverUserId;

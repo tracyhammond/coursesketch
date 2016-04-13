@@ -85,5 +85,4 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
         final AuthenticationUpdater authUpdater = authChecker;
         return new MongoInstitution(info, auth, authUpdater);
     }
-
 }

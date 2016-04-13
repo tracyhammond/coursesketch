@@ -1,9 +1,11 @@
 package coursesketch.database;
 
+import utilities.CourseSketchException;
+
 /**
  * Created by gigemjt on 10/17/14.
  */
-public class LoginException extends Exception {
+public class LoginException extends CourseSketchException {
     /**
      * @param message
      *            takes in a message.

@@ -31,7 +31,7 @@ public final class IdentityServerRunner extends GeneralConnectionRunner {
      */
     @Override
     protected void loadConfigurations() {
-        super.setDatabaseName(DatabaseStringConstants.AUTH_DATABASE);
+        super.setDatabaseName(DatabaseStringConstants.IDENTITY_DATABASE);
     }
 
     /**

@@ -178,7 +178,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             LOG.info("REQUEST TYPE = SUBMISSION");
             try {
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, AnswerClientWebSocket.class,
-                        ((ProxyConnectionState) state).getUserId());
+                        ((ProxyConnectionState) state).getAuthId(), ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 send(conn, createBadConnectionResponse(req, AnswerClientWebSocket.class));
@@ -188,7 +188,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             LOG.info("REQUEST TYPE = DATA REQUEST");
             try {
                 ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, DataClientWebSocket.class,
-                        ((ProxyConnectionState) state).getUserId());
+                        ((ProxyConnectionState) state).getAuthId(), ((ProxyConnectionState) state).getUserId());
             } catch (ConnectionException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
                 send(conn, createBadConnectionResponse(req, DataClientWebSocket.class));

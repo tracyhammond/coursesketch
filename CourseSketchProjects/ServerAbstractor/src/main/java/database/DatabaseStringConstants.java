@@ -39,6 +39,7 @@ public final class DatabaseStringConstants {
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
     public static final String AUTH_DATABASE = "auth";
+    public static final String IDENTITY_DATABASE = "identity";
 
     // meta fields
     public static final String NAME = "Name";
@@ -137,6 +138,7 @@ public final class DatabaseStringConstants {
     public static final String INSTRUCTOR_CLIENT_ID = "InstructorClientId";
     public static final String LAST_LOGIN_TIMES = "LoginSuccesses";
     public static final String LOGIN_AMOUNT_FIELD = "LoginCount";
+    public static final String IDENTITY_AUTH = "Identity Auth";
 
     // user group specific
     public static final String NON_USER_LIST = "NonUserList"; // used for moderators, peer teachers, and admins

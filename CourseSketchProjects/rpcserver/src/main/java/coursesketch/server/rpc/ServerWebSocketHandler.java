@@ -148,7 +148,12 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
      * @return AuthenticationChecker created from a socket to the other server.
      */
     /* package-private */ final AuthenticationWebSocketClient getAuthenticationWebsocket() {
-        return (AuthenticationWebSocketClient) getConnectionManager()
-                .getBestConnection(AuthenticationWebSocketClient.class);
+        try {
+            return (AuthenticationWebSocketClient) getConnectionManager()
+                    .getBestConnection(AuthenticationWebSocketClient.class);
+        } catch (IllegalStateException e) {
+            LOG.warn("Authentication websocket does not exist", e);
+            return null;
+        }
     }
 }
