@@ -12,7 +12,7 @@ import protobuf.srl.services.recognition.RecognitionServer;
  */
 public class RecognitionService extends RecognitionServer.RecognitionService implements CourseSketchRpcService {
     @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
-        
+
     }
 
     @Override public void addUpdate(final RpcController controller, final RecognitionServer.AddUpdateRequest request,
