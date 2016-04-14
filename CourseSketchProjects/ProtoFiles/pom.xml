@@ -130,5 +130,11 @@
 			<artifactId>protobuf-java</artifactId>
 			<version>${protobufVersion}</version>
 		</dependency>
+
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 </project>

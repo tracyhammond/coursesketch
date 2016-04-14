@@ -20,15 +20,6 @@ message SrlPermission {
 }
 
 /**
- * A sub message that contains a list of Ids.
- * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
- * This can also be used when wanting to return a list of ids.
- */
-message IdChain {
-    repeated string idChain = 1;
-}
-
-/**
  * The checksum contains 4 sets of longs
  */
 message SrlChecksum {
