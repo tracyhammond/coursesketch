@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import srl.core.sketch.Sketch;
+import protobuf.srl.sketch.Sketch;
 
 /**
  * Contatiner for Updates. This object maintains the history of transmissions

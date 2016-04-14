@@ -5,8 +5,7 @@ import java.util.LinkedList;
 import java.util.Deque;
 
 import protobuf.srl.commands.Commands.CommandType;
-
-import srl.core.sketch.Sketch;
+import protobuf.srl.sketch.Sketch;
 
 /**
  * Contatiner for Updates. This object maintains the history of transmissions
@@ -99,9 +98,9 @@ public class UpdateDeque implements Iterable<Update>{
                 Update redoThese = undoDeque.removeFirst();
                 ((LinkedList<Update>)syncDeque).add(index,redoThese);
                 redoThese.execute(s);
-            } else if (command != null && command.getType() == CommandType.MARKER && command.getMarkerType() == protobuf.srl.commands.Commands.Marker.MarkerType.CLEAR) {
+            } else if (command != null && command.getType() == CommandType.CLEAR) {
                 //Clear sketch
-                for(Update upd:syncDeque) {
+                for (Update upd:syncDeque) {
                     upd.undo(s);
                 }
                 syncDeque.clear();
