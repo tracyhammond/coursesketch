@@ -91,6 +91,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>BlankServer</artifactId>
             <version>0.0.1-SNAPSHOT</version>
