@@ -35,7 +35,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     /**
      * Submission manager.
      */
-    private final RecognitionManagerInterface manager;
+    private final RecognitionInterface manager;
 
     /**
      * Identity manager.
