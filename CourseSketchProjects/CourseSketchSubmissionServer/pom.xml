@@ -19,8 +19,8 @@
         <mainClass>connection.SubmissionRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>57</projectBranchLevel>
-        <projectLineLevel>48</projectLineLevel>
+        <projectBranchLevel>75</projectBranchLevel>
+        <projectLineLevel>59</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -87,6 +87,12 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>BlankServer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>RpcServer</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

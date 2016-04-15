@@ -118,6 +118,12 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         }
     }
 
+    /**
+     * Sets up any indexes that need to be set up or have not yet been set up.
+     */
+    @Override protected void setUpIndexes() {
+        //
+    }
 
     /**
      * {@inheritDoc}

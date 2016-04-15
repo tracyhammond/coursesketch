@@ -1,11 +1,10 @@
 package handlers;
 
-import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
-import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
@@ -53,6 +53,7 @@ public final class DataRequestHandler {
     /**
      * A message returned when getting the data was successful.
      */
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private static final String NO_OP_MESSAGE = "NO DATA TO RETURN";
 
     /**
@@ -150,29 +151,23 @@ public final class DataRequestHandler {
                             if (!itemRequest.hasAdvanceQuery()) {
                                 for (String itemId : itemRequest.getItemIdList()) {
                                     LOG.info("Trying to retrieve an experiment from a user!");
-                                    try {
-                                        final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
-                                        build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                        instance.getExperimentAsUser(userId, itemId, build.build(), internalConnections);
-                                        results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
-                                    } catch (DatabaseAccessException e) {
-                                        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                                        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                                        results.add(ResultBuilder.buildResult(e.getLocalizedMessage(), ItemQuery.EXPERIMENT,
-                                                (GeneratedMessage[]) null));
-                                        break;
-                                    }
+                                    final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                                    build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                                    final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, itemId, build.build(),
+                                            internalConnections);
+                                    results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             } else {
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
                                 final Request baseRequest = build.build();
                                 for (String itemId : itemRequest.getItemIdList()) {
-
-                                    instance.getExperimentAsInstructor(userId, itemId, baseRequest, internalConnections,
-                                            itemRequest.getAdvanceQuery());
+                                    final List<Submission.SrlExperiment> experimentList = instance.getExperimentAsInstructor(userId, itemId,
+                                            baseRequest, internalConnections, itemRequest.getAdvanceQuery());
+                                    for (Submission.SrlExperiment experiment: experimentList) {
+                                        results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
+                                    }
                                 }
-                                results.add(ResultBuilder.buildResult(NO_OP_MESSAGE, ItemQuery.NO_OP, (GeneratedMessage[]) null));
                             }
                         }
                         break;

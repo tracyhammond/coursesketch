@@ -250,7 +250,7 @@ public class MultiConnectionManager {
      * time. This can be overridden for a better server specific system.
      *
      * @param connectionType The type of connection being requested.
-     * @param <T> A subclass of the {@link AbstractClientWebSocket}.
+     * @param <T> An instance of {@link AbstractClientWebSocket} that is returned.
      * @return A valid connection.
      */
     @SuppressWarnings("checkstyle:designforextension")

@@ -12,12 +12,13 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.services.identity.Identity;
-import utilities.ExceptionUtilities;
 
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static utilities.ExceptionUtilities.handleProtoException;
 
 /**
  * A Websocket that connects to the Identity server and abstracts the RPC method of sending request to the authentication server.
@@ -260,24 +261,4 @@ public final class IdentityWebSocketClient extends ClientWebSocket implements Id
         return result;
     }
 
-    /**
-     * Checks the type of exception that was thrown in the proto exception and throws the same type if it exists.
-     * @param exception The exception that was found to be thrown.
-     * @param message An optional message
-     * @throws AuthenticationException Thrown if the proto exception was an AuthenticationException.
-     * @throws DatabaseAccessException Thrown if the proto exception was an DatabaseAccessException.
-     */
-    private void handleProtoException(final Message.ProtoException exception, final String message)
-            throws AuthenticationException, DatabaseAccessException {
-        if (ExceptionUtilities.isSameType(AuthenticationException.class, exception)) {
-            final AuthenticationException exception1 = new AuthenticationException(message, AuthenticationException.OTHER);
-            exception1.setProtoException(exception);
-            throw exception1;
-        } else if (ExceptionUtilities.isSameType(DatabaseAccessException.class, exception)) {
-            final DatabaseAccessException exception1 = new DatabaseAccessException(message);
-            exception1.setProtoException(exception);
-            throw exception1;
-        }
-        LOG.error(message, exception);
-    }
 }

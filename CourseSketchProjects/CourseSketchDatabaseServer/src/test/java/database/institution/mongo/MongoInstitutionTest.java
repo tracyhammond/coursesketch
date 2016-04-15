@@ -398,5 +398,4 @@ public class MongoInstitutionTest {
 
         institution.updateCourseProblem(ADMIN_USER, updatedProblem);
     }
-
 }

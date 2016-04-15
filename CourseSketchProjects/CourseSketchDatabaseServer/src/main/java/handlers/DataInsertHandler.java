@@ -1,8 +1,8 @@
 package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
@@ -21,7 +21,6 @@ import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
 import protobuf.srl.school.School.SrlUser;
-import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
@@ -138,13 +137,6 @@ public final class DataInsertHandler {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
                             final String resultId = instance.insertLectureSlide(userId, lectureSlide);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lectureSlide.getId()));
-                        }
-                        break;
-                        case EXPERIMENT: {
-                            LOG.info("Inserting experiment!");
-                            final Submission.SrlExperiment experiment = Submission.SrlExperiment.parseFrom(itemSet.getData());
-                            LOG.info("Experiment: {}", experiment);
-                            instance.insertSubmission(userId, experiment.getProblemId(), experiment.getSubmission().getId(), true);
                         }
                         break;
                         default:
