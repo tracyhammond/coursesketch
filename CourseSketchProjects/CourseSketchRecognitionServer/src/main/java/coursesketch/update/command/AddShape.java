@@ -31,14 +31,16 @@ public class AddShape extends Command {
         //FIXME set the time to match client load time
     }
 
+    /*
     public AddShape(IRecognitionResult input){
-        data = new SrlShape();
+        data = SrlShape.getDefaultInstance();
 
         input.sortNBestList();
         for(SrlShape s: input.getNBestList()){
             data.addInterpretations(s.getInterpretations());
         }
     }
+    */
 
     @Override
     public ByteString toByteString() {
@@ -60,10 +62,10 @@ public class AddShape extends Command {
 
     @Override
     public void execute(SrlSketch s) {
-        s.add(data);
+        // s.add(data);
     }
     @Override
     public void undo(SrlSketch s) {
-        s.remove(data);
+        // s.remove(data);
     }
 }
