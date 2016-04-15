@@ -58,10 +58,10 @@ public final class RecognitionRunner extends GeneralConnectionRunner {
 
     /**
      * {@inheritDoc}
-     * @return {@link SubmissionServiceInitializer}
+     * @return {@link RecognitionServiceInitializer}
      */
     @Override
     public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
-        return new SubmissionServiceInitializer(serverInfo);
+        return new RecognitionServiceInitializer(serverInfo);
     }
 }
