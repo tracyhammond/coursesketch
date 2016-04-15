@@ -73,7 +73,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         ActionPackageShape.Builder actionPackageShape = Commands.ActionPackageShape.newBuilder();
         try {
             SrlStroke stroke = SrlStroke.parseFrom(update.getCommands(0).getCommandData());
-            actionPackageShape.setShapesToBeContained(0, stroke.getId());
+            actionPackageShape.addShapesToBeContained(stroke.getId());
         }
         catch (com.google.protobuf.InvalidProtocolBufferException e) {
             LOG.error("There was no stroke contained in the request.");
@@ -95,7 +95,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         update.addCommands(packageShapeCommand);
 
         SrlUpdateList.Builder updateList = SrlUpdateList.newBuilder();
-        updateList.setList(0, update);
+        updateList.addList(update);
 
         result.setChanges(updateList);
 
