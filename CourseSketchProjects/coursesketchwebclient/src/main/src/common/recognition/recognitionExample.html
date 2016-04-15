@@ -17,13 +17,18 @@
     <!-- special elements -->
     <link rel="import" href="/src/sketching/sketchInclude.html">
     <script src="/src/common/recognition/recognitionManager.js"></script>
-    <script>
-        $(document).ready(function() {
-            document.getElementsByTagName('sketch-surface')[0].getUpdateManager().addPlugin(CourseSketch.recognitionPlugin);
-        });
-    </script>
+
 </head>
 <body>
-    <sketch-surface id="hello" style="height:1005; width:100%; border: 5px solid red;"></sketch-surface>
+<div>
+    <sketch-surface id="hello" style="height:50%; width:100%; border: 5px solid red;"></sketch-surface>
+</div>
+    <script>
+        $(document).ready(function() {
+            var elements = document.getElementsByTagName('sketch-surface');
+            console.log(elements);
+            elements[0].getUpdateManager().addPlugin(CourseSketch.recognitionPlugin);
+        });
+    </script>
 </body>
 </html>

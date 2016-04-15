@@ -59,10 +59,10 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         shape.setId(UUID.randomUUID().toString());
         shape.setTime(TimeManager.getSystemTime());
         shape.setIsUserCreated(false);
-        shape.addInterpretations(0, interpretationn);
+        shape.addInterpretations(interpretationn);
 
         IdChain.Builder shapeIdChain = IdChain.newBuilder();
-        shapeIdChain.setIdChain(0, shape.getId());
+        shapeIdChain.addIdChain(shape.getId());
 
         SrlCommand.Builder addShapeCommand = SrlCommand.newBuilder();
         addShapeCommand.setCommandType(CommandType.ADD_SHAPE);
