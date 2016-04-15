@@ -44,8 +44,9 @@ function ProtobufSetup() {
     var PROTOBUF_PACKAGE = 'protobuf';
     var protobufDirectory = '/other/protobuf/';
 
-    var objectList = [];
+    var messageList = [];
     var enumList = [];
+    var serviceList = [];
 
     var protoFiles = [
         { fileName: 'assignment',
@@ -142,7 +143,11 @@ function ProtobufSetup() {
         var objectName = preString + messageName;
         if (isFunction(ClassType)) {
             var isService = ClassType.$type instanceof dcodeIO.ProtoBuf.Reflect.Service;
-            objectList.push(objectName);
+            if (!isService) {
+                messageList.push(objectName);
+            } else {
+                serviceList.push(objectName);
+            }
             Object.defineProperty(localScope, objectName, {
                 /**
                  * @returns {Object} An instance a protobuf object.
@@ -428,7 +433,7 @@ function ProtobufSetup() {
      */
     this.getSupportedObjects = function getSupportedObjects() {
         // The quickest way to clone.
-        return JSON.parse(JSON.stringify(objectList));
+        return JSON.parse(JSON.stringify(messageList));
     };
 
     /**
