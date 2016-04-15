@@ -6,25 +6,32 @@
     CourseSketch.dataListener.addRequestType(CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
     CourseSketch.connection.setRecognitionListener(CourseSketch.dataListener.getListenerHook());
     var recognitionRpcDefinition = function(method, req, callback) {
+        console.log('RPC METHOD CALLED', method, req);
+        var shortenedMethodName = method.substring(method.lastIndexOf('.') + 1, method.length);
+        console.log('short name', shortenedMethodName);
         var generalRequest = CourseSketch.prutil.GeneralRecognitionRequest();
-        var returnType = CourseSketch.prutil.RecognitionResponseClass();
-        if (method === '.RecognitionService.addUpdate') {
+        var returnType = CourseSketch.prutil.getRecognitionResponseClass();
+        if (shortenedMethodName === 'addUpdate') {
+            console.log('add Update called!');
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.ADD_UPDATE);
             generalRequest.setAddUpdate(req);
-        } else if (method === '.RecognitionService.createUpdateList') {
+        } else if (shortenedMethodName === 'createUpdateList') {
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.SET_NEW_LIST);
             generalRequest.setSetUpdateList(req);
-        } else if (method === '.RecognitionService.addTemplate') {
+        } else if (shortenedMethodName === 'addTemplate') {
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.ADD_TEMPLATE);
             generalRequest.setTemplate(req);
             returnType = CourseSketch.prutil.DefaultResponseClass();
-        } else if (method === '.RecognitionService.recognize') {
+        } else if (shortenedMethodName === 'recognize') {
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.SET_NEW_LIST);
             generalRequest.setTemplate(req);
         }
 
+        console.log('rpc data is set!');
         var request = CourseSketch.prutil.createRequestFromData(generalRequest, CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
+        console.log('rpc data is added!');
         CourseSketch.dataListener.sendRequestWithTimeout(request, function (evt, msg) {
+            console.log('we got info back from the recognition server!!', msg);
             // TODO: add exception checking
             // if (msg instanceof CourseSketch.)
             callback(undefined, msg);
@@ -34,6 +41,7 @@
     CourseSketch.recognitionService = CourseSketch.prutil.RecognitionService(recognitionRpcDefinition);
 
     function addUpdate(recognitionId, update, callback) {
+        console.log('Adding the update into the server');
         var protoAddUpdate = CourseSketch.prutil.AddUpdateRequest();
         protoAddUpdate.setRecognitionId(recognitionId);
         protoAddUpdate.setUpdate(update);
@@ -75,10 +83,42 @@
         CourseSketch.recognitionService.createUpdateList(recogUpdateList, callback);
     }
 
+
     CourseSketch.recognition = {};
     CourseSketch.recognition.addUpdate = addUpdate;
     CourseSketch.recognition.setUpdateList = setUpdateList;
     CourseSketch.recognition.addSketchTemplate = addSketchTemplate;
     CourseSketch.recognition.addShapeTemplate = addStrokeTemplate;
     CourseSketch.recognition.recognize = recognize;
-});
+
+    /**
+     * A plugin used to send updates to the server.
+     *
+     * @class RecognitionPlugin
+     */
+    function RecognitionPlugin() {
+        /**
+         * Holds the list of updates that are waiting to be sent to the server.
+         *
+         * This list should almost always be near empty.
+         */
+        var queuedServerUpdates = [];
+
+        /**
+         * Called when the updatemanager adds an update.
+         *
+         * @param {SrlUpdate} update - The update to be sent to thee recognition server.
+         * @param {Boolean} toRemote - True if this update is destined to the remote server.
+         */
+        this.addUpdate = function(update, toRemote) {
+            console.log("adding update!");
+            var cleanUpdate = CourseSketch.prutil.cleanProtobuf(update, CourseSketch.prutil.getSrlUpdateClass());
+            if (!isUndefined(toRemote) && toRemote) {
+                CourseSketch.recognition.addUpdate('5', cleanUpdate, function(err, msg) {
+                    console.log('It worked@!!!', err, msg);
+                });
+            }
+        };
+    }
+    CourseSketch.recognitionPlugin = new RecognitionPlugin();
+})();

@@ -178,7 +178,7 @@ function SketchSurface() {
     };
 
     /**
-     * Returns the manager for this sketch surface.
+     * @returns {UpdateManager} Returns the manager for this sketch surface.
      */
     this.getUpdateManager = function() {
         return this.updateManager;

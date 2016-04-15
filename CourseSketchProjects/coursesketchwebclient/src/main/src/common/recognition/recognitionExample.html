@@ -16,6 +16,12 @@
 
     <!-- special elements -->
     <link rel="import" href="/src/sketching/sketchInclude.html">
+    <script src="/src/common/recognition/recognitionManager.js"></script>
+    <script>
+        $(document).ready(function() {
+            document.getElementsByTagName('sketch-surface')[0].getUpdateManager().addPlugin(CourseSketch.recognitionPlugin);
+        });
+    </script>
 </head>
 <body>
     <sketch-surface id="hello" style="height:1005; width:100%; border: 5px solid red;"></sketch-surface>

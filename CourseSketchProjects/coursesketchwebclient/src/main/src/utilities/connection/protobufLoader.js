@@ -70,9 +70,10 @@ function ProtobufSetup() {
         { fileName: 'school',
             package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
         { fileName: 'sketch',
-            package: [PROTOBUF_PACKAGE, 'srl', 'sketch'] },
+            package: [PROTOBUF_PACKAGE, 'srl', 'sketch'],
+            prefix: 'Proto' },
         { fileName: 'sketchUtil',
-            package: [PROTOBUF_PACKAGE, 'srl', 'sketch'] },
+            package: [PROTOBUF_PACKAGE, 'srl', 'utils'] },
         { fileName: 'submission',
             package: [PROTOBUF_PACKAGE, 'srl', 'submission'] },
         { fileName: 'util',
@@ -91,7 +92,7 @@ function ProtobufSetup() {
             for (var j = 1; j < protoObject.package.length; j++) {
                 resultingPackage = resultingPackage[protoObject.package[j]];
             }
-            assignValues(resultingPackage);
+            assignValues(resultingPackage, protoObject.prefix);
         }
     }
 
