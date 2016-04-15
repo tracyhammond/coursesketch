@@ -25,9 +25,11 @@ public class AddShape extends Command {
         id = UUID.fromString(input.getId());
         type = CommandType.ADD_SHAPE;
 
-        data = new SrlShape();
+        data = input;
+        /*
         data.setId(UUID.fromString(input.getId()));
         data.setName(input.getName());
+        */
         //FIXME set the time to match client load time
     }
 
@@ -50,9 +52,9 @@ public class AddShape extends Command {
         shapebuilder.setTime(data.getTime());
 
         SrlInterpretation.Builder interpretationbuilder = SrlInterpretation.newBuilder();
-        for (Interpretation i: data.getInterpretations()){
-            interpretationbuilder.setLabel(i.label);
-            interpretationbuilder.setConfidence(i.confidence);
+        for (SrlInterpretation i: data.getInterpretationsList()){
+            interpretationbuilder.setLabel(i.getLabel());
+            interpretationbuilder.setConfidence(i.getConfidence());
 
             shapebuilder.addInterpretations(interpretationbuilder.build());
         }
