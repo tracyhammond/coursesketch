@@ -173,7 +173,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
             try {
                 // No userId is sent for security reasons.
                 ((ProxyConnectionManager) this.getConnectionManager()).getBestConnection(RecognitionConnection.class)
-                        .parseConnection(req.getOtherData());
+                        .parseConnection(req);
             } catch (CourseSketchException | RecognitionException e) {
                 LOG.error("Recognition error!");
                 send(conn, ExceptionUtilities.createExceptionRequest(req, ExceptionUtilities.createProtoException(e),
