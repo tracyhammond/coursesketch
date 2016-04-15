@@ -13,13 +13,13 @@ message GeneralRecognitionRequest {
         RecognitionUpdateList setUpdateList = 3;
         RecognitionTemplate template = 4;
     }
+}
 
-    enum RecognitionRequestType {
-        ADD_UPDATE = 0;
-        SET_NEW_LIST = 1;
-        ADD_TEMPLATE = 2;
-        RECOGNIZE = 3;
-    }
+enum RecognitionRequestType {
+    ADD_UPDATE = 0;
+    SET_NEW_LIST = 1;
+    ADD_TEMPLATE = 2;
+    RECOGNIZE = 3;
 }
 
 message AddUpdateRequest {
