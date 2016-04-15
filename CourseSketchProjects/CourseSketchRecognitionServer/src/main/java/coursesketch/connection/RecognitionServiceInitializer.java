@@ -5,18 +5,16 @@ import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.recognition.framework.RecognitionInterface;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
 import database.DatabaseAccessException;
-import database.SubmissionDatabaseClient;
-import handlers.SubmissionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.utils.Util;
-import services.SubmissionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +48,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     public RecognitionServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
         databaseClient = new RecognitionDatabaseClient(serverInfo);
-        manager = new RecognitionManager(databaseClient);
+        // manager = new RecognitionManager(databaseClient);
     }
 
     /**
@@ -67,7 +65,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        services.add(new RecognitionService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
+        // services.add(new RecognitionService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
         return services;
     }
 
