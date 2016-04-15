@@ -67,7 +67,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
     }
 
     @Override public Commands.SrlUpdateList addUpdate(final String recognitionId, final Commands.SrlUpdate srlUpdate)
-            throws RecognitionException{
+            throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
@@ -75,10 +75,11 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         RecognitionServer.AddUpdateRequest.Builder addUpdateRequest = RecognitionServer.AddUpdateRequest.newBuilder();
         addUpdateRequest.setRecognitionId(recognitionId);
 
+        final RecognitionServer.RecognitionResponse recognitionResponse;
+
         try {
             LOG.debug("Sending srlUpdate addition request");
-            final RecognitionServer.RecognitionResponse recognitionResponse = recognitionService.addUpdate(getNewRpcController(),
-                    addUpdateRequest.build());
+            recognitionResponse = recognitionService.addUpdate(getNewRpcController(), addUpdateRequest.build());
             if (recognitionResponse.hasDefaultResponse() && recognitionResponse.getDefaultResponse().hasException()) {
                 final DatabaseAccessException databaseException =
                         new DatabaseAccessException("Exception with submission server");
@@ -88,12 +89,35 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         } catch (ServiceException e) {
             throw new RecognitionException("Exception when adding template", e);
         }
+        return recognitionResponse.getChanges();
     }
 
-    @Override public Commands.SrlUpdateList setUpdateList(final String s, final Commands.SrlUpdateList srlUpdateList) {
+    @Override public Commands.SrlUpdateList setUpdateList(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
+            throws RecognitionException{
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
+
+        RecognitionServer.RecognitionUpdateList.Builder recognitionUpdateList = RecognitionServer.RecognitionUpdateList.newBuilder();
+        recognitionUpdateList.setRecognitionId(recognitionId);
+        recognitionUpdateList.setUpdateList(srlUpdateList);
+
+
+        final RecognitionServer.RecognitionResponse recognitionResponse;
+
+        try {
+            LOG.debug("Sending SrlUpdateList recognition request");
+            recognitionResponse = recognitionService.createUpdateList(getNewRpcController(), recognitionUpdateList.build());
+            if (recognitionResponse.getDefaultResponse().hasException()) {
+                final DatabaseAccessException databaseException =
+                        new DatabaseAccessException("Exception with submission server");
+                databaseException.setProtoException(recognitionResponse.getDefaultResponse().getException());
+                throw new RecognitionException("Exception when adding template", databaseException);
+            }
+        } catch (ServiceException e) {
+            throw new RecognitionException("Exception when adding template", e);
+        }
+        return recognitionResponse.getChanges();
     }
 
     @Override public Sketch.SrlSketch setSketch(final String s, final Sketch.SrlSketch sketch) {
