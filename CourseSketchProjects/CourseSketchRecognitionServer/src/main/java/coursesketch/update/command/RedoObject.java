@@ -3,7 +3,7 @@ import com.google.protobuf.ByteString;
 
 import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.CommandType;
-import srl.core.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
  * Undo
@@ -24,13 +24,13 @@ public class RedoObject extends Command {
     }
 
     @Override
-    public void execute(Sketch s) {
+    public void execute(SrlSketch s) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void undo(Sketch s) {
+    public void undo(SrlSketch s) {
         // TODO Auto-generated method stub
 
     }
