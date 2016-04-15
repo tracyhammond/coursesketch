@@ -66,19 +66,37 @@ public final class RecognitionWebSocketClient extends ClientWebSocket implements
         super(iDestination, iParentServer);
     }
 
-    @Override public void addUpdate(final String s, final Commands.SrlUpdate srlUpdate) {
+    @Override public Commands.SrlUpdateList addUpdate(final String recognitionId, final Commands.SrlUpdate srlUpdate)
+            throws RecognitionException{
+        if (recognitionService == null) {
+            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
+        }
+
+        RecognitionServer.AddUpdateRequest.Builder addUpdateRequest = RecognitionServer.AddUpdateRequest.newBuilder();
+        addUpdateRequest.setRecognitionId(recognitionId);
+
+        try {
+            LOG.debug("Sending srlUpdate addition request");
+            final RecognitionServer.RecognitionResponse recognitionResponse = recognitionService.addUpdate(getNewRpcController(),
+                    addUpdateRequest.build());
+            if (recognitionResponse.hasDefaultResponse() && recognitionResponse.getDefaultResponse().hasException()) {
+                final DatabaseAccessException databaseException =
+                        new DatabaseAccessException("Exception with submission server");
+                databaseException.setProtoException(recognitionResponse.getDefaultResponse().getException());
+                throw new RecognitionException("Exception when adding template", databaseException);
+            }
+        } catch (ServiceException e) {
+            throw new RecognitionException("Exception when adding template", e);
+        }
+    }
+
+    @Override public Commands.SrlUpdateList setUpdateList(final String s, final Commands.SrlUpdateList srlUpdateList) {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
     }
 
-    @Override public void setUpdateList(final String s, final Commands.SrlUpdateList srlUpdateList) {
-        if (recognitionService == null) {
-            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
-        }
-    }
-
-    @Override public void setSketch(final String s, final Sketch.SrlSketch sketch) {
+    @Override public Sketch.SrlSketch setSketch(final String s, final Sketch.SrlSketch sketch) {
         throw new UnsupportedOperationException();
     }
 
@@ -88,6 +106,10 @@ public final class RecognitionWebSocketClient extends ClientWebSocket implements
      * @throws TemplateException
      */
     private void addTemplate(final RecognitionServer.RecognitionTemplate.Builder template) throws TemplateException {
+        if (recognitionService == null) {
+            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
+        }
+
         template.setTemplateId(UUID.randomUUID().toString());
         try {
             LOG.debug("Sending template addition request");
@@ -104,32 +126,43 @@ public final class RecognitionWebSocketClient extends ClientWebSocket implements
     }
 
     @Override public void addTemplate(final Sketch.SrlSketch sketch) throws TemplateException {
-        if (recognitionService == null) {
-            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
-        }
         addTemplate(RecognitionServer.RecognitionTemplate.newBuilder().setSketch(sketch));
     }
 
     @Override public void addTemplate(final Sketch.SrlShape srlShape) throws TemplateException  {
-        if (recognitionService == null) {
-            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
-        }
         addTemplate(RecognitionServer.RecognitionTemplate.newBuilder().setShape(srlShape));
     }
 
     @Override public void addTemplate(final Sketch.SrlStroke srlStroke) throws TemplateException {
-        if (recognitionService == null) {
-            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
-        }
         addTemplate(RecognitionServer.RecognitionTemplate.newBuilder().setStroke(srlStroke));
     }
 
-    @Override public Commands.SrlUpdateList recognize(final String s, final Commands.SrlUpdateList srlUpdateList) {
+    @Override public Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
+            throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
-        final RecognitionServer.RecognitionUpdateList.Builder recognitionRequest = RecognitionServer.RecognitionUpdateList.newBuilder();
 
+        RecognitionServer.RecognitionUpdateList.Builder recognitionUpdateList = RecognitionServer.RecognitionUpdateList.newBuilder();
+        recognitionUpdateList.setRecognitionId(recognitionId);
+        recognitionUpdateList.setUpdateList(srlUpdateList);
+
+
+        final RecognitionServer.RecognitionResponse recognitionResponse;
+
+        try {
+            LOG.debug("Sending SrlUpdateList recognition request");
+            recognitionResponse = recognitionService.recognize(getNewRpcController(), recognitionUpdateList.build());
+            if (recognitionResponse.getDefaultResponse().hasException()) {
+                final DatabaseAccessException databaseException =
+                        new DatabaseAccessException("Exception with submission server");
+                databaseException.setProtoException(recognitionResponse.getDefaultResponse().getException());
+                throw new RecognitionException("Exception when adding template", databaseException);
+            }
+        } catch (ServiceException e) {
+            throw new RecognitionException("Exception when adding template", e);
+        }
+        return recognitionResponse.getChanges();
     }
 
     @Override public Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch sketch) {

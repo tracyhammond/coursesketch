@@ -70,4 +70,7 @@ service RecognitionService {
      * Inserts the solution into the submission server.
      */
     rpc addTemplate(RecognitionTemplate) returns (protobuf.srl.request.DefaultResponse);
+
+    /*..*/
+    rpc recognize(RecognitionUpdateList) returns (RecognitionResponse);
 }
