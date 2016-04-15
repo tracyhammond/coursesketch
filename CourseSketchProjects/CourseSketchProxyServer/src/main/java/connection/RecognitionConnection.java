@@ -1,18 +1,22 @@
 package connection;
 
+import java.net.ConnectException;
 import java.net.URI;
 
+import com.google.protobuf.ByteString;
 import coursesketch.server.base.ClientWebSocket;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.services.recognition.RecognitionWebSocketClient;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import utilities.ConnectionException;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
  * Only the most important callbacks are overloaded.
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
-public class RecognitionClientWebSocket extends ClientWebSocket {
+public class RecognitionConnection extends RecognitionWebSocketClient {
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -27,8 +31,11 @@ public class RecognitionClientWebSocket extends ClientWebSocket {
      * @param parent
      *            The server that is using this connection wrapper.
      */
-    public RecognitionClientWebSocket(final URI destination, final AbstractServerWebSocketHandler parent) {
+    public RecognitionConnection(final URI destination, final AbstractServerWebSocketHandler parent) {
         super(destination, parent);
     }
 
+    public void parseConnection(final ByteString otherData) throws ConnectionException {
+        GeneralRecognitionRequest
+    }
 }

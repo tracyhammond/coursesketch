@@ -12,13 +12,15 @@ import connection.DataClientWebSocket;
 import connection.LoginClientWebSocket;
 import connection.LoginConnectionState;
 import connection.ProxyConnectionManager;
-import connection.RecognitionClientWebSocket;
+import connection.RecognitionConnection;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import utilities.ConnectionException;
+import utilities.CourseSketchException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -162,17 +164,19 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
         if (!req.hasRequestType()) {
             LOG.error("A request type was not specified for this request. This request will not be processed");
             LOG.error("Request that did not contain type: {}", req);
-            send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
+            send(conn, createBadConnectionResponse(req, RecognitionConnection.class));
         }
         final String sessionID = state.getSessionId();
         if (req.getRequestType() == MessageType.RECOGNITION) {
             LOG.info("REQUEST TYPE = RECOGNITION");
             try {
                 // No userId is sent for security reasons.
-                ((ProxyConnectionManager) this.getConnectionManager()).send(req, sessionID, RecognitionClientWebSocket.class);
-            } catch (ConnectionException e) {
+                ((ProxyConnectionManager) this.getConnectionManager()).getBestConnection(RecognitionConnection.class)
+                        .parseConnection(req.getOtherData());
+            } catch (CourseSketchException e) {
                 LOG.error("Recognition error!");
-                send(conn, createBadConnectionResponse(req, RecognitionClientWebSocket.class));
+                send(conn, ExceptionUtilities.createExceptionRequest(req, ExceptionUtilities.createProtoException(e),
+                        "Exception in proxy server sending recognition"));
             }
         } else if (req.getRequestType() == MessageType.SUBMISSION) {
             LOG.info("REQUEST TYPE = SUBMISSION");

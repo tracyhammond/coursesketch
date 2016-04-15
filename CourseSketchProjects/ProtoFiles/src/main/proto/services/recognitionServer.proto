@@ -6,6 +6,22 @@ import "sketch.proto";
 
 option java_generic_services = true;
 
+message GeneralRecognitionRequest {
+    required RecognitionRequestType requestType = 1;
+    oneof Request {
+        AddUpdateRequest addUpdate = 2;
+        RecognitionUpdateList setUpdateList = 3;
+        RecognitionTemplate template = 4;
+    }
+
+    enum RecognitionRequestType {
+        ADD_UPDATE = 0;
+        SET_NEW_LIST = 1;
+        ADD_TEMPLATE = 2;
+        RECOGNIZE = 3;
+    }
+}
+
 message AddUpdateRequest {
     /**
      * The id of the base sketch the update belongs to.

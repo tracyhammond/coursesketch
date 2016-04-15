@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by dtracers on 12/15/2015.
  */
-public final class RecognitionWebSocketClient extends ClientWebSocket implements RecognitionInterface {
+public class RecognitionWebSocketClient extends ClientWebSocket implements RecognitionInterface {
 
     /**
      * Declaration and Definition of Logger.
