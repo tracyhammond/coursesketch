@@ -42,7 +42,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
     /**
      * The default port of the Submission Server.
      */
-    public static final int PORT = 8894;
+    public static final int PORT = 8893;
 
     /**
      * The blocker service that is used to communicate.
