@@ -14,8 +14,7 @@ import protobuf.srl.sketch.Sketch.SrlSketch;
 public class ClearObject extends Command {
 
     public ClearObject() {
-        type = CommandType.MARKER;
-        markerType = protobuf.srl.commands.Commands.Marker.MarkerType.CLEAR;
+        type = CommandType.CLEAR;
         //FIXME set the time to match client load time
     }
     @Override

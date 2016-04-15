@@ -40,14 +40,14 @@ public class AddStroke extends Command {
         SrlStroke.Builder strokebuilder = SrlStroke.newBuilder();
 
         strokebuilder.setId(data.getId().toString());
-        strokebuilder.setTime(data.getTimeEnd());
+        strokebuilder.setTime(data.getTime());
         strokebuilder.setName(data.getName());
 
-        for (SrlPoint p: data.getPoints()){
+        for (SrlPoint p: data.getPointsList()){
             SrlPoint.Builder pointbuilder = SrlPoint.newBuilder();
-            pointbuilder.setX(p.x);
-            pointbuilder.setY(p.y);
-            pointbuilder.setTime(p.time);
+            pointbuilder.setX(p.getX());
+            pointbuilder.setY(p.getY());
+            pointbuilder.setTime(p.getTime());
             pointbuilder.setId(p.getId().toString());
             strokebuilder.addPoints(pointbuilder.build());
         }
@@ -60,10 +60,10 @@ public class AddStroke extends Command {
      * adds a single stroke to the sketch for recognition
      */
     public void execute(SrlSketch s) {
-        s.add(data);
+        // s.add(data);
     }
     @Override
     public void undo(SrlSketch s) {
-        s.remove(data);
+        // s.remove(data);
     }
 }
