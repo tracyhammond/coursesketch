@@ -1,6 +1,7 @@
 package coursesketch.serverfront;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.server.frontend.ServerWebSocketHandler;
 import coursesketch.server.frontend.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractClientWebSocket;
@@ -173,7 +174,7 @@ public final class ProxyServerWebSocketHandler extends ServerWebSocketHandler {
                 // No userId is sent for security reasons.
                 ((ProxyConnectionManager) this.getConnectionManager()).getBestConnection(RecognitionConnection.class)
                         .parseConnection(req.getOtherData());
-            } catch (CourseSketchException e) {
+            } catch (CourseSketchException | RecognitionException e) {
                 LOG.error("Recognition error!");
                 send(conn, ExceptionUtilities.createExceptionRequest(req, ExceptionUtilities.createProtoException(e),
                         "Exception in proxy server sending recognition"));
