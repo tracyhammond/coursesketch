@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.google.protobuf.ByteString;
 
 import protobuf.srl.commands.Commands.CommandType;
-import protobuf.srl.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
  * Placeholder class so that all the separate commands can be treated the same
@@ -48,13 +48,13 @@ public abstract class Command {
      * execute singular command, intended to be called in sequence for every Update
      * @param s PaleoSketch Sketch
      */
-    public abstract void execute(Sketch s);
+    public abstract void execute(SrlSketch s);
 
     /**
      * undo as singular command, intended to be called in sequence for every Update
      * @param s PaleoSketch Sketch
      */
-    public abstract void undo(Sketch s);
+    public abstract void undo(SrlSketch s);
 
     /**
      * Returns ID

@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import protobuf.srl.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
  * Contatiner for Updates. This object maintains the history of transmissions
@@ -60,7 +60,7 @@ public class UpdateList implements Iterable<Update>{
      * @param s PaleoSketch Sketch
      * @param index
      */
-    public void execute(Sketch s,int index) {
+    public void execute(SrlSketch s,int index) {
         syncList.get(index).execute(s);
     }
 
@@ -68,7 +68,7 @@ public class UpdateList implements Iterable<Update>{
      * Executes the commands only from the last update
      * @param s PaleoSketch Sketch
      */
-    public void executeLast(Sketch s) {
+    public void executeLast(SrlSketch s) {
         syncList.get(syncList.size()-1).execute(s);
     }
 
@@ -77,7 +77,7 @@ public class UpdateList implements Iterable<Update>{
      * an entire sketch from scratch
      * @param s PaleoSketch Sketch
      */
-    public void executeAll(Sketch s) {
+    public void executeAll(SrlSketch s) {
         for(Update up: syncList){
             up.execute(s);
         }

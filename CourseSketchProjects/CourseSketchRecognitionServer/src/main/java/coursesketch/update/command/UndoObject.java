@@ -3,7 +3,7 @@ import com.google.protobuf.ByteString;
 
 import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.CommandType;
-import srl.core.sketch.Sketch;
+import protobuf.srl.sketch.Sketch;
 
 /**
  * Undo

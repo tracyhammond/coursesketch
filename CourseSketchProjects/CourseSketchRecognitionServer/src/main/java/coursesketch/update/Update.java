@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import protobuf.srl.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
  * Collection of commands that encapsulates one complete transmission between
@@ -85,7 +85,7 @@ public class Update implements Iterable<Command>{
      * Execute all commands from this update on this sketch
      * @param s PaleoSketch Sketch
      */
-    public void execute(Sketch s){
+    public void execute(SrlSketch s){
         for(Command command: commandList){
             command.execute(s);
         }
@@ -95,7 +95,7 @@ public class Update implements Iterable<Command>{
      * Undo all commands from this update on this sketch
      * @param s PaleoSketch Sketch
      */
-    public void undo(Sketch s){
+    public void undo(SrlSketch s){
         for (int i = commandList.size(); i>=0; i--) {
             commandList.get(i).undo(s);
         }
