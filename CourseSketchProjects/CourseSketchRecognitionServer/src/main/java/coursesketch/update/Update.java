@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import protobuf.srl.sketch.Sketch;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
@@ -33,6 +34,10 @@ public class Update implements Iterable<Command>{
     public Update(long time){
         commandList = new LinkedList<Command>();
         this.time = time;
+    }
+
+    public Sketch.SrlStroke getStroke() {
+        return null;
     }
 
     /**

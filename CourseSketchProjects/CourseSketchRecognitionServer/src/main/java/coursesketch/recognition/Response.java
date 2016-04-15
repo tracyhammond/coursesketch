@@ -8,39 +8,25 @@ import coursesketch.update.Update;
 import coursesketch.update.UpdateDeque;
 import coursesketch.update.command.*;
 import protobuf.srl.commands.Commands.ActionPackageShape;
-import protobuf.srl.commands.Commands.IdChain;
+import protobuf.srl.utils.SketchUtil.IdChain;
 import protobuf.srl.commands.Commands.Marker;
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.sketch.Sketch.SrlSketch;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
-import srl.sketch.Sketch;
-import srl.recognition.paleo.PaleoConfig;
-import srl.recognition.paleo.PaleoSketchRecognizer;
 
 public class Response {
-    private PaleoSketchRecognizer m_recognizer;
     private UpdateDeque m_syncDeque;
-    private Sketch m_drawspace;
+    private SrlSketch m_drawspace;
 
     /**
      * Default constructor that initializes the recognizer with all primitives on
      */
     public Response(){
         m_syncDeque = new UpdateDeque();
-        m_drawspace = new Sketch();
-        m_recognizer = new PaleoSketchRecognizer(PaleoConfig.allOn());
-    }
-
-    /**
-     * optional constructor to specify recognition domain
-     * @param domain
-     */
-    public Response(PaleoConfig domain){
-        m_syncDeque = new UpdateDeque();
-        m_drawspace = new Sketch();
-        m_recognizer = new PaleoSketchRecognizer(domain);
+        m_drawspace = SrlSketch.getDefaultInstance();
     }
 
     /**
@@ -58,11 +44,12 @@ public class Response {
 
         //perform recognition
         Update actions = new Update();
-        actions.add(new AddShape(m_recognizer.recognize(m_syncDeque.front().getStroke())));
+        // actions.add(new AddShape(m_recognizer.recognize(m_syncDeque.front().getStroke())));
 
         List<String> ids = new LinkedList<String>();
         ids.add(m_syncDeque.front().getStroke().getId().toString());
-        actions.add(new PackageShape(null, m_syncDeque.front().getShape(), ids));
+        // m_syncDeque.front().getStroke()
+        // actions.add(new PackageShape(null, null, ids));
 
         actions.setTime(System.currentTimeMillis());
         m_syncDeque.add(actions);
@@ -71,8 +58,8 @@ public class Response {
         return repackage(actions);
     }
 
-    public static Sketch viewTest(SrlUpdateList updates) throws Exception {
-        Sketch returnSketch = new Sketch();
+    public static SrlSketch viewTest(SrlUpdateList updates) throws Exception {
+        SrlSketch returnSketch = SrlSketch.getDefaultInstance();
         UpdateDeque list = new UpdateDeque();
         for(SrlUpdate u : updates.getListList()) {
             list.add(parseUpdate(u));
@@ -150,6 +137,7 @@ public class Response {
      * @throws Exception Unsupported Command
      */
     private static SrlUpdate repackage(Update u) throws Exception{
+
         SrlUpdate.Builder updateBuilder = SrlUpdate.newBuilder();
 
         updateBuilder.setTime(u.getTime());
