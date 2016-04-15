@@ -32,7 +32,7 @@
     };
 
     CourseSketch.recognitionService = CourseSketch.prutil.RecognitionService(recognitionRpcDefinition);
-    
+
     function addUpdate(recognitionId, update, callback) {
         var protoAddUpdate = CourseSketch.prutil.AddUpdateRequest();
         protoAddUpdate.setRecognitionId(recognitionId);
@@ -74,4 +74,11 @@
         protoAddUpdate.setUpdate(updateList);
         CourseSketch.recognitionService.createUpdateList(recogUpdateList, callback);
     }
+
+    CourseSketch.recognition = {};
+    CourseSketch.recognition.addUpdate = addUpdate;
+    CourseSketch.recognition.setUpdateList = setUpdateList;
+    CourseSketch.recognition.addSketchTemplate = addSketchTemplate;
+    CourseSketch.recognition.addShapeTemplate = addStrokeTemplate;
+    CourseSketch.recognition.recognize = recognize;
 });
