@@ -15,7 +15,7 @@ import protobuf.srl.commands.Commands.SrlUpdate;
 import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.sketch.Sketch.SrlShape;
 import protobuf.srl.sketch.Sketch.SrlStroke;
-import srl.core.sketch.Sketch;
+import srl.sketch.Sketch;
 import srl.recognition.paleo.PaleoConfig;
 import srl.recognition.paleo.PaleoSketchRecognizer;
 

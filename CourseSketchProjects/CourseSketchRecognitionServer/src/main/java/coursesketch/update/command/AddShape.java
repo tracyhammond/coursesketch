@@ -5,14 +5,11 @@ import java.util.UUID;
 import com.google.protobuf.ByteString;
 
 import coursesketch.update.Command;
-import srl.core.sketch.Shape;
-import srl.core.sketch.Sketch;
-import srl.core.sketch.Interpretation;
-import srl.recognition.IRecognitionResult;
+import protobuf.srl.sketch.Sketch.SrlSketch;
+import protobuf.srl.sketch.Sketch.SrlShape;
+import protobuf.srl.sketch.Sketch.SrlInterpretation;
 
 import protobuf.srl.commands.Commands.CommandType;
-import protobuf.srl.sketch.Sketch.SrlInterpretation;
-import protobuf.srl.sketch.Sketch.SrlShape;
 
 /**
  * This Command object creates an empty container at first to have recognition
@@ -22,24 +19,24 @@ import protobuf.srl.sketch.Sketch.SrlShape;
  *
  */
 public class AddShape extends Command {
-    protected Shape data;
+    protected SrlShape data;
 
     public AddShape(SrlShape input){
         id = UUID.fromString(input.getId());
         type = CommandType.ADD_SHAPE;
 
-        data = new Shape();
+        data = new SrlShape();
         data.setId(UUID.fromString(input.getId()));
         data.setName(input.getName());
         //FIXME set the time to match client load time
     }
 
     public AddShape(IRecognitionResult input){
-        data = new Shape();
+        data = new SrlShape();
 
         input.sortNBestList();
-        for(Shape s: input.getNBestList()){
-            data.addInterpretation(s.getInterpretation());
+        for(SrlShape s: input.getNBestList()){
+            data.addInterpretations(s.getInterpretations());
         }
     }
 
@@ -48,10 +45,10 @@ public class AddShape extends Command {
         SrlShape.Builder shapebuilder = SrlShape.newBuilder();
 
         shapebuilder.setId(data.getId().toString());
-        shapebuilder.setTime(data.getTimeEnd());
+        shapebuilder.setTime(data.getTime());
 
         SrlInterpretation.Builder interpretationbuilder = SrlInterpretation.newBuilder();
-        for (Interpretation i: data.getNBestList()){
+        for (Interpretation i: data.getInterpretations()){
             interpretationbuilder.setLabel(i.label);
             interpretationbuilder.setConfidence(i.confidence);
 
@@ -62,11 +59,11 @@ public class AddShape extends Command {
     }
 
     @Override
-    public void execute(Sketch s) {
+    public void execute(SrlSketch s) {
         s.add(data);
     }
     @Override
-    public void undo(Sketch s) {
+    public void undo(SrlSketch s) {
         s.remove(data);
     }
 }
