@@ -11,6 +11,7 @@ import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import coursesketch.server.rpc.ServerWebSocketHandler;
 import coursesketch.server.rpc.ServerWebSocketInitializer;
+import coursesketch.services.RecognitionService;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        // services.add(new RecognitionService(new Authenticator(super.getRpcAuthChecker(), createAuthenticationChecker()), manager));
+        services.add(new RecognitionService(manager));
         return services;
     }
 
