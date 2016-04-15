@@ -4,11 +4,13 @@ import java.net.ConnectException;
 import java.net.URI;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.base.ClientWebSocket;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.services.recognition.RecognitionWebSocketClient;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import protobuf.srl.services.recognition.RecognitionServer;
 import utilities.ConnectionException;
 
 /**
@@ -36,6 +38,23 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
     }
 
     public void parseConnection(final ByteString otherData) throws ConnectionException {
-        GeneralRecognitionRequest
+        RecognitionServer.GeneralRecognitionRequest generalRecognitionRequest;
+        try {
+            generalRecognitionRequest = RecognitionServer.GeneralRecognitionRequest
+                    .parseFrom(otherData);
+        } catch (InvalidProtocolBufferException e) {
+            throw new ConnectionException("Unable to parse proto request for recognition", e);
+        }
+        switch (generalRecognitionRequest.getRequestType()) {
+            case ADD_UPDATE:
+                super.addUpdate(generalRecognitionRequest.getAddUpdate().getRecognitionId(), generalRecognitionRequest.getAddUpdate().)
+                break;
+            case SET_NEW_LIST:
+                break;
+            case ADD_TEMPLATE:
+                break;
+            case RECOGNIZE:
+                break;
+        }
     }
 }
