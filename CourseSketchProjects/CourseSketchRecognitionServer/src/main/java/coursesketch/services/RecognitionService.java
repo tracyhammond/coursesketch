@@ -129,4 +129,17 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
 
         done.run(defaultResponse.build());
     }
+
+    @Override
+    public void recognize(final RpcController controller, final RecognitionServer.RecognitionUpdateList request,
+            final RpcCallback<RecognitionServer.RecognitionResponse> done) {
+
+        SrlUpdateList updateList = SrlUpdateList.getDefaultInstance();
+
+        RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
+
+        result.setChanges(updateList);
+
+        done.run(result.build());
+    }
 }
