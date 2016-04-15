@@ -94,6 +94,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ServerAbstractor</artifactId>
             <version>0.0.1-SNAPSHOT</version>
