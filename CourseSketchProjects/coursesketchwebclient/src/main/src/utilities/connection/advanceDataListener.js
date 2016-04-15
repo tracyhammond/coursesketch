@@ -50,6 +50,16 @@ function AdvanceDataListener(Request, defListener) {
     };
 
     /**
+     * Adds a requestType to the datalistener
+     * @param {Request.MessageType} requestType
+     */
+    this.addRequestType = function(requestType) {
+        if (isUndefined(requestMap[requestType])) {
+            requestMap[requestType] = {};
+        }
+    };
+
+    /**
      * Sets the listener to listen for server response.
      *
      * @param {String} messageType - The message type of the request.
@@ -183,6 +193,15 @@ function AdvanceDataListener(Request, defListener) {
     };
 
     this.setupConnectionListeners();
+
+    /**
+     * @returns {Function} A function that can be used as a listener.
+     */
+    this.getListenerHook = function() {
+        return function (evt, msg) {
+            decode(evt, msg);
+        };
+    };
 
     /**
      * Sends a request that will timeout after the server.
