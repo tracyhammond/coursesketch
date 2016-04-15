@@ -32,7 +32,7 @@ public class Response {
     /**
      * Point of communication, takes an update and runs the recognizer
      * and returns the results
-     * @param protobuf.srl.commands.Commands.Update
+     * @param call
      * @return protobuf.srl.sketch.Sketch.SrlStroke
      * @throws Exception Unsupported Command
      */
@@ -72,7 +72,7 @@ public class Response {
 
     /**
      * Parses a Protobuf type update into a usable commands
-     * @param protobuf.srl.commands.Commands.Update
+     * @param call
      * @throws Exception Unsupported Command
      */
     private static Update parseUpdate(SrlUpdate call) throws Exception{
@@ -101,10 +101,9 @@ public class Response {
                 com = new RedoObject();
                 break;
             case MARKER:
-                if((Marker.parseFrom(c.getCommandData())).getType() == protobuf.srl.commands.Commands.Marker.MarkerType.CLEAR){
-                    com = new ClearObject();
-                };
-
+                break;
+            case CLEAR:
+                com = new ClearObject();
                 break;
             case ASSIGN_ATTRIBUTE:
                 break;
