@@ -9,8 +9,6 @@ import protobuf.srl.sketch.Sketch.SrlPoint;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 import protobuf.srl.sketch.Sketch.SrlStroke;
 import protobuf.srl.commands.Commands.CommandType;
-import protobuf.srl.sketch.Sketch.SrlStroke;
-import protobuf.srl.sketch.Sketch.SrlPoint;
 
 /**
  * Simple command to add a user-drawn stroke.
@@ -22,16 +20,19 @@ public class AddStroke extends Command {
     protected SrlStroke data;
 
     public AddStroke(SrlStroke input){
+        /*
         id = UUID.fromString(input.getId());
         type = CommandType.ADD_STROKE;
 
-        data = new Stroke();
+        data = new SrlStroke();
         data.setId(UUID.fromString(input.getId()));
 
         data.setName(input.getName());
         for (SrlPoint s_point : input.getPointsList()) {
-            data.addPoint(new Point(s_point.getX(), s_point.getY(), s_point.getTime(),Point.nextID()));
+            data.addPoint(new SrlPoint(s_point.getX(), s_point.getY(), s_point.getTime(), SrlPoint.nextID()));
         }
+        */
+        data = input;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class AddStroke extends Command {
         strokebuilder.setTime(data.getTimeEnd());
         strokebuilder.setName(data.getName());
 
-        for (Point p: data.getPoints()){
+        for (SrlPoint p: data.getPoints()){
             SrlPoint.Builder pointbuilder = SrlPoint.newBuilder();
             pointbuilder.setX(p.x);
             pointbuilder.setY(p.y);
@@ -58,11 +59,11 @@ public class AddStroke extends Command {
     /**
      * adds a single stroke to the sketch for recognition
      */
-    public void execute(Sketch s) {
+    public void execute(SrlSketch s) {
         s.add(data);
     }
     @Override
-    public void undo(Sketch s) {
+    public void undo(SrlSketch s) {
         s.remove(data);
     }
 }
