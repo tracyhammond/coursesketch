@@ -44,169 +44,62 @@ function ProtobufSetup() {
     var PROTOBUF_PACKAGE = 'protobuf';
     var protobufDirectory = '/other/protobuf/';
 
-    var objectList = [];
+    var messageList = [];
     var enumList = [];
+    var serviceList = [];
+
+    var protoFiles = [
+        { fileName: 'assignment',
+            package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
+        { fileName: 'commands',
+            package: [PROTOBUF_PACKAGE, 'srl', 'commands'] },
+        { fileName: 'data',
+            package: [PROTOBUF_PACKAGE, 'srl', 'query'] },
+        { fileName: 'grading',
+            package: [PROTOBUF_PACKAGE, 'srl', 'grading'] },
+        { fileName: 'identity',
+            package: [PROTOBUF_PACKAGE, 'srl', 'services', 'identity'] },
+        { fileName: 'lecturedata',
+            package: [PROTOBUF_PACKAGE, 'srl', 'lecturedata'] },
+        { fileName: 'message',
+            package: [PROTOBUF_PACKAGE, 'srl', 'request'] },
+        { fileName: 'problem',
+            package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
+        { fileName: 'recognitionServer',
+            package: [PROTOBUF_PACKAGE, 'srl', 'services', 'recognition'] },
+        { fileName: 'school',
+            package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
+        { fileName: 'sketch',
+            package: [PROTOBUF_PACKAGE, 'srl', 'sketch'] },
+        { fileName: 'sketchUtil',
+            package: [PROTOBUF_PACKAGE, 'srl', 'sketch'] },
+        { fileName: 'submission',
+            package: [PROTOBUF_PACKAGE, 'srl', 'submission'] },
+        { fileName: 'util',
+            package: [PROTOBUF_PACKAGE, 'srl', 'utils'] },
+    ];
 
     /**
-     * Builds the Utility protobuf files.
-     *
-     * These can be used by all other protobuf files.
+     * Builds all of the protobuf files
      */
-    function buildUtil() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'util.proto');
-        var utilBuilder = builder.build(PROTOBUF_PACKAGE).srl.utils;
-        assignValues(utilBuilder);
-    }
-
-    /**
-     * Builds the Grade protobuf files.
-     *
-     * This is the base for storing and retrieving grades.
-     */
-    function buildGrade() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'grading.proto');
-        var gradingBuilder = builder.build(PROTOBUF_PACKAGE).srl.grading;
-        assignValues(gradingBuilder);
-    }
-
-    /**
-     * Builds the Message protobuf files.
-     *
-     * This is the base for talking to the server.
-     */
-    function buildMessage() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'message.proto');
-        var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
-        assignValues(requestPackage);
-    }
-
-    /**
-     * Builds the Data protobuf files.
-     *
-     * These ares used to talk with the database.
-     */
-    function buildDataQuery() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'data.proto');
-        var QueryBuilder = builder.build(PROTOBUF_PACKAGE).srl.query;
-        assignValues(QueryBuilder);
-    }
-
-    /**
-     * Builds the School protobuf files.
-     *
-     * These contain data about courses, assignments, and problems
-     */
-    function buildSchool() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'school.proto');
-        var SchoolBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
-        assignValues(SchoolBuilder);
-    }
-
-    /**
-     * Builds the Sketch protobuf files.
-     *
-     * This contains the sketchml format kinda.  It holds points, strokes, and shapes
-     */
-    function buildSketch() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'sketch.proto');
-        var sketchBuilder = builder.build(PROTOBUF_PACKAGE).srl.sketch;
-        assignValues(sketchBuilder, 'Proto');
-    }
-
-    /**
-     * Builds the UpdateList protobuf files.
-     *
-     * These contain all of the little actions that can occur
-     */
-    function buildUpdateList() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'commands.proto');
-        var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
-        assignValues(ProtoUpdateCommandBuilder);
-    }
-
-    /**
-     * Builds the UpdateList protobuf files.
-     *
-     * These contain all of the little actions that can occur
-     */
-    function buildIdentity() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'identity.proto');
-        var ProtoIdentityServiceBuilder = builder.build(PROTOBUF_PACKAGE).srl.services.identity;
-        assignValues(ProtoIdentityServiceBuilder);
-    }
-
-    /**
-     * Builds the Tutorial protobuf files.
-     *
-     * These ares used for the tutorials
-     */
-    function buildTutorial() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'tutorial.proto');
-        var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
-        assignValues(ProtoTutorialBuilder);
-    }
-
-    /**
-     * Builds the Submission protobuf files.
-     *
-     * These ares for submitting experiments or solutions.
-     */
-    function buildSubmissions() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'submission.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
-        assignValues(ProtoSubmissionBuilder);
-    }
-
-    /**
-     * Builds the Lecture protobuf files.
-     *
-     * These ares used for lecture data.
-     */
-    function buildLectures() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'lecturedata.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
-        assignValues(ProtoSubmissionBuilder);
-    }
-
-    /**
-     * Builds the Assignment protobuf files.
-     *
-     * These ares used for Assignment data.
-     */
-    function buildAssignments() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'assignment.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
-        assignValues(ProtoSubmissionBuilder);
-    }
-
-    /**
-     * Builds the Problem protobuf files.
-     *
-     * These ares used for Problems data.
-     */
-    function buildProblems() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'problem.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
-        assignValues(ProtoSubmissionBuilder);
+    function buildProtobuf() {
+        for (var i = 0; i < protoFiles.length; i++) {
+            var protoObject = protoFiles[i];
+            var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + protoObject.fileName + '.proto');
+            var mainPackage = builder.build(protoObject.package[0]);
+            var resultingPackage = mainPackage;
+            for (var j = 1; j < protoObject.package.length; j++) {
+                resultingPackage = resultingPackage[protoObject.package[j]];
+            }
+            assignValues(resultingPackage);
+        }
     }
 
     /**
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
-        buildUtil();
-        buildMessage();
-        buildSchool();
-        buildSketch();
-        buildUpdateList();
-        buildIdentity();
-        buildDataQuery();
-        buildTutorial();
-        buildSubmissions();
-        buildLectures();
-        buildAssignments();
-        buildProblems();
-        buildGrade();
+        buildProtobuf();
         return localScope;
     };
 
@@ -249,14 +142,24 @@ function ProtobufSetup() {
     function createProtoMethod(ClassType, messageName, preString) {
         var objectName = preString + messageName;
         if (isFunction(ClassType)) {
-            objectList.push(objectName);
+            var isService = ClassType.$type instanceof dcodeIO.ProtoBuf.Reflect.Service;
+            if (!isService) {
+                messageList.push(objectName);
+            } else {
+                serviceList.push(objectName);
+            }
             Object.defineProperty(localScope, objectName, {
                 /**
                  * @returns {Object} An instance a protobuf object.
                  */
                 value: function() {
-                    if (arguments.length > 0) {
+                    if (arguments.length > 0 && !isService) {
                         throw new ProtobufException('you can not create this object with arguments.');
+                    }
+
+                    if (isService) {
+                        var rpcImplementation = arguments[0];
+                        return new ClassType(rpcImplementation);
                     }
                     return new ClassType();
                 },
@@ -530,7 +433,7 @@ function ProtobufSetup() {
      */
     this.getSupportedObjects = function getSupportedObjects() {
         // The quickest way to clone.
-        return JSON.parse(JSON.stringify(objectList));
+        return JSON.parse(JSON.stringify(messageList));
     };
 
     /**
