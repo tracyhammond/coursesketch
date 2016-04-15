@@ -9,10 +9,9 @@ import com.google.protobuf.ByteString;
 import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.CommandType;
-import protobuf.srl.commands.Commands.IdChain;
-import srl.core.sketch.SComponent;
-import srl.core.sketch.SContainer;
-import srl.core.sketch.Sketch;
+import protobuf.srl.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
+import protobuf.srl.utils.SketchUtil.IdChain;
 
 /**
  * Command to take a group of shapes from one container and put them in a new
@@ -34,9 +33,9 @@ public class PackageShape extends Command {
         contained = input.getShapesToBeContainedList();
     }
 
-    public PackageShape(SContainer from, SContainer to, List<String> moving) {
-        oldContainer = forgeChain(from);
-        newContainer = forgeChain(to);
+    public PackageShape(Sketch.SrlObject from, Sketch.SrlObject to, List<String> moving) {
+        //oldContainer = forgeChain(from);
+        // newContainer = forgeChain(to);
 
         contained = moving;
     }
@@ -49,6 +48,7 @@ public class PackageShape extends Command {
      *
      * @return IdChain
      */
+    /*
     private IdChain forgeChain(SContainer top) {
         List<String> chain = new LinkedList<String>();
         for (SComponent component : top.getRecursiveSubcomponents()) {
@@ -58,6 +58,7 @@ public class PackageShape extends Command {
         builder.addAllIdChain(chain);
         return builder.build();
     }
+    */
 
     @Override
     public ByteString toByteString() {
@@ -75,7 +76,8 @@ public class PackageShape extends Command {
      * This one takes all the items with IDs contained in [contained]
      * from [OldContainer] and puts them in the [NewContainer]
      */
-    public void execute(Sketch s) {
+    public void execute(SrlSketch s) {
+        /*
         SContainer from;
         if (oldContainer == null)
             from = s;
@@ -96,9 +98,11 @@ public class PackageShape extends Command {
         for (String id : contained) {
             to.add(from.remove(UUID.fromString(id)));
         }
+        */
     }
 
-    public void undo(Sketch s) {
+    public void undo(SrlSketch s) {
+        /*
         SContainer from;
         if (oldContainer == null)
             from = s;
@@ -117,5 +121,6 @@ public class PackageShape extends Command {
         for (String id : contained) {
             from.add(to.remove(UUID.fromString(id)));
         }
+        */
     }
 }
