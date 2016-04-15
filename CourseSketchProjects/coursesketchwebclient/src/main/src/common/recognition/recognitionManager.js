@@ -22,6 +22,10 @@
         }
 
         var request = CourseSketch.prutil.createRequestFromData(generalRequest, CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
-        CourseSketch.dataListener.sendRequestWithTimeout(request, callback);
-    }
+        CourseSketch.dataListener.sendRequestWithTimeout(request, function (msg) {
+            
+        });
+    };
+
+    CourseSketch.recognition = CourseSketch.prutil.RecognitionService(recognitionRpcDefinition);
 });
