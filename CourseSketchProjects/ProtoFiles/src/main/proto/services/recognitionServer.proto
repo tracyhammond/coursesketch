@@ -50,16 +50,6 @@ message RecognitionUpdateList {
     optional protobuf.srl.commands.SrlUpdateList updateList = 2;
 }
 
-message RecognitionTemplate {
-    optional string templateId = 1;
-    oneof TemplateType {
-        protobuf.srl.sketch.SrlStroke stroke = 2;
-        protobuf.srl.sketch.SrlShape shape = 3;
-        protobuf.srl.sketch.SrlSketch sketch = 4;
-    }
-    optional protobuf.srl.sketch.SrlInterpretation interpretation = 5;
-}
-
 message RecognitionResponse {
     /**
      * This is the list of changes that need to be made as suggested by the recognition server.

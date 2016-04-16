@@ -61,8 +61,23 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     }
 
     @Override
-    public List<Sketch.SrlObject> getTemplate(Sketch.SrlInterpretation srlInterpretation) {
-        return null;
+    public List<Sketch.RecognitionTemplate> getTemplate(Sketch.SrlInterpretation srlInterpretation) {
+        final List<Sketch.RecognitionTemplate> templateList = new List<Sketch.RecognitionTemplate>();
+
+        final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
+        final BasicDBObject interpretationDbObject = makeSrlInterpretation(srlInterpretation);
+
+        final DBCursor templateObjectCursor = templates.find(interpretationDbObject);
+
+        while(templateObjectCursor.hasNext()) {
+            DBObject templateObject = templateObjectCursor.next();
+
+            String id = (String)templateObject.get(TEMPLATE_ID);
+            Sketch.SrlInterpretation interpretation = getInterpretation(
+                    (DBObject)templateObject.get(TEMPLATE_INT));
+            Sketch.SrlStroke stroke = getStroke(
+                    (DBObject)templateObject.get(TEMPLATE_TYPE));
+        }
     }
 
     private BasicDBObject makeDbStoke(Sketch.SrlStroke srlStroke) {
@@ -110,5 +125,24 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     private BasicDBObject makeSrlInterpretation(Sketch.SrlInterpretation srlInterpretation) {
         return new BasicDBObject(INT_LABEL, srlInterpretation.getLabel())
                 .append(INT_CONFIDENCE, srlInterpretation.getConfidence());
+    }
+
+    private Sketch.SrlInterpretation getInterpretation(DBObject interpretationObject) {
+        String intLabel = (String)interpretationObject.get(INT_LABEL);
+        Double intConfidence = (Double)interpretationObject.get(INT_CONFIDENCE);
+
+        Sketch.SrlInterpretation.Builder srlInterpretation = Sketch.SrlInterpretation.newBuilder();
+        srlInterpretation.setLabel(intLabel);
+        srlInterpretation.setConfidence(intConfidence);
+
+        return srlInterpretation.build();
+    }
+
+    private Sketch.SrlStroke getStroke(DBObject strokeObject) {
+        String strokeId = (String)strokeObject.get(STROKE_ID);
+        long time = (long)strokeObject.get(STROKE_TIME);
+        if (strokeObject.containsField(STROKE_NAME)) {
+            String name = (String) strokeObject.get(STROKE_NAME);
+        }
     }
 }
