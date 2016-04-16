@@ -23,8 +23,8 @@
             generalRequest.setTemplate(req);
             returnType = CourseSketch.prutil.getDefaultResponseClass();
         } else if (shortenedMethodName === 'recognize') {
-            generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.SET_NEW_LIST);
-            generalRequest.setTemplate(req);
+            generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.RECOGNIZE);
+            generalRequest.setSetUpdateList(req);
         }
 
         console.log('rpc data is set!');

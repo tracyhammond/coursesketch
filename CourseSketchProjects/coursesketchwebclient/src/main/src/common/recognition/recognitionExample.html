@@ -60,7 +60,10 @@
             $('#recognize').click(function() {
                 // TODO: disable add template
                 updateManager.getCleanUpdateList(function(updateList) {
-                    CourseSketch.recognition.recognize(sketchSurface.id, updateList, function(err, msg) {
+                    console.log(updateList);
+                    var srlUpdateList = CourseSketch.prutil.SrlUpdateList();
+                    srlUpdateList.list = updateList;
+                    CourseSketch.recognition.recognize(sketchSurface.id, srlUpdateList, function(err, msg) {
                         console.log(err, msg);
                     });
                 });

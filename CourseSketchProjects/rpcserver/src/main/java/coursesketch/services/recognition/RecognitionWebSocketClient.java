@@ -175,12 +175,12 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
             recognitionResponse = recognitionService.recognize(getNewRpcController(), recognitionUpdateList.build());
             if (recognitionResponse.getDefaultResponse().hasException()) {
                 final DatabaseAccessException databaseException =
-                        new DatabaseAccessException("Exception with submission server");
+                        new DatabaseAccessException("Exception with recognition server");
                 databaseException.setProtoException(recognitionResponse.getDefaultResponse().getException());
-                throw new RecognitionException("Exception when adding template", databaseException);
+                throw new RecognitionException("Exception when recognizing update List", databaseException);
             }
         } catch (ServiceException e) {
-            throw new RecognitionException("Exception when adding template", e);
+            throw new RecognitionException("Service Exception when recognizing update List", e);
         }
         return recognitionResponse.getChanges();
     }

@@ -59,6 +59,9 @@
  **/
 package coursesketch.recognition.pdollar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +70,12 @@ import java.util.List;
 // PDollarRecognizer class constants
 //
 public class PDollarRecognizer {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(PDollarRecognizer.class);
+
 
     static int mNumPoints = 32;
     static Point mPointOrig = new Point(0.0, 0.0, 0);
@@ -77,6 +86,7 @@ public class PDollarRecognizer {
     }
 
     public RecognizerResults Recognize(List<Point> points) {
+
         PointCloud foundPointCloud = null;
         points = Resample(points, mNumPoints);
         points = Scale(points);
@@ -153,7 +163,7 @@ public class PDollarRecognizer {
         newpoints.add(points.get(0));
 
         for (int i = 1; i < points.size(); i++) {
-            if (points.get(i).ID == points.get(i - 1).ID) {
+            if (points.get(i).ID.equals(points.get(i - 1).ID)) {
                 double d = EuclideanDistance(points.get(i - 1), points.get(i));
                 if ((D + d) >= I) {
                     double qx = points.get(i - 1).X + ((I - D) / d) * (points.get(i).X - points.get(i - 1).X);
@@ -232,7 +242,7 @@ public class PDollarRecognizer {
     private static double PathLength(List<Point> points) {
         double d = 0.0;
         for (int i = 1; i < points.size(); i++) {
-            if (points.get(i).ID == points.get(i - 1).ID)
+            if (points.get(i).ID.equals(points.get(i - 1).ID))
                 d += EuclideanDistance(points.get(i - 1), points.get(i));
         }
         return d;

@@ -49,6 +49,7 @@ public class BasicRecognition extends DefaultRecognition {
         List<Sketch.SrlStroke> srlStrokes = new ArrayList<>();
         List<Point> pointCloud = convert(srlUpdateList, srlStrokes);
         final RecognizerResults recognizerResults = recognizer.Recognize(pointCloud);
+        LOG.info("RECOGNIZED SKETCH AS " + recognizerResults.mName);
 
         Sketch.SrlInterpretation.Builder interpretation = Sketch.SrlInterpretation.newBuilder();
         interpretation.setLabel(recognizerResults.mName);
@@ -103,7 +104,7 @@ public class BasicRecognition extends DefaultRecognition {
                     try {
                         Sketch.SrlStroke stroke = Sketch.SrlStroke.parseFrom(command.getCommandData());
                         List<Sketch.SrlPoint> srlPoints = stroke.getPointsList();
-                        List<Point> tempPoints = srlPointsToPoint(srlPoints);
+                        List<Point> tempPoints = srlPointsToPoint(srlPoints, stroke.getId());
                         points.addAll(tempPoints);
                         affectedStrokes.add(stroke);
                     }
@@ -116,10 +117,10 @@ public class BasicRecognition extends DefaultRecognition {
         return points;
     }
 
-    private List<Point> srlPointsToPoint(List<Sketch.SrlPoint> srlPoints) {
+    private List<Point> srlPointsToPoint(List<Sketch.SrlPoint> srlPoints, String strokeId) {
         List<Point> points = new ArrayList<Point>();
         for (Sketch.SrlPoint srlPoint : srlPoints) {
-            Point point = new Point(srlPoint.getX(), srlPoint.getY(), srlPoint.getId().hashCode());
+            Point point = new Point(srlPoint.getX(), srlPoint.getY(), strokeId);
             points.add(point);
         }
         return points;

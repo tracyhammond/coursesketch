@@ -62,11 +62,21 @@ package coursesketch.recognition.pdollar;
 public class Point {
     public double X;
     public double Y;
-    public int ID;
+    public String ID;
 
     public Point(double x, double y, int id) {
         X = x;
         Y = y;
-        ID = id;
+        ID = "" + id;
+    }
+
+    public Point(double x, double y, String id) {
+        X = x;
+        Y = y;
+        ID = "" + id;
+    }
+
+    public String toString() {
+        return ID + ": [" + X + ", " + Y + "]";
     }
 }
