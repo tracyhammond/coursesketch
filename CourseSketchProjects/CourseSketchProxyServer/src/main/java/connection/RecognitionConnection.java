@@ -9,8 +9,11 @@ import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.server.base.ClientWebSocket;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.serverfront.ProxyServerWebSocketHandler;
 import coursesketch.services.recognition.RecognitionWebSocketClient;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.recognition.RecognitionServer;
@@ -23,6 +26,10 @@ import utilities.ConnectionException;
  */
 @WebSocket(maxBinaryMessageSize = AbstractServerWebSocketHandler.MAX_MESSAGE_SIZE)
 public class RecognitionConnection extends RecognitionWebSocketClient {
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ProxyServerWebSocketHandler.class);
 
     /**
      * Creates a ConnectionWrapper to a destination using a given server.
@@ -53,10 +60,13 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
         Commands.SrlUpdateList updateList;
         switch (generalRecognitionRequest.getRequestType()) {
             case ADD_UPDATE:
+                LOG.debug(generalRecognitionRequest.toString());
+                response = RecognitionServer.RecognitionResponse.newBuilder();
                 updateList = super.addUpdate(generalRecognitionRequest.getAddUpdate().getRecognitionId(), generalRecognitionRequest.getAddUpdate().getUpdate());
                 response.setChanges(updateList);
                 break;
             case SET_NEW_LIST:
+                response = RecognitionServer.RecognitionResponse.newBuilder();
                 updateList = super.setUpdateList(generalRecognitionRequest.getSetUpdateList().getRecognitionId(), generalRecognitionRequest.getSetUpdateList().getUpdateList());
                 response.setChanges(updateList);
                 break;
@@ -72,6 +82,7 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
                 }
                 break;
             case RECOGNIZE:
+                response = RecognitionServer.RecognitionResponse.newBuilder();
                 updateList = super.recognize(generalRecognitionRequest.getSetUpdateList().getRecognitionId(), generalRecognitionRequest.getSetUpdateList().getUpdateList());
                 response.setChanges(updateList);
                 break;

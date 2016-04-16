@@ -46,6 +46,8 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
 
     @Override public void addUpdate(final RpcController controller, final RecognitionServer.AddUpdateRequest request,
             final RpcCallback<RecognitionServer.RecognitionResponse> done) {
+        LOG.debug("REQUEST: {}", request);
+
         RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
 
         SrlUpdate.Builder update = request.getUpdate().newBuilderForType();
@@ -71,8 +73,10 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         addShapeCommand.setCommandId(UUID.randomUUID().toString());
 
         ActionPackageShape.Builder actionPackageShape = Commands.ActionPackageShape.newBuilder();
+        LOG.debug("About to create a SrlStroke");
+        LOG.debug(update.toString());
         try {
-            SrlStroke stroke = SrlStroke.parseFrom(update.getCommands(0).getCommandData());
+            SrlStroke stroke = SrlStroke.parseFrom(request.getUpdate().getCommands(0).getCommandData());
             actionPackageShape.addShapesToBeContained(stroke.getId());
         }
         catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -81,6 +85,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
             done.run(result.build());
             return;
         }
+        LOG.info("Created a SrlStroke!");
         actionPackageShape.setNewContainerId(shapeIdChain);
 
         SrlCommand.Builder packageShapeCommand = SrlCommand.newBuilder();
