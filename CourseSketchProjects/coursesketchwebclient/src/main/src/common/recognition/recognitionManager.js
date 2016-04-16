@@ -58,21 +58,21 @@
     function addSketchTemplate(recognitionId, sketch, callback) {
         var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
         recogTemplate.setTemplateId(recognitionId);
-        recogTemplate.setTemplateType(sketch);
+        recogTemplate.setSketch(sketch);
         CourseSketch.recognitionService.addTemplate(recogTemplate, callback);
     }
 
     function addShapeTemplate(recognitionId, shape, callback) {
         var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
         recogTemplate.setTemplateId(recognitionId);
-        recogTemplate.setTemplateType(shape);
+        recogTemplate.setShape(shape);
         CourseSketch.recognitionService.addTemplate(recogTemplate, callback);
     }
 
     function addStrokeTemplate(recognitionId, stroke, callback) {
         var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
         recogTemplate.setTemplateId(recognitionId);
-        recogTemplate.setTemplateType(stroke);
+        recogTemplate.setStroke(stroke);
         CourseSketch.recognitionService.addTemplate(recogTemplate, callback);
     }
 

@@ -22,6 +22,8 @@
 <body>
 <div style="height: 600px;position: relative;">
     <sketch-surface id="hello" style="height: 100%; border: 5px solid red;"></sketch-surface>
+    <input type="text" />
+    <button>Submit Template</button>
 </div>
     <script>
         $(document).ready(function() {
@@ -40,6 +42,14 @@
                 }
             });
             sketchSurface.resizeSurface();
+            $('button').click(function() {
+                var sketch = sketchSurface.getCurrentSketch();
+                var protoBuf = sketch.sendToProtobuf();
+                var label = 'line';
+                CourseSketch.recognition.addSketchTemplate(label, protoBuf, function(err, success) {
+                   console.log(err, success);
+                });
+            });
         });
     </script>
 </body>
