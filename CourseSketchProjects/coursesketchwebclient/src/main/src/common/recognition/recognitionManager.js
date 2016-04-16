@@ -116,7 +116,7 @@
             if (!isUndefined(toRemote) && toRemote) {
                 CourseSketch.recognition.addUpdate(sketchId, cleanUpdate, function(err, msg) {
                     console.log('It worked@!!!', err, msg);
-                    if (!isUndefined(err) || isUndefined(msg)) {
+                    if ((!isUndefined(err) && err !== null) || isUndefined(msg)) {
                         console.log('problems with the response');
                         return;
                     }
