@@ -1,10 +1,8 @@
 package coursesketch.services.recognition;
 
 import com.google.protobuf.ServiceException;
-import coursesketch.database.auth.AuthenticationException;
-import coursesketch.database.auth.Authenticator;
-import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.recognition.framework.RecognitionInterface;
+import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.recognition.framework.exceptions.TemplateException;
 import coursesketch.server.compat.ClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -14,14 +12,9 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.recognition.RecognitionServer;
-import protobuf.srl.services.submission.SubmissionServer;
 import protobuf.srl.sketch.Sketch;
-import protobuf.srl.submission.Submission;
 
-import javax.naming.OperationNotSupportedException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -132,12 +125,12 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
      * @param template
      * @throws TemplateException
      */
-    private void addTemplate(final RecognitionServer.RecognitionTemplate.Builder template) throws TemplateException {
+    private void addTemplate(final Sketch.SrlInterpretation interpretation, final RecognitionServer.RecognitionTemplate.Builder template) throws TemplateException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
-
         template.setTemplateId(UUID.randomUUID().toString());
+        template.setInterpretation(interpretation);
         try {
             LOG.debug("Sending template addition request");
             final Message.DefaultResponse defaultResponse = recognitionService.addTemplate(getNewRpcController(), template.build());
@@ -152,16 +145,16 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         }
     }
 
-    @Override public void addTemplate(final Sketch.SrlSketch sketch) throws TemplateException {
-        addTemplate(RecognitionServer.RecognitionTemplate.newBuilder().setSketch(sketch));
+    @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlSketch sketch) throws TemplateException {
+        addTemplate(interpretation, RecognitionServer.RecognitionTemplate.newBuilder().setSketch(sketch));
     }
 
-    @Override public void addTemplate(final Sketch.SrlShape srlShape) throws TemplateException  {
-        addTemplate(RecognitionServer.RecognitionTemplate.newBuilder().setShape(srlShape));
+    @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlShape srlShape) throws TemplateException  {
+        addTemplate(interpretation, RecognitionServer.RecognitionTemplate.newBuilder().setShape(srlShape));
     }
 
-    @Override public void addTemplate(final Sketch.SrlStroke srlStroke) throws TemplateException {
-        addTemplate(RecognitionServer.RecognitionTemplate.newBuilder().setStroke(srlStroke));
+    @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlStroke srlStroke) throws TemplateException {
+        addTemplate(interpretation, RecognitionServer.RecognitionTemplate.newBuilder().setStroke(srlStroke));
     }
 
     @Override public Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)

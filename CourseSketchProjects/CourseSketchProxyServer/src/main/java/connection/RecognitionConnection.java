@@ -73,13 +73,13 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
                 break;
             case ADD_TEMPLATE:
                 if (generalRecognitionRequest.getTemplate().hasShape()) {
-                     super.addTemplate(generalRecognitionRequest.getTemplate().getShape());
+                     super.addTemplate(generalRecognitionRequest.getTemplate().getInterpretation(), generalRecognitionRequest.getTemplate().getShape());
                 }
                 else if (generalRecognitionRequest.getTemplate().hasSketch()) {
-                    super.addTemplate(generalRecognitionRequest.getTemplate().getSketch());
+                    super.addTemplate(generalRecognitionRequest.getTemplate().getInterpretation(), generalRecognitionRequest.getTemplate().getSketch());
                 }
                 else {
-                    super.addTemplate(generalRecognitionRequest.getTemplate().getStroke());
+                    super.addTemplate(generalRecognitionRequest.getTemplate().getInterpretation(), generalRecognitionRequest.getTemplate().getStroke());
                 }
                 break;
             case RECOGNIZE:
