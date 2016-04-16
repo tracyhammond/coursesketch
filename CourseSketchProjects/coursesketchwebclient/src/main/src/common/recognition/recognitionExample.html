@@ -27,7 +27,9 @@
         $(document).ready(function() {
             var elements = document.getElementsByTagName('sketch-surface');
             console.log(elements);
-            elements[0].getUpdateManager().addPlugin(CourseSketch.recognitionPlugin);
+            var sketchSurface = elements[0];
+            var updateManager = sketchSurface.getUpdateManager();
+            updateManager.addPlugin(CourseSketch.createRecognitionPlugin(updateManager, sketchSurface.id));
         });
     </script>
 </body>

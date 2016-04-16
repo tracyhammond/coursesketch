@@ -117,15 +117,20 @@
                 CourseSketch.recognition.addUpdate(sketchId, cleanUpdate, function(err, msg) {
                     console.log('It worked@!!!', err, msg);
                     if (!isUndefined(err) || isUndefined(msg)) {
-                        console.log('problems with the response')
+                        console.log('problems with the response');
                         return;
                     }
-                    var changes = msg.changes;
-                    for (var i = 0; i < changes)
+                    var updateList = msg.changes;
+                    var updates = updateList.list;
+                    for (var i = 0; i < updates.length; i++) {
+                        var update = updates[i];
+                        updateManager.addUpdate(update);
+                    }
                 });
             }
         };
     }
+
     CourseSketch.createRecognitionPlugin = function(updateManager, sketchId) {
         return new RecognitionPlugin(updateManager, sketchId);
     }
