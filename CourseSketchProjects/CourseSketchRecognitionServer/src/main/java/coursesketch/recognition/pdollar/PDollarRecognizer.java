@@ -61,6 +61,7 @@ package coursesketch.recognition.pdollar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 //
 // PDollarRecognizer class constants
@@ -69,13 +70,13 @@ public class PDollarRecognizer {
 
     static int mNumPoints = 32;
     static Point mPointOrig = new Point(0.0, 0.0, 0);
-    static ArrayList<PointCloud> mPntClouds = new ArrayList<PointCloud>();
+    static List<PointCloud> mPntClouds = new ArrayList<PointCloud>();
 
     public PDollarRecognizer() {
         initializePointCloudTable();
     }
 
-    public RecognizerResults Recognize(ArrayList<Point> points) {
+    public RecognizerResults Recognize(List<Point> points) {
         PointCloud foundPointCloud = null;
         points = Resample(points, mNumPoints);
         points = Scale(points);
@@ -94,7 +95,7 @@ public class PDollarRecognizer {
                 : new RecognizerResults(foundPointCloud.mName, Math.max((score - 2.0) / -2.0, 0.0), String.format("score %f\n", score));
     }
 
-    public int addGesture(String name, ArrayList<Point> points) {
+    public int addGesture(String name, List<Point> points) {
         mPntClouds.add(new PointCloud(name, points, mNumPoints));
         int num = 0;
         for (int i = 0; i < mPntClouds.size(); i++) {
@@ -104,7 +105,7 @@ public class PDollarRecognizer {
         return num;
     }
 
-    private static double GreedyCloudMatch(ArrayList<Point> points, PointCloud pntCloud) {
+    private static double GreedyCloudMatch(List<Point> points, PointCloud pntCloud) {
         double e = 0.50;
         double step = Math.floor(Math.pow(points.size(), 1 - e));
 
@@ -117,7 +118,7 @@ public class PDollarRecognizer {
         return min;
     }
 
-    private static double CloudDistance(ArrayList<Point> pts1, ArrayList<Point> pts2, int start) {
+    private static double CloudDistance(List<Point> pts1, List<Point> pts2, int start) {
         // pts1.size() == pts2.size()
         boolean[] matched = new boolean[pts1.size()];
         for (int k = 0; k < pts1.size(); k++)
@@ -144,11 +145,11 @@ public class PDollarRecognizer {
         return sum;
     }
 
-    private static ArrayList<Point> Resample(ArrayList<Point> points, int n) {
+    private static List<Point> Resample(List<Point> points, int n) {
         double I = PathLength(points) / (n - 1); // interval length
         double D = 0.0;
 
-        ArrayList<Point> newpoints = new ArrayList<Point>();
+        List<Point> newpoints = new ArrayList<Point>();
         newpoints.add(points.get(0));
 
         for (int i = 1; i < points.size(); i++) {
@@ -174,7 +175,7 @@ public class PDollarRecognizer {
         return newpoints;
     }
 
-    private static ArrayList<Point> Scale(ArrayList<Point> points) {
+    private static List<Point> Scale(List<Point> points) {
         double minX = Double.POSITIVE_INFINITY, maxX = Double.NEGATIVE_INFINITY;
         double minY = Double.POSITIVE_INFINITY, maxY = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < points.size(); i++) {
@@ -185,7 +186,7 @@ public class PDollarRecognizer {
         }
 
         double size = Math.max(maxX - minX, maxY - minY);
-        ArrayList<Point> newpoints = new ArrayList<Point>();
+        List<Point> newpoints = new ArrayList<Point>();
 
         for (int i = 0; i < points.size(); i++) {
             double qx = (points.get(i).X - minX) / size;
@@ -195,10 +196,10 @@ public class PDollarRecognizer {
         return newpoints;
     }
 
-    private static ArrayList<Point> TranslateTo(ArrayList<Point> points, Point pt) // translates points' centroid
+    private static List<Point> TranslateTo(List<Point> points, Point pt) // translates points' centroid
     {
         Point c = Centroid(points);
-        ArrayList<Point> newpoints = new ArrayList<Point>();
+        List<Point> newpoints = new ArrayList<Point>();
         for (int i = 0; i < points.size(); i++) {
             double qx = points.get(i).X + pt.X - c.X;
             double qy = points.get(i).Y + pt.Y - c.Y;
@@ -207,7 +208,7 @@ public class PDollarRecognizer {
         return newpoints;
     }
 
-    private static Point Centroid(ArrayList<Point> points) {
+    private static Point Centroid(List<Point> points) {
         double x = 0.0;
         double y = 0.0;
         for (int i = 0; i < points.size(); i++) {
@@ -220,7 +221,7 @@ public class PDollarRecognizer {
     }
 
     // average distance between corresponding points in two paths
-    private static double PathDistance(ArrayList<Point> pts1, ArrayList<Point> pts2) {
+    private static double PathDistance(List<Point> pts1, List<Point> pts2) {
         double d = 0.0;
         for (int i = 0; i < pts1.size(); i++) // assumes pts1.size() == pts2.size()
             d += EuclideanDistance(pts1.get(i), pts2.get(i));
@@ -228,7 +229,7 @@ public class PDollarRecognizer {
     }
 
     // length traversed by a point path
-    private static double PathLength(ArrayList<Point> points) {
+    private static double PathLength(List<Point> points) {
         double d = 0.0;
         for (int i = 1; i < points.size(); i++) {
             if (points.get(i).ID == points.get(i - 1).ID)
@@ -248,10 +249,10 @@ public class PDollarRecognizer {
     // PointCloud class: a point-cloud template
     //
     public class PointCloud {
-        public ArrayList<Point> mPoints;
+        public List<Point> mPoints;
         public String mName;
 
-        PointCloud(String name, ArrayList<Point> points, int numPoints) {
+        PointCloud(String name, List<Point> points, int numPoints) {
 
             mName = name;
             mPoints = points;

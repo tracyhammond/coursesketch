@@ -3,6 +3,7 @@ package coursesketch.services;
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import coursesketch.recognition.framework.RecognitionInterface;
+import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import org.slf4j.Logger;
@@ -145,11 +146,13 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
     public void recognize(final RpcController controller, final RecognitionServer.RecognitionUpdateList request,
             final RpcCallback<RecognitionServer.RecognitionResponse> done) {
 
-        SrlUpdateList updateList = SrlUpdateList.getDefaultInstance();
-
         RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
-
-        result.setChanges(updateList);
+        try {
+            result.setChanges(recognitionManager.recognize(request.getRecognitionId(), request.getUpdateList()));
+        } catch (RecognitionException e) {
+            final Message.ProtoException protoException = ExceptionUtilities.createProtoException(e);
+            result.setDefaultResponse(Message.DefaultResponse.newBuilder().setException(protoException).build());
+        }
 
         done.run(result.build());
     }
