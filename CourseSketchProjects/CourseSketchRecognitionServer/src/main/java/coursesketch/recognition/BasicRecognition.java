@@ -38,4 +38,8 @@ public class BasicRecognition extends DefaultRecognition {
     @Override public Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch srlSketch) throws RecognitionException {
         return null;
     }
+
+    private List<Point> convert(Commands.SrlUpdateList srlUpdateList) {
+        return null;
+    }
 }
