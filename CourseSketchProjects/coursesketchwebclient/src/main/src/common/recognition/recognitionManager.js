@@ -96,7 +96,7 @@
      *
      * @class RecognitionPlugin
      */
-    function RecognitionPlugin() {
+    function RecognitionPlugin(updateManager, sketchId) {
         /**
          * Holds the list of updates that are waiting to be sent to the server.
          *
@@ -114,11 +114,19 @@
             console.log("adding update!");
             var cleanUpdate = CourseSketch.prutil.cleanProtobuf(update, CourseSketch.prutil.getSrlUpdateClass());
             if (!isUndefined(toRemote) && toRemote) {
-                CourseSketch.recognition.addUpdate('5', cleanUpdate, function(err, msg) {
+                CourseSketch.recognition.addUpdate(sketchId, cleanUpdate, function(err, msg) {
                     console.log('It worked@!!!', err, msg);
+                    if (!isUndefined(err) || isUndefined(msg)) {
+                        console.log('problems with the response')
+                        return;
+                    }
+                    var changes = msg.changes;
+                    for (var i = 0; i < changes)
                 });
             }
         };
     }
-    CourseSketch.recognitionPlugin = new RecognitionPlugin();
+    CourseSketch.createRecognitionPlugin = function(updateManager, sketchId) {
+        return new RecognitionPlugin(updateManager, sketchId);
+    }
 })();
