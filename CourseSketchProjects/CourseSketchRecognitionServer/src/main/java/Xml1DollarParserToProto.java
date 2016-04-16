@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Xml1DollarParserToProto {
         databaseUrl.add(new ServerAddress());
 
         RecognitionDatabaseClient client = new RecognitionDatabaseClient(new ServerInfo("localhost", 0, 0, false, true, "Recognition", databaseUrl));
+        client.startDatabase();
 
         File f = new File("../xml_logs");
         navigateFiles(f, client);
@@ -45,8 +47,13 @@ public class Xml1DollarParserToProto {
             if (fileEntry.isDirectory()) {
                 navigateFiles(fileEntry, client);
             } else {
-                final Sketch.RecognitionTemplate recognitionTemplate = parseFile(
-                        ClassLoader.getSystemResourceAsStream(fileEntry.getAbsolutePath()));
+                System.out.println(fileEntry.getAbsolutePath());
+                if (!fileEntry.getName().contains(".xml")) {
+                    System.out.println(fileEntry.getName());
+                    continue;
+                }
+                final InputStream inputStream = new FileInputStream(fileEntry);
+                final Sketch.RecognitionTemplate recognitionTemplate = parseFile(inputStream);
                 client.addTemplate(recognitionTemplate.getInterpretation(), recognitionTemplate.getStroke());
             }
         }
@@ -65,7 +72,6 @@ public class Xml1DollarParserToProto {
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         final Element documentElement = document.getDocumentElement();
         System.out.println(documentElement);
-        System.out.println();
         String gestureName = documentElement.getAttribute("Name");
 
         final NodeList gestureChildNodes = documentElement.getElementsByTagName("Point");
