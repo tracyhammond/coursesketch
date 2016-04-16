@@ -1,3 +1,5 @@
+package parsers;
+
 import com.mongodb.ServerAddress;
 import coursesketch.database.RecognitionDatabaseClient;
 import coursesketch.server.interfaces.ServerInfo;

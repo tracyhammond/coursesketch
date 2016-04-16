@@ -1,3 +1,5 @@
+package parsers;
+
 import com.mongodb.ServerAddress;
 import coursesketch.database.RecognitionDatabaseClient;
 import coursesketch.server.interfaces.ServerInfo;
@@ -23,7 +25,7 @@ import java.util.UUID;
 /**
  * Created by gigemjt on 4/16/16.
  */
-public class Xml1DollarParserToProto {
+public class Xml1DollarParserToDb {
     public static void main(String args[]) throws Exception {
         //Get the DOM Builder Factory
         System.out.println("Working Directory = " +
