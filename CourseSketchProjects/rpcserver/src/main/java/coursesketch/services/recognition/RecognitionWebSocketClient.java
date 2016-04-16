@@ -125,7 +125,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
      * @param template
      * @throws TemplateException
      */
-    private void addTemplate(final Sketch.SrlInterpretation interpretation, final RecognitionServer.RecognitionTemplate.Builder template) throws TemplateException {
+    private void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.RecognitionTemplate.Builder template) throws TemplateException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
@@ -146,15 +146,15 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
     }
 
     @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlSketch sketch) throws TemplateException {
-        addTemplate(interpretation, RecognitionServer.RecognitionTemplate.newBuilder().setSketch(sketch));
+        addTemplate(interpretation, Sketch.RecognitionTemplate.newBuilder().setSketch(sketch));
     }
 
     @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlShape srlShape) throws TemplateException  {
-        addTemplate(interpretation, RecognitionServer.RecognitionTemplate.newBuilder().setShape(srlShape));
+        addTemplate(interpretation, Sketch.RecognitionTemplate.newBuilder().setShape(srlShape));
     }
 
     @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlStroke srlStroke) throws TemplateException {
-        addTemplate(interpretation, RecognitionServer.RecognitionTemplate.newBuilder().setStroke(srlStroke));
+        addTemplate(interpretation, Sketch.RecognitionTemplate.newBuilder().setStroke(srlStroke));
     }
 
     @Override public Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
