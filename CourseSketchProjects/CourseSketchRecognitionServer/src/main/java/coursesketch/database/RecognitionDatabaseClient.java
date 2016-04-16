@@ -59,7 +59,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     }
 
     private BasicDBObject MakeDbStoke(Sketch.SrlStroke srlStroke) {
-        final BasicDBObject strokeQuery =
+        // final BasicDBObject strokeQuery =
         return null;
     }
 }
