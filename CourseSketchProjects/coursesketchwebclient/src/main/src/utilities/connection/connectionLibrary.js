@@ -88,12 +88,14 @@ function Connection(uri, encrypted, attemptReconnect) {
             websocket.onmessage = function(evt) {
                 /*jshint maxcomplexity:16 */
                 try {
-                    if (msg.requestType === MessageType.RECOGNITION ) {
-                        console.log("YO REC YO");
-                    }
+
                     var MessageType = CourseSketch.prutil.getRequestClass().MessageType;
                     // Decode the Request
                     var msg = CourseSketch.prutil.getRequestClass().decode(evt.data);
+
+                    if (msg.requestType === MessageType.RECOGNITION ) {
+                        console.log("YO REC YO");
+                    }
                     // console.log('request decoded succesfully ');
                     if (msg.requestType === MessageType.TIME) {
                         console.log('getting from time');
