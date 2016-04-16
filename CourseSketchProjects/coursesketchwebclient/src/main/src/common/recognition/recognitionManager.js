@@ -29,7 +29,7 @@
 
         console.log('rpc data is set!');
         var request = CourseSketch.prutil.createRequestFromData(generalRequest, CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
-        console.log('rpc data is added!');
+        console.log('rpc data is added and being sent: ', generalRequest);
         CourseSketch.dataListener.sendRequestWithTimeout(request, function (evt, msg) {
             console.log('we got info back from the recognition server!!', msg);
             // TODO: add exception checking
