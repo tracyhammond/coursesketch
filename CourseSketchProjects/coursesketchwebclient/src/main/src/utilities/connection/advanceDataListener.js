@@ -278,7 +278,7 @@ function AdvanceDataListener(Request, defListener) {
             var clonedRequest = CourseSketch.prutil.cleanProtobuf(request, CourseSketch.prutil.getRequestClass());
             clonedRequest.otherData = TIMEOUT_CONST;
             decode(undefined, clonedRequest);
-        }, 5000);
+        }, 50000);
     };
 
 
