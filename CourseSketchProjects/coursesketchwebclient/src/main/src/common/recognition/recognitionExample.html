@@ -20,8 +20,8 @@
 
 </head>
 <body>
-<div>
-    <sketch-surface id="hello" style="height:50%; width:100%; border: 5px solid red;"></sketch-surface>
+<div style="height: 600px;position: relative;">
+    <sketch-surface id="hello" style="height: 100%; border: 5px solid red;"></sketch-surface>
 </div>
     <script>
         $(document).ready(function() {
@@ -30,6 +30,16 @@
             var sketchSurface = elements[0];
             var updateManager = sketchSurface.getUpdateManager();
             updateManager.addPlugin(CourseSketch.createRecognitionPlugin(updateManager, sketchSurface.id));
+            var resized = false;
+            updateManager.addPlugin({
+                addUpdate: function() {
+                    if (!resized) {
+                        sketchSurface.resizeSurface();
+                        resized = true;
+                    }
+                }
+            });
+            sketchSurface.resizeSurface();
         });
     </script>
 </body>
