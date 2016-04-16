@@ -1,10 +1,6 @@
 package coursesketch.database;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.server.interfaces.ServerInfo;
