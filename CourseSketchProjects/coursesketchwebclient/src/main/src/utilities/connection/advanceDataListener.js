@@ -220,6 +220,7 @@ function AdvanceDataListener(Request, defListener) {
      */
     this.getListenerHook = function() {
         return function (evt, msg) {
+            console.log('MESSAGE FROM THE RECOGNITION SERVER!');
             decode(evt, msg);
         };
     };
