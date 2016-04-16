@@ -7,6 +7,7 @@ import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
 import protobuf.srl.sketch.Sketch;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -78,7 +79,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
     @Override
     public List<Sketch.RecognitionTemplate> getTemplate(Sketch.SrlInterpretation srlInterpretation) {
-        final List<Sketch.RecognitionTemplate> templateList = new List<Sketch.RecognitionTemplate>();
+        final List<Sketch.RecognitionTemplate> templateList = new ArrayList<Sketch.RecognitionTemplate>();
 
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
         final BasicDBObject interpretationDbObject = makeSrlInterpretation(srlInterpretation);
@@ -94,6 +95,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
             Sketch.SrlStroke stroke = getStroke(
                     (DBObject)templateObject.get(TEMPLATE_TYPE));
         }
+        return null;
     }
 
 
@@ -161,5 +163,6 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         if (strokeObject.containsField(STROKE_NAME)) {
             String name = (String) strokeObject.get(STROKE_NAME);
         }
+        return null;
     }
 }
