@@ -86,8 +86,8 @@
     function recognize(recognitionId, updateList, callback) {
         var recogUpdateList = CourseSketch.prutil.RecognitionUpdateList();
         recogUpdateList.setRecognitionId(recognitionId);
-        protoAddUpdate.setUpdate(updateList);
-        CourseSketch.recognitionService.createUpdateList(recogUpdateList, callback);
+        recogUpdateList.setUpdateList(updateList);
+        CourseSketch.recognitionService.recognize(recogUpdateList, callback);
     }
 
 
