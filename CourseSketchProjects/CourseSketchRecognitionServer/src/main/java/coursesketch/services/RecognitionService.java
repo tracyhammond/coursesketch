@@ -15,6 +15,7 @@ import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.commands.Commands.SrlCommand;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.commands.Commands.ActionPackageShape;
+import protobuf.srl.sketch.Sketch;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 import protobuf.srl.sketch.Sketch.SrlInterpretation;
 import protobuf.srl.sketch.Sketch.SrlShape;
@@ -122,7 +123,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
     }
 
     @Override
-    public void addTemplate(final RpcController controller, final RecognitionServer.RecognitionTemplate request,
+    public void addTemplate(final RpcController controller, final Sketch.RecognitionTemplate request,
             final RpcCallback<Message.DefaultResponse> done) {
         // adds template to the database
 

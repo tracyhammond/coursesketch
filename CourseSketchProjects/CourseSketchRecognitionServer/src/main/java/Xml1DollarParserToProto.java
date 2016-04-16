@@ -7,7 +7,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -46,15 +45,15 @@ public class Xml1DollarParserToProto {
             if (fileEntry.isDirectory()) {
                 navigateFiles(fileEntry, client);
             } else {
-                final RecognitionServer.RecognitionTemplate recognitionTemplate = parseFile(
+                final Sketch.RecognitionTemplate recognitionTemplate = parseFile(
                         ClassLoader.getSystemResourceAsStream(fileEntry.getAbsolutePath()));
                 client.addTemplate(recognitionTemplate.getInterpretation(), recognitionTemplate.getStroke());
             }
         }
     }
 
-    public static RecognitionServer.RecognitionTemplate parseFile(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
-        RecognitionServer.RecognitionTemplate.Builder template = RecognitionServer.RecognitionTemplate.newBuilder();
+    public static Sketch.RecognitionTemplate parseFile(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
+        Sketch.RecognitionTemplate.Builder template = Sketch.RecognitionTemplate.newBuilder();
         Sketch.SrlStroke.Builder stroke = Sketch.SrlStroke.newBuilder();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
