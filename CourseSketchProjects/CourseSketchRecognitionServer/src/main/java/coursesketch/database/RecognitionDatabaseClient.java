@@ -163,6 +163,10 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         if (strokeObject.containsField(STROKE_NAME)) {
             String name = (String) strokeObject.get(STROKE_NAME);
         }
+
+        final DBCollection points = database.getCollection(STROKE_POINTS);
+
+
         return null;
     }
 }
