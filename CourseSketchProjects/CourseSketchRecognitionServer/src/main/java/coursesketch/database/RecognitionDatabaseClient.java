@@ -41,7 +41,8 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     }
 
     @Override protected void setUpIndexes() {
-
+        database.getCollection(TEMPLATE_COLLECTION).createIndex(new BasicDBObject(TEMPLATE_INT + '.' + INT_LABEL, 1)
+                .append("unique", false));
     }
 
     @Override protected void onStartDatabase() throws DatabaseAccessException {
