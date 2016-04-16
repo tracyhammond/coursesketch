@@ -146,7 +146,7 @@ function AdvanceDataListener(Request, defListener) {
                 func(evt, new AdvanceListenerException('Connection to the database Timed Out'));
                 return;
             }
-            if (!isUndefined(messageType)) {
+            if (!isUndefined(returnType)) {
                 result = CourseSketch.prutil.decodeProtobuf(msg.otherData, returnType);
                 manageTimeCallback(result);
                 return;

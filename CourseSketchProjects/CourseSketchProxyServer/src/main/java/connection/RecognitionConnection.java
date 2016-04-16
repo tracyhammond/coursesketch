@@ -9,6 +9,7 @@ import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.server.base.ClientWebSocket;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.serverfront.ProxyServerWebSocketHandler;
 import coursesketch.services.recognition.RecognitionWebSocketClient;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -48,7 +49,7 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
         super(destination, parent);
     }
 
-    public void parseConnection(final Message.Request request) throws ConnectionException, RecognitionException {
+    public void parseConnection(final Message.Request request, final String sessionId) throws ConnectionException, RecognitionException {
         RecognitionServer.GeneralRecognitionRequest generalRecognitionRequest;
         try {
             generalRecognitionRequest = RecognitionServer.GeneralRecognitionRequest
@@ -88,13 +89,15 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
                 break;
         }
 
+        final MultiConnectionState state = getStateFromId(sessionId);
+
         Message.Request.Builder requestResponse = Message.Request.newBuilder(request);
         if (response != null) {
             requestResponse.setOtherData(response.build().toByteString());
         } else {
             requestResponse.setOtherData(Message.DefaultResponse.getDefaultInstance().toByteString());
         }
-        super.onMessage(requestResponse.build().toByteString().asReadOnlyByteBuffer());
-        LOG.debug("REQUEST BUILT AND SENT: {}", requestResponse);
+        final Message.Request result = ProxyConnectionManager.createClientRequest(requestResponse.build());
+        this.getParentServer().send(getConnectionFromState(state), result);
     }
 }

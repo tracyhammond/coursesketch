@@ -124,6 +124,7 @@
                     var updates = updateList.list;
                     for (var i = 0; i < updates.length; i++) {
                         var update = updates[i];
+                        console.log('add update', update);
                         updateManager.addUpdate(update);
                     }
                 });
