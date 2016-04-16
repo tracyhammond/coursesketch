@@ -95,5 +95,6 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
             requestResponse.setOtherData(Message.DefaultResponse.getDefaultInstance().toByteString());
         }
         super.onMessage(requestResponse.build().toByteString().asReadOnlyByteBuffer());
+        LOG.debug("REQUEST BUILT AND SENT: {}", requestResponse);
     }
 }
