@@ -57,6 +57,7 @@ message RecognitionTemplate {
         protobuf.srl.sketch.SrlShape shape = 3;
         protobuf.srl.sketch.SrlSketch sketch = 4;
     }
+    optional protobuf.srl.sketch.SrlInterpretation interpretation = 5;
 }
 
 message RecognitionResponse {
