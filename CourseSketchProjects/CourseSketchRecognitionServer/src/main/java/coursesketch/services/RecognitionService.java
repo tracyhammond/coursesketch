@@ -73,7 +73,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         addShapeCommand.setCommandId(UUID.randomUUID().toString());
 
         ActionPackageShape.Builder actionPackageShape = Commands.ActionPackageShape.newBuilder();
-        LOG.debug("About to create a SrlStroke");
+        LOG.debug("About to create a SrlStroke: " + shape.getId());
         LOG.debug(update.toString());
         try {
             SrlStroke stroke = SrlStroke.parseFrom(request.getUpdate().getCommands(0).getCommandData());
@@ -101,6 +101,8 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
 
         SrlUpdateList.Builder updateList = SrlUpdateList.newBuilder();
         updateList.addList(update);
+
+        LOG.debug("RETURNING DATA {}", updateList);
 
         result.setChanges(updateList);
 
