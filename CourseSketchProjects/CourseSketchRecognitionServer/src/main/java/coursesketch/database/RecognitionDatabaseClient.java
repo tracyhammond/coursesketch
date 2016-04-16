@@ -95,8 +95,15 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
                     (DBObject)templateObject.get(TEMPLATE_INT));
             Sketch.SrlStroke stroke = getStroke(
                     (DBObject)templateObject.get(TEMPLATE_TYPE));
+
+            Sketch.RecognitionTemplate.Builder recognitionTemplate =
+                    Sketch.RecognitionTemplate.newBuilder();
+            // TODO: Mack setTemplateType type agnostic
+            recognitionTemplate.setTemplateId(id).setInterpretation(interpretation)
+                    .setStroke(stroke);
+            templateList.add(recognitionTemplate.build());
         }
-        return null;
+        return templateList;
     }
 
 
@@ -161,9 +168,48 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     private Sketch.SrlStroke getStroke(DBObject strokeObject) {
         String strokeId = (String)strokeObject.get(STROKE_ID);
         long time = (long)strokeObject.get(STROKE_TIME);
+        String name = null;
         if (strokeObject.containsField(STROKE_NAME)) {
-            String name = (String) strokeObject.get(STROKE_NAME);
+            name = (String) strokeObject.get(STROKE_NAME);
         }
-        return null;
+
+        List<DBObject> pointObjects = (List<DBObject>)strokeObject.get(STROKE_POINTS);
+        List<Sketch.SrlPoint> points = new ArrayList<Sketch.SrlPoint>();
+
+        for (DBObject pointObject: pointObjects) {
+            Sketch.SrlPoint point = getPoint(pointObject);
+            points.add(point);
+        }
+
+        Sketch.SrlStroke.Builder stroke = Sketch.SrlStroke.newBuilder();
+        stroke.setId(strokeId).setTime(time).setName(name).addAllPoints(points);
+        return stroke.build();
+    }
+
+    private Sketch.SrlPoint getPoint(DBObject pointObject) {
+        String pointId = (String)pointObject.get(POINT_ID);
+        long pointTime = (long)pointObject.get(POINT_TIME);
+        double x = (double)pointObject.get(POINT_X);
+        double y = (double)pointObject.get(POINT_Y);
+        String name = null;
+        Double pressure = null, size = null, speed = null;
+        if (pointObject.containsField(POINT_NAME)) {
+            name = (String)pointObject.get(POINT_NAME);
+        }
+        if (pointObject.containsField(POINT_PRESSURE)) {
+            pressure = (Double)pointObject.get(POINT_PRESSURE);
+        }
+        if (pointObject.containsField(POINT_SIZE)) {
+            size = (Double)pointObject.get(POINT_SIZE);
+        }
+        if (pointObject.containsField(POINT_SPEED)) {
+            speed = (Double)pointObject.get(POINT_SPEED);
+        }
+
+        Sketch.SrlPoint.Builder point = Sketch.SrlPoint.newBuilder();
+        point.setId(pointId).setTime(pointTime).setX(x).setY(y).setName(name).setPressure(pressure)
+                .setSize(size).setSpeed(speed);
+
+        return point.build();
     }
 }
