@@ -3,8 +3,11 @@ package coursesketch.recognition;
 import coursesketch.recognition.defaults.DefaultRecognition;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.recognition.framework.exceptions.RecognitionException;
+import coursesketch.recognition.pdollar.Point;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.sketch.Sketch;
+
+import java.util.List;
 
 /**
  * Created by gigemjt on 4/16/16.
@@ -28,6 +31,7 @@ public class BasicRecognition extends DefaultRecognition {
     }
 
     @Override public Commands.SrlUpdateList recognize(final String s, final Commands.SrlUpdateList srlUpdateList) throws RecognitionException {
+        List<Point> pointCloud = convert(srlUpdateList);
         return Commands.SrlUpdateList.getDefaultInstance();
     }
 
