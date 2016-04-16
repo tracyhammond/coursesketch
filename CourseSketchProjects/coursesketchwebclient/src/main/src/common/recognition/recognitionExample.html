@@ -46,7 +46,7 @@
                 var sketch = sketchSurface.getCurrentSketch();
                 var protoBuf = sketch.sendToProtobuf();
                 var label = 'line';
-                CourseSketch.recognition.addSketchTemplate(label, protoBuf, function(err, success) {
+                CourseSketch.recognition.addSketchTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
                    console.log(err, success);
                 });
             });
