@@ -1,6 +1,10 @@
 package coursesketch.database;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.server.interfaces.ServerInfo;
@@ -10,8 +14,24 @@ import protobuf.srl.sketch.Sketch;
 import java.util.List;
 import java.util.UUID;
 
-import static coursesketch.database.RecognitionStringConstants.*;
-import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
+import static coursesketch.database.RecognitionStringConstants.INT_CONFIDENCE;
+import static coursesketch.database.RecognitionStringConstants.INT_LABEL;
+import static coursesketch.database.RecognitionStringConstants.POINT_ID;
+import static coursesketch.database.RecognitionStringConstants.POINT_NAME;
+import static coursesketch.database.RecognitionStringConstants.POINT_PRESSURE;
+import static coursesketch.database.RecognitionStringConstants.POINT_SIZE;
+import static coursesketch.database.RecognitionStringConstants.POINT_SPEED;
+import static coursesketch.database.RecognitionStringConstants.POINT_TIME;
+import static coursesketch.database.RecognitionStringConstants.POINT_X;
+import static coursesketch.database.RecognitionStringConstants.POINT_Y;
+import static coursesketch.database.RecognitionStringConstants.STROKE_ID;
+import static coursesketch.database.RecognitionStringConstants.STROKE_NAME;
+import static coursesketch.database.RecognitionStringConstants.STROKE_POINTS;
+import static coursesketch.database.RecognitionStringConstants.STROKE_TIME;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_COLLECTION;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_ID;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INT;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_TYPE;
 
 /**
  * Created by David Windows on 4/13/2016.
@@ -79,6 +99,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
                     (DBObject)templateObject.get(TEMPLATE_TYPE));
         }
     }
+
 
     private BasicDBObject makeDbStoke(Sketch.SrlStroke srlStroke) {
         final BasicDBObject strokeDbObject = new BasicDBObject(STROKE_ID, srlStroke.getId())

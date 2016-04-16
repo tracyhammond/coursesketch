@@ -1,10 +1,7 @@
 package coursesketch.connection;
 
 import coursesketch.database.RecognitionDatabaseClient;
-import coursesketch.database.auth.AuthenticationDataCreator;
-import coursesketch.database.auth.AuthenticationOptionChecker;
-import coursesketch.database.auth.Authenticator;
-import coursesketch.database.submission.SubmissionManagerInterface;
+import coursesketch.recognition.BasicRecognition;
 import coursesketch.recognition.framework.RecognitionInterface;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -15,7 +12,6 @@ import coursesketch.services.RecognitionService;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +62,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
-        services.add(new RecognitionService(manager));
+        services.add(new RecognitionService(new BasicRecognition(databaseClient)));
         return services;
     }
 

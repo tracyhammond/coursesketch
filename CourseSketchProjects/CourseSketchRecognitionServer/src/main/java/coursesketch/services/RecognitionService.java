@@ -133,6 +133,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         LOG.debug("SKETCH {}", sketch);
         LOG.debug("TYPE {}", request.getInterpretation());
 
+
         Message.DefaultResponse.Builder defaultResponse = Message.DefaultResponse.newBuilder();
         defaultResponse.setSuccessful(true);
 

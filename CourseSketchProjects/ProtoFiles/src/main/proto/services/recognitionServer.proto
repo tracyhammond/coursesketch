@@ -11,7 +11,7 @@ message GeneralRecognitionRequest {
     oneof Request {
         AddUpdateRequest addUpdate = 2;
         RecognitionUpdateList setUpdateList = 3;
-        RecognitionTemplate template = 4;
+        protobuf.srl.sketch.RecognitionTemplate template = 4;
     }
 }
 
@@ -76,7 +76,7 @@ service RecognitionService {
     /**
      * Inserts the solution into the submission server.
      */
-    rpc addTemplate(RecognitionTemplate) returns (protobuf.srl.request.DefaultResponse);
+    rpc addTemplate(protobuf.srl.sketch.RecognitionTemplate) returns (protobuf.srl.request.DefaultResponse);
 
     /*..*/
     rpc recognize(RecognitionUpdateList) returns (RecognitionResponse);
