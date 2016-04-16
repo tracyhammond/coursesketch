@@ -158,6 +158,19 @@
         return proto;
     };
 
+    SRL_Sketch.prototype.sendToProtobuf = function() {
+        var protoSketch = CourseSketch.prutil.ProtoSrlSketch();
+
+        var subObjects = this.getList();
+        var protoSubObjects = [];
+
+        for (var i = 0; i < subObjects.length; i++) {
+            protoSubObjects.push(encodeSrlObject(subObjects[i]));
+        }
+        protoSketch.sketch = protoSubObjects;
+        return protoSketch;
+    };
+
     /**
      * Used locally to decode the srl object.
      *
@@ -194,6 +207,7 @@
      */
     function encodeSrlObject(object) {
         var proto = CourseSketch.prutil.ProtoSrlObject();
+        var SrlObject = CourseSketch.prutil.getProtoSrlObjectClass();
 
         if (object.check_type() === SRL_ShapeType) {
             proto.type = SrlObject.ObjectType.SHAPE;

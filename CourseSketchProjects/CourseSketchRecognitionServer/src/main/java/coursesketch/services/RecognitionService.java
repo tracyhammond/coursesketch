@@ -130,6 +130,8 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         SrlStroke stroke = request.getStroke();
         SrlShape shape = request.getShape();
         SrlSketch sketch = request.getSketch();
+        LOG.debug("SKETCH {}", sketch);
+        LOG.debug("TYPE {}", request.getInterpretation());
 
         Message.DefaultResponse.Builder defaultResponse = Message.DefaultResponse.newBuilder();
         defaultResponse.setSuccessful(true);

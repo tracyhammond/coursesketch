@@ -22,6 +22,10 @@
 <body>
 <div style="height: 600px;position: relative;">
     <sketch-surface id="hello" style="height: 100%; border: 5px solid red;"></sketch-surface>
+    <input id="label" type="text" />
+    <button id="submitTemplate">Submit Template</button>
+    <button id="enableLiveRecognition">Enable Live Recogntion</button>
+    <button id="recognize">Recognize Current Template</button>
 </div>
     <script>
         $(document).ready(function() {
@@ -29,17 +33,38 @@
             console.log(elements);
             var sketchSurface = elements[0];
             var updateManager = sketchSurface.getUpdateManager();
-            updateManager.addPlugin(CourseSketch.createRecognitionPlugin(updateManager, sketchSurface.id));
+
             var resized = false;
             updateManager.addPlugin({
                 addUpdate: function() {
                     if (!resized) {
                         sketchSurface.resizeSurface();
+                        sketchSurface.refreshSketch();
                         resized = true;
                     }
                 }
             });
             sketchSurface.resizeSurface();
+            $('#submitTemplate').click(function() {
+                var sketch = sketchSurface.getCurrentSketch();
+                var protoBuf = sketch.sendToProtobuf();
+                var label = document.getElementById('label').value;
+                CourseSketch.recognition.addSketchTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
+                   console.log(err, success);
+                });
+            });
+            $('#enableLiveRecognition').click(function() {
+                // TODO: disable add template
+                updateManager.addPlugin(CourseSketch.createRecognitionPlugin(updateManager, sketchSurface.id));
+            });
+            $('#recognize').click(function() {
+                // TODO: disable add template
+                updateManager.getCleanUpdateList(function(updateList) {
+                    CourseSketch.recognition.recognize(sketchSurface.id, updateList, function(err, msg) {
+                        console.log(err, msg);
+                    });
+                });
+            })
         });
     </script>
 </body>

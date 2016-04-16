@@ -21,7 +21,7 @@
         } else if (shortenedMethodName === 'addTemplate') {
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.ADD_TEMPLATE);
             generalRequest.setTemplate(req);
-            returnType = CourseSketch.prutil.DefaultResponseClass();
+            returnType = CourseSketch.prutil.getDefaultResponseClass();
         } else if (shortenedMethodName === 'recognize') {
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.SET_NEW_LIST);
             generalRequest.setTemplate(req);
@@ -29,7 +29,7 @@
 
         console.log('rpc data is set!');
         var request = CourseSketch.prutil.createRequestFromData(generalRequest, CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
-        console.log('rpc data is added!');
+        console.log('rpc data is added and being sent: ', generalRequest);
         CourseSketch.dataListener.sendRequestWithTimeout(request, function (evt, msg) {
             console.log('we got info back from the recognition server!!', msg);
             // TODO: add exception checking
@@ -55,25 +55,32 @@
         CourseSketch.recognitionService.createUpdateList(recogUpdateList, callback);
     }
 
-    function addSketchTemplate(recognitionId, sketch, callback) {
-        var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
-        recogTemplate.setTemplateId(recognitionId);
-        recogTemplate.setTemplateType(sketch);
-        CourseSketch.recognitionService.addTemplate(recogTemplate, callback);
+    function addTemplate(label, recognitionId, protoRecognitionTemplate, callback) {
+        var interpretationTemplate = CourseSketch.prutil.ProtoSrlInterpretation();
+        interpretationTemplate.setLabel(label);
+        interpretationTemplate.setConfidence(1);
+        interpretationTemplate.setComplexity(1);
+        protoRecognitionTemplate.setTemplateId(recognitionId);
+        protoRecognitionTemplate.setInterpretation(interpretationTemplate);
+        CourseSketch.recognitionService.addTemplate(protoRecognitionTemplate, callback);
     }
 
-    function addShapeTemplate(recognitionId, shape, callback) {
+    function addSketchTemplate(label, recognitionId, sketch, callback) {
         var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
-        recogTemplate.setTemplateId(recognitionId);
-        recogTemplate.setTemplateType(shape);
-        CourseSketch.recognitionService.addTemplate(recogTemplate, callback);
+        recogTemplate.setSketch(sketch);
+        addTemplate(label, recognitionId, recogTemplate, callback);
     }
 
-    function addStrokeTemplate(recognitionId, stroke, callback) {
+    function addShapeTemplate(label, recognitionId, shape, callback) {
         var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
-        recogTemplate.setTemplateId(recognitionId);
-        recogTemplate.setTemplateType(stroke);
-        CourseSketch.recognitionService.addTemplate(recogTemplate, callback);
+        recogTemplate.setShape(shape);
+        addTemplate(label, recognitionId, recogTemplate, callback);
+    }
+
+    function addStrokeTemplate(label, recognitionId, stroke, callback) {
+        var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
+        recogTemplate.setStroke(stroke);
+        addTemplate(label, recognitionId, recogTemplate, callback);
     }
 
     function recognize(recognitionId, updateList, callback) {
