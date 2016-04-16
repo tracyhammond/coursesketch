@@ -74,21 +74,24 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
 
         RecognitionServer.AddUpdateRequest.Builder addUpdateRequest = RecognitionServer.AddUpdateRequest.newBuilder();
         addUpdateRequest.setRecognitionId(recognitionId);
+        addUpdateRequest.setUpdate(srlUpdate);
 
         final RecognitionServer.RecognitionResponse recognitionResponse;
 
         try {
-            LOG.debug("Sending srlUpdate addition request");
+            LOG.debug("Sending srlUpdate addition request {}", addUpdateRequest);
             recognitionResponse = recognitionService.addUpdate(getNewRpcController(), addUpdateRequest.build());
             if (recognitionResponse.hasDefaultResponse() && recognitionResponse.getDefaultResponse().hasException()) {
                 final DatabaseAccessException databaseException =
                         new DatabaseAccessException("Exception with submission server");
                 databaseException.setProtoException(recognitionResponse.getDefaultResponse().getException());
-                throw new RecognitionException("Exception when adding template", databaseException);
+                throw new RecognitionException("Exception when adding update", databaseException);
             }
         } catch (ServiceException e) {
-            throw new RecognitionException("Exception when adding template", e);
+            throw new RecognitionException("Exception when adding update service error", e);
         }
+        LOG.debug("IN RPC SERVER; RECOGNITION SERVER REPONSE:");
+        LOG.debug(recognitionResponse.toString());
         return recognitionResponse.getChanges();
     }
 
