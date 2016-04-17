@@ -38,8 +38,6 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
 
     @Override public void addUpdate(final RpcController controller, final RecognitionServer.AddUpdateRequest request,
             final RpcCallback<RecognitionServer.RecognitionResponse> done) {
-        LOG.debug("REQUEST: {}", request);
-
         SrlUpdateList.Builder build = SrlUpdateList.newBuilder();
         build.addList(request.getUpdate());
         RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
@@ -48,6 +46,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         } catch (RecognitionException e) {
             final Message.ProtoException protoException = ExceptionUtilities.createProtoException(e);
             result.setDefaultResponse(Message.DefaultResponse.newBuilder().setException(protoException).build());
+            LOG.error("Exception during add update", e);
         }
 
         done.run(result.build());
@@ -94,6 +93,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
         } catch (RecognitionException e) {
             final Message.ProtoException protoException = ExceptionUtilities.createProtoException(e);
             result.setDefaultResponse(Message.DefaultResponse.newBuilder().setException(protoException).build());
+            LOG.error("Exception during recognize", e);
         }
 
         done.run(result.build());

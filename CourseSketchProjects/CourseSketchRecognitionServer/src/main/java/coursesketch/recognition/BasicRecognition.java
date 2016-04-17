@@ -5,10 +5,10 @@ import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.recognition.framework.exceptions.RecognitionException;
 import coursesketch.recognition.pdollar.PDollarRecognizer;
 import coursesketch.recognition.pdollar.Point;
+import coursesketch.recognition.pdollar.RecognizerResults;
 import coursesketch.services.RecognitionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import coursesketch.recognition.pdollar.RecognizerResults;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.sketch.Sketch;
 import protobuf.srl.utils.SketchUtil;
@@ -69,9 +69,7 @@ public class BasicRecognition extends DefaultRecognition {
         shape.setTime(TimeManager.getSystemTime());
         shape.setIsUserCreated(false);
         shape.addInterpretations(interpretation);
-
-        SketchUtil.IdChain.Builder shapeIdChain = SketchUtil.IdChain.newBuilder();
-        shapeIdChain.addIdChain(shape.getId());
+        LOG.debug("CREATING A NEW SHAPE WITH ID: {}", shape.getId());
 
         Commands.SrlCommand.Builder addShapeCommand = Commands.SrlCommand.newBuilder();
         addShapeCommand.setCommandType(Commands.CommandType.ADD_SHAPE);
@@ -84,6 +82,22 @@ public class BasicRecognition extends DefaultRecognition {
         update.setUpdateId(UUID.randomUUID().toString());
         update.setTime(TimeManager.getSystemTime());
         update.addCommands(addShapeCommand);
+
+        final Commands.SrlCommand.Builder packageShape = Commands.SrlCommand.newBuilder();
+        final Commands.ActionPackageShape.Builder actionPackage = Commands.ActionPackageShape.newBuilder();
+        final SketchUtil.IdChain.Builder idChain = SketchUtil.IdChain.newBuilder();
+        idChain.addIdChain(shape.getId());
+        actionPackage.setNewContainerId(idChain);
+
+        for (Sketch.SrlStroke stroke: affectedStrokes) {
+            actionPackage.addShapesToBeContained(stroke.getId());
+            LOG.debug("PACKING SHAPES WITH ID: {}", stroke.getId());
+        }
+
+        packageShape.setCommandData(actionPackage.build().toByteString());
+
+        update.addCommands(addShapeCommand);
+        update.addCommands(packageShape);
 
         return update.build();
     }
