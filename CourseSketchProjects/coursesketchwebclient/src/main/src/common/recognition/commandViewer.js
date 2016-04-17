@@ -7,11 +7,11 @@ var myWidth = 150; // single threaded = okay
 
 function createUpdate(object, highlight) {
     var html = '<div class = "updateInfo tiny-col-group2" style = "position:relative;">'
-    html += '<div id="column1" class="sketchObject" style = "position:relative;">';
+    html += '<div class="sketchObject" style = "position:relative;">';
     html += '<p> ID:' + object.getUpdateId() + '</p>';
     html += '<p> Time:' + object.getTime() + '</p>';
     html += '</div>';
-    html += '<div id="column2" class ="commands" style = "right:50%;">';
+    html += '<div class ="commands" style = "right:50%;">';
     html += '<div>';
     var commandList = object.getCommands();
     for (var i = 0; i < commandList.length ; i++) {

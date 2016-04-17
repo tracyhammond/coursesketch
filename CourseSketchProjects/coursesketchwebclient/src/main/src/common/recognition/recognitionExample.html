@@ -22,6 +22,7 @@
     <script src="/src/common/recognition/recognitionDebugPlugin.js"></script>
     <style>
         .sketchObject {
+            display:block;
             border-style:solid;
             border-width:1px;
         }
@@ -34,8 +35,26 @@
             background-color:yellow;
         }
 
+        .updateInfo {
+            flex-direction: row;
+            display:flex;
+        }
+
+        .update {
+
+
+        }
+
+        .update .sketchObject {
+
+        }
+
+        .commands {
+            display: block;
+        }
+
         #debug-panel {
-            overflow:scroll;
+            overflow-y:scroll;
         }
 
     </style>
@@ -44,7 +63,7 @@
 <body>
 <div style="height: 600px;position: relative;">
     <div class="top panel" style="display: flex; flex-direction: row;">
-        <sketch-surface id="hello" style="height: 80%; border: 5px solid red; flex: 1"></sketch-surface>
+        <sketch-surface id="hello" style="height: 400px; border: 5px solid red; flex: 1"></sketch-surface>
         <div id="sketchViewer" style = "flex: 1"></div>
     </div>
     <input id="label" type="text" />
