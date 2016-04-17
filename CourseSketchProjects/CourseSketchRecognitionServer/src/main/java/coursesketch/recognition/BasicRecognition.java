@@ -82,13 +82,13 @@ public class BasicRecognition extends DefaultRecognition {
         List<Point> pointCloud = convert(srlUpdateList, srlStrokes);
         final RecognizerResults recognizerResults = recognizer.Recognize(pointCloud);
         LOG.info("RECOGNIZED SKETCH AS " + recognizerResults.mName);
-
+        LOG.info("CONFIDENCE WAS " + recognizerResults.mScore);
+        Commands.SrlUpdateList.Builder updateList = Commands.SrlUpdateList.newBuilder();
         Sketch.SrlInterpretation.Builder interpretation = Sketch.SrlInterpretation.newBuilder();
         interpretation.setLabel(recognizerResults.mName);
         interpretation.setConfidence(recognizerResults.mScore);
         interpretation.setComplexity(1);
 
-        Commands.SrlUpdateList.Builder updateList = Commands.SrlUpdateList.newBuilder();
         updateList.addList(createUpdateFromResult(interpretation.build(), srlStrokes));
 
         return updateList.build();
