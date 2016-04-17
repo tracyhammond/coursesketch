@@ -2,6 +2,7 @@
 
 # https://github.com/travis-ci/travis-ci/issues/938
 # https://github.com/travis-ci/travis-ci/issues/2555
+# https://bugs.chromium.org/p/chromium/issues/detail?id=583235&q=os%3Alinux%2Cmac&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Cr%20Status%20Owner%20Summary%20OS%20Modified
 
 export DISPLAY=:99.0
 sudo sh -e /etc/init.d/xvfb start
