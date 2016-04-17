@@ -54,13 +54,13 @@ public class Xml1DollarParserToDb {
                     continue;
                 }
                 final InputStream inputStream = new FileInputStream(fileEntry);
-                final Sketch.RecognitionTemplate recognitionTemplate = parseFile(inputStream);
+                final Sketch.RecognitionTemplate recognitionTemplate = parseFile(inputStream, folder.getName() + "-" + fileEntry.getName());
                 client.addTemplate(recognitionTemplate.getInterpretation(), recognitionTemplate.getStroke());
             }
         }
     }
 
-    public static Sketch.RecognitionTemplate parseFile(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
+    public static Sketch.RecognitionTemplate parseFile(InputStream stream, String fileName) throws ParserConfigurationException, IOException, SAXException {
         Sketch.RecognitionTemplate.Builder template = Sketch.RecognitionTemplate.newBuilder();
         Sketch.SrlStroke.Builder stroke = Sketch.SrlStroke.newBuilder();
 
@@ -72,11 +72,10 @@ public class Xml1DollarParserToDb {
                 builder.parse(stream);
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         final Element documentElement = document.getDocumentElement();
-        System.out.println(documentElement);
         String gestureName = documentElement.getAttribute("Name");
 
         final NodeList gestureChildNodes = documentElement.getElementsByTagName("Point");
-        for (int i = 1; i < gestureChildNodes.getLength(); i++) {
+        for (int i = 0; i < gestureChildNodes.getLength(); i++) {
             final Node point = gestureChildNodes.item(i);
             final NamedNodeMap attributes = point.getAttributes();
             final Node nodeX = attributes.getNamedItem("X");
@@ -96,10 +95,12 @@ public class Xml1DollarParserToDb {
         stroke.setId(UUID.randomUUID().toString());
         stroke.setTime(0);
         String realLabel = gestureName.substring(0, gestureName.length() - 2);
+        System.out.println("TemplateId: " + fileName);
         System.out.println("REAL LABEL: " + realLabel);
 
         template.setStroke(stroke);
         template.setInterpretation(Sketch.SrlInterpretation.newBuilder().setConfidence(1).setLabel(realLabel));
+        template.setTemplateId(fileName);
         return template.build();
     }
 }
