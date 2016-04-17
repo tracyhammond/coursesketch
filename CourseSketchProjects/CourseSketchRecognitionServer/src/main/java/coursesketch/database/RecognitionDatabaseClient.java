@@ -90,8 +90,8 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         }
 
         final BasicDBObject sketchDbObject = new BasicDBObject();
-        // sketchDbObject.append(SKETCH_DOMAINID, sketchDomainId);
-        // sketchDbObject.append(SKETCH_SKETCH, sketchSketch);
+        sketchDbObject.append(SKETCH_DOMAINID, sketchDomainId);
+        sketchDbObject.append(SKETCH_SKETCH, sketchSketch);
 
         // TODO: Take in a TEMPLATE_ID instead of creating one here
         templateObject.append(TEMPLATE_ID, UUID.randomUUID());
