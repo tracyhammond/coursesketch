@@ -115,17 +115,17 @@
         }
         proto.setSubComponents(protoSubShapes);
 
-        proto.id = this.getId();
+        proto.setId(this.getId());
         var n = this.getTime();
         proto.setTime('' + n);
-        proto.name = this.getName();
+        proto.setName = this.getName();
         return proto;
     };
 
     /**
      * Static function that returns an {@link SRL_Shape}.
      *
-     * @param {SrlShape} shape - The proto object that is being turned into a sketch object.
+     * @param {ProtoSrlShape} shape - The proto object that is being turned into a sketch object.
      * @memberof SRL_Shape
      */
     SRL_Shape.createFromProtobuf = function(shape) {
@@ -141,6 +141,8 @@
             var protoObject = subObjects[i];
             newShape.addSubObject(decodeSrlObject(protoObject));
         }
+        newShape.setId(shape.getId());
+        newShape.setName(shape.getName());
 
         return newShape;
     };

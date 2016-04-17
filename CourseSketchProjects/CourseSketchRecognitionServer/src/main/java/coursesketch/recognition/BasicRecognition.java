@@ -81,7 +81,6 @@ public class BasicRecognition extends DefaultRecognition {
 
         update.setUpdateId(UUID.randomUUID().toString());
         update.setTime(TimeManager.getSystemTime());
-        update.addCommands(addShapeCommand);
 
         final Commands.SrlCommand.Builder packageShape = Commands.SrlCommand.newBuilder();
         packageShape.setIsUserCreated(false);
