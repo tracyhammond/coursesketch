@@ -58,7 +58,7 @@ public class XmlPDollarParserToDb {
                 }
                 final InputStream inputStream = new FileInputStream(fileEntry);
                 final Sketch.RecognitionTemplate recognitionTemplate = parseFile(inputStream, fileEntry.getName());
-                // client.addTemplate(recognitionTemplate.getInterpretation(), recognitionTemplate.getStroke());
+                client.addTemplate(recognitionTemplate.getInterpretation(), recognitionTemplate.getShape());
             }
         }
     }

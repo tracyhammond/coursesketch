@@ -1,7 +1,12 @@
 package coursesketch.database;
 
-import com.mongodb.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.server.interfaces.ServerInfo;
@@ -14,7 +19,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static coursesketch.database.RecognitionStringConstants.*;
+import static coursesketch.database.RecognitionStringConstants.INT_CONFIDENCE;
+import static coursesketch.database.RecognitionStringConstants.INT_LABEL;
+import static coursesketch.database.RecognitionStringConstants.OBJECT_TYPE;
+import static coursesketch.database.RecognitionStringConstants.POINT_ID;
+import static coursesketch.database.RecognitionStringConstants.POINT_NAME;
+import static coursesketch.database.RecognitionStringConstants.POINT_PRESSURE;
+import static coursesketch.database.RecognitionStringConstants.POINT_SIZE;
+import static coursesketch.database.RecognitionStringConstants.POINT_SPEED;
+import static coursesketch.database.RecognitionStringConstants.POINT_TIME;
+import static coursesketch.database.RecognitionStringConstants.POINT_X;
+import static coursesketch.database.RecognitionStringConstants.POINT_Y;
+import static coursesketch.database.RecognitionStringConstants.SHAPE_ID;
+import static coursesketch.database.RecognitionStringConstants.SHAPE_INTERPS;
+import static coursesketch.database.RecognitionStringConstants.SHAPE_ISUSERCREATED;
+import static coursesketch.database.RecognitionStringConstants.SHAPE_NAME;
+import static coursesketch.database.RecognitionStringConstants.SHAPE_SUBCOMPONENTS;
+import static coursesketch.database.RecognitionStringConstants.SHAPE_TIME;
+import static coursesketch.database.RecognitionStringConstants.STROKE_ID;
+import static coursesketch.database.RecognitionStringConstants.STROKE_NAME;
+import static coursesketch.database.RecognitionStringConstants.STROKE_POINTS;
+import static coursesketch.database.RecognitionStringConstants.STROKE_TIME;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_COLLECTION;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_ID;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INT;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_TYPE;
 
 /**
  * Created by David Windows on 4/13/2016.
@@ -150,7 +179,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     }
 
     private BasicDBObject makeSrlShape(Sketch.SrlShape srlShape) {
-        BasicDBObject shapeObject = null;
+        BasicDBObject shapeObject = new BasicDBObject();
         String shapeId = srlShape.getId();
         shapeObject.append(SHAPE_ID, shapeId);
         long shapeTime = srlShape.getTime();

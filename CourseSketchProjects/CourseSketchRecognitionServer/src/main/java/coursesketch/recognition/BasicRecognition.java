@@ -84,8 +84,13 @@ public class BasicRecognition extends DefaultRecognition {
         update.addCommands(addShapeCommand);
 
         final Commands.SrlCommand.Builder packageShape = Commands.SrlCommand.newBuilder();
+        packageShape.setIsUserCreated(false);
+        packageShape.setCommandId(UUID.randomUUID().toString());
+        packageShape.setCommandType(Commands.CommandType.PACKAGE_SHAPE);
+
         final Commands.ActionPackageShape.Builder actionPackage = Commands.ActionPackageShape.newBuilder();
         final SketchUtil.IdChain.Builder idChain = SketchUtil.IdChain.newBuilder();
+
         idChain.addIdChain(shape.getId());
         actionPackage.setNewContainerId(idChain);
 

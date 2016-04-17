@@ -66,6 +66,7 @@ function SRL_Sketch() {
      * Returns the object based off of its id.
      */
     this.getSubObjectById = function(objectId) {
+        console.log('OBJECT ID MAP', objectIdMap);
         return objectIdMap.get(objectId);
     };
 
