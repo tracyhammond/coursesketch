@@ -62,6 +62,12 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     @Override
     protected List<CourseSketchRpcService> getRpcServices() {
         final List<CourseSketchRpcService> services = new ArrayList<CourseSketchRpcService>();
+        try {
+            databaseClient.startDatabase();
+        }
+        catch (DatabaseAccessException e) {
+            LOG.error("Error starting database", e);
+        }
         services.add(new RecognitionService(new BasicRecognition(databaseClient)));
         return services;
     }
