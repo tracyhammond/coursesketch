@@ -3,6 +3,7 @@ package coursesketch.server.authentication;
 import com.google.common.collect.ImmutableMap;
 import coursesketch.database.auth.AuthenticationException;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
@@ -175,6 +176,19 @@ public final class HashManager {
     }
 
     /**
+     * @param originalSalt The salt the generated one is derived from.  It is completely deterministic based on the original salt.
+     * @return a valid secure salt that can be used in hashing.
+     * @throws NoSuchAlgorithmException Thrown if there are no salting algorithm's available.
+     */
+    public static String generateUnSecureSalt(final String originalSalt) throws NoSuchAlgorithmException {
+        final HashWrapper function = HASH_FUNCTION_MAP.get(CURRENT_HASH); // latest hash function
+        if (function == null) {
+            throw new NoSuchAlgorithmException(getAlgorithmFromHash(CURRENT_HASH));
+        }
+        return function.generateUnsecuredSalt(originalSalt);
+    }
+
+    /**
      * Converts A byte array into a hexadecimal string.
      *
      * @param bytes The byte array to be converted into a hexadecimal string.
@@ -192,6 +206,17 @@ public final class HashManager {
     }
 
     /**
+     * Converts A byte array into a hexadecimal string.
+     *
+     * @param stringValue The byte array to be converted into a hexadecimal string.
+     * @return A hexadecimal string.
+     */
+    @SuppressWarnings({ "checkstyle:magicnumber" })
+    public static String toHex(final String stringValue) {
+        return toHex(stringValue.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
      * Converts a hex string into a byte array.
      *
      * @param hexString A hexadecimal string that is to be converted into bytes.
@@ -206,6 +231,23 @@ public final class HashManager {
                     + Character.digit(hexString.charAt(i + 1), 16));
         }
         return data;
+    }
+
+    /**
+     * Converts a hex string into a byte array.
+     *
+     * @param hexString A hexadecimal string that is to be converted into bytes.
+     * @return A byte array that is made from the hex characters.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    public static String fromHexString(final String hexString) {
+        final int len = hexString.length();
+        final byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                    + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return new String(data, StandardCharsets.UTF_8);
     }
 
     /**

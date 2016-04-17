@@ -52,4 +52,14 @@ class BCryptWrapper implements HashWrapper {
     @Override public String generateSalt() {
         return BCrypt.gensalt(LOG_ROUNDS);
     }
+
+    /**
+     * @param originalSalt
+     *         The salt the generated one is derived from.  It is completely deterministic based on the original salt.
+     * @return a valid secure salt that can be used in hashing.
+     * This salt is not secure and should not be used in passwords.
+     */
+    @Override public String generateUnsecuredSalt(final String originalSalt) {
+        return BCrypt.gensalt(LOG_ROUNDS, new UnsecuredRandom(originalSalt));
+    }
 }

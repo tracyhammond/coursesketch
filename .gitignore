@@ -77,3 +77,4 @@ config/local/*
 # linux binaries
 *.deb
 fonts.dir
+*.pub

@@ -5,7 +5,7 @@ import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import static org.mockito.Matchers.any;
@@ -52,13 +52,13 @@ public class AuthenticationHelper {
      * @throws DatabaseAccessException Should not be thrown because authChecker should be a mock.
      * @throws AuthenticationException Should not be thrown because authChecker should be a mock.
      */
-    public static void setMockPermissions(final AuthenticationChecker authChecker, final School.ItemType type,
+    public static void setMockPermissions(final AuthenticationChecker authChecker, final Util.ItemType type,
             final String itemId, final String userId,
             final Authentication.AuthType authType, final Authentication.AuthResponse.PermissionLevel permissionLevel)
             throws DatabaseAccessException, AuthenticationException {
         // specific results
         when(authChecker.isAuthenticated(
-                createAnyEqMatcher(type, School.ItemType.class),
+                createAnyEqMatcher(type, Util.ItemType.class),
                 createAnyEqMatcher(itemId, String.class),
                 createAnyEqMatcher(userId, String.class),
                 createAnyEqMatcher(authType, Authentication.AuthType.class)))
@@ -79,18 +79,18 @@ public class AuthenticationHelper {
      * @param isOpen The resulting mock date that will be returned if the {@code authChecker} is given the above matches.
      * @throws DatabaseAccessException Should not be thrown because authChecker should be a mock.
      * @return {@link AuthenticationDataCreator}, A new instance if {@code creator} is null otherwise it is the value of {@code creator}.
-     * @see #setMockPublished(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, boolean)
-     * @see #setMockRegistrationRequired(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, boolean)
+     * @see #setMockPublished(AuthenticationOptionChecker, AuthenticationDataCreator, Util.ItemType, String, boolean)
+     * @see #setMockRegistrationRequired(AuthenticationOptionChecker, AuthenticationDataCreator, Util.ItemType, String, boolean)
      */
     public static AuthenticationDataCreator setMockDate(final AuthenticationOptionChecker option, final AuthenticationDataCreator creator,
-            final School.ItemType type, final String itemId, final long checkTime, final boolean isOpen) throws DatabaseAccessException {
+            final Util.ItemType type, final String itemId, final long checkTime, final boolean isOpen) throws DatabaseAccessException {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
             tempCreator = mock(AuthenticationDataCreator.class);
         }
         when(option.createDataGrabber(
-                createAnyEqMatcher(type, School.ItemType.class),
+                createAnyEqMatcher(type, Util.ItemType.class),
                 createAnyEqMatcher(itemId, String.class)))
                 .thenReturn(tempCreator);
         when(option.authenticateDate(tempCreator, checkTime))
@@ -109,18 +109,18 @@ public class AuthenticationHelper {
      * @param isPublished The resulting mock publish state that will be returned if the {@code authChecker} is given the above matches.
      * @throws DatabaseAccessException Should not be thrown because authChecker should be a mock.
      * @return {@link AuthenticationDataCreator}, A new instance if {@code creator} is null otherwise it is the value of {@code creator}.
-     * @see #setMockDate(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, long, boolean)
-     * @see #setMockRegistrationRequired(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, boolean)
+     * @see #setMockDate(AuthenticationOptionChecker, AuthenticationDataCreator, Util.ItemType, String, long, boolean)
+     * @see #setMockRegistrationRequired(AuthenticationOptionChecker, AuthenticationDataCreator, Util.ItemType, String, boolean)
      */
     public static AuthenticationDataCreator setMockPublished(final AuthenticationOptionChecker option, final AuthenticationDataCreator creator,
-            final School.ItemType type, final String itemId, final boolean isPublished) throws DatabaseAccessException {
+            final Util.ItemType type, final String itemId, final boolean isPublished) throws DatabaseAccessException {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
             tempCreator = mock(AuthenticationDataCreator.class);
         }
         when(option.createDataGrabber(
-                createAnyEqMatcher(type, School.ItemType.class),
+                createAnyEqMatcher(type, Util.ItemType.class),
                 createAnyEqMatcher(itemId, String.class)))
                 .thenReturn(tempCreator);
         when(option.isItemPublished(tempCreator))
@@ -136,22 +136,23 @@ public class AuthenticationHelper {
      *                Send in null to apply this to a new {@link AuthenticationDataCreator}.
      * @param type The {@code ItemType} which will be matched for this registration state. Send in null to apply this to any {@code ItemType}.
      * @param itemId The {@code itemId} that will be matched for this registration state. Send in null to apply this to any (@code itemId}.
-     * @param isRegistrationRequired The resulting mock registration state that will be returned if the {@code authChecker} is given the above matches.
+     * @param isRegistrationRequired The resulting mock registration state that will be returned if the
+     *          {@code authChecker} is given the above matches.
      * @throws DatabaseAccessException Should not be thrown because authChecker should be a mock.
      * @return {@link AuthenticationDataCreator}, A new instance if {@code creator} is null otherwise it is the value of {@code creator}.
-     * @see #setMockDate(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, long, boolean)
-     * @see #setMockPublished(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, boolean)
+     * @see #setMockDate(AuthenticationOptionChecker, AuthenticationDataCreator, Util.ItemType, String, long, boolean)
+     * @see #setMockPublished(AuthenticationOptionChecker, AuthenticationDataCreator, Util.ItemType, String, boolean)
      */
     public static AuthenticationDataCreator setMockRegistrationRequired(final AuthenticationOptionChecker option,
             final AuthenticationDataCreator creator,
-            final School.ItemType type, final String itemId, final boolean isRegistrationRequired) throws DatabaseAccessException {
+            final Util.ItemType type, final String itemId, final boolean isRegistrationRequired) throws DatabaseAccessException {
         // specific results
         AuthenticationDataCreator tempCreator = creator;
         if (tempCreator == null) {
             tempCreator = mock(AuthenticationDataCreator.class);
         }
         when(option.createDataGrabber(
-                createAnyEqMatcher(type, School.ItemType.class),
+                createAnyEqMatcher(type, Util.ItemType.class),
                 createAnyEqMatcher(itemId, String.class)))
                 .thenReturn(tempCreator);
         when(option.isItemRegistrationRequired(tempCreator))

@@ -12,6 +12,11 @@
     <name>AuthenticationTestHelper</name>
     <artifactId>AuthenticationTestHelper</artifactId>
 
+    <properties>
+        <!-- This may be removed and a later solution will need to be worked on -->
+        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>CourseSketch</groupId>

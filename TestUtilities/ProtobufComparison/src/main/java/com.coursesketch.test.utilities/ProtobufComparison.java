@@ -62,6 +62,7 @@ public class ProtobufComparison {
 
     /**
      * Constructor for setting values.
+     *
      * @param ignoredFields {@link #ignoredFields}.
      * @param ignoredMessages {@link #ignoredMessages}.
      * @param isDeepEquals {@link #isDeepEquals}.

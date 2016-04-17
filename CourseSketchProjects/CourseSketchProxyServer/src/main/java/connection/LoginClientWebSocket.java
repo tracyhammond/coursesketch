@@ -128,7 +128,7 @@ public final class LoginClientWebSocket extends ClientWebSocket {
      */
     private void loginUser(final LoginInformation login, final Request request, final LoginConnectionState state) {
         if (login.getIsLoggedIn()) {
-            state.logIn(login.getIsInstructor(), request.getServersideId());
+            state.logIn(login.getIsInstructor(), request.getServersideId(), request.getServerUserId());
         }
 
         // strips away identification

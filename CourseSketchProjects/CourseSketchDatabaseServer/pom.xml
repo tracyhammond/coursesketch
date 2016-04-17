@@ -19,8 +19,8 @@
         <mainClass>connection.DatabaseRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>33</projectBranchLevel>
-        <projectLineLevel>34</projectLineLevel>
+        <projectBranchLevel>37</projectBranchLevel>
+        <projectLineLevel>38</projectLineLevel>
     </properties>
 
     <build>
@@ -73,6 +73,12 @@
                             <file>${basedir}/src/main/java/connection/DatabaseConnectionManager.java</file>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>ip_prop_reverse2</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/DatabaseConnectionManager.java</file>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -113,6 +119,7 @@
             <version>2.3.2</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
@@ -137,6 +144,13 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtobufComparison</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>MatcherHelper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

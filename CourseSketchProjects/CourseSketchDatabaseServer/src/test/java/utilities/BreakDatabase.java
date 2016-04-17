@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static database.DatabaseStringConstants.*;
+import static database.DbSchoolUtility.getCollectionFromType;
 
 /**
  * Lets break DATABASES!!!!!!!!
@@ -31,7 +32,7 @@ public final class BreakDatabase {
     private UserClient userClient;
 
     public BreakDatabase(final DB db) {
-        mongoDatabase = new MongoInstitution(null, null, null);
+        mongoDatabase = new MongoInstitution(null, null, null, null);
         database = db;
         userClient = new UserClient(true, db);
     }
@@ -63,11 +64,11 @@ public final class BreakDatabase {
         School.SrlCourse course = createRandomCourse();
 
         userClient.insertUser(user, user.getUsername());
-        String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
+        String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
+        mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
-        DBCollection collection = database.getCollection(COURSE_COLLECTION);
-        collection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
+        DBCollection courseCollection = database.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        courseCollection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
     }
@@ -77,12 +78,12 @@ public final class BreakDatabase {
         School.SrlCourse course = createRandomCourse();
 
         userClient.insertUser(user, user.getUsername());
-        String courseID = mongoDatabase.insertCourse(user.getUsername(), course);
-        mongoDatabase.putUserInCourse(courseID, user.getUsername(), null);
+        String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
+        mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
-        DBCollection collection = database.getCollection(COURSE_COLLECTION);
-        DBObject dbCourse = collection.findOne();
-        collection.update(dbCourse, new BasicDBObject(SET_COMMAND, new BasicDBObject(ADMIN, new ArrayList<>())));
+        DBCollection courseCollection = database.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        DBObject dbCourse = courseCollection.findOne();
+        courseCollection.update(dbCourse, new BasicDBObject(SET_COMMAND, new BasicDBObject(ADMIN, new ArrayList<>())));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
     }
@@ -125,7 +126,7 @@ public final class BreakDatabase {
 
             // testing inserting course
             System.out.println("INSERTING COURSE");
-            String courseId = MongoInstitution.getInstance(null).insertCourse(instructionID, testBuilder.buildPartial());
+            String courseId = MongoInstitution.getInstance(null).insertCourse(null, instructionID, testBuilder.buildPartial());
             System.out.println("INSERTING COURSE SUCCESSFUL");
             System.out.println(courseId);
             LocalAddAssignments.testAssignments(courseId, instructionID);

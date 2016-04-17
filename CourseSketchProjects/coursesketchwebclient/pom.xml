@@ -150,6 +150,33 @@
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>unpack libraries</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.github.dtracers</groupId>
+                                    <artifactId>SketchRecognitionFramework</artifactId>
+                                    <version>-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/src/main/resources/other/protobuf</outputDirectory>
+                                    <includes>**/*.proto</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
@@ -252,6 +279,12 @@
             <artifactId>ProtoFiles</artifactId>
             <version>0.0.2-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

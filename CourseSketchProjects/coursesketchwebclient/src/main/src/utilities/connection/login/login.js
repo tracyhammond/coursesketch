@@ -4,6 +4,7 @@
 
 /**
  * A class that allows a user to login.
+ *
  * @class LoginSystem
  */
 function LoginSystem() {
@@ -23,9 +24,10 @@ function LoginSystem() {
 
     /**
      * Creates a new connection object and stores it locally.
-     * @param {String} location Url to connect to.
-     * @param {Boolean} encrypted True if the connection should occur over ssl
-     * @param {Boolean} attemptReconnections True if the connection should be reattempted till success.
+     *
+     * @param {String} location - Url to connect to.
+     * @param {Boolean} encrypted - True if the connection should occur over ssl
+     * @param {Boolean} attemptReconnections - True if the connection should be reattempted till success.
      */
     this.createConnection = function(location, encrypted, attemptReconnections) {
         connection = new Connection(location, encrypted, attemptReconnections);
@@ -57,8 +59,8 @@ function LoginSystem() {
     };
 
     /**
-     * @param {Document} document The document in which the node is being imported to.
-     * @param {Element} templateClone An element representing the data inside tag,
+     * @param {Document} document - The document in which the node is being imported to.
+     * @param {Element} templateClone - An element representing the data inside tag,
      *                  its content has already been imported and then added to this element.
      */
     this.initializeElement = function(document, templateClone) {
@@ -72,7 +74,7 @@ function LoginSystem() {
     };
 
     /**
-     * Attaches the wave effect to the login button
+     * Attaches the wave effect to the login button.
      */
     function attachButtons() {
         var loginButton = shadowRoot.querySelector('#loginButton');
@@ -86,8 +88,9 @@ function LoginSystem() {
     function setupLoginScript() {
         /**
          * Called when the server responds to an attempt to login.
-         * @param {Event} evt the event that caused the successful login
-         * @param {Message} message The protobuf message sent from the server.
+         *
+         * @param {Event} evt - the event that caused the successful login
+         * @param {Message} message - The protobuf message sent from the server.
          */
         function onLogin(evt, message) {
             var userId = undefined;
@@ -139,8 +142,9 @@ function LoginSystem() {
         console.log('Submitting something?');
         /**
          * Called to send the login.
-         * @param {String} arg1 username
-         * @param {String} arg2 hashed password
+         *
+         * @param {String} arg1 - username
+         * @param {String} arg2 - hashed password
          */
         function sendLogin(arg1, arg2) {
             if (!connection.isConnected()) {
@@ -190,6 +194,7 @@ function LoginSystem() {
 
     /**
      * @function setOnSuccessLogin
+     * @param {Function} callback - Called when user login is successful.
      * The callback is called with one parameter.
      * @callbackParam {Connection} An instance of the connection object object.
      */
@@ -207,14 +212,14 @@ function LoginSystem() {
     /**
      * @function setRegisterCallback
      * The callback is called when the register button is pressed.
+     * @param {Function} callback - Called when user login is successful.
      */
     this.setRegisterCallback = function(callback) {
         registerCallback = callback;
     };
 
     /**
-     * Removes all stored variables. so that hopefully most of this object can
-     * be garbage collected
+     * Removes all stored variables. So that hopefully most of this object can be garbage collected.
      */
     this.finalize = function() {
         connection = undefined;

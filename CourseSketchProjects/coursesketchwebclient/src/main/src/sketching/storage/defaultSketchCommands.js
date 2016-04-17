@@ -11,6 +11,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Removes all elements of the sketch.
+     *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
      */
@@ -35,7 +36,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -44,7 +45,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -53,7 +54,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -62,7 +63,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -86,7 +87,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * The undo method associated with adding a stroke to the sketch
+     * The undo method associated with adding a stroke to the sketch.
      *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
@@ -116,7 +117,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Undoes adding a shape command which basically means it removes the shape
+     * Undoes adding a shape command which basically means it removes the shape.
      *
      * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.
@@ -132,7 +133,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Removes an object from the this.getLocalSketchSurface().
+     * Removes an object from the {@code this.getLocalSketchSurface()}.
      *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
@@ -149,7 +150,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
 
     /**
      * Undoes removing an object from the sketch Removes an object from the
-     * this.getLocalSketchSurface().
+     * {@code this.getLocalSketchSurface()}.
      *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
@@ -181,8 +182,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Moves shapes from one shape to another shape. But does the opposite as
-     * the redo package shape
+     * Moves shapes from one shape to another shape. But does the opposite as the redo package shape.
      *
      * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.
@@ -225,11 +225,14 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     /**
      * Moves the shapes from the old container to the new container.
      *
-     * @param {SrlSketch} sketch
-     *            the sketch object that is being affected by these
-     *            changes.
+     * @param {SrlSketch} sketch - The sketch object that is being affected by these changes.
      */
     CourseSketch.prutil.getActionPackageShapeClass().prototype.redo = function(sketch) {
+
+        if (this.newContainerId) {
+            console.log('SHAPE ID: ', this.newContainerId.getIdChain());
+        }
+
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
         var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 
@@ -239,6 +242,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
         }
         for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
             var shapeId = this.shapesToBeContained[shapeIndex];
+            console.log('SHAPE BEING CONTAINED ID ', shapeId);
             var object = oldContainingObject.removeSubObjectById(shapeId);
             newContainingObject.addSubObject(object);
         }
@@ -249,13 +253,15 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
      *
      * This is a reverse of the process used in redo.
      *
-     * @param {SrlSketch} sketch
-     *            the sketch object that is being affected by these
-     *            changes.
+     * @param {SrlSketch} sketch - The sketch object that is being affected by these changes.
      */
     CourseSketch.prutil.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
+
+        if (!!this.newContainerId) {
+            console.log('NEW CONTAINER ID ID ID ID ', this.newContainerId.getIdChain());
+        }
 
         if (oldContainingObject === newContainingObject) {
             // done moving to same place.

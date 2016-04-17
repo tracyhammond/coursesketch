@@ -1,10 +1,10 @@
 package test;
 
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlBankProblem.QuestionType;
+import protobuf.srl.school.Assignment.SrlAssignment.LatePolicy;
+import protobuf.srl.school.Problem.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;

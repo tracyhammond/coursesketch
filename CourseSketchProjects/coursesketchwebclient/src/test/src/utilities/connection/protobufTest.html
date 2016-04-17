@@ -14,6 +14,7 @@
 
 </head>
 <body>
+<div><H1>DO NOT ADD ANY MORE UNIT TESTS TO THIS FILE<br>Create a second (or third, etc...) file and put them there</H1></div>
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 	<script>
@@ -45,7 +46,6 @@
         });
 
         QUnit.module("lists", {
-            prutil : new ProtobufSetup().initializeBuf(),
         });
 
         test("protobuf contains a list of supported objects", function(assert) {
@@ -60,60 +60,7 @@
                     + " elements");
         });
 
-        /* Also tests that the default prutil actually works as it is supposed to. */
-        QUnit.module("proto Objects");
-
-        test("protobuf correctly creates object with no arguments Using standard util", function(assert) {
-            var array = CourseSketch.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var object = CourseSketch.prutil[object]();
-            }
-            ok(true);
-
-        });
-
-        test("protobuf throws exception when object is called with arguments", function(assert) {
-            var array = CourseSketch.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var spy = this.spy(CourseSketch.prutil, object);
-                try {
-                    spy("arg1");
-                } catch (exception) {
-                }
-                assert.ok(spy.threw("ProtobufException"));
-            }
-        });
-
-        test("protobuf correctly creates object with no arguments", function(assert) {
-            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var array = this.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var object = this.prutil[object]();
-            }
-            ok(true);
-
-        });
-
-        test("protobuf throws exception when object is called with arguments", function(assert) {
-            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var array = this.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var spy = this.spy(this.prutil, object);
-                try {
-                    spy("arg1");
-                } catch (exception) {
-                }
-                assert.ok(spy.threw("ProtobufException"));
-            }
-        });
-
-        QUnit.module("converters", {
-            prutil : new ProtobufSetup().initializeBuf(),
-        });
+        QUnit.module("converters");
         QUnit.test("createBaseCommand", function(assert) {
             this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
             var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
@@ -178,7 +125,6 @@
     </script>
 	<script>
         QUnit.module("encode/decode", {
-            prutil : new ProtobufSetup().initializeBuf(),
         });
         QUnit.test("decoding a protobuf works", function(assert) {
             this.prutil = new ProtobufSetup().initializeBuf();

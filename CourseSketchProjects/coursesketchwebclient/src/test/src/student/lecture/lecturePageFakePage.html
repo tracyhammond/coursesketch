@@ -11,12 +11,12 @@
 	data-fake>
 <script>
 if (CourseSketch.dataManager.realDatabaseReady()) {
-	CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
+	CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0].id);
 } else {
     var intervalVar = setInterval(function() {
 	if (CourseSketch.dataManager.realDatabaseReady()) {
 	    clearInterval(intervalVar);
-	    CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0]);
+	    CourseSketch.dataManager.addState("currentLecture", CourseSketch.fakeLectures[0].id);
 	}
     }, 100);
 }

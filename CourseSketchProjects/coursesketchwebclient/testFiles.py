@@ -32,7 +32,7 @@ class MainPage(webapp2.RequestHandler):
 
     def get_class_from_file_name(self, file_name, fileNameWithPath):
         if file_name.endswith("Test.html"):
-            return "unitTest" + " " + self.getFailedUnitTest(file_name, fileNameWithPath);
+            return "unitTest" + " " + self.getFailedUnitTest(file_name, fileNameWithPath)
         elif file_name.endswith("FakePage.html"):
             return "fakePage"
         else:
@@ -40,12 +40,13 @@ class MainPage(webapp2.RequestHandler):
 
     def searchTestFiles(self):
         fileList = []
+        failedList = []
         directory = 'src/test/src/'
         absPath = os.path.abspath(directory)
         self.response.write('looking at files in directory ' + directory + ' <br>')
         counter = 1
         for r, d, f in os.walk(directory):
-            testFiles = [];
+            testFiles = []
             for files in f:
                     if files.endswith(".html"):
                         testFiles.append(files)
@@ -60,14 +61,18 @@ class MainPage(webapp2.RequestHandler):
                 self.response.write('<a href="#show' + str(counter) + '" class="show myButton" id="show' + str(counter) + '">Collapse</a><div class="list">')
                 self.response.write('<ul>')
                 for files in testFiles:
-                    fileNameWithPath = os.path.join(r,files);
-                    fileName = str(files);
-                    self.response.write('<li><a class="testFile ' + self.get_class_from_file_name(fileName, fileNameWithPath) +  '"  href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>')
+                    fileNameWithPath = os.path.join(r,files)
+                    fileName = str(files)
+                    testElement = '<li><a class="testFile ' + self.get_class_from_file_name(fileName, fileNameWithPath) +  '"  href="' + fileNameWithPath + '" target="_blank">'+ fileName +'</a></li>'
+                    if self.getFailedUnitTest(fileName, fileNameWithPath) == "failed":
+                        failedList.append(testElement)
+                    self.response.write(testElement)
                 self.response.write('</ul>')
                 self.response.write('</div></div>')
                 counter = counter + 1
         if counter == 1:
             self.response.write('<br><b>There are no test files in: ' + directory + '</b>')
+        return failedList
 
     def get(myOwn):
         myOwn.response.write('<style type="text/css">')
@@ -90,7 +95,14 @@ class MainPage(webapp2.RequestHandler):
         myOwn.response.write(' </style>')
         myOwn.response.write('<h1><a href="/index.html" target="_blank">Main Page</a></h1>')
         myOwn.response.write('List of test files to use<br>')
-        myOwn.searchTestFiles()
+        failedList = myOwn.searchTestFiles()
+
+        myOwn.response.write('<div><br>Files that failed their unit tests:<br><div>')
+        if len(failedList) == 0:
+            myOwn.response.write('No files failed their unit test! :)')
+        for element in failedList:
+            myOwn.response.write(element)
+        myOwn.response.write('</div></div>')
         #for file in fileList:
         #	self.response.write('<a href="' + file + '">'+ file +'</a><br>')
 

@@ -15,9 +15,8 @@ function ProblemTextPanel() {
     /**
      * Makes the exit button close the box and enables dragging.
      *
-     * @param {node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {node} templateClone - Is a clone of the custom HTML Element for the text box.
      * @instance
-     * @memberof NavigationPanel
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
@@ -28,9 +27,8 @@ function ProblemTextPanel() {
     /**
      * Sets the question text if one it exists.
      *
-     * @param {String} questionText the text/instructions for the problem.
+     * @param {String} questionText - The text/instructions for the problem.
      * @instance
-     * @memberof NavigationPanel
      * @function setNavigator
      */
     this.setProblemText = function(questionText) {
@@ -48,7 +46,7 @@ function ProblemTextPanel() {
     };
 
     /**
-     * Renders the textBuffer onto the actual Text
+     * Renders the textBuffer onto the actual Text.
      */
     this.swapBuffer = function() {
         var textBuffer = this.textBuffer;

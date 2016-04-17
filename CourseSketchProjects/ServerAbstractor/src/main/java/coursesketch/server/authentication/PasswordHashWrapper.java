@@ -46,4 +46,8 @@ class PasswordHashWrapper implements HashWrapper {
     @Override public String generateSalt() {
         return PasswordHash.createSalt();
     }
+
+    @Override public String generateUnsecuredSalt(final String originalSalt) {
+        return PasswordHash.createSalt(originalSalt);
+    }
 }

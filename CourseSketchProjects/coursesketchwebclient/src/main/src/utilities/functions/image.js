@@ -1,3 +1,5 @@
+// jscs:disable jsDoc
+
 /**
  * Gets an image in base 64 so we can save it as binary.
  *

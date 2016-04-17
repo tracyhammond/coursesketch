@@ -16,8 +16,8 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>0</projectBranchLevel>
-        <projectLineLevel>0</projectLineLevel>
+        <projectBranchLevel>24</projectBranchLevel>
+        <projectLineLevel>20</projectLineLevel>
         <netty.version>4.0.27.Final</netty.version>
     </properties>
     <build>
@@ -91,6 +91,12 @@
             <artifactId>ProtoFiles</artifactId>
             <version>0.0.2-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>-SNAPSHOT</version>
         </dependency>
 
         <dependency>

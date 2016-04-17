@@ -1,0 +1,83 @@
+package protobuf.srl.services.recognition;
+
+import "message.proto";
+import "commands.proto";
+import "sketch.proto";
+
+option java_generic_services = true;
+
+message GeneralRecognitionRequest {
+    required RecognitionRequestType requestType = 1;
+    oneof Request {
+        AddUpdateRequest addUpdate = 2;
+        RecognitionUpdateList setUpdateList = 3;
+        protobuf.srl.sketch.RecognitionTemplate template = 4;
+    }
+}
+
+enum RecognitionRequestType {
+    ADD_UPDATE = 0;
+    SET_NEW_LIST = 1;
+    ADD_TEMPLATE = 2;
+    RECOGNIZE = 3;
+}
+
+message AddUpdateRequest {
+    /**
+     * The id of the base sketch the update belongs to.
+     *
+     * Note that this is the base sketch and not and newer sketch.
+     */
+    optional string recognitionId = 1;
+
+    /**
+     * The update being added.
+     */
+    optional protobuf.srl.commands.SrlUpdate update = 2;
+}
+
+message RecognitionUpdateList {
+    /**
+     * The id of the base sketch the update belongs to.
+     *
+     * Note that this is the base sketch and not and newer sketch.
+     */
+    required string recognitionId = 1;
+
+    /**
+     * The update list that is being set.
+     */
+    optional protobuf.srl.commands.SrlUpdateList updateList = 2;
+}
+
+message RecognitionResponse {
+    /**
+     * This is the list of changes that need to be made as suggested by the recognition server.
+     */
+    optional protobuf.srl.commands.SrlUpdateList changes = 1;
+    optional protobuf.srl.request.DefaultResponse defaultResponse = 2;
+}
+
+/**
+ * A service that handles messages to the recogntion server and from the recognition server.
+ */
+service RecognitionService {
+
+    /**
+     * Adds a single update to be recognized.
+     */
+    rpc addUpdate(AddUpdateRequest) returns (RecognitionResponse);
+
+    /**
+     * Inserts the experiment into the submission server.
+     */
+    rpc createUpdateList(RecognitionUpdateList) returns (RecognitionResponse);
+
+    /**
+     * Inserts the solution into the submission server.
+     */
+    rpc addTemplate(protobuf.srl.sketch.RecognitionTemplate) returns (protobuf.srl.request.DefaultResponse);
+
+    /*..*/
+    rpc recognize(RecognitionUpdateList) returns (RecognitionResponse);
+}

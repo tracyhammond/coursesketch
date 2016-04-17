@@ -49,15 +49,15 @@ module.exports = function(grunt) {
                 reporter:'jslint',
                 reporterOutput: 'target/jshint.xml'
             },
-            files: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js', '!src/main/src/utilities/libraries/**/*.js',
-                    '!src/test/src/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
+            files: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js',
+                '!src/main/src/utilities/libraries/**/*.js', '!src/test/src/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
         },
         jscs: {
             src: '<%= jshint.files %>',
             options: {
                 config: 'config/jscs.conf.jscsrc',
                 reporterOutput: 'target/jscsReport.txt',
-                maxErrors: 200
+                maxErrors: 1000
             }
         },
         /*

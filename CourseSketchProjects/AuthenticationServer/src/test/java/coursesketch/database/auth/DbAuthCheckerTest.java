@@ -14,7 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.security.NoSuchAlgorithmException;
@@ -33,8 +33,8 @@ public class DbAuthCheckerTest {
     @Rule
     public FongoRule fongo = new FongoRule();
 
-    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
-    public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
+    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.BANK_PROBLEM;
+    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
 
     public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
     public static final String VALID_ITEM_ID = new ObjectId().toHexString();
@@ -71,7 +71,7 @@ public class DbAuthCheckerTest {
                 createPermission(salt, MOD_ID, Authentication.AuthResponse.PermissionLevel.MODERATOR));
     }
 
-    public void insertValidObject(School.ItemType itemType, String itemId, String... groupId) {
+    public void insertValidObject(Util.ItemType itemType, String itemId, String... groupId) {
         List<Object> list = new BasicDBList();
         Collections.addAll(list, groupId);
         db.getCollection(getCollectionFromType(itemType)).insert(

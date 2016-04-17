@@ -57,8 +57,11 @@ exports.config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: [{
-        browserName: 'chrome'
+        browserName: 'chrome',
+        chromeOptions: {
+            args : [ '--no-sandbox' ]
         }
+
         //,
         // {
         //    browserName: 'firefox',
@@ -71,7 +74,7 @@ exports.config = {
         //    'test/spec/alert.js'
         // ]
         // }
-    ],
+    }],
     //
     // ===================
     // Test Configurations
@@ -79,7 +82,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity.
-    logLevel: 'silent',
+    logLevel: 'verbose',
     //
     // Enables colors for log output
     coloredLogs: true,
@@ -197,7 +200,7 @@ exports.config = {
     // Gets executed after all workers got shut down and the process is about to exit. It is not
     // possible to defer the end of the process using a promise.
     onComplete: function() {
-        console.log('that\'s it');
+        console.log('that\'s it all tests have finished!');
         var seleniumChildProcesses = global['seleniumChildProcesses'];
         console.log('killing the child');
         if (seleniumChildProcesses && seleniumChildProcesses.kill) {
