@@ -57,29 +57,31 @@
 
     function addTemplate(label, recognitionId, protoRecognitionTemplate, callback) {
         var interpretationTemplate = CourseSketch.prutil.ProtoSrlInterpretation();
-        interpretationTemplate.setLabel(label);
+        interpretationTemplate.setLabel('' + label);
         interpretationTemplate.setConfidence(1);
         interpretationTemplate.setComplexity(1);
-        protoRecognitionTemplate.setTemplateId(recognitionId);
-        protoRecognitionTemplate.setInterpretation(interpretationTemplate);
-        CourseSketch.recognitionService.addTemplate(protoRecognitionTemplate, callback);
+        protoRecognitionTemplate.setTemplateId('' + recognitionId);
+        // protoRecognitionTemplate.setInterpretation(interpretationTemplate);
+        var clean = CourseSketch.prutil.cleanProtobuf(protoRecognitionTemplate,
+            CourseSketch.prutil.getProtoRecognitionTemplateClass());
+        CourseSketch.recognitionService.addTemplate(CourseSketch.prutil.ProtoRecognitionTemplate(), callback);
     }
 
     function addSketchTemplate(label, recognitionId, sketch, callback) {
-        var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
+        var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
         recogTemplate.setSketch(sketch);
         addTemplate(label, recognitionId, recogTemplate, callback);
     }
 
     function addShapeTemplate(label, recognitionId, shape, callback) {
-        var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
+        var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
         recogTemplate.setShape(shape);
         addTemplate(label, recognitionId, recogTemplate, callback);
     }
 
     function addStrokeTemplate(label, recognitionId, stroke, callback) {
-        var recogTemplate = CourseSketch.prutil.RecognitionTemplate();
-        recogTemplate.setStroke(stroke);
+        var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
+        // recogTemplate.setStroke(stroke);
         addTemplate(label, recognitionId, recogTemplate, callback);
     }
 
@@ -95,7 +97,8 @@
     CourseSketch.recognition.addUpdate = addUpdate;
     CourseSketch.recognition.setUpdateList = setUpdateList;
     CourseSketch.recognition.addSketchTemplate = addSketchTemplate;
-    CourseSketch.recognition.addShapeTemplate = addStrokeTemplate;
+    CourseSketch.recognition.addShapeTemplate = addShapeTemplate;
+    CourseSketch.recognition.addStrokeTemplate = addStrokeTemplate;
     CourseSketch.recognition.recognize = recognize;
 
     /**

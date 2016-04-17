@@ -94,10 +94,10 @@
             });
             sketchSurface.resizeSurface();
             $('#submitTemplate').click(function() {
-                var sketch = sketchSurface.getCurrentSketch();
-                var protoBuf = sketch.sendToProtobuf();
+                var stroke = sketchSurface.getCurrentSketch().getList()[0];
+                var protoBuf = stroke.sendToProtobuf();
                 var label = document.getElementById('label').value;
-                CourseSketch.recognition.addSketchTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
+                CourseSketch.recognition.addStrokeTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
                    console.log(err, success);
                 });
             });
