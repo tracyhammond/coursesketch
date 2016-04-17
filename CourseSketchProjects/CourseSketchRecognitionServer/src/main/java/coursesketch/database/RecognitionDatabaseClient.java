@@ -1,40 +1,30 @@
 package coursesketch.database;
 
 import com.mongodb.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.sketch.Sketch;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static coursesketch.database.RecognitionStringConstants.INT_CONFIDENCE;
-import static coursesketch.database.RecognitionStringConstants.INT_LABEL;
-import static coursesketch.database.RecognitionStringConstants.POINT_ID;
-import static coursesketch.database.RecognitionStringConstants.POINT_NAME;
-import static coursesketch.database.RecognitionStringConstants.POINT_PRESSURE;
-import static coursesketch.database.RecognitionStringConstants.POINT_SIZE;
-import static coursesketch.database.RecognitionStringConstants.POINT_SPEED;
-import static coursesketch.database.RecognitionStringConstants.POINT_TIME;
-import static coursesketch.database.RecognitionStringConstants.POINT_X;
-import static coursesketch.database.RecognitionStringConstants.POINT_Y;
-import static coursesketch.database.RecognitionStringConstants.STROKE_ID;
-import static coursesketch.database.RecognitionStringConstants.STROKE_NAME;
-import static coursesketch.database.RecognitionStringConstants.STROKE_POINTS;
-import static coursesketch.database.RecognitionStringConstants.STROKE_TIME;
-import static coursesketch.database.RecognitionStringConstants.TEMPLATE_COLLECTION;
-import static coursesketch.database.RecognitionStringConstants.TEMPLATE_ID;
-import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INT;
-import static coursesketch.database.RecognitionStringConstants.TEMPLATE_TYPE;
+import static coursesketch.database.RecognitionStringConstants.*;
 
 /**
  * Created by David Windows on 4/13/2016.
  */
 public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReader implements TemplateDatabaseInterface {
     private DB database;
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(RecognitionDatabaseClient.class);
 
     public RecognitionDatabaseClient(final ServerInfo serverInfo) {
         super(serverInfo);
@@ -53,12 +43,37 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
     @Override
     public void addTemplate(Sketch.SrlInterpretation srlInterpretation, Sketch.SrlSketch srlSketch) {
+        /*
+        final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
 
+        final BasicDBObject templateObject = new BasicDBObject();
+
+
+
+        // TODO: Take in a TEMPLATE_ID instead of creating one here
+        templateObject.append(TEMPLATE_ID, UUID.randomUUID());
+        templateObject.append(TEMPLATE_INT, interpretationDbObject);
+        templateObject.append(TEMPLATE_TYPE, shapeDbObject);
+
+        templates.insert(templateObject);
+        */
     }
 
     @Override
     public void addTemplate(Sketch.SrlInterpretation srlInterpretation, Sketch.SrlShape srlShape) {
+        final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
 
+        final BasicDBObject templateObject = new BasicDBObject();
+
+        final BasicDBObject interpretationDbObject = makeSrlInterpretation(srlInterpretation);
+        final BasicDBObject shapeDbObject = makeSrlShape(srlShape);
+
+        // TODO: Take in a TEMPLATE_ID instead of creating one here
+        templateObject.append(TEMPLATE_ID, UUID.randomUUID());
+        templateObject.append(TEMPLATE_INT, interpretationDbObject);
+        templateObject.append(TEMPLATE_TYPE, shapeDbObject);
+
+        templates.insert(templateObject);
     }
 
     @Override
@@ -68,7 +83,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         final BasicDBObject templateObject = new BasicDBObject();
 
         final BasicDBObject interpretationDbObject = makeSrlInterpretation(srlInterpretation);
-        final BasicDBObject strokeDbObject = makeDbStoke(srlStroke);
+        final BasicDBObject strokeDbObject = makeSrlStoke(srlStroke);
 
         // TODO: Take in a TEMPLATE_ID instead of creating one here
         templateObject.append(TEMPLATE_ID, UUID.randomUUID());
@@ -106,8 +121,72 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         return templateList;
     }
 
+    //TODO: Change the names of all the methods below from makeSrl{Object} to makeDb{Object}
 
-    private BasicDBObject makeDbStoke(Sketch.SrlStroke srlStroke) {
+    private BasicDBObject makeSrlObject(Sketch.SrlObject srlObject) {
+        BasicDBObject result = null;
+        if (srlObject.getType().equals(Sketch.SrlObject.ObjectType.SHAPE)) {
+            try {
+                result = makeSrlShape(Sketch.SrlShape.parseFrom(srlObject.getObject()));
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                LOG.error("There was no shape contained in the object.");
+            }
+        } else if (srlObject.getType().equals(Sketch.SrlObject.ObjectType.STROKE)) {
+            try {
+                result = makeSrlStoke(Sketch.SrlStroke.parseFrom(srlObject.getObject()));
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                LOG.error("There was no stroke contained in the object.");
+            }
+        } else if (srlObject.getType().equals(Sketch.SrlObject.ObjectType.POINT)) {
+            try {
+                result = makeSrlPoint(Sketch.SrlPoint.parseFrom(srlObject.getObject()));
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                LOG.error("There was no point contained in the object.");
+            }
+        }
+        result.append(OBJECT_TYPE, srlObject.getType().name());
+
+        return result;
+    }
+
+    private BasicDBObject makeSrlShape(Sketch.SrlShape srlShape) {
+        BasicDBObject shapeObject = null;
+        String shapeId = srlShape.getId();
+        shapeObject.append(SHAPE_ID, shapeId);
+        long shapeTime = srlShape.getTime();
+        shapeObject.append(SHAPE_TIME, shapeTime);
+
+        List<Object> interpretationList = new BasicDBList();
+        List<Sketch.SrlInterpretation> shapeInterpretations = srlShape.getInterpretationsList();
+        for (Sketch.SrlInterpretation shapeInterpretation : shapeInterpretations) {
+            DBObject interpretation = makeSrlInterpretation(shapeInterpretation);
+            interpretationList.add(interpretation);
+        }
+        shapeObject.append(SHAPE_INTERPS, interpretationList);
+
+        List<Object> subcomponentList = new BasicDBList();
+        List<Sketch.SrlObject> shapeComponents = srlShape.getSubComponentsList();
+        for (Sketch.SrlObject shapeCompenent : shapeComponents) {
+            DBObject component = makeSrlObject(shapeCompenent);
+            subcomponentList.add(component);
+        }
+        shapeObject.append(SHAPE_SUBCOMPONENTS, subcomponentList);
+
+        String shapeName = null;
+        if(srlShape.hasName()) {
+            shapeName = srlShape.getName();
+            shapeObject.append(SHAPE_NAME, shapeName);
+        }
+
+        Boolean isUserCreated;
+        if(srlShape.hasIsUserCreated()) {
+            isUserCreated = srlShape.getIsUserCreated();
+            shapeObject.append(SHAPE_ISUSERCREATED, isUserCreated);
+        }
+        return shapeObject;
+    }
+
+    private BasicDBObject makeSrlStoke(Sketch.SrlStroke srlStroke) {
         final BasicDBObject strokeDbObject = new BasicDBObject(STROKE_ID, srlStroke.getId())
                 .append(STROKE_TIME, srlStroke.getTime());
 

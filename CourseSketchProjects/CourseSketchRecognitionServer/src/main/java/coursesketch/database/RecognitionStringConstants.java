@@ -10,7 +10,7 @@ package coursesketch.database;
 public class RecognitionStringConstants {
     public static final String TEMPLATE_COLLECTION  = "Templates";
 
-    //TODO: Change INT to INTREPETATION
+    //TODO: Change INT to INTERPRETATION
 
     public static final String TEMPLATE_ID          = "TemplateId";
     public static final String TEMPLATE_INT         = "TemplateInterpretation";
@@ -32,4 +32,15 @@ public class RecognitionStringConstants {
     public static final String POINT_PRESSURE       = "PointPressure";
     public static final String POINT_SIZE           = "PointSize";
     public static final String POINT_SPEED          = "PointSpeed";
+
+    public static final String OBJECT_TYPE          = "ObjectType";
+
+    public static final String SHAPE_ID             = "ShapeId";
+    public static final String SHAPE_TIME           = "ShapeTime";
+    public static final String SHAPE_NAME           = "ShapeName";
+    public static final String SHAPE_ISUSERCREATED  = "ShapeIsUserCreated";
+    public static final String SHAPE_INTERPS        = "ShapeInterpretations";
+    public static final String SHAPE_SUBCOMPONENTS  = "ShapeSubComponents";
+
+    //public static final String
 }
