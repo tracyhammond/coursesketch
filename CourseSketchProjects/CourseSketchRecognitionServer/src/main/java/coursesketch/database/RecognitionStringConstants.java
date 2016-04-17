@@ -42,5 +42,6 @@ public class RecognitionStringConstants {
     public static final String SHAPE_INTERPS        = "ShapeInterpretations";
     public static final String SHAPE_SUBCOMPONENTS  = "ShapeSubComponents";
 
-    //public static final String
+    public static final String SKETCH_DOMAINID      = "SketchDomainId";
+    public static final String SKETCH_SKETCH        = "SketchSketch";
 }

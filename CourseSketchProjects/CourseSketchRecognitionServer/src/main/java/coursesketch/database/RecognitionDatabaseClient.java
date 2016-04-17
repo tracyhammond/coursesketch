@@ -72,20 +72,31 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
     @Override
     public void addTemplate(Sketch.SrlInterpretation srlInterpretation, Sketch.SrlSketch srlSketch) {
-        /*
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
 
         final BasicDBObject templateObject = new BasicDBObject();
 
+        final BasicDBObject interpretationDbObject = makeSrlInterpretation(srlInterpretation);
 
+        String sketchDomainId = srlSketch.getDomainId();
+
+        final List<Object> sketchSketch = new BasicDBList();
+        final List<Sketch.SrlObject> sketches = srlSketch.getSketchList();
+        for (Sketch.SrlObject sketch : sketches) {
+            BasicDBObject dbSketch = makeSrlObject(sketch);
+            sketchSketch.add(dbSketch);
+        }
+
+        final BasicDBObject sketchDbObject = new BasicDBObject();
+        sketchDbObject.append(SKETCH_DOMAINID, sketchDomainId);
+        sketchDbObject.append(SKETCH_SKETCH, sketchSketch);
 
         // TODO: Take in a TEMPLATE_ID instead of creating one here
         templateObject.append(TEMPLATE_ID, UUID.randomUUID());
         templateObject.append(TEMPLATE_INT, interpretationDbObject);
-        templateObject.append(TEMPLATE_TYPE, shapeDbObject);
+        templateObject.append(TEMPLATE_TYPE, sketchDbObject);
 
         templates.insert(templateObject);
-        */
     }
 
     @Override
