@@ -44,6 +44,8 @@ import static coursesketch.database.RecognitionStringConstants.TEMPLATE_COLLECTI
 import static coursesketch.database.RecognitionStringConstants.TEMPLATE_ID;
 import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INT;
 import static coursesketch.database.RecognitionStringConstants.TEMPLATE_TYPE;
+import static coursesketch.database.RecognitionStringConstants.SKETCH_DOMAINID;
+import static coursesketch.database.RecognitionStringConstants.SKETCH_SKETCH;
 
 /**
  * Created by David Windows on 4/13/2016.
@@ -150,6 +152,32 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
                     (DBObject)templateObject.get(TEMPLATE_INT));
             Sketch.SrlStroke stroke = getStroke(
                     (DBObject)templateObject.get(TEMPLATE_TYPE));
+
+            Sketch.RecognitionTemplate.Builder recognitionTemplate =
+                    Sketch.RecognitionTemplate.newBuilder();
+            // TODO: Mack setTemplateType type agnostic
+            recognitionTemplate.setTemplateId(id).setInterpretation(interpretation)
+                    .setStroke(stroke);
+            templateList.add(recognitionTemplate.build());
+        }
+        return templateList;
+    }
+
+    public List<Sketch.RecognitionTemplate> getTemplate() {
+        final List<Sketch.RecognitionTemplate> templateList = new ArrayList<Sketch.RecognitionTemplate>();
+
+        final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
+
+        final DBCursor templateObjectCursor = templates.find();
+
+        while(templateObjectCursor.hasNext()) {
+            DBObject templateObject = templateObjectCursor.next();
+
+            String id = (String) templateObject.get(TEMPLATE_ID);
+            Sketch.SrlInterpretation interpretation = getInterpretation(
+                    (DBObject) templateObject.get(TEMPLATE_INT));
+            Sketch.SrlStroke stroke = getStroke(
+                    (DBObject) templateObject.get(TEMPLATE_TYPE));
 
             Sketch.RecognitionTemplate.Builder recognitionTemplate =
                     Sketch.RecognitionTemplate.newBuilder();
@@ -282,6 +310,66 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         srlInterpretation.setConfidence(intConfidence);
 
         return srlInterpretation.build();
+    }
+
+    private Sketch.SrlObject getObject(DBObject someObject) {
+        Sketch.SrlObject.ObjectType objectType = Sketch.SrlObject.ObjectType.valueOf(
+                (String)someObject.get(OBJECT_TYPE));
+
+        Sketch.SrlObject.Builder srlObject = Sketch.SrlObject.newBuilder();
+
+        if (objectType.equals(Sketch.SrlObject.ObjectType.SHAPE)) {
+            Sketch.SrlShape srlShape = getShape(someObject);
+            srlObject.setType(Sketch.SrlObject.ObjectType.SHAPE);
+            srlObject.setObject(srlShape.toByteString());
+        } else if (objectType.equals(Sketch.SrlObject.ObjectType.STROKE)) {
+            Sketch.SrlStroke srlStroke = getStroke(someObject);
+            srlObject.setType(Sketch.SrlObject.ObjectType.STROKE);
+            srlObject.setObject(srlStroke.toByteString());
+        } else {
+            Sketch.SrlPoint srlPoint = getPoint(someObject);
+            srlObject.setType(Sketch.SrlObject.ObjectType.POINT);
+            srlObject.setObject(srlPoint.toByteString());
+        }
+        return srlObject.build();
+    }
+
+    private Sketch.SrlShape getShape(DBObject shapeObject) {
+        Sketch.SrlShape.Builder shape = Sketch.SrlShape.newBuilder();
+        String shapeId = (String)shapeObject.get(SHAPE_ID);
+        shape.setId(shapeId);
+
+        long time = (long)shapeObject.get(SHAPE_TIME);
+        shape.setTime(time);
+
+        String name = null;
+        if (shapeObject.containsField(SHAPE_NAME)) {
+            name = (String)shapeObject.get(SHAPE_NAME);
+            shape.setName(name);
+        }
+        Boolean isUserCreated = null;
+        if (shapeObject.containsField(SHAPE_ISUSERCREATED)) {
+            isUserCreated = (Boolean)shapeObject.get(SHAPE_ISUSERCREATED);
+            shape.setIsUserCreated(isUserCreated);
+        }
+
+        List<DBObject> shapeInterpretations = (List<DBObject>)shapeObject.get(SHAPE_INTERPS);
+        List<Sketch.SrlInterpretation> interpretations = new ArrayList<Sketch.SrlInterpretation>();
+        for (DBObject shapeInterpretation : shapeInterpretations) {
+            Sketch.SrlInterpretation interpretation = getInterpretation(shapeInterpretation);
+            interpretations.add(interpretation);
+        }
+        shape.addAllInterpretations(interpretations);
+
+        List<DBObject> shapeSubComponents = (List<DBObject>)shapeObject.get(SHAPE_SUBCOMPONENTS);
+        List<Sketch.SrlObject> subComponents = new ArrayList<Sketch.SrlObject>();
+        for (DBObject subComponent : shapeSubComponents) {
+            Sketch.SrlObject srlObject = getObject(subComponent);
+            subComponents.add(srlObject);
+        }
+        shape.addAllSubComponents(subComponents);
+
+        return shape.build();
     }
 
     private Sketch.SrlStroke getStroke(DBObject strokeObject) {

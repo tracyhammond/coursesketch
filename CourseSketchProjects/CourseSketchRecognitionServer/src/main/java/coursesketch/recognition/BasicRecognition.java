@@ -1,5 +1,6 @@
 package coursesketch.recognition;
 
+import coursesketch.database.RecognitionDatabaseClient;
 import coursesketch.recognition.defaults.DefaultRecognition;
 import coursesketch.recognition.framework.TemplateDatabaseInterface;
 import coursesketch.recognition.framework.exceptions.RecognitionException;
@@ -26,26 +27,57 @@ public class BasicRecognition extends DefaultRecognition {
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(RecognitionService.class);
-
+    private final TemplateDatabaseInterface templateDatabase;
     PDollarRecognizer recognizer = new PDollarRecognizer();
+    private boolean initialized = false;
 
     public BasicRecognition(final TemplateDatabaseInterface templateDatabase) {
         super(templateDatabase);
+        this.templateDatabase = templateDatabase;
+    }
+
+    public void initialize() {
+        LOG.info("Initialized BasidRecognition");
+        final List<Sketch.RecognitionTemplate> templates = ((RecognitionDatabaseClient)
+                templateDatabase).getTemplate();
+
+        for (Sketch.RecognitionTemplate template : templates) {
+            if (template.hasStroke()) {
+                LOG.debug("Loading Template {}", template);
+                List<Sketch.SrlStroke> strokes = new ArrayList<Sketch.SrlStroke>();
+                strokes.add(template.getStroke());
+                List<Point> points = convert(strokes);
+                recognizer.addGesture(template.getInterpretation().getLabel(), points);
+            }
+        }
+        initialized = true;
     }
 
     @Override public Commands.SrlUpdateList addUpdate(final String s, final Commands.SrlUpdate srlUpdate) throws RecognitionException {
+        if (!initialized) {
+            initialize();
+        }
         return Commands.SrlUpdateList.getDefaultInstance();
     }
 
     @Override public Commands.SrlUpdateList setUpdateList(final String s, final Commands.SrlUpdateList srlUpdateList) throws RecognitionException {
+        if (!initialized) {
+            initialize();
+        }
         return Commands.SrlUpdateList.getDefaultInstance();
     }
 
     @Override public Sketch.SrlSketch setSketch(final String s, final Sketch.SrlSketch srlSketch) throws RecognitionException {
+        if (!initialized) {
+            initialize();
+        }
         return null;
     }
 
     @Override public Commands.SrlUpdateList recognize(final String s, final Commands.SrlUpdateList srlUpdateList) throws RecognitionException {
+        if (!initialized) {
+            initialize();
+        }
         List<Sketch.SrlStroke> srlStrokes = new ArrayList<>();
         List<Point> pointCloud = convert(srlUpdateList, srlStrokes);
         final RecognizerResults recognizerResults = recognizer.Recognize(pointCloud);
@@ -108,6 +140,9 @@ public class BasicRecognition extends DefaultRecognition {
     }
 
     @Override public Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch srlSketch) throws RecognitionException {
+        if (!initialized) {
+            initialize();
+        }
         return null;
     }
 
@@ -132,6 +167,16 @@ public class BasicRecognition extends DefaultRecognition {
                     }
                 }
             }
+        }
+        return points;
+    }
+
+    private List<Point> convert(List<Sketch.SrlStroke> strokes) {
+        List<Point> points = new ArrayList<Point>();
+        for (Sketch.SrlStroke stroke : strokes) {
+            List<Sketch.SrlPoint> srlPoints = stroke.getPointsList();
+            List<Point> tempPoints = srlPointsToPoint(srlPoints, stroke.getId());
+            points.addAll(tempPoints);
         }
         return points;
     }

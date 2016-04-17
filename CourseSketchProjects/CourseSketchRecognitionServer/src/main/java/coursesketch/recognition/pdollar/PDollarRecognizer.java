@@ -82,7 +82,7 @@ public class PDollarRecognizer {
     static List<PointCloud> mPntClouds = new ArrayList<PointCloud>();
 
     public PDollarRecognizer() {
-        initializePointCloudTable();
+        //initializePointCloudTable();
     }
 
     public RecognizerResults Recognize(List<Point> points) {
