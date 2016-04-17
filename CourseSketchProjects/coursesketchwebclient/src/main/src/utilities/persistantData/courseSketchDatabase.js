@@ -36,8 +36,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var lectureDataManager;
     var slideDataManager;
 
-    var dataSender = {};
-
     /*
      * END OF VARIABLE SETTING
      */
@@ -53,8 +51,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * After the lower level database has been completely setup the higher level
-     * specific databases can be called.
+     * After the lower level database has been completely setup the higher level specific databases can be called.
+     *
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
@@ -73,7 +71,11 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var database = new ProtoDatabase(localUserId, version, initalizedFunction);
 
     (function() {
-
+        /**
+         * Add function for adding elements to the database.
+         *
+         * @returns {Transaction} The transaction from storing the data in the database.
+         */
         var addFunction = function(store, objectId, objectToAdd) {
             return store.put({
                 'id': objectId,
@@ -97,64 +99,25 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     })();
 
     /**
-     * Sends a request to retrive data from the server.
+     * This is supposed to clean out the database.
+     *
+     * Currently does not work.
      */
-    dataSender.sendDataRequest = function sendDataRequest(queryType, idList, advanceQuery) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataRequest();
-        dataSend.items = [];
-        var itemRequest = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        itemRequest.setQuery(queryType);
-
-        if (!isUndefined(idList)) {
-            itemRequest.setItemId(idList);
-        }
-        if (!isUndefined(advanceQuery)) {
-            itemRequest.setAdvanceQuery(advanceQuery.toArrayBuffer());
-        }
-        dataSend.items.push(itemRequest);
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_REQUEST));
-    };
-
-    /**
-     * Inserts data into the server database.
-     */
-    dataSender.sendDataInsert = function sendDataInsert(queryType, data) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
-        dataSend.items = [];
-        var itemSend = CourseSketch.PROTOBUF_UTIL.ItemSend();
-        itemSend.setQuery(queryType);
-        itemSend.setData(data);
-        dataSend.items.push(itemSend);
-
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_INSERT));
-    };
-
-    /**
-     * Sends an update to the server for the data to be updated.
-     */
-    dataSender.sendDataUpdate = function sendDataUpdate(queryType, data) {
-        var dataSend = CourseSketch.PROTOBUF_UTIL.DataSend();
-        dataSend.items = [];
-        var itemUpdate = CourseSketch.PROTOBUF_UTIL.ItemSend();
-        itemUpdate.setQuery(queryType);
-        itemUpdate.setData(data);
-        dataSend.items.push(itemUpdate);
-
-        serverConnection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataSend, Request.MessageType.DATA_UPDATE));
-    };
-
     this.emptySchoolData = function() {
         database.emptySelf();
     };
 
+    /**
+     * Creates the specific datamanagers.
+     */
     this.start = function() {
         // creates a manager for just courses.
-        courseManager = new CourseDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        assignmentManager = new AssignmentDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        courseProblemManager = new CourseProblemDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        submissionManager = new SubmissionDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        lectureDataManager = new LectureDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
-        slideDataManager = new SlideDataManager(this, dataListener, database, dataSender, Request, ByteBuffer);
+        courseManager = new CourseDataManager(this, dataListener, database, Request, ByteBuffer);
+        assignmentManager = new AssignmentDataManager(this, dataListener, database, Request, ByteBuffer);
+        courseProblemManager = new CourseProblemDataManager(this, dataListener, database, Request, ByteBuffer);
+        submissionManager = new SubmissionDataManager(this, dataListener, database, Request, ByteBuffer);
+        lectureDataManager = new LectureDataManager(this, dataListener, database, Request, ByteBuffer);
+        slideDataManager = new SlideDataManager(this, dataListener, database, Request, ByteBuffer);
 
         console.log('Database is ready for use! with user: ' + userId);
         databaseFinishedLoading = true;
@@ -197,46 +160,31 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Polls the server for updates, after all items
      */
     this.pollUpdates = function(callback) {
-        database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
-            if (isUndefined(result) || isUndefined(result.data)) {
-                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE);
-            } else {
-                var lastTime = result.data;
-                dataSender.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, [ lastTime ]);
+        /**
+         * Called from the server.
+         *
+         * @param {Event} evt websocket event.
+         * @param {ItemResult | BaseException} item The response from the server.
+         */
+        var updateListener = function(evt, item) {
+            if (isException(item)) {
+                CourseSketch.clientException(item);
             }
-        });
-        var functionCalled = false;
-        var timeout = setTimeout(function() {
-            if (!functionCalled && callback) {
-                functionCalled = true;
-                callback();
-            }
-        }, 5000);
-
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.UPDATE, function(evt, item) {
             // to store for later recall
             database.putInOther(LAST_UPDATE_TIME, connection.getCurrentTime().toString());
-            clearTimeout(timeout);
-            var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-            var courseList = school.courses;
-            for (var i = 0; i < courseList.length; i++) {
-                localScope.setCourse(courseList[i]);
+            // TODO: there used to be update code here that would update the local cache
+            // When that code isbeing used again to optimize load times please add back the update function here!
+            callback();
+        };
+        database.getFromOther(LAST_UPDATE_TIME, function(e, request, result) {
+            var item = undefined;
+            if (isUndefined(result) || isUndefined(result.data)) {
+                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE);
+            } else {
+                var lastTime = result.data;
+                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
             }
-
-            var assignmentList = school.assignments;
-            for (i = 0; i < assignmentList.length; i++) {
-                localScope.setAssignment(assignmentList[i]);
-            }
-
-            var problemList = school.problems;
-            for (i = 0; i < problemList.length; i++) {
-                localScope.setCourseProblem(problemList[i]);
-            }
-
-            if (!functionCalled && callback) {
-                functionCalled = true;
-                callback();
-            }
+            advanceDataListener.sendDataRequest(item, updateListener);
         });
     };
 
@@ -248,14 +196,27 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
         stateMachine.set(key, value);
     };
 
+    /**
+     * Returns the state at the given key.
+     * @param {String} key The unique identifier for the state.
+     */
     this.getState = function(key) {
         return stateMachine.get(key);
     };
 
+    /**
+     * Returns true if the given key is a valid state, false otherwise.
+     *
+     * @param {String} key The unique identifier for the state.
+     * @returns {Boolean} true if the state exists false otherwise.
+     */
     this.hasState = function(key) {
         return stateMachine.has(key);
     };
 
+    /**
+     * Empties all state data.
+     */
     this.clearStates = function() {
         stateMachine = new Map();
     };
@@ -276,7 +237,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * @param {Function} callback Called when the database is ready.
      */
     this.waitForDatabase = function waitForDatabase(callback) {
-        var localScope = this;
         var interval = setInterval(function() {
             if (localScope.isDatabaseReady()) {
                 clearInterval(interval);

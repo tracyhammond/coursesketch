@@ -1,17 +1,7 @@
 import "util.proto";
+import "commands.proto";
 
 package protobuf.srl.school;
-
-// holds all data that is sent from server. (grades, roster, classes, assignments, problems
-message SrlSchool {
-    repeated SrlCourse courses = 1;
-    repeated SrlAssignment assignments = 2;
-    repeated SrlProblem problems = 3;
-    repeated SrlBankProblem bankProblems = 4;
-    repeated SrlGrade grades = 5;
-    //repeated SrlBankGrade bankGrades = 6; //????
-
-}
 
 message SrlCourse {
     required string id = 1; // This must be globally unique.
@@ -27,6 +17,7 @@ message SrlCourse {
     optional State state = 11;
     repeated string assignmentList = 12;
     repeated string lectureList = 13;
+    optional string registrationKey = 14;
 
     enum Accessibility {
         SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
@@ -65,6 +56,19 @@ message SrlAssignment {
         GAME = 5;
         OTHER = 6; // Allows instructors to create unique assignment types
     }
+}
+
+/**
+ * Specifies the type of item something is.
+ *
+ * NOTE: the names are used for the collection name for some databases.
+ */
+enum ItemType {
+    COURSE = 0;
+    ASSIGNMENT = 1;
+    COURSE_PROBLEM = 2;
+    BANK_PROBLEM = 3;
+    LECTURE = 4;
 }
 
 message LatePolicy {
@@ -123,6 +127,8 @@ message SrlBankProblem {
     repeated string otherKeywords = 9;
     optional protobuf.srl.utils.SrlPermission accessPermission = 10;
     optional string script = 11; // a script string that is used for custom setups in experiments
+    optional protobuf.srl.commands.SrlUpdateList baseSketch = 12; // the base sketch the instructor will make for assignments
+    optional string registrationKey = 13;
 }
 
 message SrlGrade {

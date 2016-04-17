@@ -37,6 +37,11 @@ function Connection(uri, encrypted, attemptReconnect) {
             console.log('Creating socket at ' + wsUri);
             websocket = new WebSocket(wsUri);
             websocket.binaryType = 'arraybuffer'; // We are talking binary
+            /**
+             * Called when the websocekt opens.
+             *
+             * @param {Event} evt An event containing data about opening.
+             */
             websocket.onopen = function(evt) {
                 connected = true;
                 if (onOpen) {
@@ -48,6 +53,11 @@ function Connection(uri, encrypted, attemptReconnect) {
                 }
             };
 
+            /**
+             * Called when the websocket closes.
+             *
+             * @param {Event} evt An event containing data about closing.
+             */
             websocket.onclose = function(evt) {
                 connected = false;
                 websocket.close();
@@ -64,17 +74,23 @@ function Connection(uri, encrypted, attemptReconnect) {
                     }, 3000);
                 }
             };
+
+            /**
+             * Called when the websocket receives a message.
+             *
+             * @param {Event} evt An event containing data about receiving a message.
+             */
             websocket.onmessage = function(evt) {
                 /*jshint maxcomplexity:15 */
                 try {
-                    var MessageType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType;
+                    var MessageType = CourseSketch.prutil.getRequestClass().MessageType;
                     // Decode the Request
-                    var msg = CourseSketch.PROTOBUF_UTIL.getRequestClass().decode(evt.data);
+                    var msg = CourseSketch.prutil.getRequestClass().decode(evt.data);
                     // console.log('request decoded succesfully ');
                     if (msg.requestType === MessageType.TIME) {
                         console.log('getting from time');
                         var rsp = onTime(evt, msg);
-                        if (rsp !== null) {
+                        if (rsp !== null && !isUndefined(rsp)) {
                             localScope.sendRequest(rsp);
                         }
                     } else if (msg.requestType === MessageType.LOGIN && onLogin) {
@@ -95,11 +111,16 @@ function Connection(uri, encrypted, attemptReconnect) {
                         console.log(msg);
                         onSchoolData(evt, msg);
                     } else if (msg.requestType === MessageType.ERROR) {
+                        var exception = CourseSketch.prutil.decodeProtobuf(msg.getOtherData(),
+                            CourseSketch.prutil.getProtoExceptionClass());
+
+                        console.log('exception object', exception);
                         console.log(msg.getResponseText());
+
+                        CourseSketch.showShallowException(exception);
                         if (onError) {
                             onError(evt, msg.getResponseText());
                         }
-                        alert('ERROR: ' + msg.getResponseText());
                     } else if (onRequest) {
                         onRequest(evt, msg);
                     }
@@ -111,6 +132,12 @@ function Connection(uri, encrypted, attemptReconnect) {
                 }
                 // Decode with protobuff and pass object to client
             };
+
+            /**
+             * Called when the websocket throws an error.
+             *
+             * @param {Event} evt An event containing data about the error.
+             */
             websocket.onerror = function(evt) {
                 if (onError) {
                     onError(evt, null);
@@ -156,38 +183,83 @@ function Connection(uri, encrypted, attemptReconnect) {
         onError = error;
     };
 
+    /**
+     * Sets a listener to listen to login events.
+     *
+     * @param {Function} listener the function that is called when the client receives a login message from the server
+     */
     this.setLoginListener = function(listener) {
         onLogin = listener;
     };
 
+    /**
+     * Sets a listener to listen to recognition events.
+     *
+     * @param {Function} listener the function that is called when the client receives a recognition message from the server.
+     */
     this.setRecognitionListener = function(listener) {
         onRecognition = listener;
     };
 
+    /**
+     * Sets a listener to listen to answer checker events.
+     *
+     * @param {Function} listener the function that is called when the client receives a answer checker message from the server.
+     */
     this.setAnswerCheckingListener = function(listener) {
         onAnswerChecker = listener;
     };
 
+    /**
+     * Sets a listener to listen to submission events.
+     *
+     * @param {Function} listener the function that is called when the client receives a submission message from the server.
+     */
     this.setSubmissionListener = function(listener) {
         onSubmission = listener;
     };
 
+    /**
+     * Sets a listener to listen to submission events.
+     *
+     * @param {Function} listener the function that is called when the client receives a submission message from the server.
+     */
     this.setSchoolDataListener = function(listener) {
         onSchoolData = listener;
     };
 
+    /**
+     * Sets a listener to listen to a connection opening.
+     *
+     * @param {Function} listener the function that is called when the client opens a connection.
+     */
     this.setOnOpenListener = function(listener) {
         onOpen = listener;
     };
 
+    /**
+     * Sets a listener to listen to a connection closing.
+     *
+     * @param {Function} listener the function that is called when the client closes a connection.
+     */
     this.setOnCloseListener = function(listener) {
         onClose = listener;
     };
 
+    /**
+     * Sets a listener to listen to any message.
+     *
+     * @param {Function} listener the function that is called when the client receives any message.
+     */
     this.setOnMessageListener = function(listener) {
         onRequest = listener;
     };
 
+    /**
+     * Sets a listener to listen to an error event from the server.
+     *
+     * @param {Function} listener the function that is called when the client receives an error from the server.
+     */
     this.setOnErrorListener = function(listener) {
         onError = listener;
     };
@@ -221,7 +293,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                 data: message.toArrayBuffer()
             };
             websocket.onmessage(event);
-        }, 100);
+        }, 20);
     };
     /**
      * Closes the websocket.
@@ -242,29 +314,50 @@ function Connection(uri, encrypted, attemptReconnect) {
 
     CourseSketch.getCurrentTime = this.getCurrentTime;
 
+    /**
+     * Called to synchronize time events.
+     *
+     * @param {Event} evt An event about receiving a message
+     * @param {Request} msg The message the contains timing data.
+     * @returns {Request|Undefined} returns the time to send or null if no time is being sent
+     */
     function onTime(evt, msg) {
         if (msg.getResponseText() === SEND_TIME_TO_CLIENT_MSG) { // client
             return clientReciveTimeDiff(msg);
         } else if (msg.getResponseText() === SEND_LATENCY_TO_CLIENT_MSG) { // client
             return clientReciveLatency(msg);
         }
-        return null;
+        return undefined;
     }
 
+    /**
+     * Computes the time difference and returns a request for the latency.
+     *
+     * Called when the server returns the request for the time difference.
+     * @param {Request} req the time request
+     * @returns {Request} A request that specifies a request to the server to return latency.
+     */
     function clientReciveTimeDiff(req) {
         var startCounter = localScope.getCurrentTime();
         timeDifferance = dcodeIO.Long.fromString('' + req.getMessageTime()).subtract(localScope.getCurrentTime());
-        var rsp = CourseSketch.PROTOBUF_UTIL.Request();
-        rsp.setRequestType(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.TIME);
+        var rsp = CourseSketch.prutil.Request();
+        rsp.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.TIME);
         rsp.setMessageTime(dcodeIO.Long.fromString('' + req.getMessageTime()).add(localScope.getCurrentTime().subtract(startCounter)));
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
+        rsp.setRequestId(generateUUID());
         return rsp;
     }
 
+    /**
+     * Saves the offset locally.
+     *
+     * @param {Request} req The time request.
+     * @returns {Undefined} No more server actions are needed.  Return null to denote that.
+     */
     function clientReciveLatency(req) {
         latency = dcodeIO.Long.fromString('' + req.getMessageTime());
         totalTimeDifferance = timeDifferance.add(latency);
-        return null;
+        return undefined;
     }
 }
 

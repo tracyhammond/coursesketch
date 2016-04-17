@@ -9,26 +9,24 @@ import com.mongodb.DBRef;
 import connection.SubmissionClientWebSocket;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
+import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 import utilities.ConnectionException;
-
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
-import static database.DatabaseStringConstants.ADMIN;
 import static database.DatabaseStringConstants.COURSE_PROBLEM_COLLECTION;
 import static database.DatabaseStringConstants.EXPERIMENT_COLLECTION;
-import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SOLUTION_ID;
@@ -104,11 +102,9 @@ public final class SubmissionManager {
      * @param internalConnections A manager of connections to another database.
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      */
-    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final String sessionInfo,
+    public static void mongoGetExperiment(final DB dbs, final String userId, final String problemId, final Request sessionInfo,
             final MultiConnectionManager internalConnections) throws DatabaseAccessException {
-        final Request.Builder requestBuilder = Request.newBuilder();
-        requestBuilder.setSessionInfo(sessionInfo);
-        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
+
         final ItemRequest.Builder build = ItemRequest.newBuilder();
         build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
@@ -124,6 +120,8 @@ public final class SubmissionManager {
         build.addItemId(sketchId);
         final DataRequest.Builder data = DataRequest.newBuilder();
         data.addItems(build);
+
+        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(sessionInfo);
         requestBuilder.setOtherData(data.build().toByteString());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
@@ -147,54 +145,65 @@ public final class SubmissionManager {
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static void mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final DB dbs, final String userId,
-            final String problemId, final String sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            final String problemId, final Request sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
             throws DatabaseAccessException, AuthenticationException {
         final DBObject problem = new DBRef(dbs, COURSE_PROBLEM_COLLECTION, new ObjectId(problemId)).fetch();
         if (problem == null) {
             throw new DatabaseAccessException("Problem was not found with the following ID " + problemId);
         }
-        final ArrayList adminList = (ArrayList<Object>) problem.get(ADMIN); // convert
-        // to
-        // ArrayList<String>
-        final ArrayList modList = (ArrayList<Object>) problem.get(MOD); // convert
-                                                                        // to
-        // ArrayList<String>
-        boolean isAdmin = false, isMod = false;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-        if (!isAdmin && !isMod) {
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, userId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final Request.Builder requestBuilder = Request.newBuilder();
-        requestBuilder.setSessionInfo(sessionInfo);
-        requestBuilder.setRequestType(MessageType.DATA_REQUEST);
-        final ItemRequest.Builder build = ItemRequest.newBuilder();
-        build.setQuery(ItemQuery.EXPERIMENT);
         final DBRef myDbRef = new DBRef(dbs, EXPERIMENT_COLLECTION, new ObjectId(problemId));
-        final DBObject corsor = myDbRef.fetch();
-        for (String key : corsor.keySet()) {
-            if (SELF_ID.equals(key)) {
-                continue;
-            }
-            final Object experimentId = corsor.get(key);
-            if (experimentId == null || experimentId instanceof ObjectId) {
-                continue;
-            }
-            final String sketchId = corsor.get(key).toString();
-            LOG.info("SketchId: {}", sketchId);
-            build.addItemId(sketchId);
+        final DBObject dbObject = myDbRef.fetch();
+
+        if (dbObject == null) {
+            throw new DatabaseAccessException("Students have not submitted any data for this problem: " + problemId);
         }
-        build.setAdvanceQuery(review);
+
+        final ItemRequest itemRequest = createSubmissionRequest(dbObject, review);
         final DataRequest.Builder data = DataRequest.newBuilder();
-        data.addItems(build);
+        data.addItems(itemRequest);
+        final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(sessionInfo);
         requestBuilder.setOtherData(data.build().toByteString());
-        LOG.info("Sending command: {}", requestBuilder.build());
         try {
             internalConnections.send(requestBuilder.build(), null, SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
+    }
+
+    /**
+     * Creates a submission request for the submission server.
+     * @param experiments A {@link DBObject} that represents the experiments in the database.
+     * @param review An advance query used for reviewing students submissions.
+     * @return {@link ItemRequest} That is used to query the submission server.
+     */
+    private static ItemRequest createSubmissionRequest(final DBObject experiments, final ByteString review) {
+        final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
+        itemRequest.setQuery(ItemQuery.EXPERIMENT);
+        for (String key : experiments.keySet()) {
+            if (SELF_ID.equals(key)) {
+                continue;
+            }
+            final Object experimentId = experiments.get(key);
+            if (experimentId == null || experimentId instanceof ObjectId) {
+                continue;
+            }
+            final String sketchId = experiments.get(key).toString();
+            LOG.info("SketchId: {}", sketchId);
+            itemRequest.addItemId(sketchId);
+        }
+        itemRequest.setAdvanceQuery(review);
+        return itemRequest.build();
     }
 
     // need to be able to get a single submission

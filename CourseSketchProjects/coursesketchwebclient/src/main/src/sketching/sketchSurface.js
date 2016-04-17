@@ -48,8 +48,8 @@ function SketchSurface() {
             this.id = generateUUID();
         }
         if (!isUndefined(this.updateManager) && this.updateManager.getListLength() <= 0) {
-            var command = CourseSketch.PROTOBUF_UTIL.createNewSketch(this.id);
-            var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            var command = CourseSketch.prutil.createNewSketch(this.id);
+            var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
             this.updateManager.addUpdate(update);
         }
     };
@@ -101,11 +101,11 @@ function SketchSurface() {
      */
     function addStrokeCallback(stroke) {
 
-        var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, true);
+        var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.ADD_STROKE, true);
         var protoStroke = stroke.sendToProtobuf(parent);
         command.commandData = protoStroke.toArrayBuffer();
         command.decodedData = stroke;
-        var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+        var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
         this.updateManager.addUpdate(update);
     }
 
@@ -191,9 +191,9 @@ function SketchSurface() {
      * This is a cleaned version of the list and modifying this list will not affect the update manager list.
      */
     this.getSrlUpdateListProto = function() {
-        var updateProto = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        var updateProto = CourseSketch.prutil.SrlUpdateList();
         updateProto.list = this.updateManager.getUpdateList();
-        return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateProto.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateListClass());
+        return CourseSketch.prutil.decodeProtobuf(updateProto.toArrayBuffer(), CourseSketch.prutil.getSrlUpdateListClass());
     };
 
     /**
@@ -210,9 +210,9 @@ function SketchSurface() {
         var update = updateList[0];
         if (!isUndefined(update)) {
             var firstCommand = update.commands[0];
-            if (firstCommand.commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_SKETCH) {
-                var sketch = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(firstCommand.commandData,
-                    CourseSketch.PROTOBUF_UTIL.getActionCreateSketchClass());
+            if (firstCommand.commandType === CourseSketch.prutil.CommandType.CREATE_SKETCH) {
+                var sketch = CourseSketch.prutil.decodeProtobuf(firstCommand.commandData,
+                    CourseSketch.prutil.getActionCreateSketchClass());
                 this.id = sketch.sketchId.idChain[0];
                 this.sketchManager.setParentSketchId(this.id);
             }
@@ -259,7 +259,13 @@ SketchSurface.prototype.initializeElement = function(templateClone) {
     this.sketchCanvas = this.shadowRoot.querySelector('#drawingCanvas');
 };
 
-
+/**
+ * Called to initialize the sketch surface.
+ *
+ * Looks at attributes and sets up the sketch surface based on these attributes.
+ * @param {InputListener} InputListenerClass
+ * @param {UpdateManager} UpdateManagerClass
+ */
 SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateManagerClass) {
     /*jshint maxcomplexity:13 */
     this.initializeSketch();
@@ -284,4 +290,9 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
     if (!isUndefined(this.dataset) && !(isUndefined(this.dataset.autoresize))) {
         this.makeResizeable();
     }
+    window.addEventListener('load', function() {
+        this.resizeSurface();
+    }.bind(this));
+
+
 };

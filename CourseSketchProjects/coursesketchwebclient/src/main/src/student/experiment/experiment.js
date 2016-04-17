@@ -32,17 +32,18 @@ validateFirstRun(document.currentScript);
         // todo: better way of removing elements
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
-        var oldElement = parentPanel.querySelector('.sub-panel');
-        if (oldElement instanceof Node) {
-            parentPanel.removeChild(oldElement);
-        }
-        if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+        parentPanel.emptyPanel();
+        if (problemType === CourseSketch.prutil.QuestionType.SKETCH) {
             console.log('Loading sketch problem');
             loadSketch(navigator);
-        } else if (problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.FREE_RESP) {
+        } else if (problemType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             console.log('Loading typing problem');
             loadTyping(navigator);
         }
+
+        var questionText = document.querySelector('problem-text-panel');
+        questionText.setProblemText(navigator.getProblemText());
+        console.log('a problem has been loaded with question text', navigator.getProblemText());
 
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
@@ -51,7 +52,7 @@ validateFirstRun(document.currentScript);
         parentPanel.isGrader = false;
 
         parentPanel.setWrapperFunction(function(submission) {
-            var studentExperiment = CourseSketch.PROTOBUF_UTIL.SrlExperiment();
+            var studentExperiment = CourseSketch.prutil.SrlExperiment();
             navigator.setSubmissionInformation(studentExperiment, true);
             console.log('student experiment data set', studentExperiment);
             studentExperiment.submission = submission;
@@ -65,7 +66,6 @@ validateFirstRun(document.currentScript);
     CourseSketch.studentExperiment.addWaitOverlay = function() {
         CourseSketch.studentExperiment.waitScreenManager.buildOverlay(document.querySelector('body'));
         CourseSketch.studentExperiment.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**
@@ -82,14 +82,15 @@ validateFirstRun(document.currentScript);
      */
     function loadTyping(navigator) {
         var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel';
-        typingSurface.style.width = '100%';
-        typingSurface.style.height = 'calc(100% - 110px)';
+        typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException ||isUndefined(submission.getTextAnswer())) {
+            if (isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            if (isUndefined(submission) || CourseSketch.isException(submission) ||isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }
@@ -105,9 +106,9 @@ validateFirstRun(document.currentScript);
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel submittable';
+        sketchSurface.className = 'sub-panel submittable';
         sketchSurface.style.width = '100%';
-        sketchSurface.style.height = 'calc(100% - 110px)';
+        sketchSurface.style.height = '100%';
         sketchSurface.setErrorListener(function(exception) {
             console.log(exception);
             alert(exception);
@@ -117,6 +118,10 @@ validateFirstRun(document.currentScript);
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
         var realWaiting = element.finishWaiting.bind(element);
+
+        /**
+         * Called when the sketch surface is done loading to remove the overlay.
+         */
         element.finishWaiting = function() {
             realWaiting();
             sketchSurface.refreshSketch();
@@ -130,7 +135,10 @@ validateFirstRun(document.currentScript);
 
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
             var problemScript = navigator.getProblemScript();
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getUpdateList())) {
+            if (CourseSketch.isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            if (isUndefined(submission) || CourseSketch.isException(submission) || isUndefined(submission.getUpdateList())) {
                 executeScript(problemScript, document.getElementById('problemPanel'), function() {
                     console.log('script executed - worker disconnect');
                     if (element.isRunning()) {
@@ -151,13 +159,10 @@ validateFirstRun(document.currentScript);
             //loads and runs the script
             executeScript(problemScript, document.getElementById('problemPanel'), function() {
                 console.log('script executed - worker disconnect');
-                console.log(submission);
                 var updateList = submission.getUpdateList();
-                //console.log(updateList);
                 sketchSurface.loadUpdateList(updateList.getList(), element);
                 updateList = null;
                 element = null;
-                //console.log(submission);
             });
         });
         //end of getSubmission

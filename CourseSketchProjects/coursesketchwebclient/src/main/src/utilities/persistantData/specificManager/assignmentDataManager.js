@@ -1,9 +1,17 @@
-function AssignmentDataManager(parent, advanceDataListener, parentDatabase, sendData, request, buffer) {
+/**
+ * A manager for assignments that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase The local database
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
+function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
     var dataListener = advanceDataListener;
     var database = parentDatabase;
-    var Request = request;
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Looks at the assignment and gives it some state if the state values do
@@ -14,7 +22,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
         var state = assignment.getState();
         var updateAssignment = false;
         if (isUndefined(state) || state === null) {
-            state = CourseSketch.PROTOBUF_UTIL.State();
+            state = CourseSketch.prutil.State();
             updateAssignment = true;
         }
         try {
@@ -107,8 +115,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
      *                function to be called after assignment setting is done
      */
     function insertAssignmentServer(assignment, assignmentCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+        advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
+            if (isException(item)) {
+                assignmentCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                    'Getting the list of asignments: ' + asignmentIdList,  item));
+                return;
+            }
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -129,7 +141,6 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
     }
 
 
@@ -194,14 +205,17 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+            advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
+                if (isException(item)) {
+                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'Getting the list of asignments: ' + asignmentIdList,  item));
+                    return;
+                }
                  // we do not need to make server changes we just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer());
         });
     }
     parent.updateAssignment = updateAssignment;
@@ -226,7 +240,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                 // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
-                    stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlAssignmentClass().decode(bytes), assignmentCallback);
+                    stateCallback(CourseSketch.prutil.getSrlAssignmentClass().decode(bytes), assignmentCallback);
                 } catch (exception) {
                     console.error(exception);
                     assignmentCallback(new DatabaseException('The result is undefined', 'getting Assignment: ' + assignmentId));
@@ -306,38 +320,32 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
                         // after the entire list has been gone through pull the
                         // leftovers from the server
                         if (leftOverId.length >= 1) {
-                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT,
-                                function(evt, item) {
-                                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                            CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT);
+                            var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.ASSIGNMENT,
+                                    leftOverId);
+                            advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                                if (isException(item)) {
+                                    assignmentCallbackComplete(new DatabaseException('exception thrown while waiting for response from sever',
+                                        'Getting the list of asignments: ' + assignmentIdList,  item));
+                                    return;
+                                }
 
-                                    // after listener is removed
-                                    if (isUndefined(item.data) || item.data === null) {
-                                        assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist.'));
-                                        return;
-                                    }
-                                    var school = CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass().decode(item.data);
-                                    var assignment = school.assignments[0];
-                                    if (isUndefined(assignment) || assignment instanceof DatabaseException) {
-                                        var result = assignment;
-                                        if (isUndefined(result)) {
-                                            result = new DatabaseException('Nothing is in the server database!',
-                                                'Grabbing assignment from server: ' + assignmentIdList);
-                                        }
-                                        if (!isUndefined(assignmentCallbackComplete)) {
-                                            assignmentCallbackComplete(result);
-                                        }
-                                        return;
-                                    }
-                                    for (var i = 0; i < school.assignments.length; i++) {
-                                        localScope.setAssignment(school.assignments[i]);
-                                        assignmentList.push(school.assignments[i]);
-                                    }
-                                    stateCallbackList(assignmentList, assignmentCallbackComplete);
-                                    assignmentIdList = null;
-                                });
-                            // creates a request that is then sent to the server
-                            sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.ASSIGNMENT, leftOverId);
+                                // after listener is removed
+                                if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                                    // not calling the state callback because this should skip that step.
+                                    assignmentCallbackComplete(new DatabaseException('The data sent back from the server does not exist: ' +
+                                            assignmentIdList));
+                                    return;
+                                }
+                                for (var i = 0; i < item.data.length; i++) {
+                                    var decodedAssignment = CourseSketch.prutil.decodeProtobuf(item.data[i],
+                                        CourseSketch.prutil.getSrlAssignmentClass());
+                                    localScope.setAssignment(decodedAssignment);
+                                    assignmentList.push(decodedAssignment);
+                                }
+                                stateCallbackList(assignmentList, assignmentCallbackComplete);
+                                assignmentIdList = null;
+                            });
+                            // end server listener
                         } else {
                             stateCallbackList(assignmentList, assignmentCallbackComplete);
                         }
@@ -369,6 +377,12 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, send
             throw new DatabaseException('Calling get Assignment with an undefined callback');
         }
         var called = false;
+
+        /**
+         * Ensures that the callback is only called once.
+         *
+         * @param {List<Assignments>} assignmentList The assignments that were loaded.
+         */
         function callOnce(assignmentList) {
             if (!called) {
                 called = true;

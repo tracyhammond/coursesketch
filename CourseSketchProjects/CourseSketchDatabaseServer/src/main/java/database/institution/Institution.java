@@ -3,9 +3,10 @@ package database.institution;
 import com.google.protobuf.ByteString;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.request.Message;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
@@ -31,8 +32,9 @@ public interface Institution {
      * @param userId The user requesting these courses.
      * @return A list of courses given a list of Ids for the courses.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if the user if the user is trying to access something non-existant.
      */
-    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException;
+    List<SrlCourse> getCourses(List<String> courseIds, String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * @param problemID A list of ids for a specific course problem.
@@ -79,8 +81,9 @@ public interface Institution {
      * @param userId The user requesting these courses.
      * @return A list of course problems given a list of Ids for the course problems.
      * @throws AuthenticationException Thrown if the user does not have permissions for the courses requested.
+     * @throws DatabaseAccessException Thrown if there are problems getting the problems.
      */
-    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException;
+    List<SrlBankProblem> getProblem(List<String> problemID, String userId) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * @return A list of courses that are public (used when registering problems)
@@ -351,10 +354,8 @@ public interface Institution {
     /**
      * Registers a user for a course
      *
-     * Upon registration 3 steps happen:
+     * Upon registration 2 steps happen:
      * <ol>
-     * <li>The user is checked to make sure that they already are not enrolled
-     * in the course.
      * <li>The user is added to the user permission list.</li>
      * <li>The user now has the course in its list of courses.</li>
      * </ol>
@@ -363,14 +364,41 @@ public interface Institution {
      *            The credentials user to be put into the course.
      * @param courseId
      *            The course that the user is being inserted into
+     * @param registrationKey
+     *            Used to ensure that the user has permission to be added to the course.
      * @return The Id of the object that was inserted
      * @throws DatabaseAccessException
-     *             Only thrown if the user is already registered for the course.
-     *
+     *             Thrown if there is data missing or the registration was not successful.
      * @throws AuthenticationException
      *             Thrown if the user does not have permission to be inserted into the course.
      */
-    boolean putUserInCourse(String courseId, String userId) throws DatabaseAccessException, AuthenticationException;
+    boolean putUserInCourse(String courseId, String userId, String registrationKey) throws DatabaseAccessException, AuthenticationException;
+
+    /**
+     * Registers a course for a bank problem
+     *
+     * Upon registration 2 steps happen:
+     * <ol>
+     * <li>The registration key is checked to ensure that the the registration is valid.</li>
+     * <li>The course is added to the bank problem user permission list.</li>
+     * </ol>
+     *
+     * @param courseId
+     *            The credentials course to be put into the bank problem.
+     * @param bankProblemId
+     *            The bankproblem that the course is being inserted into
+     * @param userId
+     *            The credentials of the user trying to put the course into the bank problem
+     * @param clientRegistrationKey
+     *            Used to ensure that the course has permission to be added to the bankproblem.
+     * @return {@code true} if the registration was successful.
+     * @throws DatabaseAccessException
+     *             Thrown if there is data missing or the registration was not successful.
+     * @throws AuthenticationException
+     *             Thrown if the user does not have permission to be inserted into the course.
+     */
+    boolean putCourseInBankProblem(String courseId, String bankProblemId, String userId, String clientRegistrationKey)
+            throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Gets all of the courses of a specific user.
@@ -401,7 +429,7 @@ public interface Institution {
      * @param internalConnections The connection manager to other servers.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void getExperimentAsUser(String userId, String problemId, String sessionInfo, MultiConnectionManager internalConnections)
+    void getExperimentAsUser(String userId, String problemId, Message.Request sessionInfo, MultiConnectionManager internalConnections)
             throws DatabaseAccessException;
 
     /**
@@ -414,7 +442,7 @@ public interface Institution {
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
-    void getExperimentAsInstructor(String userId, String problemId, String sessionInfo,
+    void getExperimentAsInstructor(String userId, String problemId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
@@ -423,7 +451,8 @@ public interface Institution {
      * @param courseId must be admin of the course.
      * @param page The page number.
      * @return A list of all bank problems.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      */
-    List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException;
+    List<SrlBankProblem> getAllBankProblems(String userId, String courseId, int page) throws AuthenticationException, DatabaseAccessException;
 }

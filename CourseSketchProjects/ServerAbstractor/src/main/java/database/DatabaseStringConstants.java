@@ -4,9 +4,8 @@ package database;
  * Contains a list of useful constants used by the database.
  *
  * @author gigemjt
- *
  */
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({ "PMD.CommentRequired", "checkstyle:javadocvariable" })
 public final class DatabaseStringConstants {
     // Id
     public static final String SELF_ID = "_id";
@@ -19,6 +18,7 @@ public final class DatabaseStringConstants {
     public static final String EXPERIMENT_ID = "ExperimentId";
     public static final String USER_ID = "UserId";
     public static final String SCHOOLITEMID = "SchoolItemID";
+    public static final String OWNER_ID = "OWNER";
 
     // collections
     public static final String COURSE_COLLECTION = "Courses";
@@ -38,6 +38,7 @@ public final class DatabaseStringConstants {
     public static final String LOGIN_COLLECTION = "CourseSketchUsers";
     public static final String DATABASE = "institution";
     public static final String LOGIN_DATABASE = "login";
+    public static final String AUTH_DATABASE = "auth";
 
     // meta fields
     public static final String NAME = "Name";
@@ -106,6 +107,7 @@ public final class DatabaseStringConstants {
     public static final String QUESTION_TYPE = "QuestionType";
     public static final String KEYWORDS = "OtherKeywords";
     public static final String SCRIPT = "Script";
+    public static final String BASE_SKETCH = "BaseSketch";
 
     // state specific
     public static final String STATE_PUBLISHED = "Published"; // Instructor has finished construction of school item
@@ -133,15 +135,24 @@ public final class DatabaseStringConstants {
     public static final String STUDENT_ID = "StudentId";
     public static final String STUDENT_CLIENT_ID = "StudentClientId";
     public static final String INSTRUCTOR_CLIENT_ID = "InstructorClientId";
+    public static final String LAST_LOGIN_TIMES = "LoginSuccesses";
+    public static final String LOGIN_AMOUNT_FIELD = "LoginCount";
 
     // user group specific
     public static final String USER_LIST = "UserList";
     public static final String GROUP_PREFIX = "group";
     public static final int GROUP_PREFIX_LENGTH = GROUP_PREFIX.length();
+    public static final String SALT = "Salt";
+    public static final String REGISTRATION_KEY = "RegistrationKey";
 
     // mongo comands
     public static final String SET_COMMAND = "$set";
     public static final String ADD_SET_COMMAND = "$addToSet";
+    public static final String PUSH_COMMAND = "$push";
+    public static final String EACH_COMMAND = "$each";
+    public static final String SORT_COMMAND = "$sort";
+    public static final String SLICE_COMMAND = "$slice";
+    public static final String INCREMENT_COMMAND = "$inc";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";

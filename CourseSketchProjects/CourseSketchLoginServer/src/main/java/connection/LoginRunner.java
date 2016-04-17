@@ -1,9 +1,10 @@
 package connection;
 
+import coursesketch.database.DatabaseClient;
 import coursesketch.server.base.GeneralConnectionRunner;
 import coursesketch.server.base.ServerWebSocketInitializer;
-import database.DatabaseClient;
-
+import coursesketch.server.interfaces.ServerInfo;
+import database.DatabaseStringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author gigemjt
  */
-public class LoginRunner extends GeneralConnectionRunner {
+public final class LoginRunner extends GeneralConnectionRunner {
 
     /**
      * Declaration and Definition of Logger.
@@ -48,16 +49,26 @@ public class LoginRunner extends GeneralConnectionRunner {
      * Makes the login database run locally.
      */
     @Override
-    public final void executeLocalEnvironment() {
+    public void executeLocalEnvironment() {
         LOG.info("Setting the login database to connect locally");
         new DatabaseClient(false, null); // makes the database point locally
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     @Override
-    public final ServerWebSocketInitializer createSocketInitializer(final long time, final boolean secure, final boolean local) {
-        return new LoginServlet(time, secure, local);
+    protected void loadConfigurations() {
+        super.setDatabaseName(DatabaseStringConstants.LOGIN_DATABASE);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link LoginServlet}.
+     */
+    @Override
+    public ServerWebSocketInitializer createSocketInitializer(final ServerInfo serverInfo) {
+        return new LoginServlet(serverInfo);
     }
 }

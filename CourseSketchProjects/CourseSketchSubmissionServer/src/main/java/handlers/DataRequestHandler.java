@@ -10,11 +10,12 @@ import protobuf.srl.query.Data.DataResult;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
-import protobuf.srl.submission.Submission.SrlExperimentList;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 /**
  * Handles request for submissions.
@@ -44,7 +45,7 @@ public final class DataRequestHandler {
         DataRequest dataReq;
         try {
             dataReq = DataRequest.parseFrom(req.getOtherData());
-            final Request.Builder resultReq = Request.newBuilder(req);
+            final Request.Builder resultReq = ProtobufUtilities.createBaseResponse(req, true);
             resultReq.clearOtherData();
             final DataResult.Builder builder = DataResult.newBuilder();
             try {
@@ -59,23 +60,16 @@ public final class DataRequestHandler {
                     }
                 }
             } catch (Exception e) {
+                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                final Request.Builder build = Request.newBuilder();
-                build.setRequestType(Request.MessageType.ERROR);
-                build.setResponseText(e.getMessage());
-                build.setSessionInfo(req.getSessionInfo());
-                return build.build();
+                return ExceptionUtilities.createExceptionRequest(req, protoEx);
             }
             resultReq.setOtherData(builder.build().toByteString());
-            resultReq.setRequestType(MessageType.DATA_REQUEST);
             return resultReq.build();
         } catch (InvalidProtocolBufferException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            build.setResponseText(e.getMessage());
-            build.setSessionInfo(req.getSessionInfo());
-            return build.build();
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            return ExceptionUtilities.createExceptionRequest(req, protoEx);
         }
     }
 
@@ -103,7 +97,7 @@ public final class DataRequestHandler {
         send.setQuery(ItemQuery.EXPERIMENT);
 
         if (experiment != null) {
-            send.setData(experiment.toByteString());
+            send.addData(experiment.toByteString());
         } else {
             send.setNoData(true);
             send.setErrorMessage(errorMessage);
@@ -122,20 +116,18 @@ public final class DataRequestHandler {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private static ItemResult getExperimentsForInstructor(final ItemRequest itemReq) {
         LOG.info("attempting to get an experiment as an instructor");
-        final SrlExperimentList.Builder experiments = SrlExperimentList.newBuilder();
+        final ItemResult.Builder send = ItemResult.newBuilder();
+        send.setQuery(ItemQuery.EXPERIMENT);
         final StringBuilder errorMessage = new StringBuilder();
         for (String item : itemReq.getItemIdList()) {
             try {
-                experiments.addExperiments(DatabaseClient.getExperiment(item, DatabaseClient.getInstance()));
+                final SrlExperiment exp = DatabaseClient.getExperiment(item, DatabaseClient.getInstance());
+                send.addData(exp.toByteString());
             } catch (Exception e) {
                 errorMessage.append('\n').append(e.getMessage());
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
             }
         }
-
-        final ItemResult.Builder send = ItemResult.newBuilder();
-        send.setQuery(ItemQuery.EXPERIMENT);
-        send.setData(experiments.build().toByteString());
         send.setErrorMessage(errorMessage.toString());
         send.setAdvanceQuery(itemReq.getAdvanceQuery());
         return send.build();

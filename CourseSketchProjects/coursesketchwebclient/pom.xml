@@ -17,7 +17,7 @@
                 </os>
             </activation>
             <properties>
-                <nodeVersion>v0.10.28</nodeVersion>
+                <nodeVersion>v4.2.2</nodeVersion>
             </properties>
         </profile>
         <profile>
@@ -138,7 +138,7 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <testDirectory>${basedir}/src/main/test</testDirectory>
-        <nodeVersion>v0.10.30</nodeVersion>
+        <nodeVersion>v4.2.2</nodeVersion>
     </properties>
 
     <reporting>
@@ -153,7 +153,7 @@
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
-                <version>0.0.23</version>
+                <version>0.0.26</version>
 
                 <executions>
 
@@ -196,6 +196,49 @@
                         </goals>
                         <configuration>
                             <arguments>--no-color</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.dtracers</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Replace</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <file>${basedir}/target/website/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION_NUMBER</token>
+                                    <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Reverse</id>
+                        <configuration>
+                            <file>${basedir}/target/website/index.html</file>
+                            <replacements>
+                                <replacement>
+                                    <token>VERSION_NUMBER</token>
+                                    <value>${project.artifactId}-${project.version}-r${buildNumber}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ip_prop_replace</id>
+                        <configuration>
+                            <includes>
+                                <include>${basedir}/target/website/src/main/src/utilities/connection/login/loginInclude.html</include>
+                                <include>${basedir}/target/website/src/main/src/utilities/connection/register/registerInclude.html</include>
+                            </includes>
                         </configuration>
                     </execution>
                 </executions>

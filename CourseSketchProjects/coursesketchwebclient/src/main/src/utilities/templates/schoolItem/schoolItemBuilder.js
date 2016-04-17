@@ -51,6 +51,12 @@ function SchoolItemBuilder() {
                 // capitalizes only the first letter.
                 var capitalName = objectName.charAt(0).toUpperCase() + objectName.slice(1);
                 var setName = 'set' + capitalName;
+                /**
+                 * Allows the setting of custom values.
+                 *
+                 * @param {*} value The value that is wanted to be set in the school Item.
+                 * @returns {SchoolItemBuilder} Returns This same object.
+                 */
                 scope[setName] = function(value) {
                     scope[objectName] = value;
                     return scope;
@@ -72,6 +78,11 @@ function SchoolItemBuilder() {
      * CREATING LIST LOGIC
      **************************************************************************/
 
+    /**
+     * Builds the list given the settings.
+     *
+     * @param {String|Element} id the element or string of the id of the element.
+     */
     this.build = function(id) {
 
         var hostElement = undefined;
@@ -86,7 +97,8 @@ function SchoolItemBuilder() {
             hostElement.innerHTML = '';
         }
 
-        var element = document.createElement('h1');
+        var element = document.createElement('p');
+        element.className = 'flow-text';
         // if there is no list add the empty message and then exit
         if (!this.list || this.list.length <= 0) {
             var message = 'There are no items in this list!';
@@ -147,6 +159,7 @@ function SchoolItemBuilder() {
     this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type, index) {
         // Required Items
         var box = document.createElement('school-item');
+        box.className = 'hoverable';
         box.setAttribute('id', srlSchoolItem.id);
         box.schoolItemData = srlSchoolItem;
 
@@ -228,7 +241,8 @@ function SchoolItemBuilder() {
 
         if (srlSchoolItem.name) {
             var name = document.createElement('span');
-            name.className = 'name';
+            name.className = 'name light';
+            name.setAttribute('width', '100%');
             name.textContent = srlSchoolItem.name;
             box.appendChild(name);
         }

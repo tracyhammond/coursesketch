@@ -17,7 +17,9 @@ import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import utilities.ConnectionException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 
 /**
  * Handles the request of a submission.
@@ -48,7 +50,7 @@ public final class SubmissionRequestHandler {
         final String sessionInfo = req.getSessionInfo();
         try {
             final ByteString result = handleSubmission(req);
-            final Request.Builder build = Request.newBuilder(req);
+            final Request.Builder build = ProtobufUtilities.createBaseResponse(req, true);
             build.setResponseText("Submission Succesful!");
             build.clearOtherData();
             LOG.info("Session Info: {}", sessionInfo);
@@ -56,7 +58,7 @@ public final class SubmissionRequestHandler {
                 // passes the data to the database for connecting
                 final Data.DataSend send = Data.DataSend.newBuilder().addItems(Data.ItemSend.newBuilder().setData(result).
                         setQuery(Data.ItemQuery.EXPERIMENT)).build();
-                final Request.Builder databaseRequest = Request.newBuilder(req);
+                final Request.Builder databaseRequest = ProtobufUtilities.createBaseResponse(req, true);
                 databaseRequest.setRequestType(Request.MessageType.DATA_INSERT);
                 databaseRequest.setOtherData(send.toByteString());
                 LOG.info("Sending experiment data to database server");
@@ -65,21 +67,11 @@ public final class SubmissionRequestHandler {
             // sends the response back to the answer checker which can then send it back to the client.
             return build.build();
         } catch (SubmissionException e) {
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            if (e.getMessage() != null) {
-                build.setResponseText(e.getMessage());
-            }
-            build.setSessionInfo(sessionInfo);
+            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+            final Request build = ExceptionUtilities.createExceptionRequest(req, protoEx);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            return build.build();
+            return build;
         } catch (ConnectionException e) {
-            final Request.Builder build = Request.newBuilder();
-            build.setRequestType(Request.MessageType.ERROR);
-            if (e.getMessage() != null) {
-                build.setResponseText(e.getMessage());
-            }
-            build.setSessionInfo(sessionInfo);
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }
         return null;

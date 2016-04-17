@@ -1,5 +1,15 @@
 validateFirstRun(document.currentScript);
 
+/**
+ * @namespace courseManagement
+ */
+
+/**
+ * The element that handles the waiting icon.
+ *
+ * [TODO change docs to custom element]
+ * @memberof courseManagement
+ */
 CourseSketch.courseManagement.waitingIcon = (function() {
     var manage = new WaitScreenManager();
     manage.waitIconText = 'loading data';
@@ -15,6 +25,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      *
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
+     * @name initializeCourseManagment
+     * @memberof courseManagement
      */
     CourseSketch.courseManagement.initializeCourseManagment = function() {
         if (!document.querySelector('#class_list_column')) {
@@ -23,6 +35,10 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         document.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
+        /**
+         * Helper function to stop the waiting icon and show the courses once that database is ready.
+         * @memberof courseManagement
+         */
         var loadCourses = function(courseList) {
             if (waitingIcon.isRunning()) {
                 waitingIcon.finishWaiting();
@@ -30,26 +46,26 @@ CourseSketch.courseManagement.waitingIcon = (function() {
             courseManagement.showCourses(courseList);
         };
         if (CourseSketch.dataManager.isDatabaseReady()) {
-            CourseSketch.dataManager.pollUpdates(function() {
-                CourseSketch.dataManager.getAllCourses(loadCourses);
-            });
+            CourseSketch.dataManager.getAllCourses(loadCourses);
         } else {
             var intervalVar = setInterval(function() {
                 if (CourseSketch.dataManager.isDatabaseReady()) {
                     clearInterval(intervalVar);
-                    CourseSketch.dataManager.pollUpdates(function() {
-                        CourseSketch.dataManager.getAllCourses(loadCourses);
-                    });
+                    CourseSketch.dataManager.getAllCourses(loadCourses);
                 }
             }, 100);
         }
     };
 
     /**
-     * Given a list of {@link SrlCourse} a bunch of school items are built then
-     * added to the clss_list_column div.
+     * Given a list of {@link SrlCourse} a bunch of school items are built then added to the class_list_column div.
+     *
+     * @memberof courseManagement
      */
     courseManagement.showCourses = function showCourses(courseList) {
+        if (CourseSketch.isException(courseList)) {
+            CourseSketch.clientException(courseList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
@@ -60,10 +76,13 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         });
 
         if (courseList instanceof CourseSketch.DatabaseException || courseList.length === 0) {
-            if (CourseSketch.connection.isInstructor) {
-                builder.setEmptyListMessage('Please Create a new course to get started!');
+            if (!isUndefined(courseList.getCause()) && courseList.getCause() instanceof CourseSketch.AdvanceListenerException) {
+                CourseSketch.clientException(courseList);
+                builder.setEmptyListMessage('An exception occurred while getting the course. Please try again later.');
+            } else if (CourseSketch.connection.isInstructor) {
+                builder.setEmptyListMessage('Please create a new course to get started!');
             } else {
-                builder.setEmptyListMessage('Please add a new course to get started');
+                builder.setEmptyListMessage('Please add a new course to get started.');
             }
             courseList = [];
         }
@@ -75,7 +94,9 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a user clicks on a course school item.
+     *
      * This loads the assignments from the database then calls 'showAssignments' to display them.
+     * @memberof courseManagement
      */
     courseManagement.courseClicked = function(course) {
         var classColumn = document.querySelector('#class_list_column');
@@ -104,16 +125,21 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called to show a specific set of assignments with the given list.
+     *
+     * @memberof courseManagement
      */
     courseManagement.showAssignments = function(assignmentList, course) {
-        console.log(assignmentList);
+        if (CourseSketch.isException(assignmentList)) {
+            CourseSketch.clientException(assignmentList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no assignments for this course!');
         if (assignmentList instanceof CourseSketch.DatabaseException) {
-            if (!isUndefined(course) && course.getState() !== null &&!(course.getState().accessible)) {
+            builder.setEmptyListMessage('An exception was thrown, so assignments can not be loaded.');
+            if (!isUndefined(course) && course.getState() !== null && !(course.getState().accessible)) {
                 builder.setEmptyListMessage('This course is currently not available. Please contact the instructor to let you view the assignments');
             }
             assignmentList = [];
@@ -132,6 +158,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when an assignment is clicked.
+     *
+     * @memberof courseManagement
      */
     courseManagement.assignmentClicked = function(assignment) {
         var assignmentColumn = document.querySelector('#assignment_list_column');
@@ -154,16 +182,22 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Displays the list of problems for the user to pick from.
+     *
      * @param {list} problemList The list of problems that are wanting to be showed
      * @param {assignment} assignment (optional) The assignment that created this problem list
+     * @memberof courseManagement
      */
     courseManagement.showProblems = function(problemList, assignment) {
+        if (CourseSketch.isException(problemList)) {
+            CourseSketch.clientException(problemList);
+        }
         var builder = new SchoolItemBuilder();
         if (CourseSketch.connection.isInstructor === true) {
             builder.setInstructorCard(true);
         }
         builder.setEmptyListMessage('There are no problems for this assignment!');
         if (problemList instanceof CourseSketch.DatabaseException) {
+            builder.setEmptyListMessage('An exception was thrown so problems can not be loaded.');
             problemList = [];
             if (!isUndefined(assignment) && assignment.getState() !== null && !assignment.getState().accessible) {
                 builder.setEmptyListMessage('This assignment is currently not available. ' +
@@ -178,6 +212,8 @@ CourseSketch.courseManagement.waitingIcon = (function() {
 
     /**
      * Called when a problem is displayed.
+     *
+     * @memberof courseManagement
      */
     courseManagement.problemClicked = function(problem) {
         var problemColumn = document.querySelector('#problem_list_column');
@@ -227,6 +263,11 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     };
 
+    /**
+     * Sets the message to hint that the previous column is selectable and gives prompts to action.
+     *
+     * @memberof courseManagement
+     */
     function setNotSelectedMessage(number) {
         var builder = new SchoolItemBuilder();
 
@@ -241,6 +282,12 @@ CourseSketch.courseManagement.waitingIcon = (function() {
         }
     }
 
+    /**
+     * A helper method to simplify the code for changing the selection.
+     *
+     * Clears the existing selection then selects the given id.
+     * @memberof courseManagement
+     */
     function changeSelection(id, selectionManager) {
         selectionManager.clearAllSelectedItems();
         selectionManager.addSelectedItem(id);

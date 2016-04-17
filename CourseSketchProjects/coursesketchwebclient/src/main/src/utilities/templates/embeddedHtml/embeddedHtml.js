@@ -12,6 +12,10 @@ function EmbeddedHtml() {
         shadowRoot.appendChild(templateClone);
     };
 
+    /**
+     * Sets the html source that is being embedded.
+     * @param {String} html html code.
+     */
     this.setHtml = function(html) {
         this.shadowRoot.innerHTML = html;
     };
@@ -23,14 +27,14 @@ function EmbeddedHtml() {
      * @return {EmbeddedHtml} the created protobuf object.
      */
     this.saveData = function(event) {
-        var embeddedHtmlProto = CourseSketch.PROTOBUF_UTIL.EmbeddedHtml();
+        var embeddedHtmlProto = CourseSketch.prutil.EmbeddedHtml();
 
         // Populate data in the proto object
         embeddedHtmlProto.embeddedHtml = this.shadowRoot.innerHTML;
 
         // If the image does not have an id, then a command has not been created for the image
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_EMBEDDED_HTML, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_EMBEDDED_HTML, true);
         }
         this.command.setCommandData(embeddedHtmlProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -62,6 +66,11 @@ function EmbeddedHtml() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener.
+     *
+     * @param {Function} listener Called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

@@ -1,9 +1,13 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
+import utilities.ExceptionUtilities;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 
 import java.nio.ByteBuffer;
@@ -79,15 +83,29 @@ public abstract class AbstractServerWebSocketHandler {
     private final ISocketInitializer parentServer;
 
     /**
-     * A constructor that accepts a servlet.
-     * @param parent The parent servlet of this server.
+     * Information about the server.
      */
-    protected AbstractServerWebSocketHandler(final ISocketInitializer parent) {
+    private final ServerInfo serverInfo;
+
+    /**
+     * An object that reads from the database.
+     */
+    private AbstractCourseSketchDatabaseReader databaseReader;
+
+    /**
+     * A constructor that accepts a servlet.
+     *
+     * @param parent The parent servlet of this server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
+     */
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
         parentServer = parent;
+        this.serverInfo = serverInfo;
     }
 
     /**
      * Called when the connection is closed.
+     *
      * @param conn The connection that closed the websocket
      * @param statusCode The reason that the connection was closed.
      * @param reason The human readable reason that the connection was closed.
@@ -98,7 +116,7 @@ public abstract class AbstractServerWebSocketHandler {
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
-            idToState.remove(stateId.getKey());
+            idToState.remove(stateId.getSessionId());
         } else {
             LOG.error("Connection Id can not be found");
         }
@@ -120,8 +138,8 @@ public abstract class AbstractServerWebSocketHandler {
         // uses actual variables as get methods produce unmodifiable maps
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
-        LOG.debug("Session Key {}", uniqueState.getKey());
-        idToState.put(uniqueState.getKey(), uniqueState);
+        LOG.debug("Session Key {}", uniqueState.getSessionId());
+        idToState.put(uniqueState.getSessionId(), uniqueState);
         LOG.info("ID ASSIGNED");
 
         LOG.info("Recieving connection {}", getConnectionToId().size());
@@ -186,6 +204,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @param req The actual message that is being sent.
      */
     public final void send(final SocketSession session, final Request req) {
+        LOG.debug("Sending Request {}", req.getRequestId());
         session.send(ByteBuffer.wrap(req.toByteArray()));
     }
 
@@ -197,9 +216,24 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * @return The {@link AbstractServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
      */
-    @SuppressWarnings("static-method")
     public final String getName() {
         return NAME;
+    }
+
+    /**
+     * @return The hostName of the server.
+     * @see ServerInfo#hostName
+     */
+    public final String getHostName() {
+        return serverInfo.getHostName();
+    }
+
+    /**
+     * @return The port that the server is running on.
+     * @see ServerInfo#port
+     */
+    public final int getHostPort() {
+        return serverInfo.getPort();
     }
 
     /**
@@ -227,14 +261,9 @@ public abstract class AbstractServerWebSocketHandler {
      * @return {@link Request} with a message explaining what happened.
      */
     public final Request createBadConnectionResponse(final Request req, final Class<? extends AbstractClientWebSocket> connectionType) {
-        final Request.Builder response = Request.newBuilder();
-        if (req == null) {
-            response.setRequestType(Request.MessageType.ERROR);
-        } else {
-            response.setRequestType(req.getRequestType());
-        }
-        response.setResponseText("A server with connection type: " + connectionType.getSimpleName() + " Is not connected correctly");
-        return response.build();
+        final Message.ProtoException exception = ExceptionUtilities.createProtoException(new Exception("A server with connection type: "
+                + connectionType.getSimpleName() + " Is not connected correctly"));
+        return ExceptionUtilities.createExceptionRequest(req, exception);
     }
 
     /**
@@ -264,6 +293,14 @@ public abstract class AbstractServerWebSocketHandler {
     protected abstract MultiConnectionManager getConnectionManager();
 
     /**
+     * Creates a CourseSketchDatabaseReader if it is needed.
+     *
+     * @param info Information about the server.
+     * @return {@link AbstractCourseSketchDatabaseReader}.
+     */
+    protected abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+
+    /**
      * @return A map representing the Id to state. The returned map is read only.
      */
     protected final Map<String, MultiConnectionState> getIdToState() {
@@ -289,6 +326,29 @@ public abstract class AbstractServerWebSocketHandler {
      */
     protected final Map<SocketSession, MultiConnectionState> getConnectionToId() {
         return connectionToId;
+    }
+
+    /**
+     * Performs some initialization.  This is called before the server is started.
+     */
+    public final void initialize() {
+        databaseReader = createDatabaseReader(this.serverInfo);
+        onInitialize();
+    }
+
+    /**
+     * Performs some initialization.
+     *
+     * This is called before the server is started.
+     * This is called by {@link #initialize()}.
+     */
+    protected abstract void onInitialize();
+
+    /**
+     * @return {@link AbstractCourseSketchDatabaseReader}.  This may return null if one is not set.
+     */
+    protected final AbstractCourseSketchDatabaseReader getDatabaseReader() {
+        return databaseReader;
     }
 
     /**
@@ -344,13 +404,18 @@ public abstract class AbstractServerWebSocketHandler {
             if (sessionInfo == null) {
                 return req;
             }
-            final Request.Builder breq = Request.newBuilder();
-            breq.mergeFrom(req);
-            breq.setSessionInfo(sessionInfo);
-            if (!breq.hasMessageTime()) {
-                breq.setMessageTime(TimeManager.getSystemTime());
+
+            // why do the work if they are the same?
+            if (sessionInfo.equals(req.getSessionInfo())) {
+                return req;
             }
-            return breq.build();
+
+            final Request.Builder sessionInfoReplacement = ProtobufUtilities.createBaseResponse(req, true);
+            sessionInfoReplacement.setSessionInfo(sessionInfo);
+            if (!sessionInfoReplacement.hasMessageTime()) {
+                sessionInfoReplacement.setMessageTime(TimeManager.getSystemTime());
+            }
+            return sessionInfoReplacement.build();
         }
 
         /**

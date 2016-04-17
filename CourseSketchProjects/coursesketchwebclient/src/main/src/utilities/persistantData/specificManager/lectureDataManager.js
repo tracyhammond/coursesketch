@@ -1,10 +1,17 @@
-function LectureDataManager(parent, advanceDataListener, parentDatabase,
-        sendData, request, buffer) {
-    var dataListener = advanceDataListener;
+/**
+ * A manager for lectires that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener A listener for the database.
+ * @param {IndexedDB} parentDatabase  The local database
+ * @param {Function} sendData A function that makes sending data much easier
+ * @param {SrlRequest} Request A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @constructor
+ */
+function LectureDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var database = parentDatabase;
-    var Request = request;
     var localScope = parent;
-    var ByteBuffer = buffer;
 
     /**
      * Sets a lecture in local database.
@@ -40,8 +47,8 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
      *                function to be called after lecture setting is done
      */
     function insertLectureServer(lecture, lectureCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURE, function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURE);
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -62,7 +69,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
+        sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.LECTURE, lecture.toArrayBuffer());
     }
 
     /**
@@ -80,15 +87,15 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.LECTURE, function(evt, item) {
+                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.LECTURE);
                 // we do not need to make server changes we
                 // just need to make sure it was successful.
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lecture.toArrayBuffer());
+            sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.LECTURE, lecture.toArrayBuffer());
         });
     }
     parent.updateLecture = updateLecture;
@@ -175,7 +182,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
                 if (!isUndefined(lectureCallback)) {
-                    lectureCallback(CourseSketch.PROTOBUF_UTIL
+                    lectureCallback(CourseSketch.prutil
                             .getLectureClass().decode(bytes));
                 } // endif
             } // end else
@@ -244,14 +251,14 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                     if (barrier === 0) {
                         if (lectureIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, function(evt, item) {
-                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE);
+                                    CourseSketch.prutil.ItemQuery.LECTURE, function(evt, item) {
+                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.prutil.ItemQuery.LECTURE);
                                 // after listener is removed
                                 if (isUndefined(item.data) || item.data === null) {
                                     serverCallback(new DatabaseException('The data sent back from the server does not exist.'));
                                     return;
                                 }
-                                var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
+                                var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
                                 var lecture = school.lectures[0];
                                 if (isUndefined(lecture) || lecture instanceof DatabaseException) {
                                     var result = lecture;
@@ -273,7 +280,7 @@ function LectureDataManager(parent, advanceDataListener, parentDatabase,
                                 } // end if serverCallback
 
                             }); // setListener
-                            sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURE, lectureIdsNotFound);
+                            sendData.sendDataRequest(CourseSketch.prutil.ItemQuery.LECTURE, lectureIdsNotFound);
                         } // end if lectureIdsNotFound
                         if (lecturesFound.length > 0 && !isUndefined(localCallback)) {
                             localCallback(lecturesFound);

@@ -18,7 +18,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 
 /**
  * Manages updates for mongo.
