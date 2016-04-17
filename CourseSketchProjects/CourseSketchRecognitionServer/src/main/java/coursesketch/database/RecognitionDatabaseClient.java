@@ -169,11 +169,12 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
 
         final DBCursor templateObjectCursor = templates.find();
+        LOG.debug("NUMBER OF TEMPLATES FOUND {}", templateObjectCursor.count());
 
         while(templateObjectCursor.hasNext()) {
             DBObject templateObject = templateObjectCursor.next();
 
-            String id = (String) templateObject.get(TEMPLATE_ID);
+            String id = templateObject.get(TEMPLATE_ID).toString();
             Sketch.SrlInterpretation interpretation = getInterpretation(
                     (DBObject) templateObject.get(TEMPLATE_INT));
             Sketch.SrlStroke stroke = getStroke(
@@ -373,11 +374,14 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     }
 
     private Sketch.SrlStroke getStroke(DBObject strokeObject) {
+        Sketch.SrlStroke.Builder stroke = Sketch.SrlStroke.newBuilder();
+
         String strokeId = (String)strokeObject.get(STROKE_ID);
         long time = (long)strokeObject.get(STROKE_TIME);
         String name = null;
         if (strokeObject.containsField(STROKE_NAME)) {
             name = (String) strokeObject.get(STROKE_NAME);
+            stroke.setName(name);
         }
 
         List<DBObject> pointObjects = (List<DBObject>)strokeObject.get(STROKE_POINTS);
@@ -388,12 +392,13 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
             points.add(point);
         }
 
-        Sketch.SrlStroke.Builder stroke = Sketch.SrlStroke.newBuilder();
-        stroke.setId(strokeId).setTime(time).setName(name).addAllPoints(points);
+        stroke.setId(strokeId).setTime(time).addAllPoints(points);
         return stroke.build();
     }
 
     private Sketch.SrlPoint getPoint(DBObject pointObject) {
+        Sketch.SrlPoint.Builder point = Sketch.SrlPoint.newBuilder();
+
         String pointId = (String)pointObject.get(POINT_ID);
         long pointTime = (long)pointObject.get(POINT_TIME);
         double x = (double)pointObject.get(POINT_X);
@@ -402,20 +407,22 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         Double pressure = null, size = null, speed = null;
         if (pointObject.containsField(POINT_NAME)) {
             name = (String)pointObject.get(POINT_NAME);
+            point.setName(name);
         }
         if (pointObject.containsField(POINT_PRESSURE)) {
             pressure = (Double)pointObject.get(POINT_PRESSURE);
+            point.setPressure(pressure)
         }
         if (pointObject.containsField(POINT_SIZE)) {
             size = (Double)pointObject.get(POINT_SIZE);
+            point.setSize(size);
         }
         if (pointObject.containsField(POINT_SPEED)) {
             speed = (Double)pointObject.get(POINT_SPEED);
+            point.setSpeed(speed);
         }
 
-        Sketch.SrlPoint.Builder point = Sketch.SrlPoint.newBuilder();
-        point.setId(pointId).setTime(pointTime).setX(x).setY(y).setName(name).setPressure(pressure)
-                .setSize(size).setSpeed(speed);
+        point.setId(pointId).setTime(pointTime).setX(x).setY(y);
 
         return point.build();
     }
