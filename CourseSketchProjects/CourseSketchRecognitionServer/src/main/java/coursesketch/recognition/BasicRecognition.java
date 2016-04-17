@@ -43,7 +43,7 @@ public class BasicRecognition extends DefaultRecognition {
 
         for (Sketch.RecognitionTemplate template : templates) {
             if (template.hasStroke()) {
-                LOG.debug("Loading Template {}", template);
+                // LOG.debug("Loading Template {}", template);
                 List<Sketch.SrlStroke> strokes = new ArrayList<Sketch.SrlStroke>();
                 strokes.add(template.getStroke());
                 List<Point> points = convert(strokes);

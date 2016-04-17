@@ -411,7 +411,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         }
         if (pointObject.containsField(POINT_PRESSURE)) {
             pressure = (Double)pointObject.get(POINT_PRESSURE);
-            point.setPressure(pressure)
+            point.setPressure(pressure);
         }
         if (pointObject.containsField(POINT_SIZE)) {
             size = (Double)pointObject.get(POINT_SIZE);
