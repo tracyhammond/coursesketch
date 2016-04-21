@@ -44,11 +44,11 @@ public class Response {
 
         //perform recognition
         Update actions = new Update();
-        // actions.add(new AddShape(m_recognizer.recognize(m_syncDeque.front().getStroke())));
+        // actions.add(new AddShape(m_recognizer.recognize(m_syncDeque.front().parseStroke())));
 
         List<String> ids = new LinkedList<String>();
         ids.add(m_syncDeque.front().getStroke().getId().toString());
-        // m_syncDeque.front().getStroke()
+        // m_syncDeque.front().parseStroke()
         // actions.add(new PackageShape(null, null, ids));
 
         actions.setTime(System.currentTimeMillis());

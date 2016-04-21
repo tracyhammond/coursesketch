@@ -778,7 +778,6 @@
             <version>${logbackVersion}</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>

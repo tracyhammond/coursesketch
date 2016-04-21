@@ -20,7 +20,7 @@ import utilities.ExceptionUtilities;
 /**
  * Created by David Windows on 4/13/2016.
  */
-public class RecognitionService extends RecognitionServer.RecognitionService implements CourseSketchRpcService {
+public final class RecognitionService extends RecognitionServer.RecognitionService implements CourseSketchRpcService {
     /**
      * Declaration and Definition of Logger.
      */
@@ -38,9 +38,9 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
 
     @Override public void addUpdate(final RpcController controller, final RecognitionServer.AddUpdateRequest request,
             final RpcCallback<RecognitionServer.RecognitionResponse> done) {
-        SrlUpdateList.Builder build = SrlUpdateList.newBuilder();
+        final SrlUpdateList.Builder build = SrlUpdateList.newBuilder();
         build.addList(request.getUpdate());
-        RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
+        final RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
         try {
             result.setChanges(recognitionManager.recognize(request.getRecognitionId(), build.build()));
         } catch (RecognitionException e) {
@@ -55,9 +55,9 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
     @Override public void createUpdateList(final RpcController controller, final RecognitionServer.RecognitionUpdateList request,
             final RpcCallback<RecognitionServer.RecognitionResponse> done) {
         // sets update list
-        SrlUpdateList updateList = SrlUpdateList.getDefaultInstance();
+        final SrlUpdateList updateList = SrlUpdateList.getDefaultInstance();
 
-        RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
+        final RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
 
         result.setChanges(updateList);
 
@@ -69,15 +69,15 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
             final RpcCallback<Message.DefaultResponse> done) {
         // adds template to the database
 
-        String templateId = request.getTemplateId();
-        SrlStroke stroke = request.getStroke();
-        SrlShape shape = request.getShape();
-        SrlSketch sketch = request.getSketch();
+        final String templateId = request.getTemplateId();
+        final SrlStroke stroke = request.getStroke();
+        final SrlShape shape = request.getShape();
+        final SrlSketch sketch = request.getSketch();
         LOG.debug("SKETCH {}", sketch);
         LOG.debug("TYPE {}", request.getInterpretation());
 
 
-        Message.DefaultResponse.Builder defaultResponse = Message.DefaultResponse.newBuilder();
+        final Message.DefaultResponse.Builder defaultResponse = Message.DefaultResponse.newBuilder();
         defaultResponse.setSuccessful(true);
 
         done.run(defaultResponse.build());
@@ -87,7 +87,7 @@ public class RecognitionService extends RecognitionServer.RecognitionService imp
     public void recognize(final RpcController controller, final RecognitionServer.RecognitionUpdateList request,
             final RpcCallback<RecognitionServer.RecognitionResponse> done) {
 
-        RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
+        final RecognitionServer.RecognitionResponse.Builder result = RecognitionServer.RecognitionResponse.newBuilder();
         try {
             result.setChanges(recognitionManager.recognize(request.getRecognitionId(), request.getUpdateList()));
         } catch (RecognitionException e) {
