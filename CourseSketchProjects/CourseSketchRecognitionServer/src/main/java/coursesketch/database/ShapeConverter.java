@@ -10,7 +10,6 @@ import protobuf.srl.sketch.Sketch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static coursesketch.database.RecognitionStringConstants.INT_CONFIDENCE;
 import static coursesketch.database.RecognitionStringConstants.INT_LABEL;
@@ -37,7 +36,7 @@ import static coursesketch.database.RecognitionStringConstants.STROKE_TIME;
 /**
  * Created by David Windows on 4/20/2016.
  */
-public class ShapeConverter<DBObject> implements ShapeConverterInterface<DBObject> {
+public final class ShapeConverter implements ShapeConverterInterface<com.mongodb.DBObject> {
     /**
      * Declaration and Definition of Logger.
      */
@@ -67,7 +66,7 @@ public class ShapeConverter<DBObject> implements ShapeConverterInterface<DBObjec
                 LOG.error("There was no point contained in the object.");
             }
         }
-        result.append(OBJECT_TYPE, srlObject.getType().name());
+        result.put(OBJECT_TYPE, srlObject.getType().name());
 
         return result;
     }
@@ -116,18 +115,18 @@ public class ShapeConverter<DBObject> implements ShapeConverterInterface<DBObjec
                 .append(STROKE_TIME, srlStroke.getTime());
 
         if (srlStroke.hasName()) {
-            strokeDbObject.append(STROKE_NAME, srlStroke.getName());
+            strokeDBObject.append(STROKE_NAME, srlStroke.getName());
         }
 
         final List<Object> pointsDbList = new BasicDBList();
         final List<Sketch.SrlPoint> pointsList = srlStroke.getPointsList();
         for (Sketch.SrlPoint point : pointsList) {
-            final BasicDBObject pointObject = makeDbPoint(point);
+            final DBObject pointObject = makeDbPoint(point);
             pointsDbList.add(pointObject);
         }
 
-        strokeDbObject.append(STROKE_POINTS, pointsDbList);
-        return strokeDbObject;
+        strokeDBObject.append(STROKE_POINTS, pointsDbList);
+        return strokeDBObject;
     }
 
     @Override
@@ -155,7 +154,7 @@ public class ShapeConverter<DBObject> implements ShapeConverterInterface<DBObjec
     }
 
     @Override
-    public DBObject makeDbInterpretation(final Sketch.SrlInterpretation srlInterpretation) {
+    public com.mongodb.DBObject makeDbInterpretation(final Sketch.SrlInterpretation srlInterpretation) {
         return new BasicDBObject(INT_LABEL, srlInterpretation.getLabel())
                 .append(INT_CONFIDENCE, srlInterpretation.getConfidence());
     }

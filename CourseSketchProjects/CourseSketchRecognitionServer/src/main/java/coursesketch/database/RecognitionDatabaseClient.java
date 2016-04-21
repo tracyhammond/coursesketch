@@ -62,14 +62,14 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
         final BasicDBObject templateObject = new BasicDBObject();
 
-        final BasicDBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
+        final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
 
         final String sketchDomainId = srlSketch.getDomainId();
 
         final List<Object> sketchSketch = new BasicDBList();
         final List<Sketch.SrlObject> sketches = srlSketch.getSketchList();
         for (Sketch.SrlObject sketch : sketches) {
-            final BasicDBObject dbSketch = shapeConverter.makeDbObject(sketch);
+            final DBObject dbSketch = shapeConverter.makeDbObject(sketch);
             sketchSketch.add(dbSketch);
         }
 
@@ -91,8 +91,8 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
         final BasicDBObject templateObject = new BasicDBObject();
 
-        final BasicDBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
-        final BasicDBObject shapeDbObject = shapeConverter.makeDbShape(srlShape);
+        final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
+        final DBObject shapeDbObject = shapeConverter.makeDbShape(srlShape);
 
         // TODO: Take in a TEMPLATE_ID instead of creating one here
         templateObject.append(TEMPLATE_ID, UUID.randomUUID());
@@ -108,8 +108,8 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
         final BasicDBObject templateObject = new BasicDBObject();
 
-        final BasicDBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
-        final BasicDBObject strokeDbObject = shapeConverter.makeDbStroke(srlStroke);
+        final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
+        final DBObject strokeDbObject = shapeConverter.makeDbStroke(srlStroke);
 
         // TODO: Take in a TEMPLATE_ID instead of creating one here
         templateObject.append(TEMPLATE_ID, UUID.randomUUID());
@@ -124,7 +124,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         final List<Sketch.RecognitionTemplate> templateList = new ArrayList<Sketch.RecognitionTemplate>();
 
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
-        final BasicDBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
+        final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
 
         final DBCursor templateObjectCursor = templates.find(interpretationDbObject);
 
