@@ -87,6 +87,9 @@ function ProtobufSetup() {
         for (var i = 0; i < protoFiles.length; i++) {
             var protoObject = protoFiles[i];
             var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + protoObject.fileName + '.proto');
+            if (isUndefined(builder) || builder === null) {
+                console.log('can not create builder for file: ', protobufDirectory + protoObject.fileName + '.proto');
+            }
             var mainPackage = builder.build(protoObject.package[0]);
             var resultingPackage = mainPackage;
             for (var j = 1; j < protoObject.package.length; j++) {
