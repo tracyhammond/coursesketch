@@ -84,18 +84,32 @@ function ProtobufSetup() {
      * Builds all of the protobuf files
      */
     function buildProtobuf() {
+        var commondBuilder = undefined;
+        var packageList = [];
         for (var i = 0; i < protoFiles.length; i++) {
             var protoObject = protoFiles[i];
-            var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + protoObject.fileName + '.proto');
+            var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + protoObject.fileName + '.proto', commondBuilder);
             if (isUndefined(builder) || builder === null) {
                 console.log('can not create builder for file: ', protobufDirectory + protoObject.fileName + '.proto');
             }
-            var mainPackage = builder.build(protoObject.package[0]);
-            var resultingPackage = mainPackage;
-            for (var j = 1; j < protoObject.package.length; j++) {
+            if (isUndefined(commondBuilder)) {
+                commondBuilder = builder;
+            }
+        }
+        var root = commondBuilder.build();
+        for (var i = 0; i < protoFiles.length; i++) {
+            var protoObject = protoFiles[i];
+            if (packageList.includes(protoObject.package.join('.'))) {
+                // console.log('These values have already been assigned. for file: ', protoObject.fileName, ' Skipping building!');
+                continue;
+            }
+
+            var resultingPackage = root;
+            for (var j = 0; j < protoObject.package.length; j++) {
                 resultingPackage = resultingPackage[protoObject.package[j]];
             }
             assignValues(resultingPackage, protoObject.prefix);
+            packageList.push(protoObject.package.join('.'));
         }
     }
 
