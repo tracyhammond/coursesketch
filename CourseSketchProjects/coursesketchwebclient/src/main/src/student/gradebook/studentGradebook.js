@@ -22,7 +22,6 @@
             CourseSketch.dataManager.getAssignments(assignmentList, undefined, function(assignments) {
                 // loads all of the grades
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
-
                     var table = document.querySelector('.gradeList');
                     CourseSketch.gradeBook.initializeTable(categoryList, assignments, gradeList, table);
                 });
