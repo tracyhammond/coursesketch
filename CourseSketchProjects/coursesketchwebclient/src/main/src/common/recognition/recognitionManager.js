@@ -64,7 +64,9 @@
         // protoRecognitionTemplate.setInterpretation(interpretationTemplate);
         var clean = CourseSketch.prutil.cleanProtobuf(protoRecognitionTemplate,
             CourseSketch.prutil.getProtoRecognitionTemplateClass());
-        CourseSketch.recognitionService.addTemplate(CourseSketch.prutil.ProtoRecognitionTemplate(), callback);
+        clean.templateId = '';
+        console.log(clean);
+        CourseSketch.recognitionService.addTemplate(clean, callback);
     }
 
     function addSketchTemplate(label, recognitionId, sketch, callback) {
