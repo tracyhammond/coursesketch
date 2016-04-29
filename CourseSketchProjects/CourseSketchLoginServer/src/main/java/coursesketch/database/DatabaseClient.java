@@ -253,10 +253,10 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         } else {
             throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
+        // Gets user id and add it to the result.
         final String userId = getUserId(cursor.get(DatabaseStringConstants.USER_NAME).toString(),
                 cursor.get(DatabaseStringConstants.IDENTITY_AUTH).toString());
         result.append(DatabaseStringConstants.USER_ID, userId);
-        // gets user id
 
         return result;
     }

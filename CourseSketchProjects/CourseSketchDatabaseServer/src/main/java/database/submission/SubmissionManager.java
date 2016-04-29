@@ -126,7 +126,7 @@ public final class SubmissionManager {
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
         final DBObject cursor = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION).findOne(new ObjectId(problemId));
-        if (cursor == null) {
+        if (cursor == null || !cursor.containsField(userId) || Strings.isNullOrEmpty((String) cursor.get(userId))) {
             throw new DatabaseAccessException("Mo student has submitted anything for this problem");
         }
         final String hashedUserId = MongoInstitution.hashUserId(userId, courseId);
