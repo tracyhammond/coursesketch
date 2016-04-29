@@ -15,6 +15,7 @@ import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -187,5 +188,9 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
 
     @Override public Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch sketch) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override public List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate) {
+        return null;
     }
 }
