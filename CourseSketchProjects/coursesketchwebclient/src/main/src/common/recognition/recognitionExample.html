@@ -94,10 +94,14 @@
             });
             sketchSurface.resizeSurface();
             $('#submitTemplate').click(function() {
-                var stroke = sketchSurface.getCurrentSketch().getList()[0];
-                var protoBuf = stroke.sendToProtobuf();
+                var sketchList = sketchSurface.getCurrentSketch().getList();
+                var shape = new SRL_Shape();
+                for (var i = 0; i < sketchList.length; i++) {
+                    shape.addSubObject(sketchList[i]);
+                }
+                var protoBuf = shape.sendToProtobuf();
                 var label = document.getElementById('label').value;
-                CourseSketch.recognition.addStrokeTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
+                CourseSketch.recognition.addShapeTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
                    console.log(err, success);
                 });
             });

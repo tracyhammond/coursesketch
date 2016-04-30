@@ -120,7 +120,7 @@
          * @param {Boolean} toRemote - True if this update is destined to the remote server.
          */
         this.addUpdate = function(update, toRemote) {
-            console.log("adding update!");
+            console.log('adding update!');
             var cleanUpdate = CourseSketch.prutil.cleanProtobuf(update, CourseSketch.prutil.getSrlUpdateClass());
             if (!isUndefined(toRemote) && toRemote) {
                 CourseSketch.recognition.addUpdate(sketchId, cleanUpdate, function(err, msg) {
@@ -143,5 +143,5 @@
 
     CourseSketch.createRecognitionPlugin = function(updateManager, sketchId) {
         return new RecognitionPlugin(updateManager, sketchId);
-    }
+    };
 })();
