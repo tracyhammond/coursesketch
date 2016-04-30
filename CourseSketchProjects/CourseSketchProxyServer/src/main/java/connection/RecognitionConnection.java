@@ -72,26 +72,29 @@ public class RecognitionConnection extends RecognitionWebSocketClient {
                 response.setChanges(updateList);
                 break;
             case ADD_TEMPLATE:
+                final String templateId = generalRecognitionRequest.getTemplate().getTemplateId();
+                final Sketch.SrlInterpretation interpretation = generalRecognitionRequest.getTemplate().getInterpretation();
                 if (generalRecognitionRequest.getTemplate().hasShape()) {
-                     super.addTemplate(generalRecognitionRequest.getTemplate().getInterpretation(), generalRecognitionRequest.getTemplate().getShape());
+                     super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getShape());
                 }
                 else if (generalRecognitionRequest.getTemplate().hasSketch()) {
-                    super.addTemplate(generalRecognitionRequest.getTemplate().getInterpretation(), generalRecognitionRequest.getTemplate().getSketch());
+                    super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getSketch());
                 }
                 else {
-                    super.addTemplate(generalRecognitionRequest.getTemplate().getInterpretation(), generalRecognitionRequest.getTemplate().getStroke());
+                    super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getStroke());
                 }
                 break;
             case RECOGNIZE:
                 response = RecognitionServer.RecognitionResponse.newBuilder();
-                updateList = super.recognize(generalRecognitionRequest.getSetUpdateList().getRecognitionId(), generalRecognitionRequest.getSetUpdateList().getUpdateList());
+                updateList = super.recognize(generalRecognitionRequest.getSetUpdateList().getRecognitionId(),
+                        generalRecognitionRequest.getSetUpdateList().getUpdateList());
                 response.setChanges(updateList);
                 break;
         }
 
         final MultiConnectionState state = getStateFromId(sessionId);
 
-        Message.Request.Builder requestResponse = Message.Request.newBuilder(request);
+        final Message.Request.Builder requestResponse = Message.Request.newBuilder(request);
         if (response != null) {
             requestResponse.setOtherData(response.build().toByteString());
         } else {

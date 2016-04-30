@@ -16,7 +16,6 @@ import protobuf.srl.sketch.Sketch;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by dtracers on 12/15/2015.
@@ -60,13 +59,13 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         super(iDestination, iParentServer);
     }
 
-    @Override public Commands.SrlUpdateList addUpdate(final String recognitionId, final Commands.SrlUpdate srlUpdate)
+    @Override public final Commands.SrlUpdateList addUpdate(final String recognitionId, final Commands.SrlUpdate srlUpdate)
             throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
 
-        RecognitionServer.AddUpdateRequest.Builder addUpdateRequest = RecognitionServer.AddUpdateRequest.newBuilder();
+        final RecognitionServer.AddUpdateRequest.Builder addUpdateRequest = RecognitionServer.AddUpdateRequest.newBuilder();
         addUpdateRequest.setRecognitionId(recognitionId);
         addUpdateRequest.setUpdate(srlUpdate);
 
@@ -89,13 +88,13 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         return recognitionResponse.getChanges();
     }
 
-    @Override public Commands.SrlUpdateList setUpdateList(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
-            throws RecognitionException{
+    @Override public final Commands.SrlUpdateList setUpdateList(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
+            throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
 
-        RecognitionServer.RecognitionUpdateList.Builder recognitionUpdateList = RecognitionServer.RecognitionUpdateList.newBuilder();
+        final RecognitionServer.RecognitionUpdateList.Builder recognitionUpdateList = RecognitionServer.RecognitionUpdateList.newBuilder();
         recognitionUpdateList.setRecognitionId(recognitionId);
         recognitionUpdateList.setUpdateList(srlUpdateList);
 
@@ -117,20 +116,22 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         return recognitionResponse.getChanges();
     }
 
-    @Override public Sketch.SrlSketch setSketch(final String s, final Sketch.SrlSketch sketch) {
+    @Override public final Sketch.SrlSketch setSketch(final String s, final Sketch.SrlSketch sketch) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Adds a template to the recognition server.
+     * @param templateId
      * @param template
      * @throws TemplateException
      */
-    private void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.RecognitionTemplate.Builder template) throws TemplateException {
+    private void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+            final Sketch.RecognitionTemplate.Builder template) throws TemplateException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
-        template.setTemplateId(UUID.randomUUID().toString());
+        template.setTemplateId(templateId);
         template.setInterpretation(interpretation);
         try {
             LOG.debug("Sending template addition request");
@@ -146,25 +147,31 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         }
     }
 
-    @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlSketch sketch) throws TemplateException {
-        addTemplate(interpretation, Sketch.RecognitionTemplate.newBuilder().setSketch(sketch));
+    @Override
+    public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+            final Sketch.SrlSketch sketch) throws TemplateException {
+        addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setSketch(sketch));
     }
 
-    @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlShape srlShape) throws TemplateException  {
-        addTemplate(interpretation, Sketch.RecognitionTemplate.newBuilder().setShape(srlShape));
+    @Override
+    public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+            final Sketch.SrlShape srlShape) throws TemplateException  {
+        addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setShape(srlShape));
     }
 
-    @Override public void addTemplate(final Sketch.SrlInterpretation interpretation, final Sketch.SrlStroke srlStroke) throws TemplateException {
-        addTemplate(interpretation, Sketch.RecognitionTemplate.newBuilder().setStroke(srlStroke));
+    @Override
+    public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+            final Sketch.SrlStroke srlStroke) throws TemplateException {
+        addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setStroke(srlStroke));
     }
 
-    @Override public Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
+    @Override public final Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
             throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
 
-        RecognitionServer.RecognitionUpdateList.Builder recognitionUpdateList = RecognitionServer.RecognitionUpdateList.newBuilder();
+        final RecognitionServer.RecognitionUpdateList.Builder recognitionUpdateList = RecognitionServer.RecognitionUpdateList.newBuilder();
         recognitionUpdateList.setRecognitionId(recognitionId);
         recognitionUpdateList.setUpdateList(srlUpdateList);
 
@@ -186,11 +193,11 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         return recognitionResponse.getChanges();
     }
 
-    @Override public Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch sketch) {
+    @Override public final Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch sketch) {
         throw new UnsupportedOperationException();
     }
 
-    @Override public List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate) {
+    @Override public final List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate) {
         return null;
     }
 }

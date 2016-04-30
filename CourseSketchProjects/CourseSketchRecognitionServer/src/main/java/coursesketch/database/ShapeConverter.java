@@ -170,7 +170,7 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
      * @return A Recognition Tempalte that has been parsed.
      */
     public Sketch.RecognitionTemplate parseRecognitionTemplate(final DBObject templateObject) {
-        final String id = (String) templateObject.get(TEMPLATE_ID);
+        final String id = templateObject.get(TEMPLATE_ID).toString();
         final Sketch.SrlInterpretation interpretation = parseInterpretation(
                 (DBObject) templateObject.get(TEMPLATE_INTERPRETATION));
 
