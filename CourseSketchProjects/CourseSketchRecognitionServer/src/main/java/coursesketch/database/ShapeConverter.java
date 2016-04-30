@@ -47,8 +47,6 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
      */
     private static final Logger LOG = LoggerFactory.getLogger(ShapeConverter.class);
 
-    //TODO: Change the names of all the methods below from makeSrl{Object} to makeDb{Object}
-
     @Override
     public DBObject makeDbObject(final Sketch.SrlObject srlObject) {
         DBObject result = null;
@@ -198,6 +196,7 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
         return recognitionTemplate.build();
     }
 
+    @Override
     public Sketch.SrlSketch parseSketch(final DBObject sketchObject) {
         final Sketch.SrlSketch.Builder sketch = Sketch.SrlSketch.newBuilder();
         final List<DBObject> sketchData = (List<DBObject>) sketchObject.get(SKETCH_SKETCH);
@@ -311,8 +310,8 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
 
         final String pointId = (String) pointObject.get(POINT_ID);
         final long pointTime = (long) pointObject.get(POINT_TIME);
-        double x = (double) pointObject.get(POINT_X);
-        double y = (double) pointObject.get(POINT_Y);
+        final double x = (double) pointObject.get(POINT_X);
+        final double y = (double) pointObject.get(POINT_Y);
         String name = null;
         Double pressure = null, size = null, speed = null;
         if (((DBObject) pointObject).containsField(POINT_NAME)) {

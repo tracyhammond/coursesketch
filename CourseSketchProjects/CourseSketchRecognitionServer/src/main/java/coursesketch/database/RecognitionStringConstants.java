@@ -10,8 +10,6 @@ package coursesketch.database;
 public class RecognitionStringConstants {
     public static final String TEMPLATE_COLLECTION      = "Templates";
 
-    //TODO: Change INT to INTERPRETATION
-
     public static final String TEMPLATE_ID               = "TemplateId";
     public static final String TEMPLATE_INTERPRETATION   = "TemplateInterpretation";
     public static final String TEMPLATE_DATA             = "TemplateData";
