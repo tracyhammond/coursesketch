@@ -122,9 +122,10 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
 
     /**
      * Adds a template to the recognition server.
-     * @param templateId
-     * @param template
-     * @throws TemplateException
+     * @param templateId The id of the template being added.
+     * @param interpretation The interpretation of the template.
+     * @param template The template data.
+     * @throws TemplateException Thrown if there are problems creating the template.
      */
     private void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
             final Sketch.RecognitionTemplate.Builder template) throws TemplateException {
@@ -197,7 +198,26 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         throw new UnsupportedOperationException();
     }
 
-    @Override public final List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate) {
-        return null;
+    @Override public final List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate)
+            throws RecognitionException {
+        if (recognitionService == null) {
+            recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
+        }
+
+        RecognitionServer.GeneratedTemplates generatedTemplates = null;
+        try {
+            LOG.debug("Sending generate additional templates request");
+            generatedTemplates = recognitionService
+                    .generateTemplates(getNewRpcController(), recognitionTemplate);
+            if (generatedTemplates.getDefaultResponse().hasException()) {
+                final DatabaseAccessException databaseException =
+                        new DatabaseAccessException("Exception with recognition server");
+                databaseException.setProtoException(generatedTemplates.getDefaultResponse().getException());
+                throw new RecognitionException("Exception when recognizing update List", databaseException);
+            }
+        } catch (ServiceException e) {
+            // throw new TemplateException("Exception when adding template", e);
+        }
+        return generatedTemplates.getGeneratedTemplatesList();
     }
 }

@@ -25,6 +25,12 @@
         } else if (shortenedMethodName === 'recognize') {
             generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.RECOGNIZE);
             generalRequest.setSetUpdateList(req);
+        } else if (shortenedMethodName === 'generateTemplates') {
+            generalRequest.setRequestType(CourseSketch.prutil.RecognitionRequestType.GENERATE_SHAPES);
+            generalRequest.setTemplate(req);
+            returnType = CourseSketch.prutil.getGeneratedTemplatesClass();
+        } else {
+            throw "Recognition service method is not recognized: " + shortenedMethodName;
         }
 
         console.log('rpc data is set!');
@@ -34,7 +40,7 @@
             console.log('we got info back from the recognition server!!', msg);
             // TODO: add exception checking
             // if (msg instanceof CourseSketch.)
-            callback(undefined, msg);
+            callback(evt, msg);
         }, 1, returnType);
     };
 
@@ -55,13 +61,17 @@
         CourseSketch.recognitionService.createUpdateList(recogUpdateList, callback);
     }
 
-    function addTemplate(label, recognitionId, protoRecognitionTemplate, callback) {
+    function setTemplateData(label, recognitionId, protoRecognitionTemplate) {
         var interpretationTemplate = CourseSketch.prutil.ProtoSrlInterpretation();
         interpretationTemplate.setLabel('' + label);
         interpretationTemplate.setConfidence(1);
         interpretationTemplate.setComplexity(1);
         protoRecognitionTemplate.setTemplateId('' + recognitionId);
         protoRecognitionTemplate.setInterpretation(interpretationTemplate);
+    }
+
+    function addTemplate(label, recognitionId, protoRecognitionTemplate, callback) {
+        setTemplateData(label, recognitionId, protoRecognitionTemplate);
         console.log(protoRecognitionTemplate);
         CourseSketch.recognitionService.addTemplate(protoRecognitionTemplate, callback);
     }
@@ -91,7 +101,6 @@
         CourseSketch.recognitionService.recognize(recogUpdateList, callback);
     }
 
-
     CourseSketch.recognition = {};
     CourseSketch.recognition.addUpdate = addUpdate;
     CourseSketch.recognition.setUpdateList = setUpdateList;
@@ -99,6 +108,8 @@
     CourseSketch.recognition.addShapeTemplate = addShapeTemplate;
     CourseSketch.recognition.addStrokeTemplate = addStrokeTemplate;
     CourseSketch.recognition.recognize = recognize;
+    CourseSketch.recognition.setTemplateData = setTemplateData;
+    CourseSketch.recognition.generateTemplates = CourseSketch.recognitionService.generateTemplates.bind(CourseSketch.recognitionService);
 
     /**
      * A plugin used to send updates to the server.

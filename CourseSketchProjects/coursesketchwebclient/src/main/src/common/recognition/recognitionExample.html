@@ -71,6 +71,7 @@
     <button id="enableLiveRecognition">Enable Live Recogntion</button>
     <button id="recognize">Recognize Current Template</button>
     <button id="enableDebugging">Enable Debugging</button>
+    <button id="generateSimilarShapes">Generate Similar Images</button>
     <div id="debug-panel">
         <div id ="commandViewer"></div>
     </div>
@@ -93,12 +94,18 @@
                 }
             });
             sketchSurface.resizeSurface();
-            $('#submitTemplate').click(function() {
-                var sketchList = sketchSurface.getCurrentSketch().getList();
+
+            function createShapeFromSketch(sketch) {
+                var sketchList = sketch.getList();
                 var shape = new SRL_Shape();
                 for (var i = 0; i < sketchList.length; i++) {
                     shape.addSubObject(sketchList[i]);
                 }
+                return shape;
+            }
+
+            $('#submitTemplate').click(function() {
+                var shape = createShapeFromSketch(sketchSurface.getCurrentSketch());
                 var protoBuf = shape.sendToProtobuf();
                 var label = document.getElementById('label').value;
                 CourseSketch.recognition.addShapeTemplate(label, '' + sketchSurface.id, protoBuf, function(err, success) {
@@ -129,6 +136,18 @@
             });
             $('#enableDebugging').click(function() {
                 updateManager.addPlugin(CourseSketch.createDebugRecognitionPlugin('commandViewer', 'sketchViewer', sketchSurface));
+            });
+
+            $('#generateSimilarShapes').click(function () {
+
+                var shape = createShapeFromSketch(sketchSurface.getCurrentSketch());
+                var label = document.getElementById('label').value;
+                var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
+                CourseSketch.recognition.setTemplateData(label, '' + sketchSurface.id, recogTemplate);
+                recogTemplate.setShape(shape.sendToProtobuf());
+                CourseSketch.recognition.generateTemplates(recogTemplate, function (err, msg) {
+                    console.log(err, msg);
+                })
             });
         });
     </script>

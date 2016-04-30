@@ -15,6 +15,8 @@ import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
 import utilities.ExceptionUtilities;
 
+import java.util.UUID;
+
 /**
  * Created by David Windows on 4/13/2016.
  */
@@ -115,5 +117,27 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
         }
 
         done.run(result.build());
+    }
+
+    /**
+     * <code>rpc generateTemplates(.protobuf.srl.sketch.RecognitionTemplate) returns (.protobuf.srl.services.recognition.GeneratedTemplates);</code>
+     *
+     * <pre>
+     * *
+     * Creates a list of potential template matches.
+     * </pre>
+     *
+     * @param controller
+     * @param request
+     * @param done
+     */
+    @Override public void generateTemplates(final RpcController controller, final Sketch.RecognitionTemplate request,
+            final RpcCallback<RecognitionServer.GeneratedTemplates> done) {
+        final RecognitionServer.GeneratedTemplates.Builder builder = RecognitionServer.GeneratedTemplates.newBuilder();
+        for (int i = 0; i < 2 * 2 * 2; i++) {
+            LOG.debug("GENERATING TEMPLATE #{}", i);
+            builder.addGeneratedTemplates(Sketch.RecognitionTemplate.newBuilder(request).setTemplateId(UUID.randomUUID().toString()));
+        }
+        done.run(builder.build());
     }
 }

@@ -35,6 +35,7 @@ function AdvanceDataListener(Request, defListener) {
     requestMap[Request.MessageType.DATA_INSERT] = {};
     requestMap[Request.MessageType.DATA_UPDATE] = {};
     var TIMEOUT_CONST = 'TIMED_OUT';
+    var TIMEOUT_TIME = 5000;
 
     var localScope = this;
     var defaultListener = defListener || false;
@@ -279,7 +280,7 @@ function AdvanceDataListener(Request, defListener) {
             var clonedRequest = CourseSketch.prutil.cleanProtobuf(request, CourseSketch.prutil.getRequestClass());
             clonedRequest.otherData = TIMEOUT_CONST;
             decode(undefined, clonedRequest);
-        }, 50000);
+        }, TIMEOUT_TIME);
     };
 
 
