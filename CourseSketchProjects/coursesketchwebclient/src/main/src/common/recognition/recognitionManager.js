@@ -61,12 +61,9 @@
         interpretationTemplate.setConfidence(1);
         interpretationTemplate.setComplexity(1);
         protoRecognitionTemplate.setTemplateId('' + recognitionId);
-        // protoRecognitionTemplate.setInterpretation(interpretationTemplate);
-        var clean = CourseSketch.prutil.cleanProtobuf(protoRecognitionTemplate,
-            CourseSketch.prutil.getProtoRecognitionTemplateClass());
-        clean.templateId = '';
-        console.log(clean);
-        CourseSketch.recognitionService.addTemplate(clean, callback);
+        protoRecognitionTemplate.setInterpretation(interpretationTemplate);
+        console.log(protoRecognitionTemplate);
+        CourseSketch.recognitionService.addTemplate(protoRecognitionTemplate, callback);
     }
 
     function addSketchTemplate(label, recognitionId, sketch, callback) {
@@ -83,7 +80,7 @@
 
     function addStrokeTemplate(label, recognitionId, stroke, callback) {
         var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
-        // recogTemplate.setStroke(stroke);
+        recogTemplate.setStroke(stroke);
         addTemplate(label, recognitionId, recogTemplate, callback);
     }
 

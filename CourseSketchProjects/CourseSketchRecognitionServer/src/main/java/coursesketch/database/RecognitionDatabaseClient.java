@@ -14,40 +14,55 @@ import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.sketch.Sketch;
+import utilities.LoggingConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static coursesketch.database.RecognitionStringConstants.INT_LABEL;
+import static coursesketch.database.RecognitionStringConstants.INTERPRETATION_LABEL;
+import static coursesketch.database.RecognitionStringConstants.OBJECT_TYPE;
 import static coursesketch.database.RecognitionStringConstants.TEMPLATE_COLLECTION;
 import static coursesketch.database.RecognitionStringConstants.TEMPLATE_ID;
-import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INT;
-import static coursesketch.database.RecognitionStringConstants.TEMPLATE_TYPE;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INTERPRETATION;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_DATA;
 import static coursesketch.database.RecognitionStringConstants.SKETCH_DOMAINID;
 import static coursesketch.database.RecognitionStringConstants.SKETCH_SKETCH;
 
 /**
  * Created by David Windows on 4/13/2016.
  */
-public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReader implements TemplateDatabaseInterface {
+public final class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReader implements TemplateDatabaseInterface {
 
     /**
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(RecognitionDatabaseClient.class);
 
+    /**
+     * Converts shapes from Database format to java format and back.
+     */
+    private final ShapeConverter shapeConverter = new ShapeConverter();
+
+    /**
+     * The local database where everything is stored.
+     */
     private DB database;
 
-    final private ShapeConverter shapeConverter = new ShapeConverter();
-
+    /**
+     * Creates a database interface with the local server information.
+     *
+     * @param serverInfo Information about how to create the database.
+     */
     public RecognitionDatabaseClient(final ServerInfo serverInfo) {
         super(serverInfo);
     }
 
     @Override protected void setUpIndexes() {
-        database.getCollection(TEMPLATE_COLLECTION).createIndex(new BasicDBObject(TEMPLATE_INT + '.' + INT_LABEL, 1)
+        database.getCollection(TEMPLATE_COLLECTION).createIndex(new BasicDBObject(TEMPLATE_INTERPRETATION + '.' + INTERPRETATION_LABEL, 1)
                 .append("unique", false));
+        database.getCollection(TEMPLATE_COLLECTION).createIndex(new BasicDBObject(TEMPLATE_ID, 1)
+                .append("unique", true));
     }
 
     @Override protected void onStartDatabase() throws DatabaseAccessException {
@@ -57,12 +72,8 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
     }
 
     @Override
-    public void addTemplate(final Sketch.SrlInterpretation srlInterpretation, final Sketch.SrlSketch srlSketch) {
+    public void addTemplate(final String templateId, final Sketch.SrlInterpretation srlInterpretation, final Sketch.SrlSketch srlSketch) {
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
-
-        final BasicDBObject templateObject = new BasicDBObject();
-
-        final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
 
         final String sketchDomainId = srlSketch.getDomainId();
 
@@ -76,47 +87,60 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
         final BasicDBObject sketchDbObject = new BasicDBObject();
         sketchDbObject.append(SKETCH_DOMAINID, sketchDomainId);
         sketchDbObject.append(SKETCH_SKETCH, sketchSketch);
+        final BasicDBObject templateObject = createDefaultTemplate(templateId, srlInterpretation, sketchDbObject);
 
-        // TODO: Take in a TEMPLATE_ID instead of creating one here
-        templateObject.append(TEMPLATE_ID, UUID.randomUUID());
-        templateObject.append(TEMPLATE_INT, interpretationDbObject);
-        templateObject.append(TEMPLATE_TYPE, sketchDbObject);
+        LOG.debug("ADDING TEMPLATE: {}", LoggingConstants.prettyPrintJson(templateObject.toString()));
 
         templates.insert(templateObject);
     }
 
     @Override
-    public void addTemplate(final Sketch.SrlInterpretation srlInterpretation, final Sketch.SrlShape srlShape) {
+    public void addTemplate(final String templateId, final Sketch.SrlInterpretation srlInterpretation, final Sketch.SrlShape srlShape) {
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
 
-        final BasicDBObject templateObject = new BasicDBObject();
-
-        final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
         final DBObject shapeDbObject = shapeConverter.makeDbShape(srlShape);
 
-        // TODO: Take in a TEMPLATE_ID instead of creating one here
-        templateObject.append(TEMPLATE_ID, UUID.randomUUID());
-        templateObject.append(TEMPLATE_INT, interpretationDbObject);
-        templateObject.append(TEMPLATE_TYPE, shapeDbObject);
+        final BasicDBObject templateObject = createDefaultTemplate(templateId, srlInterpretation, shapeDbObject);
+        templateObject.put(OBJECT_TYPE, Sketch.SrlObject.ObjectType.SHAPE.name());
+
+        LOG.debug("ADDING TEMPLATE: \n\n{}", LoggingConstants.prettyPrintJson(templateObject.toString()));
 
         templates.insert(templateObject);
     }
 
     @Override
-    public void addTemplate(final Sketch.SrlInterpretation srlInterpretation, final Sketch.SrlStroke srlStroke) {
+    public void addTemplate(final String templateId, final Sketch.SrlInterpretation srlInterpretation, final Sketch.SrlStroke srlStroke) {
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
 
+        final DBObject strokeDbObject = shapeConverter.makeDbStroke(srlStroke);
+
+        final BasicDBObject templateObject = createDefaultTemplate(templateId, srlInterpretation, strokeDbObject);
+        templateObject.put(OBJECT_TYPE, Sketch.SrlObject.ObjectType.STROKE.name());
+
+        LOG.debug("ADDING TEMPLATE: \n\n{}", LoggingConstants.prettyPrintJson(templateObject.toString()));
+
+        templates.insert(templateObject);
+    }
+
+    /**
+     * Creates the basic template data that is shared across all types of templates.
+     *
+     * @param templateId The id of the template being stored.
+     * @param srlInterpretation The interpretation of the template being stored.
+     * @param templateData The data of the template being stored.
+     * @return A basic template with some data filled out.
+     */
+    private BasicDBObject createDefaultTemplate(final String templateId, final Sketch.SrlInterpretation srlInterpretation,
+            final DBObject templateData) {
         final BasicDBObject templateObject = new BasicDBObject();
 
         final DBObject interpretationDbObject = shapeConverter.makeDbInterpretation(srlInterpretation);
-        final DBObject strokeDbObject = shapeConverter.makeDbStroke(srlStroke);
 
-        // TODO: Take in a TEMPLATE_ID instead of creating one here
-        templateObject.append(TEMPLATE_ID, UUID.randomUUID());
-        templateObject.append(TEMPLATE_INT, interpretationDbObject);
-        templateObject.append(TEMPLATE_TYPE, strokeDbObject);
+        templateObject.append(TEMPLATE_ID, UUID.fromString(templateId));
+        templateObject.append(TEMPLATE_INTERPRETATION, interpretationDbObject);
+        templateObject.append(TEMPLATE_DATA, templateData);
 
-        templates.insert(templateObject);
+        return templateObject;
     }
 
     @Override
@@ -130,24 +154,13 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
         while (templateObjectCursor.hasNext()) {
             final DBObject templateObject = templateObjectCursor.next();
-
-            final String id = (String) templateObject.get(TEMPLATE_ID);
-            final Sketch.SrlInterpretation interpretation = shapeConverter.parseInterpretation(
-                    (DBObject) templateObject.get(TEMPLATE_INT));
-            final Sketch.SrlStroke stroke = shapeConverter.parseStroke(
-                    (DBObject) templateObject.get(TEMPLATE_TYPE));
-
-            final Sketch.RecognitionTemplate.Builder recognitionTemplate =
-                    Sketch.RecognitionTemplate.newBuilder();
-            // TODO: Mack setTemplateType type agnostic
-            recognitionTemplate.setTemplateId(id).setInterpretation(interpretation)
-                    .setStroke(stroke);
-            templateList.add(recognitionTemplate.build());
+            templateList.add(shapeConverter.parseRecognitionTemplate(templateObject));
         }
         return templateList;
     }
 
-    public List<Sketch.RecognitionTemplate> getTemplate() {
+    @Override
+    public List<Sketch.RecognitionTemplate> getAllTemplates() {
         final List<Sketch.RecognitionTemplate> templateList = new ArrayList<Sketch.RecognitionTemplate>();
 
         final DBCollection templates = database.getCollection(TEMPLATE_COLLECTION);
@@ -157,19 +170,7 @@ public class RecognitionDatabaseClient extends AbstractCourseSketchDatabaseReade
 
         while (templateObjectCursor.hasNext()) {
             final DBObject templateObject = templateObjectCursor.next();
-
-            final String id = templateObject.get(TEMPLATE_ID).toString();
-            final Sketch.SrlInterpretation interpretation = shapeConverter.parseInterpretation(
-                    (DBObject) templateObject.get(TEMPLATE_INT));
-            final Sketch.SrlStroke stroke = shapeConverter.parseStroke(
-                    (DBObject) templateObject.get(TEMPLATE_TYPE));
-
-            final Sketch.RecognitionTemplate.Builder recognitionTemplate =
-                    Sketch.RecognitionTemplate.newBuilder();
-            // TODO: Mack setTemplateType type agnostic
-            recognitionTemplate.setTemplateId(id).setInterpretation(interpretation)
-                    .setStroke(stroke);
-            templateList.add(recognitionTemplate.build());
+            templateList.add(shapeConverter.parseRecognitionTemplate(templateObject));
         }
         return templateList;
     }

@@ -8,16 +8,16 @@ package coursesketch.database;
 
 @SuppressWarnings({ "PMD.CommentRequired", "checkstyle:javadocvariable" })
 public class RecognitionStringConstants {
-    public static final String TEMPLATE_COLLECTION  = "Templates";
+    public static final String TEMPLATE_COLLECTION      = "Templates";
 
     //TODO: Change INT to INTERPRETATION
 
-    public static final String TEMPLATE_ID          = "TemplateId";
-    public static final String TEMPLATE_INT         = "TemplateInterpretation";
-    public static final String TEMPLATE_TYPE        = "TemplateType";
+    public static final String TEMPLATE_ID               = "TemplateId";
+    public static final String TEMPLATE_INTERPRETATION   = "TemplateInterpretation";
+    public static final String TEMPLATE_DATA             = "TemplateData";
 
-    public static final String INT_LABEL            = "InterpretationLabel";
-    public static final String INT_CONFIDENCE       = "InterpretationConfidence";
+    public static final String INTERPRETATION_LABEL      = "InterpretationLabel";
+    public static final String INTERPRETATION_CONFIDENCE = "InterpretationConfidence";
 
     public static final String STROKE_ID            = "StrokeId";
     public static final String STROKE_TIME          = "StrokeTime";

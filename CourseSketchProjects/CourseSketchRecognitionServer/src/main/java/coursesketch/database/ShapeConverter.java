@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import coursesketch.recognition.framework.ShapeConverterInterface;
+import coursesketch.recognition.framework.exceptions.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.sketch.Sketch;
@@ -11,8 +12,8 @@ import protobuf.srl.sketch.Sketch;
 import java.util.ArrayList;
 import java.util.List;
 
-import static coursesketch.database.RecognitionStringConstants.INT_CONFIDENCE;
-import static coursesketch.database.RecognitionStringConstants.INT_LABEL;
+import static coursesketch.database.RecognitionStringConstants.INTERPRETATION_CONFIDENCE;
+import static coursesketch.database.RecognitionStringConstants.INTERPRETATION_LABEL;
 import static coursesketch.database.RecognitionStringConstants.OBJECT_TYPE;
 import static coursesketch.database.RecognitionStringConstants.POINT_ID;
 import static coursesketch.database.RecognitionStringConstants.POINT_NAME;
@@ -28,10 +29,14 @@ import static coursesketch.database.RecognitionStringConstants.SHAPE_ISUSERCREAT
 import static coursesketch.database.RecognitionStringConstants.SHAPE_NAME;
 import static coursesketch.database.RecognitionStringConstants.SHAPE_SUBCOMPONENTS;
 import static coursesketch.database.RecognitionStringConstants.SHAPE_TIME;
+import static coursesketch.database.RecognitionStringConstants.SKETCH_SKETCH;
 import static coursesketch.database.RecognitionStringConstants.STROKE_ID;
 import static coursesketch.database.RecognitionStringConstants.STROKE_NAME;
 import static coursesketch.database.RecognitionStringConstants.STROKE_POINTS;
 import static coursesketch.database.RecognitionStringConstants.STROKE_TIME;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_ID;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_INTERPRETATION;
+import static coursesketch.database.RecognitionStringConstants.TEMPLATE_DATA;
 
 /**
  * Created by David Windows on 4/20/2016.
@@ -155,14 +160,57 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
 
     @Override
     public com.mongodb.DBObject makeDbInterpretation(final Sketch.SrlInterpretation srlInterpretation) {
-        return new BasicDBObject(INT_LABEL, srlInterpretation.getLabel())
-                .append(INT_CONFIDENCE, srlInterpretation.getConfidence());
+        return new BasicDBObject(INTERPRETATION_LABEL, srlInterpretation.getLabel())
+                .append(INTERPRETATION_CONFIDENCE, srlInterpretation.getConfidence());
+    }
+
+
+    /**
+     * Parses a template that was found in the database.
+     *
+     * @param templateObject The db object that is being parsed.
+     * @return A Recognition Tempalte that has been parsed.
+     */
+    public Sketch.RecognitionTemplate parseRecognitionTemplate(final DBObject templateObject) {
+        final String id = (String) templateObject.get(TEMPLATE_ID);
+        final Sketch.SrlInterpretation interpretation = parseInterpretation(
+                (DBObject) templateObject.get(TEMPLATE_INTERPRETATION));
+
+        final Sketch.RecognitionTemplate.Builder recognitionTemplate =
+                Sketch.RecognitionTemplate.newBuilder();
+
+        final String objectType = (String) templateObject.get(OBJECT_TYPE);
+        final DBObject templateData = (DBObject) templateObject.get(TEMPLATE_DATA);
+        if (objectType == null) {
+            final Sketch.SrlSketch srlSketch = parseSketch(templateData);
+            recognitionTemplate.setSketch(srlSketch);
+        } else if (objectType.equals(Sketch.SrlObject.ObjectType.SHAPE.name())) {
+            final Sketch.SrlShape srlShape = parseShape(templateData);
+            recognitionTemplate.setShape(srlShape);
+        } else if (objectType.equals(Sketch.SrlObject.ObjectType.STROKE.name())) {
+            final Sketch.SrlStroke stroke = parseStroke(templateData);
+            recognitionTemplate.setStroke(stroke);
+        } else {
+            LOG.error("", new TemplateException("Unknown template type: " + objectType));
+        }
+
+        recognitionTemplate.setTemplateId(id).setInterpretation(interpretation);
+        return recognitionTemplate.build();
+    }
+
+    public Sketch.SrlSketch parseSketch(final DBObject sketchObject) {
+        final Sketch.SrlSketch.Builder sketch = Sketch.SrlSketch.newBuilder();
+        final List<DBObject> sketchData = (List<DBObject>) sketchObject.get(SKETCH_SKETCH);
+        for (DBObject dbObject: sketchData) {
+            sketch.addSketch(parseObject(dbObject));
+        }
+        return sketch.build();
     }
 
     @Override
     public Sketch.SrlInterpretation parseInterpretation(final DBObject interpretationObject) {
-        final String intLabel = (String) interpretationObject.get(INT_LABEL);
-        final Double intConfidence = (Double) interpretationObject.get(INT_CONFIDENCE);
+        final String intLabel = (String) interpretationObject.get(INTERPRETATION_LABEL);
+        final Double intConfidence = (Double) interpretationObject.get(INTERPRETATION_CONFIDENCE);
 
         final Sketch.SrlInterpretation.Builder srlInterpretation = Sketch.SrlInterpretation.newBuilder();
         srlInterpretation.setLabel(intLabel);

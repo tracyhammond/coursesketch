@@ -4,6 +4,7 @@ import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
 import coursesketch.recognition.framework.RecognitionInterface;
 import coursesketch.recognition.framework.exceptions.RecognitionException;
+import coursesketch.recognition.framework.exceptions.TemplateException;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.rpc.CourseSketchRpcService;
 import org.slf4j.Logger;
@@ -12,9 +13,6 @@ import protobuf.srl.commands.Commands.SrlUpdateList;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
-import protobuf.srl.sketch.Sketch.SrlShape;
-import protobuf.srl.sketch.Sketch.SrlSketch;
-import protobuf.srl.sketch.Sketch.SrlStroke;
 import utilities.ExceptionUtilities;
 
 /**
@@ -26,8 +24,16 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
      */
     private static final Logger LOG = LoggerFactory.getLogger(RecognitionService.class);
 
+    /**
+     * The interface that performs the recognition specific code.
+     */
     private final RecognitionInterface recognitionManager;
 
+    /**
+     * Creates a recognition service with the given Recognition Backing.
+     *
+     * @param manager The manager that backs the service and performs the actual recognition.
+     */
     public RecognitionService(final RecognitionInterface manager) {
         recognitionManager = manager;
     }
@@ -67,20 +73,32 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
     @Override
     public void addTemplate(final RpcController controller, final Sketch.RecognitionTemplate request,
             final RpcCallback<Message.DefaultResponse> done) {
-        // adds template to the database
-
-        final String templateId = request.getTemplateId();
-        final SrlStroke stroke = request.getStroke();
-        final SrlShape shape = request.getShape();
-        final SrlSketch sketch = request.getSketch();
-        LOG.debug("SKETCH {}", sketch);
-        LOG.debug("TYPE {}", request.getInterpretation());
-
-
         final Message.DefaultResponse.Builder defaultResponse = Message.DefaultResponse.newBuilder();
-        defaultResponse.setSuccessful(true);
-
+        try {
+            addTemplate(request);
+            defaultResponse.setSuccessful(true);
+        } catch (TemplateException e) {
+            defaultResponse.setException(ExceptionUtilities.createProtoException(e));
+        }
         done.run(defaultResponse.build());
+    }
+
+    /**
+     * Adds a template to the database.
+     *
+     * @param template The template that is being added to the database.
+     * @throws TemplateException Thrown if there is a problem adding the template.
+     */
+    private void addTemplate(final Sketch.RecognitionTemplate template) throws TemplateException {
+        if (template.hasSketch()) {
+            recognitionManager.addTemplate(template.getTemplateId(), template.getInterpretation(), template.getSketch());
+        } else if (template.hasShape()) {
+            recognitionManager.addTemplate(template.getTemplateId(), template.getInterpretation(), template.getShape());
+        } else if (template.hasStroke()) {
+            recognitionManager.addTemplate(template.getTemplateId(), template.getInterpretation(), template.getStroke());
+        } else {
+            throw new TemplateException("No template data has been found");
+        }
     }
 
     @Override
