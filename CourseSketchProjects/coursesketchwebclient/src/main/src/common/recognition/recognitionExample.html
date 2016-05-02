@@ -152,8 +152,10 @@
                 sketch.clearSketch();
                 var shape = SRL_Shape.createFromProtobuf(template.getShape());
                 sketch.addSubObject(shape);
+                console.log(sketch);
                 sketchSurface.resizeSurface();
                 sketchSurface.refreshSketch();
+                console.log('sketch surface should be hwown');
             }
 
             $('#generateSimilarShapes').click(function () {

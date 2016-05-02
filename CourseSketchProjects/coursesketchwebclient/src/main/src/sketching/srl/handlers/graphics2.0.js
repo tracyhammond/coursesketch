@@ -4,7 +4,7 @@
  *
  * @class Graphics
  * @param {Element} canvas - The canvas element that is being drawn to.
- * @param {SketchManager} sketchManager - The manager that handles which sketch is currently active.
+ * @param {SketchSurfaceManager} sketchManager - The manager that handles which sketch is currently active.
  */
 function Graphics(canvas, sketchManager) {
     paper.install(window);
@@ -74,7 +74,7 @@ function Graphics(canvas, sketchManager) {
     /**
      * Adds a given point to the active path.
      *
-     * @param {SrlPoint} point - The point that is being added to the current updating path.
+     * @param {SRL_Point} point - The point that is being added to the current updating path.
      */
     this.updatePath = function(point) {
         livePath.add(point);
@@ -83,8 +83,8 @@ function Graphics(canvas, sketchManager) {
     /**
      * Adds a final given point to the path, then simplifies it (makes it pretty and smooth).
      *
-     * @param {SrlPoint} point - The point that is being added to the current updating path.
-     * @param {SrlStroke} stroke - The stroke that contains all of the points that were added.
+     * @param {SRL_Point} point - The point that is being added to the current updating path.
+     * @param {SRL_Stroke} stroke - The stroke that contains all of the points that were added.
      */
     this.endPath = function(point, stroke) {
         livePath.add(point);
@@ -107,14 +107,23 @@ function Graphics(canvas, sketchManager) {
         ps.view.update();
         var sketch = sketchManager.getCurrentSketch();
         var objectList = sketch.getList();
+        recursivelyLoadSketch(objectList);
+        ps.view.update();
+    };
+
+    /**
+     * @param {Array<SRL_Object>} objectList
+     */
+    function recursivelyLoadSketch(objectList, color) {
         for (var i = 0; i < objectList.length; i++) {
             var object = objectList[i];
             if (object instanceof SRL_Stroke) {
-                loadStroke(object);
+                loadStroke(object, color);
+            } else if (object instanceof SRL_Shape) {
+                loadShape(object);
             }
         }
-        ps.view.update();
-    };
+    }
     var loadSketch = this.loadSketch;
 
     /**
@@ -132,9 +141,9 @@ function Graphics(canvas, sketchManager) {
     /**
      * Draws a single stroke onto the screen.
      *
-     * @param {Srl_Stroke} stroke - The stroke to be drawn.
+     * @param {SRL_Stroke} stroke - The stroke to be drawn.
      */
-    function loadStroke(stroke) {
+    function loadStroke(stroke, color) {
         ps.activate();
         var object = ps.project.getItem({ data: { id: stroke.getId() } });
         if (!isUndefined(object) && object !== null) {
@@ -142,11 +151,24 @@ function Graphics(canvas, sketchManager) {
         }
         var path = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
         path.data.id = stroke.getId();
+        if (!isUndefined(color)) {
+            path.strokeColor = color;
+        }
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
             path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
         }
         path.simplify();
+    }
+
+    /**
+     * Draws a single stroke onto the screen.
+     *
+     * @param {SRL_Stroke} stroke - The stroke to be drawn.
+     */
+    function loadShape(shape) {
+        // make all shapes red!
+        recursivelyLoadSketch(shape.getSubObjects(), '#ff0000');
     }
 
     /**

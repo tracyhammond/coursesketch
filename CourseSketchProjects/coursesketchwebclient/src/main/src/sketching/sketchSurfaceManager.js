@@ -9,12 +9,16 @@
 function SketchSurfaceManager(sketchSurface) {
     var sketchMap = new Map();
     var parentSketch = undefined;
+
+    /**
+     * @type {SRL_Sketch}
+     */
     var currentSketch = undefined;
 
     /**
      * Sets the parent sketch.
      *
-     * @param {SrlSketch} sketch - The top level sketch.
+     * @param {SRL_Sketch} sketch - The top level sketch.
      */
     this.setParentSketch = function(sketch) {
         parentSketch = sketch;

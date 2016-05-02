@@ -494,7 +494,6 @@ function ProtobufSetup() {
         var protoClass = proto;
         if ((typeof proto) === 'string') {
             protoClass = CourseSketch.prutil['get' + proto + 'Class']();
-            console.log(protoClass);
         }
 
         try {
