@@ -180,24 +180,15 @@
      * @returns {ProtoSrlObject} SRL_Object or its subclass.
      */
     function decodeSrlObject(object) {
-        var proto = false;
-        var scope = false;
-        if (!isUndefined(ProtoSrlObject)) {
-            proto = ProtoSrlObject;
-            scope = localScope;
-        } else {
-            proto = parent.ProtoSrlObject;
-            scope = parent;
-        }
-
+        var proto = CourseSketch.prutil.getProtoSrlObjectClass();
         var objectType = object.type; // FIXME: change this to objectType
         switch (objectType) {
             case proto.ObjectType.SHAPE:
-                return SRL_Shape.createFromProtobuf(scope.ProtoSrlShape.decode(object.object));
+                return SRL_Shape.createFromProtobuf(CourseSketch.prutil.decodeProtobuf(object.object, 'ProtoSrlShape'));
             case proto.ObjectType.STROKE:
-                return SRL_Stroke.createFromProtobuf(scope.ProtoSrlStroke.decode(object.object));
+                return SRL_Stroke.createFromProtobuf(CourseSketch.prutil.decodeProtobuf(object.object, 'ProtoSrlStroke'));
             case proto.ObjectType.POINT:
-                return SRL_Point.createFromProtobuf(scope.ProtoSrlPoint.decode(object.object));
+                return SRL_Point.createFromProtobuf(CourseSketch.prutil.decodeProtobuf(object.object, 'ProtoSrlPoint'));
         }
     }
 

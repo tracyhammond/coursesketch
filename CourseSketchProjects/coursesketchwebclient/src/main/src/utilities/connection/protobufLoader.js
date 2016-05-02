@@ -469,8 +469,9 @@ function ProtobufSetup() {
      *
      * @param {ArrayBuffer} data
      *            a compiled set of data in the protobuf object.
-     * @param {ProtobufClass} proto - The protobuf object that is being decoded.
+     * @param {ProtobufClass | String} proto - The protobuf object that is being decoded.
      *            This can be grabbed by using CourseSketch.prutil.get<objectName>Class();
+     *            If it is a string you do not use "get<objectName>Class" and instead just pass in <objectName> as a string.
      * @param {Function} [onError] - A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
      *
@@ -489,11 +490,19 @@ function ProtobufSetup() {
             }
         }
         var decoded = undefined;
-        try {
-            decoded = proto.decode(data);
-        } catch (exception) {
-            throw new ProtobufException('data was not decoded successfully');
+
+        var protoClass = proto;
+        if ((typeof proto) === 'string') {
+            protoClass = CourseSketch.prutil['get' + proto + 'Class']();
+            console.log(protoClass);
         }
+
+        try {
+            decoded = protoClass.decode(data);
+        } catch (exception) {
+            throw new ProtobufException('data was not decoded successfully', exception);
+        }
+
         if (isUndefined(decoded)) {
             throw new ProtobufException('data was not decoded successfully or input was empty');
         }

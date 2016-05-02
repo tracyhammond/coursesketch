@@ -72,6 +72,11 @@
     <button id="recognize">Recognize Current Template</button>
     <button id="enableDebugging">Enable Debugging</button>
     <button id="generateSimilarShapes">Generate Similar Images</button>
+    <div id="moreButtons" style="display:none;">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+        <button id="next">Next</button>
+    </div>
     <div id="debug-panel">
         <div id ="commandViewer"></div>
     </div>
@@ -138,16 +143,58 @@
                 updateManager.addPlugin(CourseSketch.createDebugRecognitionPlugin('commandViewer', 'sketchViewer', sketchSurface));
             });
 
-            $('#generateSimilarShapes').click(function () {
+            /**
+             *
+             * @param {SRL_Sketch} sketch
+             * @param template
+             */
+            function loadTemplateIntoSketch(sketch, template) {
+                sketch.clearSketch();
+                var shape = SRL_Shape.createFromProtobuf(template.getShape());
+                sketch.addSubObject(shape);
+                sketchSurface.resizeSurface();
+                sketchSurface.refreshSketch();
+            }
 
+            $('#generateSimilarShapes').click(function () {
                 var shape = createShapeFromSketch(sketchSurface.getCurrentSketch());
                 var label = document.getElementById('label').value;
                 var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
                 CourseSketch.recognition.setTemplateData(label, '' + sketchSurface.id, recogTemplate);
                 recogTemplate.setShape(shape.sendToProtobuf());
                 CourseSketch.recognition.generateTemplates(recogTemplate, function (err, msg) {
-                    console.log(err, msg);
-                })
+                    console.log('generated teplates callback', err, msg);
+                    $('#moreButtons').show();
+                    console.log('loading templates', msg);
+                    var sketch = sketchSurface.getCurrentSketch();
+                    var templateList = msg.getGeneratedTemplates();
+                    var currentTemplate = templateList[0];
+                    var currentIndex = 0;
+                    console.log('setting up buttons');
+                    $('#next').click(function () {
+                        console.log('loading next template');
+                        currentIndex++;
+                        currentTemplate = templateList[currentIndex % templateList.length];
+                        loadTemplateIntoSketch(sketch, currentTemplate);
+                        console.log('loading template #', currentIndex);
+                    });
+
+                    $('#yes').click(function () {
+                        console.log('submitting positibe template');
+                        currentTemplate.type = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.POSITIVE;
+                        CourseSketch.recognitionService.addTemplate(currentTemplate, function (err, msg) {
+                            console.log(err, msg);
+                        });
+                    });
+
+                    $('#no').click(function () {
+                        console.log('submitting negative tempalte');
+                        currentTemplate.type = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.NEGATIVE;
+                        CourseSketch.recognitionService.addTemplate(currentTemplate, function (err, msg) {
+                            console.log(err, msg);
+                        });
+                    });
+                });
             });
         });
     </script>

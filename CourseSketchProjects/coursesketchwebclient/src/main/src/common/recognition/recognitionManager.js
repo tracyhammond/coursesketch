@@ -30,7 +30,7 @@
             generalRequest.setTemplate(req);
             returnType = CourseSketch.prutil.getGeneratedTemplatesClass();
         } else {
-            throw "Recognition service method is not recognized: " + shortenedMethodName;
+            throw 'Recognition service method is not recognized: ' + shortenedMethodName;
         }
 
         console.log('rpc data is set!');
@@ -40,7 +40,12 @@
             console.log('we got info back from the recognition server!!', msg);
             // TODO: add exception checking
             // if (msg instanceof CourseSketch.)
-            callback(evt, msg);
+            try {
+                // if callback is called with error then the protobuf implementation does not call it with msg.
+                callback(undefined, msg);
+            } catch(exception) {
+                console.log(exception);
+            }
         }, 1, returnType);
     };
 
