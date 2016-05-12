@@ -12,6 +12,7 @@ import coursesketch.services.RecognitionService;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import recognition.TensorFlowRecognition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
         } catch (DatabaseAccessException e) {
             LOG.error("Error starting database", e);
         }
-        services.add(new RecognitionService(new BasicRecognition(databaseClient)));
+        services.add(new RecognitionService(new TensorFlowRecognition(databaseClient)));
         return services;
     }
 
