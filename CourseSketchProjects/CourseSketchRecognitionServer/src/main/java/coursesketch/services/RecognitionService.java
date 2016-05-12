@@ -15,8 +15,6 @@ import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
 import utilities.ExceptionUtilities;
 
-import java.util.UUID;
-
 /**
  * Created by David Windows on 4/13/2016.
  */
@@ -133,11 +131,14 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
      */
     @Override public void generateTemplates(final RpcController controller, final Sketch.RecognitionTemplate request,
             final RpcCallback<RecognitionServer.GeneratedTemplates> done) {
-        final RecognitionServer.GeneratedTemplates.Builder builder = RecognitionServer.GeneratedTemplates.newBuilder();
-        for (int i = 0; i < 2 * 2 * 2; i++) {
-            LOG.debug("GENERATING TEMPLATE #{}", i);
-            builder.addGeneratedTemplates(Sketch.RecognitionTemplate.newBuilder(request).setTemplateId(UUID.randomUUID().toString()));
+        final RecognitionServer.GeneratedTemplates.Builder result = RecognitionServer.GeneratedTemplates.newBuilder();
+        try {
+            result.addAllGeneratedTemplates(recognitionManager.generateTemplates(request));
+        } catch (RecognitionException e) {
+            final Message.ProtoException protoException = ExceptionUtilities.createProtoException(e);
+            result.setDefaultResponse(Message.DefaultResponse.newBuilder().setException(protoException).build());
+            LOG.error("Exception during recognize", e);
         }
-        done.run(builder.build());
+        done.run(result.build());
     }
 }
