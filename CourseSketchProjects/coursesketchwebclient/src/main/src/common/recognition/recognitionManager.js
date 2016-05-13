@@ -75,28 +75,31 @@
         protoRecognitionTemplate.setInterpretation(interpretationTemplate);
     }
 
-    function addTemplate(label, recognitionId, protoRecognitionTemplate, callback) {
+    function addTemplate(label, recognitionId, protoRecognitionTemplate, callback, templateType) {
         setTemplateData(label, recognitionId, protoRecognitionTemplate);
+        if (!isUndefined(templateType)) {
+            protoRecognitionTemplate.type = templateType;
+        }
         console.log(protoRecognitionTemplate);
         CourseSketch.recognitionService.addTemplate(protoRecognitionTemplate, callback);
     }
 
-    function addSketchTemplate(label, recognitionId, sketch, callback) {
+    function addSketchTemplate(label, recognitionId, sketch, callback, templateType) {
         var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
         recogTemplate.setSketch(sketch);
-        addTemplate(label, recognitionId, recogTemplate, callback);
+        addTemplate(label, recognitionId, recogTemplate, callback, templateType);
     }
 
-    function addShapeTemplate(label, recognitionId, shape, callback) {
+    function addShapeTemplate(label, recognitionId, shape, callback, templateType) {
         var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
         recogTemplate.setShape(shape);
-        addTemplate(label, recognitionId, recogTemplate, callback);
+        addTemplate(label, recognitionId, recogTemplate, callback, templateType);
     }
 
-    function addStrokeTemplate(label, recognitionId, stroke, callback) {
+    function addStrokeTemplate(label, recognitionId, stroke, callback, templateType) {
         var recogTemplate = CourseSketch.prutil.ProtoRecognitionTemplate();
         recogTemplate.setStroke(stroke);
-        addTemplate(label, recognitionId, recogTemplate, callback);
+        addTemplate(label, recognitionId, recogTemplate, callback, templateType);
     }
 
     function recognize(recognitionId, updateList, callback) {
