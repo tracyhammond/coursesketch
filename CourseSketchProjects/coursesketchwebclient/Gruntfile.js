@@ -201,7 +201,9 @@ module.exports = function(grunt) {
                         expand: true,
                         src: [ 'src/**', '!src/test/**',
                             // we do not want these copied as they are legacy.
-                            '!src/html/**', '!src/js/**' ],
+                            '!src/html/**', '!src/js/**',
+                            // we do not want these copied as they are not meant for production.
+                            '!src/**/debug/**' ],
 
                         dest: 'target/website/'
                     },

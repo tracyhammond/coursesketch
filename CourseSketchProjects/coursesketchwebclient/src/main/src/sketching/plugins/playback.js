@@ -55,7 +55,7 @@ function Playback(updateList, updateManager, graphics) {
      * @param {Boolean} redraw - True if the sketch surface needs to be redrawn.
      * @param {Integer} updateIndex - The index that this update is in the update list.
      */
-    this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+    this.addUpdate = function addUpdate(update, redraw, updateIndex, updateType, updatePluginId) {
         var commandList = update.commands;
 
         /**

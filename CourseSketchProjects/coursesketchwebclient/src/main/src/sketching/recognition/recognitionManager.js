@@ -118,49 +118,4 @@
     CourseSketch.recognition.recognize = recognize;
     CourseSketch.recognition.setTemplateData = setTemplateData;
     CourseSketch.recognition.generateTemplates = CourseSketch.recognitionService.generateTemplates.bind(CourseSketch.recognitionService);
-
-    /**
-     * A plugin used to send updates to the server.
-     *
-     * @class RecognitionPlugin
-     */
-    function RecognitionPlugin(updateManager, sketchId) {
-        /**
-         * Holds the list of updates that are waiting to be sent to the server.
-         *
-         * This list should almost always be near empty.
-         */
-        var queuedServerUpdates = [];
-
-        /**
-         * Called when the updatemanager adds an update.
-         *
-         * @param {SrlUpdate} update - The update to be sent to thee recognition server.
-         * @param {Boolean} toRemote - True if this update is destined to the remote server.
-         */
-        this.addUpdate = function(update, toRemote) {
-            console.log('adding update!');
-            var cleanUpdate = CourseSketch.prutil.cleanProtobuf(update, CourseSketch.prutil.getSrlUpdateClass());
-            if (!isUndefined(toRemote) && toRemote) {
-                CourseSketch.recognition.addUpdate(sketchId, cleanUpdate, function(err, msg) {
-                    console.log('It worked@!!!', err, msg);
-                    if ((!isUndefined(err) && err !== null) || isUndefined(msg)) {
-                        console.log('problems with the response');
-                        return;
-                    }
-                    var updateList = msg.changes;
-                    var updates = updateList.list;
-                    for (var i = 0; i < updates.length; i++) {
-                        var update = updates[i];
-                        console.log('add update', update);
-                        updateManager.addUpdate(update);
-                    }
-                });
-            }
-        };
-    }
-
-    CourseSketch.createRecognitionPlugin = function(updateManager, sketchId) {
-        return new RecognitionPlugin(updateManager, sketchId);
-    };
 })();
