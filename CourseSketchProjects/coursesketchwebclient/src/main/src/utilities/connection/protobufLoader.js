@@ -299,6 +299,21 @@ function ProtobufSetup() {
     };
 
     /**
+     * @function
+     * Given an SrlUpdate a Request is created.
+     * @param {SrlUpdate} update - A valid and complete object.
+     * @param {MessageType} requestType - The type that the request is.
+     * @return {Request} used for all requesting needs
+     */
+    this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
+        if (!(update instanceof localScope.getSrlUpdateClass())) {
+            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
+        }
+
+        return this.createRequestFromData(update, requestType);
+    };
+
+    /**
      * Given a protobuf Command array an SrlUpdate is created.
      *
      * It is important to node that an SrlUpdate implies that the commands
@@ -337,21 +352,6 @@ function ProtobufSetup() {
         update.setTime('' + n);
         update.setUpdateId(generateUUID());
         return update;
-    };
-
-    /**
-     * @function
-     * Given an SrlUpdate a Request is created.
-     * @param {SrlUpdate} update - A valid and complete object.
-     * @param {MessageType} requestType - The type that the request is.
-     * @return {Request} used for all requesting needs
-     */
-    this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
-        if (!(update instanceof localScope.getSrlUpdateClass())) {
-            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
-        }
-
-        return this.createRequestFromData(update, requestType);
     };
 
     /**
