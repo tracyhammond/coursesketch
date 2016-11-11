@@ -101,7 +101,7 @@ public final class RecognitionDatabaseClient extends AbstractCourseSketchDatabas
         final DBObject shapeDbObject = shapeConverter.makeDbShape(srlShape);
 
         final BasicDBObject templateObject = createDefaultTemplate(templateId, srlInterpretation, shapeDbObject);
-        templateObject.put(OBJECT_TYPE, Sketch.SrlObject.ObjectType.SHAPE.name());
+        templateObject.put(OBJECT_TYPE, Sketch.ObjectType.SHAPE.name());
 
         LOG.debug("ADDING TEMPLATE: \n\n{}", LoggingConstants.prettyPrintJson(templateObject.toString()));
 
@@ -115,7 +115,7 @@ public final class RecognitionDatabaseClient extends AbstractCourseSketchDatabas
         final DBObject strokeDbObject = shapeConverter.makeDbStroke(srlStroke);
 
         final BasicDBObject templateObject = createDefaultTemplate(templateId, srlInterpretation, strokeDbObject);
-        templateObject.put(OBJECT_TYPE, Sketch.SrlObject.ObjectType.STROKE.name());
+        templateObject.put(OBJECT_TYPE, Sketch.ObjectType.STROKE.name());
 
         LOG.debug("ADDING TEMPLATE: \n\n{}", LoggingConstants.prettyPrintJson(templateObject.toString()));
 

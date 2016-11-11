@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>com.github.dtracers</groupId>
 			<artifactId>CourseSketchDefaultRecognition</artifactId>
-			<version>-SNAPSHOT</version>
+			<version>t2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.DonaldMcRonald</groupId>
