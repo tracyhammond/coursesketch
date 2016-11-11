@@ -166,6 +166,16 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setStroke(srlStroke));
     }
 
+    @Override
+    public void trainTemplate(Sketch.RecognitionTemplate recognitionTemplate) throws TemplateException {
+
+    }
+
+    @Override
+    public void finishTraining() throws RecognitionException {
+
+    }
+
     @Override public final Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
             throws RecognitionException {
         if (recognitionService == null) {
@@ -198,6 +208,11 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public List<Sketch.SrlInterpretation> recognize(String s, Sketch.RecognitionTemplate recognitionTemplate) throws RecognitionException {
+        return null;
+    }
+
     @Override public final List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate)
             throws RecognitionException {
         if (recognitionService == null) {
@@ -219,5 +234,10 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
             // throw new TemplateException("Exception when adding template", e);
         }
         return generatedTemplates.getGeneratedTemplatesList();
+    }
+
+    @Override
+    public void initialize() throws RecognitionException {
+
     }
 }
