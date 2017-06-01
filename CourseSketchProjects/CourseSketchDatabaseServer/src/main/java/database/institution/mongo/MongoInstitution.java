@@ -9,9 +9,11 @@ import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.server.authentication.HashManager;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
@@ -26,9 +28,11 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.submission.Submission;
 import utilities.LoggingConstants;
 
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -456,23 +460,41 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void getExperimentAsUser(final String userId, final String problemId, final Message.Request sessionInfo,
-            final MultiConnectionManager internalConnections) throws DatabaseAccessException {
+    public Submission.SrlExperiment getExperimentAsUser(final String userId, final String problemId, final Message.Request sessionInfo,
+            final MultiConnectionManager internalConnections) throws DatabaseAccessException, AuthenticationException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
-        SubmissionManager.mongoGetExperiment(database, userId, problemId, sessionInfo, internalConnections);
+        return SubmissionManager.mongoGetExperiment(database, userId, problemId,
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class));
     }
 
     @Override
-    public void getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
+    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String userId, final String problemId, final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId, sessionInfo,
-                internalConnections, review);
+        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, userId, problemId,
+                internalConnections.getBestConnection(SubmissionWebSocketClient.class));
     }
 
     @Override
     public List<SrlBankProblem> getAllBankProblems(final String userId, final String courseId, final int page)
             throws AuthenticationException, DatabaseAccessException {
         return BankProblemManager.mongoGetAllBankProblems(auth, database, userId, courseId, page);
+    }
+
+    /**
+     * Hashes a userId based on the courseId.
+     *
+     * Only hashed user Ids are stored in the database.
+     * @param userId The userId that is being hashed.
+     * @param courseId The courseId that is being used as a salt.
+     * @return A hashed version of this Id.
+     * @throws AuthenticationException Thrown if there are problems creating the hash.
+     */
+    public static String hashUserId(final String userId, final String courseId) throws AuthenticationException {
+        try {
+            return HashManager.createHash(userId, HashManager.generateUnSecureSalt(courseId));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AuthenticationException(e);
+        }
     }
 }

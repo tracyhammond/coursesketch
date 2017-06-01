@@ -1,5 +1,6 @@
 package connection;
 
+import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -9,44 +10,33 @@ import utilities.ConnectionException;
 import utilities.LoggingConstants;
 
 /**
- * A manager for holding all of the connections that were created.
- *
- * @author gigemjt
+ * Created by dtracers on 12/6/2015.
  */
-public final class SubmissionConnectionManager extends MultiConnectionManager {
-    /**
-     * IP address for database server.
-     */
-    private static final String DATABASE_ADDRESS = "DATABASE_IP_PROP";
+public class SubmissionConnectionManager extends MultiConnectionManager {
 
     /**
-     * Declaration and Definition of Logger.
+     *  Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionConnectionManager.class);
 
     /**
-     * Port number.
-     */
-    private static final int DATABASE_PORT = 8885;
-
-    /**
-     * Creates a default {@link MultiConnectionManager}.
-     * @param parent  The server that is using this object.
+     * A constructor for the multi connection manager.
+     * @param server The parent server
      * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public SubmissionConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
-        super(parent, serverInfo);
+    public SubmissionConnectionManager(final AbstractServerWebSocketHandler server, final ServerInfo serverInfo) {
+        super(server, serverInfo);
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * Creates a connection for the {@link DataClientWebSocket}.
+     * Called to connect this server to other servers.
+     * @param serv The current server that the connections will be made from.
      */
     @Override
-    public void connectServers(final AbstractServerWebSocketHandler serv) {
+    public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, isConnectionLocal(), DATABASE_ADDRESS, DATABASE_PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, this.isConnectionLocal(), AuthenticationWebSocketClient.ADDRESS, AuthenticationWebSocketClient.PORT,
+                    this.isSecure(), AuthenticationWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

@@ -6,12 +6,16 @@ import coursesketch.database.DatabaseClient;
 import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
 import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
+import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,15 +140,9 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
             final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
             // registers user
             client.createUser(login.getUsername(), login.getPassword(), login.getEmail(), login.getIsInstructor());
-
             // login user after registering user.
             loginUser(conn, req, login);
-        } catch (GeneralSecurityException | AuthenticationException e) {
-            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            send(conn, createLoginResponse(req, login, false, e.getMessage(), null));
-        } catch (RegistrationException e) {
+        } catch (GeneralSecurityException | AuthenticationException | RegistrationException | DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -211,6 +209,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
         requestBuilder.setResponseText(message);
         if (userLoginInfo != null) {
             requestBuilder.setServersideId((String) userLoginInfo.get(DatabaseClient.SERVER_ID));
+            requestBuilder.setServerUserId((String) userLoginInfo.get(DatabaseStringConstants.USER_ID));
         }
         if (login != null) {
             // Create the Login Response.
@@ -240,14 +239,9 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * @return {@link DatabaseClient}.
      */
     @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
-        return new DatabaseClient(info);
+        final IdentityManagerInterface identityWebSocketClient = (IdentityWebSocketClient) getConnectionManager()
+                .getBestConnection(IdentityWebSocketClient.class);
+        return new DatabaseClient(info, identityWebSocketClient);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    @Override protected void onInitialize() {
-        super.getDatabaseReader().startDatabase();
-    }
 }
