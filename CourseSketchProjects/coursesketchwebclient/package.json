@@ -23,7 +23,7 @@
     "mocha-qunit-ui": "^0.1.2",
     "webdriverio" : "3.4.0",
     "grunt-webdriver": "1.0.0",
-    "selenium-standalone": "5.1.0",
+    "selenium-standalone": "6.4.1",
     "mocha": "2.3.3",
     "xunit-file": "0.0.9",
     "grunt-mkdir": "0.1.2",
