@@ -1,6 +1,7 @@
 package connection;
 
 import coursesketch.auth.AuthenticationWebSocketClient;
+import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
@@ -38,6 +39,13 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
         try {
             createAndAddConnection(serv, this.isConnectionLocal(), AuthenticationWebSocketClient.ADDRESS, AuthenticationWebSocketClient.PORT,
                     this.isSecure(), AuthenticationWebSocketClient.class);
+        } catch (ConnectionException e) {
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+
+        try {
+            createAndAddConnection(serv, this.isConnectionLocal(), IdentityWebSocketClient.ADDRESS, IdentityWebSocketClient.PORT,
+                    this.isSecure(), IdentityWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

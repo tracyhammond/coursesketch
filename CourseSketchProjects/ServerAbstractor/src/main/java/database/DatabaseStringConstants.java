@@ -158,6 +158,7 @@ public final class DatabaseStringConstants {
     public static final String SLICE_COMMAND = "$slice";
     public static final String INCREMENT_COMMAND = "$inc";
     public static final String IN_COMMAND = "$in";
+    public static final String SUBFIELD_COMMAND = ".";
 
     // state and grade specific
     public static final String SCHOOLITEMTYPE = "SchoolItemType";

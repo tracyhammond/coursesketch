@@ -109,17 +109,17 @@ public final class BankProblemManager {
      *         The object that is authenticating the user.
      * @param dbs
      *         the database where the problem is stored.
+     * @param authId
+     *         the id of the user (typically a course unless they are an admin)
      * @param problemBankId
      *         the id of the problem that is being grabbed.
-     * @param userId
-     *         the id of the user (typically a course unless they are an admin)
      * @return the SrlBank problem data if it past all tests.
      * @throws AuthenticationException
      *         thrown if the user does not have access to the permissions.
      * @throws DatabaseAccessException
      *         thrown if there is a problem finding the bank problem in the database.
      */
-    public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId)
+    public static SrlBankProblem mongoGetBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problemBankId));
         final DBObject mongoBankProblem = myDbRef.fetch();
@@ -132,7 +132,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
 
         // if registration is not required for bank problem any course can use it!
         if (!responder.hasStudentPermission() && responder.isRegistrationRequired()) {
@@ -197,10 +197,10 @@ public final class BankProblemManager {
      *         the object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         the user updating the bank problem.
      * @param problemBankId
      *         the id of the problem getting updated.
-     * @param userId
-     *         the user updating the bank problem.
      * @param problem
      *         the bank problem data that is being updated.
      * @return true if the update is successful
@@ -211,7 +211,7 @@ public final class BankProblemManager {
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity",
             "PMD.NPathComplexity", "PMD.AvoidDeeplyNestedIfStmts" })
-    public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String problemBankId, final String userId,
+    public static boolean mongoUpdateBankProblem(final Authenticator authenticator, final DB dbs, final String authId, final String problemBankId,
             final SrlBankProblem problem) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
         final DBRef myDbRef = new DBRef(dbs, PROBLEM_BANK_COLLECTION, convertStringToObjectId(problemBankId));
@@ -225,7 +225,7 @@ public final class BankProblemManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, problemBankId, authId, 0, authType);
         final DBCollection problemCollection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
 
         if (!responder.hasTeacherPermission()) {
@@ -305,7 +305,7 @@ public final class BankProblemManager {
      *         the object that is performing authentication.
      * @param database
      *         The database where the assignment is being stored.
-     * @param userId
+     * @param authId
      *         the user asking for the bank problems.
      * @param courseId
      *         The course the user is wanting to possibly be associated with the bank problem.
@@ -317,13 +317,13 @@ public final class BankProblemManager {
      * @throws DatabaseAccessException
      *         Thrown if there are fields missing that make the problem inaccessible.
      */
-    public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String userId,
+    public static List<SrlBankProblem> mongoGetAllBankProblems(final Authenticator authenticator, final DB database, final String authId,
             final String courseId, final int page) throws AuthenticationException, DatabaseAccessException {
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId, userId, 0, authType);
+                .checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, authType);
         if (!responder.hasTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
@@ -346,10 +346,10 @@ public final class BankProblemManager {
      *         Used to ensure the user has access to the registration key.
      * @param database
      *         The database that contains the registration key.
+     * @param authId
+     *         The user wanting to view the registration key.
      * @param bankProblemId
      *         The id of the bank problem that contains the registration key.
-     * @param userId
-     *         The user wanting to view the registration key.
      * @return The registration key of the given course if the constraints are met, null is returned in all other cases.
      * @throws AuthenticationException
      *         Thrown if there are problems checking the users authentication.
@@ -358,7 +358,7 @@ public final class BankProblemManager {
      */
     @SuppressWarnings("PMD.UselessParentheses")
     public static String mongoGetRegistrationKey(final Authenticator authenticator, final DB database,
-            final String bankProblemId, final String userId)
+            final String authId, final String bankProblemId)
             throws AuthenticationException, DatabaseAccessException {
         final DBRef myDbRef = new DBRef(database, PROBLEM_BANK_COLLECTION, convertStringToObjectId(bankProblemId));
         final DBObject cursor = myDbRef.fetch();
@@ -372,7 +372,7 @@ public final class BankProblemManager {
                 .setCheckIsPublished(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.BANK_PROBLEM, bankProblemId.trim(), userId, 0, authType);
+                .checkAuthentication(School.ItemType.BANK_PROBLEM, bankProblemId.trim(), authId, 0, authType);
 
         if ((!responder.isRegistrationRequired() && responder.isItemPublished()) || responder.hasTeacherPermission()) {
             return (String) cursor.get(DatabaseStringConstants.REGISTRATION_KEY);

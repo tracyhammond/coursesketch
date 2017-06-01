@@ -1,5 +1,6 @@
 package coursesketch.database.identity;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -127,7 +128,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
             final List<String> groupList = Lists.newArrayList(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
 
-            if (parentId != null) {
+            if (!Strings.isNullOrEmpty(parentId)) {
+                LOG.warn("Inserting bank problem {} with no parent id", itemId);
                 insertUserIntoGroup(parentId, groupId, true);
             }
         }
@@ -238,6 +240,11 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      */
     private void insertUserIntoGroup(final String userId, final String groupId, final boolean isUser)
             throws AuthenticationException, DatabaseAccessException {
+        if (Strings.isNullOrEmpty(userId)) {
+            throw new DatabaseAccessException("Illegal argument when inserting user into group, userId can not be empty",
+                    new IllegalArgumentException("UserId can not be null or empty"));
+        }
+
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.SELF_ID, true)
@@ -262,7 +269,8 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         final String list = isUser ? DatabaseStringConstants.USER_LIST : DatabaseStringConstants.NON_USER_LIST;
         database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION).update(
                 group,
-                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(list + "." + userId, hash)));
+                new BasicDBObject(DatabaseStringConstants.SET_COMMAND,
+                        new BasicDBObject(list + DatabaseStringConstants.SUBFIELD_COMMAND + userId, hash)));
     }
 
     /**
@@ -362,6 +370,10 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
 
         final DBObject item = collection.findOne(new ObjectId(itemId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true));
+
+        if (item == null) {
+            throw new DatabaseAccessException(getCollectionFromType(itemType) + " can not be found with the given itemId: " + itemId);
+        }
 
         final Map<String, String> courseRoster = new HashMap<>();
 

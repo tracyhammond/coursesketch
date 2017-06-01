@@ -141,7 +141,7 @@ public class AuthenticationWebSocketClientTest {
     @Test
     public void createNewItemCallsServiceWithCorrectValuesNullParent() throws Exception {
 
-        webclient.createNewItem(VALID_ITEM_TYPE, VALID_ITEM_ID, null, VALID_USERNAME, VALID_REGISTRATION_KEY);
+        webclient.createNewItem(VALID_USERNAME, VALID_ITEM_ID, VALID_ITEM_TYPE, null, VALID_REGISTRATION_KEY);
 
         final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
                 .setItemId(VALID_ITEM_ID)
@@ -160,7 +160,7 @@ public class AuthenticationWebSocketClientTest {
     @Test
     public void createNewItemCallsServiceWithCorrectValuesValidParent() throws Exception {
 
-        webclient.createNewItem(VALID_ITEM_TYPE, VALID_ITEM_CHILD_ID, VALID_ITEM_ID, VALID_USERNAME, VALID_REGISTRATION_KEY);
+        webclient.createNewItem(VALID_USERNAME, VALID_ITEM_CHILD_ID, VALID_ITEM_TYPE, VALID_ITEM_ID, VALID_REGISTRATION_KEY);
 
         final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
                 .setItemId(VALID_ITEM_CHILD_ID)
@@ -180,7 +180,7 @@ public class AuthenticationWebSocketClientTest {
     @Test
     public void registerUserCallsServiceWithCorrectValues() throws Exception {
 
-        webclient.registerUser(VALID_ITEM_TYPE, VALID_ITEM_ID, TEACHER_USER_ID, VALID_REGISTRATION_KEY);
+        webclient.registerUser(TEACHER_USER_ID, VALID_ITEM_ID, VALID_ITEM_TYPE, VALID_REGISTRATION_KEY);
 
         final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
                 .setItemId(VALID_ITEM_ID)
