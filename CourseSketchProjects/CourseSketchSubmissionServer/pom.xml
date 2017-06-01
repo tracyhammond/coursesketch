@@ -113,5 +113,11 @@
             <version>2.4.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtobufComparison</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

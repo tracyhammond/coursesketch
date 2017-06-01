@@ -93,7 +93,8 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         return response;
     }
 
-    @Override public final void createNewItem(final School.ItemType collectionType, final String itemId, final String parentId, final String userId,
+    @Override public final void createNewItem(final String authId, final String itemId, final School.ItemType collectionType,
+            final String parentId,
             final String registrationKey) throws AuthenticationException {
 
         if (authService == null) {
@@ -101,7 +102,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         }
 
         final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
-                .setAuthId(userId)
+                .setAuthId(authId)
                 .setItemId(itemId)
                 .setItemType(collectionType)
                 .build();
@@ -133,7 +134,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         }
     }
 
-    @Override public final void registerUser(final School.ItemType collectionType, final String itemId, final String userId,
+    @Override public final void registerUser(final String authId, final String itemId, final School.ItemType collectionType,
             final String registrationKey)
             throws AuthenticationException {
         if (authService == null) {
@@ -141,7 +142,7 @@ public class AuthenticationWebSocketClient extends ClientWebSocket implements Au
         }
 
         final Authentication.AuthRequest request = Authentication.AuthRequest.newBuilder()
-                .setAuthId(userId)
+                .setAuthId(authId)
                 .setItemId(itemId)
                 .setItemType(collectionType)
                 .build();

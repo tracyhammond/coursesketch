@@ -4,7 +4,9 @@ import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.auth.MongoOptionChecker;
+import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.base.ServerWebSocketHandler;
 import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
@@ -87,6 +89,9 @@ public class DatabaseServerWebSocketHandler extends ServerWebSocketHandler {
                 .getBestConnection(AuthenticationWebSocketClient.class);
         final Authenticator auth = new Authenticator(authChecker, new MongoOptionChecker(info));
         final AuthenticationUpdater authUpdater = authChecker;
-        return new MongoInstitution(info, auth, authUpdater);
+
+        final IdentityManagerInterface identityManagerInterface = (IdentityWebSocketClient) getConnectionManager()
+                .getBestConnection(IdentityWebSocketClient.class);
+        return new MongoInstitution(info, auth, authUpdater, identityManagerInterface);
     }
 }

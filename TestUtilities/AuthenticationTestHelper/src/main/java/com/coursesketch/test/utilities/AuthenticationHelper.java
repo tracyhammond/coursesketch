@@ -136,7 +136,8 @@ public class AuthenticationHelper {
      *                Send in null to apply this to a new {@link AuthenticationDataCreator}.
      * @param type The {@code ItemType} which will be matched for this registration state. Send in null to apply this to any {@code ItemType}.
      * @param itemId The {@code itemId} that will be matched for this registration state. Send in null to apply this to any (@code itemId}.
-     * @param isRegistrationRequired The resulting mock registration state that will be returned if the {@code authChecker} is given the above matches.
+     * @param isRegistrationRequired The resulting mock registration state that will be returned if the
+     *          {@code authChecker} is given the above matches.
      * @throws DatabaseAccessException Should not be thrown because authChecker should be a mock.
      * @return {@link AuthenticationDataCreator}, A new instance if {@code creator} is null otherwise it is the value of {@code creator}.
      * @see #setMockDate(AuthenticationOptionChecker, AuthenticationDataCreator, School.ItemType, String, long, boolean)

@@ -9,6 +9,8 @@ import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 
@@ -24,6 +26,11 @@ import static database.DbSchoolUtility.getParentItemType;
  * Created by dtracers on 10/7/2015.
  */
 public final class DbAuthManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DbAuthManager.class);
 
     /**
      * The database that the auth checker grabs data from.
@@ -85,7 +92,8 @@ public final class DbAuthManager {
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
 
-            if (parentId != null) {
+            if (!Strings.isNullOrEmpty(parentId)) {
+                LOG.warn("Inserting bank problem {} with no parent id", itemId);
                 insertUserIntoGroup(parentId, groupId, Authentication.AuthResponse.PermissionLevel.STUDENT);
             }
         }
@@ -187,6 +195,12 @@ public final class DbAuthManager {
      */
     private void insertUserIntoGroup(final String authId, final String groupId, final Authentication.AuthResponse.PermissionLevel permissionLevel)
             throws AuthenticationException, DatabaseAccessException {
+
+        if (Strings.isNullOrEmpty(authId)) {
+            throw new DatabaseAccessException("Illegal argument when inserting user into group, userId can not be empty",
+                    new IllegalArgumentException("UserId can not be null or empty"));
+        }
+
         final DBCollection collection = database.getCollection(DatabaseStringConstants.USER_GROUP_COLLECTION);
         final DBObject group = collection.findOne(new ObjectId(groupId),
                 new BasicDBObject(DatabaseStringConstants.SALT, true));
