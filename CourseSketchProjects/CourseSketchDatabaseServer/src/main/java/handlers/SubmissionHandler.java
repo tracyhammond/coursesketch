@@ -70,13 +70,7 @@ public final class SubmissionHandler {
             String submissionId;
             try {
                 submissionId = submissionManager.insertExperiment(req.getServersideId(), null, experimentWithIds, req.getMessageTime());
-            } catch (AuthenticationException e) {
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                // bail early
-                return;
-            } catch (DatabaseAccessException e) {
+            } catch (AuthenticationException | DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
@@ -97,13 +91,7 @@ public final class SubmissionHandler {
                 final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
                 LOG.debug("Hashed user id: {}", hashedUserId);
                 instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), submissionId, true);
-            } catch (DatabaseAccessException e) {
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                // bail early
-                return;
-            } catch (AuthenticationException e) {
+            } catch (AuthenticationException | DatabaseAccessException e) {
                 final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
                 conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

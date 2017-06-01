@@ -61,7 +61,8 @@ public class LoginConnectionState extends MultiConnectionState {
 
     /**
      * Logs in the connection.
-     *  @param instructorFlag
+     *
+     * @param instructorFlag
      *            true if the user is an instructor.
      * @param authId The authentication id for this specific login state
      * @param userIdentity The userIdentity for this specific login state
@@ -101,7 +102,6 @@ public class LoginConnectionState extends MultiConnectionState {
     protected final String getServerAuthId() {
         return serverAuthId;
     }
-
 
     /**
      * @return the identification id of the user who logged in (its user id)
