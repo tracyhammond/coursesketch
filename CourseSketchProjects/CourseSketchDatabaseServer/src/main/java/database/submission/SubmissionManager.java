@@ -59,8 +59,8 @@ public final class SubmissionManager {
      *
      * if {@code experiment} is true then {@code userId} is a userId otherwise
      * it is the bankProblem if {@code experiment} is true then {@code problem}
-     * is a courseProblem otherwise it is the bankProblem
-     *  @param dbs The database that contains the information about the submission.
+     * is a courseProblem otherwise it is the bankProblem.
+     * @param dbs The database that contains the information about the submission.
      * @param userId Generally the userId.  But it is used to uniquely identify each submission.
      * @param problemId The problem id.
      * @param submissionId The id associated with the submission on the submission server.
@@ -125,13 +125,13 @@ public final class SubmissionManager {
 
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
-        final DBObject cursor = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION).findOne(new ObjectId(problemId));
-        if (cursor == null || !cursor.containsField(userId) || Strings.isNullOrEmpty((String) cursor.get(userId))) {
-            throw new DatabaseAccessException("Mo student has submitted anything for this problem");
-        }
+        final DBCollection collection = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION);
+        final DBObject cursor = collection.findOne(new ObjectId(problemId));
+
         final String hashedUserId = MongoInstitution.hashUserId(userId, courseId);
         LOG.debug("Grabbing user with userId: {}", hashedUserId);
-        if (!cursor.containsField(hashedUserId) || Strings.isNullOrEmpty((String) cursor.get(hashedUserId))) {
+        if (cursor == null || !cursor.containsField(hashedUserId)
+                || Strings.isNullOrEmpty((String) cursor.get(hashedUserId))) {
             throw new DatabaseAccessException("The student has not submitted anything for this problem");
         }
         final String sketchId = cursor.get(hashedUserId).toString();
