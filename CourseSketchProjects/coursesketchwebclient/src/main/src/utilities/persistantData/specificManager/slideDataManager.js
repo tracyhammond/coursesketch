@@ -215,16 +215,16 @@ function SlideDataManager(parent, advanceDataListener, database, Request, ByteBu
                                     }
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                             CourseSketch.prutil.ItemQuery.LECTURESLIDE);
-                                            return;
-                                        }  // end if
-                                        for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
-                                            parentScope.setSlide(school.slides[slideIndex]);
-                                            slidesFound.push(school.slides[slideIndex]);
-                                        } // end for
-                                        if (!isUndefined(serverCallback)) {
-                                            serverCallback(slidesFound);
-                                        } // end if serverCallback
-                                        advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                                    return;
+                                }  // end if
+                                for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
+                                    parentScope.setSlide(school.slides[slideIndex]);
+                                    slidesFound.push(school.slides[slideIndex]);
+                                } // end for
+                                if (!isUndefined(serverCallback)) {
+                                    serverCallback(slidesFound);
+                                } // end if serverCallback
+                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                         CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                             }); // setListener
                         } // end if lectureIdsNotFound
