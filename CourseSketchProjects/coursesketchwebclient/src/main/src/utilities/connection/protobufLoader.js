@@ -47,22 +47,6 @@ function ProtobufSetup() {
     var enumList = [];
 
     /**
-     * @returns {ProtobufSetup} an instance of itself.
-     */
-    this.initializeBuf = function() {
-        buildUtil();
-        buildMessage();
-        buildSchool();
-        buildSketch();
-        buildUpdateList();
-        buildDataQuery();
-        buildTutorial();
-        buildSubmissions();
-        buildLectures();
-        return localScope;
-    };
-
-    /**
      * Builds the Utility protobuf files.
      *
      * These can be used by all other protobuf files.
@@ -71,6 +55,17 @@ function ProtobufSetup() {
         var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'util.proto');
         var utilBuilder = builder.build(PROTOBUF_PACKAGE).srl.utils;
         assignValues(utilBuilder);
+    }
+
+    /**
+     * Builds the Grade protobuf files.
+     *
+     * This is the base for storing and retrieving grades.
+     */
+    function buildGrade() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'grading.proto');
+        var gradingBuilder = builder.build(PROTOBUF_PACKAGE).srl.grading;
+        assignValues(gradingBuilder);
     }
 
     /**
@@ -129,6 +124,17 @@ function ProtobufSetup() {
     }
 
     /**
+     * Builds the UpdateList protobuf files.
+     *
+     * These contain all of the little actions that can occur
+     */
+    function buildIdentity() {
+        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'identity.proto');
+        var ProtoIdentityServiceBuilder = builder.build(PROTOBUF_PACKAGE).srl.services.identity;
+        assignValues(ProtoIdentityServiceBuilder);
+    }
+
+    /**
      * Builds the Tutorial protobuf files.
      *
      * These ares used for the tutorials
@@ -160,6 +166,24 @@ function ProtobufSetup() {
         var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
         assignValues(ProtoSubmissionBuilder);
     }
+
+    /**
+     * @returns {ProtobufSetup} an instance of itself.
+     */
+    this.initializeBuf = function() {
+        buildUtil();
+        buildMessage();
+        buildSchool();
+        buildSketch();
+        buildUpdateList();
+        buildIdentity();
+        buildDataQuery();
+        buildTutorial();
+        buildSubmissions();
+        buildLectures();
+        buildGrade();
+        return localScope;
+    };
 
     /**
      * @function assignValues
@@ -239,7 +263,6 @@ function ProtobufSetup() {
                 }
             });
         }
-
     }
 
     /**

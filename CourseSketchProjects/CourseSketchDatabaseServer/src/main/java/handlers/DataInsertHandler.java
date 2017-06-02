@@ -7,6 +7,7 @@ import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
@@ -27,6 +28,8 @@ import utilities.LoggingConstants;
 
 import java.util.ArrayList;
 
+import static handlers.ResultBuilder.ID_SEPARATOR;
+
 /**
  * Handles data being added or edited.
  *
@@ -43,11 +46,6 @@ public final class DataInsertHandler {
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DataInsertHandler.class);
-
-    /**
-     * The string used to separate ids when returning a result.
-     */
-    private static final String ID_SEPARATOR = " : ";
 
     /**
      * A message returned when the insert was successful.
@@ -142,6 +140,10 @@ public final class DataInsertHandler {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
                             final String resultId = instance.insertLectureSlide(authId, lectureSlide);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), resultId + ID_SEPARATOR + lectureSlide.getId()));
+                        }
+                        break;
+                        case GRADE: {
+                            GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, userId, req.getMessageTime());
                         }
                         break;
                         default:

@@ -9,8 +9,10 @@ import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data;
@@ -24,6 +26,7 @@ import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
@@ -196,6 +199,16 @@ public final class DataRequestHandler {
                         case LECTURESLIDE: {
                             final List<LectureSlide> lectureSlideLoop = instance.getLectureSlide(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURESLIDE, lectureSlideLoop));
+                        }
+                        break;
+                        case GRADE: {
+                            final List<ProtoGrade> gradeList = GradingRequestHandler.gradingRequestHandler(instance, itemRequest, authId, userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.GRADE, gradeList));
+                        }
+                        break;
+                        case COURSE_ROSTER: {
+                            final Identity.UserNameResponse courseRoster = instance.getCourseRoster(authId, itemRequest.getItemId(0));
+                            results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, courseRoster));
                         }
                         break;
                         default:

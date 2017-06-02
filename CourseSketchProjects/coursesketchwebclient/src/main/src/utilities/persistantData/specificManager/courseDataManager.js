@@ -105,8 +105,12 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
      *            asynchronous)
      */
     function getCourse(courseId, courseCallback) {
+        if (isUndefined(courseCallback)) {
+            throw new DatabaseException('Calling getCourse with an undefined callback');
+        }
+
         if (isUndefined(courseId) || courseId === null) {
-            courseCallback(new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId));
+            throw new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId);
         }
 
         getCourseLocal(courseId, function(course) {
@@ -363,6 +367,49 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         });
     }
     parent.insertCourse = insertCourse;
+
+    /**
+     * Gets the course roster then calls the callback with the map of userId: username.
+     *
+     * The callback is mandatory at the moment because callbacks to the server are asynchronous.
+     * If this method simply returned the roster as a map, it would likely return after a subsequent server call is sent.
+     * The subsequent server call would then be passing a null map as the roster instead of the actual roster.
+     * @param {String} courseId The id of the course to retrieve the course roster for.
+     * @param {Function} callback A callback is called with a list of userIds
+     */
+    function getCourseRoster(courseId, callback) {
+        if (isUndefined(callback)) {
+            throw new DatabaseException('Calling getGrade with an undefined callback');
+        }
+
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, [ courseId ]);
+
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId, item));
+                return;
+            }
+            // after listener is removed
+            if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                // not calling the state callback because this should skip that step.
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId));
+                return;
+            }
+
+
+            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.prutil.getUserNameResponseClass());
+            var userMap = new Map();
+            for (var i = 0; i < decodedRoster.userNames.length; i++) {
+                // Since proto doesn't officially have maps, we must create the map this way
+                userMap.set(decodedRoster.userNames[i].key, decodedRoster.userNames[i].value);
+            }
+            callback(userMap);
+        });
+
+    }
+    parent.getCourseRoster = getCourseRoster;
 
     /**
      * gets the id's of all of the courses in the user's local client.

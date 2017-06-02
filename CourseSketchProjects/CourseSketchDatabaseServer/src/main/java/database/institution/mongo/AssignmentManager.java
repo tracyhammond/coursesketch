@@ -14,10 +14,10 @@ import database.UserUpdateHandler;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
-import protobuf.srl.school.School.LatePolicy;
 import protobuf.srl.school.School.SrlAssignment;
 import protobuf.srl.school.School.State;
+import protobuf.srl.grading.Grading.LatePolicy;
+import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util.SrlPermission;
 

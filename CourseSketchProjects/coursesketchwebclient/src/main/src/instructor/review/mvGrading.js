@@ -48,8 +48,23 @@ validateFirstRun(document.currentScript);
             mvSketch.setUserId(array[i].userId);
             mvSketch.setUpdateList(getUpdateList(array, i).getList());
             mvSketch.setSketchClickedFunction(function() {
-                console.log(navigator);
                 CourseSketch.multiViewPage.loadProblem(navigator, this.getUpdateList());
+            });
+
+            var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+            protoGrade.userId = array[i].userId;
+            mvSketch.courseId = protoGrade.courseId = array[i].courseId;
+            mvSketch.assignmentId = protoGrade.assignmentId = array[i].assignmentId;
+            mvSketch.problemId = protoGrade.problemId = array[i].problemId;
+            console.log('before I get the grade ', protoGrade);
+
+            // TODO: don't merge in until refactor is complete.
+            // Only one of the callbacks will be called right now...
+            CourseSketch.dataManager.getGrade(protoGrade, function(protoGrade) {
+                console.log('LOADING GRADE FROM SERVER', protoGrade);
+                mvSketch.setGrade(protoGrade.currentGrade);
+                var history = protoGrade.gradeHistory;
+                mvSketch.setComment(history[history.length - 1].comment);
             });
         }
     }

@@ -225,4 +225,20 @@
     bankProblem14.id = problem14.id;
     CourseSketch.fakeProblems.push(problem14);
     CourseSketch.fakeBankProblems.push(bankProblem14);
+
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var problemLoop = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+            var bankProblemLoop = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            problemLoop.courseId = '8';
+            problemLoop.assignmentId = '' + (11 + i);
+            problemLoop.id = '' + (11 + i * 10 + j);
+            problemLoop.name = 'problem' + j;
+            bankProblemLoop.id = problemLoop.id;
+            bankProblemLoop.questionText = "Please add " + i + " + " + j;
+            CourseSketch.fakeProblems.push(problemLoop);
+            CourseSketch.fakeBankProblems.push(bankProblemLoop);
+        }
+    }
+
 })();
