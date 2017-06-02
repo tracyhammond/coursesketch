@@ -6,10 +6,7 @@ import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationOptionChecker;
-import coursesketch.database.auth.Authenticator;
-import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import database.DatabaseAccessException;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,11 +19,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
-import protobuf.srl.services.identity.Identity;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
