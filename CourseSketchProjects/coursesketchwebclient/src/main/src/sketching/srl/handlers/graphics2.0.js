@@ -67,7 +67,7 @@ function Graphics(canvas, sketchManager) {
      * @param {SrlPoint} point - The point that is being added to the current updating path.
      */
     this.createNewPath = function(point) {
-        livePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
+        livePath = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
         livePath.add(point);
     };
 

@@ -49,23 +49,23 @@ validateFirstRun(document.currentScript);
                         CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex - 1);
                     }
                 }
-                break;
+                    break;
 
                 case 38: // up
-                break;
+                    break;
 
                 case 39: { // right
                     if (CourseSketch.lecturePage.selectedSlideIndex < CourseSketch.lecturePage.lecture.idList.length - 1) {
                         CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex + 1);
                     }
                 }
-                break;
+                    break;
 
                 case 40: // down
-                break;
+                    break;
 
                 case 27: // escape!
-                break;
+                    break;
 
                 default:
                     return; // exit this handler for other keys

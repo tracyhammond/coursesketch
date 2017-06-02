@@ -4,7 +4,7 @@
  * Creates an IndexManager for a tutorial timeline
  * Manages currently selected element as well as undoing and redoing update steps when editing tutorial
  */
-function IndexManager (timeline) {
+function IndexManager(timeline) {
     var current; // Used to set currently selected index class to 'focused'
     var index = -1; // Tracks the current index in the IndexManager
     this.addNewToolArea = function(toolArea) {
@@ -64,7 +64,7 @@ function IndexManager (timeline) {
      * Runs protobuf undo function on the update corresponding to oldIndex
      * Runs protobuf redo function on the update corresponding to newIndex
      */
-    function changeListIndex (oldIndex, newIndex) {
+    function changeListIndex(oldIndex, newIndex) {
         // The indexes of toolAreas in relation the children elements starts at 1. In relation to commands and updates, the index starts at 0.
         oldIndex -= 1;
         newIndex -= 1;

@@ -11,7 +11,7 @@
  * @constructor
  */
 function SlideDataManager(parent, advanceDataListener, database, sendData, Request, ByteBuffer) {
-    var localScope = parent;
+    var parentScope = parent;
 
     /**
      * Sets a slide in the local database
@@ -128,7 +128,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      * @param {String} slideId - ID of the lecture to delete
      * @param {Function} slideCallback - function to be called after the deletion is done
      */
-    function deleteSlide (slideId, slideCallback) {
+    function deleteSlide(slideId, slideCallback) {
         database.deleteFromSlides(slideId, function(e, request) {
             if (!isUndefined(slideCallback)) {
                 slideCallback(e, request);
@@ -145,7 +145,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      * @param {Function} slideCallback - function to be called after getting is complete,
      *                paramater is the slide object
      */
-    function getSlideLocal (slideId, slideCallback) {
+    function getSlideLocal(slideId, slideCallback) {
         database.getFromSlides(slideId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 slideCallback(undefined);
@@ -184,7 +184,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      *              paramater is a list of slide objects.
      * @param {Function} serverCallback - function to be called after looking in the server for the slide.
      */
-    function getLectureSlides (slideIds, localCallback, serverCallback) {
+    function getLectureSlides(slideIds, localCallback, serverCallback) {
         if (isUndefined (slideIds) || slideIds === null || slideIds.length === 0) {
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException('Result is undefined!', 'Grabbing slide from server: ' + slideIds));
@@ -209,26 +209,26 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                         if (slideIdsNotFound.length >= 1) {
                             advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
                                     CourseSketch.prutil.ItemQuery.LECTURESLIDE, function(evt, item) {
-                                var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
-                                var slide = school.slides[0];
-                                if (isUndefined(slide) || slide instanceof DatabaseException) {
-                                    if (!isUndefined(serverCallback)) {
-                                        serverCallback(slide);
-                                    }
-                                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                                        var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
+                                        var slide = school.slides[0];
+                                        if (isUndefined(slide) || slide instanceof DatabaseException) {
+                                            if (!isUndefined(serverCallback)) {
+                                                serverCallback(slide);
+                                            }
+                                            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                             CourseSketch.prutil.ItemQuery.LECTURESLIDE);
-                                    return;
-                                }  // end if
-                                for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
-                                    localScope.setSlide(school.slides[slideIndex]);
-                                    slidesFound.push(school.slides[slideIndex]);
-                                } // end for
-                                if (!isUndefined(serverCallback)) {
-                                    serverCallback(slidesFound);
-                                } // end if serverCallback
-                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                                            return;
+                                        }  // end if
+                                        for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
+                                            parentScope.setSlide(school.slides[slideIndex]);
+                                            slidesFound.push(school.slides[slideIndex]);
+                                        } // end for
+                                        if (!isUndefined(serverCallback)) {
+                                            serverCallback(slidesFound);
+                                        } // end if serverCallback
+                                        advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                         CourseSketch.prutil.ItemQuery.LECTURESLIDE);
-                            }); // setListener
+                                    }); // setListener
                             sendData.sendDataRequest (CourseSketch.prutil.ItemQuery.LECTURESLIDE, slideIdsNotFound);
                         } // end if lectureIdsNotFound
                         if (slidesFound.length > 0 && !isUndefined(localCallback)) {

@@ -1,4 +1,5 @@
-// jscs:disable
+/* eslint-disable */
+// jshint ignore: start
 
 /**
  * How this works is a polling system.
