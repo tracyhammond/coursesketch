@@ -105,7 +105,7 @@ validateFirstRun(document.currentScript);
             $('#' + id).animate({
                 marginLeft: moveAmount
             }, 300, function() {
-                });
+            });
         } else {
             $('#' + id).animate({
                 marginLeft: '0px'

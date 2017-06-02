@@ -22,7 +22,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     var onError = false;
 
     var websocket;
-    var wsUri = (encrypted?'wss://' : 'ws://') + uri;
+    var wsUri = (encrypted ? 'wss://' : 'ws://') + uri;
     var timeoutVariable = false;
     var localScope = this;
 

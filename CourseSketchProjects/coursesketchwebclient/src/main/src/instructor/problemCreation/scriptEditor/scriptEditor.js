@@ -93,7 +93,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
         CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException ||isUndefined(submission.getTextAnswer())) {
+            if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }
