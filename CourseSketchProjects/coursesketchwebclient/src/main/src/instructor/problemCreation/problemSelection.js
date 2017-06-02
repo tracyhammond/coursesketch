@@ -30,29 +30,29 @@ function ProblemSelectionPanel() {
         var request = this.createRequest(courseId, assignmentId, page);
         CourseSketch.dataListener.setListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
                 CourseSketch.prutil.ItemQuery.BANK_PROBLEM, function(evt, item) {
-            CourseSketch.dataListener.removeListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
+                    CourseSketch.dataListener.removeListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
                                 CourseSketch.prutil.ItemQuery.BANK_PROBLEM);
-            if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
-                throw new Error('The data is null!');
-            }
-            clickSelector.clearAllSelectedItems();
-
-            var bankProblems = [];
-            for (var i = 0; i < item.data.length; i++) {
-                var decodedBankProblem = CourseSketch.prutil.getSrlBankProblemClass().decode(item.data[i]);
-                bankProblems.push(decodedBankProblem);
-            }
-            var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
-                    clickSelector.toggleSelection(this);
-                    if ($(this).hasClass(clickSelector.selectionClassName)) {
-                        removeObjectFromArray(selectedBankProblems, this.id);
-                    } else {
-                        selectedBankProblems.push(this.id);
+                    if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
+                        throw new Error('The data is null!');
                     }
-                }).build(this.shadowRoot.querySelector('#selectionContent'));
+                    clickSelector.clearAllSelectedItems();
 
-            clickSelector.applySelections(this.getListOfSelectedElements());
-        }.bind(this));
+                    var bankProblems = [];
+                    for (var i = 0; i < item.data.length; i++) {
+                        var decodedBankProblem = CourseSketch.prutil.getSrlBankProblemClass().decode(item.data[i]);
+                        bankProblems.push(decodedBankProblem);
+                    }
+                    var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
+                        clickSelector.toggleSelection(this);
+                        if ($(this).hasClass(clickSelector.selectionClassName)) {
+                            removeObjectFromArray(selectedBankProblems, this.id);
+                        } else {
+                            selectedBankProblems.push(this.id);
+                        }
+                    }).build(this.shadowRoot.querySelector('#selectionContent'));
+
+                    clickSelector.applySelections(this.getListOfSelectedElements());
+                }.bind(this));
         // end data request listener
         CourseSketch.connection.sendRequest(request);
 
