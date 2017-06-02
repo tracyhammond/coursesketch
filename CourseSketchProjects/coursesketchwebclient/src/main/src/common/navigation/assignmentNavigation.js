@@ -820,7 +820,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             }
             currentSubgroupPart = currentSubgroupPartHolder.problem;
         } else if (subgroupPartHolder.itemType === CourseSketch.prutil.ItemType.SLIDE) {
-            if (isUndefined(subgroupPartHolder.slide)|| subgroupPartHolder.slide === null) {
+            if (isUndefined(subgroupPartHolder.slide) || subgroupPartHolder.slide === null) {
                 CourseSketch.dataManager.getLectureSlide(subgroupPartHolder.id, function(lectureSlide) {
                     currentSubgroupPartHolder.slide = lectureSlide;
                     currentSubgroupPart = lectureSlide;
