@@ -74,7 +74,7 @@ public class SubmissionManagerTest {
     public static final String USER_USER = new ObjectId().toHexString();
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         db = fongo.getDB();
         experiment = Submission.SrlExperiment.newBuilder()
                 .setProblemId(PROBLEM_ID)
@@ -84,7 +84,6 @@ public class SubmissionManagerTest {
                 .setSubmission(Submission.SrlSubmission.newBuilder().setId(SUBMISSION_ID))
                 .build();
 
-        try {
             // general rules
             AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
 
@@ -96,12 +95,6 @@ public class SubmissionManagerTest {
 
             when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
                     .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
 
         authenticator = new Authenticator(authChecker, optionChecker);
     }

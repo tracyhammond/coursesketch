@@ -11,8 +11,8 @@ import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
-import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.Problem.SrlProblem;
+import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 
