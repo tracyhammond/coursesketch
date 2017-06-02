@@ -53,7 +53,7 @@ if (isUndefined(getTextWidth)) {
 if (isUndefined(cssEscapeId)) {
     /**
      * Does a very simple escaping of the id for css purposes.
-     * A more complicated version is found here: {@link https://mothereff.in/css-escapes}
+     * A more complicated version is found here: {@link https://mothereff.in/css-escapes}.
      *
      * @param {String} inputId - The id we want escaped.
      * @return {String} An escaped value is returned.

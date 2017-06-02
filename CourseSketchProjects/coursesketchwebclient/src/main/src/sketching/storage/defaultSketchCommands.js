@@ -36,7 +36,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -45,7 +45,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -54,7 +54,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -63,7 +63,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Do nothing
+     * Do nothing.
      *
      * @returns {Boolean} true.  because if we switch sketch we should probably do something about it.
      */
@@ -87,7 +87,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * The undo method associated with adding a stroke to the sketch
+     * The undo method associated with adding a stroke to the sketch.
      *
      * @returns {Boolean} true. This will always ask for the sketch to be
      *          redrawn.
@@ -182,8 +182,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     });
 
     /**
-     * Moves shapes from one shape to another shape. But does the opposite as
-     * the redo package shape
+     * Moves shapes from one shape to another shape. But does the opposite as the redo package shape.
      *
      * @returns {Boolean} false. This will never ask for the sketch to be
      *          redrawn.

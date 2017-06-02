@@ -164,7 +164,6 @@ public final class BankProblemManager {
             }
         } catch (DatabaseAccessException e) {
             LOG.error("Error parsing lecture element", e);
-            e.printStackTrace();
         }
         exactProblem.addAllOtherKeywords((ArrayList) dbObject.get(KEYWORDS)); // change
         if (dbObject.get(SCRIPT) != null) {

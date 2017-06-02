@@ -160,16 +160,14 @@ function ProblemNavigator(assignmentId, loop, preferredIndex) {
             var randomNumber = Math.random();
 
             index = randomNumber % numberOfQuestions;
-        } else {
-            if (index < 0 || index >= problemList.length && !loop) {
-                return;
-            } else if (loop) {
-                if (index < 0) {
-                    index = problemList.length - 1;
-                }
-                if (index >= problemList.length) {
-                    index = 0;
-                }
+        } else if (index < 0 || index >= problemList.length && !loop) {
+            return;
+        } else if (loop) {
+            if (index < 0) {
+                index = problemList.length - 1;
+            }
+            if (index >= problemList.length) {
+                index = 0;
             }
         }
 

@@ -439,8 +439,7 @@ function UpdateManager(sketchManager, onError) {
     }
 
     /**
-     * If the update is a marker than it will skip that parts that can not be
-     * reached
+     * If the update is a marker than it will skip that parts that can not be reached.
      *
      * @param {SrlUpdate} update - The update that is being undone.
      * @returns {Boolean} True if the sketch needs to be redrawn.
