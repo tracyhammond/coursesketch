@@ -1,5 +1,6 @@
 validateFirstRun(document.currentScript);
 (function() {
+
     CourseSketch.fakeSlides = [];
 
     var slide1 = CourseSketch.prutil.LectureSlide();
@@ -83,4 +84,9 @@ validateFirstRun(document.currentScript);
     CourseSketch.fakeSlides.push(slide18);
     CourseSketch.fakeSlides.push(slide19);
     CourseSketch.fakeSlides.push(slide20);
+
+    for (var i = 0; i < CourseSketch.fakeSlides.length; i++) {
+        CourseSketch.fakeSlides[i].elements = [];
+        CourseSketch.fakeSlides[i].elements.push(CourseSketch.fakeElements[i]);
+    }
 })();
