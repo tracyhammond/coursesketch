@@ -146,7 +146,7 @@ public class DbAuthManagerTest {
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.TEACHER_VALUE, dbObject.get(hash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test
@@ -189,7 +189,7 @@ public class DbAuthManagerTest {
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(courseHash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
 
@@ -232,7 +232,7 @@ public class DbAuthManagerTest {
         Assert.assertEquals(null, dbObject.get(courseHash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test
@@ -275,7 +275,7 @@ public class DbAuthManagerTest {
         Assert.assertEquals(null, dbObject.get(courseHash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test
@@ -313,8 +313,8 @@ public class DbAuthManagerTest {
 
         List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListParent.get(0));
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListChild.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListParent.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListChild.get(0));
         Assert.assertEquals(userListParent, userListChild);
     }
 
@@ -393,8 +393,8 @@ public class DbAuthManagerTest {
 
         List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListParent.get(0));
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListChild.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListParent.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListChild.get(0));
         Assert.assertEquals(userListParent, userListChild);
     }
 
@@ -454,7 +454,7 @@ public class DbAuthManagerTest {
         Assert.assertEquals(Authentication.AuthResponse.PermissionLevel.STUDENT_VALUE, dbObject.get(userHash));
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test(expected = AuthenticationException.class)

@@ -3,11 +3,9 @@ package database.institution.mongo;
 import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,7 +13,7 @@ import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import org.bson.types.ObjectId;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,6 +41,7 @@ import static database.DbSchoolUtility.getCollectionFromType;
 import static database.institution.mongo.BankProblemManager.mongoGetBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoInsertBankProblem;
 import static database.institution.mongo.BankProblemManager.mongoUpdateBankProblem;
+import static database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -58,7 +57,7 @@ public class BankProblemManagerTest {
     @Mock AuthenticationOptionChecker optionChecker;
     @Mock AuthenticationDataCreator dataCreator;
 
-    public DB db;
+    public MongoDatabase db;
     public Authenticator authenticator;
     public static final String VALID_REGISTRATION_KEY = "VALID KEY!";
     public static final String FAKE_ID = "507f1f77bcf86cd799439011";
@@ -71,26 +70,9 @@ public class BankProblemManagerTest {
 
     @Before
     public void before() {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
 
-        try {
-            // general results
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
-
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
     }
 
@@ -106,8 +88,8 @@ public class BankProblemManagerTest {
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        final DBCollection bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
-        final DBObject mongoBankProblem = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
+        final MongoCollection<Document> bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
+        final Document mongoBankProblem = bankProblemCollection.find(convertStringToObjectId(problemBankId)).first();
 
         Assert.assertEquals(mongoBankProblem.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
@@ -124,8 +106,8 @@ public class BankProblemManagerTest {
 
         String problemBankId = BankProblemManager.mongoInsertBankProblem(db, bankProblem.build());
 
-        final DBCollection bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
-        final DBObject cursor = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
+        final MongoCollection<Document> bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
+        final Document cursor = bankProblemCollection.find(convertStringToObjectId(problemBankId)).first();
 
 
         Assert.assertNotNull(cursor);
@@ -428,9 +410,9 @@ public class BankProblemManagerTest {
         bankProblem.setScript(FAKE_SCRIPT);
 
         mongoInsertBankProblem(db, bankProblem.build());
-        DBCursor curse = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).find();
+        MongoCursor<Document> curse = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).find().iterator();
         System.out.println(curse);
-        DBObject obj = curse.next();
+        Document obj = curse.next();
         String testString = obj.get(SCRIPT).toString();
         Assert.assertEquals(FAKE_SCRIPT, testString);
     }
@@ -447,11 +429,11 @@ public class BankProblemManagerTest {
         bankProblem.setSpecialQuestionData(lectureElement);
 
         mongoInsertBankProblem(db, bankProblem.build());
-        DBCursor curse = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).find();
+        MongoCursor<Document> curse = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).find().iterator();
         System.out.println(curse);
-        DBObject obj = curse.next();
+        Document obj = curse.next();
         final Lecturedata.LectureElement elementFromQuery = SlideManager
-                .createElementFromQuery((DBObject) obj.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA));
+                .createElementFromQuery((Document) obj.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA));
         Commands.SrlUpdateList UpdateList = elementFromQuery.getSketchArea().getRecorededSketch();
         Assert.assertEquals(FAKE_UPDATELIST.build(), UpdateList);
     }

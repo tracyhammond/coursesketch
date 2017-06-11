@@ -1,7 +1,10 @@
 package database.utilities;
 
 import database.DatabaseAccessException;
+import org.bson.Document;
 import org.bson.types.ObjectId;
+
+import static database.DatabaseStringConstants.SELF_ID;
 
 /**
  * Contains various Utilities for working with mongo databases.
@@ -23,12 +26,12 @@ public final class MongoUtilities {
      * @return {@link ObjectId} if it is successfully created.
      * @throws DatabaseAccessException Thrown if a valid id can not be created.
      */
-    public static ObjectId convertStringToObjectId(final String objectId) throws DatabaseAccessException {
+    public static Document convertStringToObjectId(final String objectId) throws DatabaseAccessException {
         if (objectId == null) {
             throw new DatabaseAccessException(new IllegalArgumentException("Object Id was given a null parameter"), false);
         }
         try {
-            return new ObjectId(objectId.trim());
+            return new Document(SELF_ID, new ObjectId(objectId.trim()));
         } catch (IllegalArgumentException e) {
             throw new DatabaseAccessException(e, false);
         }
