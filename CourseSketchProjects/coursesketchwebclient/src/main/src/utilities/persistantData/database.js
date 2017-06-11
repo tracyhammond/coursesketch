@@ -78,7 +78,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
             // We can only create Object stores in a version change transaction.
             /**
-             * Called if an upgrade is required
+             * Called if an upgrade is required.
              *
              * @param {Event} e - An upgrade event.
              */

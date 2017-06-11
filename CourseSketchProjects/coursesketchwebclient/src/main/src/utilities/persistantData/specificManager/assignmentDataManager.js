@@ -360,7 +360,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
 
     /**
      * Returns a assignment with the given assignmentId will ask the server if it
-     * does not exist locally
+     * does not exist locally.
      *
      * @param {String} assignmentId - The id of the assignment we want to find.
      * @param {Function} assignmentCallback - The method to call when the assignment has been found. (this is asynchronous)
