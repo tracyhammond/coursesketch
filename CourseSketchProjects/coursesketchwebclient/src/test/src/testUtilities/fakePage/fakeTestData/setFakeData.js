@@ -10,13 +10,14 @@
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
 
-    // barriers have been tested and work as expected with this function.
+    // barriers have been tested and work as expected with these function.
     var loadLectures = function() {
         var localBarrier = new CallbackBarrier();
         var lectureLoadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeLectures.length);
         localBarrier.finalize(lectureBarrier);
         for (var i = 0; i < CourseSketch.fakeLectures.length; ++i) {
-            CourseSketch.dataManager.setLecture(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
+            console.log(CourseSketch.fakeLectures[i]);
+            CourseSketch.dataManager.setAssignment(CourseSketch.fakeLectures[i], lectureLoadedCallback, lectureLoadedCallback);
         }
     };
 
@@ -87,25 +88,25 @@
                 }
             }
             callback(results);
-        }
+        };
 
         barrier.finalize(function() {
             console.log("DATABASE HAS ITS DATA LOADED");
             CourseSketch.dataManager.testDataLoaded = true;
         });
         loadCourses();
-        loadLectures();
         loadSlides();
-        loadAssignments();
         loadProblems();
+        loadAssignments();
+        loadLectures();
     }
 
     // waits till the database is ready to set up our loading process
-    if (CourseSketch.dataManager.realDatabaseReady()) {
+    if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
         databaseIsReadForLoading();
     } else {
         var intervalVar = setInterval(function() {
-            if (CourseSketch.dataManager.realDatabaseReady()) {
+            if (!isUndefined(CourseSketch.dataManager.realDatabaseReady) && CourseSketch.dataManager.realDatabaseReady()) {
                 clearInterval(intervalVar);
                 databaseIsReadForLoading();
             }
@@ -116,10 +117,10 @@
      * Returns a request given an input request from the server for some certain data.
      */
     CourseSketch.serverResponseForBankProblems = function(req) {
-        var dataRequest = CourseSketch.PROTOBUF_UTIL.getDataRequestClass().decode(req.otherData);
+        var dataRequest = CourseSketch.prutil.getDataRequestClass().decode(req.otherData);
         var itemRequest = dataRequest.items[0];
         var totalLength = CourseSketch.fakeBankProblems.length;
-        var school = CourseSketch.PROTOBUF_UTIL.SrlSchool();
+        var school = CourseSketch.prutil.SrlSchool();
         school.bankProblems = [];
 
         // maybe use slice in the future! but not today.
@@ -127,7 +128,7 @@
             school.bankProblems.push(CourseSketch.fakeBankProblems[i]);
         }
 
-        var result = CourseSketch.PROTOBUF_UTIL.ItemResult();
+        var result = CourseSketch.prutil.ItemResult();
         if (school.bankProblems.length > 0) {
             result.data = school.toArrayBuffer();
         } else {
@@ -135,9 +136,9 @@
         }
         result.query = itemRequest.query;
 
-        var dataResults = CourseSketch.PROTOBUF_UTIL.DataResult();
+        var dataResults = CourseSketch.prutil.DataResult();
         dataResults.results = [result];
-        var resultingRequest = CourseSketch.PROTOBUF_UTIL.createRequestFromData(dataResults,
+        var resultingRequest = CourseSketch.prutil.createRequestFromData(dataResults,
                 req.requestType);
         return resultingRequest;
     };

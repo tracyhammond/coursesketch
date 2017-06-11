@@ -9,8 +9,9 @@
 
     /**
      * Sets up scrolling for the current table.
-     * @param {Element} table
-     * @param {Object} startPosition
+     *
+     * @param {Element} table - The table that contains the grades.
+     * @param {Object} startPosition - The start potion of the view.
      */
     CourseSketch.gradeBook.initializeTableScrolling = function(table, startPosition) {
         var oldHead = document.querySelector('.fixedHead');
@@ -28,7 +29,7 @@
     };
 
     /**
-     * Scrolling code for tables
+     * Scrolling code for tables.
      */
     $(document).ready(function() {
         // independent of which table is active
@@ -46,9 +47,9 @@
 
             if (offset > triggerVerticalOffset && isUndefined(verticalHeader)) {
                 var clonedElement = scrollingTable.querySelector('thead').cloneNode(true);
-				
-				synchronizeFirstColumnWidth(clonedElement, scrollingTable.querySelector('thead'));
-				
+
+                synchronizeFirstColumnWidth(clonedElement, scrollingTable.querySelector('thead'));
+
                 var table = document.createElement('table');
                 table.appendChild(clonedElement);
                 verticalHeader = table;
@@ -83,10 +84,16 @@
             var offset = startingPosition.left - newLeft;
         });
     }); // document ready
-	
-	function synchronizeFirstColumnWidth(clonedElement, originalElement) {
-		var clonedFirstDiv = clonedElement.querySelector('div');
-		var originalFirstDice = scrollingTable.querySelector('thead div');
-		$(clonedFirstDiv).width($(originalFirstDice).width());
-	}
+
+    /**
+     * Makes column widths the same.
+     *
+     * @param {HTMLElement} clonedElement - The element that was cloned.
+     * @param {HTMLElement} originalElement - The element that was not cloned.
+     */
+    function synchronizeFirstColumnWidth(clonedElement, originalElement) {
+        var clonedFirstDiv = clonedElement.querySelector('div');
+        var originalFirstDice = scrollingTable.querySelector('thead div');
+        $(clonedFirstDiv).width($(originalFirstDice).width());
+    }
 })();

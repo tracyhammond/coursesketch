@@ -1,0 +1,29 @@
+#use http://lint.travis-ci.org/ to validate yaml
+
+sudo: required
+dist: trusty
+language: java
+
+addons:
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
+
+before_install:
+ - "sudo apt-get -qq update"
+ - "sudo chmod 755 config/setup_instructions/linux/installProtobuf.sh"
+ - "./config/setup_instructions/linux/installProtobuf.sh"
+ - "export DISPLAY=:99.0"
+ - "sh -e /etc/init.d/xvfb start"
+ - "sudo apt-get remove -y chromium-browser"
+ - "sudo apt-get -qq update"
+
+install:
+ - "set -o pipefail"
+ - "GRUNT_SKIP_TESTS=true mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dcobertura.skip"
+
+script:
+ - "set -o pipefail"
+ - "mvn -B -V test"

@@ -1,80 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Welcome!</title>
-<script type="text/javascript" src="/src/utilities/functions/base.js"></script>
-<script type="text/javascript"
-	src="/src/utilities/functions/objectAndInheritance.js"></script>
-<script type="text/javascript"
-	src="/src/utilities/functions/stateManager.js"></script>
+	<meta charset="UTF-8" data-verion="VERSION_NUMBER">
+	<title>Welcome!</title>
+	<script type="text/javascript" src="/src/utilities/functions/base.js"></script>
+	<script type="text/javascript"
+		src="/src/utilities/functions/objectAndInheritance.js"></script>
+	<script type="text/javascript"
+		src="/src/utilities/functions/stateManager.js"></script>
 
-<!-- login element -->
-<link rel="import"
-	href="/src/utilities/connection/login/loginInclude.html">
+	<!-- login element -->
+	<link rel="import"
+		href="/src/utilities/connection/login/loginInclude.html">
 
-<!-- register element -->
-<link rel="import"
-      href="/src/utilities/connection/register/registerInclude.html">
+	<!-- register element -->
+	<link rel="import"
+		  href="/src/utilities/connection/register/registerInclude.html">
 
-<!-- protobuf -->
-<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+	<!-- protobuf -->
+	<link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-<!-- Jquery library -->
-<link rel="import"
-	href="/src/utilities/libraries/jquery/jqueryInclude.html">
+	<!-- Jquery library -->
+	<link rel="import"
+		href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
-<!-- Includes the StackTrace.js -->
-<link rel="import"
-	  href="/src/utilities/libraries/stacktrace/stacktraceInclude.html">
+	<!-- Includes the StackTrace.js -->
+	<link rel="import"
+		  href="/src/utilities/libraries/stacktrace/stacktraceInclude.html">
 
-<!-- Includes the Materialize library -->
-<link rel="import"
-	  href="/src/utilities/libraries/materialize/materializeInclude.html">
+	<!-- Includes the Materialize library -->
+	<link rel="import"
+		  href="/src/utilities/libraries/materialize/materializeInclude.html">
 
-<!-- For exception notification purposes -->
-<link rel="import"
-	  href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html">
+	<!-- For exception notification purposes -->
+	<link rel="import"
+		  href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html">
 
-<link rel="icon" type="image/ico" href="images/CSpencil.ico">
-<style>
-html,body,#mainPageContent {
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
-	width: 100%;
-	height: 100vh;
-}
+	<link rel="icon" type="image/ico" href="images/CSpencil.ico">
 
-#mainPageContent {
-	overflow: visible;
-}
+	<link rel="stylesheet" href="/src/index.css">
 
-body {
-	background: #EDEEEF;
-}
-
-#loginLocation {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 10;
-	text-align: center;
-}
-
-login-system, register-system {
-	display: inline-block;
-	position: relative;
-	margin: auto;
-}
-</style>
-<script src="/src/index.js"></script>
+	<script src="/src/index.js"></script>
+	<script src="src/utilities/connection/reconnectionManager.js"></script>
 </head>
 <body>
-	<div id="mainPageContent" style="display: none;"></div>
-	<div id="loginLocation" style="display: none;"></div>
+	<header class="row" style="margin:0; width:100%; z-index:998;">
+		<nav class="col s12 white">
+			<div class="nav-wrapper">
+				<div class="brand-logo" style="display:inline-flex;">
+					<a class="center bold teal-text">Course</a>
+					<a class="center light black-text">Sketch</a>
+				</div>
+				<a href="#" data-activates="menuList" class="button-collapse" style="display:inline-block;">
+					<i class="mdi-navigation-menu black-text"></i>
+				</a>
+				<a href="#" class="right black-text">Learn More</a>
+			</div>
+		</nav>
+	</header>
+	<main class="row teal" style="margin:0;">
+		<div id="mainPageContent" style="z-index:1; display: flex;"></div>
+		<div id="loginLocation" style="z-index:1; text-align:center;"></div>
+	</main>
+	<footer class="page-footer teal darken-1" style="padding:0; margin:0;">
+		<div class="footer-copyright">
+			<div class="container center white-text">
+				Developed in the Sketch Recognition Lab at Texas A&M University
+			</div>
+		</div>
+	</footer>
 </body>
 </html>

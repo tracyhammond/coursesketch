@@ -1,4 +1,5 @@
 /* jshint camelcase: false */
+//jscs:disable
 /**
  * *************************************************************
  *
@@ -140,7 +141,7 @@ function SRL_BoundingBox() {
     };
 
     this.toString = function() {
-        return "SRL_BoundingBox: (" + internalX + ', ' + internalY + ') Width: ' + internalWidth + ' Height: ' + internalHeight;
+        return 'SRL_BoundingBox: (' + internalX + ', ' + internalY + ') Width: ' + internalWidth + ' Height: ' + internalHeight;
     };
 
 }

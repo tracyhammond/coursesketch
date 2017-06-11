@@ -1,5 +1,6 @@
 /**
- * Contains input listeners for canvas interaction and functions for creating points using drawing events
+ * Contains input listeners for canvas interaction and functions for creating points using drawing events.
+ *
  * @class InputListener
  */
 function InputListener() {
@@ -20,6 +21,9 @@ function InputListener() {
      * @function initializeCanvas
      * @instance
      * @memberof InputListener
+     * @param {Element} sketchCanvas - The element that takes in the user input.
+     * @param {Function} strokeCreationCallback - The function that is called when a stroke is created.
+     * @param {Graphics} graphics - The graphics object used to display the sketch.
      */
     this.initializeCanvas = function(sketchCanvas, strokeCreationCallback, graphics) {
         var ps = graphics.getPaper();
@@ -40,7 +44,9 @@ function InputListener() {
          * Allows you to zoom in or out based on a delta.
          * Attempts to limit zoom out to an exponential decay function.
          * This also makes sure that the final zoom function is in fact linear.
+         *
          * @memberof InputListener#initializeCanvas
+         * @param {Number} delta - The amount with witch the zoom was changed.
          */
         function zoom(delta) {
             var oldZoom = totalZoom;
@@ -57,9 +63,10 @@ function InputListener() {
 
         /**
          * A listener that attempts to listen for 2 finger scroll events so that tablets can scroll the sketch surface.
-         * @param {Event} event - the event that contains normal event data.
+         *
+         * @param {Event} event - The event that contains normal event data.
          * @param {String} phase - The phases of the event.  ("start", "move", "end")
-         * @param {Element} $target - the element the event is based off of.
+         * @param {Element} $target - The element the event is based off of.
          * @param {Object} data - Contains:<ul>
          *                  <li>movePoint</li>
          *                  <li>lastMovePoint</li>
@@ -83,6 +90,7 @@ function InputListener() {
          *
          * @function onMouseDown
          * @memberof PSTool
+         * @param {Event} event - The event from pressing the mouseDown.
          */
         tool.onMouseDown = function(event) {
             if (Key.isDown('shift') || event.event.button === 1) {
@@ -101,8 +109,10 @@ function InputListener() {
 
         /**
          * If shift is held, pans the view to follow the mouse else if shift is not held, it adds more points to the path created on MouseDown.
+         *
          * @function onMouseDown
          * @memberof PSTool
+         * @param {Event} event - The event from dragging the mouse.
          */
         tool.onMouseDrag = function(event) {
             if (Key.isDown('shift') || event.event.button === 1) {
@@ -124,6 +134,7 @@ function InputListener() {
          *
          * @function onMouseDown
          * @memberof PSTool
+         * @param {Event} event - The event from releasing the mouse.
          */
         tool.onMouseUp = function(event) {
             currentPoint = createPointFromEvent(event);
@@ -177,19 +188,20 @@ function InputListener() {
      *
      * @memberof InputListener
      * @private
+     * @param {Event} drawingEvent - The event from paper drawing.
      */
     function createPointFromEvent(drawingEvent) {
-        var currentPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
-        currentPoint.setId(generateUUID());
-        currentPoint.setTime(drawingEvent.event.timeStamp);
+        var newPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);
+        newPoint.setId(generateUUID());
+        newPoint.setTime(drawingEvent.event.timeStamp);
         if (!isUndefined(drawingEvent.pressure)) {
-            currentPoint.setPressure(drawingEvent.pressure);
+            newPoint.setPressure(drawingEvent.pressure);
         } else {
-            currentPoint.setPressure(0.5);
+            newPoint.setPressure(0.5);
         }
-        currentPoint.setSize(0.5/*drawingEvent.size*/);
-        currentPoint.setUserCreated(true);
-        return currentPoint;
+        newPoint.setSize(0.5/*drawingEvent.size*/);
+        newPoint.setUserCreated(true);
+        return newPoint;
     }
 
     /**

@@ -1,13 +1,12 @@
 package utilities;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import org.joda.time.DateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message.Request;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Manages possible differences in time between the servers.
@@ -60,17 +59,17 @@ public final class TimeManager {
      *
      * This is a transient value and is not thread safe.
      */
-    private static long timeDifference = 0;
+    private static long timeDifference;
 
     /**
      * The latency between the client and the server.
      */
-    private static long latencyDifference = 0;
+    private static long latencyDifference;
 
     /**
      * The difference between the master server and the client server.
      */
-    private static long totalTimeDifference = 0;
+    private static long totalTimeDifference;
 
     /**
      * A listener that is called every time that latency is received and finished calculating.
@@ -103,8 +102,7 @@ public final class TimeManager {
      */
     public static Request serverSendTimeToClient() {
 
-        final Request.Builder req = Request.newBuilder();
-        req.setRequestType(Request.MessageType.TIME);
+        final Request.Builder req = ProtobufUtilities.createRequestFromData(Request.MessageType.TIME);
         req.setMessageTime(getSystemTime());
         // Server sending client  'true' time
         req.setResponseText(SEND_TIME_TO_CLIENT_MSG);
@@ -125,8 +123,7 @@ public final class TimeManager {
         LOG.info("server time: {}", milltoDate(req.getMessageTime()));
         LOG.info("my (client) time: {}", milltoDate(DateTime.now().getMillis()));
         LOG.info("time difference: {}", timeDifference);
-        final Request.Builder rsp = Request.newBuilder();
-        rsp.setRequestType(Request.MessageType.TIME);
+        final Request.Builder rsp = ProtobufUtilities.createBaseResponse(req);
         // message time plus adjusted time minus time it took to compute adjusted time.
         rsp.setMessageTime(req.getMessageTime() + getSystemTime() - startCounter);
         rsp.setResponseText(CLIENT_REQUEST_LATENCY_MSG);
@@ -161,9 +158,8 @@ public final class TimeManager {
         final long latency = getSystemTime() - req.getMessageTime();
         LOG.info("latency: {}", latency);
 
-        final Request.Builder rsp = Request.newBuilder();
+        final Request.Builder rsp = ProtobufUtilities.createBaseResponse(req);
 
-        rsp.setRequestType(Request.MessageType.TIME);
         rsp.setMessageTime(latency / 2);
         rsp.setResponseText(SEND_LATENCY_TO_CLIENT_MSG);
         return rsp.build();

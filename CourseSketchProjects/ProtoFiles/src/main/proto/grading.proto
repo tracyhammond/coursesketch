@@ -42,7 +42,7 @@ enum DropType {
 // Represents a grading policy category.
 message PolicyCategory {
     required string name = 1;           // Name of the category set by the instructor. EX: Homework, Quizzes, Exam 1.
-    optional float weight = 2;          // Weight that the category has in the overall policy.
+    optional double weight = 2;          // Weight that the category has in the overall policy.
     optional LatePolicy latePolicy = 3; // This serves as a default late policy for all assignments in a category
 }
 
@@ -50,7 +50,7 @@ message PolicyCategory {
 message LatePolicy {
     required FunctionType functionType = 1 [default = STEPPING_FUNCTION];
     optional TimeFrame timeFrameType = 2 [default = DAY];           // Because this is what people are used to.
-    optional float rate = 3;                                        // Rate of subtraction.
+    optional double rate = 3;                                        // Rate of subtraction.
     optional SubtractionType subtractionType = 4 [default = CAP];   // How we are subtracting the grade.
     optional bool applyOnlyToLateProblems = 5;                      // Determines if the late policy only applies to problems submitted late.
 

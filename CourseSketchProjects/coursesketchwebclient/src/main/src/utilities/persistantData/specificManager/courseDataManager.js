@@ -1,31 +1,30 @@
 /**
  * A manager for courses that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent The database that will hold the methods of this instance.
- * @param {AdvanceDataListener} advanceDataListener A listener for the database.
- * @param {IndexedDB} parentDatabase The local database
- * @param {Function} sendData A function that makes sending data much easier
- * @param {SrlRequest} Request A shortcut to a request
- * @param {ByteBuffer} ByteBuffer Used in the case of longs for javascript.
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the database
+ * @param {IndexedDB} database - The local database
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
+function CourseDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
     var COURSE_LIST = 'COURSE_LIST';
     var userCourseId = [];
     var userHasCourses = true;
-    var database = parentDatabase;
-    var sendDataRequest = sendData.sendDataRequest;
 
     /**
-     * Looks at the course and gives it some state if the state values do not
-     * exist.
+     * Looks at the course and gives it some state if the state values do not exist.
+     *
+     * @param {SrlCourse} course - A course to be modified.
+     * @param {Function} courseCallback - Called after the state is done updating.
      */
     function stateCallback(course, courseCallback) {
         /*jshint maxcomplexity:13 */
         var state = course.getState();
         var updateCourse = false;
         if (isUndefined(state) || state === null) {
-            state = CourseSketch.PROTOBUF_UTIL.State();
+            state = CourseSketch.prutil.State();
             updateCourse = true;
         }
         try {
@@ -68,10 +67,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
     /**
      * Gets an Course from the local database.
      *
-     * @param {String} courseId
-     *                ID of the course to get
-     * @param {Function} courseCallback
-     *                function to be called after getting is complete, parameter
+     * @param {String} courseId - ID of the course to get
+     * @param {Function} courseCallback - function to be called after getting is complete, parameter
      *                is the course object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
     function getCourseLocal(courseId, courseCallback) {
@@ -86,7 +83,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
-                    stateCallback(CourseSketch.PROTOBUF_UTIL.getSrlCourseClass().decode(bytes), courseCallback);
+                    stateCallback(CourseSketch.prutil.getSrlCourseClass().decode(bytes), courseCallback);
                 } catch (exception) {
                     console.error(exception);
                     courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
@@ -101,11 +98,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * not exist locally.
      *
      *
-     * @param {String} courseId
-     *            The id of the course we want to find.
-     * @param {Function} courseCallback
-     *            The method to call when the course has been found. (this is
-     *            asynchronous)
+     * @param {String} courseId - The id of the course we want to find.
+     * @param {Function} courseCallback - The method to call when the course has been found. (this is asynchronous)
      */
     function getCourse(courseId, courseCallback) {
         if (isUndefined(courseCallback)) {
@@ -116,15 +110,20 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             throw new DatabaseException('The given id is not assigned', 'getting Course: ' + courseId);
         }
 
-        getCourseLocal(courseId, function(course) {
-            if (isUndefined(course) || course instanceof DatabaseException) {
-                advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+        getCourseLocal(courseId, function(localCourse) {
+            if (isUndefined(localCourse) || localCourse instanceof DatabaseException) {
+                var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE, [ courseId ]);
+                advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                    if (isException(item)) {
+                        courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                            'getting course ' + courseId, item));
+                        return;
+                    }
                     if (isUndefined(item.data) || item.data === null) {
                         courseCallback(new DatabaseException('The data sent back from the server for course: ' + courseId + ' does not exist.'));
                         return;
                     }
-                    var course = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getSrlCourseClass());
+                    var course = CourseSketch.prutil.decodeProtobuf(item.data[0], CourseSketch.prutil.getSrlCourseClass());
                     if (isUndefined(course)) {
                         courseCallback(new DatabaseException('Course does not exist in the remote database.'));
                         return;
@@ -133,11 +132,9 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                         stateCallback(course, courseCallback);
                     });
                 });
-                // creates a request that is then sent to the server
-                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, [ courseId ]);
             } else {
                 // get course local calls state callback so it is not needed here if it exists.
-                courseCallback(course);
+                courseCallback(localCourse);
             }
         });
     }
@@ -170,26 +167,29 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Updates an existing course into the database. This course must already
      * exist.
      *
-     * @param {SrlCourse} course
-     *                course object to set
-     * @param {Function} localCallback
-     *                function to be called after local course setting is done
-     * @param {Function} serverCallback
-     *                function to be called after server course setting is done
+     * @param {SrlCourse} course - course object to set
+     * @param {Function} localCallback - function to be called after local course setting is done
+     * @param {Function} serverCallback - function to be called after server course setting is done
      */
     function updateCourse(course, localCallback, serverCallback) {
+        if (isUndefined(course)) {
+            throw new DatabaseException('Can not update an undefined course');
+        }
         setCourse(course, function() {
             if (!isUndefined(localCallback)) {
                 localCallback();
             }
-            advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
-                 // we do not need to make server changes we just need to make sure it was successful.
+            advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
+                // we do not need to make server changes we just need to make sure it was successful.
+                if (isException(item)) {
+                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'updating course ' + course, item));
+                    return;
+                }
                 if (!isUndefined(serverCallback)) {
                     serverCallback(item);
                 }
             });
-            sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
         });
     }
     parent.updateCourse = updateCourse;
@@ -198,8 +198,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Deletes a course from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
-     * @param {String} courseId
-     *                ID of the course to delete
+     * @param {String} courseId - ID of the course to delete
      * @param {Function} courseCallback
      *                function to be called after the deletion is done
      */
@@ -219,7 +218,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     /**
      * Stores the course ids locally in the database.
-     * @param {List<String>} idList the list of ids the user currently have in their courses.
+     *
+     * @param {List<String>} idList - the list of ids the user currently have in their courses.
      */
     function setCourseIdList(idList) {
         database.putInCourses(COURSE_LIST, idList); // no call back needed!
@@ -229,13 +229,25 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      * Returns a list of all of the courses in database.
      *
      * This does attempt to pull courses from the server!
-     * @param {Function} courseCallback called when the courses are loaded (this may be called more than once)
-     * @param {Boolean} onlyLocal true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
+     *
+     * @param {Function} courseCallback - called when the courses are loaded (this may be called more than once)
+     * @param {Boolean} onlyLocal - true if we do not want to ask the server, false otherwise (choose this because it defaults to asking the server).
      */
     function getAllCourses(courseCallback, onlyLocal) {
         // there are no courses loaded onto this client!
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.SCHOOL, [ '' ]);
+        /**
+         * Called when the server responds.
+         *
+         * @param {Event} evt - websocket event
+         * @param {ItemResult | BaseException} item - The result from the server.
+         */
+        var callback = function(evt, item) {
+            if (isException(item)) {
+                courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
+                        'Getting all courses for user ' + parent.getCurrentId(), item));
+                return;
+            }
             // there was an error getting the user classes.
             if (!isUndefined(item.returnText) && item.returnText !== '' && item.returnText !== 'null' && item.returnText !== null) {
                 userHasCourses = false;
@@ -245,20 +257,20 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             }
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
-                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                        CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+                courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
+                        CourseSketch.prutil.getSrlCourseClass()));
             }
 
             var setCourseCallback = createBarrier(courseList.length, function() {
                 courseCallback(courseList);
             });
-            for (var i = 0; i < courseList.length; i++) {
-                var course = courseList[i];
+            for (var dataIndex = 0; dataIndex < courseList.length; dataIndex++) {
+                var course = courseList[dataIndex];
                 setCourse(course, setCourseCallback); // no callback is needed
             }
-        });
-        if (userCourseId.length === 0 && userHasCourses && !onlyLocal) {
-            sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+        };
+        if (userCourseId.length === 0 && !onlyLocal) {
+            advanceDataListener.sendDataRequest(itemRequest, callback);
         } else {
             // This calls the server for updates then creates a list from the
             // local data to appear fast
@@ -269,7 +281,7 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
             // ask server for course list
             if (!onlyLocal && false) {
                 // TODO: this should maybe only ask after a certain amount of time since last updated?
-                sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL, [ '' ]);
+                advanceDataListener.sendDataRequest(itemRequest, callback);
             }
 
             var localCourseCallback = createBarrier(userCourseId.length, function() {
@@ -301,12 +313,10 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
      *
      * If there is a problem courseCallback is called with an exception.
      *
-     * @param {SrlCourse} course
-     * @param {Function} courseCallback
-     *            is called after the insertion of course into the local
+     * @param {SrlCourse} course - The course that is being inserted.
+     * @param {Function} courseCallback - is called after the insertion of course into the local
      *            database. (this can be used for instant refresh)
-     * @param {Function} serverCallback
-     *            serverCallback is called after the insertion of course into
+     * @param {Function} serverCallback - serverCallback is called after the insertion of course into
      *            the server and the return of the server with the correct
      *            courseId
      */
@@ -321,8 +331,12 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 courseCallback(course);
             }
 
-            advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, function(evt, item) {
-                advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE);
+            advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
+                if (isException(item)) {
+                    serverCallback(new DatabaseException('An exception was thrown from the server while inserting a course',
+                        '' + course, item));
+                    return;
+                }
                 var resultArray = item.getReturnText().split(':');
                 var oldId = resultArray[1].trim();
                 var newId = resultArray[0].trim();
@@ -343,25 +357,33 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                     }
                 });
             });
-            sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE, course.toArrayBuffer());
         });
     }
     parent.insertCourse = insertCourse;
 
     /**
-     * Gets the course roster.
-     * @param courseId
-     * @param {Functon} callback A callback is called with a list of userIds
+     * Gets the course roster then calls the callback with the map of userId: username.
+     *
+     * The callback is mandatory at the moment because callbacks to the server are asynchronous.
+     * If this method simply returned the roster as a map, it would likely return after a subsequent server call is sent.
+     * The subsequent server call would then be passing a null map as the roster instead of the actual roster.
+     *
+     * @param {String} courseId - The id of the course to retrieve the course roster for.
+     * @param {Function} callback - A callback is called with a list of userIds
      */
     function getCourseRoster(courseId, callback) {
         if (isUndefined(callback)) {
             throw new DatabaseException('Calling getGrade with an undefined callback');
         }
 
-        var idList = [ courseId ];
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, [ courseId ]);
 
-        advanceDataListener.setListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE);
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+            if (isException(item)) {
+                callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
+                courseId, item));
+                return;
+            }
             // after listener is removed
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 // not calling the state callback because this should skip that step.
@@ -370,18 +392,23 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
                 return;
             }
 
-            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getIdChainClass());
-            callback(decodedRoster.idChain);
+
+            var decodedRoster = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.prutil.getUserNameResponseClass());
+            var userMap = new Map();
+            for (var i = 0; i < decodedRoster.userNames.length; i++) {
+                // Since proto doesn't officially have maps, we must create the map this way
+                userMap.set(decodedRoster.userNames[i].key, decodedRoster.userNames[i].value);
+            }
+            callback(userMap);
         });
 
-        sendData.sendDataRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_ROSTER, idList);
     }
     parent.getCourseRoster = getCourseRoster;
 
     /**
-     * gets the id's of all of the courses in the user's local client.
+     * Gets the id's of all of the courses in the user's local client.
      */
-    database.getFromCourses(COURSE_LIST, function(e, request, result) {
+    database.getFromCourses(COURSE_LIST, function(e, request, result) { // jscs:ignore jsDoc
         if (isUndefined(result) || isUndefined(result.data)) {
             return;
         }
@@ -397,6 +424,8 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     /**
      * Attempts to clear the database of courses.
+     *
+     * @param {Function} clearCallback - called after all of the courses were cleared.
      */
     parent.clearCourses = function(clearCallback) {
         var barrier = userCourseId.length;
@@ -416,35 +445,31 @@ function CourseDataManager(parent, advanceDataListener, parentDatabase, sendData
 
     /**
      * Searches the course list.
-     * @param {Function} callback called with a list of all courses meeting the search requirements.
+     *
+     * @param {Function} callback - called with a list of all courses meeting the search requirements.
      */
     parent.searchCourses = function(callback) {
-        var request = CourseSketch.PROTOBUF_UTIL.DataRequest();
-        var item = CourseSketch.PROTOBUF_UTIL.ItemRequest();
-        item.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
-        request.items = [ item ];
-
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.COURSE_SEARCH);
         /**
          * Listens for the search result and displays the result given to it.
          */
-        CourseSketch.dataListener.setListener(CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST,
-                CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST, CourseSketch.PROTOBUF_UTIL.ItemQuery.SCHOOL);
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {// jscs:ignore jsDoc
+            if (isException(item)) {
+                callback(new DatabaseException('There was an exception when getting the data back from the server while searching courses', item));
+                return;
+            }
+
             // there was an error getting the user classes.
             if (isUndefined(item.data) || item.data === null) {
-                callback(new DatabaseException('The data sent back from the server for searching courses'));
+                callback(new DatabaseException('There was no data sent back from the server for searching courses'));
                 return;
             }
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
-                courseList.push(CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i],
-                        CourseSketch.PROTOBUF_UTIL.getSrlCourseClass()));
+                courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
+                        CourseSketch.prutil.getSrlCourseClass()));
             }
-            var school = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data, CourseSketch.PROTOBUF_UTIL.getSrlSchoolClass());
-            var courseList = school.courses;
+            callback(courseList);
         });
-
-        CourseSketch.connection.sendRequest(CourseSketch.PROTOBUF_UTIL.createRequestFromData(request,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST));
     };
 }

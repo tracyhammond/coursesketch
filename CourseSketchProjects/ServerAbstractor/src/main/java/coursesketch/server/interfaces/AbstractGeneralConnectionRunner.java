@@ -1,16 +1,21 @@
 package coursesketch.server.interfaces;
 
+import com.google.common.collect.Lists;
+import com.mongodb.ServerAddress;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utilities.LoggingConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.LoggingConstants;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Sets up the server and manages calling the methods needed to start the server.
@@ -22,7 +27,7 @@ import utilities.LoggingConstants;
  * @since 10/19/14
  * @version 1
  */
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.TooManyFields" })
 public abstract class AbstractGeneralConnectionRunner {
 
     /**
@@ -65,6 +70,11 @@ public abstract class AbstractGeneralConnectionRunner {
      * The port of the server.
      */
     private int port = DEFAULT_PORT;
+
+    /**
+     * The hostname of the server.
+     */
+    private String hostName;
 
     /**
      * The timeoutTime of a connection.
@@ -117,6 +127,22 @@ public abstract class AbstractGeneralConnectionRunner {
      * True if the server is currently accepting input.
      */
     private boolean inputRunning;
+
+    /**
+     * Only true during times where setup happens and certain values can be set.
+     */
+    private boolean setup = false;
+
+    /**
+     * A list of addresses where the database can be found at.
+     */
+    private List<ServerAddress> databaseUrl;
+
+    /**
+     * The name of the database.
+     */
+    private String databaseName;
+
     /**
      * Parses the arguments from the server. This only expects a single argument
      * which is if it is local.
@@ -140,28 +166,36 @@ public abstract class AbstractGeneralConnectionRunner {
      * The order that the subclass methods are called is:
      * <ol>
      *     <li>{@link #loadConfigurations()}</li>
-     *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoveEnvironment()}</li>
+     *     <li>if the server is running locally {@link #executeLocalEnvironment()} is called otherwise {@link #executeRemoteEnvironment()}</li>
      *     <li>{@link #createServer()}</li>
      *     <li>if the server is running securely then {@link #configureSSL(String, String)}</li>
-     *     <li>{@link #createSocketInitializer(long, boolean, boolean)}</li>
+     *     <li>{@link #createSocketInitializer(ServerInfo)}</li>
      *     <li>{@link #addConnections()}</li>
      *     <li>{@link #startServer()}</li>
      *     <li>{@link #startInput()}</li>
      * </ol>
      */
     protected final void start() {
+        setup = true;
         loadConfigurations();
         if (local) {
+            privateLocalEnvironment();
             executeLocalEnvironment();
         } else {
-            executeRemoveEnvironment();
+            privateRemoteEnvironment();
+            executeRemoteEnvironment();
         }
+        setup = false;
         createServer();
 
         if (secure) {
             configureSSL(keystorePath, certificatePath);
         }
-        socketInitializerInstance = createSocketInitializer(getTimeoutTime(), secure, isLocal());
+
+        final ServerInfo serverInfo = new ServerInfo(this.getHostName(), this.getPort(), getTimeoutTime(), secure, isLocal(),
+                getDatabaseName(), getDatabaseUrl());
+
+        socketInitializerInstance = createSocketInitializer(serverInfo);
 
         addConnections();
 
@@ -171,19 +205,21 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * Called to load the configuration data it can be overwritten to load specific data for each server.
+     * Called to load the configuration data.
+     *
+     * It can be overwritten to load specific data for each server.
      */
     protected abstract void loadConfigurations();
 
     /**
-     * Called to setup the system if it is being run on a local computer with a local host.
+     * Called to setup the system when it is being run on a local computer with a local host.
      */
     protected abstract void executeLocalEnvironment();
 
     /**
-     * Called to setup the system for if it is being run to connect to remote compters.
+     * Called to setup the system if it is being run on a remote host.
      */
-    protected abstract void executeRemoveEnvironment();
+    protected abstract void executeRemoteEnvironment();
 
     /**
      * Called to create an actual server.
@@ -192,8 +228,11 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Configures the SSL for the server.
-     * @param iCertificatePath the password for the keystore.
-     * @param iKeystorePath the location of the keystore.
+     *
+     * @param iKeystorePath
+     *         The location of the keystore.
+     * @param iCertificatePath
+     *         The password for the keystore.
      */
     protected abstract void configureSSL(String iKeystorePath, String iCertificatePath);
 
@@ -210,6 +249,24 @@ public abstract class AbstractGeneralConnectionRunner {
      * @see #start()
      */
     protected abstract void startServer();
+
+    /**
+     * Sets up some global variables for the local configuration.
+     */
+    private void privateLocalEnvironment() {
+        hostName = "localhost";
+    }
+
+    /**
+     * Sets up some global variables for the remote configuration.
+     */
+    private void privateRemoteEnvironment() {
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOG.error("Error grabbing host name for remote environment", e);
+        }
+    }
 
     /**
      * Handles commands that can be used to perform certain functionality.
@@ -302,7 +359,7 @@ public abstract class AbstractGeneralConnectionRunner {
      * @throws java.io.IOException Thrown if there are problems getting the keyboard input.
      */
     private void startCommand() throws IOException {
-        if (this.notServerStarted()) {
+        if (!this.serverStarted()) {
             this.start();
         } else {
             LOG.info("you can not start the because it is already running.");
@@ -373,34 +430,30 @@ public abstract class AbstractGeneralConnectionRunner {
 
     /**
      * Stops the server.
+     *
      * Input is not stopped by the method.
      */
     protected abstract void stop();
 
     /**
-     * Stops the server.
+     * Reestablishes connections to other servers.
+     *
      * Input is not stopped by the method.
      */
-    protected abstract void reconnect();
+    protected final void reconnect() {
+        getSocketInitailizerInstance().reconnect();
+    }
 
     /**
-     * Returns a new instance of a {@link ISocketInitializer}.
+     * Creates and returns a new instance of a {@link ISocketInitializer}.
      *
-     * Override this method if you want to return a subclass of
-     * GeneralConnectionServlet
+     * Override this method if you want to return a subclass of GeneralConnectionServlet.
      *
-     * @param timeOut
-     *            length of specified timeout, in miliseconds
-     * @param isSecure
-     *            <code>true</code> if the servlet should be secure,
-     *            <code>false</code> otherwise
-     * @param isLocal
-     *            <code>true</code> if the server is running locally,
-     *            <code>false</code> otherwise
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      *
-     * @return a new connection servlet for this server
-     */
-    protected abstract ISocketInitializer createSocketInitializer(final long timeOut, final boolean isSecure, final boolean isLocal);
+     * @return a new instance of an {@link ISocketInitializer}.
+     **/
+    protected abstract ISocketInitializer createSocketInitializer(final ServerInfo serverInfo);
 
     /**
      * Sets the password for the SSL keystore.
@@ -427,9 +480,20 @@ public abstract class AbstractGeneralConnectionRunner {
     }
 
     /**
-     * @return true if the server has not been started (basically run most has not been called yet)
+     * False if the server has not been started (basically {@link #startServer()} has not been called yet).
+     *
+     * @return False if the server has not been started.
      */
-    protected abstract boolean notServerStarted();
+    protected abstract boolean serverStarted();
+
+    /**
+     * If in a remote server environment, gets host name by DNS resolving.
+     *
+     * @return The host name of the server.
+     */
+    public final String getHostName() {
+        return hostName;
+    }
 
     /**
      * @return The port number that this server is connected to.
@@ -514,5 +578,50 @@ public abstract class AbstractGeneralConnectionRunner {
      */
     protected final String[] getArgs() {
         return Arrays.copyOf(args, args.length);
+    }
+
+    /**
+     * Returns a list of valid {@link ServerAddress} the database can connect to.
+     *
+     * @return An unmodifiable list that represents the addresses the database can connect to.
+     */
+    private List<ServerAddress> getDatabaseUrl() {
+        if (databaseUrl == null) {
+            return Collections.unmodifiableList(Lists.newArrayList(new ServerAddress()));
+        }
+        return Collections.unmodifiableList(databaseUrl);
+    }
+
+    /**
+     * Sets the list of addresses the database can connect to.
+     *
+     * @param databaseUrl The list of addresses the database can connect to.
+     */
+    protected final void setDatabaseUrl(final List<ServerAddress> databaseUrl) {
+        if (!setup) {
+            throw new IllegalStateException("Can only set this variable during setup");
+        }
+        this.databaseUrl = databaseUrl;
+    }
+
+    /**
+     * Gets the database name.
+     *
+     * @return The database name.
+     */
+    private String getDatabaseName() {
+        return databaseName;
+    }
+
+    /**
+     * Sets the database name.
+     *
+     * @param databaseName The name of the database.
+     */
+    protected final void setDatabaseName(final String databaseName) {
+        if (!setup) {
+            throw new IllegalStateException("Can only set this variable during setup");
+        }
+        this.databaseName = databaseName;
     }
 }

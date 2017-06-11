@@ -1,24 +1,32 @@
 package database.institution.mongo;
 
+import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.ProtobufComparison;
+import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
+import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+import coursesketch.database.auth.*;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.MongoAuthenticator;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.grading.Grading.PolicyCategory;
 import protobuf.srl.grading.Grading.DroppedAssignment;
 import protobuf.srl.grading.Grading.DroppedProblems;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.grading.Grading.DropType;
+import protobuf.srl.school.School;
+import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 import protobuf.srl.school.School.SrlCourse;
 
@@ -44,6 +52,9 @@ import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for GradingPolicyManager.
@@ -51,14 +62,21 @@ import static database.DatabaseStringConstants.SELF_ID;
  *
  * Created by Matt on 4/6/2015.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GradingPolicyManagerTest {
 
     @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    @Rule
     public FongoRule fongo = new FongoRule();
+    @Mock
+    AuthenticationChecker authChecker;
+    @Mock
+    AuthenticationOptionChecker optionChecker;
 
     public DB db;
-    public Authenticator fauth;
-    public Util.SrlPermission.Builder permissionBuilder = Util.SrlPermission.newBuilder();
+    public Authenticator authenticator;
     public SrlCourse.Builder courseBuilder = SrlCourse.newBuilder();
 
     public ProtoGradingPolicy.Builder fakeProtoPolicy = ProtoGradingPolicy.newBuilder();
@@ -87,15 +105,34 @@ public class GradingPolicyManagerTest {
     public static final String FAKE_ASGN_ID = "assignmentId";
     public static final String FAKE_PROB_ID = "problemId";
     public static final String FAKE_CATEGORY_NAME = "category";
-    public static final float FAKE_CATEGORY_WEIGHT = 25;
+    public static final double FAKE_CATEGORY_WEIGHT = 25;
     public static final int FAKE_ENUM = 1;
-    public static final float FAKE_LATE_RATE = 25;
+    public static final double FAKE_LATE_RATE = 25;
     public static final boolean FAKE_BOOL = true;
 
     @Before
     public void before() {
         db = fongo.getDB();
-        fauth = new Authenticator(new MongoAuthenticator(fongo.getDB()));
+
+        try {
+            // general rules
+            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
+
+            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
+                    .thenReturn(false);
+
+            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
+                    .thenReturn(false);
+
+            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
+                    .thenReturn(true);
+
+        } catch (DatabaseAccessException e) {
+            e.printStackTrace();
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        authenticator = new Authenticator(authChecker, optionChecker);
 
         /**
          * Fake proto objects setup.
@@ -124,8 +161,7 @@ public class GradingPolicyManagerTest {
         fakeProtoPolicy.addDroppedAssignments(fakeProtoDropAsgn1.build()).addDroppedAssignments(fakeProtoDropAsgn2.build());
         fakeProtoPolicy.addDroppedProblems(fakeProtoDropProbs1.build()).addDroppedProblems(fakeProtoDropProbs2.build());
 
-        permissionBuilder.addAdminPermission(FAKE_ADMIN_ID).addUserPermission(FAKE_USER_ID);
-        courseBuilder.setId(FAKE_COURSE_ID).setAccessPermission(permissionBuilder.build());
+        courseBuilder.setId(FAKE_COURSE_ID);
 
         /**
          * Fake mongo DBObjects setup.
@@ -171,7 +207,7 @@ public class GradingPolicyManagerTest {
     @Test
     public void buildProtoLatePolicyTest() {
         LatePolicy testLatePolicy = GradingPolicyManager.buildProtoLatePolicy(fakeMongoLate);
-        Assert.assertEquals(fakeProtoLate.build(), testLatePolicy);
+        new ProtobufComparisonBuilder().build().equals(fakeProtoLate.build(), testLatePolicy);
     }
 
     @Test
@@ -184,13 +220,13 @@ public class GradingPolicyManagerTest {
     public void buildProtoDroppedProblemsTest() {
         DroppedProblems.Builder testDroppedProblem = GradingPolicyManager.buildProtoDroppedProblems(fakeDroppedProblems.get(FAKE_ASGN_ID + "1"));
         testDroppedProblem.setAssignmentId(FAKE_ASGN_ID + "1");
-        Assert.assertEquals(fakeProtoDropProbs1.build(), testDroppedProblem.build());
+        new ProtobufComparisonBuilder().setIgnoreListOrder(true).build().equals(fakeProtoDropProbs1.build(), testDroppedProblem.build());
     }
 
     @Test
     public void buildProtoCategoryTest() {
         PolicyCategory testProtoCategory = GradingPolicyManager.buildProtoCategory(fakeMongoCategory1);
-        Assert.assertEquals(fakeProtoCategory1.build(), testProtoCategory);
+        new ProtobufComparisonBuilder().build().equals(fakeProtoCategory1.build(), testProtoCategory);
     }
 
     @Test
@@ -204,7 +240,10 @@ public class GradingPolicyManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
         DBObject testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).findOne(new ObjectId(courseId));
 
         fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
@@ -212,33 +251,49 @@ public class GradingPolicyManagerTest {
     }
 
     @Test
-    public void getGradingPolicyTest() throws Exception {
+    public void getGradingPolicyAsStudentTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
-        ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(fauth, db, courseId, FAKE_USER_ID);
-        Assert.assertEquals(fakeProtoPolicy.build(), testPolicy);
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_USER_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+
+        ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
+
+        new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false).setIgnoreListOrder(true)
+                .build().equals(fakeProtoPolicy.build(), testPolicy);
     }
 
     @Test(expected = AuthenticationException.class)
     public void unauthenticatedAddGradingPolicy() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_USER_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_USER_ID, fakeProtoPolicy.build());
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void policyDoesNotExist() throws Exception {
-        GradingPolicyManager.getGradingPolicy(fauth, db, new ObjectId().toString(), FAKE_ADMIN_ID);
+        GradingPolicyManager.getGradingPolicy(authenticator, db, new ObjectId().toString(), FAKE_ADMIN_ID);
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void userNotInCourseGetPolicy() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(fauth, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
-        ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(fauth, db, courseId, "notInCourse");
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+
+        exception.expect(AuthenticationException.class);
+
+        ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, "notInCourse");
     }
 }

@@ -25,8 +25,17 @@
         var studentList = ["student1", "stud2", "gilbert", "gabby", "student5", "student6",
         "matt", "stud8", "stud9", "stud10"];
 
+        var idToNameMap = new Map();
+        for (var i = 0; i < studentList.length; i++) {
+            idToNameMap.set(studentList[i], studentList[i].toUpperCase());
+        }
+
         CourseSketch.dataManager.getCourseRoster = function(courseId, callback) {
-            var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
+            //var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
+            var studentRoster = idToNameMap;
+            studentRoster.set('noGradeStudent', 'NOGRADESTUDENT');
+            studentRoster.set('noGrade2', 'NOGRADE2');
+            studentRoster.set('failure', 'FAILURE');
             callback(studentRoster);
         };
 

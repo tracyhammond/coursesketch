@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Student GradeBook</title>
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <link type="text/css" rel="stylesheet" href="/src/student/gradebook/studentGradebook.css"/>
+
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="gradeBook"></script>
+    <script src="/src/student/gradebook/studentGradebook.js"></script>
+
+    <link rel="import" href="/src/utilities/libraries/materialize/materializeInclude.html">
+</head>
+<template id="expandableTemplate">
+    <li>
+        <div class="collapsible-header"></div>
+        <div class="collapsible-body">
+            <ul class="collection">
+            </ul>
+        </div>
+    </li>
+</template>
+<template id="gradeItem">
+    <li class="collection-item">
+        <div class="name">
+        </div>
+        <div class="secondary-content">
+            <a href="#!" class=" gradeValue">
+            </a>
+        </div>
+    </li>
+</template>
+<template id="gradeHeader">
+    <div class="mdi-av-play-arrow">
+        <a class="name black-text">
+        </a>
+        <a class="secondary-content gradeValue">
+        </a>
+    </div>
+</template>
+<body>
+<div>
+    <!--
+
+     [ AVERAGE ACROSS TOP ]
+     [Grade table] [Graph 1]
+     [catagory1]   [Graph 1]
+     [catagory2]   [Graph 2]
+     [catagory3]   [Graph 2]
+     [catagory4]   [Graph 3]
+    ... so on and so on
+
+    -->
+
+
+    <div class="courseAverage">AVERAGE HERE</div>
+    <div class="column1">
+        <ul id="All" class="collapsible gradeList" data-collapsible="expandable">
+        </ul>
+    </div>
+    <div class="column2">
+        <div></div>
+    </div>
+</div>
+</body>
+</html>

@@ -2,7 +2,7 @@ package database.institution.sql;
 
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.State;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

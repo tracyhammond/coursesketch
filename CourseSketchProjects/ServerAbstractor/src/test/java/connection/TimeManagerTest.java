@@ -1,19 +1,18 @@
 package connection;
 
-import static org.junit.Assert.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import org.joda.time.DateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 import protobuf.srl.request.Message.Request;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static org.junit.Assert.assertEquals;
 
 public class TimeManagerTest {
 
@@ -148,7 +147,7 @@ public class TimeManagerTest {
         DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_SERVER);
         final Request server = TimeManager.serverSendTimeToClient();
 
-        final Request.Builder fakeRequest = Request.newBuilder(server);
+        final Request.Builder fakeRequest = ProtobufUtilities.createBaseResponse(server, true);
         fakeRequest.setResponseText("NOT VALID REQUEST TIME");
         final Request clientResponse = TimeManager.decodeRequest(fakeRequest.build());
 
@@ -163,7 +162,7 @@ public class TimeManagerTest {
         TimeManager.setTimeEstablishedListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent event) {
                 DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
                 assertEquals(FIXED_TIME_SERVER, TimeManager.getSystemTime());
                 TimeManager.getTotalTimeDifference();

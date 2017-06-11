@@ -1,18 +1,16 @@
 validateFirstRun(document.currentScript);
 
+
 /**
  * @namespace "lecturePage/student"
  */
 
 (function() {
     $(document).ready(function() {
-
         /**
          * Selects a specific lecture slide.
          *
-         * @param {Integer} slideIndex
-         *            index of the slide in the current lecture's protobuf
-         *            object.
+         * @param {Integer} slideIndex - Index of the slide in the current lecture's protobuf object.
          * @memberof "lecturePage/student"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
@@ -25,9 +23,6 @@ validateFirstRun(document.currentScript);
                 });
                 $('#' + slideIndex + '.slide-thumb').addClass('selected');
                 CourseSketch.lecturePage.selectedSlideIndex = slideIndex;
-                CourseSketch.dataManager.getLectureSlide(CourseSketch.lecturePage
-                    .lecture.idList[slideIndex].id, CourseSketch.lecturePage.renderSlide,
-                    CourseSketch.lecturePage.renderSlide);
                 CourseSketch.lecturePage.removeWaitOverlay();
             };
             if (!isUndefined(CourseSketch.lecturePage.currentSlide)) {
@@ -46,27 +41,23 @@ validateFirstRun(document.currentScript);
         $(document).keydown(function(e) {
             switch (e.which) {
                 case 37: { // left
-                    if (CourseSketch.lecturePage.selectedSlideIndex > 0) {
-                        CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex - 1);
-                    }
+                    CourseSketch.lecturePage.navigation.gotoPrevious();
                 }
-                break;
+                    break;
 
                 case 38: // up
-                break;
+                    break;
 
                 case 39: { // right
-                    if (CourseSketch.lecturePage.selectedSlideIndex < CourseSketch.lecturePage.lecture.idList.length - 1) {
-                        CourseSketch.lecturePage.selectSlide(CourseSketch.lecturePage.selectedSlideIndex + 1);
-                    }
+                    CourseSketch.lecturePage.navigation.gotoNext();
                 }
-                break;
+                    break;
 
                 case 40: // down
-                break;
+                    break;
 
                 case 27: // escape!
-                break;
+                    break;
 
                 default:
                     return; // exit this handler for other keys
@@ -74,18 +65,27 @@ validateFirstRun(document.currentScript);
             e.preventDefault(); // prevent the default action (scroll / move caret)
         });
 
+        /**
+         * Sets up the lecture for registering and displaying the slides.
+         */
+        function setup() {
+            CourseSketch.lecturePage.lectureId = CourseSketch.dataManager.getState('currentLecture');
+            CourseSketch.dataManager.getAssignment(CourseSketch.lecturePage.lectureId, function(lecture) {
+                CourseSketch.lecturePage.lecture = lecture;
+                CourseSketch.lecturePage.navigation.resetNavigation(CourseSketch.lecturePage.lectureId, 0, 0);
+                CourseSketch.dataManager.clearStates();
+                CourseSketch.lecturePage.displaySlides();
+            });
+        }
+
         // Do setup
-        if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
-            CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
-            CourseSketch.dataManager.clearStates();
-            CourseSketch.lecturePage.displaySlides();
+        if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lectureId)) {
+            setup();
         } else {
             var intervalVar = setInterval(function() {
-                if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lecture)) {
+                if (CourseSketch.dataManager.isDatabaseReady() && isUndefined(CourseSketch.lecturePage.lectureId)) {
                     clearInterval(intervalVar);
-                    CourseSketch.lecturePage.lecture = CourseSketch.dataManager.getState('currentLecture');
-                    CourseSketch.dataManager.clearStates();
-                    CourseSketch.lecturePage.displaySlides();
+                    setup();
                 }
             }, 100);
         }
