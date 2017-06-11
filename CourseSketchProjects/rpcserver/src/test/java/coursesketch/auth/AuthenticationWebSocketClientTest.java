@@ -17,8 +17,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import protobuf.srl.request.Message;
-import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 
 import java.net.URI;
 
@@ -39,9 +39,9 @@ public class AuthenticationWebSocketClientTest {
     private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
     private static final String INVALID_USERNAME = "NOT VALID USERNAME";
 
-    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
-    public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
-    public static final School.ItemType VALID_ITEM_CHILD_TYPE = School.ItemType.ASSIGNMENT;
+    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.SLIDE;
+    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
+    public static final Util.ItemType VALID_ITEM_CHILD_TYPE = Util.ItemType.ASSIGNMENT;
 
     public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
     public static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
