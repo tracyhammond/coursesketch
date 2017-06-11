@@ -19,13 +19,12 @@ SubmissionException.prototype = new BaseException();
  * This class does not retrieve submissions.
  *
  * Assumptions made:
- * toolbar is a custom element that has two functions: setSaveCallback(callback), setSubmitCallback(callback)
- *
- * the toolbar is set before the element is inserted.  (or it will never be inserted)
- *
- * the sub-panel (submit panel) element can change at run time and may not be inserted when this element is inserted
- *
- * you can set the problem object with the class "sub-panel"
+ * <ul>
+ * <li>Toolbar is a custom element that has two functions: setSaveCallback(callback), setSubmitCallback(callback).</li>
+ * <li>The toolbar is set before the element is inserted.  (or it will never be inserted).</li>
+ * <li>The sub-panel (submit panel) element can change at run time and may not be inserted when this element is inserted.</li>
+ * <li>You can set the problem object with the class "sub-panel".</li>
+ * </ul>
  *
  * @class SubmissionPanel
  * @property {QuestionType}
@@ -33,10 +32,8 @@ SubmissionException.prototype = new BaseException();
 function SubmissionPanel() {
 
     /**
-     * @param {Element} templateClone
-     *            An element representing the data inside tag, its
-     *            content has already been imported and then added to this
-     *            element.
+     * @param {Element} templateClone - An element representing the data inside tag, its
+     *            content has already been imported and then added to this element.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -76,10 +73,11 @@ function SubmissionPanel() {
      * This sends data to the server but catches any exception.
      *
      * This method should only be used for testing purposes.
+     *
      * @instance
      * @memberof SubmissionPanel
-     * @param {Boolean} isSubmitting - true if the data is being submitted.
-     * @param {Boolean} suppressAlert - true if the alert is being suppressed (used for testing purposes)
+     * @param {Boolean} isSubmitting - True if the data is being submitted.
+     * @param {Boolean} suppressAlert - True if the alert is being suppressed (used for testing purposes)
      * @see SubmissionPanel#sendDataToServer
      */
     this.sendDataToServerExceptionWrapped = function(isSubmitting, suppressAlert) {
@@ -112,14 +110,12 @@ function SubmissionPanel() {
         var submission = undefined;
         var QuestionType = CourseSketch.prutil.QuestionType;
         switch (this.problemType) {
-            case QuestionType.SKETCH: {
+            case QuestionType.SKETCH:
                 submission = createSketchSubmission(subPanel, isSubmitting);
-            }
-            break;
-            case QuestionType.FREE_RESP: {
+                break;
+            case QuestionType.FREE_RESP:
                 submission = createTextSubmission(subPanel, isSubmitting);
-            }
-            break;
+                break;
         }
         if (isUndefined(submission)) {
             throw new SubmissionException('submission type not supported, aborting');
@@ -159,8 +155,8 @@ function SubmissionPanel() {
      *
      * @return {SrlSubmission} object that is ready to be sent to the server.
      *
-     * @param {Element} textArea The element that contains the text answer
-     * @param {Boolean} isSubmitting value Currently ignored but in the future it may be used.
+     * @param {Element} textArea - The element that contains the text answer
+     * @param {Boolean} isSubmitting - Value Currently ignored but in the future it may be used.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -174,8 +170,9 @@ function SubmissionPanel() {
      * Creates the submission object for the sketch surface.
      *
      * This also adds the submit or save marker to the update list.
-     * @param {SketchSurface} sketchSurface - the sketch surface that is being submitted.
-     * @param {Boolean} isSubmitting - true if this is a submission instead of a save.
+     *
+     * @param {SketchSurface} sketchSurface - The sketch surface that is being submitted.
+     * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
      * @return {SrlSubmission} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
@@ -216,6 +213,7 @@ function SubmissionPanel() {
      *
      * This function takes in a submission and wraps it as either the experiment or solution.
      * This wrapped value is returned from the function and then it is sent to the server internally.
+     *
      * @param  {Function} wrapperFunction - used to wrap the submission in its required data.
      * @instance
      * @memberof SubmissionPanel
@@ -226,6 +224,7 @@ function SubmissionPanel() {
 
     /**
      * Called when the panel is removed from the DOM.
+     *
      * @instance
      * @memberof SubmissionPanel
      */
@@ -235,6 +234,7 @@ function SubmissionPanel() {
 
     /**
      * This clears the toolbar and remakes the callbacks for the toolbar.
+     *
      * @instance
      * @memberof SubmissionPanel
      */
@@ -259,9 +259,9 @@ function SubmissionPanel() {
     /**
      * Makes callbacks for the toolbar that depend on the type of problem.
      *
-     * @param {QuestionType} problemType - the type of problem that is currently being submitted.
-     * @param {Element} element - the element contained inside the submission panel.
-     * @param {Toolbar} toolbar - the custom toolbar element that is contained inside the submission panel.
+     * @param {QuestionType} problemType - The type of problem that is currently being submitted.
+     * @param {Element} element - The element contained inside the submission panel.
+     * @param {Toolbar} toolbar - The custom toolbar element that is contained inside the submission panel.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -311,7 +311,8 @@ SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
  * Sets the problem type for the submission panel.
  *
  * The problem type is used to detirmine how to load and save the panel.
- * @param {QuestionType} problemType sets the problem element.
+ *
+ * @param {QuestionType} problemType - Sets the problem element.
  * @instance
  * @memberof SubmissionPanel
  */

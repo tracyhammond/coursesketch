@@ -17,6 +17,17 @@
 				<protocLocation>${env.protoc}</protocLocation>
 			</properties>
 		</profile>
+		<profile>
+			<id>proto-not-local</id>
+			<activation>
+				<file>
+					<exists>/usr/bin/protoc</exists>
+				</file>
+			</activation>
+			<properties>
+				<protocLocation>/usr/bin/protoc</protocLocation>
+			</properties>
+		</profile>
 	</profiles>
 
 	<parent>
@@ -27,6 +38,12 @@
 	</parent>
 
 	<pluginRepositories>
+		<!-- jitpack -->
+		<pluginRepository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</pluginRepository>
+
 		<pluginRepository>
 			<id>central</id>
 			<name>Central Repository</name>
@@ -41,12 +58,6 @@
 		<pluginRepository>
 			<id>protoc-plugin-backup</id>
 			<url>http://sergei-ivanov.github.com/maven-protoc-plugin/repo/releases/</url>
-		</pluginRepository>
-
-		<!-- jitpack -->
-		<pluginRepository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
 		</pluginRepository>
 	</pluginRepositories>
 

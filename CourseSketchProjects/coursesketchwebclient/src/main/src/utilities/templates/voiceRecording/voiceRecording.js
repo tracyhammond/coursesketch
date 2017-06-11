@@ -1,3 +1,4 @@
+// jscs:disable
 /**
  * Sets up and saves recordings.
  */
@@ -5,7 +6,7 @@ function VoiceRecording() {
 
     /**
      * Initialize the VoiceRecording
-     * @param {Node} templateClone is a clone of the custom HTML Element for the voice Recording
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the voice Recording
      */
     this.initializeElement = function(templateClone) {
         var localScope = this;
@@ -30,7 +31,7 @@ function VoiceRecording() {
 
         /**
          * Blink the elem passed in
-         * @param {Element} element The element that needs to blink
+         * @param {Element} element - The element that needs to blink
          */
         this.blink = function(element) {
             this.voiceBtnTimer = setInterval(function() {
@@ -84,6 +85,8 @@ function VoiceRecording() {
                 navigator.webkitGetUserMedia ||
                 navigator.mozgetUserMedia ||
                 navigator.msGetUserMedia);
+                console.log('Audio context set up');
+                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
                 window.URL = window.URL || window.webkitURL;
             } catch (e) {
                 alert('Web audio is not supported in this browser.');

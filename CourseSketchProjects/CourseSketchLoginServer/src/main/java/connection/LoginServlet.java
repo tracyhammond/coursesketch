@@ -32,14 +32,10 @@ public final class LoginServlet extends ServerWebSocketInitializer {
 
     /**
      * {@inheritDoc}
-     * <p/>
-     * The login server does not need to manage multiple connections so it returns null.
-     *
-     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
-     * @return {@code null}.
+     * @return {@link LoginConnectionManager}.
      */
     @Override
     public MultiConnectionManager createConnectionManager(final ServerInfo serverInfo) {
-        return null;
+        return new LoginConnectionManager(getServer(), serverInfo);
     }
 }

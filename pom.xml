@@ -10,10 +10,13 @@
     <modules>
         <module>CourseSketchProjects/ProtoFiles</module>
         <module>CourseSketchProjects/coursesketchwebclient</module>
+        <module>TestUtilities</module>
         <module>CourseSketchProjects/ServerAbstractor</module>
         <module>CourseSketchProjects/jettyBlank</module>
         <module>CourseSketchProjects/nettyBlank</module>
         <module>CourseSketchProjects/rpcserver</module>
+        <module>CourseSketchProjects/AuthenticationServer</module>
+        <module>CourseSketchProjects/IdentityServer</module>
         <module>CourseSketchProjects/CourseSketchDatabaseServer</module>
         <module>CourseSketchProjects/CourseSketchLoginServer</module>
         <module>CourseSketchProjects/CourseSketchProxyServer</module>
@@ -24,24 +27,24 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+        <pluginRepository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -187,8 +190,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -240,6 +243,21 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/CourseSketchProjects/coursesketchwebclient/src/main/resources/other</directory>
+                            <includes>
+                                <include>**/*.proto</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -309,7 +327,7 @@
                                 <encoding>UTF-8</encoding>
                                 <consoleOutput>true</consoleOutput>
                                 <checkstyle>
-                                    <failsOnError>false</failsOnError>
+                                    <failsOnError>true</failsOnError>
                                 </checkstyle>
                                 <check>
                                     <failsOnError>true</failsOnError>
@@ -317,6 +335,7 @@
                             </configuration>
                             <goals>
                                 <goal>checkstyle</goal>
+                                <goal>check</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -509,8 +528,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>DEBUG</token>
-                                        <value>INFO</value>
+                                        <token>root level="DEBUG"</token>
+                                        <value>root level="INFO"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -525,8 +544,8 @@
                                 <file>${basedir}/src/main/resources/logback.xml</file>
                                 <replacements>
                                     <replacement>
-                                        <token>INFO</token>
-                                        <value>DEBUG</value>
+                                        <token>root level="INFO"</token>
+                                        <value>root level="DEBUG"</value>
                                     </replacement>
                                 </replacements>
                             </configuration>
@@ -563,6 +582,22 @@
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
+                        <execution>
+                            <id>ip_prop_reverse2</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                            <configuration>
+                                <reverseProperties>true</reverseProperties>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
+                                </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                </backupPropertyFiles>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
             </plugins>
@@ -572,7 +607,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- version -->
-        <jettyVersion>9.3.0.M2</jettyVersion>
+        <jettyVersion>9.2.3.v20140905</jettyVersion>
         <!-- 9.2.2.v20140723 -->
         <protobufVersion>[2.6.1,)</protobufVersion>
         <jodaVersion>[2.1,)</jodaVersion>
@@ -580,7 +615,7 @@
         <mockitoVersion>1.9.5</mockitoVersion>
         <puppyVersion>[5.6,)</puppyVersion>
         <junitVersion>4.11</junitVersion>
-        <fongoVersion>1.5.9</fongoVersion>
+        <fongoVersion>1.6.8</fongoVersion>
         <slf4jVersion>1.7.9</slf4jVersion>
         <log4jVersion>2.1</log4jVersion>
         <logbackVersion>1.1.1</logbackVersion>
@@ -591,7 +626,7 @@
         <sitepluginVersion>2.3.3</sitepluginVersion>
         <coberturaVersion>2.6</coberturaVersion>
         <pmdVersion>3.3</pmdVersion>
-        <embeddedMongoVersion>0.1.12</embeddedMongoVersion>
+        <embeddedMongoVersion>0.3.4</embeddedMongoVersion>
         <failSafeVersion>2.18.1</failSafeVersion>
         <surefireVersion>2.17</surefireVersion>
         <replacerVersion>1.6.2</replacerVersion>
@@ -627,6 +662,8 @@
         <!-- This needs to be overwritten in child poms -->
         <mainClass>fully.qualified.MainClass</mainClass>
         <parentConfigLocationDir>${basedir}</parentConfigLocationDir>
+
+
         <!-- Property files in local config -->
         <ipPropFile>${parentConfigLocationDir}/config/local/ips_default.prop</ipPropFile>
     </properties>

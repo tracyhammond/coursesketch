@@ -16,8 +16,8 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>0</projectBranchLevel>
-        <projectLineLevel>0</projectLineLevel>
+        <projectBranchLevel>24</projectBranchLevel>
+        <projectLineLevel>20</projectLineLevel>
         <netty.version>4.0.27.Final</netty.version>
     </properties>
     <build>
@@ -116,6 +116,5 @@
             <artifactId>protobuf-rpc-pro</artifactId>
             <version>57efac2b9f25f5163409606161cef17ba86c3330</version>
         </dependency>
-
     </dependencies>
 </project>

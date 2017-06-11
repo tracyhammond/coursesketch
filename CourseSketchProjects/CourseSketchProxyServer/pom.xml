@@ -17,7 +17,7 @@
     <properties>
         <!-- This may be removed and a later solution will need to be worked on -->
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
-        <mainClass>serverfront.ProxyRunner</mainClass>
+        <mainClass>coursesketch.serverfront.ProxyRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
         <projectBranchLevel>0</projectBranchLevel>
@@ -69,6 +69,12 @@
                     </execution>
                     <execution>
                         <id>ip_prop_reverse</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ip_prop_reverse2</id>
                         <configuration>
                             <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
                         </configuration>
