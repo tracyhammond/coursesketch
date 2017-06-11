@@ -12,9 +12,7 @@
     <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#submissionTemplateImport');
-            var template = link.import.querySelector('#submission');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'submissionTemplateImport', 'submission');
 
             var newElement = new SubmissionPanel();
 
