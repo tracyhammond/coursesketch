@@ -1,5 +1,6 @@
 /* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
+//jscs:disable
 
 /**
  * ******************************
@@ -63,7 +64,7 @@ function SRL_Stroke(startPoint) {
      * @return the point at index i
      */
     this.getPoint = function(i) {
-        if (typeof i === "number") {
+        if (typeof i === 'number') {
             if (i >= points.length) {
                 return null;
             }
@@ -212,7 +213,7 @@ function SRL_Stroke(startPoint) {
      */
     this.getStartAngleCosine = function(inputSecondPoint) {
         var secondPoint = inputSecondPoint;
-        if (typeof secondPoint === "number") {
+        if (typeof secondPoint === 'number') {
             if (this.getNumPoints() <= 1) return Number.NaN;
             if (this.getNumPoints() <= secondPoint) {
                 secondPoint = this.getNumPoints() - 1;
@@ -233,7 +234,7 @@ function SRL_Stroke(startPoint) {
             var hypotenuse = Math.sqrt(sectionWidth * sectionWidth + sectionHeight * sectionHeight);
             return sectionWidth / hypotenuse;
         }
-        throw ".getStartAngleCosine needs an int argument";
+        throw '.getStartAngleCosine needs an int argument';
     };
 
     /**
@@ -249,7 +250,7 @@ function SRL_Stroke(startPoint) {
      */
     this.getStartAngleSine = function(inputSecondPoint) {
         var secondPoint = inputSecondPoint;
-        if (typeof secondPoint === "number") {
+        if (typeof secondPoint === 'number') {
             if (this.getNumPoints() <= 1) return Number.NaN;
             if (this.getNumPoints() <= secondPoint) {
                 secondPoint = this.getNumPoints() - 1;
@@ -334,7 +335,7 @@ function SRL_Stroke(startPoint) {
      * @return total time of the stroke
      */
     this.getTotalTime = function() {
-        console.log("TODO - need to implement a .getTime()");
+        console.log('TODO - need to implement a .getTime()');
         throw 'unspoorted function call: "getTotalTime"';
         // if (this.getPoints().length === 0) return Number.NaN;
         // return this.getLastPoint().getTime()-this.getFirstPoint().getTime();
@@ -347,7 +348,7 @@ function SRL_Stroke(startPoint) {
      * @return list of points with duplicates (based on time) removed
      */
     this.removeTimeDuplicates = function() {
-        console.log("TODO - need to implement a .getTime()");
+        console.log('TODO - need to implement a .getTime()');
         throw 'unspoorted function call: "removeTimeDuplicates"';
         /*
         var points = [];
@@ -388,7 +389,7 @@ function SRL_Stroke(startPoint) {
      * @return maximum stroke speed reached
      */
     this.getMaximumSpeed = function() {
-        console.log("TODO - need to implement a .getTime()");
+        console.log('TODO - need to implement a .getTime()');
         throw 'unspoorted function call: "getMaximumSpeed"';
         /*
         if (this.getPoints().length === 0) return Number.NaN;
@@ -417,7 +418,7 @@ function SRL_Stroke(startPoint) {
      * @return
      */
     this.rotationAtAPoint = function(startP) {
-        if (points[0] instanceof SRL_Point && typeof startP === "number") {
+        if (points[0] instanceof SRL_Point && typeof startP === 'number') {
             if (points.length < startP + 2) {
                 return Number.NaN;
             }

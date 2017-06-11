@@ -1,14 +1,15 @@
 /**
- * 
- 
+ *
+
 srl03.tamu.edu/phpmyadmin/
 user: srl
 password: sketchrec
- 
+
  */
 package database.institution.sql;
 
 import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 
 import java.sql.*;
 
@@ -31,13 +32,13 @@ public class MySQLTest_AK3 {
         String userId = "test";
         String classification = "test";
         String itemId = "test";
-        School.State.Builder state = School.State.newBuilder();
+        Util.State.Builder state = Util.State.newBuilder();
         state.setStarted(false);
         state.setCompleted(false);
         state.setGraded(false);
 		/*System.out.println("Which assignment would you like to pull up? ");
 		assignment_variable = user_input.next();*/
-		
+
 		// TODO Auto-generated method stub
 			try {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -77,11 +78,11 @@ public class MySQLTest_AK3 {
                 }
 
 
-		//	System.out.println(rs.first());			
+		//	System.out.println(rs.first());
 			//	rs2.close();
-			
+
 		System.out.println("done");
-		
+
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 		e.printStackTrace();

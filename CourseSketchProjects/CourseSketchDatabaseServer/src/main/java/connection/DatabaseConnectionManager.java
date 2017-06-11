@@ -1,7 +1,11 @@
 package connection;
 
+import coursesketch.auth.AuthenticationWebSocketClient;
+import coursesketch.identity.IdentityWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.submission.SubmissionWebSocketClient;
 import utilities.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,18 +22,12 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnectionManager.class);
 
     /**
-     * The port number of the submission server.
-     */
-    private static final int SUBMISSION_PORT = 8883;
-
-    /**
      * A constructor for the multi connection manager.
      * @param parent The parent server
-     * @param connectType If the connection is local or if it is remote
-     * @param secure If ssl should be used.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final boolean connectType, final boolean secure) {
-        super(parent, connectType, secure);
+    public DatabaseConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -39,8 +37,22 @@ public class DatabaseConnectionManager extends MultiConnectionManager {
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, this.isConnectionLocal(), "srl02.tamu.edu", SUBMISSION_PORT, this.isSecure(),
-                    SubmissionClientWebSocket.class);
+            createAndAddConnection(serv, this.isConnectionLocal(), AuthenticationWebSocketClient.ADDRESS, AuthenticationWebSocketClient.PORT,
+                    this.isSecure(), AuthenticationWebSocketClient.class);
+        } catch (ConnectionException e) {
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+
+        try {
+            createAndAddConnection(serv, this.isConnectionLocal(), IdentityWebSocketClient.ADDRESS, IdentityWebSocketClient.PORT,
+                    this.isSecure(), IdentityWebSocketClient.class);
+        } catch (ConnectionException e) {
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+
+        try {
+            createAndAddConnection(serv, this.isConnectionLocal(), SubmissionWebSocketClient.ADDRESS, SubmissionWebSocketClient.PORT,
+                    this.isSecure(), SubmissionWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

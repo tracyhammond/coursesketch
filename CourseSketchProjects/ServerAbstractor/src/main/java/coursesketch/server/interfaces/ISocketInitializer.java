@@ -25,13 +25,14 @@ public interface ISocketInitializer {
     int getCurrentConnectionNumber();
 
     /**
-     * Override this method to create a subclass of the MultiConnectionManager.
+     * Creates and returns a manager that can be used to connect to other servers.
      *
-     * @param connectLocally True if the connection is acting as if it is on a local computer (used for testing)
-     * @param iSecure True if the connection is using SSL.
+     * This server will act as a client when connecting to those other server.
+     *
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      * @return An instance of the {@link MultiConnectionManager}
      */
-    MultiConnectionManager createConnectionManager(final boolean connectLocally, final boolean iSecure);
+    MultiConnectionManager createConnectionManager(final ServerInfo serverInfo);
 
     /**
      * Override this method to create a subclass of GeneralConnectionServer.
@@ -39,6 +40,16 @@ public interface ISocketInitializer {
      * @return An instance of the {@link AbstractServerWebSocketHandler}
      */
     AbstractServerWebSocketHandler createServerSocket();
+
+    /**
+     * @return {@link ServerInfo}. Contains all of the data about the server.
+     */
+    ServerInfo getServerInfo();
+
+    /**
+     * Called to initialize The {@link AbstractServerWebSocketHandler}.
+     */
+    void onServerStart();
 
     // METHODS BELOW NEED TO BE IN ALL CLASSES OF THIS INTERFACE (but they can't be in interface because of scope.
 

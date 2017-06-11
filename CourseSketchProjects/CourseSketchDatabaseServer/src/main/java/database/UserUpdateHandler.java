@@ -2,14 +2,13 @@ package database;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.institution.mongo.UpdateManager;
 import handlers.ResultBuilder;
 import org.bson.BasicBSONObject;
-import org.bson.types.ObjectId;
 import protobuf.srl.query.Data;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
@@ -27,6 +26,7 @@ import static database.DatabaseStringConstants.TIME;
 import static database.DatabaseStringConstants.UPDATEID;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Hanldes updates for the user so that the system can do heavy caching on the client.
@@ -141,8 +141,8 @@ public final class UserUpdateHandler {
 
         for (String group : users) {
             if (group.startsWith(GROUP_PREFIX)) {
-                final DBRef myDbRef = new DBRef(database, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
-                final DBObject corsor = myDbRef.fetch();
+                final DBCollection collection = database.getCollection(USER_GROUP_COLLECTION);
+                final DBObject corsor = collection.findOne(convertStringToObjectId(group.substring(GROUP_PREFIX_LENGTH)));
                 final ArrayList<String> list = (ArrayList<String>) corsor.get(USER_LIST);
                 insertUpdates(database, list, objectAffectedId, classification);
             } else {
@@ -195,16 +195,16 @@ public final class UserUpdateHandler {
             objectAffectedId.add((String) ((BasicBSONObject) userUpdates.get(i)).get(UPDATEID));
             if (COURSE_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.COURSE,
-                        MongoInstitution.getInstance().getCourses(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getCourses(userId, objectAffectedId)));
             } else if (ASSIGNMENT_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.ASSIGNMENT,
-                        MongoInstitution.getInstance().getAssignment(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getAssignment(userId, objectAffectedId)));
             } else if (PROBLEM_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.BANK_PROBLEM,
-                        MongoInstitution.getInstance().getProblem(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getProblem(userId, objectAffectedId)));
             } else if (COURSE_PROBLEM_CLASSIFICATION.equals(classification)) {
                 resultList.add(ResultBuilder.buildResult(Data.ItemQuery.COURSE_PROBLEM,
-                        MongoInstitution.getInstance().getCourseProblem(objectAffectedId, userId)));
+                        MongoInstitution.getInstance(null).getCourseProblem(userId, objectAffectedId)));
             }
         }
         return resultList;

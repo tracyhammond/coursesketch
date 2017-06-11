@@ -5,8 +5,8 @@
  */
 function TextBox() {
     /**
-     * @param {String} textToRead contains the text to be read
-     * @param {Function} callback is the callback to be run after the text has been spoken
+     * @param {String} textToRead - contains the text to be read
+     * @param {Function} callback - is the callback to be run after the text has been spoken
      * This function speaks the text using the meSpeak library
      */
     this.speakText = function(textToRead, callback) {
@@ -20,8 +20,8 @@ function TextBox() {
      * The dragging is restricted to the area of the parentNode the dialog is created in
      * NOTE: This code comes from the interact library examples page
      */
-    function enableDragging(localScope) {
-        interact(localScope.shadowRoot.querySelector('.draggable'))
+    function enableDragging(localElement) {
+        interact(localElement.shadowRoot.querySelector('.draggable'))
             .ignoreFrom('textarea, button')
             .draggable({
                 onmove: function(event) {
@@ -40,14 +40,14 @@ function TextBox() {
             })
             .inertia(false)
             .restrict({
-                drag: localScope.parentNode,
+                drag: localElement.parentNode,
                 endOnly: false,
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
             });
     }
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -121,7 +121,7 @@ function TextBox() {
     // Saves Data for the proto message based on the position, height, width, and value of the text box
     this.saveData = function(event) {
         /*jshint maxcomplexity:13 */
-        var textBoxProto = CourseSketch.PROTOBUF_UTIL.ActionCreateTextBox();
+        var textBoxProto = CourseSketch.prutil.ActionCreateTextBox();
         textBoxProto.setText(this.shadowRoot.querySelector('#creatorText').value); // Sets Text value for proto message
         var dialog = this.shadowRoot.querySelector('#textBoxDialog');
         var x = '' + dialog.style.left; // Makes sure x is a string for following check function
@@ -161,9 +161,9 @@ function TextBox() {
         // If the textbox does not have an id, then a command has not been created for the textbox
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
             if (this.shadowRoot.querySelector('#speakText') === null) {
-                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, true);
+                this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, true);
             } else {
-                this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, true);
+                this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_TTSBOX, true);
             }
         }
         this.command.setCommandData(textBoxProto.toArrayBuffer()); // Sets commandData for commandlist
@@ -173,7 +173,7 @@ function TextBox() {
     };
 
     /**
-     * @param {ProtoCommand} textBoxProto is the data to be loaded from the proto
+     * @param {ProtoCommand} textBoxProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */

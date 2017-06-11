@@ -5,7 +5,7 @@
 	<template id="schoolItemTemplate">
 	<style>
 		@import "/src/utilities/templates/schoolItem/schoolItem.css";
-		@import "/src/utilities/libraries/materializecss/css/materialize.min.css";
+		@import "/bower_components/materialize/bin/materialize.css";
 	</style>
 	<span class="schoolItemState"><content select="span.grade"></content></span>
 	<img class=".image">
@@ -17,27 +17,27 @@
 					<span class="editButton" data-type="name">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</h4>
 			</div>
-			<span class="date">
-				<h4 class="accessDate">
+			<div class="date">
+				<div class="accessDate">
 					<content select=".accessDate"></content>
 					<span class="editButton" data-type="accessDate">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				</h4>
-				<h4 class="dueDate">
+				</div>
+				<div class="dueDate">
 					<content select=".dueDate"></content>
 					<span class="editButton" data-type="dueDate">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				</h4>
-				<h4 class="closeDate">
+				</div>
+				<div class="closeDate">
 					<content select=".closeDate"></content>
 					<span class="editButton" data-type="closeDate">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				</h4>
-			</span>
-			<div class="description">
+				</div>
+			</div>
+			<span class="description">
 				<p class="contentHolder">
 					<content select="div.description"></content>
 					<span class="editButton" data-type="description">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				</p>
 				<p class="expand"></p>
-			</div>
+			</span>
 		</div>
 	</div>
 	<span class="editButton advanceButton" data-type="advanceEdit">&nbsp;&nbsp;&nbsp;&nbsp;</span>

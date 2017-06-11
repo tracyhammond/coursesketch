@@ -1,48 +1,42 @@
 package connection;
 
+import coursesketch.auth.AuthenticationWebSocketClient;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConnectionException;
 import utilities.LoggingConstants;
 
 /**
- * A manager for holding all of the connections that were created.
- *
- * @author gigemjt
+ * Created by dtracers on 12/6/2015.
  */
-public final class SubmissionConnectionManager extends MultiConnectionManager {
+public class SubmissionConnectionManager extends MultiConnectionManager {
 
     /**
-     * Declaration and Definition of Logger.
+     *  Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionConnectionManager.class);
 
     /**
-     * Port number.
+     * A constructor for the multi connection manager.
+     * @param server The parent server
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    private static final int PORT = 8885;
-
-    /**
-     * Creates a default {@link MultiConnectionManager}.
-     *
-     * @param parent  The server that is using this object.
-     * @param isLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param isSecure  True if the connections should be isSecure.
-     */
-    public SubmissionConnectionManager(final AbstractServerWebSocketHandler parent, final boolean isLocal, final boolean isSecure) {
-        super(parent, isLocal, isSecure);
+    public SubmissionConnectionManager(final AbstractServerWebSocketHandler server, final ServerInfo serverInfo) {
+        super(server, serverInfo);
     }
 
     /**
-     * {@inheritDoc}.
+     * Called to connect this server to other servers.
+     * @param serv The current server that the connections will be made from.
      */
     @Override
-    public void connectServers(final AbstractServerWebSocketHandler serv) {
+    public final void connectServers(final AbstractServerWebSocketHandler serv) {
         try {
-            createAndAddConnection(serv, isConnectionLocal(), "srl04.tamu.edu", PORT, isSecure(), DataClientWebSocket.class);
+            createAndAddConnection(serv, this.isConnectionLocal(), AuthenticationWebSocketClient.ADDRESS, AuthenticationWebSocketClient.PORT,
+                    this.isSecure(), AuthenticationWebSocketClient.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

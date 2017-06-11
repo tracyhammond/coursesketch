@@ -17,35 +17,25 @@
     <!-- experiment specific -->
     <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
     <link rel="import" href="/src/common/submission/submissionInclude.html">
+    <link rel="import" href="/src/common/problem/problemTextPanelInclude.html">
 
     <!-- embedded HTML -->
     <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html">
-    <script type="text/javascript" src="/src/utilities/libraries/jailed/jailed.js"></script>
+    <script type="text/javascript" src="/bower_components/jailed/lib/jailed.js"></script>
     <script type="text/javascript" src="/src/common/scriptExecution/scriptExecutor.js"></script>
     <script type="text/javascript" src="/src/student/experiment/experiment.js"></script>
 
 </head>
 <body style = "overflow: hidden">
-
-
     <div class="row">
-        <navigation-panel></navigation-panel>
+        <div class="col s9" style="position: absolute; display: inline-flex; z-index: 1;">
+            <navigation-panel></navigation-panel>
+            <problem-text-panel style="flex: 1 1;"></problem-text-panel>
+        </div>
         <div id="percentBar" style="display:none;"></div>
-        <nav>
-            <div class="nav-wrapper z-depth-2 teal darken-3">
-                <div class="col s12">
-                    <a href="#" class="brand-logo center" style="display:inline-flex;">
-                        <div class="center bold">Course</div>
-                        <div class="center light">Sketch</div>
-                    </a>
-                    <ul id="nav-mobile" class="right hide-on-med-and-down">
-                        <li><a href="sass.html">Return</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
         <submit-panel id="problemPanel" class="col s12 cyan lighten-5">
             <problem-tool-bar></problem-tool-bar>
         </submit-panel>
     </div>
 </body>
+</html>

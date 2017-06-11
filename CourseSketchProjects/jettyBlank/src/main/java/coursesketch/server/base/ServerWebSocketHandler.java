@@ -1,8 +1,10 @@
 package coursesketch.server.base;
 
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ISocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -10,11 +12,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import protobuf.srl.request.Message.Request;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import protobuf.srl.request.Message.Request;
 import utilities.LoggingConstants;
 
 import java.nio.ByteBuffer;
@@ -34,10 +34,12 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
 
     /**
      * A constructor that accepts a servlet.
+     *
      * @param parent The parent servlet of this server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public ServerWebSocketHandler(final ISocketInitializer parent) {
-        super(parent);
+    public ServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -134,10 +136,25 @@ public class ServerWebSocketHandler extends AbstractServerWebSocketHandler {
     }
 
     /**
-     * @return The {@link MultiConnectionManager} or subclass so it can be used
-     * in this instance.
+     * {@inheritDoc}
      */
     protected final MultiConnectionManager getConnectionManager() {
         return ((ServerWebSocketInitializer) getParentServer()).getManager();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:designforextension")
+    @Override protected void onInitialize() {
+        // Does nothing by default
     }
 }

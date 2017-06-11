@@ -21,7 +21,7 @@
 <link id="loginTemplateImport" rel="import"
 	href="/src/utilities/connection/login/login.html">
 <link rel="import"
-      href="/src/utilities/libraries/materializecss/materializecssInclude.html">
+      href="/src/utilities/libraries/materialize/materializeInclude.html">
 
 <!-- login.js -->
 <script type="text/javascript" src="login.js"></script>
@@ -33,7 +33,7 @@
             var clone = document.importNode(template.content, true);
 
             var newElement = new LoginSystem();
-          	var official = "128.194.133.74:8888/websocket"; // our server
+          	var official = "PROXY_IP_PROP:8888/websocket"; // our server
     		var test = "localhost:8888/websocket"; // local server
 
     		var wsUri = official;

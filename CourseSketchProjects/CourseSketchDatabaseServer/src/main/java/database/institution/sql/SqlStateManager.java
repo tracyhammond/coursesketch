@@ -2,7 +2,7 @@ package database.institution.sql;
 
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.State;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -99,7 +99,7 @@ public final class SqlStateManager {
                 } else {
                     rst.moveToInsertRow();
                     rst.updateString(DatabaseStringConstants.USER_ID, userId);
-                    rst.updateString(DatabaseStringConstants.SCHOOLITEMTYPE, classification);
+                    rst.updateString(DatabaseStringConstants.SCHOOL_ITEM_TYPE, classification);
                     rst.updateString(DatabaseStringConstants.SCHOOLITEMID, itemId);
                     rst.updateBoolean(DatabaseStringConstants.STATE_COMPLETED, state.getCompleted());
                     rst.updateBoolean(DatabaseStringConstants.STATE_STARTED, state.getStarted());
