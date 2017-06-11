@@ -78,9 +78,7 @@
 	<script>
         var template = (function() {
             var link1 = document.querySelector('#schoolItemTemplateImport');
-            var link = link1.import.querySelector('#schoolItemTemplateImport');
-            var template = link.import.querySelector('#schoolItemTemplate');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(link1.import, document,'schoolItemTemplateImport','schoolItemTemplate');
             return clone;
         })();
         QUnit.module("creation", {

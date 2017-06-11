@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#embeddedHtmlTemplateImport');
-            var template = link.import.querySelector('#embedded-html');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'embeddedHtmlTemplateImport','embedded-html');
 
             var newElement = new EmbeddedHtml();
 

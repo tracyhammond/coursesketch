@@ -410,3 +410,22 @@ if (isUndefined(safeLoad)) {
         }
     }
 }
+
+if (isUndefined(safeImport)) {
+    /**
+     * Imports a node from a different document safely.
+     *
+     * @param importDoc {Document} The document that is importing the template
+     * @param document {Document} The general document
+     * @param importId {String} The id of the import link
+     * @param importNodeId {String} The id of the node to be imported
+     * @returns {Node|*}
+     */
+    function safeImport(importDoc, document, importId, importNodeId) {
+        var link = importDoc.getElementById(importId) || importDoc.querySelector('#' + importId);
+        console.log('grabbed link with id: ', importId, ' the resulting link is ', link);
+        var template = link.import.getElementById(importNodeId) || link.import.querySelector('#' + importNodeId);
+        console.log('grabbed node with id: ', importNodeId, ' the resulting node is ', template);
+        return document.importNode(template.content, true);
+    }
+}
