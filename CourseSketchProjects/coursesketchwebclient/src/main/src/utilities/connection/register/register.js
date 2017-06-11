@@ -122,7 +122,7 @@ function RegisterSystem() {
 
     /**
      * The function used for submitting register information.
-     * Also the only difference between {@code login.js and register.js}
+     * Also the only difference between {@code login.js and register.js}.
      *
      * @access private
      * @memberof LoginSystem

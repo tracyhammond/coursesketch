@@ -58,8 +58,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     };
 
     /**
-     *
-     * Calls undo on an {@link SrlCommand} list in the reverse of the order they are added to the list
+     * Calls undo on an {@link SrlCommand} list in the reverse of the order they are added to the list.
      *
      * <b>Note</b> that we do not add the methods we added in redo.
      * This is because we assert that you can not undo something until it has been redone first.  So the methods already exist.

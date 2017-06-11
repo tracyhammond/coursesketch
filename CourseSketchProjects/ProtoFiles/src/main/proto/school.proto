@@ -1,6 +1,4 @@
 import "util.proto";
-import "grading.proto";
-import "commands.proto";
 
 package protobuf.srl.school;
 

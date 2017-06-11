@@ -96,7 +96,7 @@ validateFirstRun(document.currentScript);
             if (isException(submission)) {
                 CourseSketch.clientException(submission);
             }
-            if (isUndefined(submission) || CourseSketch.isException(submission) ||isUndefined(submission.getTextAnswer())) {
+            if (isUndefined(submission) || CourseSketch.isException(submission) || isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }

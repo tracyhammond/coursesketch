@@ -110,14 +110,12 @@ function SubmissionPanel() {
         var submission = undefined;
         var QuestionType = CourseSketch.prutil.QuestionType;
         switch (this.problemType) {
-            case QuestionType.SKETCH: {
+            case QuestionType.SKETCH:
                 submission = createSketchSubmission(subPanel, isSubmitting);
-            }
-            break;
-            case QuestionType.FREE_RESP: {
+                break;
+            case QuestionType.FREE_RESP:
                 submission = createTextSubmission(subPanel, isSubmitting);
-            }
-            break;
+                break;
         }
         if (isUndefined(submission)) {
             throw new SubmissionException('submission type not supported, aborting');

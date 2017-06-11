@@ -242,27 +242,27 @@
      * Sets up the advance edit panel for editing advance data.
      *
      * @param {Element} element - The edit button that opens up the panel when clicked.
-     * @param {SchoolItem} localScope -  The school item that this advance panel is associated with.
+     * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
      * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
      */
-    SchoolItem.prototype.createAdvanceEditPanel = function(element, localScope, parentNode) {
+    SchoolItem.prototype.createAdvanceEditPanel = function(element, localElement, parentNode) {
         $(element).click(function(event) {
             event.stopPropagation();
 
             // create host and position it
             var host = document.createElement('dialog');
             host.className = 'advanceEditHost';
-            var pos = $(localScope).offset();
-            var leftPos = (pos.left + $(localScope).width());
-            $(host).offset({ top:pos.top, left:leftPos });
+            var pos = $(localElement).offset();
+            var leftPos = (pos.left + $(localElement).width());
+            $(host).offset({ top: pos.top, left: leftPos });
 
             // add html to host
             var shadow = host.createShadowRoot();
-            var clone = localScope.getAdvanceEditPanel();
+            var clone = localElement.getAdvanceEditPanel();
             shadow.appendChild(clone);
-            localScope.advanceEditPanel = host;
+            localElement.advanceEditPanel = host;
 
-            var currentData = loadData(localScope, localScope.schoolItemData, shadow);
+            var currentData = loadData(localElement, localElement.schoolItemData, shadow);
 
             // add our loaded element to the page.
             document.body.appendChild(host);
@@ -291,7 +291,7 @@
                 var schoolItem = getHostElement(parentNode);
                 document.body.removeChild(host);
                 console.log(schoolItem);
-                console.log(localScope);
+                console.log(localElement);
                 schoolItem.editFunction('advance', currentData, newData, schoolItem);
             };
 

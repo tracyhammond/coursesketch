@@ -544,7 +544,7 @@ function ProtobufSetup() {
     };
 
     /**
-     * Decodes the data and preserves the bytebuffer for later use
+     * Decodes the data and preserves the bytebuffer for later use.
      *
      * @param {ArrayBuffer} data
      *            a compiled set of data in the protobuf object.
