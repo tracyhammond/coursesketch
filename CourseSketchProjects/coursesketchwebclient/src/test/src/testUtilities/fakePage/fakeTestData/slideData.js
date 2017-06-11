@@ -1,3 +1,4 @@
+validateFirstRun(document.currentScript);
 (function() {
     CourseSketch.fakeSlides = [];
 

@@ -15,7 +15,10 @@
     "jailed": "asvd/jailed#a840e684a3ba14cc8af61973b3e6d0d900dca097"
   },
   "devDependencies": {
-    "blanket": "1.1.7"
+    "blanket": "1.1.7",
+    "qunit": "1.23.0",
+    "qunit-once": "0.1.1",
+    "sinon": "http://sinonjs.org/releases/sinon-1.17.3.js"
   },
   "private": true
 }

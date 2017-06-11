@@ -1,3 +1,4 @@
+validateFirstRun(document.currentScript);
 (function() {
 
     CourseSketch.fakeProblems = [];
@@ -35,7 +36,7 @@
 
     problem1.courseId = '1';
     problem1.assignmentId = '1';
-    problem1.id = '1';
+    problem1.id = '10';
     problem1.name = 'Test Problem';
     problem1.state = CourseSketch.prutil.State();
     problem1.state.published = true;
@@ -45,6 +46,7 @@
     problem1.state.completed = false;
     problem1.state.graded = true;
     problem1.problemInfo = bankProblem1;
+
     bankProblem1.id = problem1.id;
     bankProblem1.questionText = 'Please write your name.' +
         ' $\\left [ – \\frac{\\hbar^2}{2 m} \\frac{\\partial^2}{\\partial x^2} + V \\right ] \\Psi = i \\hbar \\frac{\\partial}{\\partial t} \\Psi$';
@@ -53,7 +55,7 @@
 
     problem2.courseId = '1';
     problem2.assignmentId = '1';
-    problem2.id = '2';
+    problem2.id = '20';
     problem2.other = '';
     problem2.gradeWeight = '15';
     problem2.grade = 97;
@@ -73,7 +75,7 @@
 
     problem3.courseId = '1';
     problem3.assignmentId = '2';
-    problem3.id = '3';
+    problem3.id = '30';
     problem3.state = CourseSketch.prutil.State();
     problem3.state.published = true;
     problem3.state.accessible = false;
@@ -89,7 +91,7 @@
     CourseSketch.fakeBankProblems.push(bankProblem3);
 
     problem4.courseId = '1';
-    problem4.id = '4';
+    problem4.id = '40';
     problem1.assignmentId = '2';
     problem4.state = CourseSketch.prutil.State();
     problem4.state.published = true; //closed
@@ -107,7 +109,7 @@
 
     // TODO: please finish out the test data...
     problem5.courseId = '2';
-    problem5.id = '5';
+    problem5.id = '50';
     problem5.assignmentId = '3';
     problem5.name = 'Quantum spin states';
     problem5.state = CourseSketch.prutil.State();
@@ -124,7 +126,7 @@
     CourseSketch.fakeBankProblems.push(bankProblem5);
 
     problem6.courseId = '2';
-    problem6.id = '6';
+    problem6.id = '60';
     problem6.assignmentId = '3';
     problem6.name = 'weave identification';
     problem6.state = CourseSketch.prutil.State();
@@ -141,7 +143,7 @@
     CourseSketch.fakeBankProblems.push(bankProblem6);
 
     problem7.courseId = '3';
-    problem7.id = '7';
+    problem7.id = '70';
     problem7.assignmentId = '4';
     problem7.name = 'underwater breathing';
     problem7.problemInfo = bankProblem7;
@@ -151,7 +153,7 @@
     CourseSketch.fakeBankProblems.push(bankProblem7);
 
     problem8.courseId = '3';
-    problem8.id = '8';
+    problem8.id = '80';
     problem8.assignmentId = '5';
     problem8.name = 'style quiz';
     problem8.problemInfo = bankProblem8;
@@ -162,7 +164,7 @@
 
     problem9.courseId = '4';
     problem9.assignmentId = '6';
-    problem9.id = '9';
+    problem9.id = '90';
     problem9.name = 'make course sketch';
     problem9.problemInfo = bankProblem9;
     bankProblem9.id = problem9.id;
@@ -173,7 +175,7 @@
 
     problem10.courseId = '5';
     problem10.assignmentId = '7';
-    problem10.id = '10';
+    problem10.id = '100';
     problem10.name = 'make course sketch';
     problem10.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
     + 'You have one week.';
@@ -184,7 +186,7 @@
 
     problem11.courseId = '6';
     problem11.assignmentId = '8';
-    problem11.id = '11';
+    problem11.id = '110';
     problem11.name = 'make course sketch';
     problem11.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
     + 'You have one week.';
@@ -195,7 +197,7 @@
 
     problem12.courseId = '6';
     problem12.assignmentId = '8';
-    problem12.id = '12';
+    problem12.id = '120';
     problem12.name = 'make course sketch';
     problem12.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
     + 'You have one week.';
@@ -206,7 +208,7 @@
 
     problem13.courseId = '6';
     problem13.assignmentId = '9';
-    problem13.id = '13';
+    problem13.id = '130';
     problem13.name = 'make course sketch';
     problem13.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
     + 'You have one week.';
@@ -217,7 +219,7 @@
 
     problem14.courseId = '6';
     problem14.assignmentId = '9';
-    problem14.id = '14';
+    problem14.id = '140';
     problem14.name = 'make course sketch';
     problem14.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
     + 'You have one week.';
@@ -226,18 +228,31 @@
     CourseSketch.fakeProblems.push(problem14);
     CourseSketch.fakeBankProblems.push(bankProblem14);
 
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
-	       var problemLoop = CourseSketch.prutil.SrlProblem();
-		   var bankProblemLoop = CourseSketch.prutil.SrlBankProblem();
-		   problemLoop.courseId = '8';
-		   problemLoop.assignmentId = '' + (11 + i);
-		   problemLoop.id = '' + (11 + i * 10 + j);
-		   problemLoop.name = 'problem' + j;
-		   bankProblemLoop.id = problemLoop.id;
-		   bankProblemLoop.questionText = 'Please add ' + i + ' + ' + j;
-		   CourseSketch.fakeProblems.push(problemLoop);
-		   CourseSketch.fakeBankProblems.push(bankProblemLoop);
-	    }
-	}
+    var baseAssignmentId = 10000; // 10,000
+    for (var i = 0; i < 4; i++) {
+        var assignmentIdNumber = baseAssignmentId + i * 100;
+        for (var j = 0; j < 4; j++) {
+            var problemLoop = CourseSketch.prutil.SrlProblem();
+            var bankProblemLoop = CourseSketch.prutil.SrlBankProblem();
+            problemLoop.courseId = '8';
+            problemLoop.assignmentId = '' + (assignmentIdNumber);
+            problemLoop.id = '' + (assignmentIdNumber + j * 10);
+            problemLoop.name = 'problem' + (j * 10);
+            bankProblemLoop.id = problemLoop.id;
+            bankProblemLoop.questionText = 'Please add ' + (i * 100) + ' + ' + (j * 10);
+            CourseSketch.fakeProblems.push(problemLoop);
+            CourseSketch.fakeBankProblems.push(bankProblemLoop);
+        }
+    }
+
+    for (var k = 0; k < CourseSketch.fakeProblems.length; k++) {
+        var problem = CourseSketch.fakeProblems[k];
+        var problemHolder1 = CourseSketch.prutil.ProblemSlideHolder();
+        problemHolder1.id = problem.id;
+        problemHolder1.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
+        problemHolder1.unlocked = true;
+        problemHolder1.problem = CourseSketch.fakeBankProblems[k];
+        problem.subgroups = [ problemHolder1 ];
+        // console.log('problem: ', problem.id, problem.subgroups);
+    }
 })();

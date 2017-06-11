@@ -67,7 +67,6 @@
     "requireLineFeedAtFileEnd": true,
     "disallowSpaceAfterObjectKeys": true,
 
-    "plugins": ["jscs-jsdoc"],
     "jsDoc": {
         "checkAnnotations": {
             "preset": "jsdoc3",
@@ -95,6 +94,7 @@
 
 
     /*
+
         THESE ARE RULES THAT ARE CURRENTLY DISABLED BUT MAY BE ADDED LATER
 
         "validateLineBreaks": "LF",

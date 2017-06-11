@@ -10,7 +10,7 @@
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function SlideDataManager(parent, advanceDataListener, database, sendData, Request, ByteBuffer) {
+function SlideDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
     var parentScope = parent;
 
     /**
@@ -36,7 +36,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      * @param {Function} slideCallback - function to be called after the slide setting is done
      */
     function insertSlideServer(slide, slideCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURESLIDE, function(evt, item) {
+        advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer(), function(evt, item) {
             console.log('RESPONSE PLEASE!!!!');
             advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURESLIDE);
             var resultArray = item.getReturnText().split(':');
@@ -57,7 +57,6 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
 
     /**
@@ -72,11 +71,10 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      */
     function updateSlide(slide, localCallback, serverCallback) {
         setSlide(slide, localCallback);
-        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.LECTURESLIDE, function(evt, item) {
+        advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer(), function(evt, item) {
             advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.LECTURESLIDE);
             serverCallback(item);
         });
-        sendData.sendDataUpdate(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
     parent.updateSlide = updateSlide;
 
@@ -207,29 +205,28 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                     barrier -= 1;
                     if (barrier === 0) {
                         if (slideIdsNotFound.length >= 1) {
-                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                                    CourseSketch.prutil.ItemQuery.LECTURESLIDE, function(evt, item) {
-                                        var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
-                                        var slide = school.slides[0];
-                                        if (isUndefined(slide) || slide instanceof DatabaseException) {
-                                            if (!isUndefined(serverCallback)) {
-                                                serverCallback(slide);
-                                            }
-                                            advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                            var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slideIdsNotFound);
+                            advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                                var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
+                                var slide = school.slides[0];
+                                if (isUndefined(slide) || slide instanceof DatabaseException) {
+                                    if (!isUndefined(serverCallback)) {
+                                        serverCallback(slide);
+                                    }
+                                    advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                             CourseSketch.prutil.ItemQuery.LECTURESLIDE);
-                                            return;
-                                        }  // end if
-                                        for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
-                                            parentScope.setSlide(school.slides[slideIndex]);
-                                            slidesFound.push(school.slides[slideIndex]);
-                                        } // end for
-                                        if (!isUndefined(serverCallback)) {
-                                            serverCallback(slidesFound);
-                                        } // end if serverCallback
-                                        advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
+                                    return;
+                                }  // end if
+                                for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
+                                    parentScope.setSlide(school.slides[slideIndex]);
+                                    slidesFound.push(school.slides[slideIndex]);
+                                } // end for
+                                if (!isUndefined(serverCallback)) {
+                                    serverCallback(slidesFound);
+                                } // end if serverCallback
+                                advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
                                         CourseSketch.prutil.ItemQuery.LECTURESLIDE);
-                                    }); // setListener
-                            sendData.sendDataRequest (CourseSketch.prutil.ItemQuery.LECTURESLIDE, slideIdsNotFound);
+                            }); // setListener
                         } // end if lectureIdsNotFound
                         if (slidesFound.length > 0 && !isUndefined(localCallback)) {
                             localCallback (slidesFound);
