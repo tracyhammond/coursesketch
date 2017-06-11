@@ -1,38 +1,27 @@
-package coursesketch.identity;
+package coursesketch.services;
 
-import com.google.protobuf.BlockingRpcChannel;
 import com.google.protobuf.RpcCallback;
 import com.google.protobuf.RpcController;
-import com.googlecode.protobuf.pro.duplex.RpcClientChannel;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManager;
-import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
-import coursesketch.services.IdentityService;
-import database.DatabaseAccessException;
 import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import protobuf.srl.request.Message;
 import protobuf.srl.school.School;
 import protobuf.srl.services.identity.Identity;
+import protobuf.srl.utils.Util;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.*;
-import static org.powermock.api.easymock.PowerMock.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -47,9 +36,9 @@ public class IdentityServiceTest {
     private static final String INVALID_REGISTRATION_KEY = "NOT VALID KEY YO";
     private static final String INVALID_USERNAME = "NOT VALID USERNAME";
 
-    public static final School.ItemType INVALID_ITEM_TYPE = School.ItemType.LECTURE;
-    public static final School.ItemType VALID_ITEM_TYPE = School.ItemType.COURSE;
-    public static final School.ItemType VALID_ITEM_CHILD_TYPE = School.ItemType.ASSIGNMENT;
+    public static final Util.ItemType INVALID_ITEM_TYPE = Util.ItemType.SLIDE;
+    public static final Util.ItemType VALID_ITEM_TYPE = Util.ItemType.COURSE;
+    public static final Util.ItemType VALID_ITEM_CHILD_TYPE = Util.ItemType.ASSIGNMENT;
 
     public static final String INVALID_ITEM_ID = new ObjectId().toHexString();
     public static final String VALID_ITEM_CHILD_ID = new ObjectId().toHexString();
@@ -105,7 +94,7 @@ public class IdentityServiceTest {
 
         Map<String, String> map = new HashMap<>();
         map.put(TEACHER_AUTH_ID, TEACHER_USER_ID);
-        when(identityManager.getItemRoster(anyString(), anyString(), any(School.ItemType.class), anyList(),
+        when(identityManager.getItemRoster(anyString(), anyString(), any(Util.ItemType.class), anyList(),
                 eq(dbAuthChecker))).thenReturn(map);
 
         Identity.UserNameResponse response = Identity.UserNameResponse.newBuilder()

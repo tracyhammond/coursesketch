@@ -289,7 +289,6 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         }
         build.setProblemId(cursor.get(COURSE_PROBLEM_ID).toString());
         build.setCourseId(cursor.get(COURSE_ID).toString());
-        build.setBankProblemId(cursor.get(PROBLEM_BANK_ID).toString());
         SrlSubmission sub = null;
         try {
             sub = getSubmission(cursor, submissionId);
