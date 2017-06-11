@@ -255,6 +255,4 @@ validateFirstRun(document.currentScript);
         problem.subgroups = [ problemHolder1 ];
         // console.log('problem: ', problem.id, problem.subgroups);
     }
-
-    // console.log(CourseSketch.fakeProblems);
 })();

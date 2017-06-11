@@ -17,7 +17,6 @@ function ProblemTextPanel() {
      *
      * @param {node} templateClone - Is a clone of the custom HTML Element for the text box.
      * @instance
-     * @memberof NavigationPanel
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
@@ -30,7 +29,6 @@ function ProblemTextPanel() {
      *
      * @param {String} questionText - The text/instructions for the problem.
      * @instance
-     * @memberof NavigationPanel
      * @function setNavigator
      */
     this.setProblemText = function(questionText) {
