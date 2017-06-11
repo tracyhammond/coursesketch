@@ -3,6 +3,9 @@
  *
  * @class DatabaseException
  * @extends BaseException
+ * @param {String} message - The message to show for the exception.
+ * @param {Request} request - The request associated with the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function DatabaseException(message, request, cause) {
 

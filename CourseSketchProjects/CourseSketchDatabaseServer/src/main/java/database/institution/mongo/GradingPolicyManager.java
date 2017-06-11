@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
@@ -16,7 +15,7 @@ import protobuf.srl.grading.Grading.DroppedProblems;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.grading.Grading.PolicyCategory;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.util.ArrayList;
@@ -41,6 +40,7 @@ import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Interfaces with mongo database to manage grading policies.
@@ -109,7 +109,7 @@ public final class GradingPolicyManager {
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckingAdmin(true);
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, policy.getCourseId(), userId, 0, auth.build());
+                .checkAuthentication(Util.ItemType.COURSE, policy.getCourseId(), userId, 0, auth.build());
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to insert grade policy", AuthenticationException.INVALID_PERMISSION);
         }
@@ -172,8 +172,9 @@ public final class GradingPolicyManager {
      */
     static ProtoGradingPolicy getGradingPolicy(final Authenticator authenticator, final DB dbs, final String courseId, final String userId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, GRADING_POLICY_COLLECTION, new ObjectId(courseId));
-        final DBObject policyObject = myDbRef.fetch();
+        final DBCollection gradePolicyCollection = dbs.getCollection(GRADING_POLICY_COLLECTION);
+        final DBObject policyObject = gradePolicyCollection.findOne(convertStringToObjectId(courseId));
+
         if (policyObject == null) {
             throw new DatabaseAccessException("Grading policy was not found for course with ID " + courseId);
         }
@@ -181,7 +182,7 @@ public final class GradingPolicyManager {
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckAccess(true);
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE, courseId, userId, 0, auth.build());
+                .checkAuthentication(Util.ItemType.COURSE, courseId, userId, 0, auth.build());
         if (!responder.hasAccess()) {
             throw new AuthenticationException("User does not have permission to insert grade policy", AuthenticationException.INVALID_PERMISSION);
         }

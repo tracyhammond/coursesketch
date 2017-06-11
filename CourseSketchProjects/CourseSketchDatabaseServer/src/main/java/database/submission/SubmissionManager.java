@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.ItemQuery;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 
@@ -117,7 +117,7 @@ public final class SubmissionManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasStudentPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
@@ -172,13 +172,13 @@ public final class SubmissionManager {
                 .setCheckingAdmin(true)
                 .build();
         final AuthenticationResponder responder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, 0, authType);
 
         if (!responder.hasPeerTeacherPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
 
-        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, problemId, School.ItemType.COURSE_PROBLEM, null, authenticator);
+        final Map<String, String> itemRoster = identityManager.getItemRoster(authId, problemId, Util.ItemType.COURSE_PROBLEM, null, authenticator);
         LOG.debug("User Roster for problem: {}, Roster: {}", problemId, itemRoster);
 
         final List<String> itemRequest = createSubmissionRequest(problemExperimentMap, itemRoster);

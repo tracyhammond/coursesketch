@@ -240,7 +240,7 @@ public class GradingPolicyManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
@@ -255,10 +255,10 @@ public class GradingPolicyManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, FAKE_USER_ID, null,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_USER_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
@@ -287,7 +287,7 @@ public class GradingPolicyManagerTest {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
-        AuthenticationHelper.setMockPermissions(authChecker, School.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());

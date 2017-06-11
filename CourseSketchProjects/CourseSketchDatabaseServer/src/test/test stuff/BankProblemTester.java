@@ -2,8 +2,8 @@ package test;
 
 import java.util.Date;
 
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlBankProblem.QuestionType;
+import protobuf.srl.school.Problem.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import coursesketch.database.auth.AuthenticationException;

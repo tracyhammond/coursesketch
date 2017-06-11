@@ -13,7 +13,6 @@ import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.DataRequest;
@@ -22,10 +21,10 @@ import protobuf.srl.query.Data.ItemRequest;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlBankProblem;
+import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.School.SrlCourse;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
@@ -192,7 +191,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case LECTURE: {
-                            final List<Lecture> lectureLoop = instance.getLecture(authId, itemRequest.getItemIdList());
+                            final List<SrlAssignment> lectureLoop = instance.getLecture(authId, itemRequest.getItemIdList());
                             results.add(ResultBuilder.buildResult(ItemQuery.LECTURE, lectureLoop));
                         }
                         break;

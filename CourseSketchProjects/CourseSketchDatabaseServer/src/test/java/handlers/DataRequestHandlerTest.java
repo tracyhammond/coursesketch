@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import protobuf.srl.request.Message;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import utilities.BreakDatabase;
 import utilities.ProtobufUtilities;
@@ -62,7 +62,7 @@ public class DataRequestHandlerTest {
         breakDatabase = new BreakDatabase(db);
 
         try {
-            when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+            when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                     .thenReturn(Authentication.AuthResponse.getDefaultInstance());
 
             when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))

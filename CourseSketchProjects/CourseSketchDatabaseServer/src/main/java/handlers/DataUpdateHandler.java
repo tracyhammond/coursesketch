@@ -8,7 +8,6 @@ import database.DatabaseAccessException;
 import database.institution.Institution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
@@ -16,6 +15,8 @@ import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.Assignment;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
@@ -85,7 +86,7 @@ public final class DataUpdateHandler {
                     switch (itemSet.getQuery()) {
                         // TODO Enable updates for other data
                         case LECTURE: {
-                            final Lecture lecture = Lecture.parseFrom(itemSet.getData());
+                            final Assignment.SrlAssignment lecture = Assignment.SrlAssignment.parseFrom(itemSet.getData());
                             instance.updateLecture(authId, lecture);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
@@ -103,19 +104,19 @@ public final class DataUpdateHandler {
                         }
                         break;
                         case ASSIGNMENT: {
-                            final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
+                            final Assignment.SrlAssignment assignment = Assignment.SrlAssignment.parseFrom(itemSet.getData());
                             instance.updateAssignment(authId, assignment);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case COURSE_PROBLEM: {
-                            final School.SrlProblem srlProblem = School.SrlProblem.parseFrom(itemSet.getData());
+                            final Problem.SrlProblem srlProblem = Problem.SrlProblem.parseFrom(itemSet.getData());
                             instance.updateCourseProblem(authId, srlProblem);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case BANK_PROBLEM: {
-                            final School.SrlBankProblem srlBankProblem = School.SrlBankProblem.parseFrom(itemSet.getData());
+                            final Problem.SrlBankProblem srlBankProblem = Problem.SrlBankProblem.parseFrom(itemSet.getData());
                             instance.updateBankProblem(authId, srlBankProblem);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }

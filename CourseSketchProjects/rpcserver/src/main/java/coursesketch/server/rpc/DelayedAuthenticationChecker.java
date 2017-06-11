@@ -3,7 +3,7 @@ package coursesketch.server.rpc;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,7 +27,7 @@ class DelayedAuthenticationChecker implements AuthenticationChecker {
      * @throws AuthenticationException
      *         thrown if there are problems creating the auth response or if the direct implementation is null;.
      */
-    @Override public Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId, final String userId,
+    @Override public Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId, final String userId,
             final Authentication.AuthType checkType) throws DatabaseAccessException, AuthenticationException {
         if (realAuthenticationChecker != null) {
             return realAuthenticationChecker.isAuthenticated(collectionType, itemId, userId, checkType);

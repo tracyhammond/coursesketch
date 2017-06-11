@@ -12,6 +12,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Listens for the search result and displays the result given to it.
+     *
+     * @param {List<SrlCourse>} item - The search results.
      */
     var searchCallback =  function(item) {
         var courseList = [];
@@ -64,17 +66,11 @@ validateFirstRun(document.currentScript);
         clearTimeout(setTimeVar);
     });
 
-/*
-    CourseSketch.dataListener.setListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
-            CourseSketch.prutil.ItemQuery.REGISTER, function(evt, item) {
-        alert('User is already registered for this course');
-        clearTimeout(setTimeVar);
-    });
-    */
-
     /**
      * Moves the course element over so that the registration button is visible.
      * Also sets up the registration button.
+     *
+     * @param {SrlCourse} course - The course that was clicked.
      */
     CourseSketch.classSearch.courseClickerFunction = function(course) {
         var id = course.id;
@@ -108,8 +104,8 @@ validateFirstRun(document.currentScript);
             localDoc.getElementById('registerButton').appendChild(button);
             $('#' + id).animate({
                 marginLeft: moveAmount
-                }, 300, function() {
-                });
+            }, 300, function() {
+            });
         } else {
             $('#' + id).animate({
                 marginLeft: '0px'
@@ -121,6 +117,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Allows a user to register for a class.
+     *
+     * @param {UUID} id - The id of the class being registered for.
      */
     CourseSketch.classSearch.registerClass = function(id) {
         CourseSketch.dataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.REGISTER, courseProtoMap[id].toArrayBuffer(), function(evt, item) {

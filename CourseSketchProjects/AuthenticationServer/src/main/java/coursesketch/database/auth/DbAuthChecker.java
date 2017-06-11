@@ -7,7 +7,7 @@ import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import utilities.AuthUtilities;
 
@@ -56,7 +56,7 @@ public final class DbAuthChecker implements AuthenticationChecker {
      * @throws AuthenticationException
      *         Thrown if there are problems creating the auth response.
      */
-    @Override public Authentication.AuthResponse isAuthenticated(final School.ItemType collectionType, final String itemId, final String userId,
+    @Override public Authentication.AuthResponse isAuthenticated(final Util.ItemType collectionType, final String itemId, final String userId,
             final Authentication.AuthType preFixedCheckType) throws DatabaseAccessException, AuthenticationException {
 
         checkNotNull(collectionType, "collectionType");

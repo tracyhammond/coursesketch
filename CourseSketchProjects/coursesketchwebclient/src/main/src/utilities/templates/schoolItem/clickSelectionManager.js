@@ -1,7 +1,9 @@
+
 /**
  * Manages the selection of School Items.
  *
  * This lets ony one be highlighted at a time.
+ *
  * @class ClickSelectionManager
  */
 function ClickSelectionManager() {
@@ -11,7 +13,8 @@ function ClickSelectionManager() {
 
     /**
      * Adds a selected element to the list of selected elements.
-     * @param {Element} element An element to be highlighted.
+     *
+     * @param {Element} element - An element to be highlighted.
      */
     this.addSelectedItem = function(element) {
         this.selectedItems.push(element);
@@ -20,6 +23,8 @@ function ClickSelectionManager() {
 
     /**
      * Toggles the selection of the given element.
+     *
+     * @param {Element} element - the element that is being toggled.
      */
     this.toggleSelection = function(element) {
         $(element).toggleClass(this.selectionClassName);
@@ -29,6 +34,7 @@ function ClickSelectionManager() {
      * Adds the selections class to this specific element.
      *
      * This makes it known that it should be highlighted.
+     *
      * @param {Element} element - the element that the class is being added to.
      */
     this.selectItem = function(element) {
@@ -70,7 +76,8 @@ function ClickSelectionManager() {
 
     /**
      * Adds the list of selected items to this manager.
-     * @param {Array<Element>} listOfElements the elements that the selection is being applied to.
+     *
+     * @param {Array<Element>} listOfElements - the elements that the selection is being applied to.
      */
     this.applySelections = function(listOfElements) {
         for (var i = 0; i < listOfElements.length; i++) {

@@ -11,7 +11,7 @@ import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.nio.charset.StandardCharsets;
@@ -50,7 +50,7 @@ public final class DbAuthManager {
      *
      * @param authId The AuthId of the user that is inserting the new item.
      * @param itemId The id of the item being inserted.
-     * @param itemType The type of item that is being inserted. EX: {@link protobuf.srl.school.School.ItemType#COURSE}
+     * @param itemType The type of item that is being inserted. EX: {@link protobuf.srl.school.Util.ItemType#COURSE}
      * @param parentId The id of the parent object. EX: parent points to the course if item is an Assignment.
      *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
      *                 problem.
@@ -59,10 +59,10 @@ public final class DbAuthManager {
      * @throws DatabaseAccessException Thrown if the user does not have the correct permissions to insert the item.
      * @throws AuthenticationException Thrown if there is data that can not be found in the database.
      */
-    public void insertNewItem(final String authId, final String itemId, final School.ItemType itemType,
+    public void insertNewItem(final String authId, final String itemId, final Util.ItemType itemType,
             final String parentId, final String registrationKey, final DbAuthChecker authChecker)
             throws DatabaseAccessException, AuthenticationException {
-        final School.ItemType parentType = getParentItemType(itemType);
+        final Util.ItemType parentType = getParentItemType(itemType);
         if (!parentType.equals(itemType)) {
             final Authentication.AuthResponse response = authChecker.isAuthenticated(getParentItemType(itemType), parentId, authId,
                     Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
@@ -79,14 +79,14 @@ public final class DbAuthManager {
         }
 
         // if it is a course
-        if (itemType.equals(School.ItemType.COURSE)) {
+        if (itemType.equals(Util.ItemType.COURSE)) {
             final String groupId = createNewGroup(authId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
         }
 
-        if (itemType.equals(School.ItemType.BANK_PROBLEM)) {
+        if (itemType.equals(Util.ItemType.BANK_PROBLEM)) {
             final String groupId = createNewGroup(authId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
@@ -109,18 +109,18 @@ public final class DbAuthManager {
      *
      * @param authId The AuthId of the user that is inserting the new item.
      * @param itemId The id of the item being inserted.
-     * @param itemType The type of item that is being inserted. EX: {@link School.ItemType#COURSE}
+     * @param itemType The type of item that is being inserted. EX: {@link Util.ItemType#COURSE}
      * @param registrationKey This key is needed for a user to grant themself access permission to a course.
      * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
      */
-    private BasicDBObject createItemInsertQuery(final String authId, final String itemId, final School.ItemType itemType,
+    private BasicDBObject createItemInsertQuery(final String authId, final String itemId, final Util.ItemType itemType,
             final String registrationKey) {
         final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
-        if (School.ItemType.COURSE.equals(itemType)) {
+        if (Util.ItemType.COURSE.equals(itemType)) {
             query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, authId);
         }
-        if (School.ItemType.BANK_PROBLEM.equals(itemType)) {
+        if (Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             query.append(DatabaseStringConstants.PROBLEM_BANK_ID, itemId)
                     .append(DatabaseStringConstants.OWNER_ID, authId);
         }
@@ -135,15 +135,15 @@ public final class DbAuthManager {
      *
      * @param insertQuery An existing query for an item that is going to be inserted into the database.
      * @param itemId The id of the item being inserted.
-     * @param itemType The type of item that is being inserted. EX: {@link School.ItemType#COURSE}
+     * @param itemType The type of item that is being inserted. EX: {@link Util.ItemType#COURSE}
      * @param parentId The id of the parent object. EX: parent points to course if item is an Assignment.
      *                 If the {@code itemType} is a bank problem, then this value can be a course that automatically gets permission to view the bank
      *                 problem.
      * @throws DatabaseAccessException Thrown if the parent object can not be found.
      */
-    private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final School.ItemType itemType, final String parentId)
+    private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final Util.ItemType itemType, final String parentId)
             throws DatabaseAccessException {
-        final School.ItemType collectionType = getParentItemType(itemType);
+        final Util.ItemType collectionType = getParentItemType(itemType);
         final DBCollection collection = database.getCollection(getCollectionFromType(collectionType));
         final DBObject result = collection.findOne(new ObjectId(parentId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
@@ -231,16 +231,16 @@ public final class DbAuthManager {
      * The student must have a valid registration key, an instructor does not require a valid registration key in some instances.
      * @param authId The authentication Id of the user that is being added.
      * @param itemId The Id of the course or bank problem the user is being added to.
-     * @param itemType The type of item the user is registering for (Only {@link protobuf.srl.school.School.ItemType#COURSE}
-     *                 and (Only {@link protobuf.srl.school.School.ItemType#BANK_PROBLEM} are valid types.
+     * @param itemType The type of item the user is registering for (Only {@link protobuf.srl.school.Util.ItemType#COURSE}
+     *                 and (Only {@link protobuf.srl.school.Util.ItemType#BANK_PROBLEM} are valid types.
      * @param registrationKey The key that is used to register for the course.
      * @param authChecker Used to check permissions in the database.
      * @throws AuthenticationException If the user does not have access or an invalid {@code registrationKey}.
      * @throws DatabaseAccessException Thrown if the item can not be found.
      */
-    public void registerSelf(final String authId, final String itemId, final School.ItemType itemType, final String registrationKey,
+    public void registerSelf(final String authId, final String itemId, final Util.ItemType itemType, final String registrationKey,
             final DbAuthChecker authChecker) throws AuthenticationException, DatabaseAccessException {
-        if (!School.ItemType.COURSE.equals(itemType) && !School.ItemType.BANK_PROBLEM.equals(itemType)) {
+        if (!Util.ItemType.COURSE.equals(itemType) && !Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             throw new AuthenticationException("Can only register users in a course or a bank problem.", AuthenticationException.OTHER);
         }
 
@@ -258,7 +258,7 @@ public final class DbAuthManager {
         final String databaseRegistrationKey = (String) result.get(DatabaseStringConstants.REGISTRATION_KEY);
         if (!registrationKey.equals(databaseRegistrationKey)) {
             throw new AuthenticationException("Invalid Registration key [" + registrationKey + "]"
-                    + " is not equal to stored registration key [" + databaseRegistrationKey + "] " , AuthenticationException.INVALID_PERMISSION);
+                    + " is not equal to stored registration key [" + databaseRegistrationKey + "] ", AuthenticationException.INVALID_PERMISSION);
         }
         final List<String> userGroups = (List<String>) result.get(DatabaseStringConstants.USER_LIST);
         insertUserIntoGroup(authId, userGroups.get(0), Authentication.AuthResponse.PermissionLevel.STUDENT);

@@ -72,7 +72,8 @@ function() {
         importPage.rel = 'import';
         importPage.href = '/src/main.html';
         /**
-         * Imports main.html.
+         * Imports {@code main.html}.
+         *
          * @memberof Index
          */
         importPage.onload = function() {
@@ -92,9 +93,12 @@ function() {
     /**
      * Creates a login element and a function so that when the register button is clicked the register is created.
      *
-     * This is called on the Register element when cancel is pressed.  This forms an infinite loop with {@link Index.createRegister}.
+     * This is called on the Register element when cancel is pressed.
      * They each call the other when clicked.
-     * @param {Function} register - the createRegister function
+     * This forms an infinite loop with {@link Index.createRegister}.
+     *
+     * @param {Function} register - The createRegister function
+     * @param {Function} successLoginCallback - called when the user log ins successfully.
      * @see {@link Index.createRegister}
      * @memberof Index
      */
@@ -111,9 +115,12 @@ function() {
     /**
      * Creates a register element and a function so that when the cancel button is clicked the login is created.
      *
-     * This is called on the Login element when register is pressed.  This forms an infinite loop with {@link Index.createLogin}.
+     * This is called on the Login element when register is pressed.
      * They each call the other when clicked.
-     * @param {Function} login - the createLogin function
+     * This forms an infinite loop with {@link Index.createLogin}.
+     *
+     * @param {Function} login - The createLogin function
+     * @param {Function} successLoginCallback - called when the user log ins successfully.
      * @see {@link Index.createLogin}
      * @memberof Index
      */
@@ -147,7 +154,9 @@ function() {
     };
 
     /**
-     * Called when a reconnection occurs
+     * Called when a reconnection occurs.
+     *
+     * @param {Connection} loggedInConnection - The object that handles the connection to the database.
      */
     CourseSketch.successfulReconnection = function(loggedInConnection) {
         console.log('The user relogged in correctly');
@@ -163,7 +172,7 @@ function() {
     /**
      * Creates and loads the menu.
      *
-     * @param {Link} importDoc The link element that contains the menu template.
+     * @param {Element} importDoc - The link element that contains the menu template.
      * @memberof Index
      */
     function loadMenu(importDoc) {
@@ -183,9 +192,10 @@ function() {
     }
 
     /**
-     * loads the homepage.
+     * Loads the homepage.
      *
      * This loads a different page depending on if the user is currently an instructor or a user.
+     *
      * @memberof Index
      */
     function loadHomePage() {
@@ -197,8 +207,8 @@ function() {
 
         CourseSketch.dataListener = new AdvanceDataListener(
                 CourseSketch.prutil.getRequestClass(), function(evt, item) {
-            console.log('default listener');
-        });
+                    console.log('default listener');
+                });
         CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                 CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
         CourseSketch.DatabaseException = DatabaseException;

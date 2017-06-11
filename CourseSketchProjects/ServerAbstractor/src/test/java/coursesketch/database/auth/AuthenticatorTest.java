@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import static org.junit.Assert.assertFalse;
@@ -35,7 +35,7 @@ public class AuthenticatorTest {
     @Before
     public void setup() {
         try {
-            when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+            when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                     .thenReturn(Authentication.AuthResponse.getDefaultInstance());
 
             when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
@@ -84,22 +84,22 @@ public class AuthenticatorTest {
 
     @Test(expected = NullPointerException.class)
     public void authenticatorThrowsExceptionIfInvalidItemId() throws Exception {
-        authenticator.checkAuthentication(School.ItemType.COURSE, null, null, 0, null);
+        authenticator.checkAuthentication(Util.ItemType.COURSE, null, null, 0, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void authenticatorThrowsExceptionIfInvalidUserId() throws Exception {
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", null, 0, null);
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", null, 0, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void authenticatorThrowsExceptionIfNullAuthType() throws Exception {
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, null);
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, null);
     }
 
     @Test(expected = AuthenticationException.class)
     public void authenticatorThrowsExceptionIfInvalidAuthType() throws Exception {
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.getDefaultInstance());
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.getDefaultInstance());
     }
 
     // TIME CHECKING
@@ -136,7 +136,7 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorDoesNotCheckDateIfItIsNotSet() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .build());
 
@@ -146,19 +146,19 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorOnlyChecksDate() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckDate(true)
                 .build());
 
         verify(optionChecker, atLeastOnce()).authenticateDate(any(AuthenticationDataCreator.class), anyLong());
-        verify(optionChecker, atLeastOnce()).createDataGrabber(any(School.ItemType.class), anyString());
+        verify(optionChecker, atLeastOnce()).createDataGrabber(any(Util.ItemType.class), anyString());
         verifyNoMoreInteractions(optionChecker);
     }
 
     @Test
     public void authenticatorDoesNotIfPublishedAndRegistrationIfItIsNotSet() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckDate(true)
                 .build());
 
@@ -169,7 +169,7 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorDoesNotRegistrationIfItIsAssignment() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.ASSIGNMENT, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.ASSIGNMENT, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckIsRegistrationRequired(true)
                 .build());
 
@@ -179,7 +179,7 @@ public class AuthenticatorTest {
 
     @Test
     public void authenticatorDoesNotCheckPublishedIfItIsCourseProblem() throws Exception {
-        authenticator.checkAuthentication(School.ItemType.COURSE_PROBLEM, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE_PROBLEM, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckIsRegistrationRequired(true)
                 .build());
 
@@ -190,11 +190,11 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorDoesNotCheckDateAndRegistration() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckIsPublished(true)
                 .build());
 
-        verify(optionChecker, atLeastOnce()).createDataGrabber(any(School.ItemType.class), anyString());
+        verify(optionChecker, atLeastOnce()).createDataGrabber(any(Util.ItemType.class), anyString());
         verify(optionChecker, atLeastOnce()).isItemPublished(any(AuthenticationDataCreator.class));
         verifyNoMoreInteractions(optionChecker);
     }
@@ -202,19 +202,19 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorOnlyChecksPublishedAndRegistration() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .build());
 
         verify(optionChecker, atLeastOnce()).isItemRegistrationRequired(any(AuthenticationDataCreator.class));
-        verify(optionChecker, atLeastOnce()).createDataGrabber(any(School.ItemType.class), anyString());
+        verify(optionChecker, atLeastOnce()).createDataGrabber(any(Util.ItemType.class), anyString());
         verifyNoMoreInteractions(optionChecker);
     }
 
     @Test
     public void authenticatorDoesNotCheckOptionIfNoneAreSet() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckingUser(true)
                 .build());
 
@@ -224,7 +224,7 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorDoesNotCheckAuthIfNoneAreSet() throws Exception {
 
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, Authentication.AuthType.newBuilder()
                 .setCheckDate(true)
                 .build());
 
@@ -237,9 +237,9 @@ public class AuthenticatorTest {
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckingUser(true)
                 .build();
-        authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
-        verify(authChecker, atLeastOnce()).isAuthenticated(any(School.ItemType.class), anyString(), anyString(), eq(type));
+        verify(authChecker, atLeastOnce()).isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), eq(type));
         verifyNoMoreInteractions(optionChecker);
         verifyNoMoreInteractions(authChecker);
     }
@@ -248,25 +248,25 @@ public class AuthenticatorTest {
     @Test(expected = AuthenticationException.class)
     public void authenticatorThrowsWhenAuthCheckThrowsAuthExcep() throws Exception {
 
-        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                 .thenThrow(AuthenticationException.class);
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
     }
 
     @Test(expected = AuthenticationException.class)
     public void authenticatorThrowsWhenAuthCheckThrowsDBExcep() throws Exception {
 
-        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                 .thenThrow(DatabaseAccessException.class);
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -277,7 +277,7 @@ public class AuthenticatorTest {
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
     }
 
     // Authenticator Result Tests
@@ -289,7 +289,7 @@ public class AuthenticatorTest {
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         assertFalse(responder.hasAccess());
         assertFalse(responder.hasStudentPermission());
@@ -306,7 +306,7 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorHasAccessIfAuthCheckHasAccess() throws Exception {
 
-        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                 .thenReturn(Authentication.AuthResponse.newBuilder()
                 .setHasAccess(true)
                 .build());
@@ -315,7 +315,7 @@ public class AuthenticatorTest {
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         // Specific value being tested
         assertTrue(responder.hasAccess());
@@ -342,7 +342,7 @@ public class AuthenticatorTest {
                 .setCheckAccess(true)
                 .setCheckDate(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         // Specific values being tested
         assertTrue(responder.hasAccess());
@@ -360,7 +360,7 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorPermissionIfAdminPermissionIsSet() throws Exception {
 
-        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                 .thenReturn(Authentication.AuthResponse.newBuilder()
                         .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.TEACHER)
                         .build());
@@ -368,7 +368,7 @@ public class AuthenticatorTest {
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         // Specific value being tested
         assertTrue(responder.hasAccess());
@@ -387,7 +387,7 @@ public class AuthenticatorTest {
     @Test
     public void authenticatorPermissionIfStudentPermissionIsSet() throws Exception {
 
-        when(authChecker.isAuthenticated(any(School.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
+        when(authChecker.isAuthenticated(any(Util.ItemType.class), anyString(), anyString(), any(Authentication.AuthType.class)))
                 .thenReturn(Authentication.AuthResponse.newBuilder()
                         .setPermissionLevel(Authentication.AuthResponse.PermissionLevel.STUDENT)
                         .build());
@@ -395,7 +395,7 @@ public class AuthenticatorTest {
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         // Specific value being tested
         assertTrue(responder.hasAccess());
@@ -419,7 +419,7 @@ public class AuthenticatorTest {
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckIsPublished(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         // Specific value being tested
         assertTrue(responder.isItemPublished());
@@ -443,7 +443,7 @@ public class AuthenticatorTest {
         final Authentication.AuthType type = Authentication.AuthType.newBuilder()
                 .setCheckIsRegistrationRequired(true)
                 .build();
-        AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, "", "", 0, type);
+        AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, "", "", 0, type);
 
         // Specific value being tested
         assertFalse(responder.isRegistrationRequired());

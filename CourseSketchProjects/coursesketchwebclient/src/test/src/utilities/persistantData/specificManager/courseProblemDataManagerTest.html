@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-            <title>Command Methods test</title>
+            <title>CourseProblem DataManager</title>
             <!-- test Library -->
             <link rel="import" href="/test/testUtilities/testUtilities.html">
 
@@ -174,7 +174,7 @@
                                 dataManager.getAssignment(assignment.id, function(updatedAssignment) {
                                     // cleaning the sendRequest function
                                     CourseSketch.connection.sendRequest = function(){};
-                                    dataManager.getCourseProblems(updatedAssignment.problemList,  function(courseProblemList) {
+                                    dataManager.getCourseProblems(updatedAssignment.problemGroups,  function(courseProblemList) {
                                         assert.ok(true, "courseProblems can be fetched from the database.");
                                         assert.equal(courseProblemList.length, 2,
                                                 "Two courseProblems were inserted and two courseProblems were returned.");

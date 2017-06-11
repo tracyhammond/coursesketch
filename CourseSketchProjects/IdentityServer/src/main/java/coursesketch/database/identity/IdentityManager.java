@@ -20,7 +20,7 @@ import database.DatabaseStringConstants;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.nio.charset.StandardCharsets;
@@ -99,10 +99,10 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * {@inheritDoc}
      */
     @Override
-    public void createNewItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    public void createNewItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final String parentId, final Authenticator authChecker)
             throws DatabaseAccessException, AuthenticationException {
-        final School.ItemType parentType = getParentItemType(itemType);
+        final Util.ItemType parentType = getParentItemType(itemType);
         if (!parentType.equals(itemType)) {
             final AuthenticationResponder responder = authChecker.checkAuthentication(getParentItemType(itemType), parentId, authId, 0,
                     Authentication.AuthType.newBuilder().setCheckingAdmin(true).build());
@@ -118,12 +118,12 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
         }
 
         // if it is a course
-        if (itemType.equals(School.ItemType.COURSE)) {
+        if (itemType.equals(Util.ItemType.COURSE)) {
             final String groupId = createNewGroup(userId, itemId);
             final List<String> groupList = new ArrayList<>();
             groupList.add(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
-        } else if (itemType.equals(School.ItemType.BANK_PROBLEM)) {
+        } else if (itemType.equals(Util.ItemType.BANK_PROBLEM)) {
             final String groupId = createNewGroup(userId, itemId);
             final List<String> groupList = Lists.newArrayList(groupId);
             insertQuery.append(DatabaseStringConstants.USER_LIST, groupList);
@@ -146,15 +146,15 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @param itemId
      *         The id of the item being inserted
      * @param itemType
-     *         The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
+     *         The type of item that is being inserted, EX: {@link Util.ItemType#COURSE}
      * @return {@link BasicDBObject} that contains the basic set up that every item has for its creation.
      */
-    private BasicDBObject createItemInsertQuery(final String userId, final String itemId, final School.ItemType itemType) {
+    private BasicDBObject createItemInsertQuery(final String userId, final String itemId, final Util.ItemType itemType) {
         final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.SELF_ID, new ObjectId(itemId));
-        if (School.ItemType.COURSE.equals(itemType)) {
+        if (Util.ItemType.COURSE.equals(itemType)) {
             query.append(DatabaseStringConstants.COURSE_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, userId);
-        } else if (School.ItemType.BANK_PROBLEM.equals(itemType)) {
+        } else if (Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             query.append(DatabaseStringConstants.PROBLEM_BANK_ID, new ObjectId(itemId))
                     .append(DatabaseStringConstants.OWNER_ID, userId);
         }
@@ -169,7 +169,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @param itemId
      *         The id of the item being inserted
      * @param itemType
-     *         The type of item that is being inserted, EX: {@link School.ItemType#COURSE}
+     *         The type of item that is being inserted, EX: {@link Util.ItemType#COURSE}
      * @param parentId
      *         The id of the parent object EX: parent points to course if item is an Assignment.
      *         If the {@code itemType} is a bank problem the this value can be a course that automatically gets permission to view the bank
@@ -177,9 +177,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         Thrown if the parent object can not be found.
      */
-    private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final School.ItemType itemType, final String parentId)
+    private void copyParentDetails(final BasicDBObject insertQuery, final String itemId, final Util.ItemType itemType, final String parentId)
             throws DatabaseAccessException {
-        final School.ItemType collectionType = getParentItemType(itemType);
+        final Util.ItemType collectionType = getParentItemType(itemType);
         final DBCollection collection = database.getCollection(getCollectionFromType(collectionType));
         final DBObject result = collection.findOne(new ObjectId(parentId),
                 new BasicDBObject(DatabaseStringConstants.USER_LIST, true)
@@ -277,9 +277,9 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * {@inheritDoc}
      */
     @Override
-    public void registerUserInItem(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    public void registerUserInItem(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final Authenticator authChecker) throws AuthenticationException, DatabaseAccessException {
-        if (!School.ItemType.COURSE.equals(itemType) && !School.ItemType.BANK_PROBLEM.equals(itemType)) {
+        if (!Util.ItemType.COURSE.equals(itemType) && !Util.ItemType.BANK_PROBLEM.equals(itemType)) {
             throw new AuthenticationException("Can only register users in a course or a bank problem", AuthenticationException.OTHER);
         }
 
@@ -357,7 +357,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * {@inheritDoc}
      */
     @Override
-    public Map<String, String> getItemRoster(final String authId, final String itemId, final School.ItemType itemType,
+    public Map<String, String> getItemRoster(final String authId, final String itemId, final Util.ItemType itemType,
             final Collection<String> userIdsList, final Authenticator authChecker)
             throws AuthenticationException, DatabaseAccessException {
         final AuthenticationResponder responder = authChecker.checkAuthentication(itemType, itemId, authId, 0,
@@ -429,7 +429,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * {@inheritDoc}
      */
     @Override
-    public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final School.ItemType itemType,
+    public Map<String, String> getUserName(final String userId, final String authId, final String itemId, final Util.ItemType itemType,
             final Authenticator authChecker)
             throws AuthenticationException, DatabaseAccessException {
         final AuthenticationResponder responder = authChecker.checkAuthentication(itemType, itemId, authId, 0,
@@ -514,7 +514,7 @@ public final class IdentityManager extends AbstractCourseSketchDatabaseReader im
      * @throws DatabaseAccessException
      *         Thrown if the group does not exist.
      */
-    boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final School.ItemType itemType)
+    boolean isUserInItem(final String userId, final boolean isUser, final String itemId, final Util.ItemType itemType)
             throws DatabaseAccessException {
         final DBCollection collection = this.database.getCollection(getCollectionFromType(itemType));
         final DBObject result = collection.findOne(new ObjectId(itemId));

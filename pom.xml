@@ -582,6 +582,22 @@
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
+                        <execution>
+                            <id>ip_prop_reverse2</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>replace</goal>
+                            </goals>
+                            <configuration>
+                                <reverseProperties>true</reverseProperties>
+                                <propertyFiles>
+                                    <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
+                                </propertyFiles>
+                                <backupPropertyFiles>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                </backupPropertyFiles>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
             </plugins>

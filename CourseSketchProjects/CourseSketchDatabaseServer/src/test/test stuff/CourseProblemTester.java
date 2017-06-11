@@ -1,7 +1,7 @@
 package test;
 
 import protobuf.srl.utils.Util.SrlPermission;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Problem.SrlBankProblem;
 
 import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;

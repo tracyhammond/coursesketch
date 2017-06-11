@@ -6,7 +6,7 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import database.SubmissionDatabaseClient;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 import utilities.TimeManager;
@@ -40,7 +40,7 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
         authType.setCheckingAdmin(true);
         final AuthenticationResponder authenticationResponder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, TimeManager.getSystemTime(),
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, TimeManager.getSystemTime(),
                         authType.build());
         if (!authenticationResponder.hasStudentPermission()) {
             throw new AuthenticationException("User does not have permission to for this submission:", AuthenticationException.INVALID_PERMISSION);
@@ -63,7 +63,7 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
         authType.setCheckingAdmin(true);
         final AuthenticationResponder authenticationResponder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemId, authId, TimeManager.getSystemTime(),
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemId, authId, TimeManager.getSystemTime(),
                         authType.build());
         if (!authenticationResponder.hasStudentPermission()) {
             throw new AuthenticationException("User does not have permission to for this submission", AuthenticationException.INVALID_PERMISSION);
@@ -81,7 +81,7 @@ public final class SubmissionManager implements SubmissionManagerInterface {
         final Authentication.AuthType.Builder authType = Authentication.AuthType.newBuilder();
         authType.setCheckingAdmin(true);
         final AuthenticationResponder authenticationResponder = authenticator
-                .checkAuthentication(School.ItemType.COURSE_PROBLEM, problemBankId, authId, TimeManager.getSystemTime(),
+                .checkAuthentication(Util.ItemType.COURSE_PROBLEM, problemBankId, authId, TimeManager.getSystemTime(),
                         authType.build());
         if (!authenticationResponder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permission to for this submission", AuthenticationException.INVALID_PERMISSION);

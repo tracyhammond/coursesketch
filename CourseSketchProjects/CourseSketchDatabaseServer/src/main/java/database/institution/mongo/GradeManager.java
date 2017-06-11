@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.GradeHistory;
 import protobuf.srl.grading.Grading.ProtoGrade;
-import protobuf.srl.school.School;
+import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 
 import java.security.NoSuchAlgorithmException;
@@ -194,19 +194,19 @@ public final class GradeManager {
             throws DatabaseAccessException, AuthenticationException {
 
         String itemId;
-        School.ItemType itemType;
+        Util.ItemType itemType;
         if (grade.getExternalGrade()) {
             itemId = grade.getCourseId();
-            itemType = School.ItemType.COURSE;
+            itemType = Util.ItemType.COURSE;
         } else if (grade.hasProblemId()) {
             itemId = grade.getProblemId();
-            itemType = School.ItemType.COURSE_PROBLEM;
+            itemType = Util.ItemType.COURSE_PROBLEM;
         } else if (grade.hasAssignmentId()) {
             itemId = grade.getAssignmentId();
-            itemType = School.ItemType.ASSIGNMENT;
+            itemType = Util.ItemType.ASSIGNMENT;
         } else {
             itemId = grade.getCourseId();
-            itemType = School.ItemType.COURSE;
+            itemType = Util.ItemType.COURSE;
         }
         LOG.debug("Checking grade permission for type: {}", itemType);
         return authenticator.checkAuthentication(itemType, itemId, authId, 0, auth);
@@ -351,7 +351,7 @@ public final class GradeManager {
         // Check authentication so only teachers of the course can retrieve all grades
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckingAdmin(true);
-        final AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, auth.build());
+        final AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, courseId, authId, 0, auth.build());
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException("User does not have permissions to get grades for this course",
                     AuthenticationException.INVALID_PERMISSION);
@@ -411,7 +411,7 @@ public final class GradeManager {
         // Check authentication to make sure the user is in the course
         final Authentication.AuthType.Builder auth = Authentication.AuthType.newBuilder();
         auth.setCheckingAdmin(true);
-        final AuthenticationResponder responder = authenticator.checkAuthentication(School.ItemType.COURSE, courseId, authId, 0, auth.build());
+        final AuthenticationResponder responder = authenticator.checkAuthentication(Util.ItemType.COURSE, courseId, authId, 0, auth.build());
         if (!responder.hasStudentPermission()) {
             throw new AuthenticationException("User does not have permissions to get grades for this course",
                     AuthenticationException.INVALID_PERMISSION);

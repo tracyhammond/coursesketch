@@ -3,8 +3,8 @@ package coursesketch.database.auth;
 import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.DateTime;
 import utilities.ExceptionUtilities;
 
@@ -109,7 +109,7 @@ public final class Authenticator {
      * @return An {@link AuthenticationResponder} that contains the information about the authentication response.
      * @throws AuthenticationException Thrown if there are problems creating the {@link AuthenticationResponder}.
      */
-    public AuthenticationResponder checkAuthentication(final School.ItemType collectionType, final String itemId,
+    public AuthenticationResponder checkAuthentication(final Util.ItemType collectionType, final String itemId,
             final String userId, final long checkTime, final Authentication.AuthType checkType) throws AuthenticationException {
         checkNotNull(collectionType, "collectionType");
         checkNotNull(itemId, "itemId");
@@ -160,7 +160,7 @@ public final class Authenticator {
      * @param userId The user trying to authenticate.
      * @param threadData Object that contains information useful to all threads.
      */
-    private void checkAuth(final School.ItemType collectionType, final String itemId, final String userId,
+    private void checkAuth(final Util.ItemType collectionType, final String itemId, final String userId,
             final AuthenticationThreadData threadData) {
         final Authentication.AuthType checkType = threadData.authType;
         if (validUserAccessRequest(checkType)) {
@@ -198,7 +198,7 @@ public final class Authenticator {
      * @param checkTime The time that the item is being accessed.  (Or perceived to be accessed at)
      * @param threadData Object that contains information useful to all threads.
      */
-    private void checkOption(final School.ItemType collectionType, final String itemId, final long checkTime,
+    private void checkOption(final Util.ItemType collectionType, final String itemId, final long checkTime,
             final AuthenticationThreadData threadData) {
         final Authentication.AuthType checkType = threadData.authType;
         if (checkType.getCheckDate() || checkType.getCheckAccess() || checkType.getCheckIsPublished() || checkType.getCheckIsRegistrationRequired()) {
@@ -238,18 +238,18 @@ public final class Authenticator {
      * @param checkType Contains what is being checked.
      * @throws DatabaseAccessException Thrown if there are problems reading the data from the database.
      */
-    private void setOptionAuthData(final School.ItemType collectionType, final String itemId, final long checkTime,
+    private void setOptionAuthData(final Util.ItemType collectionType, final String itemId, final long checkTime,
             final Authentication.AuthResponse.Builder authBuilder, final Authentication.AuthType checkType) throws DatabaseAccessException {
         final AuthenticationDataCreator dataCreator = optionChecker.createDataGrabber(collectionType, itemId);
         if (checkType.getCheckDate()) {
             authBuilder.setIsItemOpen(optionChecker.authenticateDate(dataCreator, checkTime));
         }
         if ((checkType.getCheckAccess() || checkType.getCheckIsRegistrationRequired())
-                && (School.ItemType.COURSE == collectionType || School.ItemType.BANK_PROBLEM == collectionType)) {
+                && (Util.ItemType.COURSE == collectionType || Util.ItemType.BANK_PROBLEM == collectionType)) {
             authBuilder.setIsRegistrationRequired(optionChecker.isItemRegistrationRequired(dataCreator));
         }
         // Course Problems can not be published only assignments!
-        if (checkType.getCheckIsPublished() && School.ItemType.COURSE_PROBLEM != collectionType) {
+        if (checkType.getCheckIsPublished() && Util.ItemType.COURSE_PROBLEM != collectionType) {
             authBuilder.setIsItemPublished(optionChecker.isItemPublished(dataCreator));
         }
     }

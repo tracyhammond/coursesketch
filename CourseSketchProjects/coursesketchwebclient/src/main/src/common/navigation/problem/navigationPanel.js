@@ -13,29 +13,28 @@ function NavigationPanel() {
      * Sets up the navigator callback and binds the buttons.
      *
      * @instance
-     * @memberof NavigationPanel
      * @function setUpNavigator
      */
     this.setUpNavigator = function() {
-        console.log(this.itemNavigator);
         this.itemNavigator.addCallback(function(nav) {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
             this.setUpButtons(nav);
-            var totalNumber = nav.getLength();
+            var totalNumber = nav.getSubgroupSize();
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;
             }
-
         }.bind(this));
 
         this.setUpButtons(this.itemNavigator);
+        if (!this.itemNavigator.isDataLoaded() && !isUndefined(this.itemNavigator.getAssignmentId())) {
+            this.itemNavigator.reloadAssignment();
+        }
     };
 
     /**
-     * @param {ProblemNavigator} nav sets bindings and disables buttons if they can not do anything.
+     * @param {AssignmentNavigator} nav - Sets bindings and disables buttons if they can not do anything.
      * @instance
-     * @memberof NavigationPanel
      * @function setUpButtons
      */
     this.setUpButtons = function(nav) {
@@ -54,21 +53,10 @@ function NavigationPanel() {
         /* jscs:enable jsDoc */
     };
 
-    /*
-    Window.onresize = function() {
-        var navWidth = document.getElementById('navPanel').offsetWidth;
-        var navHeight = document.getElementById('navPanel').offsetHeight;
-        var textWidth = document.getElementById('panelWrapper').offsetWidth - navWidth;
-        document.getElementById('problemPanel').style.width = (textWidth - 15) +'px';
-        document.getElementById('problemPanel').style.height = (navHeight -15) +'px';
-    }
-    */
-
     /**
-     * @param {node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {node} templateClone - Is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      * @instance
-     * @memberof NavigationPanel
      * @function intializeElement
      */
     this.initializeElement = function(templateClone) {
@@ -76,17 +64,17 @@ function NavigationPanel() {
         this.shadowRoot.appendChild(templateClone);
 
         if (isUndefined(this.itemNavigator)) {
-            this.itemNavigator = new ProblemNavigator(this.dataset.assignment_id, !isUndefined(this.dataset.loop), this.dataset.index);
+            this.itemNavigator = new AssignmentNavigator(this.dataset.assignment_id, this.dataset.index, true);
         }
-        this.setUpNavigator();
         this.itemNavigator.setUiLoaded(true);
+        this.setUpNavigator();
     };
 
     /**
      * Sets the navigator if one is to be used.
-     * @param {ProblemNavigator} navPanel the nav panel that is being used.
+     *
+     * @param {AssignmentNavigator} navPanel - The nav panel that is being used.
      * @instance
-     * @memberof NavigationPanel
      * @function setNavigator
      */
     this.setNavigator = function(navPanel) {
@@ -94,9 +82,8 @@ function NavigationPanel() {
     };
 
     /**
-     * @return {ProblemNavigator}.
+     * @return {AssignmentNavigator}.
      * @instance
-     * @memberof NavigationPanel
      * @function getNavigator
      */
     this.getNavigator = function() {

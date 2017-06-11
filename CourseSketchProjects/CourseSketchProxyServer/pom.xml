@@ -73,6 +73,12 @@
                             <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>ip_prop_reverse2</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/ProxyConnectionManager.java</file>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

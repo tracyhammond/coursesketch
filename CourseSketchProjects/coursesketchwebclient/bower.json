@@ -11,11 +11,14 @@
     "dialog-polyfill": "0.4.2",
     "MathJax": "2.5.3",
     "paper": "v0.9.25",
-    "protobufjs": "dcodeIO/protobuf.js#4.1.2",
+    "protobufjs": "dcodeIO/protobuf.js#5.0.1",
     "jailed": "asvd/jailed#a840e684a3ba14cc8af61973b3e6d0d900dca097"
   },
   "devDependencies": {
-    "blanket": "1.1.7"
+    "blanket": "1.1.7",
+    "qunit": "1.23.0",
+    "qunit-once": "0.1.1",
+    "sinon": "http://sinonjs.org/releases/sinon-1.17.3.js"
   },
   "private": true
 }

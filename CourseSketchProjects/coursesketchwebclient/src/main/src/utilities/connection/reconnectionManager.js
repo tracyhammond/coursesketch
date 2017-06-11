@@ -5,16 +5,17 @@ $(document).ready(function() {
     var queuedMessages = [];
 
     /**
-     * Pushes a server message that does not complete until the user is logged in again.
-     * @param {Request} request The request being sent to the server.
-     * @param {Function} callback What is called when the server responds.
-     * @param {Number | undefined} times The number of time the request is expected.
+     * Pusheds a server message that does not complete until the user is logged in again.
+     *
+     * @param {Request} request - The request being sent to the server.
+     * @param {Function} callback - What is called when the server responds.
+     * @param {Number | undefined} times - The number of time the request is expected.
      */
     CourseSketch.pushServerMessage = function(request, callback, times) {
         queuedMessages.push({
-            'request':  request,
+            'request': request,
             'callback': callback,
-            'times':    times
+            'times': times
         });
     };
 
