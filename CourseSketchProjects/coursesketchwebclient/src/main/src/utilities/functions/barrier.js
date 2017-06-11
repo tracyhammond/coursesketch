@@ -1,3 +1,4 @@
+// jscs:disable jsDoc
 /**
  * A class that allows callbacks to be a barrier.
  */
@@ -25,7 +26,8 @@ CallbackBarrier.prototype.getCallback = function() {
 
 /**
  * Creates a function that is called to decrement the barrier but is only called once.
- * @param {Number} amount The number of times the result is called before the callback is called.
+ *
+ * @param {Number} amount - The number of times the result is called before the callback is called.
  */
 CallbackBarrier.prototype.getCallbackAmount = function(amount) {
     if (this.finalized) {
@@ -39,8 +41,11 @@ CallbackBarrier.prototype.getCallbackAmount = function(amount) {
         }
     }.bind(this);
 };
+
 /**
  * Sends in the call that is called when all of the callbacks are created.
+ *
+ * @param {Function} callback - The callback to be called when the barrier is finished.
  */
 CallbackBarrier.prototype.finalize = function(callback) {
     this.callbackHandle = callback;
@@ -51,8 +56,36 @@ CallbackBarrier.prototype.finalize = function(callback) {
 };
 
 /**
+ * Creates a callback that is triggered once complete is called.
+ * <code>
+ * <pre>
+ *     Example Use:
+ *     var b = new Barrier();
+ *
+ *     b.once(function() {
+ *       // do some stuff
+ *     });
+ *
+ *     fs.doSomethingAsync(function () {
+ *       b.complete();
+ *     });
+ * </pre>
+ * </code>
+ *
+ * @param {Function} callback - called after complete is called
+ */
+CallbackBarrier.prototype.once = function(callback) {
+    var result = this.getCallbackAmount(1);
+    this.finalize(callback);
+    this.complete = result;
+};
+
+/**
  * Creates a barrier with the specific amount and a callback.
  * What is returned is the function that is called a number of times before callback is called.
+ *
+ * @param {Number} amount - The number of times the barrier can be called.
+ * @param {Function} callback - called after complete is called
  */
 function createBarrier(amount, callback) {
     var barrier = new CallbackBarrier();
@@ -60,3 +93,5 @@ function createBarrier(amount, callback) {
     barrier.finalize(callback);
     return result;
 }
+
+CallbackBarrier.createBarrier = createBarrier;

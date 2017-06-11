@@ -1,17 +1,12 @@
 package test;
 
-import java.util.Date;
-
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
-import protobuf.srl.school.School.SrlBankProblem;
-import protobuf.srl.school.School.SrlBankProblem.QuestionType;
-import protobuf.srl.utils.Util.SrlPermission;
-import protobuf.srl.school.School.SrlProblem;
+import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
-import database.RequestConverter;
-import database.auth.AuthenticationException;
 import database.institution.Institution;
+import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.school.Problem.SrlBankProblem;
+import protobuf.srl.school.Problem.SrlBankProblem.QuestionType;
+import protobuf.srl.utils.Util.SrlPermission;
 
 public class TestProblemsSmall {
 	public static void testProblems() throws AuthenticationException, DatabaseAccessException {

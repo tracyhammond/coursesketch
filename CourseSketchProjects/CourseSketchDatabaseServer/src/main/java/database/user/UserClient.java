@@ -1,7 +1,8 @@
 package database.user;
 
 import static database.DatabaseStringConstants.DATABASE;
-import protobuf.srl.school.School.SrlSchool;
+
+import protobuf.srl.query.Data;
 import protobuf.srl.school.School.SrlUser;
 
 import com.mongodb.DB;
@@ -9,7 +10,7 @@ import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 
 import java.net.UnknownHostException;
@@ -63,7 +64,7 @@ public final class UserClient {
      * A private constructor that creates a client.
      */
     private UserClient() {
-        this("goldberglinux.tamu.edu");
+        this("localhost");
     }
 
     /**
@@ -171,7 +172,8 @@ public final class UserClient {
      * @throws DatabaseAccessException
      *             Thrown if no dates exist.
      */
-    public static SrlSchool mongoGetReleventUpdates(final String userId, final long time) throws AuthenticationException, DatabaseAccessException {
+    public static List<Data.ItemResult> mongoGetReleventUpdates(final String userId, final long time)
+            throws AuthenticationException, DatabaseAccessException {
         return UserUpdateHandler.mongoGetAllRelevantUpdates(getInstance().database, userId, time);
     }
 }

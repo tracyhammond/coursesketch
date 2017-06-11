@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Script Execution Tests</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/testUtilities.html">
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/utilities/defaultUtils.html">
+
+<!-- file being tested. -->
+<script src="/src/common/scriptExecution/scriptExecutor.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+	<script>
+        QUnit.module("Tests", {
+
+            setup: function() {
+                try {
+                    var mockPanelObject = document.createElement('DIV');
+                    mockPanelObject.className = 'removeMe';
+                    var mockSketchSurfaceObject = document.createElement('DIV');
+                    mockSketchSurfaceObject.className = 'sub-panel submittable';
+                    mockPanelObject.appendChild(mockSketchSurfaceObject);
+                    document.body.appendChild(mockPanelObject);
+                    mockSketchSurfaceObject.resizeSurface = function() {};
+                    api = new PanelEditApi(mockPanelObject);
+                    textAreaObj = {
+                        className: 'sub-panel',
+                        location: 'bottom',
+                        width: 10,
+                        height: 5,
+                        textContent: "Test text content"
+                    };
+                } catch (exception) {
+                }
+            },
+            teardown : function() {
+                document.body.removeChild(document.querySelector('.removeMe'));
+            }
+        });
+        test("Merge Api", function(assert) {
+            var testFunct1 = function() {
+                return 1;
+            };
+            var testFunct2 = function() {
+                return 1;
+            };
+            var api1 = {
+                testFunct1: testFunct1
+            };
+            var api2 = {
+                testFunct2: testFunct2
+            };
+            var mergedApi = mergeApi(api1, api2);
+            assert.equal(mergedApi.testFunct1, testFunct1, "Merged Api1 Successfully!");
+            assert.equal(mergedApi.testFunct2, testFunct2, "Merged Api2 Successfully!");
+        });
+
+        test("addTextArea", function(assert) {
+            api.addTextArea(textAreaObj);
+            assert.ok(document.getElementsByTagName('textarea').length > 0, "Text Area Exists");
+            assert.equal(document.getElementsByTagName('textarea')[0].value, "Test text content", "Text content correct!")
+        });
+
+        test("setSketchSurfaceBG", function(assert) {
+            api.setSketchSurfaceBg('grid_paper');
+            assert.equal(document.querySelector('.submittable').className, "grid_paper sub-panel submittable",
+                "background changed correctly!")
+        });
+    </script>
+</body>

@@ -1,6 +1,7 @@
 /* depends on base.js */
 // jshint undef:false
 // jshint latedef:false
+// jscs:disable jsDoc
 
 /**
  **************************************************************
@@ -11,11 +12,11 @@
  **************************************************************
  */
 
-/**
- * Takes the height and width of this element and expands it to fill the size of
- * the screen.
- */
+
 if (isUndefined(fillScreen)) {
+    /**
+     * Takes the height and width of this element and expands it to fill the size of the screen.
+     */
     function fillScreen(scope, id) {
         var height = scope.window.innerHeight - 4;
         var width = scope.window.innerWidth - 4;
@@ -27,11 +28,11 @@ if (isUndefined(fillScreen)) {
     }
 }
 
-/**
- * Takes the height of this element and expands it to fill the size of the
- * screen.
- */
+
 if (isUndefined(fillHeight)) {
+    /**
+     * Takes the height of this element and expands it to fill the size of the screen.
+     */
     function fillHeight(scope, id) {
         var height = scope.window.innerHeight - 4;
         var element = scope.document.getElementById(id);
@@ -40,11 +41,11 @@ if (isUndefined(fillHeight)) {
     }
 }
 
-/**
- * Takes the width of this element and expands it to fill the size of the
- * screen.
- */
+
 if (isUndefined(fillWidth)) {
+    /**
+     * Takes the width of this element and expands it to fill the size of the screen.
+     */
     function fillWidth(scope, id) {
         var width = scope.window.innerWidth - 4;
         var element = scope.document.getElementById(id);
@@ -53,10 +54,11 @@ if (isUndefined(fillWidth)) {
     }
 }
 
-/**
- * Sets the height of the iFrame to the height of the content.
- */
+
 if (isUndefined(setHeightToContent)) {
+    /**
+     * Sets the height of the iFrame to the height of the content.
+     */
     function setHeightToContent(scope, iframeId, contentId, offset) {
         if (!offset) {
             offset = 0;
@@ -71,10 +73,11 @@ if (isUndefined(setHeightToContent)) {
     }
 }
 
-/**
- * Sets the height of the iFrame to the height of the content.
- */
+
 if (isUndefined(setWidthToContent)) {
+    /**
+     * Sets the width of the iFrame to the width of the content.
+     */
     function setWidthToContent(scope, iframeId, contentId, offset) {
         if (!offset) {
             offset = 0;
@@ -88,10 +91,11 @@ if (isUndefined(setWidthToContent)) {
     }
 }
 
-/**
- * Sets the height of the iFrame to the height of the content.
- */
+
 if (isUndefined(setSizeToContent)) {
+    /**
+     * Sets the size of the iFrame to the size of the content.
+     */
     function setSizeToContent(scope, iframeId, contentId, offsetX, offsetY) {
         if (!offsetX) {
             offsetX = 0;
@@ -113,19 +117,20 @@ if (isUndefined(setSizeToContent)) {
     }
 }
 
-/**
- * Returns the iframe given the scope and the iframeId.
- */
+
 if (isUndefined(getIframeScope)) {
+    /**
+     * Returns the iframe given the scope and the iframeId.
+     */
     function getIframeScope(scope, iframeId) {
         return scope.getElementById(iframeId).contentWindow.document;
     }
 }
 
-/**
- * Makes an element fullscreen.
- */
 if (isUndefined(makeFullScreen)) {
+    /**
+     * Makes an element fullscreen.
+     */
     function makeFullScreen(element) {
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
@@ -140,6 +145,11 @@ if (isUndefined(makeFullScreen)) {
 }
 
 if (isUndefined(makeNotFullScreen)) {
+    /**
+     * Stops the element from being full screen.
+     *
+     * @param {Element} element - The element that full screen is being removed from.
+     */
     function makeNotFullScreen(element) {
         if (element.cancelFullscreen) {
             element.cancelFullscreen();
@@ -149,5 +159,4 @@ if (isUndefined(makeNotFullScreen)) {
             element.webkitExitFullscreen();
         }
     }
-    element.webkitExitFullscreen();
 }

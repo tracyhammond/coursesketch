@@ -4,31 +4,30 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
+import coursesketch.database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationResponder;
+import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
+import database.DatabaseStringConstants;
 import database.RequestConverter;
 import database.UserUpdateHandler;
-import database.auth.AuthenticationException;
-import database.auth.Authenticator;
-import database.auth.Authenticator.AuthType;
-import database.auth.MongoAuthenticator;
-import org.bson.types.ObjectId;
-import protobuf.srl.school.School.LatePolicy;
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.utils.Util.SrlPermission;
-import protobuf.srl.school.School.State;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.school.Assignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.utils.Util.State;
+import protobuf.srl.grading.Grading.LatePolicy;
+import protobuf.srl.utils.Util;
+import protobuf.srl.services.authentication.Authentication;
+import utilities.TimeManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static database.DatabaseStringConstants.ACCESS_DATE;
-import static database.DatabaseStringConstants.ADMIN;
-import static database.DatabaseStringConstants.ASSIGNMENT_COLLECTION;
-import static database.DatabaseStringConstants.ASSIGNMENT_OTHER_TYPE;
+import static database.DatabaseStringConstants.ASSIGNMENT_CATEGORY;
 import static database.DatabaseStringConstants.ASSIGNMENT_RESOURCES;
 import static database.DatabaseStringConstants.ASSIGNMENT_TYPE;
 import static database.DatabaseStringConstants.CLOSE_DATE;
-import static database.DatabaseStringConstants.COURSE_COLLECTION;
 import static database.DatabaseStringConstants.COURSE_ID;
 import static database.DatabaseStringConstants.DESCRIPTION;
 import static database.DatabaseStringConstants.DUE_DATE;
@@ -38,25 +37,69 @@ import static database.DatabaseStringConstants.LATE_POLICY_FUNCTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
-import static database.DatabaseStringConstants.MOD;
 import static database.DatabaseStringConstants.NAME;
-import static database.DatabaseStringConstants.PERMISSION_LEVELS;
+import static database.DatabaseStringConstants.NAVIGATION_TYPE;
 import static database.DatabaseStringConstants.PROBLEM_LIST;
+import static database.DatabaseStringConstants.REVIEW_OPEN_DATE;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
-import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static database.DbSchoolUtility.getCollectionFromType;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages assignments for mongo.
  *
+ * In the mongo database, an assignment has the following structure.
+ *
+ * Assignment
+ * {
+ *     // IDs
+ *     _id : ID,
+ *     courseId: ID,
+ *
+ *     // Human information
+ *     name: String,
+ *     description: String,
+ *
+ *     // Display and navigation information
+ *     assignmentType: AssignmentType,
+ *     navigationType: NavigationType,
+ *
+ *     // Grading (these values being set override the grade policy)
+ *     assignmentCategory: String,
+ *     latePolicy: LatePolicy,
+ *     gradeWeight: float,
+ *
+ *     // Date related
+ *     accessDate: milliseconds,
+ *     dueDate: milliseconds,
+ *     closeDate: milliseconds,
+ *     reviewOpenDate: milliseconds,  // zero means not reviewable (which is default)
+ *
+ *     published: boolean,
+ *     problemGroups: [
+ *         "groupUUid1",
+ *         "groupUUid2",
+ *     ],
+ * }
+ *
+ * AssignmentTypes:
+ *     FLASHCARD, (this means infinite questions in random order)
+ *     LECTURE, (this means it will look like a lecture)
+ *     GRADED, (this is the default students can not see any answers till the assignment is closed)
+ *     PRACTICE (this allows students to see the correct answer immediately)
+ *
+ * NavigationTypes:
+ *     DEFAULT, (chooses what the default type is for the specific assignmentType
+ *     LOOPING, (this means the question order loops when the end is reached)
+ *     NO_BACK_TRAVEL, (what it sounds like, as soon as they progress they can not navigate backwards [this one might require server navigation])
+ *     RANDOM (pulls the next one at a random order)
+ *
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-        "PMD.UselessParentheses" })
+        "PMD.CommentSize", "PMD.UselessParentheses" })
 public final class AssignmentManager {
 
     /**
@@ -77,7 +120,7 @@ public final class AssignmentManager {
      *         The object that is performing authenticaton.
      * @param dbs
      *         The database where the assignment is being stored.
-     * @param userId
+     * @param authId
      *         The id of the user that asking to insert the assignment.
      * @param assignment
      *         The assignment that is being inserted.
@@ -87,30 +130,120 @@ public final class AssignmentManager {
      * @throws DatabaseAccessException
      *         Thrown if there are problems inserting the assignment.
      */
-    public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String userId, final SrlAssignment assignment)
+    public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String authId, final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection newUser = dbs.getCollection(ASSIGNMENT_COLLECTION);
-        final AuthType auth = new AuthType();
-        auth.setCheckAdminOrMod(true);
-        if (!authenticator.isAuthenticated(COURSE_COLLECTION, assignment.getCourseId(), userId, 0, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(Util.ItemType.COURSE, assignment.getCourseId().trim(), authId, 0, courseAuthType);
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("For course: " + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
         }
 
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId()).append(NAME, assignment.getName())
-                .append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber()).append(ASSIGNMENT_OTHER_TYPE, assignment.getOther())
-                .append(DESCRIPTION, assignment.getDescription()).append(ASSIGNMENT_RESOURCES, assignment.getLinksList())
-                .append(GRADE_WEIGHT, assignment.getGradeWeight()).append(ACCESS_DATE, assignment.getAccessDate().getMillisecond())
-                .append(DUE_DATE, assignment.getDueDate().getMillisecond())
-                .append(IMAGE, assignment.getImageUrl()).append(ADMIN, assignment.getAccessPermission().getAdminPermissionList())
-                .append(MOD, assignment.getAccessPermission().getModeratorPermissionList())
-                .append(USERS, assignment.getAccessPermission().getUserPermissionList());
+        final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId())
+                .append(NAME, assignment.getName())
+                .append(DESCRIPTION, assignment.getDescription());
+
+        setAssignmentTypeInformation(assignment, query, true);
+
+        setDateInformation(assignment, query, true);
+
+        setGradeInformation(assignment, query, true);
+
+        if (assignment.getProblemGroupsList() != null) {
+            query.append(PROBLEM_LIST, assignment.getProblemGroupsList());
+        }
+
+        assignmentCollection.insert(query);
+        final String selfId = query.get(SELF_ID).toString();
+
+        // Inserts the id into the parent course.
+        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), selfId);
+
+        return selfId;
+    }
+
+    /**
+     * Sets the date information for inserting an assignment into the database.
+     *
+     * Specifically sets accessDate, dueDate, closeDate and reviewOpenDate.  Sets defaults if the information does not already exist.
+     * @param assignment The assignment that contains the date information
+     * @param query The object that the date information is being set into.
+     * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
+     * @return True if the query was modified, false otherwise.
+     */
+    public static boolean setDateInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+        if (assignment.hasAccessDate()) {
+            query.append(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
+        } else if (isInsertion) {
+            // The default is the current server time.
+            query.append(ACCESS_DATE, TimeManager.getSystemTime());
+        }
 
         // Sets a default date in the instance that a date was not given.
-        if (!assignment.hasCloseDate()) {
-            query.append(CLOSE_DATE, RequestConverter.getMaxTime());
-        } else {
-            query.append(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
+        if (assignment.hasDueDate()) {
+            query.append(DUE_DATE, assignment.getDueDate().getMillisecond());
+        } else if (isInsertion) {
+            query.append(DUE_DATE, RequestConverter.getMaxTime());
         }
+
+        // Sets a default date in the instance that a date was not given.
+        if (assignment.hasCloseDate()) {
+            query.append(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
+        } else if (isInsertion) {
+            query.append(CLOSE_DATE, RequestConverter.getMaxTime());
+        }
+
+        if (assignment.hasReviewOpenDate()) {
+            query.append(REVIEW_OPEN_DATE, assignment.getReviewOpenDate().getMillisecond());
+        } else if (isInsertion) {
+            query.append(REVIEW_OPEN_DATE, -1);
+        }
+
+        return isInsertion || assignment.hasAccessDate() || assignment.hasDueDate() || assignment.hasCloseDate() || assignment.hasReviewOpenDate();
+    }
+
+    /**
+     * Sets the grade information for inserting an assignment into the database.
+     *
+     * Does not set an information if it is already set.
+     * @param assignment The assignment that contains the date information
+     * @param query The object that the date information is being set into.
+     * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
+     * @return True if the query was modified, false otherwise.
+     */
+    public static boolean setAssignmentTypeInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+        // Grade data
+        if (assignment.hasAssignmentType()) {
+            query.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
+        } else if (isInsertion) {
+            // The default is the current server time.
+            query.append(ASSIGNMENT_TYPE, Assignment.AssignmentType.GRADED.getNumber());
+        }
+
+        // Sets a default date in the instance that a date was not given.
+        if (assignment.hasNavigationType()) {
+            query.append(NAVIGATION_TYPE, assignment.getNavigationType().getNumber());
+        } else if (isInsertion) {
+            query.append(NAVIGATION_TYPE, Assignment.NavigationType.DEFAULT.getNumber());
+        }
+
+        return isInsertion || assignment.hasAssignmentType() || assignment.hasNavigationType();
+    }
+
+    /**
+     * Sets the grade information for inserting an assignment into the database.
+     *
+     * Does not set an information if it is already set.
+     * @param assignment The assignment that contains the date information
+     * @param query The object that the date information is being set into.
+     * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
+     * @return True if the query was modified, false otherwise.
+     */
+    public static boolean setGradeInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+        // Grade data
         if (assignment.hasLatePolicy()) {
             query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
                     .append(LATE_POLICY_RATE, assignment.getLatePolicy().getRate())
@@ -118,16 +251,19 @@ public final class AssignmentManager {
 
             query.append(LATE_POLICY_TIME_FRAME_TYPE, assignment.getLatePolicy().getTimeFrameType().getNumber());
         }
-        if (assignment.getProblemListList() != null) {
-            query.append(PROBLEM_LIST, assignment.getProblemListList());
+
+        if (assignment.hasGradeWeight()) {
+            query.append(DatabaseStringConstants.GRADE_WEIGHT, assignment.getGradeWeight());
         }
-        newUser.insert(query);
-        final DBObject corsor = newUser.findOne(query);
 
-        // inserts the id into the previous the course
-        CourseManager.mongoInsertAssignmentIntoCourse(dbs, assignment.getCourseId(), corsor.get(SELF_ID).toString());
+        // The default is homework.
+        if (assignment.hasAssignmentCatagory()) {
+            query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, assignment.getAssignmentCatagory());
+        } else if (isInsertion) {
+            query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, DatabaseStringConstants.HOMEWORK_CATEGORY);
+        }
 
-        return corsor.get(SELF_ID).toString();
+        return isInsertion || assignment.hasLatePolicy() || assignment.hasGradeWeight() || assignment.hasAssignmentCatagory();
     }
 
     /**
@@ -137,10 +273,10 @@ public final class AssignmentManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The id of the user that asking to insert the assignment.
      * @param assignmentId
      *         The id of the assignment that is being grabbed.
-     * @param userId
-     *         The id of the user that asking to insert the assignment.
      * @param checkTime
      *         The time that the assignment was asked to be grabbed. (used to
      *         check if the assignment is valid)
@@ -152,50 +288,47 @@ public final class AssignmentManager {
      *         Thrown if there are problems retrieving the assignment.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
-    public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
+    public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
-        final DBObject corsor = myDbRef.fetch();
-        if (corsor == null) {
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
+        if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
 
-        boolean isAdmin, isMod, isUsers;
-        isAdmin = authenticator.checkAuthentication(userId, (List<String>) corsor.get(ADMIN));
-        isMod = authenticator.checkAuthentication(userId, (List<String>) corsor.get(MOD));
-        isUsers = authenticator.checkAuthentication(userId, (List<String>) corsor.get(USERS));
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckAccess(true)
+                .setCheckDate(true)
+                .setCheckingAdmin(true)
+                .setCheckIsPublished(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, assignmentId, authId, checkTime, authType);
 
-        if (!isAdmin && !isMod && !isUsers) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        if (!responder.hasAccess()) {
+            throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
         }
 
-        // check to make sure the assignment is within the time period that the
-        // course is open and the user is in the course
-        // FUTURE: maybe not make this necessarry if the insertion of assignments prevents this.
-        final AuthType auth = new AuthType();
-        auth.setCheckDate(true);
-        auth.setCheckUser(true);
+        final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
+                .setCheckDate(true)
+                .build();
+        final AuthenticationResponder courseResponder = authenticator
+                .checkAuthentication(Util.ItemType.COURSE, (String) cursor.get(COURSE_ID), authId, checkTime, courseAuthType);
 
         // Throws an exception if a user (only) is trying to get an assignment when the class is not in session.
-        if (isUsers && !isAdmin && !isMod && !authenticator
-                .isAuthenticated(COURSE_COLLECTION, (String) corsor.get(COURSE_ID), userId, checkTime, auth)) {
-            throw new AuthenticationException(AuthenticationException.INVALID_DATE);
+        if (responder.hasAccess() && !responder.hasPeerTeacherPermission() && !courseResponder.isItemOpen()) {
+            throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_DATE);
         }
 
         final State.Builder stateBuilder = State.newBuilder();
         // FUTURE: add this to all fields!
         // An assignment is only publishable after a certain criteria is met
-        if (corsor.containsField(STATE_PUBLISHED)) {
-            final boolean published = (Boolean) corsor.get(STATE_PUBLISHED);
-            if (published) {
-                stateBuilder.setPublished(true);
-            } else {
-                if (!isAdmin || !isMod) {
-                    throw new DatabaseAccessException("The specific assignment is not published yet", true);
-                }
-                stateBuilder.setPublished(false);
-            }
+        if (!responder.isItemPublished() && !responder.hasModeratorPermission()) {
+            throw new DatabaseAccessException("The specific assignment is not published yet: " + assignmentId, true);
         }
+
+        // Post this point either item is published OR responder is at least responder.
+        stateBuilder.setPublished(responder.isItemPublished());
 
         // now all possible exceptions have already been thrown.
         final SrlAssignment.Builder exactAssignment = SrlAssignment.newBuilder();
@@ -203,23 +336,23 @@ public final class AssignmentManager {
         exactAssignment.setId(assignmentId);
 
         // sets the majority of the assignment data
-        setAssignmentData(exactAssignment, corsor);
+        setAssignmentData(exactAssignment, cursor);
 
-        setAssignmentStateAndDate(exactAssignment, stateBuilder, corsor, isAdmin, isMod, checkTime);
+        setAssignmentStateAndDate(exactAssignment, stateBuilder, cursor,
+                responder.hasTeacherPermission(), responder.hasModeratorPermission(), checkTime);
 
-        if (corsor.get(IMAGE) != null) {
-            exactAssignment.setImageUrl((String) corsor.get(IMAGE));
+        if (cursor.get(IMAGE) != null) {
+            exactAssignment.setImageUrl((String) cursor.get(IMAGE));
         }
 
         // if you are a user, the assignment must be open to view the problems
-        if (isAdmin || isMod || (isUsers
-                && Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate()))) {
-            if (corsor.get(PROBLEM_LIST) != null) {
-                exactAssignment.addAllProblemList((List) corsor.get(PROBLEM_LIST));
+        if (responder.hasPeerTeacherPermission() || (responder.hasAccess()
+                && responder.isItemOpen())) {
+            if (cursor.get(PROBLEM_LIST) != null) {
+                exactAssignment.addAllProblemGroups((List) cursor.get(PROBLEM_LIST));
             }
-
             stateBuilder.setAccessible(true);
-        } else if (isUsers && !Authenticator.isTimeValid(checkTime, exactAssignment.getAccessDate(), exactAssignment.getCloseDate())) {
+        } else if (responder.hasAccess() && !responder.isItemOpen()) {
             stateBuilder.setAccessible(false);
             LOG.info("USER ASSIGNMENT TIME IS CLOSED SO THE COURSE LIST HAS BEEN PREVENTED FROM BEING USED!");
             LOG.info("TIME OPEN: {} \n CURRENT TIME: {} \n TIME CLOSED: {} \n", exactAssignment.getAccessDate().getMillisecond(), checkTime,
@@ -229,15 +362,6 @@ public final class AssignmentManager {
 
         exactAssignment.setState(stateBuilder);
 
-        final SrlPermission.Builder permissions = SrlPermission.newBuilder();
-        if (isAdmin) {
-            permissions.addAllAdminPermission((ArrayList) corsor.get(ADMIN)); // admin
-            permissions.addAllModeratorPermission((ArrayList) corsor.get(MOD)); // admin
-        }
-        if (isAdmin || isMod) {
-            permissions.addAllUserPermission((ArrayList) corsor.get(USERS)); // mod
-            exactAssignment.setAccessPermission(permissions.build());
-        }
         return exactAssignment.build();
     }
 
@@ -246,17 +370,27 @@ public final class AssignmentManager {
      *
      * @param exactAssignment
      *         The assignment that the data is being set to.
-     * @param corsor
+     * @param cursor
      *         The database cursor pointing to a specific assignment.
      */
-    private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject corsor) {
-        exactAssignment.setCourseId((String) corsor.get(COURSE_ID));
-        exactAssignment.setName((String) corsor.get(NAME));
-        exactAssignment.setAssignmentType(SrlAssignment.AssignmentType.valueOf((Integer) corsor.get(ASSIGNMENT_TYPE)));
-        exactAssignment.setOther((String) corsor.get(ASSIGNMENT_OTHER_TYPE));
-        exactAssignment.setDescription((String) corsor.get(DESCRIPTION));
-        exactAssignment.addAllLinks((List) corsor.get(ASSIGNMENT_RESOURCES));
-        exactAssignment.setGradeWeight((String) corsor.get(GRADE_WEIGHT));
+    private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject cursor) {
+        exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
+        exactAssignment.setName((String) cursor.get(NAME));
+        if (cursor.containsField(ASSIGNMENT_TYPE)) {
+            exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
+        }
+        if (cursor.containsField(NAVIGATION_TYPE)) {
+            exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
+        }
+        if (cursor.containsField(ASSIGNMENT_CATEGORY)) {
+            exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
+        } else {
+            exactAssignment.setAssignmentCatagory(DatabaseStringConstants.HOMEWORK_CATEGORY);
+        }
+        exactAssignment.setDescription((String) cursor.get(DESCRIPTION));
+        if (cursor.containsField(GRADE_WEIGHT)) {
+            exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
+        }
     }
 
     /**
@@ -266,7 +400,7 @@ public final class AssignmentManager {
      *         A protobuf assignment builder.
      * @param stateBuilder
      *         A protobuf state builder.
-     * @param corsor
+     * @param cursor
      *         The current database pointer for the assignment.
      * @param isAdmin
      *         True if the user is acting as an admin.
@@ -276,26 +410,26 @@ public final class AssignmentManager {
      *         The time that the check was performed.
      */
     private static void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder,
-            final DBObject corsor, final boolean isAdmin, final boolean isMod, final long checkTime) {
+            final DBObject cursor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
-            if (corsor.get(LATE_POLICY_FUNCTION_TYPE) == null) {
+            if (cursor.get(LATE_POLICY_FUNCTION_TYPE) == null) {
                 latePolicy.setFunctionType(LatePolicy.FunctionType.STEPPING_FUNCTION);
             } else {
-                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) corsor.get(LATE_POLICY_FUNCTION_TYPE)));
+                latePolicy.setFunctionType(LatePolicy.FunctionType.valueOf((Integer) cursor.get(LATE_POLICY_FUNCTION_TYPE)));
             }
 
-            if (corsor.get(LATE_POLICY_RATE) == null) {
+            if (cursor.get(LATE_POLICY_RATE) == null) {
                 latePolicy.setRate(1.0F);
             } else {
-                latePolicy.setRate(Float.parseFloat("" + corsor.get(LATE_POLICY_RATE)));
+                latePolicy.setRate(Float.parseFloat("" + cursor.get(LATE_POLICY_RATE)));
             }
 
-            if (corsor.get(LATE_POLICY_SUBTRACTION_TYPE) == null) {
+            if (cursor.get(LATE_POLICY_SUBTRACTION_TYPE) == null) {
                 latePolicy.setSubtractionType(LatePolicy.SubtractionType.CAP);
             } else {
                 try {
-                    final Object subType = corsor.get(LATE_POLICY_SUBTRACTION_TYPE);
+                    final Object subType = cursor.get(LATE_POLICY_SUBTRACTION_TYPE);
                     if (subType != null) {
                         final boolean subtractionType = (Boolean) subType; // true is cap score.
                         if (subtractionType) {
@@ -304,27 +438,28 @@ public final class AssignmentManager {
                             latePolicy.setSubtractionType(LatePolicy.SubtractionType.PERCENT);
                         }
                     } else {
-                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
+                        latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) cursor.get(LATE_POLICY_SUBTRACTION_TYPE)));
                     }
                 } catch (ClassCastException e) {
-                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) corsor.get(LATE_POLICY_SUBTRACTION_TYPE)));
+                    latePolicy.setSubtractionType(LatePolicy.SubtractionType.valueOf((Integer) cursor.get(LATE_POLICY_SUBTRACTION_TYPE)));
                 }
             }
 
             if (latePolicy.getFunctionType() != LatePolicy.FunctionType.EXPONENTIAL) {
-                if (corsor.get(LATE_POLICY_TIME_FRAME_TYPE) == null) {
+                if (cursor.get(LATE_POLICY_TIME_FRAME_TYPE) == null) {
                     latePolicy.setTimeFrameType(LatePolicy.TimeFrame.DAY);
                 } else {
-                    latePolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((Integer) corsor.get(LATE_POLICY_TIME_FRAME_TYPE)));
+                    latePolicy.setTimeFrameType(LatePolicy.TimeFrame.valueOf((Integer) cursor.get(LATE_POLICY_TIME_FRAME_TYPE)));
                 }
             } else {
                 latePolicy.setTimeFrameType(LatePolicy.TimeFrame.CONSTANT);
             }
         }
 
-        exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(ACCESS_DATE)).longValue()));
-        exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(DUE_DATE)).longValue()));
-        exactAssignment.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) corsor.get(CLOSE_DATE)).longValue()));
+        exactAssignment.setAccessDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(ACCESS_DATE)).longValue()));
+        exactAssignment.setDueDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(DUE_DATE)).longValue()));
+        exactAssignment.setCloseDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(CLOSE_DATE)).longValue()));
+        exactAssignment.setReviewOpenDate(RequestConverter.getProtoFromMilliseconds(((Number) cursor.get(REVIEW_OPEN_DATE)).longValue()));
 
         if (exactAssignment.getDueDate().getMillisecond() > checkTime) {
             stateBuilder.setPastDue(true);
@@ -338,10 +473,10 @@ public final class AssignmentManager {
      *         The object that is performing authentication.
      * @param dbs
      *         The database where the assignment is being stored.
+     * @param authId
+     *         The id of the user that asking to insert the assignment.
      * @param assignmentId
      *         The id of the assignment that is being updated.
-     * @param userId
-     *         The id of the user that asking to insert the assignment.
      * @param assignment
      *         The assignment that is being inserted.
      * @return true if the assignment was updated successfully.
@@ -351,116 +486,53 @@ public final class AssignmentManager {
      *         The assignment does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
-    public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
+    public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
-        final DBObject corsor = myDbRef.fetch();
-        DBObject updateObj = null;
-        final DBCollection assignmentCollection = dbs.getCollection(ASSIGNMENT_COLLECTION);
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
-        final ArrayList adminList = (ArrayList<Object>) corsor.get("Admin");
-        final ArrayList modList = (ArrayList<Object>) corsor.get("Mod");
-        boolean isAdmin, isMod;
-        isAdmin = authenticator.checkAuthentication(userId, adminList);
-        isMod = authenticator.checkAuthentication(userId, modList);
-
-        if (!isAdmin && !isMod) {
-            throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
+        if (cursor == null) {
+            throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
 
-        if (isAdmin || isMod) {
+        final BasicDBObject updateQuery = new BasicDBObject();
+
+        final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
+                .setCheckingAdmin(true)
+                .build();
+        final AuthenticationResponder responder = authenticator
+                .checkAuthentication(Util.ItemType.ASSIGNMENT, assignmentId, authId, 0, authType);
+
+        if (!responder.hasModeratorPermission()) {
+            throw new AuthenticationException("For assignment: " + assignmentId, AuthenticationException.INVALID_PERMISSION);
+        }
+
+        if (responder.hasModeratorPermission()) {
             if (assignment.hasName()) {
-                updateObj = new BasicDBObject(NAME, assignment.getName());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateQuery.append(NAME, assignment.getName());
                 update = true;
             }
 
-            if (assignment.hasAssignmentType()) {
-                update = true;
-                updateObj = new BasicDBObject(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-            }
-            if (assignment.hasOther()) {
-                updateObj = new BasicDBObject(ASSIGNMENT_OTHER_TYPE, assignment.getOther());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
             // Optimization: have something to do with pulling values of an
             // array and pushing values to an array
             if (assignment.hasDescription()) {
-                updateObj = new BasicDBObject(DESCRIPTION, assignment.getDescription());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.getLinksList() != null) {
-                updateObj = new BasicDBObject(ASSIGNMENT_RESOURCES, assignment.getLinksList());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.hasLatePolicy()) {
-                throw new DatabaseAccessException("Late policy does not exist in the database!");
-                /*
-                 updateObj = new BasicDBObject(LATE_POLICY,
-                 assignment.getLatePolicy().getNumber());
-                 courses.update(corsor, new BasicDBObject (SET_COMMAND,
-                 updateObj));
-                 */
-            }
-            if (assignment.hasGradeWeight()) {
-                updateObj = new BasicDBObject(GRADE_WEIGHT, assignment.getGradeWeight());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.hasAccessDate()) {
-                updateObj = new BasicDBObject(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.hasDueDate()) {
-                updateObj = new BasicDBObject(DUE_DATE, assignment.getDueDate().getMillisecond());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.hasCloseDate()) {
-                updateObj = new BasicDBObject(CLOSE_DATE, assignment.getCloseDate().getMillisecond());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.hasImageUrl()) {
-                updateObj = new BasicDBObject(IMAGE, assignment.getImageUrl());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                update = true;
-            }
-            if (assignment.getProblemListCount() > 0) {
-                updateObj = new BasicDBObject(PROBLEM_LIST, assignment.getProblemListList());
-                assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
+                updateQuery.append(DESCRIPTION, assignment.getDescription());
                 update = true;
             }
 
-            // Optimization: have something to do with pulling values of an
-            // array and pushing values to an array
-            if (assignment.hasAccessPermission()) {
-                final SrlPermission permissions = assignment.getAccessPermission();
-                if (isAdmin) {
-                    // ONLY ADMIN CAN CHANGE ADMIN OR MOD
-                    if (permissions.getAdminPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(ADMIN, permissions.getAdminPermissionList());
-                        assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                    }
-                    if (permissions.getModeratorPermissionCount() > 0) {
-                        updateObj = new BasicDBObject(MOD, permissions.getModeratorPermissionList());
-                        assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                    }
-                }
-                if (permissions.getUserPermissionCount() > 0) {
-                    updateObj = new BasicDBObject(USERS, permissions.getUserPermissionList());
-                    assignmentCollection.update(corsor, new BasicDBObject(SET_COMMAND, updateObj));
-                }
+            if (assignment.getLinksList() != null) {
+                updateQuery.append(ASSIGNMENT_RESOURCES, assignment.getLinksList());
+                update = true;
             }
+
+            update |= setAssignmentTypeInformation(assignment, updateQuery, false);
+            update |= setDateInformation(assignment, updateQuery, false);
+            update |= setGradeInformation(assignment, updateQuery, false);
         }
         if (update) {
-            UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
+            assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateQuery));
+            UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
         return true;
     }
@@ -478,65 +550,18 @@ public final class AssignmentManager {
      * @param problemId
      *         The id of the course problem that is being added to the assignment.
      * @return True if it is successful.
+     * @throws AuthenticationException The user does not have permission to update the assignment.
+     * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsert(final DB dbs, final String assignmentId, final String problemId) {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
+    static boolean mongoInsertProblemGroupIntoAssignment(final DB dbs, final String assignmentId, final String problemId)
+            throws AuthenticationException, DatabaseAccessException {
+        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
 
-        final DBObject corsor = myDbRef.fetch();
-
-        final DBCollection courses = dbs.getCollection(ASSIGNMENT_COLLECTION);
         final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
-        courses.update(corsor, new BasicDBObject("$addToSet", updateObj));
+        assignmentCollection.update(cursor, new BasicDBObject("$addToSet", updateObj));
 
-        UserUpdateHandler.insertUpdates(dbs, ((List) corsor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
+        UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         return true;
-    }
-
-    /**
-     * NOTE: This is meant for internal use do not make this method public
-     *
-     * This is used to copy permissions from the parent course into the current
-     * assignment.
-     *
-     * @param dbs
-     *         The database where the data is stored.
-     * @param assignmentId
-     *         The id of the assignment that is getting permissions.
-     * @param ids
-     *         The list of list of permissions that is getting added.
-     */
-    // package-private
-    static void mongoInsertDefaultGroupId(final DB dbs, final String assignmentId, final List<String>... ids) {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
-        final DBObject corsor = myDbRef.fetch();
-        final DBCollection assignments = dbs.getCollection(ASSIGNMENT_COLLECTION);
-
-        final BasicDBObject updateQuery = MongoAuthenticator.createMongoCopyPermissionQeuery(ids);
-
-        LOG.info("Updated Query: ", updateQuery);
-        assignments.update(corsor, updateQuery);
-    }
-
-    /**
-     * NOTE: This is meant for internal use do not make this method public
-     *
-     * Returns a list of Id for the default group for an assignment.
-     *
-     * The Ids are ordered as so: AdminGroup, ModGroup, UserGroup.
-     *
-     * @param dbs
-     *         The database where the ids are stored.
-     * @param assignmentId
-     *         The id of the assignment that contains the ids.
-     * @return A list of id groups.
-     */
-    static List<String>[] mongoGetDefaultGroupId(final DB dbs, final String assignmentId) {
-        final DBRef myDbRef = new DBRef(dbs, ASSIGNMENT_COLLECTION, new ObjectId(assignmentId));
-        final DBObject corsor = myDbRef.fetch();
-        final ArrayList<String>[] returnValue = new ArrayList[PERMISSION_LEVELS];
-        returnValue[0] = (ArrayList) corsor.get(ADMIN);
-        returnValue[1] = (ArrayList) corsor.get(MOD);
-        returnValue[2] = (ArrayList) corsor.get(USERS);
-        return returnValue;
     }
 }

@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 function WaitScreenManager() {
     /**
      * resets the values in the school builder so that the same build object can be used again.
@@ -27,7 +28,7 @@ function WaitScreenManager() {
      ***************/
     for (var obj in this) {
         if (obj !== this.resetValues && ('' + obj) !== 'resetValues') {
-            var objectName = '' + obj;
+            var nameOfObject = '' + obj;
             // scopes the loop so that the memory of the object stays
             (function(objectName, scope) {
                 // capitalizes only the first letter.
@@ -37,7 +38,7 @@ function WaitScreenManager() {
                     scope[objectName] = value;
                     return scope;
                 };
-            })(objectName, this);
+            })(nameOfObject, this);
         }
     }
 
@@ -64,7 +65,7 @@ function WaitScreenManager() {
         element.startWaiting = function() {
             running = true;
             if (element.parentNode) {
-                element.style.display = 'initial'; // default
+                element.style.display = 'inline-flex'; // default
             } else {
                 throw new Error('Element must be added before it can start waiting');
             }
@@ -126,7 +127,7 @@ function WaitScreenManager() {
     /**
      * Adds a semi-transparent overlay to the specified element, preventing user interaction.
      *
-     * @param {Element} element element to which the overlay will be added
+     * @param {Element} element - element to which the overlay will be added
      */
     this.buildOverlay = function(element) {
         var overlay = document.createElement('dialog');
@@ -138,6 +139,9 @@ function WaitScreenManager() {
         overlay.style.width = '100%';
         overlay.style.height = '100%';
         overlay.style.zIndex = 2147483647;
+        overlay.style.display = 'inline-flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
         overlay.open = true;
         overlay.id = 'overlay';
         element.appendChild(overlay);
@@ -146,27 +150,32 @@ function WaitScreenManager() {
     /**
      * Adds a wait icon to the specified element.
      *
-     * @param {Element} element element to which the wait icon will be added
+     * @param {Element} element - element to which the wait icon will be added
      */
     this.buildWaitIcon = function buildWaitIcon(element) {
         var outer = document.createElement('div');
-        outer.setAttribute('class', 'outerWaitingIcon');
+        outer.setAttribute('class', 'preloader-wrapper big active valign');
+        var inner1 = document.createElement('div');
+        inner1.setAttribute('class', 'spinner-layer spinner-blue-only');
+        var inner2 = document.createElement('div');
+        inner2.setAttribute('class', 'circle-clipper left');
+        var inner3 = document.createElement('div');
+        inner3.setAttribute('class', 'circle');
 
-        var img = document.createElement('img');
-        img.setAttribute('class', 'waitingIcon');
-        if (this.customIcon) {
-            img.src = customIcon;
-        } else {
-            img.src = '/images/loading/000000_large_loader.gif';
-        }
-        outer.appendChild(img);
-        if (this.waitIconText) {
-            var text = document.createElement('h1');
-            text.textContent = this.waitIconText;
-            text.setAttribute('class', 'waitingIconText');
-            outer.appendChild(text);
-        }
+        inner2.appendChild(inner3);
+        inner1.appendChild(inner2);
+        outer.appendChild(inner1);
+
+
         element.appendChild(outer);
+        if (this.waitIconText) {
+            var text = document.createElement('h4');
+            text.textContent = this.waitIconText;
+            text.style.textAlign = 'center';
+            text.setAttribute('class', 'waitingIconText');
+            element.appendChild(text);
+        }
+
     };
 }
 

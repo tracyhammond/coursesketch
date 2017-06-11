@@ -1,0 +1,58 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Protobuf Creation Test</title>
+
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/utilities/connection/protobufLoader.js" data-cover></script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+    // Also tests that the default prutil actually works as it is supposed to.
+
+    QUnit.module("proto Objects School Objects");
+
+    QUnit.test("create course", function (assert) {
+        this.prutil = new ProtobufSetup().initializeBuf();
+        var course = this.prutil.SrlCourse();
+        course.setId("ID");
+        course.setName("Name");
+        assert.ok(true);
+    });
+
+    QUnit.test("create assignment", function (assert) {
+        this.prutil = new ProtobufSetup().initializeBuf();
+        var assignment = this.prutil.SrlAssignment();
+        assignment.setId("ID");
+        assignment.setCourseId("CourseId")
+        assignment.setName("Name");
+        assert.ok(true);
+    });
+
+    QUnit.test("create problem", function (assert) {
+        this.prutil = new ProtobufSetup().initializeBuf();
+        var courseProblem = this.prutil.SrlProblem();
+        courseProblem.setId("ID");
+        courseProblem.setCourseId("CourseId");
+        courseProblem.setAssignmentId("AssignmentId");
+        courseProblem.setName("Name");
+        assert.ok(true);
+    });
+
+</script>
+
+<script>
+</script>
+
+</body>
+</html>

@@ -2,14 +2,14 @@ package database;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.institution.mongo.UpdateManager;
+import handlers.ResultBuilder;
 import org.bson.BasicBSONObject;
-import org.bson.types.ObjectId;
-import protobuf.srl.school.School.SrlSchool;
+import protobuf.srl.query.Data;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
@@ -26,6 +26,7 @@ import static database.DatabaseStringConstants.TIME;
 import static database.DatabaseStringConstants.UPDATEID;
 import static database.DatabaseStringConstants.USER_GROUP_COLLECTION;
 import static database.DatabaseStringConstants.USER_LIST;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Hanldes updates for the user so that the system can do heavy caching on the client.
@@ -128,8 +129,11 @@ public final class UserUpdateHandler {
      * @param users the list of people who are holding this new update.
      * @param objectAffectedId the id of the object that was updated.
      * @param classification if it is a course, assignment, ...
+     * @throws AuthenticationException thrown if the user does not have permission to access the update.
+     * @throws DatabaseAccessException thrown if the update does not exist or if the user does not exist.
      */
-    public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification) {
+    public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification)
+            throws AuthenticationException, DatabaseAccessException {
         if (users == null) {
             LOG.error("There are no users for this school item");
             return;
@@ -137,18 +141,12 @@ public final class UserUpdateHandler {
 
         for (String group : users) {
             if (group.startsWith(GROUP_PREFIX)) {
-                final DBRef myDbRef = new DBRef(database, USER_GROUP_COLLECTION, new ObjectId(group.substring(GROUP_PREFIX_LENGTH)));
-                final DBObject corsor = myDbRef.fetch();
+                final DBCollection collection = database.getCollection(USER_GROUP_COLLECTION);
+                final DBObject corsor = collection.findOne(convertStringToObjectId(group.substring(GROUP_PREFIX_LENGTH)));
                 final ArrayList<String> list = (ArrayList<String>) corsor.get(USER_LIST);
                 insertUpdates(database, list, objectAffectedId, classification);
             } else {
-                try {
-                    UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
-                } catch (AuthenticationException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                } catch (DatabaseAccessException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                }
+                UpdateManager.mongoInsertUpdate(database, group, objectAffectedId, TimeManager.getSystemTime(), classification);
             }
         }
     }
@@ -169,7 +167,7 @@ public final class UserUpdateHandler {
 
     /**
      * Retrieves all the updates for a given user and returns them as a
-     * {@link SrlSchool} item.
+     * {@link protobuf.srl.query.Data.ItemResult} item.
      *
      * FUTURE: handle the case when an update is create for an assignment that
      * does not exist.
@@ -185,27 +183,31 @@ public final class UserUpdateHandler {
      * @throws AuthenticationException thrown if the user does not have access to the update or the contents of the update.
      * @throws DatabaseAccessException thrown if some of the data in the update does not exist.
      */
-    public static SrlSchool mongoGetAllRelevantUpdates(final DB dbs, final String userId, final long time)
+    public static List<Data.ItemResult> mongoGetAllRelevantUpdates(final DB dbs, final String userId, final long time)
             throws AuthenticationException, DatabaseAccessException {
         final BasicDBList userUpdates = UpdateManager.mongoGetUpdate(dbs, userId, time);
         final int size = userUpdates.size();
-        final List<String> objectAffectedId = new ArrayList<String>();
-        final SrlSchool.Builder build = SrlSchool.newBuilder();
+        final List<String> objectAffectedId = new ArrayList<>();
+        final ArrayList<Data.ItemResult> resultList = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             final String classification = (String) ((BasicBSONObject) userUpdates.get(i)).get(CLASSIFICATION);
             objectAffectedId.add((String) ((BasicBSONObject) userUpdates.get(i)).get(UPDATEID));
             if (COURSE_CLASSIFICATION.equals(classification)) {
-                build.addCourses(MongoInstitution.getInstance().getCourses(objectAffectedId, userId).get(0));
+                resultList.add(ResultBuilder.buildResult(Data.ItemQuery.COURSE,
+                        MongoInstitution.getInstance(null).getCourses(userId, objectAffectedId)));
             } else if (ASSIGNMENT_CLASSIFICATION.equals(classification)) {
-                build.addAssignments(MongoInstitution.getInstance().getAssignment(objectAffectedId, userId).get(0));
+                resultList.add(ResultBuilder.buildResult(Data.ItemQuery.ASSIGNMENT,
+                        MongoInstitution.getInstance(null).getAssignment(userId, objectAffectedId)));
             } else if (PROBLEM_CLASSIFICATION.equals(classification)) {
-                build.addBankProblems(MongoInstitution.getInstance().getProblem(objectAffectedId, userId).get(0));
+                resultList.add(ResultBuilder.buildResult(Data.ItemQuery.BANK_PROBLEM,
+                        MongoInstitution.getInstance(null).getProblem(userId, objectAffectedId)));
             } else if (COURSE_PROBLEM_CLASSIFICATION.equals(classification)) {
-                build.addProblems(MongoInstitution.getInstance().getCourseProblem(objectAffectedId, userId).get(0));
+                resultList.add(ResultBuilder.buildResult(Data.ItemQuery.COURSE_PROBLEM,
+                        MongoInstitution.getInstance(null).getCourseProblem(userId, objectAffectedId)));
             }
         }
-        return build.build();
+        return resultList;
 
     }
 

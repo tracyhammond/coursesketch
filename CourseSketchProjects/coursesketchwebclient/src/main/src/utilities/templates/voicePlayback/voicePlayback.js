@@ -1,55 +1,159 @@
+/* eslint-disable */
+/**
+ * Sets up and saves recordings.
+ * Calls playback.js and starts music when play button is pushed.
+ */
 function VoicePlayback() {
-    this.initializeElement = function(templateClone) {
-        var localScope = this;
-        shadowRoot = this.createShadowRoot();
-        shadowRoot.appendChild(templateClone);
+    var localScope = undefined;
 
-        this.shadowRoot.querySelector("#play-btn").onclick = function(){
-            localScope.shadowRoot.querySelector("#pause-btn").style.display = "block";
-            localScope.shadowRoot.querySelector("#play-btn").style.display = "none";
-            playMe();
-            playVoice();
+    /**
+     * Initialize microphone on client
+     */
+    this.initRecorder = function() {
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            navigator.getUserMedia = (navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozgetUserMedia ||
+            navigator.msGetUserMedia);
+            window.URL = window.URL || window.webkitURL;
+        } catch (e) {
+            alert('Web audio is not supported in this browser.');
         }
-        this.shadowRoot.querySelector("#pause-btn").onclick = function(){
-            localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
-            localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
-            pauseVoice();
-        }
 
-        var surface = document.body.querySelector("sketch-surface");
-        var graphics = surface.graphics;
-        var updateManager = surface.getUpdateManager();
+        /**
+         * Create the recorder and check to see if failed or not
+         */
+        navigator.getUserMedia({ audio: true }, function(stream) {
+            localScope.recorder = new Recorder(stream);
+        }, function(e) {
+        });
+    };
 
-        function playMe() {
-            var graphics = surface.graphics;
-            var updateList = surface.getUpdateList();
+    /**
+     * Start recording voice
+     */
+    this.startRecording = function() {
+        localScope.recorder.record();
+    };
+
+    /**
+     * Stop recording voice
+     */
+    this.stopRecording = function() {
+        localScope.recorder.stop();
+        localScope.saveFile();
+    };
+
+    /**
+     * Save the file to the database
+     * NOTE: CURRENTLY SAVES LOCALLY
+     */
+    this.saveFile = function() {
+        localScope.recorder.exportMP3(function(blob, mp3name) {
+            localScope.vid.src = URL.createObjectURL(blob);
+            localScope.vid.type = 'audio/mp3';
+        });
+    };
+
+    /**
+     * Blink the elem passed in
+     * @param {Element} element - The element that needs to blink
+     */
+    this.blink = function(element) {
+        localScope.voiceBtnTimer = setInterval(function() {
+            element.fadeOut(400, function() {
+                element.fadeIn(400);
+            });
+        }, 800);
+        element.val('REC');
+    };
+
+    /**
+     * Playback the drawn sketch
+     */
+    this.playMe = function() {
+        localScope.surface.resizeSurface();
+        if (!localScope.isPaused) {
+            var updateList = localScope.surface.getUpdateList();
             var copyList = [];
             for (var i = 0; i < updateList.length; i++) {
                 copyList.push(updateList[i]);
             }
-            var updateManager = surface.getUpdateManager();
-            updateManager.clearUpdates(false);
+            localScope.updateManager = localScope.surface.getUpdateManager();
+            localScope.updateManager.clearUpdates(false);
 
-            var playBack = new Playback(copyList, updateManager, graphics);
-            updateManager.addPlugin(playBack);
-            playBack.playNext();
-            //localScope.shadowRoot.querySelector("#play-btn").style.display = "block";
-            //localScope.shadowRoot.querySelector("#pause-btn").style.display = "none";
+            localScope.playBack = new Playback(copyList, localScope.updateManager, localScope.graphics);
+            localScope.updateManager.addPlugin(localScope.playBack);
+            localScope.playBack.playNext(new Date().getTime());
+        } else {
+            localScope.playBack.playNext(new Date().getTime());
         }
+    };
 
-        function playVoice() {
-            localScope.audio.play();
-        }
+    /**
+     * Pause the drawn sketch
+     */
+    this.pauseMe = function() {
+        localScope.pauseIndex = localScope.playBack.pauseNext();
+        localScope.isPaused = true;
+    };
 
-        function pauseVoice() {
-            localScope.audio.pause();
-        }
+    /**
+     * Initialize the passed in element.
+     * Used for initializing the video
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the voicePlayback
+     */
+    this.initializeElement = function(templateClone) {
+        localScope = this;
+        shadowRoot = this.createShadowRoot();
+        shadowRoot.appendChild(templateClone);
 
-        function init() {
-            localScope.audio = document.createElement('audio');
-            localScope.audio.src = '/src/utilities/templates/voicePlayback/TestRecording/mp3test.mp3';
-        }
-    }
+        localScope.recorder = undefined;
+        localScope.initRecorder();
+
+        localScope.vid = this.shadowRoot.querySelector('#myaudio');
+        localScope.vid.src = '/src/utilities/templates/voicePlayback/test.mp3';
+        localScope.playBack = undefined;
+        localScope.isPaused = false;
+        localScope.pauseIndex = 0;
+        localScope.startTime = 0;
+
+        /**
+         * Calls playMe when the play button is bushed to start playback
+         */
+        localScope.vid.onplay = function() {
+            localScope.playMe();
+        };
+        /**
+         * Calls pauseMe when the play button is bushed to pause playback
+         */
+        localScope.vid.onpause = function() {
+            localScope.pauseMe();
+        };
+
+        setTimeout(function() {
+            localScope.surface = localScope.shadowRoot.querySelector('sketch-surface');
+            localScope.graphics = localScope.surface.graphics;
+            localScope.updateManager = localScope.surface.getUpdateManager();
+
+            /**
+             * Calls blink if the button is blinking or starts blink if it is not blinking
+             */
+            this.shadowRoot.querySelector('#recordBtn').onclick = function() {
+                if (localScope.isRecording === true) {
+                    localScope.stopRecording();
+                    clearInterval(localScope.voiceBtnTimer);
+                    localScope.isRecording = false;
+                    $(localScope.shadowRoot.querySelector('#recordBtn')).val(null);
+                } else {
+                    localScope.blink($(localScope.shadowRoot.querySelector('#recordBtn')));
+                    localScope.startRecording();
+                    localScope.isRecording = true;
+                }
+            }.bind(this);
+        }, 2000);
+    };
 
 }
 

@@ -6,17 +6,19 @@ import coursesketch.server.base.ServerWebSocketInitializer;
 import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.server.interfaces.SocketSession;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemRequest;
+import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.request.Message.Request.MessageType;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import utilities.ConnectionException;
+import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
+import utilities.ProtobufUtilities;
 import utilities.TimeManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A simple WebSocketServer implementation.
@@ -38,7 +40,7 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
      *         The parent servlet of this server.
      */
     public AnswerCheckerServerWebSocketHandler(final ServerWebSocketInitializer parent) {
-        super(parent);
+        super(parent, parent.getServerInfo());
     }
 
     /**
@@ -62,7 +64,8 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 try {
                     student = SrlExperiment.parseFrom(req.getOtherData());
                 } catch (InvalidProtocolBufferException e1) {
-                    conn.send(createExceptionRequest(e1, req));
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
                     return; // sorry but we are bailing if anything does not look right.
                 }
@@ -72,56 +75,38 @@ public class AnswerCheckerServerWebSocketHandler extends ServerWebSocketHandler 
                 LOG.info("Student experiment {}", student);
                 try {
                     getConnectionManager().send(req,
-                            req.getSessionInfo() + "+" + state.getKey(),
+                            req.getSessionInfo() + "+" + state.getSessionId(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e1) {
-                    conn.send(createExceptionRequest(e1, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 } // pass submission on
 
                 // request the solution for checking FUTURE: need to
                 // actually retrieve answer.
-                final Request.Builder builder = Request.newBuilder();
-                builder.setRequestType(MessageType.DATA_REQUEST);
-                builder.setSessionInfo(req.getSessionInfo() + "+"
-                        + state.getKey());
+                final Request.Builder builder = ProtobufUtilities.createRequestFromData(MessageType.DATA_REQUEST, null,
+                        req.getSessionInfo() + "+" + state.getSessionId());
+
                 final ItemRequest.Builder itemRequest = ItemRequest.newBuilder();
                 itemRequest.setQuery(ItemQuery.SOLUTION);
                 itemRequest.addItemId(student.getProblemId());
+                builder.setOtherData(itemRequest.build().toByteString());
                 // FIXME this needs to change probably to make this work
                 // internalconnections.send(builder.setOtherData(itemRequest.build().toByteString()).build(),
-                // state.getKey(), SubmissionConnection.class);
+                // state.getSessionId(), SubmissionConnection.class);
             } else {
                 try {
                     getConnectionManager().send(req, req.getSessionInfo(),
                             SubmissionClientWebSocket.class);
                 } catch (ConnectionException e) {
-                    conn.send(createExceptionRequest(e, req));
                     LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                    final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
+                    conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
                 }
             }
         }
     }
-
-    /**
-     * Creates a request that represents the exception that was caused.
-     *
-     * @param exception
-     *         the exception to be sent back to the client.
-     * @param inputRequest
-     *         The request that was sent to this server.
-     * @return A request that warps around the exception.
-     */
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private Request createExceptionRequest(final Exception exception, final Request inputRequest) {
-        final Request.Builder builder = Request.newBuilder(inputRequest);
-        builder.setRequestType(MessageType.ERROR);
-        builder.clearOtherData();
-        builder.clearMessageTime();
-        builder.setResponseText(exception.getMessage());
-        return builder.build();
-    }
-
     /**
      * @return {@link AnswerConnectionState} that can be used for holding experiments for checking.
      */
