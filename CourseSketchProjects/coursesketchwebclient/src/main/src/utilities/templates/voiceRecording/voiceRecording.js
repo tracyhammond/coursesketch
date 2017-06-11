@@ -82,24 +82,14 @@ function VoiceRecording() {
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 navigator.getUserMedia = (navigator.getUserMedia ||
-<<<<<<< HEAD
-                                          navigator.webkitGetUserMedia ||
-                                          navigator.mozgetUserMedia ||
-                                          navigator.msGetUserMedia);
-                window.URL = window.URL || window.webkitURL;
-
-                console.log('Audio context set up');
-                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
-            } catch (e) {
-                alert('No web audio support in this browser');
-=======
                 navigator.webkitGetUserMedia ||
                 navigator.mozgetUserMedia ||
                 navigator.msGetUserMedia);
+                console.log('Audio context set up');
+                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
                 window.URL = window.URL || window.webkitURL;
             } catch (e) {
                 alert('Web audio is not supported in this browser.');
->>>>>>> master
             }
 
             navigator.getUserMedia({ audio: true }, function(stream) {
