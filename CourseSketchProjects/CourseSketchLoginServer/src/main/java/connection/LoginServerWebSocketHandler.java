@@ -1,7 +1,6 @@
 package connection;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
 import coursesketch.database.DatabaseClient;
 import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
@@ -16,6 +15,7 @@ import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
+import org.bson.Document;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ import utilities.ProtobufUtilities;
 import utilities.TimeManager;
 
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 /**
  * A simple WebSocketServer implementation.
@@ -166,12 +167,12 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
         final boolean loginAsDefault = !login.hasIsInstructor();
         final DatabaseClient client = (DatabaseClient) super.getDatabaseReader();
         try {
-            final BasicDBObject userLoginInfo = client.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
+            final Document userLoginInfo = client.mongoIdentify(login.getUsername(), login.getPassword(), loginAsDefault,
                     login.getIsInstructor());
             if (userLoginInfo != null) {
                 send(conn, createLoginResponse(req, login, true, CORRECT_LOGIN_MESSAGE, userLoginInfo));
                 client.userLoggedInSuccessfully(login.getUsername(), (String) userLoginInfo.get(DatabaseClient.SERVER_ID),
-                        (boolean) userLoginInfo.get(DatabaseClient.IS_INSTRUCTOR), TimeManager.getSystemTime());
+                        (boolean) userLoginInfo.get(DatabaseClient.IS_INSTRUCTOR), Arrays.asList(TimeManager.getSystemTime()));
             }
         } catch (LoginException e) {
             LOG.warn("Login failed, creating failed response.");
@@ -185,7 +186,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
     /**
      * Creates a {@link Request} to return on login request.
      *
-     * @param userLoginInfo A {@link BasicDBObject} with a set of values:
+     * @param userLoginInfo A {@link Document} with a set of values:
      *          {
      *              CLIENT_ID: clientId,
      *              SERVER_ID: serverId,
@@ -204,7 +205,7 @@ public final class LoginServerWebSocketHandler extends ServerWebSocketHandler {
      * @return {@link Request} that contains the response from the login server.
      */
     private static Request createLoginResponse(final Request req, final LoginInformation login, final boolean success, final String message,
-            final BasicDBObject userLoginInfo) {
+            final Document userLoginInfo) {
         final Request.Builder requestBuilder = ProtobufUtilities.createBaseResponse(req);
         requestBuilder.setResponseText(message);
         if (userLoginInfo != null) {

@@ -631,7 +631,7 @@
         <!-- mongo-->
         <embeddedMongoVersion>0.3.4</embeddedMongoVersion>
         <mongodbJavaDriverVersion>[3.4.2,)</mongodbJavaDriverVersion>
-        <mongodbVersion>3.5.8</mongodbVersion>
+        <mongodbVersion>3.4.4</mongodbVersion>
         <fongoVersion>2.1.0</fongoVersion>
 
         <!-- unit testing versions -->
