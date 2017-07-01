@@ -11,7 +11,7 @@
  */
 function SubmissionDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
     var database = parentDatabase;
-    var localScope = parent;
+    var parentScope = parent;
 
     /**
      * Returns a submission.  But right now only treats it as an exerpiment.
@@ -40,12 +40,12 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                     }
                     if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                         submissionCallback(new DatabaseException(
-                                item.returnText? item.returnText : 'The data sent back from the server does not exist.'));
+                                item.returnText ? item.returnText : 'The data sent back from the server does not exist.'));
                         return;
                     }
                     var experiment = CourseSketch.prutil.getSrlExperimentClass().decode(item.data[0]);
                     var sub = experiment.submission;
-                    localScope.setSubmission(problemId, sub);
+                    parentScope.setSubmission(problemId, sub);
                     submissionCallback(sub);
                     sub = undefined;
                     experiment = undefined;

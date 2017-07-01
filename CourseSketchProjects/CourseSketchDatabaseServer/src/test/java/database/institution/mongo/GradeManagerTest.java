@@ -1,14 +1,16 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
+import com.coursesketch.test.utilities.DatabaseHelper;
+import com.coursesketch.test.utilities.DocumentComparisonOptions;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import coursesketch.database.auth.*;
 import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.RequestConverter;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.GradeHistory;
-import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 import protobuf.srl.school.School.SrlCourse;
@@ -41,10 +42,7 @@ import static database.DatabaseStringConstants.GRADE_VALUE;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.USER_ID;
 import static database.DatabaseStringConstants.WHO_CHANGED;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 
 /**
  * Tests for GradeManager.
@@ -65,53 +63,40 @@ public class GradeManagerTest {
     @Mock
     AuthenticationOptionChecker optionChecker;
 
-    public DB db;
-    public Authenticator authenticator;
-    public SrlCourse.Builder courseBuilder = SrlCourse.newBuilder();
+    public MongoDatabase db;
+    private Authenticator authenticator;
+    private SrlCourse.Builder courseBuilder = SrlCourse.newBuilder();
 
-    public ProtoGrade.Builder protoGradeGrabber = ProtoGrade.newBuilder();
-    public ProtoGrade.Builder fakeProtoGrade = ProtoGrade.newBuilder();
-    public GradeHistory.Builder fakeProtoHistory1 = GradeHistory.newBuilder();
-    public GradeHistory.Builder fakeProtoHistory2 = GradeHistory.newBuilder();
+    private ProtoGrade.Builder protoGradeGrabber = ProtoGrade.newBuilder();
+    private ProtoGrade.Builder fakeProtoGrade = ProtoGrade.newBuilder();
+    private GradeHistory.Builder fakeProtoHistory1 = GradeHistory.newBuilder();
+    private GradeHistory.Builder fakeProtoHistory2 = GradeHistory.newBuilder();
 
-    public BasicDBObject fakeMongoGrade = new BasicDBObject();
-    public List<BasicDBObject> fakeMongoHistory = new ArrayList<>();
+    private Document fakeMongoGrade = new Document();
+    private List<Document> fakeMongoHistory = new ArrayList<>();
 
-    public static final String FAKE_COURSE_ID = "courseId";
-    public static final String FAKE_USER_ID = "userId";
-    public static final String FAKE_ADMIN_ID = "adminId";
-    public static final String FAKE_ASGN_ID = "assignmentId";
-    public static final String FAKE_PROB_ID = "problemId";
-    public static final float FAKE_CURRENT_GRADE = 95;
-    public static final float FAKE_OLD_GRADE = 75;
-    public static final float FAKE_NEW_GRADE = 95;
-    public static final String FAKE_COMMENT = "hi";
-    public static final boolean FAKE_EXTERNAL_GRADE = false;
-    public static final long FAKE_OLD_MILLISECONDS = 12345;
-    public static final long FAKE_NEW_MILLISECONDS = 223456;
+    private static final String FAKE_COURSE_ID = "courseId";
+    private static final String FAKE_USER_ID = "userId";
+    private static final String FAKE_ADMIN_ID = "adminId";
+    private static final String FAKE_ASGN_ID = "assignmentId";
+    private static final String FAKE_PROB_ID = "problemId";
+    private static final float FAKE_CURRENT_GRADE = 95;
+    private static final float FAKE_OLD_GRADE = 75;
+    private static final float FAKE_NEW_GRADE = 95;
+    private static final String FAKE_COMMENT = "hi";
+    private static final boolean FAKE_EXTERNAL_GRADE = false;
+    private static final long FAKE_OLD_MILLISECONDS = 12345;
+    private static final long FAKE_NEW_MILLISECONDS = 223456;
+
+    private DocumentComparisonOptions documentComparisonOptions = new DocumentComparisonOptions();
 
     @Before
     public void before() throws NoSuchAlgorithmException, AuthenticationException {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
 
-        try {
-            // general rules
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
+        documentComparisonOptions.ignoreFloatDoubleComparisons = true;
 
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
 
         /**
@@ -134,16 +119,17 @@ public class GradeManagerTest {
         /**
          * Setting up fake Mongo data.
          */
-        BasicDBObject mongoHistory1 = new BasicDBObject(GRADE_VALUE, FAKE_OLD_GRADE)
+        Document mongoHistory1 = new Document(GRADE_VALUE, FAKE_OLD_GRADE)
                 .append(COMMENT, FAKE_COMMENT + "1").append(WHO_CHANGED, FAKE_ADMIN_ID)
                 .append(GRADED_DATE, FAKE_OLD_MILLISECONDS);
-        BasicDBObject mongoHistory2 = new BasicDBObject(GRADE_VALUE, FAKE_NEW_GRADE)
+        Document mongoHistory2 = new Document(GRADE_VALUE, FAKE_NEW_GRADE)
                 .append(COMMENT, FAKE_COMMENT + "2").append(WHO_CHANGED, FAKE_ADMIN_ID)
                 .append(GRADED_DATE, FAKE_NEW_MILLISECONDS);
         fakeMongoHistory.add(mongoHistory1);
         fakeMongoHistory.add(mongoHistory2);
 
-        fakeMongoGrade.append(COURSE_ID, FAKE_COURSE_ID).append(USER_ID, HashManager.toHex(userIdHash.getBytes())).append(ASSIGNMENT_ID, FAKE_ASGN_ID)
+        fakeMongoGrade.append(COURSE_ID, FAKE_COURSE_ID).append(USER_ID, HashManager.toHex(userIdHash.getBytes()))
+                .append(ASSIGNMENT_ID, FAKE_ASGN_ID)
                 .append(COURSE_PROBLEM_ID, FAKE_PROB_ID).append(CURRENT_GRADE, FAKE_CURRENT_GRADE)
                 .append(GRADE_HISTORY, fakeMongoHistory).append(EXTERNAL_GRADE, FAKE_EXTERNAL_GRADE);
 
@@ -152,8 +138,8 @@ public class GradeManagerTest {
 
     @Test
     public void buildMongoGradeHistoryTest() {
-        BasicDBObject mongoHistory = GradeManager.buildMongoGradeHistory(fakeProtoHistory2.build());
-        Assert.assertEquals(fakeMongoHistory.get(1), mongoHistory);
+        Document mongoHistory = GradeManager.buildMongoGradeHistory(fakeProtoHistory2.build());
+        DatabaseHelper.assertDocumentEquals(fakeMongoHistory.get(1), mongoHistory, documentComparisonOptions);
     }
 
     @Test
@@ -165,9 +151,10 @@ public class GradeManagerTest {
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
-        DBObject testGrade = db.getCollection(GRADE_COLLECTION).findOne(new BasicDBObject(COURSE_ID, courseId), new BasicDBObject(SELF_ID, false));
+        Document testGrade = db.getCollection(GRADE_COLLECTION).find(new Document(COURSE_ID, courseId))
+                .projection(Projections.exclude(SELF_ID)).first();
         fakeMongoGrade.put(COURSE_ID, courseId);
-        Assert.assertEquals(fakeMongoGrade, testGrade);
+        DatabaseHelper.assertDocumentEquals(fakeMongoGrade, testGrade, documentComparisonOptions);
     }
 
     @Test
@@ -182,11 +169,12 @@ public class GradeManagerTest {
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
-        DBObject testGrade = db.getCollection(GRADE_COLLECTION).findOne(new BasicDBObject(COURSE_ID, courseId), new BasicDBObject(SELF_ID, false));
+        Document testGrade = db.getCollection(GRADE_COLLECTION).find(new Document(COURSE_ID, courseId))
+                .projection(Projections.exclude(SELF_ID)).first();
         fakeMongoGrade.put(COURSE_ID, courseId);
         fakeMongoGrade.remove(ASSIGNMENT_ID);
         fakeMongoGrade.remove(COURSE_PROBLEM_ID);
-        Assert.assertEquals(fakeMongoGrade, testGrade);
+        DatabaseHelper.assertDocumentEquals(fakeMongoGrade, testGrade, documentComparisonOptions);
     }
 
     @Test(expected = AuthenticationException.class)
@@ -268,9 +256,10 @@ public class GradeManagerTest {
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
-        DBObject testGrade = db.getCollection(GRADE_COLLECTION).findOne(new BasicDBObject(COURSE_ID, courseId), new BasicDBObject(SELF_ID, false));
+        Document testGrade = db.getCollection(GRADE_COLLECTION).find(new Document(COURSE_ID, courseId))
+                .projection(Projections.exclude(SELF_ID)).first();
         fakeMongoGrade.put(COURSE_ID, courseId);
-        Assert.assertEquals(fakeMongoGrade, testGrade);
+        DatabaseHelper.assertDocumentEquals(fakeMongoGrade, testGrade, documentComparisonOptions);
     }
 
     @Test
@@ -287,15 +276,16 @@ public class GradeManagerTest {
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradeManager.addGrade(authenticator, db, FAKE_ADMIN_ID, fakeProtoGrade.build());
-        DBObject testGrade = db.getCollection(GRADE_COLLECTION).findOne(new BasicDBObject(COURSE_ID, courseId), new BasicDBObject(SELF_ID, false));
+        Document testGrade = db.getCollection(GRADE_COLLECTION).find(new Document(COURSE_ID, courseId))
+                .projection(Projections.exclude(SELF_ID)).first();
         fakeMongoGrade.put(COURSE_ID, courseId);
 
         // The assert fails if the list contents are in reverse order, so reversing to make the assert not fail due to that.
-        List<BasicDBObject> reverseMongoHistory = new ArrayList<>();
+        List<Document> reverseMongoHistory = new ArrayList<>();
         reverseMongoHistory.add(fakeMongoHistory.get(1));
         reverseMongoHistory.add(fakeMongoHistory.get(0));
         fakeMongoGrade.put(GRADE_HISTORY, reverseMongoHistory);
-        Assert.assertEquals(fakeMongoGrade, testGrade);
+        DatabaseHelper.assertDocumentEquals(fakeMongoGrade, testGrade, documentComparisonOptions);
     }
 
     @Test
@@ -306,7 +296,7 @@ public class GradeManagerTest {
 
     @Test(expected = DatabaseAccessException.class)
     public void buildProtoGradeHistoryNoValuesTest() throws Exception {
-        GradeHistory testHistory = GradeManager.buildProtoGradeHistory(new BasicDBObject());
+        GradeManager.buildProtoGradeHistory(new Document());
     }
 
     @Test
@@ -318,13 +308,13 @@ public class GradeManagerTest {
     @Test(expected = DatabaseAccessException.class)
     public void buildProtoGradeNoCourseIdTest() throws Exception {
         fakeMongoGrade.remove(COURSE_ID);
-        ProtoGrade testGrade = GradeManager.buildProtoGrade(fakeMongoGrade);
+        GradeManager.buildProtoGrade(fakeMongoGrade);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void buildProtoGradeNoUserIdTest() throws Exception {
         fakeMongoGrade.remove(USER_ID);
-        ProtoGrade testGrade = GradeManager.buildProtoGrade(fakeMongoGrade);
+        GradeManager.buildProtoGrade(fakeMongoGrade);
     }
 
     @Test
@@ -420,7 +410,7 @@ public class GradeManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_ADMIN_ID, null, Authentication.AuthResponse.PermissionLevel.PEER_TEACHER);
 
-        ProtoGrade testAdminGrade = GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
+        GradeManager.getGrade(authenticator, db, FAKE_ADMIN_ID, FAKE_ADMIN_ID,
                 protoGradeGrabber.build());
     }
 
@@ -434,7 +424,7 @@ public class GradeManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM, FAKE_PROB_ID,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        ProtoGrade testUserGrade = GradeManager.getGrade(authenticator, db, FAKE_USER_ID, FAKE_USER_ID,
+        GradeManager.getGrade(authenticator, db, FAKE_USER_ID, FAKE_USER_ID,
                 protoGradeGrabber.build());
     }
 
@@ -532,7 +522,7 @@ public class GradeManagerTest {
 
     @Test(expected = AuthenticationException.class)
     public void getAllAssignmentGradesStudentNotInCourseTest() throws Exception {
-        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, FAKE_COURSE_ID, FAKE_USER_ID, FAKE_USER_ID);
+        GradeManager.getAllAssignmentGradesStudent(authenticator, db, FAKE_COURSE_ID, FAKE_USER_ID, FAKE_USER_ID);
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -542,6 +532,6 @@ public class GradeManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId,
                 FAKE_USER_ID, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<ProtoGrade> testGrades = GradeManager.getAllAssignmentGradesStudent(authenticator, db, courseId, FAKE_USER_ID, FAKE_USER_ID);
+        GradeManager.getAllAssignmentGradesStudent(authenticator, db, courseId, FAKE_USER_ID, FAKE_USER_ID);
     }
 }

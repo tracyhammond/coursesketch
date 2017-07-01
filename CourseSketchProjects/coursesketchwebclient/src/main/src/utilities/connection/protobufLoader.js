@@ -268,7 +268,7 @@ function ProtobufSetup() {
             pException.setName('String Error');
             return pException;
         }
-        pException.setMssg(anError.message);
+        pException.setMssg('' + anError.message);
 
         var stack = anError.stack;
         if (!isArray(stack)) {

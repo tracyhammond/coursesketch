@@ -1,15 +1,12 @@
 package database.institution.mongo;
 
 import com.coursesketch.test.utilities.AuthenticationHelper;
-import com.coursesketch.test.utilities.ProtobufComparison;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.*;
 import database.DatabaseAccessException;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +22,6 @@ import protobuf.srl.grading.Grading.DroppedAssignment;
 import protobuf.srl.grading.Grading.DroppedProblems;
 import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.grading.Grading.DropType;
-import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 import protobuf.srl.school.School.SrlCourse;
@@ -52,9 +48,8 @@ import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
+import static database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Tests for GradingPolicyManager.
@@ -75,63 +70,46 @@ public class GradingPolicyManagerTest {
     @Mock
     AuthenticationOptionChecker optionChecker;
 
-    public DB db;
-    public Authenticator authenticator;
-    public SrlCourse.Builder courseBuilder = SrlCourse.newBuilder();
+    public MongoDatabase db;
+    private Authenticator authenticator;
+    private SrlCourse.Builder courseBuilder = SrlCourse.newBuilder();
 
-    public ProtoGradingPolicy.Builder fakeProtoPolicy = ProtoGradingPolicy.newBuilder();
-    public PolicyCategory.Builder fakeProtoCategory1 = PolicyCategory.newBuilder();
-    public PolicyCategory.Builder fakeProtoCategory2 = PolicyCategory.newBuilder();
-    public DroppedAssignment.Builder fakeProtoDropAsgn1 = DroppedAssignment.newBuilder();
-    public DroppedAssignment.Builder fakeProtoDropAsgn2 = DroppedAssignment.newBuilder();
-    public DroppedProblems.Builder fakeProtoDropProbs1 = DroppedProblems.newBuilder();
-    public DroppedProblems.Builder fakeProtoDropProbs2 = DroppedProblems.newBuilder();
-    public DroppedProblems.SingleProblem.Builder fakeProtoDropProblem1 = DroppedProblems.SingleProblem.newBuilder();
-    public DroppedProblems.SingleProblem.Builder fakeProtoDropProblem2 = DroppedProblems.SingleProblem.newBuilder();
-    public LatePolicy.Builder fakeProtoLate = LatePolicy.newBuilder();
+    private ProtoGradingPolicy.Builder fakeProtoPolicy = ProtoGradingPolicy.newBuilder();
+    private PolicyCategory.Builder fakeProtoCategory1 = PolicyCategory.newBuilder();
+    private PolicyCategory.Builder fakeProtoCategory2 = PolicyCategory.newBuilder();
+    private DroppedAssignment.Builder fakeProtoDropAsgn1 = DroppedAssignment.newBuilder();
+    private DroppedAssignment.Builder fakeProtoDropAsgn2 = DroppedAssignment.newBuilder();
+    private DroppedProblems.Builder fakeProtoDropProbs1 = DroppedProblems.newBuilder();
+    private DroppedProblems.Builder fakeProtoDropProbs2 = DroppedProblems.newBuilder();
+    private DroppedProblems.SingleProblem.Builder fakeProtoDropProblem1 = DroppedProblems.SingleProblem.newBuilder();
+    private DroppedProblems.SingleProblem.Builder fakeProtoDropProblem2 = DroppedProblems.SingleProblem.newBuilder();
+    private LatePolicy.Builder fakeProtoLate = LatePolicy.newBuilder();
 
-    public BasicDBObject fakeMongoPolicy = new BasicDBObject();
-    public BasicDBObject fakeMongoCategory1 = new BasicDBObject();
-    public BasicDBObject fakeMongoCategory2 = new BasicDBObject();
-    public BasicDBObject fakeMongoLate = new BasicDBObject();
-    Map<String, List<BasicDBObject>> fakeDroppedProblems = new HashMap<>();
-    List<BasicDBObject> droppedProblemsList = new ArrayList<>();
-    ArrayList<BasicDBObject> fakeCategories = new ArrayList<>();
-    List<BasicDBObject> fakeDroppedAssignments = new ArrayList<>();
+    private Document fakeMongoPolicy = new Document();
+    private Document fakeMongoCategory1 = new Document();
+    private Document fakeMongoCategory2 = new Document();
+    private Document fakeMongoLate = new Document();
+    private Map<String, List<Document>> fakeDroppedProblems = new HashMap<>();
+    private List<Document> droppedProblemsList = new ArrayList<>();
+    private ArrayList<Document> fakeCategories = new ArrayList<>();
+    private List<Document> fakeDroppedAssignments = new ArrayList<>();
 
-    public static final String FAKE_COURSE_ID = "courseId";
-    public static final String FAKE_USER_ID = "userId";
-    public static final String FAKE_ADMIN_ID = "adminId";
-    public static final String FAKE_ASGN_ID = "assignmentId";
-    public static final String FAKE_PROB_ID = "problemId";
-    public static final String FAKE_CATEGORY_NAME = "category";
-    public static final double FAKE_CATEGORY_WEIGHT = 25;
-    public static final int FAKE_ENUM = 1;
-    public static final double FAKE_LATE_RATE = 25;
-    public static final boolean FAKE_BOOL = true;
+    private static final String FAKE_COURSE_ID = "courseId";
+    private static final String FAKE_USER_ID = "userId";
+    private static final String FAKE_ADMIN_ID = "adminId";
+    private static final String FAKE_ASGN_ID = "assignmentId";
+    private static final String FAKE_PROB_ID = "problemId";
+    private static final String FAKE_CATEGORY_NAME = "category";
+    private static final double FAKE_CATEGORY_WEIGHT = 25;
+    private static final int FAKE_ENUM = 1;
+    private static final double FAKE_LATE_RATE = 25;
+    private static final boolean FAKE_BOOL = true;
 
     @Before
     public void before() {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
 
-        try {
-            // general rules
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
-
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
 
         /**
@@ -164,26 +142,26 @@ public class GradingPolicyManagerTest {
         courseBuilder.setId(FAKE_COURSE_ID);
 
         /**
-         * Fake mongo DBObjects setup.
+         * Fake mongo Documents setup.
          */
-        fakeMongoLate = new BasicDBObject(LATE_POLICY_FUNCTION_TYPE, FAKE_ENUM)
+        fakeMongoLate = new Document(LATE_POLICY_FUNCTION_TYPE, FAKE_ENUM)
                 .append(LATE_POLICY_TIME_FRAME_TYPE, FAKE_ENUM).append(LATE_POLICY_RATE, FAKE_LATE_RATE)
                 .append(LATE_POLICY_SUBTRACTION_TYPE, FAKE_ENUM)
                 .append(APPLY_ONLY_TO_LATE_PROBLEMS, FAKE_BOOL);
 
-        fakeMongoCategory1 = new BasicDBObject(GRADE_CATEGORY_NAME, FAKE_CATEGORY_NAME + "1")
+        fakeMongoCategory1 = new Document(GRADE_CATEGORY_NAME, FAKE_CATEGORY_NAME + "1")
                 .append(GRADE_CATEGORY_WEIGHT, FAKE_CATEGORY_WEIGHT)
                 .append(LATE_POLICY, fakeMongoLate);
 
-        fakeMongoCategory2 = new BasicDBObject(fakeMongoCategory1);
+        fakeMongoCategory2 = new Document(fakeMongoCategory1);
         fakeMongoCategory2.put(GRADE_CATEGORY_NAME, FAKE_CATEGORY_NAME + "2");
 
         fakeCategories.add(fakeMongoCategory1);
         fakeCategories.add(fakeMongoCategory2);
 
-        BasicDBObject singleProblem1 = new BasicDBObject(COURSE_PROBLEM_ID, FAKE_PROB_ID + "1")
+        Document singleProblem1 = new Document(COURSE_PROBLEM_ID, FAKE_PROB_ID + "1")
                 .append(DROP_TYPE, FAKE_ENUM);
-        BasicDBObject singleProblem2 = new BasicDBObject(COURSE_PROBLEM_ID, FAKE_PROB_ID + "2")
+        Document singleProblem2 = new Document(COURSE_PROBLEM_ID, FAKE_PROB_ID + "2")
                 .append(DROP_TYPE, FAKE_ENUM);
         droppedProblemsList.add(singleProblem1);
         droppedProblemsList.add(singleProblem2);
@@ -191,8 +169,8 @@ public class GradingPolicyManagerTest {
         fakeDroppedProblems.put(FAKE_ASGN_ID + "1", droppedProblemsList);
         fakeDroppedProblems.put(FAKE_ASGN_ID + "2", droppedProblemsList);
 
-        fakeDroppedAssignments.add(new BasicDBObject(ASSIGNMENT_ID, FAKE_ASGN_ID + "1").append(DROP_TYPE, FAKE_ENUM));
-        fakeDroppedAssignments.add(new BasicDBObject(ASSIGNMENT_ID, FAKE_ASGN_ID + "2").append(DROP_TYPE, FAKE_ENUM));
+        fakeDroppedAssignments.add(new Document(ASSIGNMENT_ID, FAKE_ASGN_ID + "1").append(DROP_TYPE, FAKE_ENUM));
+        fakeDroppedAssignments.add(new Document(ASSIGNMENT_ID, FAKE_ASGN_ID + "2").append(DROP_TYPE, FAKE_ENUM));
 
         fakeMongoPolicy.append(SELF_ID, FAKE_COURSE_ID).append(GRADE_POLICY_TYPE, FAKE_ENUM).append(GRADE_CATEGORIES, fakeCategories)
                 .append(DROPPED_PROBLEMS, fakeDroppedProblems).append(DROPPED_ASSIGNMENTS, fakeDroppedAssignments);
@@ -200,7 +178,7 @@ public class GradingPolicyManagerTest {
 
     @Test
     public void buildMongoLatePolicyTest() {
-        BasicDBObject testLatePolicy = GradingPolicyManager.buildMongoLatePolicy(fakeProtoLate.build());
+        Document testLatePolicy = GradingPolicyManager.buildMongoLatePolicy(fakeProtoLate.build());
         Assert.assertEquals(fakeMongoLate, testLatePolicy);
     }
 
@@ -212,7 +190,7 @@ public class GradingPolicyManagerTest {
 
     @Test
     public void buildMongoDroppedProblemObjectTest() {
-        List<BasicDBObject> testDroppedProblems = GradingPolicyManager.buildMongoDroppedProblemObject(fakeProtoDropProbs1.build());
+        List<Document> testDroppedProblems = GradingPolicyManager.buildMongoDroppedProblemObject(fakeProtoDropProbs1.build());
         Assert.assertEquals(fakeDroppedProblems.get(FAKE_ASGN_ID + "1"), testDroppedProblems);
     }
 
@@ -231,7 +209,7 @@ public class GradingPolicyManagerTest {
 
     @Test
     public void buildMongoCategoryTest() {
-        BasicDBObject testMongoCategory = GradingPolicyManager.buildMongoCategory(fakeProtoCategory1.build());
+        Document testMongoCategory = GradingPolicyManager.buildMongoCategory(fakeProtoCategory1.build());
         Assert.assertEquals(fakeMongoCategory1, testMongoCategory);
     }
 
@@ -244,7 +222,7 @@ public class GradingPolicyManagerTest {
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
-        DBObject testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).findOne(new ObjectId(courseId));
+        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
 
         fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
         Assert.assertEquals(fakeMongoPolicy, testPolicy);
@@ -294,6 +272,6 @@ public class GradingPolicyManagerTest {
 
         exception.expect(AuthenticationException.class);
 
-        ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, "notInCourse");
+        GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, "notInCourse");
     }
 }

@@ -13,9 +13,9 @@ $(document).ready(function() {
      */
     CourseSketch.pushServerMessage = function(request, callback, times) {
         queuedMessages.push({
-            'request':  request,
+            'request': request,
             'callback': callback,
-            'times':    times
+            'times': times
         });
     };
 

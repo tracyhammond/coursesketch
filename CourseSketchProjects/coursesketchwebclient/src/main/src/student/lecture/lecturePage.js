@@ -43,21 +43,21 @@ validateFirstRun(document.currentScript);
                 case 37: { // left
                     CourseSketch.lecturePage.navigation.gotoPrevious();
                 }
-                break;
+                    break;
 
                 case 38: // up
-                break;
+                    break;
 
                 case 39: { // right
                     CourseSketch.lecturePage.navigation.gotoNext();
                 }
-                break;
+                    break;
 
                 case 40: // down
-                break;
+                    break;
 
                 case 27: // escape!
-                break;
+                    break;
 
                 default:
                     return; // exit this handler for other keys

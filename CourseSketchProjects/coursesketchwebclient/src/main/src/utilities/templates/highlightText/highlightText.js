@@ -91,7 +91,7 @@ function HighlightText() {
      * @param {String} currentPath - is used within the function to append the previous sibling to the path
      * @return {String} currentPath is the XML Path of the input node
      */
-    function getXPath (node, currentPath) {
+    function getXPath(node, currentPath) {
         currentPath = currentPath || '';
         switch (node.nodeType) {
             case 3:

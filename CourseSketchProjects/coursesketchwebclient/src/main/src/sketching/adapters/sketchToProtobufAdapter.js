@@ -1,6 +1,6 @@
 /* jshint camelcase: false */
 
-(function(localScope) {
+(function(scriptScope) {
     /**
      * Creates an SRL prtobuf version of a point.
      *
@@ -184,7 +184,7 @@
         var scope = false;
         if (!isUndefined(ProtoSrlObject)) {
             proto = ProtoSrlObject;
-            scope = localScope;
+            scope = scriptScope;
         } else {
             proto = parent.ProtoSrlObject;
             scope = parent;

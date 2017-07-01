@@ -43,17 +43,17 @@
     experiment5.courseId = '1';
     experiment1.courseId = '1';
 
-    experiment1.assignmentId = '1';
-    experiment2.assignmentId = '1';
-    experiment3.assignmentId = '1';
-    experiment4.assignmentId = '1';
-    experiment5.assignmentId = '1';
+    experiment1.assignmentId = '100';
+    experiment2.assignmentId = '100';
+    experiment3.assignmentId = '100';
+    experiment4.assignmentId = '100';
+    experiment5.assignmentId = '100';
 
-    experiment1.problemId = '1';
-    experiment2.problemId = '1';
-    experiment3.problemId = '1';
-    experiment4.problemId = '2';
-    experiment5.problemId = '2';
+    experiment1.problemId = '30';
+    experiment2.problemId = '30';
+    experiment3.problemId = '30';
+    experiment4.problemId = '40';
+    experiment5.problemId = '40';
 
     experiment1.userId = 'tony';
     experiment2.userId = 'Dtracer';
