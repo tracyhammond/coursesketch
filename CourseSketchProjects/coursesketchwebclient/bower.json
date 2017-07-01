@@ -7,7 +7,7 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#0.7.14",
     "IndexedDBShim": "",
     "stacktrace-js": "0.6.4",
-    "materialize": "0.97.1",
+    "materialize": "0.99.0",
     "dialog-polyfill": "0.4.2",
     "MathJax": "2.5.3",
     "paper": "v0.9.25",
