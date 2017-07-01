@@ -7,12 +7,13 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#0.7.14",
     "IndexedDBShim": "",
     "stacktrace-js": "0.6.4",
-    "materialize": "0.97.1",
+    "materialize": "0.99.0",
     "dialog-polyfill": "0.4.2",
     "MathJax": "2.5.3",
     "paper": "v0.9.25",
-    "protobufjs": "dcodeIO/protobuf.js#473ee72417d3e2ced7c0b46371ec316e8c305bed",
-    "jailed": "asvd/jailed#a840e684a3ba14cc8af61973b3e6d0d900dca097"
+    "protobufjs": "dcodeIO/protobuf.js#5.0.1",
+    "jailed": "asvd/jailed#a840e684a3ba14cc8af61973b3e6d0d900dca097",
+    "d3": "3.5.5"
   },
   "devDependencies": {
     "blanket": "1.1.7",

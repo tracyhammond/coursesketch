@@ -9,10 +9,12 @@ import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingPolicyRequestHandler;
 import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
+import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.DataRequest;
@@ -208,6 +210,12 @@ public final class DataRequestHandler {
                         case COURSE_ROSTER: {
                             final Identity.UserNameResponse courseRoster = instance.getCourseRoster(authId, itemRequest.getItemId(0));
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, courseRoster));
+                        }
+                        break;
+                        case GRADING_POLICY: {
+                            final ProtoGradingPolicy gradingPolicy = GradingPolicyRequestHandler.gradingPolicyRequestHandler(instance, itemRequest,
+                                    userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.GRADING_POLICY, gradingPolicy));
                         }
                         break;
                         default:

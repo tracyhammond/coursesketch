@@ -15,10 +15,10 @@ function userActionGraph() {
      * after the update list is done loading
      * @param updateList  a list that contains all the changes made in sketch.
      */
-    this.setUpdateList = function(updateList)  {
-        this.shadowRoot.querySelector("sketch-surface").loadUpdateList(updateList, undefined, function() {
-            console.log("Resizing the canvas");
-            this.shadowRoot.querySelector("sketch-surface").fillCanvas();
+    this.setUpdateList = function(updateList) {
+        this.shadowRoot.querySelector('sketch-surface').loadUpdateList(updateList, undefined, function() {
+            console.log('Resizing the canvas');
+            this.shadowRoot.querySelector('sketch-surface').fillCanvas();
         }.bind(this));
     };
 
@@ -29,10 +29,12 @@ function userActionGraph() {
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
 
-        this.shadowRoot.querySelector(".correctButton").onclick = correct.bind(this);
-        this.shadowRoot.querySelector(".wrongButton").onclick = wrong.bind(this);
-        this.shadowRoot.querySelector("input").addEventListener("click",
-            function(event) {event.stopPropagation()}, false);
+        this.shadowRoot.querySelector('.correctButton').onclick = correct.bind(this);
+        this.shadowRoot.querySelector('.wrongButton').onclick = wrong.bind(this);
+        this.shadowRoot.querySelector('input').addEventListener('click',
+            function(event) {
+                event.stopPropagation();
+            }, false);
         this.setupAttributes();
     };
 
@@ -40,17 +42,17 @@ function userActionGraph() {
      * Looks at the data attributes of this element and configures the element appropriately.
      */
     this.setupAttributes = function() {
-        if (!isUndefined(this.dataset) && this.dataset.binary == "true" || this.dataset.binary == "") {
-            this.shadowRoot.querySelector("#gradeInput").disabled = true;
+        if (!isUndefined(this.dataset) && this.dataset.binary === 'true' || this.dataset.binary === '') {
+            this.shadowRoot.querySelector('#gradeInput').disabled = true;
         }
-        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_points) && this.dataset.max_points != "") {
-            this.shadowRoot.querySelector("#gradeInput").max = this.dataset.max_points;
-            this.shadowRoot.querySelector("#gradeInput").className = "point";
+        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_points) && this.dataset.max_points !== '') {
+            this.shadowRoot.querySelector('#gradeInput').max = this.dataset.max_points;
+            this.shadowRoot.querySelector('#gradeInput').className = 'point';
             this.maxValue = parseFloat(this.dataset.max_points);
         }
-        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_percent) && this.dataset.max_percent != "") {
-            this.shadowRoot.querySelector("#gradeInput").max = this.dataset.max_percent;
-            this.shadowRoot.querySelector("#gradeInput").className = "percent";
+        if (!isUndefined(this.dataset) && !isUndefined(this.dataset.max_percent) && this.dataset.max_percent !== '') {
+            this.shadowRoot.querySelector('#gradeInput').max = this.dataset.max_percent;
+            this.shadowRoot.querySelector('#gradeInput').className = 'percent';
         }
     };
 
@@ -60,8 +62,8 @@ function userActionGraph() {
     function correct(event) {
         event.stopPropagation();
         this.gradeValue = this.maxValue;
-        this.shadowRoot.querySelector("#outer").className='outerCorrect';
-        this.shadowRoot.querySelector("#gradeInput").value = parseFloat(this.gradeValue);
+        this.shadowRoot.querySelector('#outer').className = 'outerCorrect';
+        this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
 
     /*
@@ -70,15 +72,15 @@ function userActionGraph() {
     function wrong(event) {
         event.stopPropagation();
         this.gradeValue = 0;
-        this.shadowRoot.querySelector("#outer").className='outerWrong';
-        this.shadowRoot.querySelector("#gradeInput").value = parseFloat(this.gradeValue);
+        this.shadowRoot.querySelector('#outer').className = 'outerWrong';
+        this.shadowRoot.querySelector('#gradeInput').value = parseFloat(this.gradeValue);
     }
 
     /**
      * Sets the callback that is called when the sketch is clicked.
      */
     this.setSketchClickedFunction = function(sketchClickedFunction) {
-        this.shadowRoot.querySelector("sketch-surface").onclick = sketchClickedFunction;
+        this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;
     };
 }
 

@@ -54,6 +54,15 @@ target/
 #logs
 *Log.out*
 *.log
+CourseSketchProjects/AuthenticationServer/log
+CourseSketchProjects/CourseSketchDatabaseServer/log/
+CourseSketchProjects/CourseSketchLoginServer/log/
+CourseSketchProjects/CourseSketchRecognitionServer/log/
+CourseSketchProjects/CourseSketchSubmissionServer/log/
+CourseSketchProjects/IdentityServer/log
+CourseSketchProjects/ServerAbstractor/log/
+CourseSketchProjects/coursesketchwebclient/package-lock.json
+CourseSketchProjects/rpcserver/log
 #end logs
 
 #website files
@@ -62,9 +71,10 @@ npm-debug.log
 node_modules/
 node_temp
 node_tmp
-doc
+doc/
 bower_components/
 package-lock.json
+CourseSketchProjects/coursesketchwebclient/etc/
 #end website files
 
 CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*

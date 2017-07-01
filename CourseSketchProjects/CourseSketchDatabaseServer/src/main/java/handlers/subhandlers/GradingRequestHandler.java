@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to handle grade and grading policy data requests to the server.
+ * Used to handle grade data requests to the server.
  *
  * Created by matt on 4/22/15.
  */

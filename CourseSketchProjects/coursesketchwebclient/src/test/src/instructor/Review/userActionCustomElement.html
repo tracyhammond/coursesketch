@@ -77,11 +77,11 @@
             return false;
         }
 
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, stubs);
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE, stubs);
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE, stubs);
 
-        var assignAt = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.ASSIGN_ATTRIBUTE, true);
-        var assignUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ assignAt ]);
+        var assignAt = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.ASSIGN_ATTRIBUTE, true);
+        var assignUpdate = CourseSketch.prutil.createUpdateFromCommands([ assignAt ]);
 
         updateList.addUpdate(assignUpdate);
         updateList.addUpdate(assignUpdate);
@@ -96,7 +96,7 @@
         updateList.redoAction(false);
         updateList.addUpdate(assignUpdate);*/
 
-        var updateData = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        var updateData = CourseSketch.prutil.SrlUpdateList();
         //updateData.list=(updates.getUpdateList());
         updateData.list= updateList;
         console.log(updateData);
