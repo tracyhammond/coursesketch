@@ -4,9 +4,8 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -14,16 +13,14 @@ import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import database.DbSchoolUtility;
 import database.RequestConverter;
-import org.bson.types.ObjectId;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -34,8 +31,8 @@ import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import utilities.TimeManager;
 
-import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DbSchoolUtility.getCollectionFromType;
+import static database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -53,7 +50,7 @@ public class AssignmentManagerTest {
     @Mock AuthenticationChecker authChecker;
     @Mock AuthenticationOptionChecker optionChecker;
 
-    public DB db;
+    public MongoDatabase db;
     public Authenticator authenticator;
 
     public static final String VALID_NAME = "Valid course name!";
@@ -83,26 +80,9 @@ public class AssignmentManagerTest {
 
         PowerMockito.mockStatic(TimeManager.class);
         PowerMockito.when(TimeManager.class, "getSystemTime").thenReturn(100L);
-        db = fongo.getDB();
+        db = fongo.getDatabase();
 
-        try {
-            // general rules
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
-
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
         courseId = null;
         assignmentId = null;
@@ -155,8 +135,8 @@ public class AssignmentManagerTest {
         defaultAssignment.setId(FAKE_ID);
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject mongoAssignment = collection.findOne(convertStringToObjectId(assignmentId));
+        final MongoCollection<Document> collection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Document mongoAssignment = collection.find(convertStringToObjectId(assignmentId)).first();
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.ACCESS_DATE), TimeManager.getSystemTime());
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.CLOSE_DATE), RequestConverter.getMaxTime());
@@ -170,11 +150,11 @@ public class AssignmentManagerTest {
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAVIGATION_TYPE), Assignment.NavigationType.DEFAULT_VALUE);
 
         // empty fields
-        Assert.assertFalse(mongoAssignment.containsField(DatabaseStringConstants.GRADE_WEIGHT));
-        Assert.assertFalse(mongoAssignment.containsField(DatabaseStringConstants.LATE_POLICY_FUNCTION_TYPE));
-        Assert.assertFalse(mongoAssignment.containsField(DatabaseStringConstants.LATE_POLICY_RATE));
-        Assert.assertFalse(mongoAssignment.containsField(DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE));
-        Assert.assertFalse(mongoAssignment.containsField(DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE));
+        Assert.assertFalse(mongoAssignment.containsKey(DatabaseStringConstants.GRADE_WEIGHT));
+        Assert.assertFalse(mongoAssignment.containsKey(DatabaseStringConstants.LATE_POLICY_FUNCTION_TYPE));
+        Assert.assertFalse(mongoAssignment.containsKey(DatabaseStringConstants.LATE_POLICY_RATE));
+        Assert.assertFalse(mongoAssignment.containsKey(DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE));
+        Assert.assertFalse(mongoAssignment.containsKey(DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE));
     }
 
     @Test
@@ -193,8 +173,8 @@ public class AssignmentManagerTest {
 
         assignmentId = AssignmentManager.mongoInsertAssignment(authenticator, db, ADMIN_USER, defaultAssignment.build());
 
-        final DBCollection assignmentCollection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject mongoAssignment = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
+        final MongoCollection<Document> assignmentCollection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Document mongoAssignment = assignmentCollection.find(convertStringToObjectId(assignmentId)).first();
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);

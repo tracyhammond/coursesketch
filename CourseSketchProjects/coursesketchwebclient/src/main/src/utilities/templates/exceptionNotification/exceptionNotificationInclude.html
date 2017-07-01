@@ -12,9 +12,7 @@
     <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#exceptionNotificationImport');
-            var template = link.import.querySelector('#exceptionNotification');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document, 'exceptionNotificationImport', 'exceptionNotification');
 
             var newElement = new ExceptionNotification();
 

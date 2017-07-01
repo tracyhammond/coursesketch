@@ -1,23 +1,22 @@
 package database;
 
 import com.mongodb.BasicDBList;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.institution.mongo.UpdateManager;
 import handlers.ResultBuilder;
 import org.bson.BasicBSONObject;
+import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.query.Data;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static database.DatabaseStringConstants.CLASSIFICATION;
 import static database.DatabaseStringConstants.GROUP_PREFIX;
@@ -84,7 +83,7 @@ public final class UserUpdateHandler {
      * @throws AuthenticationException Thrown if the user does not have access to the update.
      * @throws DatabaseAccessException Thrown if the database does not contain the specified update.
      */
-    public static void removeOldUpdates(final DB database, final String userId) throws AuthenticationException, DatabaseAccessException {
+    public static void removeOldUpdates(final MongoDatabase database, final String userId) throws AuthenticationException, DatabaseAccessException {
         // ges all of the updates.
         final BasicDBList updateList = UpdateManager.mongoGetUpdate(database, userId, 0);
         final int size = updateList.size();
@@ -105,7 +104,7 @@ public final class UserUpdateHandler {
      * @param objectAffectedId the id of the object that was updated.
      * @param classification the type of update (course, assignment, ...)
      */
-    public static void insertUpdates(final DB database, final String[] users, final String objectAffectedId, final String classification) {
+    public static void insertUpdates(final MongoDatabase database, final String[] users, final String objectAffectedId, final String classification) {
         if (users == null) {
             LOG.error("There are no users for this school item");
             return;
@@ -132,7 +131,8 @@ public final class UserUpdateHandler {
      * @throws AuthenticationException thrown if the user does not have permission to access the update.
      * @throws DatabaseAccessException thrown if the update does not exist or if the user does not exist.
      */
-    public static void insertUpdates(final DB database, final List<String> users, final String objectAffectedId, final String classification)
+    public static void insertUpdates(final MongoDatabase database, final List<String> users, final String objectAffectedId,
+            final String classification)
             throws AuthenticationException, DatabaseAccessException {
         if (users == null) {
             LOG.error("There are no users for this school item");
@@ -141,8 +141,8 @@ public final class UserUpdateHandler {
 
         for (String group : users) {
             if (group.startsWith(GROUP_PREFIX)) {
-                final DBCollection collection = database.getCollection(USER_GROUP_COLLECTION);
-                final DBObject corsor = collection.findOne(convertStringToObjectId(group.substring(GROUP_PREFIX_LENGTH)));
+                final MongoCollection<Document> collection = database.getCollection(USER_GROUP_COLLECTION);
+                final Document corsor = collection.find(convertStringToObjectId(group.substring(GROUP_PREFIX_LENGTH))).first();
                 final ArrayList<String> list = (ArrayList<String>) corsor.get(USER_LIST);
                 insertUpdates(database, list, objectAffectedId, classification);
             } else {
@@ -160,7 +160,7 @@ public final class UserUpdateHandler {
      * @throws AuthenticationException thrown if the user does not have permission to access the update.
      * @throws DatabaseAccessException thrown if the update does not exist or if the user does not exist.
      */
-    public static void insertUpdate(final DB database, final String userId, final String objectAffectedId, final String classification)
+    public static void insertUpdate(final MongoDatabase database, final String userId, final String objectAffectedId, final String classification)
             throws AuthenticationException, DatabaseAccessException {
         UpdateManager.mongoInsertUpdate(database, userId, objectAffectedId, TimeManager.getSystemTime(), classification);
     }
@@ -183,7 +183,7 @@ public final class UserUpdateHandler {
      * @throws AuthenticationException thrown if the user does not have access to the update or the contents of the update.
      * @throws DatabaseAccessException thrown if some of the data in the update does not exist.
      */
-    public static List<Data.ItemResult> mongoGetAllRelevantUpdates(final DB dbs, final String userId, final long time)
+    public static List<Data.ItemResult> mongoGetAllRelevantUpdates(final MongoDatabase dbs, final String userId, final long time)
             throws AuthenticationException, DatabaseAccessException {
         final BasicDBList userUpdates = UpdateManager.mongoGetUpdate(dbs, userId, time);
         final int size = userUpdates.size();

@@ -479,6 +479,8 @@
                                 <!-- link to github repo -->
                                 <!-- https://github.com/joelittlejohn/embedmongo-maven-plugin -->
 
+                                <version>${mongodbVersion}</version>
+
                                 <!-- optional (file|console|none), default console -->
                                 <logging>file</logging>
 
@@ -606,31 +608,40 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- version -->
+        <!-- versioning -->
         <jettyVersion>9.2.3.v20140905</jettyVersion>
         <!-- 9.2.2.v20140723 -->
         <protobufVersion>[2.6.1,)</protobufVersion>
         <jodaVersion>[2.1,)</jodaVersion>
-        <mongodbVersion>[2.12.3,)</mongodbVersion>
-        <mockitoVersion>1.9.5</mockitoVersion>
-        <puppyVersion>[5.6,)</puppyVersion>
-        <junitVersion>4.11</junitVersion>
-        <fongoVersion>1.6.8</fongoVersion>
+        <sitepluginVersion>2.3.3</sitepluginVersion>
+        <replacerVersion>1.6.2</replacerVersion>
+        <resourcePluginVersion>2.7</resourcePluginVersion>
+
+        <!-- logging -->
         <slf4jVersion>1.7.9</slf4jVersion>
         <log4jVersion>2.1</log4jVersion>
         <logbackVersion>1.1.1</logbackVersion>
+
+        <!-- checkstyle -->
         <checkstyleVersion>2.13</checkstyleVersion>
         <findbugVersion>3.0.0</findbugVersion>
-        <powermock.version>1.5.6</powermock.version>
-        <easymock.version>3.3</easymock.version>
-        <sitepluginVersion>2.3.3</sitepluginVersion>
-        <coberturaVersion>2.6</coberturaVersion>
+        <puppyVersion>[5.6,)</puppyVersion>
         <pmdVersion>3.3</pmdVersion>
+
+        <!-- mongo-->
         <embeddedMongoVersion>0.3.4</embeddedMongoVersion>
+        <mongodbJavaDriverVersion>[3.4.2,)</mongodbJavaDriverVersion>
+        <mongodbVersion>3.4.4</mongodbVersion>
+        <fongoVersion>2.1.0</fongoVersion>
+
+        <!-- unit testing versions -->
         <failSafeVersion>2.18.1</failSafeVersion>
         <surefireVersion>2.17</surefireVersion>
-        <replacerVersion>1.6.2</replacerVersion>
-        <resourcePluginVersion>2.7</resourcePluginVersion>
+        <junitVersion>4.11</junitVersion>
+        <coberturaVersion>2.6</coberturaVersion>
+        <mockitoVersion>1.9.5</mockitoVersion>
+        <powermock.version>1.5.6</powermock.version>
+        <easymock.version>3.3</easymock.version>
 
         <!-- testing -->
         <testLevel>85</testLevel>
@@ -694,7 +705,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>${mongodbVersion}</version>
+            <version>${mongodbJavaDriverVersion}</version>
         </dependency>
 
         <dependency>
