@@ -79,6 +79,7 @@ function LoginSystem() {
     function attachButtons() {
         var loginButton = shadowRoot.querySelector('#loginnButton');
         Waves.attach(loginButton);
+    }
 
     /**
      * Sets up what happens upon the server return the result of attempting to

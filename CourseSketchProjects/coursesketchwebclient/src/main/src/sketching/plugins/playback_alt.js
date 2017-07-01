@@ -31,7 +31,7 @@ function Playback(updateList, updateManager, graphics) {
                     var strokeBarrier = new CallbackBarrier();
                     var pointAdded = strokeBarrier.getCallbackAmount(pointList.length);
 
-                    var strokePath = new ps.Path({ strokeWidth: 2, strokeCap:'round', selected:false, strokeColor: 'black' });
+                    var strokePath = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
                     strokeBarrier.finalize(function() {
                         strokePath.simplify();
                         commandFinished();
@@ -39,7 +39,7 @@ function Playback(updateList, updateManager, graphics) {
                     console.log(ps);
 
                     var startingTime = pointList[0].getTime();
-                    for (var i = 0; i < pointList.length; i++) {
+                    for (var innerIndex = 0; innerIndex < pointList.length; innerIndex++) {
 
                         (function(index) {
                             setTimeout(function() {
@@ -47,7 +47,7 @@ function Playback(updateList, updateManager, graphics) {
                                 graphics.getPaper().view.update();
                                 pointAdded();
                             }, pointList[index].getTime() - startingTime);
-                        })(i);
+                        })(innerIndex);
                     }
                 })();
             } else {
@@ -62,8 +62,8 @@ function Playback(updateList, updateManager, graphics) {
     this.playNext = function(spot) {
         target = spot;
         graphics.setDrawUpdate(false);
-        if(currentIndex>target){currentIndex--;}
-        if(currentIndex<target){currentIndex++;}
+        if (currentIndex > target){currentIndex--;}
+        if (currentIndex < target){currentIndex++;}
         if (currentIndex === 0) {
             graphics.getPaper().project.activeLayer.removeChildren();
             graphics.getPaper().view.update();
@@ -71,7 +71,7 @@ function Playback(updateList, updateManager, graphics) {
         if (currentIndex === target || currentIndex >= length) {
             graphics.setDrawUpdate(true);
             console.log('Finished');
-            currentIndex=-1;
+            currentIndex = -1;
             return;
         }
         updateManager.addUpdate(updateList[currentIndex]);
