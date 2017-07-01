@@ -4,8 +4,7 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.CourseSketchMatcher;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,6 +14,7 @@ import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import database.institution.mongo.MongoInstitution;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class SubmissionManagerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    public DB db;
+    public MongoDatabase db;
 
     @Mock AuthenticationChecker authChecker;
     @Mock AuthenticationOptionChecker optionChecker;
@@ -75,7 +75,7 @@ public class SubmissionManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
         experiment = Submission.SrlExperiment.newBuilder()
                 .setProblemId(PROBLEM_ID)
                 .setAssignmentId(new ObjectId().toString())
@@ -103,7 +103,7 @@ public class SubmissionManagerTest {
     public void insertingSubmissionCreatesCorrectDataInDatabase() {
         SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
 
-        DBObject result = db.getCollection(EXPERIMENT_COLLECTION).find().next();
+        Document result = db.getCollection(EXPERIMENT_COLLECTION).find().first();
         Assert.assertEquals(PROBLEM_ID, result.get(SELF_ID).toString());
         Assert.assertEquals(SUBMISSION_ID, result.get(USER_USER));
     }
@@ -113,7 +113,7 @@ public class SubmissionManagerTest {
         SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
         SubmissionManager.mongoInsertSubmission(db, ADMIN_USER, PROBLEM_ID, SUBMISSION_ID2, true);
 
-        DBObject result = db.getCollection(EXPERIMENT_COLLECTION).find().next();
+        Document result = db.getCollection(EXPERIMENT_COLLECTION).find().first();
         Assert.assertEquals(PROBLEM_ID, result.get(SELF_ID).toString());
         Assert.assertEquals(SUBMISSION_ID, result.get(USER_USER));
         Assert.assertEquals(SUBMISSION_ID2, result.get(ADMIN_USER));
