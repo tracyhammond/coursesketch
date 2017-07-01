@@ -2,13 +2,17 @@ package database.institution.mongo;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.DropType;
 import protobuf.srl.grading.Grading.DroppedAssignment;
 import protobuf.srl.grading.Grading.DroppedProblems;
@@ -40,6 +44,8 @@ import static database.DatabaseStringConstants.LATE_POLICY_RATE;
 import static database.DatabaseStringConstants.LATE_POLICY_SUBTRACTION_TYPE;
 import static database.DatabaseStringConstants.LATE_POLICY_TIME_FRAME_TYPE;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.UPSERT_COMMAND;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
@@ -79,6 +85,11 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  */
 @SuppressWarnings("PMD.CommentSize")
 final class GradingPolicyManager {
+
+    /**
+     * Declaration and Definition of Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GradingPolicyManager.class);
 
     /**
      * Private constructor.
@@ -123,7 +134,7 @@ final class GradingPolicyManager {
             droppedProblems.put(policy.getDroppedProblems(i).getAssignmentId(), buildMongoDroppedProblemObject(policy.getDroppedProblems(i)));
         }
 
-        final Document policyObject = new Document(SELF_ID, new ObjectId(policy.getCourseId()))
+        final Document policyObject = new Document()
                 .append(GRADE_POLICY_TYPE, policy.getPolicyType().getNumber()).append(GRADE_CATEGORIES, categories)
                 .append(DROPPED_PROBLEMS, droppedProblems);
 
@@ -136,13 +147,18 @@ final class GradingPolicyManager {
                 droppedAssignments.add(assignment);
             }
             policyObject.append(DROPPED_ASSIGNMENTS, droppedAssignments);
+        } else {
+            policyObject.append(DROPPED_ASSIGNMENTS, new ArrayList<Document>());
         }
 
         // Query for an existing policy for the course.
-        final Document query = new Document(SELF_ID, new ObjectId(policy.getCourseId()));
+        final Bson filter = Filters.eq(SELF_ID, new ObjectId(policy.getCourseId()));
 
-        UpdateOptions options = new UpdateOptions().upsert(true);
-        policyCollection.updateOne(query, policyObject, options);
+        final UpdateOptions options = new UpdateOptions().upsert(true);
+
+        LOG.debug("Update query {}", policyObject);
+        final Document idDocument = new Document(SELF_ID, new ObjectId(policy.getCourseId()));
+        policyCollection.updateOne(filter, new Document(SET_COMMAND, policyObject).append(UPSERT_COMMAND, idDocument), options);
     }
 
     /**

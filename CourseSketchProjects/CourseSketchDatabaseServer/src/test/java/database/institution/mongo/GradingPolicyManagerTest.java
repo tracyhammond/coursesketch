@@ -222,7 +222,7 @@ public class GradingPolicyManagerTest {
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
         GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
-        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
+        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find().first();
 
         fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
         Assert.assertEquals(fakeMongoPolicy, testPolicy);
@@ -242,17 +242,21 @@ public class GradingPolicyManagerTest {
         GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicyProto = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
+        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
 
+        fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
         new ProtobufComparisonBuilder()
                 .setFailAtFirstMisMatch(false).setIgnoreListOrder(true)
                 .build().equals(fakeProtoPolicy.build(), testPolicyProto);
+        Assert.assertEquals(fakeMongoPolicy, testPolicy);
+
+        // Update the grade policy
 
         fakeProtoPolicy.clearDroppedAssignments();
         GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
-        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
+        testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
 
-        fakeMongoPolicy.remove(DROPPED_ASSIGNMENTS);
-        fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
+        fakeMongoPolicy.put(DROPPED_ASSIGNMENTS, new ArrayList<>());
         Assert.assertEquals(fakeMongoPolicy, testPolicy);
         Assert.assertEquals(db.getCollection(GRADING_POLICY_COLLECTION).count(), 1); // Only 1 document in the collection
 
@@ -261,7 +265,6 @@ public class GradingPolicyManagerTest {
         new ProtobufComparisonBuilder()
                 .setFailAtFirstMisMatch(false).setIgnoreListOrder(true)
                 .build().equals(fakeProtoPolicy.build(), testPolicyProto);
-
     }
 
     @Test
