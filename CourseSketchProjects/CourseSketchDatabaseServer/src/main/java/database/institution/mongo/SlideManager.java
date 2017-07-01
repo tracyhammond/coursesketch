@@ -1,20 +1,20 @@
 package database.institution.mongo;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import database.DatabaseAccessException;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
+import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
+import org.bson.Document;
+import org.bson.types.Binary;
 import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.tutorial.TutorialOuterClass;
+import protobuf.srl.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,29 +44,22 @@ public final class SlideManager {
     /**
      * Private constructor.
      */
-    private SlideManager() {
-    }
+    private SlideManager() { }
 
     /**
      * Inserts a lecture into the mongo database.
      *
-     * @param authenticator
-     *         the object that is performing authenticaton.
-     * @param dbs
-     *         The database where the slide is being stored.
-     * @param authId
-     *         The id of the user that asking to insert the slide.
-     * @param slide
-     *         The slide that is being inserted.
+     * @param authenticator the object that is performing authenticaton.
+     * @param dbs The database where the slide is being stored.
+     * @param authId The id of the user that asking to insert the slide.
+     * @param slide The slide that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws AuthenticationException
-     *         Thrown if the user did not have the authentication to perform the authentication.
-     * @throws DatabaseAccessException
-     *         Thrown if there are problems inserting the assignment.
+     * @throws AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
+     * @throws DatabaseAccessException Thrown if there are problems inserting the assignment.
      */
-    public static String mongoInsertSlide(final Authenticator authenticator, final DB dbs, final String authId, final LectureSlide slide)
+    public static String mongoInsertSlide(final Authenticator authenticator, final MongoDatabase dbs, final String authId, final LectureSlide slide)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection newUser = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
+        final MongoCollection<Document> newUser = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckAccess(true)
@@ -81,14 +74,14 @@ public final class SlideManager {
         if (!responder.hasModeratorPermission()) {
             throw new AuthenticationException(AuthenticationException.INVALID_PERMISSION);
         }
-        final BasicDBObject query = new BasicDBObject(DatabaseStringConstants.ASSIGNMENT_ID, slide.getAssignmentId());
+        final Document query = new Document(DatabaseStringConstants.ASSIGNMENT_ID, slide.getAssignmentId());
         final ArrayList list = new ArrayList();
         for (Lecturedata.LectureElement element : slide.getElementsList()) {
             list.add(createQueryFromElement(element));
         }
         query.append(ELEMENT_LIST, list);
-        newUser.insert(query);
-        final DBObject cursor = newUser.findOne(query);
+        newUser.insertOne(query);
+        final Document cursor = newUser.find(query).first();
 
         return cursor.get(SELF_ID).toString();
     }
@@ -96,12 +89,11 @@ public final class SlideManager {
     /**
      * NOTE: This function is only used internally and should not be made public.
      *
-     * @param lectureElement
-     *         an element that belongs on a lecture
-     * @return a BasicDBObject of the element
+     * @param lectureElement an element that belongs on a lecture
+     * @return a Document of the element
      */
-    public static BasicDBObject createQueryFromElement(final Lecturedata.LectureElement lectureElement) {
-        final BasicDBObject query = new BasicDBObject(SELF_ID, lectureElement.getId())
+    public static Document createQueryFromElement(final Lecturedata.LectureElement lectureElement) {
+        final Document query = new Document(SELF_ID, lectureElement.getId())
                 .append(X_POSITION, lectureElement.getXPosition())
                 .append(Y_POSITION, lectureElement.getYPosition())
                 .append(X_DIMENSION, lectureElement.getXDimension())
@@ -130,29 +122,22 @@ public final class SlideManager {
     /**
      * Grabs the slide from mongo and performs checks making sure the user is valid before returning the slide.
      *
-     * @param authenticator
-     *         the object that is performing authentication.
-     * @param dbs
-     *         The database where the assignment is being stored.
-     * @param userId
-     *         The id of the user that asking to insert the lecture.
-     * @param slideId
-     *         the id of the lecture that is being grabbed.
-     * @param checkTime
-     *         The time that the assignment was asked to be grabbed. (used to
-     *         check if the slide is valid)
+     * @param authenticator the object that is performing authentication.
+     * @param dbs The database where the assignment is being stored.
+     * @param userId The id of the user that asking to insert the lecture.
+     * @param slideId the id of the lecture that is being grabbed.
+     * @param checkTime The time that the assignment was asked to be grabbed. (used to
+     * check if the slide is valid)
      * @return The slide from the database.
-     * @throws AuthenticationException
-     *         Thrown if the user did not have the authentication to get the
-     *         slide.
-     * @throws DatabaseAccessException
-     *         Thrown if there are problems retrieving the slide.
+     * @throws AuthenticationException Thrown if the user did not have the authentication to get the
+     * slide.
+     * @throws DatabaseAccessException Thrown if there are problems retrieving the slide.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
-    public static LectureSlide mongoGetLectureSlide(final Authenticator authenticator, final DB dbs, final String userId, final String slideId,
-            final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(slideId));
+    public static LectureSlide mongoGetLectureSlide(final Authenticator authenticator, final MongoDatabase dbs,
+            final String userId, final String slideId, final long checkTime) throws AuthenticationException, DatabaseAccessException {
+        final MongoCollection<Document> collection = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
+        final Document cursor = collection.find(convertStringToObjectId(slideId)).first();
         if (cursor == null) {
             throw new DatabaseAccessException("Slide was not found with the following ID " + slideId, true);
         }
@@ -198,30 +183,24 @@ public final class SlideManager {
     }
 
     /**
-     * updates data from an assignment.
+     * Updates data from an assignment.
      *
-     * @param authenticator
-     *         the object that is performing authentication.
-     * @param dbs
-     *         The database where the lecture slide is being stored.
-     * @param assignmentId
-     *         the id of the lecture slide that is being updated.
-     * @param userId
-     *         The id of the user that asking to update the lecture slide.
-     * @param lectureSlide
-     *         The lecture slide that is being updated.
+     * @param authenticator the object that is performing authentication.
+     * @param dbs The database where the lecture slide is being stored.
+     * @param assignmentId the id of the lecture slide that is being updated.
+     * @param userId The id of the user that asking to update the lecture slide.
+     * @param lectureSlide The lecture slide that is being updated.
      * @return true if the lecture slide was updated successfully.
-     * @throws AuthenticationException
-     *         The user does not have permission to update the lecture slide.
-     * @throws DatabaseAccessException
-     *         The lecture does not exist.
+     * @throws AuthenticationException The user does not have permission to update the lecture slide.
+     * @throws DatabaseAccessException The lecture does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
-    public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final DB dbs, final String assignmentId, final String userId,
+    public static boolean mongoUpdateLectureSlide(final Authenticator authenticator, final MongoDatabase dbs,
+            final String assignmentId, final String userId,
             final LectureSlide lectureSlide) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection collection = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
-        final DBObject cursor = collection.findOne(convertStringToObjectId(lectureSlide.getId()));
+        final MongoCollection<Document> collection = dbs.getCollection(getCollectionFromType(Util.ItemType.SLIDE));
+        final Document cursor = collection.find(convertStringToObjectId(lectureSlide.getId())).first();
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -234,11 +213,11 @@ public final class SlideManager {
         }
         // TODO make a way to clear out a lecture slide so it is empty?
         if (lectureSlide.getElementsCount() > 0) {
-            final List<BasicDBObject> list = new ArrayList<>();
+            final List<Document> list = new ArrayList<>();
             for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
                 list.add(createQueryFromElement(element));
             }
-            collection.update(cursor, new BasicDBObject(SET_COMMAND, new BasicDBObject(ELEMENT_LIST, list)));
+            collection.updateOne(cursor, new Document(SET_COMMAND, new Document(ELEMENT_LIST, list)));
             update = true;
         }
         return update;
@@ -247,19 +226,16 @@ public final class SlideManager {
     /**
      * sets data of the slide from the given cursor.
      *
-     * @param exactSlide
-     *         The lecture that the data is being set to.
-     * @param cursor
-     *         The database cursor pointing to a specific slide.
-     * @throws database.DatabaseAccessException
-     *         passes exception through to createElementFromQuery
+     * @param exactSlide The lecture that the data is being set to.
+     * @param cursor The database cursor pointing to a specific slide.
+     * @throws database.DatabaseAccessException passes exception through to createElementFromQuery
      */
-    public static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final DBObject cursor) throws DatabaseAccessException {
+    public static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final Document cursor) throws DatabaseAccessException {
         exactSlide.setAssignmentId(cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString());
         exactSlide.setId(cursor.get(SELF_ID).toString());
         if (cursor.get(ELEMENT_LIST) != null) {
             final ArrayList<Lecturedata.LectureElement> objects = new ArrayList<>();
-            for (BasicDBObject element : (List<BasicDBObject>) cursor.get(ELEMENT_LIST)) {
+            for (Document element : (List<Document>) cursor.get(ELEMENT_LIST)) {
                 objects.add(createElementFromQuery(element));
             }
             exactSlide.addAllElements(objects);
@@ -269,13 +245,11 @@ public final class SlideManager {
     /**
      * NOTE: This function is only used internally and should not be made public.
      *
-     * @param query
-     *         a BasicDBObject from the mongo database that is a slide
-     * @return a Lecturedata.LectureElement of the BasicDBObject that was passed in
-     * @throws database.DatabaseAccessException
-     *         a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
+     * @param query a Document from the mongo database that is a slide
+     * @return a Lecturedata.LectureElement of the Document that was passed in
+     * @throws database.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
-    public static Lecturedata.LectureElement createElementFromQuery(final DBObject query) throws DatabaseAccessException {
+    public static Lecturedata.LectureElement createElementFromQuery(final Document query) throws DatabaseAccessException {
         final Lecturedata.LectureElement.Builder element = Lecturedata.LectureElement.newBuilder();
         final String lectureElementId = (String) query.get(SELF_ID);
         final int xPos = (int) query.get(X_POSITION);
@@ -284,7 +258,7 @@ public final class SlideManager {
         final int yDim = (int) query.get(Y_DIMENSION);
         final Lecturedata.LectureElement.ElementTypeCase blobType =
                 Lecturedata.LectureElement.ElementTypeCase.valueOf((int) query.get(SLIDE_BLOB_TYPE));
-        final byte[] blob = (byte[]) query.get(SLIDE_BLOB);
+        final byte[] blob = ((Binary) query.get(SLIDE_BLOB)).getData();
         element.setId(lectureElementId);
         element.setXPosition(xPos);
         element.setYPosition(yPos);

@@ -38,9 +38,7 @@
     (function(importDoc) {
         $(document).ready(function() {
 
-            var link = importDoc.querySelector('#sketchSurfaceImport');
-            var template = link.import.querySelector('template');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document, 'sketchSurfaceImport', 'sketch-surface-template');
 
             var newElement = new SketchSurface();
 

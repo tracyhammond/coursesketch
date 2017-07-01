@@ -74,7 +74,7 @@ function AdvanceDataListener(Request, defListener) {
 
         localMap[requestId] = {
             func: func,
-            times: (isUndefined(times)? 1 : times)
+            times: (isUndefined(times) ? 1 : times)
         };
     }
 

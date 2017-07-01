@@ -25,9 +25,8 @@ function HeaderHandler() {
             header.animate({
                 top: '0px'
             }, 300, function() {
-                    open = true;
-                }
-            );
+                open = true;
+            });
             return false;
         }
     };

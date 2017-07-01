@@ -11,7 +11,7 @@
  * @constructor
  */
 function SlideDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
-    var localScope = parent;
+    var parentScope = parent;
 
     /**
      * Sets a slide in the local database
@@ -126,7 +126,7 @@ function SlideDataManager(parent, advanceDataListener, database, Request, ByteBu
      * @param {String} slideId - ID of the lecture to delete
      * @param {Function} slideCallback - function to be called after the deletion is done
      */
-    function deleteSlide (slideId, slideCallback) {
+    function deleteSlide(slideId, slideCallback) {
         database.deleteFromSlides(slideId, function(e, request) {
             if (!isUndefined(slideCallback)) {
                 slideCallback(e, request);
@@ -143,7 +143,7 @@ function SlideDataManager(parent, advanceDataListener, database, Request, ByteBu
      * @param {Function} slideCallback - function to be called after getting is complete,
      *                paramater is the slide object
      */
-    function getSlideLocal (slideId, slideCallback) {
+    function getSlideLocal(slideId, slideCallback) {
         database.getFromSlides(slideId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 slideCallback(undefined);
@@ -182,7 +182,7 @@ function SlideDataManager(parent, advanceDataListener, database, Request, ByteBu
      *              paramater is a list of slide objects.
      * @param {Function} serverCallback - function to be called after looking in the server for the slide.
      */
-    function getLectureSlides (slideIds, localCallback, serverCallback) {
+    function getLectureSlides(slideIds, localCallback, serverCallback) {
         if (isUndefined (slideIds) || slideIds === null || slideIds.length === 0) {
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException('Result is undefined!', 'Grabbing slide from server: ' + slideIds));
@@ -218,7 +218,7 @@ function SlideDataManager(parent, advanceDataListener, database, Request, ByteBu
                                     return;
                                 }  // end if
                                 for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
-                                    localScope.setSlide(school.slides[slideIndex]);
+                                    parentScope.setSlide(school.slides[slideIndex]);
                                     slidesFound.push(school.slides[slideIndex]);
                                 } // end for
                                 if (!isUndefined(serverCallback)) {

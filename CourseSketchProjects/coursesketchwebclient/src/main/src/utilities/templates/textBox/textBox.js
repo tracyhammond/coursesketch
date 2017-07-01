@@ -20,8 +20,8 @@ function TextBox() {
      * The dragging is restricted to the area of the parentNode the dialog is created in
      * NOTE: This code comes from the interact library examples page
      */
-    function enableDragging(localScope) {
-        interact(localScope.shadowRoot.querySelector('.draggable'))
+    function enableDragging(localElement) {
+        interact(localElement.shadowRoot.querySelector('.draggable'))
             .ignoreFrom('textarea, button')
             .draggable({
                 onmove: function(event) {
@@ -40,7 +40,7 @@ function TextBox() {
             })
             .inertia(false)
             .restrict({
-                drag: localScope.parentNode,
+                drag: localElement.parentNode,
                 endOnly: false,
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
             });

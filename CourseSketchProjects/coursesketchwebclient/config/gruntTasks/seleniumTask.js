@@ -65,13 +65,13 @@ module.exports = function(grunt) {
         selenium.install({
             // check for more recent versions of selenium here:
             // http://selenium-release.storage.googleapis.com/index.html
-            version: '2.53.0',
+            version: '3.4.0',
             baseURL: 'http://selenium-release.storage.googleapis.com',
             drivers: {
                 chrome: {
                     // check for more recent versions of chrome driver here:
                     // http://chromedriver.storage.googleapis.com/index.html
-                    version: '2.21',
+                    version: '2.27',
                     arch: process.arch,
                     baseURL: 'http://chromedriver.storage.googleapis.com'
                 }
@@ -92,7 +92,7 @@ module.exports = function(grunt) {
                     chrome: {
                         // check for more recent versions of chrome driver here:
                         // http://chromedriver.storage.googleapis.com/index.html
-                        version: '2.21',
+                        version: '2.27',
                         arch: process.arch,
                         baseURL: 'http://chromedriver.storage.googleapis.com'
                     }

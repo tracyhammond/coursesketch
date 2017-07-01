@@ -4,7 +4,7 @@ var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequ
 var selenium = require('selenium-standalone');
 
 module.exports = function(grunt) {
-    grunt.loadNpmTasks('grunt-jscs');
+    grunt.loadNpmTasks('gruntify-eslint');
     grunt.loadNpmTasks('grunt-regex-check');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-connect-rewrite');
@@ -46,18 +46,19 @@ module.exports = function(grunt) {
                 globals: {
                     module: true
                 },
-                reporter:'jslint',
+                reporter: 'jslint',
                 reporterOutput: 'target/jshint.xml'
             },
             files: [ 'Gruntfile.js', 'src/main/src/**/*.js', 'src/test/src/**/*.js',
                 '!src/main/src/utilities/libraries/**/*.js', '!src/test/src/**/*.js', '!src/main/src/sketching/srl/objects/**/*.js' ]
         },
-        jscs: {
+        eslint: {
             src: '<%= jshint.files %>',
             options: {
-                config: 'config/jscs.conf.jscsrc',
-                reporterOutput: 'target/jscsReport.txt',
-                maxErrors: 1000
+                configFile: 'config/eslint.json',
+                outputFile: 'target/eslintReport.txt',
+                fix: true
+               // maxWarnings: 1000
             }
         },
         /*
@@ -291,7 +292,7 @@ module.exports = function(grunt) {
             // TODO: change this into a plugin
             runOncePlugins: {
                 src: [ 'target/website/bower_components/jquery/dist/jquery.js', 'target/website/bower_components/babel-polyfill/browser-polyfill.js',
-                        'target/website/bower_components/webcomponentsjs/webcomponents.js' ],
+                    'target/website/bower_components/webcomponentsjs/webcomponents.js' ],
                 overwrite: true,
                 replacements: [
                     {
@@ -452,7 +453,7 @@ module.exports = function(grunt) {
     grunt.registerTask('checkstyle', function() {
         printTaskGroup();
         grunt.task.run([
-            'jscs',
+            'eslint',
             'jshint',
             'regex-check'
         ]);

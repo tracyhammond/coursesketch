@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#imageBoxTemplateImport');
-            var template = link.import.querySelector('#image-box');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'imageBoxTemplateImport','image-box');
 
             var newElement = new ImageBox();
 

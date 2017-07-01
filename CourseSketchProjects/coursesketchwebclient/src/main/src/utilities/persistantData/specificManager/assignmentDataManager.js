@@ -11,7 +11,7 @@
 function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
     var dataListener = advanceDataListener;
     var database = parentDatabase;
-    var localScope = parent;
+    var parentScope = parent;
 
     /**
      * Looks at the assignment and gives it some state if the state values do
@@ -335,7 +335,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
                                 for (var dataIndex = 0; dataIndex < item.data.length; dataIndex++) {
                                     var decodedAssignment = CourseSketch.prutil.decodeProtobuf(item.data[dataIndex],
                                         CourseSketch.prutil.getSrlAssignmentClass());
-                                    localScope.setAssignment(decodedAssignment);
+                                    parentScope.setAssignment(decodedAssignment);
                                     assignmentList.push(decodedAssignment);
                                 }
                                 stateCallbackList(assignmentList, assignmentCallbackComplete);

@@ -562,7 +562,7 @@ public interface Institution {
      * <pre><code>
      * coll.update(
      *  { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId },
-     *  {   $push: { gradeHistory: { $each: [gradeToInsertDBObject], $sort: { GRADED_DATE: -1 }}}
+     *  {   $push: { gradeHistory: { $each: [gradeToInsertDocument], $sort: { GRADED_DATE: -1 }}}
      *      $set: { CURRENT_GRADE: currentGrade }
      *      $setOnInsert: { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId }
      *  },

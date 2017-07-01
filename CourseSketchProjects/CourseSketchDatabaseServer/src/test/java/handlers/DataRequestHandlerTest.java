@@ -2,6 +2,7 @@ package handlers;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
@@ -50,7 +51,7 @@ public class DataRequestHandlerTest {
     @Mock AuthenticationChecker authChecker;
     @Mock AuthenticationOptionChecker optionChecker;
 
-    public DB db;
+    public MongoDatabase db;
     public Authenticator authenticator;
     public BreakDatabase breakDatabase;
 
@@ -58,7 +59,7 @@ public class DataRequestHandlerTest {
 
     @Before
     public void before() {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
         breakDatabase = new BreakDatabase(db);
 
         try {

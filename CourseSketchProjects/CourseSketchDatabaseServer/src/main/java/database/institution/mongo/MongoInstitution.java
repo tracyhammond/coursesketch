@@ -3,9 +3,8 @@ package database.institution.mongo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationUpdater;
 import coursesketch.database.auth.Authenticator;
@@ -22,6 +21,7 @@ import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.submission.SubmissionManager;
 import database.user.UserClient;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
@@ -39,7 +39,6 @@ import protobuf.srl.utils.Util;
 import utilities.LoggingConstants;
 import utilities.TimeManager;
 
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     /**
      * A private Database that stores all of the data used by mongo.
      */
-    private DB database;
+    private MongoDatabase database;
 
     /**
      * Creates a mongo institution based on the server info.
@@ -110,9 +109,9 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     /**
      * This is only used for testing and references the test database not the real database.
      *
-     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      * @param authenticator What is used to authenticate access to the different resources.
      * @return An instance of the mongo client. Creates it if it does not exist.
+     * @see <a href="http://en.wikipedia.org/wiki/Double-checked_locking">Double Checked Locking</a>.
      */
     @Deprecated
     @SuppressWarnings("checkstyle:innerassignment")
@@ -135,9 +134,10 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      *
      * This method should be synchronous.
      */
-    @Override protected void onStartDatabase() {
+    @Override
+    protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-        database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        database = mongoClient.getDatabase(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
 
@@ -146,33 +146,26 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      *
      * Because we only want the database set once it has to be set in the constructor.
      * We also want the class to be final so the test code has to be here.
-     * @param testOnly
-     *         if true it uses the test database. Otherwise it uses the real
-     *         name of the database.
+     *
+     * @param testOnly if true it uses the test database. Otherwise it uses the real
+     * name of the database.
      * @param fakeDB The fake database.
      * @param authenticator What is used to authenticate access to the different resources.
      * @param authUpdater Used to change authentication data.
      * @param identityManagerInterface @see {@link #identityManager}
      */
-    public MongoInstitution(final boolean testOnly, final DB fakeDB, final Authenticator authenticator, final AuthenticationUpdater authUpdater,
+    public MongoInstitution(final boolean testOnly, final MongoDatabase fakeDB, final Authenticator authenticator,
+            final AuthenticationUpdater authUpdater,
             final IdentityManagerInterface identityManagerInterface) {
         this(null, authenticator, authUpdater, identityManagerInterface);
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
-            MongoClient mongoClient = null;
-            try {
-                mongoClient = new MongoClient("localhost");
-            } catch (UnknownHostException e) {
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            }
-            if (mongoClient == null) {
-                return;
-            }
+            final MongoClient mongoClient = new MongoClient("localhost");
             if (testOnly) {
-                database = mongoClient.getDB("test");
+                database = mongoClient.getDatabase("test");
             } else {
-                database = mongoClient.getDB(DATABASE);
+                database = mongoClient.getDatabase(DATABASE);
 
             }
         }
@@ -183,15 +176,15 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     @Override
     public void setUpIndexes() {
         LOG.info("Setting up the indexes");
-        database.getCollection(USER_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
-        database.getCollection(UPDATE_COLLECTION).ensureIndex(new BasicDBObject(SELF_ID, 1).append("unique", true));
+        database.getCollection(USER_COLLECTION).createIndex(new Document(SELF_ID, 1).append("unique", true));
+        database.getCollection(UPDATE_COLLECTION).createIndex(new Document(SELF_ID, 1).append("unique", true));
     }
 
     @Override
     public ArrayList<SrlCourse> getCourses(final String authId, final List<String> courseIds) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = TimeManager.getSystemTime();
-        final ArrayList<SrlCourse> allCourses = new ArrayList<SrlCourse>();
+        final ArrayList<SrlCourse> allCourses = new ArrayList<>();
         for (String courseId : courseIds) {
             allCourses.add(CourseManager.mongoGetCourse(auth, database, authId, courseId, currentTime));
         }
@@ -226,7 +219,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public ArrayList<SrlAssignment> getAssignment(final String authId, final List<String> assignmentID) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = TimeManager.getSystemTime();
-        final ArrayList<SrlAssignment> allAssignments = new ArrayList<SrlAssignment>();
+        final ArrayList<SrlAssignment> allAssignments = new ArrayList<>();
         for (int assignments = assignmentID.size() - 1; assignments >= 0; assignments--) {
             try {
                 allAssignments.add(AssignmentManager.mongoGetAssignment(
@@ -249,7 +242,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public List<SrlAssignment> getLecture(final String authId, final List<String> lectureId) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = TimeManager.getSystemTime();
-        final ArrayList<SrlAssignment> allLectures = new ArrayList<SrlAssignment>();
+        final ArrayList<SrlAssignment> allLectures = new ArrayList<>();
         for (int lectures = lectureId.size() - 1; lectures >= 0; lectures--) {
             try {
                 allLectures.add(AssignmentManager.mongoGetAssignment(auth, database, lectureId.get(lectures),
@@ -273,7 +266,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     public ArrayList<LectureSlide> getLectureSlide(final String authId, final List<String> slideId) throws AuthenticationException,
             DatabaseAccessException {
         final long currentTime = TimeManager.getSystemTime();
-        final ArrayList<LectureSlide> allSlides = new ArrayList<LectureSlide>();
+        final ArrayList<LectureSlide> allSlides = new ArrayList<>();
         for (int slides = slideId.size() - 1; slides >= 0; slides--) {
             try {
                 allSlides.add(SlideManager.mongoGetLectureSlide(auth, database, slideId.get(slides),
@@ -471,7 +464,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-     public boolean putUserInCourse(final String userId, final String authId, final String courseId, final String clientRegistrationKey)
+    public boolean putUserInCourse(final String userId, final String authId, final String courseId, final String clientRegistrationKey)
             throws DatabaseAccessException, AuthenticationException {
 
         String registrationKey = clientRegistrationKey;
@@ -578,6 +571,7 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
      * Hashes a userId based on the courseId.
      *
      * Only hashed user Ids are stored in the database.
+     *
      * @param userId The userId that is being hashed.
      * @param courseId The courseId that is being used as a salt.
      * @return A hashed version of this Id.

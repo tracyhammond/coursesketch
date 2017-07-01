@@ -1,6 +1,6 @@
 /* jshint camelcase: false */
 
-(function(localScope) {
+(function(scriptScope) {
     /**
      * Creates an SRL prtobuf version of a point.
      *

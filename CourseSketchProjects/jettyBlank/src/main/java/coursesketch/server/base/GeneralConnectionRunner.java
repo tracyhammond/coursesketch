@@ -29,7 +29,6 @@ import utilities.LoggingConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Properties;
 
 /**
  * Runs and sets up the server.
@@ -55,9 +54,6 @@ public class GeneralConnectionRunner extends AbstractGeneralConnectionRunner {
      */
     public static void main(final String... args) {
         final GeneralConnectionRunner runner = new GeneralConnectionRunner(args);
-        final Properties properties = new Properties();
-        properties.setProperty("org.eclipse.jetty.LEVEL", "INFO");
-        org.eclipse.jetty.util.log.StdErrLog.setProperties(properties);
         runner.start();
     }
 
