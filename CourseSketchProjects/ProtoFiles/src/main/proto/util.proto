@@ -46,3 +46,28 @@ enum QuestionType {
     FREE_RESP = 3; // typing
     CHECK_BOX = 4;
 }
+
+/**
+ * The state of items in course sketch and how they are stored.
+ */
+message State {
+    optional bool published = 1; // Instructor has finished construction of school item
+    optional bool accessible = 2; // Has been made the school item available to be viewed and worked on
+    optional bool pastDue = 3; // Due Date has passed. 'Late' if also not completed. 'Closed' if also no long accessible.
+    optional bool started = 4; // Student has viewed or begun the school item
+    optional bool completed = 5; // Student has saved/submitted work on all parts of school item
+    optional bool graded = 6; // Instructor has finished grading the school item
+}
+
+/**
+ * Specifies the type of item something is.
+ *
+ * NOTE: the names are used for the collection name for some databases.
+ */
+enum ItemType {
+    COURSE = 0;
+    ASSIGNMENT = 1;
+    COURSE_PROBLEM = 2;
+    BANK_PROBLEM = 3;
+    SLIDE = 5;
+}

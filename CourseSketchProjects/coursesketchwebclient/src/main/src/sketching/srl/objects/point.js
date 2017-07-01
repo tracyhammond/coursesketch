@@ -1,4 +1,5 @@
 /* Depends on objectAndInheritance.js */
+//jscs:disable
 
 /**
  * ******************************

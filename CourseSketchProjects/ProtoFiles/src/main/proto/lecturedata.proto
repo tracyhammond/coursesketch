@@ -1,39 +1,20 @@
-import "school.proto";
 import "tutorial.proto";
-import "util.proto";
+import "commands.proto";
 package protobuf.srl.lecturedata;
 
-message Lecture {
-    required string courseId = 1;
-    //id of this lecture
-    required string id = 2;
-    optional string name = 3;
-    optional string description = 4;
-    repeated IdsInLecture idList = 5;
-    optional protobuf.srl.utils.SrlPermission accessPermission = 6;
-    optional protobuf.srl.utils.DateTime accessDate = 7;
-    optional protobuf.srl.utils.DateTime closeDate = 8;
-    optional protobuf.srl.school.State state = 9;
-}
-
-message IdsInLecture {
-    required string id = 1;
-    required bool isSlide = 2;
-    optional bool unlocked = 3;
-    optional LectureNavigator nav = 4;
-}
-
 message LectureSlide {
-    required string lectureId = 1;
-    //id of this slide
-    required string id = 2;
-    //thumbnail
-    repeated LectureElement elements = 3;
+    // Ids
+    required string id = 1;
+    required string assignmentId = 2;
+    required string courseProblemId = 3;
+
+    // The elements that are displayed for each slide
+    repeated LectureElement elements = 4;
 }
 
 message LectureElement {
     //id of this element
-    required string id = 2;
+    optional string id = 2;
     optional int32 x_position = 3;
     optional int32 y_position = 4;
     optional int32 x_dimension = 5;
@@ -43,7 +24,6 @@ message LectureElement {
         protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
         Image image = 8;
         SketchArea sketchArea = 9;
-        SrlQuestion question = 10;
         EmbeddedHtml embeddedHtml = 11;
     }
 }
@@ -59,36 +39,14 @@ message Image {
 
 message SketchArea {
     //srlSketch object if proto include works
-    optional bytes SrlUpdateList = 10;
+    optional protobuf.srl.commands.SrlUpdateList recorededSketch = 10;
 }
 
+/**
+ * used for navigating different lectures or lecture subgroups
+ */
 message LectureNavigator {
     optional string nextLectureId = 1;
     optional int32 nextSlide = 2;
-}
-
-message SrlQuestion {
-    required string id = 1;
-    optional string questionText = 2;
-    optional protobuf.srl.utils.QuestionType questionType = 3 [default=SKETCH];
-    repeated LectureNavigator navs = 4;
-
-    oneof QuestionOption {
-        MultipleChoice multipleChoice = 5;
-        SketchQuestion sketchQuestion = 6;
-    }
-}
-
-message MultipleChoice {
-    repeated AnswerChoice answerChoices = 1;
-    optional string correctId = 2;
-}
-
-message SketchQuestion {
-    optional bytes sketch = 1;
-}
-
-message AnswerChoice {
-    required string id = 1;
-    optional string text = 2;
+    optional string nextLectureGroupId = 3;
 }

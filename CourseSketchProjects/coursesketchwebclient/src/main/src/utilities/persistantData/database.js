@@ -3,7 +3,12 @@
  * opened.
  *
  * It will also create all the functions needed for the specific database.
+ *
  * @class ProtoDatabase
+ *
+ * @param {String} databaseName - The name of the database.
+ * @param {String} version - The version of the database.  (Must always be increasing)
+ * @param {Function} openCallback - called when the database is ready.
  */
 function ProtoDatabase(databaseName, version, openCallback) {
     CourseSketch = CourseSketch || {};
@@ -30,7 +35,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     /**
      * Sets the upgrade table to the input table.
      *
-     * @param {Table} tables A list of tables that are being stored in the database.
+     * @param {Table} tables - A list of tables that are being stored in the database.
      */
     this.setTables = function(tables) {
         upgradeTables = tables;
@@ -50,13 +55,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * }
      * </code>
      *
-     * @param {String} tableName
-     *            The name of the specific table to be created.
-     * @param {String} keyValue
-     *            This is the key for that specific table
-     * @param {Function} addingFunction
-     *            Takes in a store and then creates and returns a request see
-     *            sample above.
+     * @param {String} tableName - The name of the specific table to be created.
+     * @param {String} keyValue - This is the key for that specific table
+     * @param {Function} addingFunction - Takes in a store and then creates and returns a request see sample above.
      */
     this.createTable = function(tableName, keyValue, addingFunction) {
         return {
@@ -77,14 +78,18 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
             // We can only create Object stores in a version change transaction.
             /**
-             * Called if an upgrade is required
+             * Called if an upgrade is required.
              *
-             * @param {Event} e An upgrade event.
+             * @param {Event} e - An upgrade event.
              */
             request.onupgradeneeded = function(e) {
                 var db = e.target.result;
                 // A versionchange transaction is started automatically.
                 e.target.transaction.onerror = dbNameSpace.indexedDB.onerror;
+                if (upgradeTables === null) {
+                    // if the table is null then there is nothing to upgrade
+                    return;
+                }
                 for (var i = 0; i < upgradeTables.length; i++) {
                     table = upgradeTables[i];
                     // delete existing table
@@ -97,7 +102,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             /**
              * Called when the database is succesfuly upgraded.
              *
-             * @param {Event} e A success event.
+             * @param {Event} e - A success event.
              */
             request.onsuccess = function(e) {
                 console.log('Database has opened');
@@ -110,7 +115,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
             /**
              * Called if there is an error in opening the database.
              *
-             * @param {Event} e An error event.
+             * @param {Event} e - An error event.
              */
             request.onerror = function(e) {
                 console.log(e);
@@ -134,7 +139,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
     };
 
     /**
-     * creates a bunch of functions for the table which are created upon successful database creation.
+     * Creates a bunch of functions for the table which are created upon successful database creation.
      */
     function createTableFunctions() {
         if (upgradeTables === null) {
@@ -150,9 +155,9 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for adding items to the database.
                  *
-                 * @param {String} objectId the Key of the object when added to the database.
-                 * @param {String} objectToAdd A string representing the object in the database.
-                 * @param {Function} callback Called when the object is successfully added to the database.
+                 * @param {String} objectId - the Key of the object when added to the database.
+                 * @param {String} objectToAdd - A string representing the object in the database.
+                 * @param {Function} callback - Called when the object is successfully added to the database.
                  */
                 localScope[ 'putIn' + localTable.name ] = function(objectId, objectToAdd, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -170,7 +175,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     /**
                      * Called when the transaction is complete.
                      *
-                     * @param {Event} e A success event.
+                     * @param {Event} e - A success event.
                      */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
@@ -181,7 +186,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     /**
                      * Called if there is an error during the transaction.
                      *
-                     * @param {Event} e An error event.
+                     * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -191,8 +196,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for deleting items from the database.
                  *
-                 * @param {String} objectId The id of the object we are trying to delete from the database.
-                 * @param {Function} callback The function that is called after deleting the item.
+                 * @param {String} objectId - The id of the object we are trying to delete from the database.
+                 * @param {Function} callback - The function that is called after deleting the item.
                  */
                 localScope[ 'deleteFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -207,7 +212,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var request = store.delete(objectId);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e A success event.
+                     *
+                     * @param {Event} e - A success event.
                      */
                     trans.oncomplete = function(e) {
                         if (!isUndefined(callback)) {
@@ -217,7 +223,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e An error event.
+                     *
+                     * @param {Event} e - An error event.
                      */
                     request.onerror = function(e) {
                         console.log(e.value);
@@ -227,8 +234,8 @@ function ProtoDatabase(databaseName, version, openCallback) {
                 /**
                  * Creates a function for deleting items from the database.
                  *
-                 * @param {String} objectId The id of the object we are trying to get from the database.
-                 * @param {Function} callback The function that is called after retrieving the item.
+                 * @param {String} objectId - The id of the object we are trying to get from the database.
+                 * @param {Function} callback - The function that is called after retrieving the item.
                  */
                 localScope[ 'getFrom' + localTable.name ] = function(objectId, callback) {
                     if (!databaseSupported || !dbNameSpace.indexedDB || !dbNameSpace.indexedDB.db || CourseSketch.noCache) {
@@ -245,22 +252,24 @@ function ProtoDatabase(databaseName, version, openCallback) {
                     var db = dbNameSpace.indexedDB.db;
                     var trans = db.transaction([ localTable.name ]);
                     var store = trans.objectStore(localTable.name);
-                    var request = store.get(objectId);
+                    var result = store.get(objectId);
                     /**
                      * Called when the transaction is complete.
-                     * @param {Event} e A success event.
+                     *
+                     * @param {Event} e - A success event.
                      */
-                    request.onsuccess = function(e) {
+                    result.onsuccess = function(e) {
                         if (callback) {
-                            callback(e, request, request.result);
+                            callback(e, result, result.result);
                         }
                     };
 
                     /**
                      * Called if there is an error during the transaction.
-                     * @param {Event} e An error event.
+                     *
+                     * @param {Event} e - An error event.
                      */
-                    request.onerror = function(e) {
+                    result.onerror = function(e) {
                         console.log(e.value);
                     };
                 };
@@ -284,24 +293,26 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * This is supposed to empty out the database.
      *
      * Currently does not work.
+     *
+     * @param {String} newDatabaseName - The name of the database.
      */
-    function emptyDB(databaseName) {
+    function emptyDB(newDatabaseName) {
         try {
             var result = confirm('Do you want to empty all of the local data?');
             if (result === true) {
-                var dbreq = dbNameSpace.indexedDB.deleteDatabase(databaseName);
+                var dbreq = dbNameSpace.indexedDB.deleteDatabase(newDatabaseName);
                 /**
                  * Called if emptying is succesful.
                  *
-                 * @param {Event} event A success event.
+                 * @param {Event} event - A success event.
                  */
                 dbreq.onsuccess = function(event) {
-                    output_trace('indexedDB: ' + databaseName + ' deleted');
+                    output_trace('indexedDB: ' + newDatabaseName + ' deleted');
                 };
                 /**
                  * Called if there is an error emptying the database.
                  *
-                 * @param {Event} event An error event.
+                 * @param {Event} event - An error event.
                  */
                 dbreq.onerror = function(event) {
                     output_trace('indexedDB.delete Error: ' + event.message);

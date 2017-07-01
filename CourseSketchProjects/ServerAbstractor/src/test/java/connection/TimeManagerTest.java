@@ -162,7 +162,7 @@ public class TimeManagerTest {
         TimeManager.setTimeEstablishedListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(final ActionEvent e) {
+            public void actionPerformed(final ActionEvent event) {
                 DateTimeUtils.setCurrentMillisFixed(FIXED_TIME_CLIENT);
                 assertEquals(FIXED_TIME_SERVER, TimeManager.getSystemTime());
                 TimeManager.getTotalTimeDifference();

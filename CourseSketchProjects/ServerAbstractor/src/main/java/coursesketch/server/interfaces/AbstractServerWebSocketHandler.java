@@ -1,6 +1,8 @@
 package coursesketch.server.interfaces;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
+import database.DatabaseAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.request.Message;
@@ -82,15 +84,29 @@ public abstract class AbstractServerWebSocketHandler {
     private final ISocketInitializer parentServer;
 
     /**
-     * A constructor that accepts a servlet.
-     * @param parent The parent servlet of this server.
+     * Information about the server.
      */
-    protected AbstractServerWebSocketHandler(final ISocketInitializer parent) {
+    private final ServerInfo serverInfo;
+
+    /**
+     * An object that reads from the database.
+     */
+    private AbstractCourseSketchDatabaseReader databaseReader;
+
+    /**
+     * A constructor that accepts a servlet.
+     *
+     * @param parent The parent servlet of this server.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
+     */
+    protected AbstractServerWebSocketHandler(final ISocketInitializer parent, final ServerInfo serverInfo) {
         parentServer = parent;
+        this.serverInfo = serverInfo;
     }
 
     /**
      * Called when the connection is closed.
+     *
      * @param conn The connection that closed the websocket
      * @param statusCode The reason that the connection was closed.
      * @param reason The human readable reason that the connection was closed.
@@ -101,7 +117,7 @@ public abstract class AbstractServerWebSocketHandler {
         final MultiConnectionState stateId = getConnectionToId().remove(conn);
         if (stateId != null) {
             idToConnection.remove(stateId);
-            idToState.remove(stateId.getKey());
+            idToState.remove(stateId.getSessionId());
         } else {
             LOG.error("Connection Id can not be found");
         }
@@ -123,8 +139,8 @@ public abstract class AbstractServerWebSocketHandler {
         // uses actual variables as get methods produce unmodifiable maps
         connectionToId.put(conn, uniqueState);
         idToConnection.put(uniqueState, conn);
-        LOG.debug("Session Key {}", uniqueState.getKey());
-        idToState.put(uniqueState.getKey(), uniqueState);
+        LOG.debug("Session Key {}", uniqueState.getSessionId());
+        idToState.put(uniqueState.getSessionId(), uniqueState);
         LOG.info("ID ASSIGNED");
 
         LOG.info("Recieving connection {}", getConnectionToId().size());
@@ -189,6 +205,7 @@ public abstract class AbstractServerWebSocketHandler {
      * @param req The actual message that is being sent.
      */
     public final void send(final SocketSession session, final Request req) {
+        LOG.debug("Sending Request {}", req.getRequestId());
         session.send(ByteBuffer.wrap(req.toByteArray()));
     }
 
@@ -200,9 +217,24 @@ public abstract class AbstractServerWebSocketHandler {
     /**
      * @return The {@link AbstractServerWebSocketHandler#NAME} of the connection should be overwritten to give it a new name.
      */
-    @SuppressWarnings("static-method")
     public final String getName() {
         return NAME;
+    }
+
+    /**
+     * @return The hostName of the server.
+     * @see ServerInfo#hostName
+     */
+    public final String getHostName() {
+        return serverInfo.getHostName();
+    }
+
+    /**
+     * @return The port that the server is running on.
+     * @see ServerInfo#port
+     */
+    public final int getHostPort() {
+        return serverInfo.getPort();
     }
 
     /**
@@ -262,6 +294,14 @@ public abstract class AbstractServerWebSocketHandler {
     protected abstract MultiConnectionManager getConnectionManager();
 
     /**
+     * Creates a CourseSketchDatabaseReader if it is needed.
+     *
+     * @param info Information about the server.
+     * @return {@link AbstractCourseSketchDatabaseReader}.
+     */
+    protected abstract AbstractCourseSketchDatabaseReader createDatabaseReader(final ServerInfo info);
+
+    /**
      * @return A map representing the Id to state. The returned map is read only.
      */
     protected final Map<String, MultiConnectionState> getIdToState() {
@@ -290,6 +330,46 @@ public abstract class AbstractServerWebSocketHandler {
     }
 
     /**
+     * Performs some initialization.  This is called before the server is started.
+     */
+    public final void initialize() {
+        databaseReader = createDatabaseReader(this.serverInfo);
+        try {
+            startDatabase();
+        } catch (DatabaseAccessException e) {
+            LOG.error("An error was created starting the database for the server", e);
+        }
+        onInitialize();
+    }
+
+    /**
+     * Performs some initialization.
+     *
+     * This is called before the server is started.
+     * This is called by {@link #initialize()}.
+     */
+    protected abstract void onInitialize();
+
+    /**
+     * Starts the database if it exists.
+     *
+     * @throws DatabaseAccessException thrown if the database is unable to start.
+     */
+    protected final void startDatabase() throws DatabaseAccessException {
+        final AbstractCourseSketchDatabaseReader reader = getDatabaseReader();
+        if (reader != null) {
+            reader.startDatabase();
+        }
+    }
+
+    /**
+     * @return {@link AbstractCourseSketchDatabaseReader}.  This may return null if one is not set.
+     */
+    protected final AbstractCourseSketchDatabaseReader getDatabaseReader() {
+        return databaseReader;
+    }
+
+    /**
      * Parses a request from the given ByteBuffer.
      * @author gigemjt
      *
@@ -312,6 +392,7 @@ public abstract class AbstractServerWebSocketHandler {
             try {
                 return Request.parseFrom(buffer.array());
             } catch (final InvalidProtocolBufferException e) {
+                LOG.error("Error parsing request", e);
                 return null;
             }
         }

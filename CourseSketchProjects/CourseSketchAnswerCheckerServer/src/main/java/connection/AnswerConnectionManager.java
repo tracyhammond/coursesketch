@@ -2,6 +2,7 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionManager;
+import coursesketch.server.interfaces.ServerInfo;
 import utilities.ConnectionException;
 
 import org.slf4j.Logger;
@@ -21,21 +22,22 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AnswerConnectionManager.class);
 
     /**
+     * IP address.
+     */
+    private static final String SUBMISSION_ADDRESS = "SUBMISSION_IP_PROP";
+
+    /**
      * Port number.
      */
-    private static final int PORT = 8883;
+    private static final int SUBMISSION_PORT = 8883;
 
     /**
      * Creates a default {@link MultiConnectionManager}.
-     *
      * @param parent  The server that is using this object.
-     * @param isLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param isSecure  True if the connections should be secure.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public AnswerConnectionManager(final AbstractServerWebSocketHandler parent,
-            final boolean isLocal, final boolean isSecure) {
-        super(parent, isLocal, isSecure);
+    public AnswerConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        super(parent, serverInfo);
     }
 
     /**
@@ -44,8 +46,8 @@ public class AnswerConnectionManager extends MultiConnectionManager {
     @Override
     public final void connectServers(final AbstractServerWebSocketHandler parent) {
         try {
-            createAndAddConnection(parent, isConnectionLocal(), "srl02.tamu.edu",
-                    PORT, this.isSecure(), SubmissionClientWebSocket.class);
+            createAndAddConnection(parent, isConnectionLocal(), SUBMISSION_ADDRESS,
+                    SUBMISSION_PORT, this.isSecure(), SubmissionClientWebSocket.class);
         } catch (ConnectionException e) {
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
         }

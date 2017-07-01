@@ -1,8 +1,8 @@
 package handlers.subhandlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
 import database.institution.Institution;
 import handlers.DataInsertHandler;
 import org.slf4j.Logger;
@@ -56,14 +56,15 @@ public final class GradingRequestHandler {
      *
      * @param institution The database interface.
      * @param request The request being sent.
-     * @param userId The Id of the user who sent the request.
+     * @param authId The id used to authenticate the user.
+     * @param userId The id of the user who sent the request used for identification purposes.
      * @return List of the grades. The list is length 1 if it is only a single grade.
      * @throws AuthenticationException Thrown if user does not have correct permission to retrieve grade.
      * @throws DatabaseAccessException Thrown if there is something not found in the database.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
      */
-    public static List<ProtoGrade> gradingRequestHandler(final Institution institution, final ItemRequest request, final String userId)
-            throws AuthenticationException, DatabaseAccessException, InvalidProtocolBufferException {
+    public static List<ProtoGrade> gradingRequestHandler(final Institution institution, final ItemRequest request, final String authId,
+            final String userId) throws DatabaseAccessException, InvalidProtocolBufferException, AuthenticationException {
         final GradingQuery query = GradingQuery.parseFrom(request.getAdvanceQuery());
 
         final boolean instructor = query.getPermissionLevel() == GradingQuery.PermissionLevel.INSTRUCTOR;
@@ -74,15 +75,17 @@ public final class GradingRequestHandler {
         LOG.debug("Query State instructor: {}, student: {}, allGrades: {}, singleGrade: {}", instructor, student, allGrades, singleGrade);
         List<ProtoGrade> returnList = new ArrayList<>();
         if (instructor && allGrades) {
-            returnList = institution.getAllAssignmentGradesInstructor(request.getItemId(COURSE_INDEX), userId);
+            returnList = institution.getAllAssignmentGradesInstructor(authId, request.getItemId(COURSE_INDEX));
         } else if (student && allGrades) {
-            returnList = institution.getAllAssignmentGradesStudent(request.getItemId(COURSE_INDEX), userId);
-        } else if (instructor && singleGrade) {
-            returnList.add(institution.getGrade(userId, request.getItemId(USER_INDEX), request.getItemId(COURSE_INDEX),
-                    request.getItemId(ASSIGNMENT_INDEX), request.getItemId(PROBLEM_INDEX)));
-        } else if (student && singleGrade) {
-            returnList.add(institution.getGrade(userId, userId, request.getItemId(COURSE_INDEX), request.getItemId(ASSIGNMENT_INDEX),
-                    request.getItemId(PROBLEM_INDEX)));
+            returnList = institution.getAllAssignmentGradesStudent(userId, authId, request.getItemId(COURSE_INDEX));
+        } else {
+            final ProtoGrade gradeData = ProtoGrade.newBuilder()
+                    .setUserId(request.getItemId(USER_INDEX))
+                    .setCourseId(request.getItemId(COURSE_INDEX))
+                    .setAssignmentId(request.getItemId(ASSIGNMENT_INDEX))
+                    .setProblemId(request.getItemId(PROBLEM_INDEX))
+                    .build();
+            returnList.add(institution.getGrade(userId, authId, gradeData));
         }
         return returnList;
     }

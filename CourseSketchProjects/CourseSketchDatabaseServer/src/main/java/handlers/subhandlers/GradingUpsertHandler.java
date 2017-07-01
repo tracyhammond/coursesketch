@@ -1,8 +1,8 @@
 package handlers.subhandlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
 import database.institution.Institution;
 import protobuf.srl.grading.Grading;
 import protobuf.srl.query.Data;
@@ -27,24 +27,24 @@ public final class GradingUpsertHandler {
      *
      * @param institution The database interface.
      * @param itemSet The upsert object being sent.
-     * @param userId The id of the user upserting the grade.
+     * @param authId The id of the user upserting the grade.
      * @param gradedTime The time of the grade submission.
      * @throws AuthenticationException Thrown if user does not have correct permission to upsert grade.
      * @throws DatabaseAccessException Thrown if there is something not found in the database.
      * @throws InvalidProtocolBufferException Thrown if a protobuf object is not correctly formatted.
      */
-    public static void gradingUpsertHandler(final Institution institution, final Data.ItemSend itemSet, final String userId, final long gradedTime)
+    public static void gradingUpsertHandler(final Institution institution, final Data.ItemSend itemSet, final String authId, final long gradedTime)
             throws AuthenticationException, DatabaseAccessException, InvalidProtocolBufferException {
         final Grading.ProtoGrade grade = Grading.ProtoGrade.parseFrom(itemSet.getData());
         final Grading.ProtoGrade.Builder clone =  Grading.ProtoGrade.newBuilder(grade);
         final List<Grading.GradeHistory.Builder> gradeHistory = clone.getGradeHistoryBuilderList();
         if (gradeHistory.size() == 1) {
-            final Grading.GradeHistory.Builder newestHistroy = gradeHistory.get(0);
+            final Grading.GradeHistory.Builder newestHistory = gradeHistory.get(0);
             final Util.DateTime.Builder date = Util.DateTime.newBuilder();
             date.setMillisecond(gradedTime);
-            newestHistroy.setGradedDate(date);
-            newestHistroy.setWhoChanged(userId);
+            newestHistory.setGradedDate(date);
+            newestHistory.setWhoChanged(authId);
         }
-        institution.addGrade(userId, clone.build());
+        institution.addGrade(authId, clone.build());
     }
 }
