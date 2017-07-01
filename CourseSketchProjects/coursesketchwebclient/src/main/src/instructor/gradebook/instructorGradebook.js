@@ -1,5 +1,5 @@
 (function() {
-
+    var keyEventHandler;
     $(document).ready(function() {
         CourseSketch.dataManager.waitForDatabase(function() {
             var courseId = CourseSketch.dataManager.getState('gradebookCourseid');
@@ -13,18 +13,19 @@
 
     /**
      * Loads grades for the given course.
-     * @param {String} courseId The id of the course.
+     *
+     * @param {String} courseId - The id of the course.
      */
     CourseSketch.gradeBook.loadGrades = function(courseId) {
         CourseSketch.dataManager.getCourse(courseId, function(course) {
             CourseSketch.gradeBook.course = course;
-            CourseSketch.dataManager.getCourseRoster(courseId, function(studentList) {
+            CourseSketch.dataManager.getCourseRoster(courseId, function(idToNameMap) {
                 // loads all of the grades
-                CourseSketch.dataManager.courseRoster = studentList;
+                CourseSketch.dataManager.courseRoster = idToNameMap;
                 CourseSketch.dataManager.getAllAssignmentGrades(courseId, function(gradeList) {
                     var assignmentList = course.assignmentList;
                     var table = document.querySelector('.tabletalk');
-                    CourseSketch.gradeBook.initializeTable(assignmentList, gradeList, studentList, table);
+                    CourseSketch.gradeBook.initializeTable(assignmentList, gradeList, idToNameMap, table);
                 });
             });
         });
@@ -33,37 +34,38 @@
     /**
      * Initializes a table from the given values.
      *
-     * @param {List<String>} assignmentList List of assignment IDs.
-     * @param {List<ProtoGrade>} gradeList List of grades from the server.
-     * @param {List<String>} studentList List of student IDs.
-     * @param {HTMLTable} table The grade table on the webpage.
+     * @param {List<String>} assignmentList - List of assignment IDs.
+     * @param {List<ProtoGrade>} gradeList - List of grades from the server.
+     * @param {Map<String, String>} idToNameMap - Map of key: studentId and value: username
+     * @param {HTMLTable} table - The grade table on the webpage.
      */
-    CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, studentList, table) {
+    CourseSketch.gradeBook.initializeTable = function(assignmentList, gradeList, idToNameMap, table) {
         table.innerHTML = '';
-
+        var studentList = Array.from(idToNameMap.keys());
         var assignmentMap = new Map();
-        var studentMap = new Map();
+        var idToRowMap = new Map();
         var body = document.createElement('tbody');
         table.appendChild(body);
 
         for (var i = 0; i < studentList.length; i++) {
-            addNewStudent(studentMap, studentList[i], assignmentList, body);
+            addNewStudent(idToRowMap, studentList[i], assignmentList, body);
         }
-        CourseSketch.gradeBook.studentMap = studentMap;
+        CourseSketch.gradeBook.idToRowMap = idToRowMap;
 
         createAssignmentHeader(assignmentList, assignmentMap, table);
-        CourseSketch.gradeBook.populateGrades(gradeList, studentMap, assignmentMap, body);
-        populateStudentNames(studentMap);
+        CourseSketch.gradeBook.populateGrades(gradeList, idToRowMap, assignmentMap, body);
+        populateStudentNames(idToRowMap);
     };
 
     /**
      * Creates a new tr with the number of assignments and adds it to the student map.
      *
-     * @param {Map<String,Element>} studentMap This is a map of studentId's to table rows.
-     * @param {String} studentId The student's ID number.
-     * @param {Integer} assignmentList The list of assignments for the course.
+     * @param {Map<String,Element>} idToRowMap - This is a map of studentId's to table rows.
+     * @param {String} studentId - The student's ID number.
+     * @param {Integer} assignmentList - The list of assignments for the course.
+     * @param {Element} table - The table the rows are being added to.
      */
-    function addNewStudent(studentMap, studentId, assignmentList, table) {
+    function addNewStudent(idToRowMap, studentId, assignmentList, table) {
         var row = document.createElement('tr');
         for (var i = 0; i < assignmentList.length; i++) {
             var column = document.createElement('td');
@@ -79,29 +81,30 @@
             row.appendChild(column);
         }
         table.appendChild(row);
-        studentMap.set(studentId, row);
+        idToRowMap.set(studentId, row);
     }
 
     /**
      * This populates the map of grades for each student and, calls student adding function if student has not been added yet.
      *
-     * @param {List<ProtoGrade>} listGrades The list of grades from the server.
-     * @param {Map<String, Integer>} studentMap This is a map of studentIds to table rows.
-     * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
-     * @param {HTMLTable} table The grade table on the webpage.
-     * @return {List<ProtoGrade>} grades that were not displayed.   This is because the users do not exist anymore in the course roster.
+     * @param {List<ProtoGrade>} listGrades - The list of grades from the server.
+     * @param {Map<String, Integer>} idToRowMap - This is a map of studentIds to table rows.
+     * @param {Map<String, Integer>} assignmentMap - This is a map of assignmentIds to table columns.
+     * @param {HTMLTable} table - The grade table on the webpage.
+     * @return {List<ProtoGrade>} grades that were not displayed.
+     *          This is because the users do not exist anymore in the course roster.
      */
-    CourseSketch.gradeBook.populateGrades = function(listGrades, studentMap, assignmentMap, table) {
+    CourseSketch.gradeBook.populateGrades = function(listGrades, idToRowMap, assignmentMap, table) {
         var gradesNotShown = [];
         for (var i = 0; i < listGrades.length; i++) {
             var protoGrade = listGrades[i];
             var studentId = protoGrade.userId;
             var assignmentId = protoGrade.assignmentId;
-            if (!studentMap.has(studentId)) {
+            if (!idToRowMap.has(studentId)) {
                 gradesNotShown.push(protoGrade);
                 continue;
             }
-            var studentRow = studentMap.get(studentId);
+            var studentRow = idToRowMap.get(studentId);
             var columnList = studentRow.children;
             var cell = columnList[assignmentMap.get(assignmentId)];
             var stringGrade = '' + protoGrade.getCurrentGrade();
@@ -113,9 +116,9 @@
     /**
      * Creates the assignment header while populating the assignment map.
      *
-     * @param {List<String>} assignmentList List of assignments for the course.
-     * @param {Map<String, Integer>} assignmentMap This is a map of assignmentIds to table columns.
-     * @param {Element} table The grade table on the webpage.
+     * @param {List<String>} assignmentList - List of assignments for the course.
+     * @param {Map<String, Integer>} assignmentMap - This is a map of assignmentIds to table columns.
+     * @param {Element} table - The grade table on the webpage.
      */
     function createAssignmentHeader(assignmentList, assignmentMap, table) {
         var header = document.createElement('thead');
@@ -150,11 +153,11 @@
 
         // Remove this code once the single request method has been resolved.
         CourseSketch.dataManager.getAssignments(assignmentList, undefined, function(assignments) {
-            for (var i = 0; i < assignments.length; i++) {
+            for (var assignmentIndex = 0; assignmentIndex < assignments.length; assignmentIndex++) {
                 // The order in the assigmment list may not match the order in the list of assigments.
                 // this is used to match the order together so the right name goes with the correct button.
-                var index = assignmentList.indexOf(assignments[i].id);
-                buttonList[index].textContent = assignments[i].name;
+                var index = assignmentList.indexOf(assignments[assignmentIndex].id);
+                buttonList[index].textContent = assignments[assignmentIndex].name;
             }
         });
         header.appendChild(row);
@@ -164,16 +167,18 @@
     /**
      * Adds the student names to the first column of every row.
      *
-     * @param {Map<String, Element>} studentMap This is a map of studentIds to table rows.
+     * @param {Map<String, Element>} idToRowMap - This is a map of studentIds to table rows.
      */
-    function populateStudentNames(studentMap) {
-        studentMap.forEach(function(value, key, map) {
-            row = map.get(key);
+    function populateStudentNames(idToRowMap) {
+        console.log(idToRowMap);
+        idToRowMap.forEach(function(value, key, map) {
+            var row = map.get(key);
             var cell = document.createElement('td');
             cell.dataset.student = key;
-            var cellText = key;
-            if (key.length > 13) {
-                cellText = key.substring(0, 10) + '...';
+            var username = CourseSketch.dataManager.courseRoster.get(key);
+            var cellText = username;
+            if (username.length > 13) {
+                cellText = username.substring(0, 10) + '...';
             }
             cell.textContent = cellText;
             cell.className = 'namecell';
@@ -184,8 +189,8 @@
     /**
      * This creates tabs, one for each grading category.
      *
-     * @param {List<String>} gradeCategories The list of categories for grades in the gradebook.
-     * @param {element} tabholder The element that will hold the tabs.
+     * @param {List<String>} gradeCategories - The list of categories for grades in the gradebook.
+     * @param {element} tabholder - The element that will hold the tabs.
      */
     CourseSketch.gradeBook.createTabs = function(gradeCategories, tabholder) {
         tabholder.innerHTML = '';
@@ -228,7 +233,7 @@
      *
      * In this state, instructors can input their grades. This state has the input field.
      *
-     * @param {Event} event The event that triggered the function.
+     * @param {Event} event - The event that triggered the function.
      */
     function gradeCellSelected(event) {
         if (this.querySelector('input') === null) {
@@ -247,6 +252,7 @@
 
             this.appendChild(container);
             input.value = grade;
+            // Done to allow instant typing.
             input.focus();
             input.select();
 
@@ -264,7 +270,7 @@
             /**
              * Clears validity message for checking that the user only entered numbers.
              *
-             * setCustomValidity must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
+             * {@code setCustomValidity} must be cleared oninput otherwise the error message will continually appear and form will never appear valid.
              */
             input.oninput = function() {
                 this.setCustomValidity('');
@@ -283,10 +289,9 @@
     }
 
     /**
-     * TODO: Make comment save to the grade for the specified assignment and student.
      * Adds a comment to a grade.
      *
-     * @param {HTMLTableCell} cell The cell that the comment is being added for.
+     * @param {HTMLTableCell} cell - The cell that the comment is being added for.
      */
     function addComment(cell) {
         console.log(cell);
@@ -301,7 +306,7 @@
      *
      * This may also trigger a grade save.
      *
-     * @param {Element} cell the selected cell whose code is being removed.
+     * @param {Element} cell - The selected cell whose code is being removed.
      */
     function unselectCell(cell) {
         var oldGrade = cell.dataset.old_grade;
@@ -314,7 +319,7 @@
 
             if (oldGrade !== newGrade) {
                 console.log('SAVING GRADE: [', newGrade, ', ', comment, ']');
-                var protoGrade = buildProtoGrade(cell, newGrade, comment);
+                var protoGrade = CourseSketch.gradeBook.buildProtoGrade(cell, newGrade, comment);
                 CourseSketch.dataManager.setGrade(protoGrade);
             }
 
@@ -327,7 +332,8 @@
         }
     }
 
-    var keyEventHandler = undefined;
+    keyEventHandler = undefined;
+    // we scope the time stamp for throttling the key presses.
     (function() {
 
         // This is used to throttle events.
@@ -339,7 +345,8 @@
          * When Tab is pressed, moves the selection to the right 1 cell.
          * When Enter is pressed, moves the selection down 1 cell.
          * Has a minimum time of 50ms between key events.
-         * @param {Event} event The event that triggers the function.
+         *
+         * @param {Event} event - The event that triggers the function.
          */
         keyEventHandler = function(event) {
             if (event.timeStamp - previousTimeStamp < 50) {
@@ -365,10 +372,10 @@
     })();
 
     /**
-     * TODO: Make this work if we need it.
+     * TODO: Make this work if we need it. Currently we are not using it.
      * Moves selection one cell to the left.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move left from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move left from.
      */
     function moveLeft(cell) {
         unselectCell(cell);
@@ -377,7 +384,7 @@
     /**
      * Moves selection one cell to the right.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move right from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move right from.
      */
     function moveRight(cell) {
         unselectCell(cell);
@@ -396,7 +403,7 @@
     /**
      * Moves selection one cell down.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move down from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move down from.
      */
     function moveDown(cell) {
         unselectCell(cell);
@@ -416,10 +423,10 @@
     }
 
     /**
-     * TODO: Make this work if we need it.
+     * TODO: Make this work if we need it. Currently we are not using it.
      * Moves selection one cell up.
      *
-     * @param {HTMLTableCell} cell The starting cell that we will move up from.
+     * @param {HTMLTableCell} cell - The starting cell that we will move up from.
      */
     function moveUp(cell) {
         unselectCell(cell);
@@ -428,14 +435,15 @@
     /**
      * Builds a ProtoGrade for a selected cell to send to the server.
      *
-     * @param {HTMLTableCell} cell The cell the grade is coming from.
-     * @param {String} grade The value of the grade.
-     * @param {String} comment The comment for the grade.
+     * @param {HTMLTableCell} cell - The cell the grade is coming from.
+     * @param {String} grade - The value of the grade. String because input.value returns a string.
+     * @param {String} comment - The comment for the grade.
      * @returns {ProtoGrade} The ProtoGrade from the selected cell.
      */
-    function buildProtoGrade(cell, grade, comment) {
+    CourseSketch.gradeBook.buildProtoGrade = function(cell, grade, comment) {
         grade = parseFloat(grade); // Sent in is a string. Proto requires a float.
-        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        var protoGrade = CourseSketch.prutil.ProtoGrade();
+        var gradeHistory = CourseSketch.prutil.GradeHistory();
         protoGrade.setCourseId(CourseSketch.gradeBook.course.id);
         protoGrade.setUserId(cell.dataset.student);
         if (!isUndefined(cell.dataset.assignment)) {
@@ -446,9 +454,6 @@
         }
         if (!isNaN(grade)) {
             protoGrade.setCurrentGrade(grade);
-        }
-        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
-        if (!isNaN(grade)) {
             gradeHistory.setGradeValue(grade);
         }
         if (!isUndefined(comment)) {
@@ -456,10 +461,12 @@
         }
         protoGrade.setGradeHistory(gradeHistory); // Don't need to add to list since there is only one gradeHistory value
         return protoGrade;
-    }
+    };
 
     /**
      * Returns the index of an element in reference to its parent element.
+     *
+     * @param {Element} element - The element that the index is being found for.
      */
     function getChildIndex(element) {
         var k = -1;
@@ -475,23 +482,4 @@
         }
         return k;
     }
-
-    /*
-    function expandColumns(assignmentId, problemList, index) {
-
-        // create an assignmentMap that has index is set so that it will insert grades in the problem slot (this means the indexes are offset)
-    }
-    */
-
-    /*
-    function viewAssignmentBreakdown(cell) {
-        var index = getChildIndex(cell);
-        var assignmentId = cell.dataset.assignment;
-        CourseSketch.dataManager.getAssignment(assignemntId, function(assignment) {
-            CourseSketch.dataManager.getCourseProblems(assignment.problemList, undefined, function(courseProblems) {
-
-            });
-        });
-    }
-    */
 })();

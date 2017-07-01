@@ -6,6 +6,7 @@
 <link rel="import" href="/test/testUtilities/testUtilities.html">
 
 <!-- files needed for testing -->
+    <script src="/src/utilities/functions/base.js"></script>
 
 <!-- file being tested. -->
 <script src="/src/utilities/functions/image.js" data-cover></script>
@@ -26,35 +27,54 @@
 
 	<script>
         QUnit.module("testModule1");
-        test("svg test", function(assert) {
-            expect(0);
-            imgTag = document.getElementById("testImageSvg");
-            var data = getBase64Image(imgTag);
-            console.log(data);
-            var storeTag = document.getElementById("resultImageSvg");
-            setBase64Image(storeTag, data);
-            var data2 = getBase64Image(storeTag);
-            //assert.equal(data, data2);
+        QUnit.test("svg test", function(assert) {
+            expect(1);
+            var done = assert.async();
+            setRealTimeout(function() {
+                throws(function() {
+                    imgTag = document.getElementById("testImageSvg");
+                    var data = getBase64Image(imgTag);
+                    console.log(data);
+                    var storeTag = document.getElementById("resultImageSvg");
+                    setBase64Image(storeTag, data);
+                    var data2 = getBase64Image(storeTag);
+                });
+                done();
+            }, 100);
         });
 
-        test("png test", function(assert) {
-            imgTag = document.getElementById("testImagePng");
-            var data = getBase64Image(imgTag);
-            console.log(data);
-            var storeTag = document.getElementById("resultImagePng");
-            setBase64Image(storeTag, data);
-            var data2 = getBase64Image(storeTag);
-            assert.equal(data, data2);
+        QUnit.test("png test", function(assert) {
+            var done = assert.async();
+            setRealTimeout(function() {
+                imgTag = document.getElementById("testImagePng");
+                var data = getBase64Image(imgTag);
+                console.log("64 image data from tag", data);
+                var storeTag = document.getElementById("resultImagePng");
+                setBase64Image(storeTag, data);
+                setRealTimeout(function() {
+                    var data2 = getBase64Image(storeTag);
+                    console.log("restored data", data2);
+                    assert.equal(data, data2);
+                    done();
+                }, 500);
+            }, 500);
         });
 
-        test("gif test", function(assert) {
-            imgTag = document.getElementById("testImageGif");
-            var data = getBase64Image(imgTag);
-            console.log(data);
-            var storeTag = document.getElementById("resultImageGif");
-            setBase64Image(storeTag, data);
-            var data2 = getBase64Image(storeTag);
-            assert.equal(data, data2);
+        QUnit.test("gif test", function(assert) {
+            var done = assert.async();
+            setRealTimeout(function() {
+                imgTag = document.getElementById("testImageGif");
+                var data = getBase64Image(imgTag);
+                console.log("64 image data from tag", data);
+                var storeTag = document.getElementById("resultImageGif");
+                setBase64Image(storeTag, data);
+                setRealTimeout(function() {
+                    var data2 = getBase64Image(storeTag);
+                    console.log("restored data", data2);
+                    assert.equal(data, data2);
+                    done();
+                }, 500);
+            }, 500);
         });
     </script>
 </body>

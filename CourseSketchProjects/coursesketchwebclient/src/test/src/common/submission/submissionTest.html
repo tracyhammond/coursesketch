@@ -25,9 +25,7 @@
 
         var template = (function() {
             var link1 = document.querySelector('#submissionTemplateImport');
-            var link = link1.import.querySelector('#submissionTemplateImport');
-            var template = link.import.querySelector('#submission');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(link1.import, document,'submissionTemplateImport','submission');
             return clone;
         })();
 
@@ -83,8 +81,9 @@
             });
         });
 
-        QUnit.asyncTest("testing toolbar submission callback is set", function(assert) {
+        QUnit.test("testing toolbar submission callback is set", function(assert) {
             expect(1);
+            var done = assert.async();
             var element = createSubmissionElement();
             addElementToDom(element[0]);
             var submission = element[0];
@@ -94,16 +93,17 @@
             submission.sendDataToServer = function(isSubmission) {
                 clearInterval(interval);
                 assert.ok(isSubmission, "Submission callback is set");
-                QUnit.start();
+                done();
             };
             // set variable.
-            interval = setInterval(function() {
+            interval = setRealTimeout(function() {
                 simulate(toolbar.shadowRoot.querySelector("#submission"), "click");
-            }, 100);
+            }, 300);
         });
 
-        QUnit.asyncTest("testing toolbar save callback is set", function(assert) {
+        QUnit.test("testing toolbar save callback is set", function(assert) {
             expect(1);
+            var done = assert.async();
             var element = createSubmissionElement();
             addElementToDom(element[0]);
             var submission = element[0];
@@ -113,12 +113,13 @@
             submission.sendDataToServer = function(isSubmission) {
                 clearInterval(interval);
                 assert.ok(!isSubmission, "Save callback is set");
-                QUnit.start();
+                done();
             };
             // set variable.
-            interval = setInterval(function() {
+            interval = setRealTimeout(function() {
+                var shadow = toolbar.shadowRoot;
                 simulate(toolbar.shadowRoot.querySelector("#save"), "click");
-            }, 100);
+            }, 300);
         });
 
         QUnit.test("testing wrapped exception does not throw error", function(assert) {
@@ -205,7 +206,7 @@
             addElementToDom(element[0]);
             var submission = element[0];
             var textArea = document.createElement("textarea");
-            textArea.className = "sub-panel";
+            textArea.className = "sub-panel submittable";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
             submission.problemType = CourseSketch.prutil.QuestionType.FREE_RESP;
@@ -224,7 +225,7 @@
             addElementToDom(element[0]);
             var submission = element[0];
             var textArea = document.createElement("textarea");
-            textArea.className = "sub-panel";
+            textArea.className = "sub-panel submittable";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
             submission.problemType = CourseSketch.prutil.QuestionType.FREE_RESP;
@@ -249,7 +250,7 @@
             addElementToDom(element[0]);
             var submission = element[0];
             var textArea = document.createElement("textarea");
-            textArea.className = "sub-panel";
+            textArea.className = "sub-panel submittable";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
             submission.problemType = CourseSketch.prutil.QuestionType.FREE_RESP;
@@ -274,7 +275,7 @@
             addElementToDom(element[0]);
             var submission = element[0];
             var textArea = document.createElement("textarea");
-            textArea.className = "sub-panel";
+            textArea.className = "sub-panel submittable";
             textArea.value = "I AM TEXT VALUE";
             submission.appendChild(textArea);
             submission.problemType = CourseSketch.prutil.QuestionType.FREE_RESP;

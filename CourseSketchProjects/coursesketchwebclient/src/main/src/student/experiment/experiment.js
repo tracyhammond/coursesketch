@@ -6,29 +6,33 @@ validateFirstRun(document.currentScript);
         CourseSketch.dataManager.waitForDatabase(function() {
             var panel = document.querySelector('navigation-panel');
             var navigator = panel.getNavigator();
-            var assignment = CourseSketch.dataManager.getState('currentAssignment');
-            if (!isUndefined(assignment)) {
-                navigator.setAssignmentId(assignment);
-            }
+            var assignmentId = CourseSketch.dataManager.getState('currentAssignment');
             var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
-            if (!isUndefined(problemIndex)) {
-                navigator.setPreferredIndex(parseInt(problemIndex, 10));
-            }
+            var addCallback = isUndefined(panel.dataset.callbackset);
+
             CourseSketch.dataManager.clearStates();
 
-            if (isUndefined(panel.dataset.callbackset)) {
+            if (addCallback) {
                 panel.dataset.callbackset = '';
                 navigator.addCallback(loadProblem);
-                navigator.reloadProblems();
+            }
+
+            if (!isUndefined(assignmentId)) {
+                navigator.resetNavigation(assignmentId, parseInt(problemIndex, 10));
+            } else if (addCallback) {
+                navigator.refresh();
             }
         });
     });
 
     /**
      * Loads the problem, called every time a user navigates to a different problem.
+     *
+     * @param {AssignmentNavigator} navigator - The assignment navigator.
      */
     function loadProblem(navigator) {
-        var problemType = navigator.getProblemType();
+        var bankProblem = navigator.getCurrentInfo();
+        var problemType = bankProblem.getQuestionType();
         // todo: better way of removing elements
         var parentPanel = document.getElementById('problemPanel');
         console.log(parentPanel);
@@ -40,6 +44,10 @@ validateFirstRun(document.currentScript);
             console.log('Loading typing problem');
             loadTyping(navigator);
         }
+
+        var questionText = document.querySelector('problem-text-panel');
+        questionText.setProblemText(bankProblem.getQuestionText());
+        console.log('a problem has been loaded with question text', bankProblem.getQuestionText());
 
         parentPanel.problemIndex = navigator.getCurrentNumber();
         parentPanel.setProblemType(problemType);
@@ -62,7 +70,6 @@ validateFirstRun(document.currentScript);
     CourseSketch.studentExperiment.addWaitOverlay = function() {
         CourseSketch.studentExperiment.waitScreenManager.buildOverlay(document.querySelector('body'));
         CourseSketch.studentExperiment.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**
@@ -75,21 +82,21 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * loads the typing from the submission.
+     * Loads the typing from the submission.
+     *
+     * @param {AssignmentNavigator} navigator - The assignment navigator.
      */
     function loadTyping(navigator) {
         var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel';
-        typingSurface.style.width = '100%';
-        typingSurface.style.height = 'calc(100% - 110px)';
+        typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
-        CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
+        CourseSketch.dataManager.getSubmission(navigator.getGroupId(), function(submission) {
             if (isException(submission)) {
                 CourseSketch.clientException(submission);
             }
-            if (isUndefined(submission) || CourseSketch.isException(submission) ||isUndefined(submission.getTextAnswer())) {
+            if (isUndefined(submission) || CourseSketch.isException(submission) || isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;
             }
@@ -102,12 +109,14 @@ validateFirstRun(document.currentScript);
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
+     *
+     * @param {AssignmentNavigator} navigator - The assignment navigator.
      */
     function loadSketch(navigator) {
         var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel submittable';
+        sketchSurface.className = 'sub-panel submittable';
         sketchSurface.style.width = '100%';
-        sketchSurface.style.height = 'calc(100% - 110px)';
+        sketchSurface.style.height = '100%';
         sketchSurface.setErrorListener(function(exception) {
             console.log(exception);
             alert(exception);
@@ -131,9 +140,10 @@ validateFirstRun(document.currentScript);
 
         // adding here because of issues
         document.getElementById('problemPanel').appendChild(sketchSurface);
+        var problem = navigator.getCurrentInfo();
 
-        CourseSketch.dataManager.getSubmission(navigator.getCurrentProblemId(), function(submission) {
-            var problemScript = navigator.getProblemScript();
+        CourseSketch.dataManager.getSubmission(navigator.getGroupId(), function(submission) {
+            var problemScript = problem.getScript();
             if (CourseSketch.isException(submission)) {
                 CourseSketch.clientException(submission);
             }

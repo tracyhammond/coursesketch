@@ -4,7 +4,7 @@ import database.DatabaseStringConstants;
 import org.junit.Test;
 
 import database.DatabaseAccessException;
-import protobuf.srl.school.School.State;
+import protobuf.srl.utils.Util.State;
 
 import java.sql.*;
 

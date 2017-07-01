@@ -1,7 +1,8 @@
+// jscs:disable jsDoc
 (function() {
 
     /**
-     * @param {ShadowRoot} parent the root of the parent.
+     * @param {ShadowRoot} parent - the root of the parent.
      * @return {Map} A map of the data mapped to the element.
      */
     function getInput(parent) {
@@ -20,11 +21,12 @@
     var loaderObject = {};
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
+     *
      * @return {Undefined|String} the name or undefined.
      */
     loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -48,11 +50,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
+     *
      * @return {Undefined|String} undefined or the description.
      */
     loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -76,11 +79,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a name object from the schoolItem.
+     *
      * @return {Null} This returns null to differentiate it from other possible values as this is not saveable.
      */
     loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -99,11 +103,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a functiontype object from the schoolItem.
+     *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -125,11 +130,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a time frame object from the schoolItem.
+     *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -151,11 +157,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads a subtraction object from the schoolItem.
+     *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -177,11 +184,12 @@
     };
 
     /**
-     * yes I know these functions have an underscore.
+     * Yes I know these functions have an underscore.
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
      * loads an Assignment type object from the schoolItem.
+     *
      * @return {Undefined|Enum} either undefined or the value of the enum.
      */
     loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill) {
@@ -202,9 +210,9 @@
     /**
      * Loads the data from the school item into the edit panel.
      *
-     * @param {Element} schoolItemElement the school Item that is currently being edited.
-     * @param {Map} schoolItemData A mpa containing the school item.
-     * @param {Element} editPanel a panel that displays the editable material.
+     * @param {Element} schoolItemElement - the school Item that is currently being edited.
+     * @param {Map} schoolItemData - A mpa containing the school item.
+     * @param {Element} editPanel - a panel that displays the editable material.
      * @returns {Map} A map that contains the field of the school proto boject and the loaded value of the proto object.
      */
     function loadData(schoolItemElement, schoolItemData, editPanel) {
@@ -233,28 +241,28 @@
     /**
      * Sets up the advance edit panel for editing advance data.
      *
-     * @param {Element} element The edit button that opens up the panel when clicked.
-     * @param {SchoolItem} localScope  The school item that this advance panel is associated with.
-     * @param {Node} parentNode The node that is a parent to the button.  This is used to get the school item after saving.
+     * @param {Element} element - The edit button that opens up the panel when clicked.
+     * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
+     * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
      */
-    SchoolItem.prototype.createAdvanceEditPanel = function(element, localScope, parentNode) {
+    SchoolItem.prototype.createAdvanceEditPanel = function(element, localElement, parentNode) {
         $(element).click(function(event) {
             event.stopPropagation();
 
             // create host and position it
             var host = document.createElement('dialog');
             host.className = 'advanceEditHost';
-            var pos = $(localScope).offset();
-            var leftPos = (pos.left + $(localScope).width());
-            $(host).offset({ top:pos.top, left:leftPos });
+            var pos = $(localElement).offset();
+            var leftPos = (pos.left + $(localElement).width());
+            $(host).offset({ top: pos.top, left: leftPos });
 
             // add html to host
             var shadow = host.createShadowRoot();
-            var clone = localScope.getAdvanceEditPanel();
+            var clone = localElement.getAdvanceEditPanel();
             shadow.appendChild(clone);
-            localScope.advanceEditPanel = host;
+            localElement.advanceEditPanel = host;
 
-            var currentData = loadData(localScope, localScope.schoolItemData, shadow);
+            var currentData = loadData(localElement, localElement.schoolItemData, shadow);
 
             // add our loaded element to the page.
             document.body.appendChild(host);
@@ -283,7 +291,7 @@
                 var schoolItem = getHostElement(parentNode);
                 document.body.removeChild(host);
                 console.log(schoolItem);
-                console.log(localScope);
+                console.log(localElement);
                 schoolItem.editFunction('advance', currentData, newData, schoolItem);
             };
 
@@ -291,14 +299,14 @@
             /**
              * Called to cancel the editing process.
              *
-             * @param {Element} event  On Click event.
+             * @param {Element} closeEvent -  On Click event.
              * @returns {Boolean} false if the element clicked is the host dialog.
              */
-            function close(event) {
-                if (event.toElement === host) {
+            function close(closeEvent) {
+                if (closeEvent.toElement === host) {
                     return false;
                 }
-                event.stopPropagation();
+                closeEvent.stopPropagation();
                 document.body.removeEventListener('click', close);
                 try {
                     document.body.removeChild(host);

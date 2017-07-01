@@ -67,6 +67,7 @@
                 var dataResult = CourseSketch.prutil.DataResult();
                 var itemResult = CourseSketch.prutil.ItemResult();
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
                 itemResult.query = CourseSketch.prutil.ItemQuery.COURSE;
                 dataResult.results = [itemResult];
@@ -79,8 +80,9 @@
 
                 // sends to the server.
                 CourseSketch.connection.sendRequest = function(message) {
-                   req.otherData = dataResult.toArrayBuffer();
-                   CourseSketch.connection.sendSelf(req);
+                    req.otherData = dataResult.toArrayBuffer();
+                    req.requestId = message.requestId;
+                    CourseSketch.connection.sendSelf(req);
                 }; //send request
                 waitForDatabase(dataManager, function() {
                     dataManager.insertCourse(course, undefined, function(course2) {
@@ -98,6 +100,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var itemResult = CourseSketch.prutil.ItemResult();
@@ -116,12 +119,14 @@
                     itemResult.returnText = "1Two" + ":" + course1.id;
                     CourseSketch.connection.sendRequest = function(message) {
                         req.otherData = dataResult.toArrayBuffer();
+                        req.requestId = message.requestId;
                         CourseSketch.connection.sendSelf(req);
                     }; //send request
                     dataManager.insertCourse(course1, undefined, function() {
                         itemResult.returnText = "2Two" + ":" + course2.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
+                            req.requestId = message.requestId;
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
                         dataManager.insertCourse(course2, undefined, function() {
@@ -146,6 +151,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var fakeID = generateUUID();
@@ -162,6 +168,7 @@
                 req.otherData= dataResult.toArrayBuffer();
                 expect(1);
                 CourseSketch.connection.sendRequest = function(message) {
+                    req.requestId = message.requestId;
                     CourseSketch.connection.sendSelf(req);
                 }; //send request
                 var waitfor = 0;
@@ -184,6 +191,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                     CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var itemResult = CourseSketch.prutil.ItemResult();
@@ -202,12 +210,14 @@
                     itemResult.returnText = "1Two" + ":" + course1.id;
                     CourseSketch.connection.sendRequest = function(message) {
                         req.otherData = dataResult.toArrayBuffer();
+                        req.requestId = message.requestId;
                         CourseSketch.connection.sendSelf(req);
                     }; //send request
                     dataManager.insertCourse(course1, undefined, function() {
                         itemResult.returnText = "2Two" + ":" + course2.id;
                         CourseSketch.connection.sendRequest = function(message) {
                             req.otherData = dataResult.toArrayBuffer();
+                            req.requestId = message.requestId;
                             CourseSketch.connection.sendSelf(req);
                         }; //send request
                         dataManager.insertCourse(course2, undefined, function() {
@@ -236,7 +246,9 @@
 
                 // TEST STARTING
                 waitForDatabase(dataManager, function() {
-                    dataManager.getCourse(fakeID);
+                    dataManager.getCourse(fakeID, function() {
+                        // Does nothing, but getCourse can not take in a null callback!
+                    });
                 }); // end waitForDatabase
             });
 
@@ -266,8 +278,9 @@
                                 assert.equal(id, course.id, "The course is not found locally so instead we search in the server.");
                                 QUnit.start();
                             };
-                            // We don't expect this to be called so we don't pass in any callback
-                            dataManager.getCourse(course.id);
+                            dataManager.getCourse(course.id, function () {
+                                // Does nothing as the callback is not needed.
+                            });
                         });
                     });
                 }); // end waitForDatabase
@@ -277,6 +290,7 @@
                 var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener,
                     CourseSketch.connection, CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
                 var req = CourseSketch.prutil.Request();
+                req.requestId = generateUUID();
                 req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_UPDATE;
                 var dataResult = CourseSketch.prutil.DataResult();
                 var fakeID = generateUUID();
@@ -296,9 +310,10 @@
                 dataResult.results = [itemResult];
                 req.otherData= dataResult.toArrayBuffer();
                 CourseSketch.connection.sendRequest = function(message) {
-                        req.otherData = dataResult.toArrayBuffer();
-                        CourseSketch.connection.sendSelf(req);
-                    }; //send request
+                    req.otherData = dataResult.toArrayBuffer();
+                    req.requestId = message.requestId;
+                    CourseSketch.connection.sendSelf(req);
+                }; //send request
                 var waitfor = 0;
 
                 // TEST STARTING

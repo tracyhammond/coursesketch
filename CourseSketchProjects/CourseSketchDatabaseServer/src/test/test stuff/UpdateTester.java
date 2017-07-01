@@ -6,12 +6,12 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.UpdateManager;
 
 public class UpdateTester {
 
-	public static void main(String[] args) throws UnknownHostException, AuthenticationException, DatabaseAccessException 
+	public static void main(String[] args) throws UnknownHostException, AuthenticationException, DatabaseAccessException
 	{
 		MongoClient mongoClient = new MongoClient("localhost");
 		DB db = mongoClient.getDB("login");

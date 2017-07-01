@@ -203,7 +203,6 @@
 
         // run tests
         simulate(shadow.querySelector('button.save'), "click");
-
     });
 
     test("advance edit assignment type loads", function(assert) {
@@ -211,7 +210,7 @@
         schoolItem.dataset.instructor="";
         // set up data
         var schoolItemProto = CourseSketch.prutil.SrlAssignment();
-        schoolItemProto.assignmentType = CourseSketch.prutil.getSrlAssignmentClass().AssignmentType.LAB;
+        schoolItemProto.assignmentType = CourseSketch.prutil.AssignmentType.GRADED;
         schoolItem.schoolItemData = schoolItemProto;
 
         // append data
@@ -225,7 +224,7 @@
         var selectElement = shadow.querySelector('#elementAssignmentType');
         var result = selectElement.value;
         var text = selectElement.options[selectElement.selectedIndex].innerHTML;
-        assert.equal(text, "Lab", 'the function type should be loaded correctly');
+        assert.equal(text, "Homework", 'the function type should be loaded correctly');
         assert.equal(result, schoolItemProto.assignmentType,
             'we can get the number from the value using protobuf');
     });
