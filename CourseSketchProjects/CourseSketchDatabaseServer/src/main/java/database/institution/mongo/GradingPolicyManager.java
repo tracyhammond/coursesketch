@@ -153,21 +153,10 @@ final class GradingPolicyManager {
      *     coll.find( { _id: ObjectId(courseId) }, { _id: false } )
      * </code></pre>
      *
-<<<<<<< HEAD
-     * @param authenticator
-     *         The object that is performing authentication.
-     * @param dbs
-     *         The database that the gradingPolicy is being added to.
-     * @param courseId
-     *         The gradingPolicy we will get is from this course.
-     * @param userId
-     *         The id of the user asking for the policy.
-=======
      * @param authenticator The object that is performing authentication.
      * @param dbs The database that the gradingPolicy is being added to.
      * @param courseId The gradingPolicy we will get is from this course.
      * @param userId The id of the user asking for the state.
->>>>>>> master
      * @return The protoObject representing the gradingPolicy.
      * @throws AuthenticationException Thrown if the user did not have the authentication to get the course.
      * @throws DatabaseAccessException Thrown if a grading policy is not found for the course.
