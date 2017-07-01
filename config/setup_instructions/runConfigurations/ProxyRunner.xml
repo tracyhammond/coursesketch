@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ProxyRunner" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-    <option name="MAIN_CLASS_NAME" value="serverfront.ProxyRunner" />
+    <option name="MAIN_CLASS_NAME" value="coursesketch.serverfront.ProxyRunner" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="local" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
