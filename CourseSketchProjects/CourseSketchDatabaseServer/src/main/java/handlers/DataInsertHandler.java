@@ -7,6 +7,7 @@ import coursesketch.server.interfaces.SocketSession;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingPolicyUpsertHandler;
 import handlers.subhandlers.GradingUpsertHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,6 +144,10 @@ public final class DataInsertHandler {
                         break;
                         case GRADE: {
                             GradingUpsertHandler.gradingUpsertHandler(instance, itemSet, userId, req.getMessageTime());
+                        }
+                        break;
+                        case GRADING_POLICY: {
+                            GradingPolicyUpsertHandler.gradingPolicyUpsertHandler(instance, itemSet, userId);
                         }
                         break;
                         default:
