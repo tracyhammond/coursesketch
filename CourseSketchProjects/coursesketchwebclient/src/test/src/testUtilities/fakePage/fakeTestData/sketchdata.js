@@ -31,7 +31,7 @@
 	var update4 = CourseSketch.prutil.SrlUpdate();
 	var update5 = CourseSketch.prutil.SrlUpdate();
 
-	var update6 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+	var update6 = CourseSketch.prutil.SrlUpdate();
 
 	/*
 	 * commands for adding strokes to updates, false is because the strokes are created in code
@@ -175,8 +175,8 @@
 
 	update6.updateId = "undo-update";
 	update6.commands = new Array();
-	var undoMarkerObject = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, false);
-	var undoUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ undoMarkerObject ]);
+	var undoMarkerObject = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, false);
+	var undoUpdate = CourseSketch.prutil.createUpdateFromCommands([ undoMarkerObject ]);
 	update6.commands.push(undoMarkerObject);
 
 	/*

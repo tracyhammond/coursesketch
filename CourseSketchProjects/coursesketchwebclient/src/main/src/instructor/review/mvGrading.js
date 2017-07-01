@@ -61,7 +61,7 @@ validateFirstRun(document.currentScript);
                 CourseSketch.multiViewPage.loadProblem(navigator, this.getUpdateList());
             });
 
-            var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+            var protoGrade = CourseSketch.prutil.ProtoGrade();
             protoGrade.userId = array[i].userId;
             mvSketch.courseId = protoGrade.courseId = array[i].courseId;
             mvSketch.assignmentId = protoGrade.assignmentId = array[i].assignmentId;

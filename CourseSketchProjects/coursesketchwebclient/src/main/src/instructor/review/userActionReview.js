@@ -86,11 +86,11 @@ function UserActionGraph() {
         console.log(updateData.list);
         for (var u = 0; u < updateData.list.length; u++) {
             //checks to see if current command corresponds to previous lowest marker
-            //CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateData.list[u].time, CourseSketch.PROTOBUF_UTIL.getUpdateClass());
+            //CourseSketch.prutil.decodeProtobuf(updateData.list[u].time, CourseSketch.prutil.getUpdateClass());
             //console.log('here');
             if (updateData.list[u].commands[0].getCommandTypeName() === 'MARKER') {
-                markerObject = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(updateData.list[u].commands[0].commandData,
-                    CourseSketch.PROTOBUF_UTIL.getMarkerClass());
+                markerObject = CourseSketch.prutil.decodeProtobuf(updateData.list[u].commands[0].commandData,
+                    CourseSketch.prutil.getMarkerClass());
                 if (markerObject.otherData > 0) {
                     currentParent = currentParent.children[currentParent.children.length - 1];
                     currentParent.AddChild(new Node(updateData.list[u].commands[0].getCommandTypeName()));
