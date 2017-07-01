@@ -134,7 +134,6 @@ function() {
         element.appendChild(register);
     }
 
-
     /**
      * A public function that creates a login element.
      */

@@ -214,22 +214,22 @@ public class GradingPolicyManagerTest {
     }
 
     @Test
-    public void insertGradingPolicyTest() throws Exception {
+    public void firstInsertGradingPolicyTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
-        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
+        GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find().first();
 
         fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
         Assert.assertEquals(fakeMongoPolicy, testPolicy);
     }
 
     @Test
-    public void getGradingPolicyAsStudentTest() throws Exception {
+    public void updateGradingPolicyTest() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
 
@@ -239,7 +239,46 @@ public class GradingPolicyManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_USER_ID, null,
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+
+        ProtoGradingPolicy testPolicyProto = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
+        Document testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
+
+        fakeMongoPolicy.put(SELF_ID, new ObjectId(courseId));
+        new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false).setIgnoreListOrder(true)
+                .build().equals(fakeProtoPolicy.build(), testPolicyProto);
+        Assert.assertEquals(fakeMongoPolicy, testPolicy);
+
+        // Update the grade policy
+
+        fakeProtoPolicy.clearDroppedAssignments();
+        GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        testPolicy = db.getCollection(GRADING_POLICY_COLLECTION).find(convertStringToObjectId(courseId)).first();
+
+        fakeMongoPolicy.put(DROPPED_ASSIGNMENTS, new ArrayList<>());
+        Assert.assertEquals(fakeMongoPolicy, testPolicy);
+        Assert.assertEquals(db.getCollection(GRADING_POLICY_COLLECTION).count(), 1); // Only 1 document in the collection
+
+        testPolicyProto = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
+
+        new ProtobufComparisonBuilder()
+                .setFailAtFirstMisMatch(false).setIgnoreListOrder(true)
+                .build().equals(fakeProtoPolicy.build(), testPolicyProto);
+    }
+
+    @Test
+    public void getGradingPolicyTest() throws Exception {
+        String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
+        fakeProtoPolicy.setCourseId(courseId);
+
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
+                Authentication.AuthResponse.PermissionLevel.TEACHER);
+
+        AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_USER_ID, null,
+                Authentication.AuthResponse.PermissionLevel.STUDENT);
+
+        GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         ProtoGradingPolicy testPolicy = GradingPolicyManager.getGradingPolicy(authenticator, db, courseId, FAKE_USER_ID);
 
@@ -252,7 +291,7 @@ public class GradingPolicyManagerTest {
     public void unauthenticatedAddGradingPolicy() throws Exception {
         String courseId = CourseManager.mongoInsertCourse(db, courseBuilder.build());
         fakeProtoPolicy.setCourseId(courseId);
-        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_USER_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_USER_ID, fakeProtoPolicy.build());
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -268,7 +307,7 @@ public class GradingPolicyManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE, courseId, FAKE_ADMIN_ID, null,
                 Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        GradingPolicyManager.insertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
+        GradingPolicyManager.upsertGradingPolicy(authenticator, db, FAKE_ADMIN_ID, fakeProtoPolicy.build());
 
         exception.expect(AuthenticationException.class);
 

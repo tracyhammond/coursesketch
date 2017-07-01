@@ -1,0 +1,50 @@
+<html>
+<head>
+    <!-- basic utilities -->
+
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <link type="text/css" rel="stylesheet" href="/src/instructor/gradingPolicy/instructorGradingPolicy.css"/>
+
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js" data-namespace="gradingPolicy"></script>
+    <script type="text/javascript" src="/src/instructor/gradingPolicy/instructorGradingPolicy.js"> </script>
+
+    <link rel="import" href="/src/utilities/libraries/materialize/materializeInclude.html">
+
+</head>
+<body>
+    <div class="container row">
+
+        <div class="col s4"><h5>Category Name</h5></div>
+        <div class="col s2"><h5>Weight</h5></div>
+        <div class="col s3"><h5>Grading System</h5></div>
+        <div class="col s2>"><h5>Late Policy</h5></div>
+
+
+
+            <div class="input-field col s4">
+                <input placeholder="Enter Category Name" id="category_name" type="text" class="validate">
+            </div>
+            <div class="input-field col s2">
+                <input placeholder="Enter Weight" id="category_weight" type="number" class="validate">
+            </div>
+            <div class="col s3">
+                <div class="input-field col s6" style="padding: 0px;">
+                    <input name="policy_base" type="radio" id="percent">
+                    <label for="percent">Percent</label>
+                </div>
+                <div class="input-field col s6" style="padding: 0px;">
+                    <input name="policy_base" type="radio" id="point">
+                    <label for="point">Point</label>
+                </div>
+            </div>
+            <div class="input-field col s2">
+                <select class="browser-default">
+                    <option value="1">Policy 1</option>
+                    <option value="2">Policy 2</option>
+                    <option value="3">Policy 3</option>
+                </select>
+            </div>
+
+    </div>
+</body>
+</html>

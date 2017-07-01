@@ -552,8 +552,8 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void insertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
-        GradingPolicyManager.insertGradingPolicy(auth, database, authId, policy);
+    public void upsertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException {
+        GradingPolicyManager.upsertGradingPolicy(auth, database, authId, policy);
     }
 
     @Override

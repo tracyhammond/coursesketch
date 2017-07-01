@@ -98,7 +98,7 @@ function MvSketch() {
      */
     function saveGrade(event) {
         event.stopPropagation();
-        var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+        var protoGrade = CourseSketch.prutil.ProtoGrade();
         if (!isUndefined(this.courseId)) {
             protoGrade.courseId = this.courseId;
         }
@@ -114,7 +114,7 @@ function MvSketch() {
         var grade = parseFloat(this.shadowRoot.querySelector('#gradeInput').value);
         var comment = this.shadowRoot.querySelector('#comment').value;
 
-        var gradeHistory = CourseSketch.PROTOBUF_UTIL.GradeHistory();
+        var gradeHistory = CourseSketch.prutil.GradeHistory();
         if (!isNaN(grade)) {
             gradeHistory.setGradeValue(grade);
         }
