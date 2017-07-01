@@ -480,7 +480,7 @@ public interface Institution {
      * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
-     * @param authId
+     * @param userId
      *         The id of the user asking for the state.
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
