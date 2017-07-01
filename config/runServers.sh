@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #start mongo
 name="mongo"
 command1="mongod"
