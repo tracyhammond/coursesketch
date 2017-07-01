@@ -1,77 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Welcome!</title>
-<script type="text/javascript" src="/src/utilities/functions/base.js"></script>
-<script type="text/javascript"
-	src="/src/utilities/functions/objectAndInheritance.js"></script>
-<script type="text/javascript"
-	src="/src/utilities/functions/stateManager.js"></script>
+    <meta charset="UTF-8">
+    <title>Welcome!</title>
+    <script type="text/javascript" src="/src/utilities/functions/base.js"></script>
+    <script type="text/javascript"
+            src="/src/utilities/functions/objectAndInheritance.js"></script>
+    <script type="text/javascript"
+            src="/src/utilities/functions/stateManager.js"></script>
 
-<!-- login element -->
-<link rel="import"
-	href="/src/utilities/connection/login/loginInclude.html">
+    <!-- login element -->
+    <link rel="import"
+          href="/src/utilities/connection/login/loginInclude.html">
 
-<!-- register element -->
-<link rel="import"
-      href="/src/utilities/connection/register/registerInclude.html">
+    <!-- register element -->
+    <link rel="import"
+          href="/src/utilities/connection/register/registerInclude.html">
 
-<!-- protobuf -->
-<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-<!-- Jquery library -->
-<link rel="import"
-	href="/src/utilities/libraries/jquery/jqueryInclude.html">
+    <!-- Jquery library -->
+    <link rel="import"
+          href="/src/utilities/libraries/jquery/jqueryInclude.html">
 
-<!-- For exception notification purposes -->
-<link rel="import"
-	  href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html">
+    <!-- For exception notification purposes -->
+    <link rel="import"
+          href="/src/utilities/templates/exceptionNotification/exceptionNotificationInclude.html">
 
-<link rel="icon" type="image/ico" href="images/CSpencil.ico">
-<style>
-body {
-	display: flex;
-	min-height: 100vh;
-	flex-direction: column;
-}
+    <link rel="icon" type="image/ico" href="images/CSpencil.ico">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
 
-main {
-	flex: 1 0 auto;
-}
+        main {
+            flex: 1 0 auto;
+        }
 
-login-system, register-system {
-	display: inline;
-	position: relative;
-	margin: auto;
-}
-</style>
-<script src="/src/index.js"></script>
+        login-system, register-system {
+            display: inline;
+            position: relative;
+            margin: auto;
+        }
+    </style>
+    <script src="/src/index.js"></script>
 </head>
 <body>
-	<header class="row" style="margin:0; width:100%; z-index:2;">
-		<nav class="col s12 white">
-			<div class="nav-wrapper">
-				<div class="brand-logo" style="display:inline-flex;">
-					<a class="center bold teal-text">Course</a>
-					<a class="center light black-text">Sketch</a>
-				</div>
-				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="#" class="black-text">Learn More</a></li>
-				</ul>
-			</div>
-		</nav>
-	</header>
-	<main class="row teal" style="margin:0;">
-		<div id="mainPageContent" style="z-index:1; display: flex;"></div>
-		<div id="loginLocation" style="z-index:1; text-align:center;"></div>
-	</main>
-	<footer class="page-footer teal darken-1" style="padding:0; margin:0;">
-		<div class="footer-copyright">
-			<div class="container center white-text">
-				Developed in the Sketch Recognition Lab at Texas A&M University
-			</div>
-		</div>
-	</footer>
+<header class="row" style="margin:0; width:100%; z-index:2;">
+    <nav class="col s12 white">
+        <div class="nav-wrapper">
+            <div class="brand-logo" style="display:inline-flex;">
+                <a class="center bold teal-text">Course</a>
+                <a class="center light black-text">Sketch</a>
+            </div>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="#" class="black-text">Learn More</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main class="row teal" style="margin:0;">
+    <div id="mainPageContent" style="z-index:1; display: flex;"></div>
+    <div id="loginLocation" style="z-index:1; text-align:center;"></div>
+</main>
+<footer class="page-footer teal darken-1" style="padding:0; margin:0;">
+    <div class="footer-copyright">
+        <div class="container center white-text">
+            Developed in the Sketch Recognition Lab at Texas A&M University
+        </div>
+    </div>
+</footer>
 </body>
 </html>
