@@ -1,10 +1,11 @@
+//jscs:disable jsDoc
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed
  */
 function TimelineMarker() {
     /**
-     * @param {node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -34,7 +35,7 @@ function TimelineMarker() {
     }
 
     /**
-     * @param {Function} remove The element is removed and calls this function during the process
+     * @param {Function} remove - The element is removed and calls this function during the process
      */
     this.setRemoveFunction = function(remove) {
         this.removeFunction = remove;

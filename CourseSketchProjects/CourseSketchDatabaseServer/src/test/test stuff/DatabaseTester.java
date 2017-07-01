@@ -2,15 +2,12 @@ package test;
 
 import static util.StringConstants.*;
 
-import java.net.UnknownHostException;
-
-import com.mongodb.BasicDBObject;
+import com.mongodb.Document;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+import com.mongodb.MongoCollection<Document>;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 import database.user.UserClient;
 
@@ -34,7 +31,7 @@ public class DatabaseTester {
 			CourseProblemTester.testCourseProblems(returnId, assignmentId, bankId1);
 			System.out.println("Creating course problem2");
 			CourseProblemTester.testCourseProblems(returnId, assignmentId2, bankId2);
-			
+
 			System.out.println("Test Users");
 			UserTester.testUsers(returnId);
 		} catch (DatabaseAccessException e) {
@@ -47,22 +44,22 @@ public class DatabaseTester {
 	}
 
 	public static void deleteCollections(DB dbs) {
-		DBCollection collection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
-		collection.remove(new BasicDBObject());
+		MongoCollection<Document> collection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(COURSE_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(ASSIGNMENT_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(USER_GROUP_COLLECTION);
-		collection.remove(new BasicDBObject());
-		
+		collection.deleteOne(new Document());
+
 		collection = dbs.getCollection(USER_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 	}
 }

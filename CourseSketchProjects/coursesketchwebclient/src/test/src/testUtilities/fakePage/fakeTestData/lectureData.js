@@ -1,205 +1,329 @@
+validateFirstRun(document.currentScript);
 (function() {
 	CourseSketch.fakeLectures = [];
-	
-	var lecture1 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture2 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture3 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture4 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture5 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture6 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture7 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture8 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture9 = CourseSketch.PROTOBUF_UTIL.Lecture();
-	var lecture10 = CourseSketch.PROTOBUF_UTIL.Lecture();
 
-	var slideId1 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId2 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId3 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId4 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId5 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId6 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId7 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId8 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId9 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId10 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId11 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId12 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId13 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId14 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId15 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId16 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId17 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId18 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId19 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
-	var slideId20 = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+	var lecture1 = CourseSketch.prutil.SrlAssignment();
+	var lecture2 = CourseSketch.prutil.SrlAssignment();
+	var lecture3 = CourseSketch.prutil.SrlAssignment();
+	var lecture4 = CourseSketch.prutil.SrlAssignment();
+	var lecture5 = CourseSketch.prutil.SrlAssignment();
+	var lecture6 = CourseSketch.prutil.SrlAssignment();
+	var lecture7 = CourseSketch.prutil.SrlAssignment();
+	var lecture8 = CourseSketch.prutil.SrlAssignment();
+	var lecture9 = CourseSketch.prutil.SrlAssignment();
+	var lecture10 = CourseSketch.prutil.SrlAssignment();
 
-	slideId1.id = "1";
-	slideId1.isSlide = true;
+	var slides = CourseSketch.fakeSlides;
 
-	slideId2.id = "2";
-	slideId2.isSlide = true;
+	var idLists = [];
+	var idList1= CourseSketch.prutil.SrlProblem();
+	idLists.push(idList1);
 
-	slideId3.id = "3";
-	slideId3.isSlide = true;
+	var idList2 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList2);
 
-	slideId4.id = "4";
-	slideId4.isSlide = true;
+	var idList3 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList3);
 
-	slideId5.id = "5";
-	slideId5.isSlide = true;
+	var idList4 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList4);
 
-	slideId6.id = "6";
-	slideId6.isSlide = true;
+	var idList5 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList5);
 
-	slideId7.id = "7";
-	slideId7.isSlide = true;
+	var idList6 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList6);
 
-	slideId8.id = "8";
-	slideId8.isSlide = true;
+	var idList7 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList7);
 
-	slideId9.id = "9";
-	slideId9.isSlide = true;
+	var idList8 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList8);
 
-	slideId10.id = "10";
-	slideId10.isSlide = true;
+	var idList9 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList9);
 
-	slideId11.id = "11";
-	slideId11.isSlide = true;
+	var idList10 = CourseSketch.prutil.SrlProblem();
+	idLists.push(idList10);
 
-	slideId12.id = "12";
-	slideId12.isSlide = true;
+	for (var i = 0; i < idLists.length; i++) {
+		var assignmentIdNumber = i * 100 + 1000;
+		// problem id fixing
+		idLists[i].id = '' + (i * 10 + assignmentIdNumber);
+		idLists[i].assignmentId = '' + assignmentIdNumber;
+		idLists[i].courseId = '' + Math.ceil((i + 1) / 2);
 
-	slideId13.id = "13";
-	slideId13.isSlide = true;
+		// slide id fixing
+		slides[i * 2].assignmentId = idLists[i].assignmentId;
+		slides[i * 2 + 1].assignmentId = idLists[i].assignmentId;
 
-	slideId14.id = "14";
-	slideId14.isSlide = true;
+		slides[i * 2].courseProblemId = idLists[i].id;
+		slides[i * 2 + 1].courseProblemId = idLists[i].id;
 
-	slideId15.id = "15";
-	slideId15.isSlide = true;
+		var problemHolder1 = CourseSketch.prutil.ProblemSlideHolder();
+		var problemHolder2 = CourseSketch.prutil.ProblemSlideHolder();
 
-	slideId16.id = "16";
-	slideId16.isSlide = true;
+		problemHolder1.id = slides[i * 2].id;
+		problemHolder2.id = slides[i * 2 + 1].id;
 
-	slideId17.id = "17";
-	slideId17.isSlide = true;
+		problemHolder1.itemType = CourseSketch.prutil.ItemType.SLIDE;
+		problemHolder2.itemType = CourseSketch.prutil.ItemType.SLIDE;
 
-	slideId18.id = "18";
-	slideId18.isSlide = true;
+		problemHolder1.unlocked = true;
+		problemHolder1.unlocked = true;
 
-	slideId19.id = "19";
-	slideId19.isSlide = true;
+        idLists[i].subgroups = [problemHolder1, problemHolder2];
 
-	slideId20.id = "20";
-	slideId20.isSlide = true;
+		// add them as valid problems as seen by the database
+		CourseSketch.fakeProblems.push(idLists[i]);
+	}
 
-	var idList1 = [];
-	idList1[0] = slideId1;
-	idList1[1] = slideId2;
-
-	var idList2 = [];
-	idList2[0] = slideId3;
-	idList2[1] = slideId4;
-
-	var idList3 = [];
-	idList3[0] = slideId5;
-	idList3[1] = slideId6;
-
-	var idList4 = [];
-	idList4[0] = slideId7;
-	idList4[1] = slideId8;
-
-	var idList5 = [];
-	idList5[0] = slideId9;
-	idList5[1] = slideId10;
-
-	var idList6 = [];
-	idList6[0] = slideId11;
-	idList6[1] = slideId12;
-
-	var idList7 = [];
-	idList7[0] = slideId13;
-	idList7[1] = slideId14;
-
-	var idList8 = [];
-	idList8[0] = slideId15;
-	idList8[1] = slideId16;
-
-	var idList9 = [];
-	idList9[0] = slideId17;
-	idList9[1] = slideId18;
-
-	var idList10 = [];
-	idList10[0] = slideId19;
-	idList10[1] = slideId20;
-
-	lecture1.id = "1";
-	lecture1.courseId = "1";
-	lecture1.name = "Test lecture title!";
-	lecture1.description = "I am a test lecture description!";
-	lecture1.idList = idList1;
+    // Has 2 problem subgroups in it
+	lecture1.id = '1000';
+	lecture1.courseId = '1';
+	lecture1.name = 'Test lecture title!';
+	lecture1.description = 'I am a test lecture description!';
+	lecture1.problemGroups = [ idList1.id, idList2.id ];
 	CourseSketch.fakeLectures.push(lecture1);
 
-	lecture2.id = "2";
-	lecture2.courseId = "1";
-	lecture2.name = "Another test lecture!";
-	lecture2.description = "Awesome sauce!";
-	lecture2.idList = idList2;
+	lecture2.id = '1100';
+	lecture2.courseId = '1';
+	lecture2.name = 'Another test lecture!';
+	lecture2.description = 'Awesome sauce!';
+	lecture2.problemGroups = [ idList2.id ];
 	CourseSketch.fakeLectures.push(lecture2);
 
-	lecture3.id = "3";
-	lecture3.courseId = "2";
-	lecture3.name = "How to Use CourseSketch Lectures";
-	lecture3.description = "Learn how to make a super awesome CourseSketch lecture!";
-	lecture3.idList = idList3;
+	lecture3.id = '1200';
+	lecture3.courseId = '2';
+	lecture3.name = 'How to Use CourseSketch Lectures';
+	lecture3.description = 'Learn how to make a super awesome CourseSketch lecture!';
+	lecture3.problemGroups = [ idList3.id ];
 	CourseSketch.fakeLectures.push(lecture3);
-	
-	lecture4.id = "4";
-	lecture4.courseId = "2";
-	lecture4.name = "CourseSketch Tutorials";
-	lecture4.description = "Learn how to make a super awesome CourseSketch tutorials!";
-	lecture4.idList = idList4;
+
+	lecture4.id = '1300';
+	lecture4.courseId = '2';
+	lecture4.name = 'CourseSketch Tutorials';
+	lecture4.description = 'Learn how to make a super awesome CourseSketch tutorials!';
+	lecture4.problemGroups = [ idList4.id ];
 	CourseSketch.fakeLectures.push(lecture4);
 
-	lecture5.id = "5";
-	lecture5.courseId = "3";
-	lecture5.name = "Quantum Entanglement Communicators";
-	lecture5.description = "FTL communication is a neccesity. This class will teach you the basic workings of a quantum entanglement communicator.";
-	lecture5.idList = idList5;
+	lecture5.id = '1400';
+	lecture5.courseId = '3';
+	lecture5.name = 'Quantum Entanglement Communicators';
+	lecture5.description = 'FTL communication is a neccesity. This class will teach you the basic workings of a quantum entanglement communicator.';
+	lecture5.problemGroups = [ idList5.id ];
 	CourseSketch.fakeLectures.push(lecture5);
 
-	lecture6.id = "6";
-	lecture6.courseId = "3";
-	lecture6.name = "Rocket Physics";
-	lecture6.description = "The hardest physics class you will ever take. Your brain will not be able to handle this.";
-	lecture6.idList = idList6;
+	lecture6.id = '1500';
+	lecture6.courseId = '3';
+	lecture6.name = 'Rocket Physics';
+	lecture6.description = 'The hardest physics class you will ever take. Your brain will not be able to handle this.';
+	lecture6.problemGroups = [ idList6.id ];
 	CourseSketch.fakeLectures.push(lecture6);
 
-	lecture7.id = "7";
-	lecture7.courseId = "4";
-	lecture7.name = "Introduction to Basket Weaving";
-	lecture7.description = "Before you can make a basket underwater, you must first make a basket above water.";
-	lecture7.idList = idList7;
+	lecture7.id = '1600';
+	lecture7.courseId = '4';
+	lecture7.name = 'Introduction to Basket Weaving';
+	lecture7.description = 'Before you can make a basket underwater, you must first make a basket above water.';
+	lecture7.problemGroups = [ idList7.id ];
 	CourseSketch.fakeLectures.push(lecture7);
 
-	lecture8.id = "8";
-	lecture8.courseId = "4";
-	lecture8.name = "Hydronics of Basket Weaving";
-	lecture8.description = "This class will teach you one of the basic challenges behind weaving baskets underwater: hydronics.";
-	lecture8.idList = idList8;
+	lecture8.id = '1700';
+	lecture8.courseId = '4';
+	lecture8.name = 'Hydronics of Basket Weaving';
+	lecture8.description = 'This class will teach you one of the basic challenges behind weaving baskets underwater: hydronics.';
+	lecture8.problemGroups = [ idList8.id ];
 	CourseSketch.fakeLectures.push(lecture8);
-	
-	lecture9.id = "9";
-	lecture9.courseId = "5";
-	lecture9.name = "Using the Fake Page";
-	lecture9.description = "Learn how to use fake pages!";
-	lecture9.idList = idList9;
+
+	lecture9.id = '1800';
+	lecture9.courseId = '5';
+	lecture9.name = 'Using the Fake Page';
+	lecture9.description = 'Learn how to use fake pages!';
+	lecture9.problemGroups = [ idList9.id ];
 	CourseSketch.fakeLectures.push(lecture9);
 
-	lecture10.id = "10";
-	lecture10.courseId = "5";
-	lecture10.name = "The Data Manager";
-	lecture10.description = "Learn how to use the CourseSketch Data Manager!";
-	lecture10.idList = idList10;
+	lecture10.id = '1900';
+	lecture10.courseId = '5';
+	lecture10.name = 'The Data Manager';
+	lecture10.description = 'Learn how to use the CourseSketch Data Manager!';
+	lecture10.problemGroups = [ idList10.id ];
 	CourseSketch.fakeLectures.push(lecture10);
+
+	for (var i = 0; i < CourseSketch.fakeLectures.length; i++) {
+		CourseSketch.fakeLectures[i].setAssignmentType(CourseSketch.prutil.AssignmentType.LECTURE);
+	}
+
+	// FORMAT FOR THIS LECTURE
+	// GROUP 2210
+	// SLIDE 2210
+	// Lecture 1000
+	// SLIDE 2211
+	// GROUP 2230
+	// SLIDE 2220
+	// Lecture 2000
+	// Lecture 3000
+	// SLIDE 2221
+	// GROUP 2230
+	// Lecture 1000
+	// SLIDE 2230
+	// Lecture 2
+	// GROUP 2240
+	// SLIDE 2240
+    // BankProblem 2241
+	var lecture11 = CourseSketch.prutil.SrlAssignment();
+	lecture11.id = '2000';
+	lecture11.courseId = '1';
+	lecture11.name = 'The complicated lecture';
+	lecture11.description = 'This complicated lecture holds other lectures';
+    lecture11.setAssignmentType(CourseSketch.prutil.AssignmentType.LECTURE);
+
+	// GROUP 1
+	var group = CourseSketch.prutil.SrlProblem();
+	group.id = '2210';
+    group.assignemntId = lecture11.id;
+    group.subgroups = [];
+
+    // group1 item 1
+    var slide = CourseSketch.prutil.LectureSlide();
+    slide.id = '2210';
+    slide.assignmentId = lecture11.id;
+    slide.courseProblemId = group.id;
+    CourseSketch.fakeSlides.push(slide);
+
+    var problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.SLIDE;
+    problemHolder.unlocked = true;
+    problemHolder.id = slide.id;
+    group.subgroups.push(problemHolder);
+
+    // group 1 item 2
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.ASSIGNMENT;
+    problemHolder.unlocked = true;
+    problemHolder.id = lecture1.id;
+    group.subgroups.push(problemHolder);
+
+    slide = CourseSketch.prutil.LectureSlide();
+    slide.id = '2211';
+    slide.assignmentId = lecture11.id;
+    slide.courseProblemId = group.id;
+    CourseSketch.fakeSlides.push(slide);
+
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.SLIDE;
+    problemHolder.unlocked = true;
+    problemHolder.id = slide.id;
+    group.subgroups.push(problemHolder);
+
+    lecture11.problemGroups.push(group.id);
+    CourseSketch.fakeProblems.push(group);
+
+	// GROUP 2
+	group = CourseSketch.prutil.SrlProblem();
+	group.id = '2220';
+    group.assignemntId = lecture11.id;
+    group.subgroups = [];
+
+    // Slide
+    slide = CourseSketch.prutil.LectureSlide();
+    slide.id = '2220';
+    slide.assignmentId = lecture11.id;
+    slide.courseProblemId = group.id;
+    CourseSketch.fakeSlides.push(slide);
+
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.SLIDE;
+    problemHolder.unlocked = true;
+    problemHolder.id = slide.id;
+    group.subgroups.push(problemHolder);
+
+    // lecture 1
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.ASSIGNMENT;
+    problemHolder.unlocked = true;
+    problemHolder.id = lecture1.id;
+    group.subgroups.push(problemHolder);
+
+    // lecture 2
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.ASSIGNMENT;
+    problemHolder.unlocked = true;
+    problemHolder.id = lecture2.id;
+    group.subgroups.push(problemHolder);
+
+    // slide
+    slide = CourseSketch.prutil.LectureSlide();
+    slide.id = '2221';
+    slide.assignmentId = lecture11.id;
+    slide.courseProblemId = group.id;
+    CourseSketch.fakeSlides.push(slide);
+
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.SLIDE;
+    problemHolder.unlocked = true;
+    problemHolder.id = slide.id;
+    group.subgroups.push(problemHolder);
+
+    lecture11.problemGroups.push(group.id);
+    CourseSketch.fakeProblems.push(group);
+
+	// GROUP 3
+	group = CourseSketch.prutil.SrlProblem();
+	group.id = '2230';
+    group.assignemntId = lecture11.id;
+    group.subgroups = [];
+
+    // lecture
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.ASSIGNMENT;
+    problemHolder.unlocked = true;
+    problemHolder.id = lecture3.id;
+    group.subgroups.push(problemHolder);
+
+    // slide
+
+    slide = CourseSketch.prutil.LectureSlide();
+    slide.id = '2230';
+    slide.assignmentId = lecture11.id;
+    slide.courseProblemId = group.id;
+    CourseSketch.fakeSlides.push(slide);
+
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.SLIDE;
+    problemHolder.unlocked = true;
+    problemHolder.id = slide.id;
+    group.subgroups.push(problemHolder);
+
+    lecture11.problemGroups.push(group.id);
+    CourseSketch.fakeProblems.push(group);
+
+	// GROUP 4
+	group = CourseSketch.prutil.SrlProblem();
+	group.id = '2240';
+    group.assignemntId = lecture11.id;
+    group.subgroups = [];
+
+    // slide
+    slide = CourseSketch.prutil.LectureSlide();
+    slide.id = '2240';
+    slide.assignmentId = lecture11.id;
+    slide.courseProblemId = group.id;
+    CourseSketch.fakeSlides.push(slide);
+
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.SLIDE;
+    problemHolder.unlocked = true;
+    problemHolder.id = slide.id;
+    group.subgroups.push(problemHolder);
+
+    // bank problem!
+    problemHolder = CourseSketch.prutil.ProblemSlideHolder();
+    problemHolder.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
+    problemHolder.unlocked = true;
+    problemHolder.id = CourseSketch.fakeBankProblems[0].id;
+    group.subgroups.push(problemHolder);
+
+    lecture11.problemGroups.push(group.id);
+    CourseSketch.fakeProblems.push(group);
+    CourseSketch.fakeLectures.push(lecture11);
 })();

@@ -1,3 +1,4 @@
+//jscs:disable jsDoc
 function WaitScreenManager() {
     /**
      * resets the values in the school builder so that the same build object can be used again.
@@ -27,7 +28,7 @@ function WaitScreenManager() {
      ***************/
     for (var obj in this) {
         if (obj !== this.resetValues && ('' + obj) !== 'resetValues') {
-            var objectName = '' + obj;
+            var nameOfObject = '' + obj;
             // scopes the loop so that the memory of the object stays
             (function(objectName, scope) {
                 // capitalizes only the first letter.
@@ -37,7 +38,7 @@ function WaitScreenManager() {
                     scope[objectName] = value;
                     return scope;
                 };
-            })(objectName, this);
+            })(nameOfObject, this);
         }
     }
 
@@ -126,7 +127,7 @@ function WaitScreenManager() {
     /**
      * Adds a semi-transparent overlay to the specified element, preventing user interaction.
      *
-     * @param {Element} element element to which the overlay will be added
+     * @param {Element} element - element to which the overlay will be added
      */
     this.buildOverlay = function(element) {
         var overlay = document.createElement('dialog');
@@ -149,7 +150,7 @@ function WaitScreenManager() {
     /**
      * Adds a wait icon to the specified element.
      *
-     * @param {Element} element element to which the wait icon will be added
+     * @param {Element} element - element to which the wait icon will be added
      */
     this.buildWaitIcon = function buildWaitIcon(element) {
         var outer = document.createElement('div');
@@ -165,28 +166,6 @@ function WaitScreenManager() {
         inner1.appendChild(inner2);
         outer.appendChild(inner1);
 
-        /*<div class="preloader-wrapper big active">
-            <div class="spinner-layer spinner-blue-only">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
-        </div>
-
-        var img = document.createElement('img');
-        img.setAttribute('class', 'waitingIcon');
-        if (this.customIcon) {
-            img.src = customIcon;
-        } else {
-            img.src = '/images/loading/000000_large_loader.gif';
-        }
-        outer.appendChild(img);*/
         element.appendChild(outer);
         if (this.waitIconText) {
             var text = document.createElement('h4');

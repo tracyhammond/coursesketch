@@ -1,4 +1,7 @@
 validateFirstRun(document.currentScript);
+/**
+ * @namespace lectureSelection
+ */
 
 (function() {
     $(document).ready(function() {
@@ -16,6 +19,7 @@ validateFirstRun(document.currentScript);
          *            the attribute's new value
          * @param {protoObject} lectureObject
          *            protobuf element that has been edited
+         * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.lectureEndEdit = function(attributeChanged, oldValue, newValue, lectureObject) {
             element[attributeChanged] = newValue;
@@ -23,11 +27,11 @@ validateFirstRun(document.currentScript);
         };
 
         /**
-         * Function that is called when a lecture is selected
-         * (clicked on)
+         * Function that is called when a lecture is selected (clicked on).
          *
          * @param {protoObject} lecture
          *            protobuf object of the lecture that was selected
+         * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.lectureSelected = function(lecture) {
             CourseSketch.dataManager.addState('currentLecture', lecture);
@@ -43,6 +47,7 @@ validateFirstRun(document.currentScript);
          *
          * @param {list} lectureList
          *                list of lectures to display
+         * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.displayLectures = function(lectureList) {
             if (lectureList[0] instanceof CourseSketch.DatabaseException) {
@@ -64,11 +69,13 @@ validateFirstRun(document.currentScript);
         };
 
         /**
-         * Called when a course is selected. Updates selection
-         * and gets lectures for the course.
+         * Updates selection and gets lectures for the course.
+         *
+         * Called when a course is selected.
          *
          * @param {Object} course
          *                course object of the selected element
+         * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.courseSelected = function(course) {
             var courseid = course.id;
@@ -79,8 +86,8 @@ validateFirstRun(document.currentScript);
                 .clearAllSelectedItems();
             CourseSketch.lectureSelection.courseSelectionManager
                 .addSelectedItem(document.getElementById(courseid));
-            CourseSketch.dataManager.getCourse(courseid, function(course) {
-                CourseSketch.dataManager.getCourseLectures(course.lectureList,
+            CourseSketch.dataManager.getCourse(courseid, function(foundCourse) {
+                CourseSketch.dataManager.getCourseLectures(foundCourse.lectureList,
                     CourseSketch.lectureSelection.displayLectures,
                     CourseSketch.lectureSelection.displayLectures);
             });
@@ -91,13 +98,21 @@ validateFirstRun(document.currentScript);
          *
          * @param {event} evt
          *                event from click (or other) action
+         * @param {Function} addLectureCallback - A function that is called after the lecture is added.
+         * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.addLecture = function(evt, addLectureCallback) {
-            var lecture = CourseSketch.PROTOBUF_UTIL.Lecture();
+            var lecture = CourseSketch.prutil.Lecture();
             lecture.courseId = currentCourse;
             lecture.name = 'Untitled Lecture';
             lecture.id = generateUUID();
             lecture.description = 'N/A';
+
+            /**
+             * Called after inserting a lecture into the database.
+             *
+             * @memberof lectureSelection
+             */
             var insertCallback = function() {
                 CourseSketch.dataManager.getCourse(currentCourse,
                     function(course) {
@@ -116,7 +131,8 @@ validateFirstRun(document.currentScript);
         /**
          * Renders a list of courses to the screen.
          *
-         * @param {list} courseList list of courses to display
+         * @param {List<SrlCourse>} courseList - List of courses to display.
+         * @memberof lectureSelection
          */
         CourseSketch.lectureSelection.showCourses = function(courseList) {
             CourseSketch.lectureSelection.schoolItemBuilder = new SchoolItemBuilder();
@@ -127,6 +143,12 @@ validateFirstRun(document.currentScript);
                 .build(document.querySelector('#col1>.content'));
         };
 
+        /**
+         * Loads the courses from the database.
+         *
+         * @param {List<SrlCourse>} courseList - List of courses to display.
+         * @memberof lectureSelection
+         */
         var loadCourses = function(courseList) {
             /* (waitingIcon.isRunning()) {
             waitingIcon.finishWaiting();

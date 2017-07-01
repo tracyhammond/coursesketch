@@ -33,11 +33,9 @@ message SrlExperiment {
     optional string courseId = 1;
     optional string assignmentId = 2;
     optional string problemId = 3;
+    // This is used in the cases where there are multiple parts of a problem.
+    optional string partId = 4;
     optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
     optional SrlSubmission submission = 6;
     optional protobuf.srl.utils.SrlPermission accessPermission = 7;
-}
-
-message SrlExperimentList {
-    repeated SrlExperiment experiments = 1;
 }

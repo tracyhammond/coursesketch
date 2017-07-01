@@ -2,10 +2,10 @@ package local.data;
 
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
-import protobuf.srl.school.School.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import java.util.Date;
@@ -29,16 +29,13 @@ public class LocalAddAssignments {
 			d.setDate(21);
 			d.setHours(0);
 			testBuilder.setDueDate(RequestConverter.getProtoFromMilliseconds(d.getTime()));
-			SrlPermission.Builder permissions = SrlPermission.newBuilder();
-
-			testBuilder.setAccessPermission(permissions.build());
 			System.out.println(testBuilder.toString());
 
 			// testing inserting course
 				System.out.println("INSERTING ASSIGNMENT");
 				String assignmentId = null;
 				try {
-					assignmentId = MongoInstitution.getInstance().insertAssignment(mastId, testBuilder.buildPartial());
+					assignmentId = MongoInstitution.getInstance(null).insertAssignment(null, mastId, testBuilder.buildPartial());
 				} catch (AuthenticationException e) {
 					e.printStackTrace();
 				} catch (DatabaseAccessException e) {
@@ -51,7 +48,7 @@ public class LocalAddAssignments {
 	}
 
 	public static void main(String args[]) {
-		new MongoInstitution(false, null); // makes the database point locally
+		new MongoInstitution(null, null, null, null); // makes the database point locally
 		new UserClient(false, null); // makes the database point locally
 		testAssignments(""/*course id */,""/*instructor id*/);
 	}

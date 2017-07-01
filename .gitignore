@@ -7,10 +7,14 @@
 *.html~
 *.css~
 *.java~
+*.sh~
+*.txt~
+*.json~
+*branchNames~
 
 #end edit files
 
-
+#compiled files
 *.class
 .DS_Store
 # Package Files #
@@ -20,6 +24,7 @@
 bin/
 Non_Commit/
 *.pyc
+#end compiled files
 
 .~lock*
 
@@ -30,6 +35,7 @@ Non_Commit/
 .dgrproj
 .dgd/*.tmp
 
+#ide files
 target/
 .project
 .settings
@@ -42,18 +48,43 @@ target/
 */.idea/*
 *.idea/*
 .idea
-
 *.iml
+#end ide files
 
+#logs
 *Log.out*
 *.log
+CourseSketchProjects/AuthenticationServer/log
+CourseSketchProjects/CourseSketchDatabaseServer/log/
+CourseSketchProjects/CourseSketchLoginServer/log/
+CourseSketchProjects/CourseSketchRecognitionServer/log/
+CourseSketchProjects/CourseSketchSubmissionServer/log/
+CourseSketchProjects/IdentityServer/log
+CourseSketchProjects/ServerAbstractor/log/
+CourseSketchProjects/coursesketchwebclient/package-lock.json
+CourseSketchProjects/rpcserver/log
+#end logs
 
+#website files
 node/
 npm-debug.log
 node_modules/
 node_temp
 node_tmp
-doc
+doc/
 bower_components/
+package-lock.json
+CourseSketchProjects/coursesketchwebclient/etc/
+#end website files
 
 CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
+*.ini
+
+#local configs
+config/local/*
+!config/local/*_default.prop
+!config/local/README
+
+# linux binaries
+*.deb
+fonts.dir

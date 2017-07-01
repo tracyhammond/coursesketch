@@ -1,7 +1,7 @@
 <html>
 <head>
 <link rel="import"
-	  href="/src/utilities/libraries/materializecss/materializecssInclude.html">
+	  href="/src/utilities/libraries/materialize/materializeInclude.html">
 
 <!-- basic utilities -->
 <link rel="import" href="/src/utilities/defaultUtils.html">
@@ -21,6 +21,8 @@
 <script type="text/javascript" src="/src/utilities/functions/string.js"></script>
 <script type="text/javascript"
 	src="/src/common/homepage/courseManager.js"></script>
+<link rel="import" href="/src/common/homepage/homepage.css">
+
 
 
 
@@ -31,49 +33,11 @@
 </script>
 </head>
 <body>
-	<style>
-		.colHolder > div {
-			height:100%;
-		}
-
-		.column{
-			display: flex;
-			flex-direction: column;
-		}
-
-		.homePageHeader {
-			flex: 0 0 auto;
-			text-align: center;
-			color: white;
-		}
-
-		.scrollColumn {
-			overflow-y: scroll;
-			overflow-wrap: break-word;
-			flex: 1 1 auto;
-			background:white;
-			padding: 15px;
-		}
-
-		h2 {
-			margin-top:0.5em;
-			margin-bottom:0.5em;
-			font-size:1.5em;
-			line-height: 1.5em;
-		}
-
-		p {
-			margin: 0;
-		}
-
-
-
-	</style>
 	<div class="">
 		<div class="colHolder row" style="height:100%; margin:0;">
 			<div class="col s3 column">
 				<h2 class="homePageHeader">Courses</h2>
-				<div id="column1" class="scrollColumn">
+				<div id="column1" class="scrollColumn z-depth-1">
 					<div class="btn col s12" style="margin-bottom:10px;"
 						onclick="CourseSketch.redirectContent('/src/student/search/classSearch.html','Search for classes');">Find
 						New Course</div>
@@ -83,7 +47,7 @@
 			</div>
 			<div class="col s3 column">
 				<h2 class="homePageHeader">Assignments</h2>
-				<div id="column2" class="scrollColumn">
+				<div id="column2" class="scrollColumn z-depth-1">
 					<div id="assignment_list_column" class="school_div">
 						<p class="flow-text">Please click on the previous column</p>
 					</div>
@@ -91,7 +55,7 @@
 			</div>
 			<div class="col s3 column">
 				<h2 class="homePageHeader">Problems</h2>
-				<div id="column3" class="scrollColumn">
+				<div id="column3" class="scrollColumn z-depth-1">
 					<div id="problem_list_column" class="school_div">
 						<p class="flow-text">Please click on the previous column</p>
 					</div>
@@ -99,7 +63,7 @@
 			</div>
 			<div class="col s3 column">
 				<h2 class="homePageHeader">Lectures</h2>
-				<div id="column4" class="scrollColumn">
+				<div id="column4" class="scrollColumn z-depth-1">
 					<div id="lecture_list_column" class="school_div">
 						<p class="flow-text">Please click on the previous column</p>
 					</div>

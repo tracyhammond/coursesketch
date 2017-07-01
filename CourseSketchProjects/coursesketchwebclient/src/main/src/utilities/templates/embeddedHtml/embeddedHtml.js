@@ -3,7 +3,7 @@
  */
 function EmbeddedHtml() {
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -12,6 +12,11 @@ function EmbeddedHtml() {
         shadowRoot.appendChild(templateClone);
     };
 
+    /**
+     * Sets the html source that is being embedded.
+     *
+     * @param {String} html - html code.
+     */
     this.setHtml = function(html) {
         this.shadowRoot.innerHTML = html;
     };
@@ -19,18 +24,18 @@ function EmbeddedHtml() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function
+     * @param {Event} event - event that triggered this function
      * @return {EmbeddedHtml} the created protobuf object.
      */
     this.saveData = function(event) {
-        var embeddedHtmlProto = CourseSketch.PROTOBUF_UTIL.EmbeddedHtml();
+        var embeddedHtmlProto = CourseSketch.prutil.EmbeddedHtml();
 
         // Populate data in the proto object
         embeddedHtmlProto.embeddedHtml = this.shadowRoot.innerHTML;
 
         // If the image does not have an id, then a command has not been created for the image
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_EMBEDDED_HTML, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_EMBEDDED_HTML, true);
         }
         this.command.setCommandData(embeddedHtmlProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -43,7 +48,7 @@ function EmbeddedHtml() {
     };
 
     /**
-     * @param {ProtoCommand} embeddedHtmlProto is the data to be loaded from the proto
+     * @param {ProtoCommand} embeddedHtmlProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -62,6 +67,11 @@ function EmbeddedHtml() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener.
+     *
+     * @param {Function} listener - Called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

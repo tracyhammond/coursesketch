@@ -18,9 +18,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#schoolItemTemplateImport');
-            var template = link.import.querySelector('#schoolItemTemplate');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'schoolItemTemplateImport','schoolItemTemplate');
 
             var newElement = new SchoolItem();
 
@@ -44,8 +42,7 @@
                 }
             };
 
-            var advanceEditTemplate = importDoc.querySelector('#advanceEditImport').import.querySelector('#advanceEditTemplate');
-            var advanceNode = document.importNode(advanceEditTemplate.content, true);
+            var advanceNode = safeImport(importDoc, document,'advanceEditImport','advanceEditTemplate');
 
             /**
              * returns a clone of the node that can be used for creating an advance edit panel.

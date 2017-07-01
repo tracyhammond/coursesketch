@@ -1,0 +1,33 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    position:relative;
+}
+
+login-system, register-system {
+    display: inline;
+    position: relative;
+    margin: auto;
+}
+
+@media only screen and (min-width: 992px) {
+    nav .brand-logo {
+        position: relative;
+    }
+}
+
+.reconnectLogin {
+    position: absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    margin-left:auto;
+    margin-right:auto;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 100%);
+}

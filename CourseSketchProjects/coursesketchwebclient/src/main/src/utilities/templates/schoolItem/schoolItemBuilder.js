@@ -1,3 +1,4 @@
+// jscs:disable jsDoc
 /**
  * Takes in a school item object (which is a course, assignment ... etc) and
  * creates an item card as a result.
@@ -45,17 +46,23 @@ function SchoolItemBuilder() {
      **************************************************************************/
     for (var obj in this) {
         if (obj !== this.resetValues && ('' + obj) !== 'resetValues') {
-            var objectName = '' + obj;
+            var nameOfObject = '' + obj;
             // scopes the loop so that the memory of the object stays
             (function(objectName, scope) {
                 // capitalizes only the first letter.
                 var capitalName = objectName.charAt(0).toUpperCase() + objectName.slice(1);
                 var setName = 'set' + capitalName;
+                /**
+                 * Allows the setting of custom values.
+                 *
+                 * @param {*} value - The value that is wanted to be set in the school Item.
+                 * @returns {SchoolItemBuilder} Returns This same object.
+                 */
                 scope[setName] = function(value) {
                     scope[objectName] = value;
                     return scope;
                 };
-            })(objectName, this);
+            })(nameOfObject, this);
         }
     }
 
@@ -72,6 +79,11 @@ function SchoolItemBuilder() {
      * CREATING LIST LOGIC
      **************************************************************************/
 
+    /**
+     * Builds the list given the settings.
+     *
+     * @param {String|Element} id - the element or string of the id of the element.
+     */
     this.build = function(id) {
 
         var hostElement = undefined;
@@ -87,7 +99,7 @@ function SchoolItemBuilder() {
         }
 
         var element = document.createElement('p');
-        element.className='flow-text';
+        element.className = 'flow-text';
         // if there is no list add the empty message and then exit
         if (!this.list || this.list.length <= 0) {
             var message = 'There are no items in this list!';
@@ -148,6 +160,7 @@ function SchoolItemBuilder() {
     this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type, index) {
         // Required Items
         var box = document.createElement('school-item');
+        box.className = 'hoverable';
         box.setAttribute('id', srlSchoolItem.id);
         box.schoolItemData = srlSchoolItem;
 
@@ -230,7 +243,7 @@ function SchoolItemBuilder() {
         if (srlSchoolItem.name) {
             var name = document.createElement('span');
             name.className = 'name light';
-            name.setAttribute('width','100%');
+            name.setAttribute('width', '100%');
             name.textContent = srlSchoolItem.name;
             box.appendChild(name);
         }

@@ -15,21 +15,21 @@
 	 * createing the sketches to make possible submissions or other test data
 	 */
 
-	var sketch1 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-	var sketch2 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-	var sketch3 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-	var sketch4 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
-	var sketch5 = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+	var sketch1 = CourseSketch.prutil.SrlUpdateList();
+	var sketch2 = CourseSketch.prutil.SrlUpdateList();
+	var sketch3 = CourseSketch.prutil.SrlUpdateList();
+	var sketch4 = CourseSketch.prutil.SrlUpdateList();
+	var sketch5 = CourseSketch.prutil.SrlUpdateList();
 
 	/*
 	 * making updates to be used in a sketches update list
 	 */
 
-	var update1 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
-	var update2 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
-	var update3 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
-	var update4 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
-	var update5 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
+	var update1 = CourseSketch.prutil.SrlUpdate();
+	var update2 = CourseSketch.prutil.SrlUpdate();
+	var update3 = CourseSketch.prutil.SrlUpdate();
+	var update4 = CourseSketch.prutil.SrlUpdate();
+	var update5 = CourseSketch.prutil.SrlUpdate();
 
 	var update6 = CourseSketch.PROTOBUF_UTIL.SrlUpdate();
 
@@ -38,26 +38,26 @@
 	 * not from a user.
 	 */
 
-	var command1 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
-		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-	var command2 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
-		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-	var command3 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
-		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-	var command4 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
-		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-	var command5 = CourseSketch.PROTOBUF_UTIL.createBaseCommand(
-		CourseSketch.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+	var command1 = CourseSketch.prutil.createBaseCommand(
+		CourseSketch.prutil.CommandType.ADD_STROKE, false);
+	var command2 = CourseSketch.prutil.createBaseCommand(
+		CourseSketch.prutil.CommandType.ADD_STROKE, false);
+	var command3 = CourseSketch.prutil.createBaseCommand(
+		CourseSketch.prutil.CommandType.ADD_STROKE, false);
+	var command4 = CourseSketch.prutil.createBaseCommand(
+		CourseSketch.prutil.CommandType.ADD_STROKE, false);
+	var command5 = CourseSketch.prutil.createBaseCommand(
+		CourseSketch.prutil.CommandType.ADD_STROKE, false);
 
 	/*
 	 * creating strokes to be used for the command ADD_STROKE
 	 */
 
-	var stroke1 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
-	var stroke2 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
-	var stroke3 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
-	var stroke4 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
-	var stroke5 = CourseSketch.PROTOBUF_UTIL.ProtoSrlStroke();
+	var stroke1 = CourseSketch.prutil.ProtoSrlStroke();
+	var stroke2 = CourseSketch.prutil.ProtoSrlStroke();
+	var stroke3 = CourseSketch.prutil.ProtoSrlStroke();
+	var stroke4 = CourseSketch.prutil.ProtoSrlStroke();
+	var stroke5 = CourseSketch.prutil.ProtoSrlStroke();
 
 	/*
 	 * initaliszing the arrays of each stroke to hold their points
@@ -75,7 +75,7 @@
 
 	//a circle
 	for(var i = 0; i <= 360; i += 5) {
-		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
+		var point = CourseSketch.prutil.ProtoSrlPoint();
 		point.id = "point" + i;
 		point.time = currentTime.add(i * 10);
 		point.x = (Math.cos(toRadians(i)) * 50) + 100;
@@ -84,7 +84,7 @@
 	}
 	// a slightly larger circle
 	for(var i = 0; i <= 360; i += 5){
-		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
+		var point = CourseSketch.prutil.ProtoSrlPoint();
 		point.id = "point" + i;
 		point.time = currentTime.add(i * 10);
 		point.x = (Math.cos(toRadians(i)) * 50) + 250;
@@ -93,7 +93,7 @@
 	}
 	// a line
 	for(var i = 0; i < 300; i++){
-		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
+		var point = CourseSketch.prutil.ProtoSrlPoint();
 		point.id = "point" + i;
 		point.time = currentTime.add(i * 10);
 		point.x = i * 2;
@@ -102,7 +102,7 @@
 	}
 	// a steeper line
 	for(var i = 0; i < 400; i++){
-		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
+		var point = CourseSketch.prutil.ProtoSrlPoint();
 		point.id = "point" + i;
 		point.time = currentTime.add(i * 10);
 		point.x = i;
@@ -111,7 +111,7 @@
 	}
 	// a flat line
 	for(var i = 0; i < 400; i++){
-		var point = CourseSketch.PROTOBUF_UTIL.ProtoSrlPoint();
+		var point = CourseSketch.prutil.ProtoSrlPoint();
 		point.id = "point" + i;
 		point.time = currentTime.add(i * 10);
 		point.x = i;
@@ -155,22 +155,22 @@
 
 	update2.updateId = "update1-of-sketch2";
 	update2.commands = new Array();
-	update2.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch2"));
+	update2.commands.push(CourseSketch.prutil.createNewSketch("sketch2"));
 	update2.commands.push(command2);
 
 	update3.updateId = "update1-of-sketch3";
 	update3.commands = new Array();
-	//update3.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch3"));
+	//update3.commands.push(CourseSketch.prutil.createNewSketch("sketch3"));
 	update3.commands.push(command3);
 
 	update4.updateId = "update1-of-sketch4";
 	update4.commands = new Array();
-	//update4.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch4"));
+	//update4.commands.push(CourseSketch.prutil.createNewSketch("sketch4"));
 	update4.commands.push(command4);
 
 	update5.updateId = "update1-of-sketch5";
 	update5.commands = new Array();
-	//update5.commands.push(CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch5"));
+	//update5.commands.push(CourseSketch.prutil.createNewSketch("sketch5"));
 	update5.commands.push(command5);
 
 	update6.updateId = "undo-update";
@@ -183,8 +183,8 @@
 	 * initalizing the array of updates for the sketchs list of updates
 	 */
 
-	sketch1.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
-			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch1") ])
+	sketch1.setList([CourseSketch.prutil.createUpdateFromCommands(
+			[ CourseSketch.prutil.createNewSketch("sketch1") ])
 		]);
 	sketch1.list.push(update1);
 	sketch1.list.push(update2);
@@ -196,26 +196,26 @@
 	}
 	sketch1.setList(sketch1.list);
 
-	sketch2.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
-			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch2") ])
+	sketch2.setList([CourseSketch.prutil.createUpdateFromCommands(
+			[ CourseSketch.prutil.createNewSketch("sketch2") ])
 		]);
 	sketch2.list.push(update2);
 	sketch2.setList(sketch2.list);
 
-	sketch3.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
-			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch3") ])
+	sketch3.setList([CourseSketch.prutil.createUpdateFromCommands(
+			[ CourseSketch.prutil.createNewSketch("sketch3") ])
 		]);
 	sketch3.list.push(update3);
 	sketch3.setList(sketch3.list);
 
-	sketch4.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
-			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch4") ])
+	sketch4.setList([CourseSketch.prutil.createUpdateFromCommands(
+			[ CourseSketch.prutil.createNewSketch("sketch4") ])
 		]);
 	sketch4.list.push(update4);
 	sketch4.setList(sketch4.list);
 
-	sketch5.setList([CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands(
-			[ CourseSketch.PROTOBUF_UTIL.createNewSketch("sketch5") ])
+	sketch5.setList([CourseSketch.prutil.createUpdateFromCommands(
+			[ CourseSketch.prutil.createNewSketch("sketch5") ])
 		]);
 	sketch5.list.push(update5);
 	sketch5.setList(sketch5.list);
@@ -236,12 +236,12 @@
  * cleans the update to make sure it is the same as all new versions
  */
 function cleanUpdate(update) {
-	return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
+	return CourseSketch.prutil.decodeProtobuf(update.toArrayBuffer(), CourseSketch.prutil.getSrlUpdateClass());
 }
 
 /**
  * cleans the command to make sure it is the same as all new versions
  */
 function cleanCommand(command) {
-	return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlCommandClass());
+	return CourseSketch.prutil.decodeProtobuf(command.toArrayBuffer(), CourseSketch.prutil.getSrlCommandClass());
 }

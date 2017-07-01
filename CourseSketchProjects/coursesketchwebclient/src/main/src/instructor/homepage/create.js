@@ -6,13 +6,13 @@ validateFirstRun(document.currentScript);
      * Function to be called when a lecture has finished editing.
      *
      * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
+     *            The name of the protobuf attribute that changed
      * @param {String|Number|Object} oldValue
-     *            the attribute's old value
+     *            The attribute's old value
      * @param {String|Number|Object} newValue
-     *            the attribute's new value
+     *            The attribute's new value
      * @param {Element} element
-     *            protobuf element that has been edited
+     *            Protobuf element that has been edited
      */
     courseManagement.courseEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var keyList = newValue.keys();
@@ -29,8 +29,10 @@ validateFirstRun(document.currentScript);
     courseManagement.commonShowCourses = courseManagement.showCourses;
 
     /**
-     * Overwrote the old showCourses inside courseManagement.js to add some edit capabilities.
+     * Overwrote the old showCourses inside {@code courseManagement.js} to add some edit capabilities.
      * This also calls original showCourses function in courseManagement after displaying the buttons.
+     *
+     * @param {Array<SrlCourse>} courseList - The list of courses.
      */
     courseManagement.showCourses = function(courseList) {
         courseManagement.commonShowCourses(courseList);
@@ -45,7 +47,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new course with default values.
-     * adds it to the database.
+     *
+     * Adds it to the database.
      */
     courseManagement.addNewCourse = function addNewCourse() {
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
@@ -53,7 +56,7 @@ validateFirstRun(document.currentScript);
         courseColumn.appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
         // by instructors
-        var course = CourseSketch.PROTOBUF_UTIL.SrlCourse();
+        var course = CourseSketch.prutil.SrlCourse();
         // course.id = "Course_01";
         course.name = 'Insert name';
         course.description = 'Insert description';
@@ -115,8 +118,10 @@ validateFirstRun(document.currentScript);
     courseManagement.commonShowAssignments = courseManagement.showAssignments;
 
     /**
-     * Overwrote the old showAssignments inside courseManagement.js to add some edit capabilities.
+     * Overwrote the old showAssignments inside {@code courseManagement.js} to add some edit capabilities.
      * This also calls original showAssignments function in courseManagement after displaying the buttons.
+     *
+     * @param {Array<SrlAssignment>} assignmentList - a list of assignments.
      */
     courseManagement.showAssignments = function(assignmentList) {
         showButton('assignment_button');
@@ -131,7 +136,7 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a new assignment with default values.
-     * and adds it to the database.
+     * And adds it to the database.
      */
     courseManagement.addNewAssignment = function addNewAssignment() {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
@@ -142,7 +147,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
         // by instructors
-        var assignment = CourseSketch.PROTOBUF_UTIL.SrlAssignment();
+        var assignment = CourseSketch.prutil.SrlAssignment();
         assignment.name = 'Insert name';
         assignment.courseId = courseId;
         alert(courseId);
@@ -200,7 +205,7 @@ validateFirstRun(document.currentScript);
      */
     courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
         var problem = element.schoolItemData;
-        newValue.forEach(function(value, key, mapObj) {
+        newValue.forEach(function(value, key) {
             if (key === 'description') {
                 var bankProblem = problem.getProblemInfo();
                 bankProblem.questionText = value;
@@ -216,8 +221,10 @@ validateFirstRun(document.currentScript);
     courseManagement.commonShowProblems = courseManagement.showProblems;
 
     /**
-     * Overwrote the old showProblems inside courseManagement.js to add some edit capabilities.
+     * Overwrote the old showProblems inside {@code courseManagement.js} to add some edit capabilities.
      * This also calls original showProblems function in courseManagement after displaying the buttons.
+     *
+     * @param {list} problemList - The list of problems that are wanting to be showed
      */
     courseManagement.showProblems = function(problemList) {
         showButton('problem_button');
@@ -256,7 +263,8 @@ validateFirstRun(document.currentScript);
      * Creates a new bank problem and course problem with default values and adds it to the database.
      *
      * Displays the problem after it is added.
-     * @param {String|Undefined} existingBankProblem - if loading an existing bank problem then the value is the Id. Otherwise it is undefined.
+     *
+     * @param {String|Undefined} existingBankProblem - If loading an existing bank problem then the value is the Id. Otherwise it is undefined.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem(existingBankProblem) {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
@@ -268,16 +276,16 @@ validateFirstRun(document.currentScript);
         CourseSketch.courseManagement.waitingIcon.startWaiting();
 
 
-        var courseProblem = CourseSketch.PROTOBUF_UTIL.SrlProblem();
+        var courseProblem = CourseSketch.prutil.SrlProblem();
         courseProblem.courseId = courseId;
         courseProblem.name = 'Insert Problem Name';
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
 
         if (isUndefined(existingBankProblem)) {
-            var bankProblem = CourseSketch.PROTOBUF_UTIL.SrlBankProblem();
+            var bankProblem = CourseSketch.prutil.SrlBankProblem();
             bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-            var permissions = CourseSketch.PROTOBUF_UTIL.SrlPermission();
+            var permissions = CourseSketch.prutil.SrlPermission();
             permissions.userPermission = [ courseId ];
             bankProblem.accessPermission = permissions;
             courseProblem.setProblemInfo(bankProblem);
@@ -322,7 +330,9 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * sets an element (should be a button) with the given id to be visible.
+     * Sets an element (should be a button) with the given id to be visible.
+     *
+     * @param {UUID} id - The id of the button that should be shown.
      */
     function showButton(id) {
         var element = document.getElementById(id);
@@ -331,8 +341,10 @@ validateFirstRun(document.currentScript);
         }
     }
 
-     /**
-     * sets an element (should be a button) with the given id to be invisible.
+    /**
+     * Sets an element (should be a button) with the given id to be invisible.
+     *
+     * @param {UUID} id - The id of the button that should be shown.
      */
     function hideButton(id) {
         var element = document.getElementById(id);

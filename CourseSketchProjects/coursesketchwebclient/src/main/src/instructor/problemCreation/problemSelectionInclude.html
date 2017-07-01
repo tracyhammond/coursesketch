@@ -11,9 +11,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#selectionTemplateImport');
-            var template = link.import.querySelector('#selectionPanel');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'selectionTemplateImport','selectionPanel');
 
             var newElement = new ProblemSelectionPanel();
 
