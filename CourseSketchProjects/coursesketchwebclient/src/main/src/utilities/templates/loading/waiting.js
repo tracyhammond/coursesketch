@@ -166,7 +166,6 @@ function WaitScreenManager() {
         inner1.appendChild(inner2);
         outer.appendChild(inner1);
 
-
         element.appendChild(outer);
         if (this.waitIconText) {
             var text = document.createElement('h4');
