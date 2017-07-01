@@ -30,8 +30,6 @@ Non_Commit/
 .dgrproj
 .dgd/*.tmp
 
-package-lock
-
 target/
 .project
 .settings
@@ -59,14 +57,3 @@ doc
 bower_components/
 
 CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
-CourseSketchProjects/AuthenticationServer/log
-CourseSketchProjects/CourseSketchDatabaseServer/log/
-CourseSketchProjects/CourseSketchLoginServer/log/
-CourseSketchProjects/CourseSketchRecognitionServer/
-CourseSketchProjects/CourseSketchSubmissionServer/log/
-CourseSketchProjects/IdentityServer/log
-CourseSketchProjects/ServerAbstractor/log/
-CourseSketchProjects/coursesketchwebclient/etc/
-CourseSketchProjects/coursesketchwebclient/package-lock.json
-CourseSketchProjects/rpcserver/log
-config/local/
