@@ -175,18 +175,20 @@ function() {
      * @memberof Index
      */
     function loadMenu(importDoc) {
-        var content = importDoc.querySelector('#menubarTemplate').import;
-        var template = undefined;
+        var menuToLoad;
         if (CourseSketch.connection.isInstructor) {
-            template = content.querySelector('#instructorMenu');
+            menuToLoad = 'instructorMenu';
         } else {
-            template = content.querySelector('#studentMenu');
+            menuToLoad = 'studentMenu';
         }
-        var clone = document.importNode(template.content, true);
+        var clone = safeImport(importDoc, document, 'menubarTemplate', menuToLoad);
         document.querySelector('.nav-wrapper').appendChild(clone);
+        var element = document.querySelectorAll('.button-collapse')[0];
+        element.style.display = 'inline-flex';
 
-        $('.button-collapse').sideNav({
-            closeOnClick: true // Closes side-nav on <a> clicks
+        $(element).sideNav({
+            closeOnClick: true, // Closes side-nav on <a> clicks
+            edge: 'left'
         });
     }
 
