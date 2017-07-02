@@ -36,10 +36,9 @@
     </script>
 
 </head>
-<body>
 <body style="background: #55C3C2;">
-<div class="">
-    <div class="colHolder row" style="height:100%; margin:0;">
+<main class="" style="z-index: 1">
+    <div class="colHolder row" style="height:100vh; margin:0;">
         <div class="col s3 column">
             <h2 class="homePageHeader">Courses</h2>
             <div id="column1" class="scrollColumn z-depth-1">
@@ -49,7 +48,7 @@
                 <div id="class_list_column" class="school_div"></div>
             </div>
         </div>
-        <div class="col s3 column">
+        <div class="col s3 column" style="height:100vh;">
             <h2 class="homePageHeader">Assignments</h2>
             <div id="column2" class="scrollColumn z-depth-1">
                 <div id="assignment_button" style="display: none;">
@@ -62,34 +61,39 @@
                 </div>
             </div>
         </div>
-        <div class="col s3 column">
+        <div class="col s3 column" style="height:100vh;">
             <h2 class="homePageHeader">Problems</h2>
             <div id="column3" class="scrollColumn z-depth-1">
-                <button class="btn col s12" style="display: none;"
-                        onclick="CourseSketch.courseManagement.addNewCourseProblem()">
-                    Add New Problem
-                </button>
-                <button class="btn col s12" style="display: none;"
-                        onclick="CourseSketch.courseManagement.chooseExistingProblem()">Choose existing problem
-                </button>
+                <div id="problem_button" style="display: none;">
+                    <button class="btn col s12" style="margin-bottom:10px;"
+                            onclick="CourseSketch.courseManagement.addNewCourseProblem()">
+                        Add New Problem
+                    </button>
+                    <button class="btn col s12" style="margin-bottom:10px;"
+                            onclick="CourseSketch.courseManagement.chooseExistingProblem()">Choose existing problem
+                    </button>
+                </div>
                 <div id="problem_list_column" class="school_div">
                     <p class="flow-text">Please click on the previous column</p>
                 </div>
             </div>
         </div>
-        <div class="col s3 column">
+        <div class="col s3 column" style="height:100vh;">
             <h2 class="homePageHeader">Lectures</h2>
-            <div id="column4" class="scrollColumn z-depth-1">
-                <div id="lecture_list_column" class="school_div">
+            <div id="column4" class="scrollColumn z-depth-1" style="max-height:100vh;">
+                <div id="lecture_list_column" class="school_div" style="max-height:100%;">
                     <p class="flow-text">Please click on the previous column</p>
                 </div>
             </div>
         </div>
 
     </div>
-</div>
+    <div id="advancedEditHolder" style="position: fixed;
+    bottom: 0; height:50%; width:100vw; z-index: 100;">
+
+    </div>
+</main>
 
 </body>
-
 
 </html>

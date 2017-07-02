@@ -4,47 +4,138 @@
 <body>
 <template id="advanceEditTemplate">
     <style>
-        @import "/src/utilities/templates/schoolItem/schoolItem.css";
         @import "/src/utilities/templates/schoolItem/advanceEdit.css";
+        @import "/bower_components/materialize/dist/css/materialize.css";
+        @import "https://fonts.googleapis.com/icon?family=Material+Icons";
     </style>
-        <button class="closeButton">X</button>
-        <span>
-            <h4>ID:</h4>
-            <span id="elementId" class = "need-loading" data-prop="id"></span>
-        </span>
-        <span>
-            <h4>Name:</h4>
-            <input id="elementName" type="text" class="need-saving need-loading" data-prop="name">
-        </span>
-        <span>
-            <h4>Description:</h4>
-            <br>
-            <textarea id="elementDescription" class="need-saving need-loading" data-prop="description"></textarea>
-        </span>
-        <span>
-            <h4>Assignment Type:</h4>
-            <select id="elementAssignmentType" class="need-saving need-loading" data-prop="assignmentType">
-                <option value=0>Homework</option>
-                <option value=1>Quiz</option>
-                <option value=2>Lab</option>
-                <option value=3>Exam</option>
-                <option value=4>Survey</option>
-                <option value=5>Logic Game</option>
-                <option value=6>Other</option>
-            </select>
-        </span>
-        <div class="latePolicy">
-            <h3>Late Policy</h3>
-            <span>
-                <h4>Algorithm:</h4>
+    <div class="card" style="z-index: 100;">
+        <div>
+            <span data-prop="id" class="need-loading">
+                <span>ID:</span>
+                <span class="data"></span>
+            </span>
+            <button class="save"></button>
+            <button class="closeButton"></button>
+        </div>
+        <ul class="collapsible" data-collapsible="accordion">
+        </ul>
+    </div>
+    <!-- details -->
+    <template class="Course Assignment Problem">
+        <li>
+            <div class="collapsible-header active"><i class="material-icons">mode_edit</i>Details</div>
+            <div class="collapsible-body row">
+                <div data-prop="name" class="need-saving need-loading col s6">
+                    <span>Name:</span>
+                    <input type="text" class="data">
+                </div>
+                <div class="col s6">
+                    <div data-prop="description" class="need-saving need-loading">
+                        <span>Description:</span>
+                        <textarea class="data"></textarea>
+                    </div>
+                    <div data-prop="question" class="need-saving need-loading">
+                        <span>Question:</span>
+                        <textarea class="data"></textarea>
+                    </div>
+                </div>
+                <div class="col s12 section">
+                    <div class="col s12 divider"></div>
+                </div>
+                <div data-prop="imageUrl" class="need-saving need-loading col s6">
+                    <span>Image:</span>
+                    <img class="data">
+                </div>
+                <div class="col s6">
+                    <div data-prop="assignmentType" class="need-saving need-loading">
+                        <span>Assignment Type:</span>
+                        <select class="data">
+                            <option value=0>Graded</option>
+                            <option value=1>FlashCard</option>
+                            <option value=2>Lecture</option>
+                            <option value=3>Practice</option>
+                        </select>
+                    </div>
+                    <div data-prop="access" class="need-saving need-loading">
+                        <span>Access type:</span>
+                        <select class="data">
+                            <option value=0>Public to everyone no registration is needed</option>
+                            <option value=1>Public (anyone can sign up)</option>
+                            <option value=2>Protected (can request to sign up)</option>
+                            <option value=3>Hidden (not searchable but access can be requested)</option>
+                            <option value=4>Private (Invitation only)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </template>
+    <!-- dates -->
+    <template class="Course Assignment">
+        <li>
+            <div class="collapsible-header"><i class="material-icons">perm_contact_calendar</i>Dates</div>
+            <div class="collapsible-body row">
+                <div data-prop="accessDate" class="need-saving need-loading col s3">
+                    <span>accessDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+                <div data-prop="dueDate" class="need-saving need-loading col s3">
+                    <span>dueDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+                <div data-prop="closeDate" class="need-saving need-loading col s3">
+                    <span>closeDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+                <div data-prop="reviewOpenDate" class="need-saving need-loading col s3">
+                    <span>reviewOpenDate:</span>
+                    <div data-date class="data">
+                        <input type="date" class="date">
+                        <input type="time" class="time">
+                    </div>
+                </div>
+            </div>
+        </li>
+    </template>
+    <!-- course specific -->
+    <template class="Course">
+        <li>
+            <div class="collapsible-header"><i class="material-icons">vpn_key</i>Registration key</div>
+            <div class="collapsible-body">
+                <div data-prop="registrationKey" class="need-loading">
+                    <span>Registration key:</span>
+                    <span class="data">No Key Created yet</span>
+                    <!-- add copy to clipboard button -->
+                </div>
+            </div>
+        </li>
+    </template>
+    <!-- assignment specific -->
+    <template class="Assignment">
+        <li>
+            <div class="collapsible-header"><i class="material-icons">av_timer</i>Late Policy</div>
+            <div class="collapsible-body">
+                <div class="latePolicy">
+                    <h3>Late Policy</h3>
+                    <span>
+                <span>Algorithm:</span>
                 <select id="elementFunction" class="need-saving need-loading" data-prop="functionType">
                     <option value="STEPPING_FUNCTION">Stepping</option>
                     <option value="LINE">Linear</option>
                     <option value="EXPONENTIAL">Exponential</option>
                 </select>
             </span>
-            <span>
-                <h4>Time Period:</h4>
+                    <span>
+                <span>Time Period:</span>
                 <select id="elementTimeFrame" class="need-saving need-loading" data-prop="timeFrameType">
                     <option value="CONSTANT">Constantly</option>
                     <option value="MINUTE">Every Minute</option>
@@ -52,16 +143,27 @@
                     <option value="DAY">Every Day</option>
                 </select>
             </span>
-            <span>
-                <h4>Reduction Rule:</h4>
+                    <span>
+                <span>Reduction Rule:</span>
                 <select id="elementSubtraction" class="need-saving need-loading" data-prop="subtractionType">
                     <option value="CAP">Cap grade</option>
                     <option value="PERCENT">percent of actual grade</option>
                 </select>
             </span>
-            <button>generate example graph from options</button>
-        </div>
-    <button class="scripting">Add Script/Sketch</button>
-    <button class="save">saveME</button>
+                    <button>generate example graph from options</button>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">grade</i>Grade specifics</div>
+            <div class="collapsible-body">
+            </div>
+        </li>
+    </template>
+    <!-- problem specific -->
+    <template class="Problem">
+        <!-- you are going to be interesting -->
+    </template>
 </template>
+
 </body>

@@ -143,7 +143,7 @@ function SchoolItemBuilder() {
     function findType(object) {
         if (!isUndefined(object.assignmentList)) {
             return COURSE;
-        } else if (!isUndefined(object.problemList)) {
+        } else if (!isUndefined(object.reviewOpenDate)) {
             return ASSIGNMENT;
         } else if (!isUndefined(object.problemInfo)) {
             return PROBLEM;
@@ -176,6 +176,7 @@ function SchoolItemBuilder() {
         }
 
         box.setAttribute('data-item_number', index);
+        box.setAttribute('data-type', type);
 
         this.addClickFunction(box, this.boxClickFunction, this.editCallback, srlSchoolItem);
 

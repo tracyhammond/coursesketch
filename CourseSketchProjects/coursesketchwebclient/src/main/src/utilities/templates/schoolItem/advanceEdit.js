@@ -1,5 +1,5 @@
 // jscs:disable jsDoc
-(function() {
+(function () {
 
     /**
      * @param {ShadowRoot} parent - the root of the parent.
@@ -25,93 +25,11 @@
      * This is so that you don't have to dynamically capitalize the first letter.
      * Each one returns a value if it exist otherwise undefined is returned.
      * <br>
-     * loads a name object from the schoolItem.
-     *
-     * @return {Undefined|String} the name or undefined.
-     */
-    loaderObject.load_name = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var name = '';
-        if (isUndefined(schoolItemData)) {
-            try {
-                // grabs the content element then gets the first inserted node.
-                name = schoolItemElement.shadowRoot.querySelector('.name content').getDistributedNodes()[0].textContent;
-            } catch (exception) {
-                console.log('Ignoring exception while setting name of element');
-                console.log(exception);
-            }
-        } else {
-            name = schoolItemData.name;
-        }
-        if (name !== '') {
-            nodeToFill.value = name;
-            return name;
-        }
-        return undefined;
-    };
-
-    /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
-     * loads a name object from the schoolItem.
-     *
-     * @return {Undefined|String} undefined or the description.
-     */
-    loaderObject.load_description = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var description = '';
-        if (isUndefined(schoolItemData)) {
-            try {
-                // grabs the content element then gets the first inserted node.
-                description = schoolItemElement.shadowRoot.querySelector('.description content').getDistributedNodes()[0].textContent;
-            } catch (exception) {
-                console.log('Ignoring exception while setting description of element');
-                console.log(exception);
-            }
-        } else {
-            description = schoolItemData.description;
-        }
-        if (description !== '') {
-            nodeToFill.value = description;
-            return description;
-        }
-        return undefined;
-    };
-
-    /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
-     * loads a name object from the schoolItem.
-     *
-     * @return {Null} This returns null to differentiate it from other possible values as this is not saveable.
-     */
-    loaderObject.load_id = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var id = '';
-        if (isUndefined(schoolItemData)) {
-            console.log(schoolItemElement.id);
-        } else {
-            id = schoolItemData.id;
-        }
-        if (id !== '') {
-            nodeToFill.textContent = id;
-        } else {
-            nodeToFill.textContent = 'No Id assigned yet';
-        }
-        return null;
-    };
-
-    /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
      * loads a functiontype object from the schoolItem.
      *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
-    loaderObject.load_functionType = function(schoolItemElement, schoolItemData, nodeToFill) {
+    loaderObject.load_functionType = function (schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (!isUndefined(schoolItemData)) {
             try {
@@ -138,7 +56,7 @@
      *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
-    loaderObject.load_timeFrameType = function(schoolItemElement, schoolItemData, nodeToFill) {
+    loaderObject.load_timeFrameType = function (schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (!isUndefined(schoolItemData)) {
             try {
@@ -165,7 +83,7 @@
      *
      * @return {Null|Undefined|Enum} either undefined or the value of the enum.
      */
-    loaderObject.load_subtractionType = function(schoolItemElement, schoolItemData, nodeToFill) {
+    loaderObject.load_subtractionType = function (schoolItemElement, schoolItemData, nodeToFill) {
         var index = -1;
         if (!isUndefined(schoolItemData)) {
             try {
@@ -183,29 +101,61 @@
         return undefined;
     };
 
-    /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
-     * loads an Assignment type object from the schoolItem.
-     *
-     * @return {Undefined|Enum} either undefined or the value of the enum.
-     */
-    loaderObject.load_assignmentType = function(schoolItemElement, schoolItemData, nodeToFill) {
-        var index = -1;
-        if (!isUndefined(schoolItemData)) {
-            index = schoolItemData.assignmentType;
-        }
-        if (index > 0 || index === 0) {
-            if (index > 6) {
-                index = 6;
+    function loadIntoElement(elementData, schoolItemData) {
+        if (elementData.tagName === 'SPAN') {
+            elementData.textContent = schoolItemData;
+            if (isUndefined(schoolItemData)) {
+                elementData.textContent = "no information for this field";
             }
-            nodeToFill.options[index].selected = true;
-            return nodeToFill.value;
+            return schoolItemData;
         }
-        return undefined;
-    };
+        if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
+            var dateInput = elementData.querySelector('.date');
+            var timeInput = elementData.querySelector('.time');
+
+            var result = undefined;
+            var date;
+            if (!isUndefined(schoolItemData) && !isUndefined(schoolItemData.millisecond) && schoolItemData.millisecond !== null) {
+                var milliseconds = '' + schoolItemData.millisecond;
+                result = schoolItemData.millisecond;
+                date = new Date(milliseconds);
+                if ('' + date === 'Invalid Date') {
+                    date = new Date();
+                }
+            }
+
+            // format date for date input
+            var day = ('0' + date.getDate()).slice(-2);
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var today = date.getFullYear() + '-' + (month) + '-' + (day);
+
+            dateInput.value = today;
+
+            // format hour for date input
+            var hours = ('0' + date.getHours()).slice(-2);
+            var minutes = ('0' + date.getMinutes()).slice(-2);
+            var seconds = ('0' + date.getSeconds()).slice(-2);
+
+            var time = hours + ':' + minutes + ':' + seconds;
+
+            timeInput.value = time;
+
+            return result;
+        }
+        if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' && elementData.type === 'text')) {
+            if (!isUndefined(schoolItemData)) {
+                elementData.value = schoolItemData;
+            }
+            return schoolItemData;
+        }
+        if (elementData.tagName === 'SELECT') {
+            if (!isUndefined(schoolItemData)) {
+                elementData.options[schoolItemData].selected = true;
+                elementData.style.display = 'inherit';
+            }
+            return schoolItemData;
+        }
+    }
 
     /**
      * Loads the data from the school item into the edit panel.
@@ -218,10 +168,22 @@
     function loadData(schoolItemElement, schoolItemData, editPanel) {
         var inputList = editPanel.querySelectorAll('.need-loading');
         var mappedInput = new Map();
-        for (var i = 0; i < inputList.length; i++) {
-            var result = loaderObject['load_' + inputList[i].dataset.prop](schoolItemElement, schoolItemData, inputList[i]);
-            if (result !== null) {
-                mappedInput.set(inputList[i].dataset.prop, result);
+        for (var property in schoolItemData) {
+            if (schoolItemData.hasOwnProperty(property)) {
+                /*
+                 var element = inputList.filter(function (element) {
+                 return element.getAttribute('data-prop') === property;
+                 });
+                 */
+                var element = editPanel.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
+                if (!isUndefined(element)) {
+                    var elementData = element.querySelectorAll('.data')[0];
+                    var result = loadIntoElement(elementData, schoolItemData[property]);
+                    element.style.display = 'inherit';
+                    mappedInput.set(property, result);
+                } else {
+                    mappedInput.set(property, undefined);
+                }
             }
         }
         return mappedInput;
@@ -230,7 +192,7 @@
     /**
      * Removes the advance edit panel if the school item is removed.
      */
-    SchoolItem.prototype.finalize = function() {
+    SchoolItem.prototype.finalize = function () {
         if (!isUndefined(this.advanceEditPanel)) {
             if (this.advanceEditPanel.parentNode !== null) {
                 this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
@@ -241,82 +203,114 @@
     /**
      * Sets up the advance edit panel for editing advance data.
      *
-     * @param {Element} element - The edit button that opens up the panel when clicked.
      * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
      * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
      */
-    SchoolItem.prototype.createAdvanceEditPanel = function(element, localElement, parentNode) {
-        $(element).click(function(event) {
-            event.stopPropagation();
+    SchoolItem.prototype.createAdvanceEditPanel = function (localElement, parentNode, saveCallback) {
+        // create host and position it
+        var host = document.createElement('div');
+        host.className = 'advanceEditHost';
+        host.style.height = '100%';
+        host.style.display = 'none';
 
-            // create host and position it
-            var host = document.createElement('dialog');
-            host.className = 'advanceEditHost';
-            var pos = $(localElement).offset();
-            var leftPos = (pos.left + $(localElement).width());
-            $(host).offset({ top: pos.top, left: leftPos });
+        // add html to host
+        var shadow = host.createShadowRoot();
+        var clone = localElement.getAdvanceEditPanel();
+        clone = combineLists(clone, localElement);
+        shadow.appendChild(clone);
+        localElement.advanceEditPanel = host;
+        var currentData;
+        // add our loaded element to the page.
+        parentNode.appendChild(host);
 
-            // add html to host
-            var shadow = host.createShadowRoot();
-            var clone = localElement.getAdvanceEditPanel();
-            shadow.appendChild(clone);
-            localElement.advanceEditPanel = host;
+        // save data
+        //NOT WORKING, NEEDS TO BE MODIFIED
+        var saveButton = shadow.querySelector('button.save');
+        /**
+         * Called to save all of the input.
+         */
+        saveButton.onclick = function () {
+            var newData = getInput(shadow);
+            var schoolItem = localElement;
+            console.log(schoolItem);
+            console.log(localElement);
+            saveCallback('advance', currentData, newData, schoolItem);
+        };
 
-            var currentData = loadData(localElement, localElement.schoolItemData, shadow);
-
-            // add our loaded element to the page.
-            document.body.appendChild(host);
-            /**
-             * Opens scripting window on click.
-             *
-             * open scripting window and sketch saving/loading
-             */
-            var scriptButton = shadow.querySelector('button.scripting');
-            /**
-             * Called to open a script editor.
-             */
-            scriptButton.onclick = function() {
-                var data = getInput(shadow);
-                location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
-            };
-
-            // save data
-            //NOT WORKING, NEEDS TO BE MODIFIED
-            var saveButton = shadow.querySelector('button.save');
-            /**
-             * Called to save all of the input.
-             */
-            saveButton.onclick = function() {
-                var newData = getInput(shadow);
-                var schoolItem = getHostElement(parentNode);
-                document.body.removeChild(host);
-                console.log(schoolItem);
-                console.log(localElement);
-                schoolItem.editFunction('advance', currentData, newData, schoolItem);
-            };
-
-            // cancel!
-            /**
-             * Called to cancel the editing process.
-             *
-             * @param {Element} closeEvent -  On Click event.
-             * @returns {Boolean} false if the element clicked is the host dialog.
-             */
-            function close(closeEvent) {
-                if (closeEvent.toElement === host) {
-                    return false;
-                }
-                closeEvent.stopPropagation();
-                document.body.removeEventListener('click', close);
-                try {
-                    document.body.removeChild(host);
-                } catch (exception) {
-                    // ignored if this throws an error.
-                }
+        // cancel!
+        /**
+         * Called to cancel the editing process.
+         *
+         * @param {Element} closeEvent -  On Click event.
+         * @returns {Boolean} false if the element clicked is the host dialog.
+         */
+        function close(closeEvent) {
+            if (closeEvent.toElement === host) {
+                return false;
             }
+            closeEvent.stopPropagation();
+            document.body.removeEventListener('click', close);
+            try {
+                document.body.removeChild(host);
+            } catch (exception) {
+                // ignored if this throws an error.
+            }
+        }
 
-            shadow.querySelector('button.closeButton').onclick = close;
-            document.body.addEventListener('click', close);
+        shadow.querySelector('button.closeButton').onclick = close;
+        document.body.addEventListener('click', close);
+
+        // select the target node
+        var target = host;
+
+        // create an observer instance
+        var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.type === 'attributes') {
+                    currentData = loadData(localElement, localElement.schoolItemData, shadow);
+                    var accordion = host.shadowRoot.querySelectorAll('.collapsible')[0];
+                    $(accordion).collapsible();
+                }
+            });
         });
+
+        // configuration of the observer:
+        var config = {attributes: true, childList: true};
+
+        // pass in the target node, as well as the observer options
+        observer.observe(target, config);
+
+        return host;
     };
+
+    /**
+     *
+     * @param {Element} clone
+     * @param schoolItemElement
+     */
+    function combineLists(clone, schoolItemElement) {
+        var type = schoolItemElement.getAttribute('data-type');
+        var listOfTemplates = clone.querySelectorAll('.' + type);
+        var parent = clone.querySelector('ul.collapsible');
+        for (var i = 0; i < listOfTemplates.length; i++) {
+            parent.appendChild(listOfTemplates[i].content);
+        }
+        return clone;
+    }
+
+    function ignore() {
+        /**
+         * Opens scripting window on click.
+         *
+         * open scripting window and sketch saving/loading
+         */
+        var scriptButton = shadow.querySelector('button.scripting');
+        /**
+         * Called to open a script editor.
+         */
+        scriptButton.onclick = function () {
+            var data = getInput(shadow);
+            location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
+        };
+    }
 })();

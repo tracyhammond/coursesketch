@@ -1,35 +1,18 @@
-/*
-.colHolder > div {
-    height: 100%;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-}
-
-.homePageHeader {
-    flex: 0 0 auto;
-    text-align: center;
-    color: white;
-}
-
 .scrollColumn {
+    max-height: calc(100vh - 4em);
+    overflow-y:hidden;
+}
+
+.school_div {
+    max-height: 100vh;
+    width: calc(100% - 2px);
     overflow-y: scroll;
     overflow-wrap: break-word;
     flex: 1 1 auto;
-    background: white;
-    padding: 15px;
+    background: #e3f2fd;
+    padding-top: 15px;
 }
 
-h2 {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    font-size: 1.5em;
-    line-height: 1.5em;
-}
-
-p {
-    margin: 0;
-}
-*/
+.school_div::-webkit-scrollbar { width: 0 !important }
+.school_div { -ms-overflow-style: none; }
+.school_div { overflow: -moz-scrollbars-none; }
