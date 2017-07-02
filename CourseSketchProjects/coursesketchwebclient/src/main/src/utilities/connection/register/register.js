@@ -69,7 +69,16 @@ function RegisterSystem() {
         setupLoginScript();
         setupFormScript();
         setupCallbacks();
+        attachButtons();
     };
+
+    /**
+     * Attaches the wave effect to the login button.
+     */
+    function attachButtons() {
+        var loginButton = shadowRoot.querySelectorAll('#registerButton')[0];
+        Waves.attach(loginButton);
+    }
 
     /**
      * Sets up what happens upon the server return the result of attempting to

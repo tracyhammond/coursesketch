@@ -148,7 +148,7 @@ validateFirstRun(document.currentScript);
                 CourseSketch.clientException(submission);
             }
             if (isUndefined(submission) || CourseSketch.isException(submission) || isUndefined(submission.getUpdateList())) {
-                executeScript(problemScript, document.getElementById('problemPanel'), function() {
+                executeScript(problemScript, document.getElementById('problemPanel'), false, function() {
                     console.log('script executed - worker disconnect');
                     if (element.isRunning()) {
                         element.finishWaiting();
@@ -166,7 +166,7 @@ validateFirstRun(document.currentScript);
             sketchSurface.refreshSketch();
 
             //loads and runs the script
-            executeScript(problemScript, document.getElementById('problemPanel'), function() {
+            executeScript(navigator, document.getElementById('problemPanel'), true, function() {
                 console.log('script executed - worker disconnect');
                 var updateList = submission.getUpdateList();
                 sketchSurface.loadUpdateList(updateList.getList(), element);
