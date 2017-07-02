@@ -29,6 +29,9 @@
      * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
      */
     function createShallowNotification(protoEx) {
+        if (protoEx.getMssg() === "cannot read property 'CLOSE' of undefined") {
+            return;
+        }
         try {
             var imageUrl = 'http://www.spilmanlaw.com/media%20content/media-content/Stock%20Photos/Alert.jpg?width=2218&height=2216&ext=.jpg';
             var notification = new Notification(protoEx.getExceptionType(), {
@@ -103,35 +106,35 @@ function ExceptionNotification() {
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
         var modal_id = $(this.shadowRoot.querySelector('#closeButton')).attr('href');
-        $(this.shadowRoot.querySelector('#notificationInformation')).openModal();
+        var elements = this.shadowRoot.querySelectorAll('#notificationInformation');
+        $(elements[0]).modal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: .5, // Opacity of modal background
+            inDuration: 300, // Transition in duration
+            outDuration: 200, // Transition out duration
+            startingTop: '4%', // Starting top style attribute
+            endingTop: '10%', // Ending top style attribute
+            ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+                alert("Ready");
+                console.log(modal, trigger);
+            },
+            complete: function() { alert('Closed'); } // Callback for Modal close
+        });
+        $(elements[0]).modal('open');
         /**
          * Removes the element when clicked.
          *
          * @param {Event} event - On Click event.
          * @returns {Boolean} false.
          */
-        document.body.querySelector('#lean-overlay').onclick = function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            localScope.parentNode.removeChild(localScope);
-            return false;
-        };
 
         /**
          * Removes the element when clicked.
          *
          * @param {Event} event - On Click event.
          */
-        this.shadowRoot.querySelector('#closeButton').onclick = function(event) {
-            $(document.body.querySelector('#lean-overlay')).fadeOut(250);
-            setTimeout(function() {
-                var remElem = document.body.querySelector('#lean-overlay');
-                console.log(remElem);
-                if (!isUndefined(remElem) && remElem !== null) {
-                    document.body.removeChild(remElem);
-                }
-                localScope.parentNode.removeChild(localScope);
-            }, 250);
+        this.shadowRoot.querySelectorAll('#closeButton')[0].onclick = function(event) {
+            $(elements[0]).modal('close');
         };
         Waves.attach(this.shadowRoot.querySelector('#closeButton'));
     };
