@@ -3,14 +3,13 @@
  *
  * Created by gigemjt on 5/12/15.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - An object that makes sending data much easier.
- * @param {IndexedDB} parentDatabase - (Not used in this manager)
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} parentDatabase - (Not used in this manager)
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function GradeDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
+function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
 
     /**
      * Adds a new grade change to the database.

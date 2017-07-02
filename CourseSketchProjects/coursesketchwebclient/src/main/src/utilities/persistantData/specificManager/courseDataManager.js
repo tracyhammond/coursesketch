@@ -1,14 +1,13 @@
 /**
  * A manager for courses that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the database
- * @param {IndexedDB} database - The local database
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} database - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function CourseDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
+function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     var COURSE_LIST = 'COURSE_LIST';
     var userCourseId = [];
     var userHasCourses = true;
@@ -91,6 +90,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         });
     }
+
     parent.getCourseLocal = getCourseLocal;
 
     /**
@@ -160,6 +160,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         });
     }
+
     parent.setCourse = setCourse;
 
     /**
@@ -192,6 +193,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             });
         });
     }
+
     parent.updateCourse = updateCourse;
 
     /**
@@ -214,6 +216,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         });
     }
+
     parent.deleteCourse = deleteCourse;
 
     /**
@@ -245,7 +248,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         var callback = function(evt, item) {
             if (isException(item)) {
                 courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'Getting all courses for user ' + parent.getCurrentId(), item));
+                    'Getting all courses for user ' + parent.getCurrentId(), item));
                 return;
             }
             // there was an error getting the user classes.
@@ -258,7 +261,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
                 courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
-                        CourseSketch.prutil.getSrlCourseClass()));
+                    CourseSketch.prutil.getSrlCourseClass()));
             }
 
             var setCourseCallback = createBarrier(courseList.length, function() {
@@ -306,6 +309,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         }
     }
+
     parent.getAllCourses = getAllCourses;
 
     /**
@@ -359,6 +363,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             });
         });
     }
+
     parent.insertCourse = insertCourse;
 
     /**
@@ -381,14 +386,14 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
-                courseId, item));
+                    courseId, item));
                 return;
             }
             // after listener is removed
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 // not calling the state callback because this should skip that step.
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
-                courseId));
+                    courseId));
                 return;
             }
 
@@ -403,6 +408,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         });
 
     }
+
     parent.getCourseRoster = getCourseRoster;
 
     /**
@@ -467,7 +473,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
                 courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
-                        CourseSketch.prutil.getSrlCourseClass()));
+                    CourseSketch.prutil.getSrlCourseClass()));
             }
             callback(courseList);
         });

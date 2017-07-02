@@ -1,15 +1,13 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {IndexedDB} parentDatabase - The local database
- * @param {Function} sendData - A function that makes sending data much easier
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} parentDatabase - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function SubmissionDataManager(parent, advanceDataListener, parentDatabase, sendData, Request, ByteBuffer) {
+function SubmissionDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
     var database = parentDatabase;
     var parentScope = parent;
 
@@ -40,7 +38,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
                     }
                     if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                         submissionCallback(new DatabaseException(
-                                item.returnText ? item.returnText : 'The data sent back from the server does not exist.'));
+                            item.returnText ? item.returnText : 'The data sent back from the server does not exist.'));
                         return;
                     }
                     var experiment = CourseSketch.prutil.getSrlExperimentClass().decode(item.data[0]);
@@ -60,6 +58,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             }
         });
     }
+
     parent.getSubmission = getSubmission;
 
     /**
@@ -105,6 +104,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
         }, undefined, 2);
 
     }
+
     parent.getAllExperiments = getAllExperiments;
 
     /**
@@ -119,6 +119,7 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             }
         });
     }
+
     parent.setSubmission = setSubmission;
 
     /**
@@ -137,5 +138,6 @@ function SubmissionDataManager(parent, advanceDataListener, parentDatabase, send
             }
         });
     }
+
     parent.deleteSubmission = deleteSubmission;
 }

@@ -105,7 +105,14 @@
         });
 
 
-        QUnit.module("basic callbacks");
+        QUnit.module("basic callbacks", {
+            beforeEach: function () {
+                this.clock = sinon.useFakeTimers();
+            },
+            afterEach: function () {
+                this.clock.restore();
+            }
+        });
         QUnit.test("basic reload", function(assert) {
             var done = assert.async();
             var testNavigator = new AssignmentNavigator("800", 0, true);
@@ -113,13 +120,16 @@
                 assert.notEqual(testNavigator.getCurrentInfo(), undefined, 'the info should not be empty');
                 done();
             });
+            this.clock.tick(500);
             testNavigator.reloadAssignment();
+            this.clock.tick(500);
         });
 
         QUnit.test("next works", function(assert) {
             var done = assert.async();
             var testNavigator = new AssignmentNavigator("700", 0, true);
             testNavigator.reloadAssignment();
+            this.clock.tick(500);
             testNavigator.addCallback(function () {
                 assert.ok(true);
                 done();
@@ -127,17 +137,20 @@
             var index = testNavigator.getCurrentSubgroupIndex();
             console.log('index');
             testNavigator.gotoNext();
+            this.clock.tick(500);
         });
 
         QUnit.test("previous works", function(assert) {
             var done = assert.async();
             var testNavigator = new AssignmentNavigator("800", 0, true);
             testNavigator.reloadAssignment();
+            this.clock.tick(500);
             testNavigator.addCallback(function () {
                 assert.ok(true);
                 done();
             });
             testNavigator.gotoPrevious();
+            this.clock.tick(500);
         });
 
         QUnit.test("basic reload with temp", function(assert) {
@@ -188,8 +201,14 @@
             });
         });
 
-
-        QUnit.module("navigation index changing (lecture style!)");
+        QUnit.module("navigation index changing (lecture style!)", {
+            beforeEach: function () {
+                this.clock = sinon.useFakeTimers();
+            },
+            afterEach: function () {
+                this.clock.restore();
+            }
+        });
         QUnit.test("part navigation forward", function (assert) {
             var done = assert.async();
             var testNavigator = new AssignmentNavigator("1000", 0, false);
@@ -205,7 +224,9 @@
                     assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
                     done();
                 });
+                this.clock.tick(500);
             });
+            this.clock.tick(500);
         });
 
         test("hasPrevious should be false at beginning", function(assert) {

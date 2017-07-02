@@ -9,6 +9,7 @@
     var courseBarrier = barrier.getCallback();
     var assignmentBarrier = barrier.getCallback();
     var problemBarrier = barrier.getCallback();
+    var bankProblemBarrier = barrier.getCallback();
 
     // barriers have been tested and work as expected with these function.
     var loadLectures = function() {
@@ -57,6 +58,18 @@
         }
     };
 
+    var loadBankProblems = function() {
+        var localBarrier = new CallbackBarrier();
+        var loadedCallback = localBarrier.getCallbackAmount(CourseSketch.fakeBankProblems.length);
+        localBarrier.finalize(bankProblemBarrier);
+        for (var i = 0; i < CourseSketch.fakeBankProblems.length; ++i) {
+            CourseSketch.dataManager.setBankProblem(CourseSketch.fakeBankProblems[i], loadedCallback);
+        }
+        CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+            callback(CourseSketch.fakeBankProblems.slice(page * 10), (page + 1) * 10);
+        }
+    };
+
     /**
      * Called when we can load our fake data into the database.
      */
@@ -97,6 +110,7 @@
         loadCourses();
         loadSlides();
         loadProblems();
+        loadBankProblems();
         loadAssignments();
         loadLectures();
     }

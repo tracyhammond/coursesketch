@@ -27,34 +27,23 @@ function ProblemSelectionPanel() {
         currentPage = page;
         currentCourse = courseId;
         currentAssignment = assignmentId;
-        var request = this.createRequest(courseId, assignmentId, page);
-        CourseSketch.dataListener.setListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
-                CourseSketch.prutil.ItemQuery.BANK_PROBLEM, function(evt, item) {
-                    CourseSketch.dataListener.removeListener(CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST,
-                                CourseSketch.prutil.ItemQuery.BANK_PROBLEM);
-                    if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
-                        throw new Error('The data is null!');
-                    }
-                    clickSelector.clearAllSelectedItems();
+        CourseSketch.dataManager.getAllBankProblems(courseId, assignmentId, page, function(bankProblems) {
+            if (bankProblems instanceof DatabaseException) {
+                throw bankProblems;
+            }
+            clickSelector.clearAllSelectedItems();
 
-                    var bankProblems = [];
-                    for (var i = 0; i < item.data.length; i++) {
-                        var decodedBankProblem = CourseSketch.prutil.getSrlBankProblemClass().decode(item.data[i]);
-                        bankProblems.push(decodedBankProblem);
-                    }
-                    var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
-                        clickSelector.toggleSelection(this);
-                        if ($(this).hasClass(clickSelector.selectionClassName)) {
-                            removeObjectFromArray(selectedBankProblems, this.id);
-                        } else {
-                            selectedBankProblems.push(this.id);
-                        }
-                    }).build(this.shadowRoot.querySelector('#selectionContent'));
+            var builder = new SchoolItemBuilder().setList(bankProblems).setBoxClickFunction(function(schoolItem) {
+                clickSelector.toggleSelection(this);
+                if ($(this).hasClass(clickSelector.selectionClassName)) {
+                    removeObjectFromArray(selectedBankProblems, this.id);
+                } else {
+                    selectedBankProblems.push(this.id);
+                }
+            }).build(this.shadowRoot.querySelector('#selectionContent'));
 
-                    clickSelector.applySelections(this.getListOfSelectedElements());
-                }.bind(this));
-        // end data request listener
-        CourseSketch.connection.sendRequest(request);
+            clickSelector.applySelections(this.getListOfSelectedElements());
+        }.bind(this));
 
         var pageList = this.shadowRoot.querySelectorAll('.currentPage');
         for (var i = 0; i < pageList.length; i++) {
@@ -159,31 +148,6 @@ function ProblemSelectionPanel() {
 }
 
 ProblemSelectionPanel.prototype = Object.create(HTMLDialogElement.prototype);
-
-/**
- * Creates a request for asking about bank problems.
- *
- * @param {String} courseId - The id of the course the problem is being requested for.
- * @param {String} assignmentId - The id of the assignment the problem is being requested for.
- * @param {Integer} page - To make it easier we do not grab every single bank problem instead we grab them in batches
- *              (this process is called pagination)
- * @returns {SrlRequest} The request that is ready to be sent to the server.
- * @memberof ProblemSelectionPanel
- */
-ProblemSelectionPanel.prototype.createRequest = function(courseId, assignmentId, page) {
-    var itemRequest = CourseSketch.prutil.ItemRequest();
-    itemRequest.page = page;
-    itemRequest.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
-    itemRequest.itemId = [];
-    itemRequest.itemId.push(courseId);
-    itemRequest.itemId.push(assignmentId);
-
-    var dataRequest = CourseSketch.prutil.DataRequest();
-    dataRequest.items = [ itemRequest ];
-    var request = CourseSketch.prutil.createRequestFromData(dataRequest,
-            CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST);
-    return request;
-};
 
 /**
  * Sets the canceled callback.

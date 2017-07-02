@@ -24,9 +24,12 @@
 
 	<script>
         $(document).ready(function() {
+            CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+                callback(CourseSketch.fakeBankProblems);
+            };
             var template = (function() {
-                var link1 = document.querySelector('#problemSelectionImport');
-                var clone = safeImport(link1.import, document,'problemSelectionImport','selectionPanel');
+                var link1 = document.querySelectorAll('#problemSelectionImport')[0];
+                var clone = safeImport(link1.import, document,'selectionTemplateImport','selectionPanel');
                 return clone;
             })();
 
@@ -45,6 +48,11 @@
                         });
                     } catch (exception) {
                     }
+                },
+                beforeEach: function () {
+                    CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+                        callback(CourseSketch.fakeBankProblems);
+                    };
                 },
                 teardown : function() {
                     document.getElementById('testDiv').innerHTML = "";
@@ -69,11 +77,10 @@
                 var assignmentId = "assignment";
                 var page = 2;
                 var oldFunction = problem.createRequest;
-                problem.createRequest = function(insertCourseId, insertAssignmentId, insertPage) {
+                CourseSketch.dataManager.getAllBankProblems = function(insertCourseId, insertAssignmentId, insertPage) {
                     assert.equal(courseId, insertCourseId);
                     assert.equal(assignmentId, insertAssignmentId);
                     assert.equal(page, insertPage);
-                    return oldFunction(insertCourseId, insertAssignmentId, insertPage);
                 };
                 problem.loadProblems(courseId, assignmentId, page);
             });

@@ -226,6 +226,8 @@ function ProtobufSetup() {
     /**
      * Given a protobuf object compile it to other data and return a request.
      *
+     * @param {Request} request
+     *              A request that is being modified instead of created outright.
      * @param {Protobuf} data
      *              An uncompiled protobuf object.
      * @param {MessageType} requestType
@@ -234,8 +236,7 @@ function ProtobufSetup() {
      *              An id that is required for every request.
      * @return {Request} Creates a request from the binary data given.
      */
-    this.createRequestFromData = function(data, requestType, requestId) {
-        var request = this.Request();
+    this.modifyRequestFromData = function(request, data, requestType, requestId) {
         request.requestType = requestType;
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
@@ -246,6 +247,22 @@ function ProtobufSetup() {
             request.requestId = generateUUID();
         }
         return request;
+    };
+
+
+    /**
+     * Given a protobuf object compile it to other data and return a request.
+     *
+     * @param {Protobuf} data
+     *              An uncompiled protobuf object.
+     * @param {MessageType} requestType
+     *              The message type of the request.
+     * @param {String} [requestId]
+     *              An id that is required for every request.
+     * @return {Request} Creates a request from the binary data given.
+     */
+    this.createRequestFromData = function(data, requestType, requestId) {
+        return this.modifyRequestFromData(this.Request(), data, requestType, requestId);
     };
 
     /**

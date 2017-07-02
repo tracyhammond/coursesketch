@@ -177,7 +177,7 @@ if (isUndefined(BaseException)) {
         /**
          * Sets the message of the Exception.
          *
-         * @param {messageValue} messageValue - is a string that contains the description
+         * @param {String} messageValue - is a string that contains the description
          *          of the the exception that occurred.
          */
         this.setMessage = function(messageValue) {
