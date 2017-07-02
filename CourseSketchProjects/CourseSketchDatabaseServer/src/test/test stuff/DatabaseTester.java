@@ -2,9 +2,9 @@ package test;
 
 import static util.StringConstants.*;
 
-import com.mongodb.BasicDBObject;
+import com.mongodb.Document;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.mongodb.MongoCollection<Document>;
 
 import database.DatabaseAccessException;
 import coursesketch.database.auth.AuthenticationException;
@@ -44,22 +44,22 @@ public class DatabaseTester {
 	}
 
 	public static void deleteCollections(DB dbs) {
-		DBCollection collection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
-		collection.remove(new BasicDBObject());
+		MongoCollection<Document> collection = dbs.getCollection(COURSE_PROBLEM_COLLECTION);
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(COURSE_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(ASSIGNMENT_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(PROBLEM_BANK_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(USER_GROUP_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 
 		collection = dbs.getCollection(USER_COLLECTION);
-		collection.remove(new BasicDBObject());
+		collection.deleteOne(new Document());
 	}
 }

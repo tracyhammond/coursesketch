@@ -1,15 +1,13 @@
 package coursesketch.update.command;
 
-import java.util.UUID;
-
 import com.google.protobuf.ByteString;
-
 import coursesketch.update.Command;
-import protobuf.srl.sketch.Sketch.SrlSketch;
-import protobuf.srl.sketch.Sketch.SrlShape;
-import protobuf.srl.sketch.Sketch.SrlInterpretation;
-
 import protobuf.srl.commands.Commands.CommandType;
+import protobuf.srl.sketch.Sketch.SrlInterpretation;
+import protobuf.srl.sketch.Sketch.SrlShape;
+import protobuf.srl.sketch.Sketch.SrlSketch;
+
+import java.util.UUID;
 
 /**
  * This Command object creates an empty container at first to have recognition
@@ -21,7 +19,7 @@ import protobuf.srl.commands.Commands.CommandType;
 public class AddShape extends Command {
     protected SrlShape data;
 
-    public AddShape(SrlShape input){
+    public AddShape(SrlShape input) {
         id = UUID.fromString(input.getId());
         type = CommandType.ADD_SHAPE;
 
@@ -48,11 +46,11 @@ public class AddShape extends Command {
     public ByteString toByteString() {
         SrlShape.Builder shapebuilder = SrlShape.newBuilder();
 
-        shapebuilder.setId(data.getId().toString());
+        shapebuilder.setId(data.getId());
         shapebuilder.setTime(data.getTime());
 
         SrlInterpretation.Builder interpretationbuilder = SrlInterpretation.newBuilder();
-        for (SrlInterpretation i: data.getInterpretationsList()){
+        for (SrlInterpretation i : data.getInterpretationsList()) {
             interpretationbuilder.setLabel(i.getLabel());
             interpretationbuilder.setConfidence(i.getConfidence());
 
@@ -63,11 +61,12 @@ public class AddShape extends Command {
     }
 
     @Override
-    public void execute(SrlSketch s) {
-        // s.add(data);
+    public void execute(SrlSketch sketch) {
+        throw new UnsupportedOperationException();
     }
+
     @Override
-    public void undo(SrlSketch s) {
-        // s.remove(data);
+    public void undo(SrlSketch sketch) {
+        throw new UnsupportedOperationException();
     }
 }

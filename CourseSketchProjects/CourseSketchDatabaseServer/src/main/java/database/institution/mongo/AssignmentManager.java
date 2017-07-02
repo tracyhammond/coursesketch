@@ -1,9 +1,7 @@
 package database.institution.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.auth.Authenticator;
@@ -11,14 +9,15 @@ import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import database.RequestConverter;
 import database.UserUpdateHandler;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import protobuf.srl.grading.Grading.LatePolicy;
 import protobuf.srl.school.Assignment;
 import protobuf.srl.school.Assignment.SrlAssignment;
-import protobuf.srl.utils.Util.State;
-import protobuf.srl.grading.Grading.LatePolicy;
-import protobuf.srl.utils.Util;
 import protobuf.srl.services.authentication.Authentication;
+import protobuf.srl.utils.Util;
+import protobuf.srl.utils.Util.State;
 import utilities.TimeManager;
 
 import java.util.List;
@@ -51,7 +50,7 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  * Manages assignments for mongo.
  *
  * In the mongo database, an assignment has the following structure.
- *
+ * <pre>
  * Assignment
  * {
  *     // IDs
@@ -95,7 +94,7 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  *     LOOPING, (this means the question order loops when the end is reached)
  *     NO_BACK_TRAVEL, (what it sounds like, as soon as they progress they can not navigate backwards [this one might require server navigation])
  *     RANDOM (pulls the next one at a random order)
- *
+ * </pre>
  * @author gigemjt
  */
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
@@ -116,23 +115,18 @@ public final class AssignmentManager {
     /**
      * Inserts an assignment into the mongo database.
      *
-     * @param authenticator
-     *         The object that is performing authenticaton.
-     * @param dbs
-     *         The database where the assignment is being stored.
-     * @param authId
-     *         The id of the user that asking to insert the assignment.
-     * @param assignment
-     *         The assignment that is being inserted.
+     * @param authenticator The object that is performing authenticaton.
+     * @param dbs The database where the assignment is being stored.
+     * @param authId The id of the user that asking to insert the assignment.
+     * @param assignment The assignment that is being inserted.
      * @return The mongo database id of the assignment.
-     * @throws AuthenticationException
-     *         Thrown if the user did not have the authentication to perform the authentication.
-     * @throws DatabaseAccessException
-     *         Thrown if there are problems inserting the assignment.
+     * @throws AuthenticationException Thrown if the user did not have the authentication to perform the authentication.
+     * @throws DatabaseAccessException Thrown if there are problems inserting the assignment.
      */
-    public static String mongoInsertAssignment(final Authenticator authenticator, final DB dbs, final String authId, final SrlAssignment assignment)
+    public static String mongoInsertAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+            final SrlAssignment assignment)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
         final Authentication.AuthType courseAuthType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -142,7 +136,7 @@ public final class AssignmentManager {
             throw new AuthenticationException("For course: " + assignment.getCourseId(), AuthenticationException.INVALID_PERMISSION);
         }
 
-        final BasicDBObject query = new BasicDBObject(COURSE_ID, assignment.getCourseId())
+        final Document query = new Document(COURSE_ID, assignment.getCourseId())
                 .append(NAME, assignment.getName())
                 .append(DESCRIPTION, assignment.getDescription());
 
@@ -156,7 +150,7 @@ public final class AssignmentManager {
             query.append(PROBLEM_LIST, assignment.getProblemGroupsList());
         }
 
-        assignmentCollection.insert(query);
+        assignmentCollection.insertOne(query);
         final String selfId = query.get(SELF_ID).toString();
 
         // Inserts the id into the parent course.
@@ -169,12 +163,13 @@ public final class AssignmentManager {
      * Sets the date information for inserting an assignment into the database.
      *
      * Specifically sets accessDate, dueDate, closeDate and reviewOpenDate.  Sets defaults if the information does not already exist.
+     *
      * @param assignment The assignment that contains the date information
      * @param query The object that the date information is being set into.
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
-    public static boolean setDateInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+    public static boolean setDateInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
         if (assignment.hasAccessDate()) {
             query.append(ACCESS_DATE, assignment.getAccessDate().getMillisecond());
         } else if (isInsertion) {
@@ -209,12 +204,13 @@ public final class AssignmentManager {
      * Sets the grade information for inserting an assignment into the database.
      *
      * Does not set an information if it is already set.
+     *
      * @param assignment The assignment that contains the date information
      * @param query The object that the date information is being set into.
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
-    public static boolean setAssignmentTypeInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+    public static boolean setAssignmentTypeInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
         // Grade data
         if (assignment.hasAssignmentType()) {
             query.append(ASSIGNMENT_TYPE, assignment.getAssignmentType().getNumber());
@@ -237,12 +233,13 @@ public final class AssignmentManager {
      * Sets the grade information for inserting an assignment into the database.
      *
      * Does not set an information if it is already set.
+     *
      * @param assignment The assignment that contains the date information
      * @param query The object that the date information is being set into.
      * @param isInsertion true if the object is being inserted.  If false then defaults are not set and instead nothing is.
      * @return True if the query was modified, false otherwise.
      */
-    public static boolean setGradeInformation(final SrlAssignment assignment, final BasicDBObject query, final boolean isInsertion) {
+    public static boolean setGradeInformation(final SrlAssignment assignment, final Document query, final boolean isInsertion) {
         // Grade data
         if (assignment.hasLatePolicy()) {
             query.append(LATE_POLICY_FUNCTION_TYPE, assignment.getLatePolicy().getFunctionType().getNumber())
@@ -253,14 +250,14 @@ public final class AssignmentManager {
         }
 
         if (assignment.hasGradeWeight()) {
-            query.append(DatabaseStringConstants.GRADE_WEIGHT, assignment.getGradeWeight());
+            query.append(GRADE_WEIGHT, assignment.getGradeWeight());
         }
 
         // The default is homework.
         if (assignment.hasAssignmentCatagory()) {
-            query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, assignment.getAssignmentCatagory());
+            query.append(ASSIGNMENT_CATEGORY, assignment.getAssignmentCatagory());
         } else if (isInsertion) {
-            query.append(DatabaseStringConstants.ASSIGNMENT_CATEGORY, DatabaseStringConstants.HOMEWORK_CATEGORY);
+            query.append(ASSIGNMENT_CATEGORY, DatabaseStringConstants.HOMEWORK_CATEGORY);
         }
 
         return isInsertion || assignment.hasLatePolicy() || assignment.hasGradeWeight() || assignment.hasAssignmentCatagory();
@@ -269,29 +266,23 @@ public final class AssignmentManager {
     /**
      * Grabs the assignment from mongo and performs checks making sure the user is valid before returning the assignment.
      *
-     * @param authenticator
-     *         The object that is performing authentication.
-     * @param dbs
-     *         The database where the assignment is being stored.
-     * @param authId
-     *         The id of the user that asking to insert the assignment.
-     * @param assignmentId
-     *         The id of the assignment that is being grabbed.
-     * @param checkTime
-     *         The time that the assignment was asked to be grabbed. (used to
-     *         check if the assignment is valid)
+     * @param authenticator The object that is performing authentication.
+     * @param dbs The database where the assignment is being stored.
+     * @param authId The id of the user that asking to insert the assignment.
+     * @param assignmentId The id of the assignment that is being grabbed.
+     * @param checkTime The time that the assignment was asked to be grabbed. (used to
+     * check if the assignment is valid)
      * @return The assignment from the database.
-     * @throws AuthenticationException
-     *         Thrown if the user did not have the authentication to get the
-     *         assignment.
-     * @throws DatabaseAccessException
-     *         Thrown if there are problems retrieving the assignment.
+     * @throws AuthenticationException Thrown if the user did not have the authentication to get the
+     * assignment.
+     * @throws DatabaseAccessException Thrown if there are problems retrieving the assignment.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity" })
-    public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
+    public static SrlAssignment mongoGetAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+            final String assignmentId,
             final long checkTime) throws AuthenticationException, DatabaseAccessException {
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
+        final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Document cursor = assignmentCollection.find(convertStringToObjectId(assignmentId)).first();
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID " + assignmentId, true);
         }
@@ -368,27 +359,25 @@ public final class AssignmentManager {
     /**
      * Sets data of the assignment from the given cursor.
      *
-     * @param exactAssignment
-     *         The assignment that the data is being set to.
-     * @param cursor
-     *         The database cursor pointing to a specific assignment.
+     * @param exactAssignment The assignment that the data is being set to.
+     * @param cursor The database cursor pointing to a specific assignment.
      */
-    private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final DBObject cursor) {
+    private static void setAssignmentData(final SrlAssignment.Builder exactAssignment, final Document cursor) {
         exactAssignment.setCourseId((String) cursor.get(COURSE_ID));
         exactAssignment.setName((String) cursor.get(NAME));
-        if (cursor.containsField(ASSIGNMENT_TYPE)) {
+        if (cursor.containsKey(ASSIGNMENT_TYPE)) {
             exactAssignment.setAssignmentType(Assignment.AssignmentType.valueOf((Integer) cursor.get(ASSIGNMENT_TYPE)));
         }
-        if (cursor.containsField(NAVIGATION_TYPE)) {
+        if (cursor.containsKey(NAVIGATION_TYPE)) {
             exactAssignment.setNavigationType(Assignment.NavigationType.valueOf((Integer) cursor.get(NAVIGATION_TYPE)));
         }
-        if (cursor.containsField(ASSIGNMENT_CATEGORY)) {
+        if (cursor.containsKey(ASSIGNMENT_CATEGORY)) {
             exactAssignment.setAssignmentCatagory((String) cursor.get(ASSIGNMENT_CATEGORY));
         } else {
             exactAssignment.setAssignmentCatagory(DatabaseStringConstants.HOMEWORK_CATEGORY);
         }
         exactAssignment.setDescription((String) cursor.get(DESCRIPTION));
-        if (cursor.containsField(GRADE_WEIGHT)) {
+        if (cursor.containsKey(GRADE_WEIGHT)) {
             exactAssignment.setGradeWeight((String) cursor.get(GRADE_WEIGHT));
         }
     }
@@ -396,21 +385,15 @@ public final class AssignmentManager {
     /**
      * Sets data about the state of the assignment and its date.
      *
-     * @param exactAssignment
-     *         A protobuf assignment builder.
-     * @param stateBuilder
-     *         A protobuf state builder.
-     * @param cursor
-     *         The current database pointer for the assignment.
-     * @param isAdmin
-     *         True if the user is acting as an admin.
-     * @param isMod
-     *         True if the user is acting as a moderator.
-     * @param checkTime
-     *         The time that the check was performed.
+     * @param exactAssignment A protobuf assignment builder.
+     * @param stateBuilder A protobuf state builder.
+     * @param cursor The current database pointer for the assignment.
+     * @param isAdmin True if the user is acting as an admin.
+     * @param isMod True if the user is acting as a moderator.
+     * @param checkTime The time that the check was performed.
      */
     private static void setAssignmentStateAndDate(final SrlAssignment.Builder exactAssignment, final State.Builder stateBuilder,
-            final DBObject cursor, final boolean isAdmin, final boolean isMod, final long checkTime) {
+            final Document cursor, final boolean isAdmin, final boolean isMod, final long checkTime) {
         if (isAdmin || isMod) {
             final LatePolicy.Builder latePolicy = LatePolicy.newBuilder();
             if (cursor.get(LATE_POLICY_FUNCTION_TYPE) == null) {
@@ -469,34 +452,28 @@ public final class AssignmentManager {
     /**
      * Updates data from an assignment.
      *
-     * @param authenticator
-     *         The object that is performing authentication.
-     * @param dbs
-     *         The database where the assignment is being stored.
-     * @param authId
-     *         The id of the user that asking to insert the assignment.
-     * @param assignmentId
-     *         The id of the assignment that is being updated.
-     * @param assignment
-     *         The assignment that is being inserted.
+     * @param authenticator The object that is performing authentication.
+     * @param dbs The database where the assignment is being stored.
+     * @param authId The id of the user that asking to insert the assignment.
+     * @param assignmentId The id of the assignment that is being updated.
+     * @param assignment The assignment that is being inserted.
      * @return true if the assignment was updated successfully.
-     * @throws AuthenticationException
-     *         The user does not have permission to update the assignment.
-     * @throws DatabaseAccessException
-     *         The assignment does not exist.
+     * @throws AuthenticationException The user does not have permission to update the assignment.
+     * @throws DatabaseAccessException The assignment does not exist.
      */
     @SuppressWarnings("PMD.ExcessiveMethodLength")
-    public static boolean mongoUpdateAssignment(final Authenticator authenticator, final DB dbs, final String authId, final String assignmentId,
+    public static boolean mongoUpdateAssignment(final Authenticator authenticator, final MongoDatabase dbs, final String authId,
+            final String assignmentId,
             final SrlAssignment assignment) throws AuthenticationException, DatabaseAccessException {
         boolean update = false;
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
+        final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Document cursor = assignmentCollection.find(convertStringToObjectId(assignmentId)).first();
 
         if (cursor == null) {
             throw new DatabaseAccessException("Assignment was not found with the following ID: " + assignmentId, true);
         }
 
-        final BasicDBObject updateQuery = new BasicDBObject();
+        final Document updateQuery = new Document();
 
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
@@ -531,7 +508,7 @@ public final class AssignmentManager {
             update |= setGradeInformation(assignment, updateQuery, false);
         }
         if (update) {
-            assignmentCollection.update(cursor, new BasicDBObject(SET_COMMAND, updateQuery));
+            assignmentCollection.updateOne(cursor, new Document(SET_COMMAND, updateQuery));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
         return true;
@@ -543,23 +520,20 @@ public final class AssignmentManager {
      * With that being said this allows an assignment to be updated adding the
      * problemId to its list of items.
      *
-     * @param dbs
-     *         The database where the assignment is stored.
-     * @param assignmentId
-     *         The assignment that the problem is being added to.
-     * @param problemId
-     *         The id of the course problem that is being added to the assignment.
+     * @param dbs The database where the assignment is stored.
+     * @param assignmentId The assignment that the problem is being added to.
+     * @param problemId The id of the course problem that is being added to the assignment.
      * @return True if it is successful.
      * @throws AuthenticationException The user does not have permission to update the assignment.
      * @throws DatabaseAccessException The assignment does not exist.
      */
-    static boolean mongoInsertProblemGroupIntoAssignment(final DB dbs, final String assignmentId, final String problemId)
+    static boolean mongoInsertProblemGroupIntoAssignment(final MongoDatabase dbs, final String assignmentId, final String problemId)
             throws AuthenticationException, DatabaseAccessException {
-        final DBCollection assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject cursor = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
+        final MongoCollection<Document> assignmentCollection = dbs.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Document cursor = assignmentCollection.find(convertStringToObjectId(assignmentId)).first();
 
-        final DBObject updateObj = new BasicDBObject(PROBLEM_LIST, problemId);
-        assignmentCollection.update(cursor, new BasicDBObject("$addToSet", updateObj));
+        final Document updateObj = new Document(PROBLEM_LIST, problemId);
+        assignmentCollection.updateOne(cursor, new Document("$addToSet", updateObj));
 
         UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         return true;

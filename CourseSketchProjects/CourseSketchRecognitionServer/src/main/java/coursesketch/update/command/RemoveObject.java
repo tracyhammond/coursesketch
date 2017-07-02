@@ -1,14 +1,13 @@
 package coursesketch.update.command;
 
-import java.util.UUID;
-
 import com.google.protobuf.ByteString;
-
 import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch;
-import protobuf.srl.utils.SketchUtil.IdChain;
 import protobuf.srl.sketch.Sketch.SrlSketch;
+import protobuf.srl.utils.SketchUtil.IdChain;
+
+import java.util.UUID;
 
 /**
  * Command to remove a single object from the overall sketch.
@@ -18,13 +17,12 @@ import protobuf.srl.sketch.Sketch.SrlSketch;
  */
 public class RemoveObject extends Command {
     private IdChain data;
-    private Sketch.SrlObject removedCompontent = null;
+    // private Sketch.SrlObject removedCompontent = null;
 
-    public RemoveObject(IdChain input){
-        id = UUID.fromString(data.getIdChain(data.getIdChainCount()-1));
-        type = CommandType.REMOVE_OBJECT;
-
+    public RemoveObject(IdChain input) {
         data = input;
+        id = UUID.fromString(data.getIdChain(data.getIdChainCount() - 1));
+        type = CommandType.REMOVE_OBJECT;
     }
 
     @Override
@@ -36,11 +34,11 @@ public class RemoveObject extends Command {
     /**
      * Removes a single object and all its subcomponents.
      */
-    public void execute(SrlSketch s) {
+    public void execute(SrlSketch sketch) {
         // scomponent = s.remove(UUID.fromString(data.getIdChain(data.getIdChainCount()-1)));
     }
 
-    public void undo(SrlSketch s) {
-       // s.add(scomponent);
+    public void undo(SrlSketch sketch) {
+        // s.add(scomponent);
     }
 }

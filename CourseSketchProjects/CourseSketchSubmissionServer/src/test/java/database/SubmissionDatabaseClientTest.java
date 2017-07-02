@@ -2,11 +2,11 @@ package database;
 
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,7 +37,7 @@ public class SubmissionDatabaseClientTest {
 
     @Before
     public void before() {
-        databaseClient = new SubmissionDatabaseClient(true, fongoRule.getDB());
+        databaseClient = new SubmissionDatabaseClient(true, fongoRule.getDatabase());
         responder = new AuthenticationResponder(Authentication.AuthResponse.getDefaultInstance());
     }
 
@@ -106,9 +106,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testUpdateListSubmitsCorrectly() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         build.setUpdateList(createSimpleDatabaseListWithSaveMarker(200));
@@ -126,9 +126,9 @@ public class SubmissionDatabaseClientTest {
     @Test(expected = DatabaseAccessException.class)
     public void testThrowsExceptionIfNoDataIsSet() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
@@ -139,9 +139,9 @@ public class SubmissionDatabaseClientTest {
     @Test(expected = DatabaseAccessException.class)
     public void testGetExperimentThatDoesNotExist() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
         Submission.SrlExperiment result = databaseClient.getExperiment(ObjectId.createFromLegacyFormat(0, 0, 0).toString(), PROBLEM_ID, null);
     }
@@ -149,9 +149,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testUpdateListAddsSaveMarker() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
         final long submissionTime = Math.abs(new Random().nextLong());
 
@@ -177,13 +177,13 @@ public class SubmissionDatabaseClientTest {
 
     @Test
     public void testFirstAndLastStroke () throws Exception {
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         Submission.SrlSubmission.Builder usedList = Submission.SrlSubmission.newBuilder();
         usedList.setUpdateList(createSimpleDatabaseListWithSubmitMarker(200));
 
-        BasicDBObject basicObject = createUpdateList(usedList.build(), null, true, 300);
+        Document basicObject = createUpdateList(usedList.build(), null, true, 300);
         Assert.assertEquals(basicObject.get(FIRST_STROKE_TIME), new Long(110));
         Assert.assertEquals(basicObject.get(FIRST_SUBMISSION_TIME), new Long(200));
     }
@@ -191,9 +191,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testUpdateListReplacesClientUpdateTime() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final long submissionTime = Math.abs(new Random().nextLong()) + 200;
@@ -226,9 +226,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testUpdateListMergesCorrectly() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
         // round 1
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
@@ -258,9 +258,9 @@ public class SubmissionDatabaseClientTest {
     @Test(expected = AuthenticationException.class)
     public void testSubmissionThrowsExceptionIfGivenWrongProblemId() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
         Submission.SrlSubmission.Builder build = Submission.SrlSubmission.newBuilder();
         final Commands.SrlUpdateList original = createSimpleDatabaseListWithSaveMarker(200);
@@ -274,9 +274,9 @@ public class SubmissionDatabaseClientTest {
     @Test(expected = DatabaseAccessException.class)
     public void testSwitchSubmissionTypeCausesProblemsTextFirst() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final String textAnswer = "TEXT ANSWER";
@@ -302,9 +302,9 @@ public class SubmissionDatabaseClientTest {
     @Test(expected = DatabaseAccessException.class)
     public void testSwitchSubmissionTypeCausesProblemsAnswerChoiceSecond() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final String textAnswer = "TEXT ANSWER";
@@ -330,9 +330,9 @@ public class SubmissionDatabaseClientTest {
     @Test(expected = DatabaseAccessException.class)
     public void testSwitchSubmissionTypeCausesProblemsUpdateListFirst() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final String textAnswer = "TEXT ANSWER";
@@ -358,9 +358,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testTextSubmissionSavesCorrectly() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
         final String textAnswer = "TEXT ANSWER";
 
@@ -380,9 +380,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testTextSubmissionUpdatesCorrectly() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final String textAnswer = "TEXT ANSWER";
@@ -410,9 +410,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testAnswerChoiceSubmissionSavesCorrectly() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final int answerChoice = 1;
@@ -433,9 +433,9 @@ public class SubmissionDatabaseClientTest {
     @Test
     public void testAnswerChoiceSubmissionUpdatesCorrectly() throws Exception {
 
-        // once you have a DB instance, you can interact with it
+        // once you have a MongoDatabase instance, you can interact with it
         // just like you would with a real one.
-        DB db = fongoRule.getDB();
+        MongoDatabase db = fongoRule.getDatabase();
 
 
         final int textAnswer = 2;

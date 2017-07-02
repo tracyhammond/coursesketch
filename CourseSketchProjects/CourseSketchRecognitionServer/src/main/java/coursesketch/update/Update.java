@@ -1,12 +1,12 @@
 package coursesketch.update;
 
+import protobuf.srl.sketch.Sketch;
+import protobuf.srl.sketch.Sketch.SrlSketch;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import protobuf.srl.sketch.Sketch;
-import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
  * Collection of commands that encapsulates one complete transmission between
@@ -15,23 +15,31 @@ import protobuf.srl.sketch.Sketch.SrlSketch;
  * @author Matthew Dillard
  *
  */
-public class Update implements Iterable<Command>{
+public class Update implements Iterable<Command> {
+    /**
+     * List of commands.
+     */
     private LinkedList<Command> commandList;
+
+    /**
+     * The time the update was created.
+     */
     private long time;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
-    public Update(){
+    public Update() {
         commandList = new LinkedList<Command>();
         time = System.currentTimeMillis();
     }
 
     /**
-     * Constructor used to set time
+     * Constructor used to set time.
+     *
      * @param time Time
      */
-    public Update(long time){
+    public Update(long time) {
         commandList = new LinkedList<Command>();
         this.time = time;
     }
@@ -41,68 +49,73 @@ public class Update implements Iterable<Command>{
     }
 
     /**
-     * Simple function to add a command
-     * @param c
+     * Simple function to add a command.
+     *
+     * @param command The command being added to the list.
      */
-    public void add(Command c){
-        commandList.add(c);
+    public void add(Command command) {
+        commandList.add(command);
     }
 
     /**
-     * @return Time of Update
+     * @return Time of Update.
      */
-    public long getTime(){
+    public long getTime() {
         return time;
     }
 
     /**
-     * Simple setter to manually set the time
-     * @param t
+     * Simple setter to manually set the time.
+     *
+     * @param time The time this update was created.
      */
-    public void setTime(long t){
-        time = t;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     /**
-     * Simple getter function
-     * @param index
-     * @return Command
+     * Simple getter function.
+     *
+     * @param index The index at which the command is in the list.
+     * @return Command The command that is getting returned.
      */
-    public Command getCommand(int index){
+    public Command getCommand(int index) {
         return commandList.get(index);
     }
 
     /**
-     * @return size of Update
+     * @return size of Update.
      */
-    public int size(){
+    public int size() {
         return commandList.size();
     }
 
     /**
-     * @return Entire list of commands in this Update
+     * @return Entire list of commands in this Update.
      */
-    public List<Command> getCommandList(){
+    public List<Command> getCommandList() {
         return Collections.unmodifiableList(commandList);
     }
 
     /**
-     * Execute all commands from this update on this sketch
-     * @param s PaleoSketch Sketch
+     * Execute all commands from this update on this sketch.
+     *
+     * @param sketch The sketch on which the update is being executed.
      */
-    public void execute(SrlSketch s){
-        for(Command command: commandList){
-            command.execute(s);
+    public void execute(SrlSketch sketch) {
+        for (Command command : commandList) {
+            command.execute(sketch);
         }
     }
 
     /**
-     * Undo all commands from this update on this sketch
-     * @param s PaleoSketch Sketch
+     * Undo all commands from this update on this sketch.
+     *
+     * @param sketch The sketch on which the update is being undone.
      */
-    public void undo(SrlSketch s){
-        for (int i = commandList.size(); i>=0; i--) {
-            commandList.get(i).undo(s);
+    public void undo(SrlSketch sketch) {
+        for (int i = commandList.size(); i >= 0; i--) {
+            commandList.get(i).undo(sketch);
         }
     }
 

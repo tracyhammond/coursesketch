@@ -134,7 +134,6 @@ function() {
         element.appendChild(register);
     }
 
-
     /**
      * A public function that creates a login element.
      */
@@ -207,8 +206,8 @@ function() {
 
         CourseSketch.dataListener = new AdvanceDataListener(
                 CourseSketch.prutil.getRequestClass(), function(evt, item) {
-            console.log('default listener');
-        });
+                    console.log('default listener');
+                });
         CourseSketch.dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
                 CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
         CourseSketch.DatabaseException = DatabaseException;

@@ -50,34 +50,36 @@ function ProtobufSetup() {
 
     var protoFiles = [
         { fileName: 'assignment',
-            package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'school' ] },
         { fileName: 'commands',
-            package: [PROTOBUF_PACKAGE, 'srl', 'commands'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'commands' ] },
         { fileName: 'data',
-            package: [PROTOBUF_PACKAGE, 'srl', 'query'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'query' ] },
         { fileName: 'grading',
-            package: [PROTOBUF_PACKAGE, 'srl', 'grading'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'grading' ] },
         { fileName: 'identity',
-            package: [PROTOBUF_PACKAGE, 'srl', 'services', 'identity'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'services', 'identity' ] },
         { fileName: 'lecturedata',
-            package: [PROTOBUF_PACKAGE, 'srl', 'lecturedata'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'lecturedata' ] },
         { fileName: 'message',
-            package: [PROTOBUF_PACKAGE, 'srl', 'request'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'request' ] },
         { fileName: 'problem',
-            package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'school' ] },
         { fileName: 'recognitionServer',
-            package: [PROTOBUF_PACKAGE, 'srl', 'services', 'recognition'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'services', 'recognition' ] },
         { fileName: 'school',
-            package: [PROTOBUF_PACKAGE, 'srl', 'school'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'school' ] },
         { fileName: 'sketch',
-            package: [PROTOBUF_PACKAGE, 'srl', 'sketch'],
+            package: [ PROTOBUF_PACKAGE, 'srl', 'sketch' ],
             prefix: 'Proto' },
         { fileName: 'sketchUtil',
-            package: [PROTOBUF_PACKAGE, 'srl', 'utils'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'utils' ] },
         { fileName: 'submission',
-            package: [PROTOBUF_PACKAGE, 'srl', 'submission'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'submission' ] },
         { fileName: 'util',
-            package: [PROTOBUF_PACKAGE, 'srl', 'utils'] },
+            package: [ PROTOBUF_PACKAGE, 'srl', 'utils' ] },
+        { fileName: 'tutorial',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'tutorial' ] },
     ];
 
     /**
@@ -97,19 +99,19 @@ function ProtobufSetup() {
             }
         }
         var root = commondBuilder.build();
-        for (var i = 0; i < protoFiles.length; i++) {
-            var protoObject = protoFiles[i];
-            if (packageList.includes(protoObject.package.join('.'))) {
+        for (i = 0; i < protoFiles.length; i++) {
+            var protoFile = protoFiles[i];
+            if (packageList.includes(protoFile.package.join('.'))) {
                 // console.log('These values have already been assigned. for file: ', protoObject.fileName, ' Skipping building!');
                 continue;
             }
 
             var resultingPackage = root;
-            for (var j = 0; j < protoObject.package.length; j++) {
-                resultingPackage = resultingPackage[protoObject.package[j]];
+            for (var j = 0; j < protoFile.package.length; j++) {
+                resultingPackage = resultingPackage[protoFile.package[j]];
             }
-            assignValues(resultingPackage, protoObject.prefix);
-            packageList.push(protoObject.package.join('.'));
+            assignValues(resultingPackage, protoFile.prefix);
+            packageList.push(protoFile.package.join('.'));
         }
     }
 
@@ -285,7 +287,7 @@ function ProtobufSetup() {
             pException.setName('String Error');
             return pException;
         }
-        pException.setMssg(anError.message);
+        pException.setMssg('' + anError.message);
 
         var stack = anError.stack;
         if (!isArray(stack)) {
@@ -296,6 +298,21 @@ function ProtobufSetup() {
 
         pException.setExceptionType('Error');
         return pException;
+    };
+
+    /**
+     * @function
+     * Given an SrlUpdate a Request is created.
+     * @param {SrlUpdate} update - A valid and complete object.
+     * @param {MessageType} requestType - The type that the request is.
+     * @return {Request} used for all requesting needs
+     */
+    this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
+        if (!(update instanceof localScope.getSrlUpdateClass())) {
+            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
+        }
+
+        return this.createRequestFromData(update, requestType);
     };
 
     /**
@@ -337,21 +354,6 @@ function ProtobufSetup() {
         update.setTime('' + n);
         update.setUpdateId(generateUUID());
         return update;
-    };
-
-    /**
-     * @function
-     * Given an SrlUpdate a Request is created.
-     * @param {SrlUpdate} update - A valid and complete object.
-     * @param {MessageType} requestType - The type that the request is.
-     * @return {Request} used for all requesting needs
-     */
-    this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
-        if (!(update instanceof localScope.getSrlUpdateClass())) {
-            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
-        }
-
-        return this.createRequestFromData(update, requestType);
     };
 
     /**
@@ -479,6 +481,7 @@ function ProtobufSetup() {
      * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {
+        /*jshint maxcomplexity:13 */
         if (isUndefined(data) || data === null || typeof data !== 'object') {
             throw new ProtobufException('Data type is not supported:' + typeof data);
         }

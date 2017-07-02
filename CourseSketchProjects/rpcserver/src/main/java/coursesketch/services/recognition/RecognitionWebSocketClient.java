@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Created by dtracers on 12/15/2015.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class RecognitionWebSocketClient extends ClientWebSocket implements RecognitionInterface {
 
     /**
@@ -36,6 +37,11 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
      * The default port of the Submission Server.
      */
     public static final int PORT = 8893;
+
+    /**
+     * Exception for template exceptions.
+     */
+    private static final String TEMPLATE_EXCEPTION_MESSAGE = "Exception when adding template";
 
     /**
      * The blocker service that is used to communicate.
@@ -59,7 +65,8 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         super(iDestination, iParentServer);
     }
 
-    @Override public final Commands.SrlUpdateList addUpdate(final String recognitionId, final Commands.SrlUpdate srlUpdate)
+    @Override
+    public final Commands.SrlUpdateList addUpdate(final String recognitionId, final Commands.SrlUpdate srlUpdate)
             throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
@@ -88,7 +95,8 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         return recognitionResponse.getChanges();
     }
 
-    @Override public final Commands.SrlUpdateList setUpdateList(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
+    @Override
+    public final Commands.SrlUpdateList setUpdateList(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
             throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
@@ -108,15 +116,16 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
                 final DatabaseAccessException databaseException =
                         new DatabaseAccessException("Exception with submission server");
                 databaseException.setProtoException(recognitionResponse.getDefaultResponse().getException());
-                throw new RecognitionException("Exception when adding template", databaseException);
+                throw new RecognitionException(TEMPLATE_EXCEPTION_MESSAGE, databaseException);
             }
         } catch (ServiceException e) {
-            throw new RecognitionException("Exception when adding template", e);
+            throw new RecognitionException(TEMPLATE_EXCEPTION_MESSAGE, e);
         }
         return recognitionResponse.getChanges();
     }
 
-    @Override public final Sketch.SrlSketch setSketch(final String s, final Sketch.SrlSketch sketch) {
+    @Override
+    public final Sketch.SrlSketch setSketch(final String sketchId, final Sketch.SrlSketch sketch) {
         throw new UnsupportedOperationException();
     }
 
@@ -141,10 +150,10 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
                 final DatabaseAccessException databaseException =
                         new DatabaseAccessException("Exception with submission server");
                 databaseException.setProtoException(defaultResponse.getException());
-                throw new TemplateException("Exception when adding template", databaseException);
+                throw new TemplateException(TEMPLATE_EXCEPTION_MESSAGE, databaseException);
             }
         } catch (ServiceException e) {
-            throw new TemplateException("Exception when adding template", e);
+            throw new TemplateException(TEMPLATE_EXCEPTION_MESSAGE, e);
         }
     }
 
@@ -156,7 +165,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
 
     @Override
     public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
-            final Sketch.SrlShape srlShape) throws TemplateException  {
+            final Sketch.SrlShape srlShape) throws TemplateException {
         addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setShape(srlShape));
     }
 
@@ -167,16 +176,17 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
     }
 
     @Override
-    public void trainTemplate(Sketch.RecognitionTemplate recognitionTemplate) throws TemplateException {
-
+    public final void trainTemplate(final Sketch.RecognitionTemplate recognitionTemplate) throws TemplateException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void finishTraining() throws RecognitionException {
-
+    public final void finishTraining() throws RecognitionException {
+        throw new UnsupportedOperationException();
     }
 
-    @Override public final Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
+    @Override
+    public final Commands.SrlUpdateList recognize(final String recognitionId, final Commands.SrlUpdateList srlUpdateList)
             throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
@@ -204,16 +214,19 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
         return recognitionResponse.getChanges();
     }
 
-    @Override public final Sketch.SrlSketch recognize(final String s, final Sketch.SrlSketch sketch) {
+    @Override
+    public final Sketch.SrlSketch recognize(final String sketchId, final Sketch.SrlSketch sketch) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Sketch.SrlInterpretation> recognize(String s, Sketch.RecognitionTemplate recognitionTemplate) throws RecognitionException {
+    public final List<Sketch.SrlInterpretation> recognize(final String sketchId, final Sketch.RecognitionTemplate recognitionTemplate) throws
+            RecognitionException {
         return null;
     }
 
-    @Override public final List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate)
+    @Override
+    public final List<Sketch.RecognitionTemplate> generateTemplates(final Sketch.RecognitionTemplate recognitionTemplate)
             throws RecognitionException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
@@ -231,13 +244,13 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
                 throw new RecognitionException("Exception when recognizing update List", databaseException);
             }
         } catch (ServiceException e) {
-            // throw new TemplateException("Exception when adding template", e);
+            throw new TemplateException(TEMPLATE_EXCEPTION_MESSAGE, e);
         }
         return generatedTemplates.getGeneratedTemplatesList();
     }
 
     @Override
-    public void initialize() throws RecognitionException {
-
+    public final void initialize() throws RecognitionException {
+        throw new UnsupportedOperationException();
     }
 }

@@ -1,10 +1,7 @@
 package coursesketch.database;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import connection.LoginServerWebSocketHandler;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.identity.IdentityManagerInterface;
@@ -14,13 +11,14 @@ import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.LoggingConstants;
 
-import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 import static database.DatabaseStringConstants.EMAIL;
@@ -73,7 +71,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * A private database.
      */
     @SuppressWarnings("PMD.UnusedPrivateField")
-    private DB database = null;
+    private MongoDatabase database = null;
 
     /**
      * Constructor for the database client.
@@ -92,28 +90,20 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @param testOnly
      *         If true it uses the test database. Otherwise it uses the real name of the database.
      * @param fakeDB
-     *         Uses a fake DB for its unit tests. This is typically used for unit testing.
+     *         Uses a fake MongoDatabase for its unit tests. This is typically used for unit testing.
      * @param identityWebSocketClient The interface for getting user identity information.
      */
-    public DatabaseClient(final boolean testOnly, final DB fakeDB, final IdentityManagerInterface identityWebSocketClient) {
+    public DatabaseClient(final boolean testOnly, final MongoDatabase fakeDB, final IdentityManagerInterface identityWebSocketClient) {
         super(null);
         identityManager = identityWebSocketClient;
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
-            MongoClient mongoClient = null;
-            try {
-                mongoClient = new MongoClient("localhost");
-            } catch (UnknownHostException e) {
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            }
-            if (mongoClient == null) {
-                return;
-            }
+            final MongoClient mongoClient = new MongoClient("localhost");
             if (testOnly) {
-                database = mongoClient.getDB("test");
+                database = mongoClient.getDatabase("test");
             } else {
-                database = mongoClient.getDB(LOGIN_DATABASE);
+                database = mongoClient.getDatabase(LOGIN_DATABASE);
             }
         }
     }
@@ -132,7 +122,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      */
     @Override protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-        database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        database = mongoClient.getDatabase(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
 
@@ -158,12 +148,12 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @throws LoginException
      *         Thrown if there is a problem loggin in.
      */
-    public BasicDBObject mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
+    public Document mongoIdentify(final String user, final String password, final boolean loginAsDefault, final boolean loginAsInstructor)
             throws LoginException {
-        final DBCollection table = database.getCollection(LOGIN_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(USER_NAME, user);
+        final MongoCollection<Document> table = database.getCollection(LOGIN_COLLECTION);
+        final Document query = new Document(USER_NAME, user);
 
-        final DBObject cursor = table.findOne(query);
+        final Document cursor = table.find(query).first();
 
         if (cursor == null) {
             throw new LoginException(LoginServerWebSocketHandler.INCORRECT_LOGIN_MESSAGE);
@@ -207,11 +197,11 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @throws NoSuchAlgorithmException
      *         Thrown if the specified algorithm does not exist.
      */
-    private void updatePassword(final DBCollection table, final DBObject userDatabaseObject, final String newPassword)
+    private void updatePassword(final MongoCollection<Document> table, final Document userDatabaseObject, final String newPassword)
             throws AuthenticationException, NoSuchAlgorithmException {
         final String newHash = HashManager.createHash(newPassword);
-        table.update(userDatabaseObject,
-                new BasicDBObject(DatabaseStringConstants.SET_COMMAND, new BasicDBObject(DatabaseStringConstants.PASSWORD, newHash)));
+        table.updateOne(userDatabaseObject,
+                new Document(DatabaseStringConstants.SET_COMMAND, new Document(DatabaseStringConstants.PASSWORD, newHash)));
     }
 
     /**
@@ -223,7 +213,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *         True if the system will log in as the default account.
      * @param loginAsInstructor
      *         True if the system will log in as the instructor (not used if loginAsDefault is true).
-     * @return A {@link BasicDBObject} with a set of values:
+     * @return A {@link Document} with a set of values:
      *          {
      *              CLIENT_ID: clientId,
      *              SERVER_ID: serverId,
@@ -233,8 +223,8 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *         Thrown if the user ids are not able to be grabbed.
      */
     @SuppressWarnings("PMD.UselessParentheses")
-    private BasicDBObject getUserInfo(final DBObject cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
-        final BasicDBObject result =  new BasicDBObject();
+    private Document getUserInfo(final Document cursor, final boolean loginAsDefault, final boolean loginAsInstructor) throws LoginException {
+        final Document result =  new Document();
         final boolean defaultAccountIsInstructor = (Boolean) cursor.get(IS_DEFAULT_INSTRUCTOR);
 
         final boolean isDefaultInstructor = loginAsDefault && defaultAccountIsInstructor;
@@ -253,10 +243,10 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
         } else {
             throw new LoginException(LoginServerWebSocketHandler.PERMISSION_ERROR_MESSAGE);
         }
+        // Gets user id and add it to the result.
         final String userId = getUserId(cursor.get(DatabaseStringConstants.USER_NAME).toString(),
                 cursor.get(DatabaseStringConstants.IDENTITY_AUTH).toString());
         result.append(DatabaseStringConstants.USER_ID, userId);
-        // gets user id
 
         return result;
     }
@@ -282,7 +272,7 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      * @param user
      *         The user name to be added.
      * @param password
-     *         The password of the user to be added to the DB.
+     *         The password of the user to be added to the MongoDatabase.
      * @param email
      *         The email of the user.
      * @param isInstructor
@@ -299,21 +289,21 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      */
     public String createUser(final String user, final String password, final String email, final boolean isInstructor)
             throws AuthenticationException, NoSuchAlgorithmException, RegistrationException, DatabaseAccessException {
-        final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
-        BasicDBObject query = new BasicDBObject(USER_NAME, user);
-        final DBObject cursor = loginCollection.findOne(query);
+        final MongoCollection<Document> loginCollection = database.getCollection(LOGIN_COLLECTION);
+        Document query = new Document(USER_NAME, user);
+        final Document cursor = loginCollection.find(query).first();
         if (cursor == null) {
             final Map<String, String> result = identityManager.createNewUser(user);
             if (result.isEmpty()) {
                 throw new RegistrationException("Unable to get the password from the new user");
             }
             final Map.Entry<String, String> userIdentity =  result.entrySet().iterator().next();
-            query = new BasicDBObject(USER_NAME, user).append(PASSWORD, HashManager.createHash(password)).append(EMAIL, email)
+            query = new Document(USER_NAME, user).append(PASSWORD, HashManager.createHash(password)).append(EMAIL, email)
                     .append(IS_DEFAULT_INSTRUCTOR, isInstructor).append(INSTRUCTOR_ID, FancyEncoder.fancyID())
                     .append(STUDENT_ID, FancyEncoder.fancyID()).append(STUDENT_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
                     .append(INSTRUCTOR_CLIENT_ID, AbstractServerWebSocketHandler.Encoder.nextID().toString())
                     .append(DatabaseStringConstants.IDENTITY_AUTH, userIdentity.getValue());
-            loginCollection.insert(query);
+            loginCollection.insertOne(query);
             return userIdentity.getKey();
         } else {
             throw new RegistrationException(LoginServerWebSocketHandler.REGISTRATION_ERROR_MESSAGE);
@@ -333,9 +323,9 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
      *         A list of system times.
      *         This should almost always be a single time but is in a vararg format to make it easier for inserting a list.
      */
-    public void userLoggedInSuccessfully(final String username, final String authId, final boolean isInstructor, final long... systemTime) {
-        final DBCollection loginCollection = database.getCollection(LOGIN_COLLECTION);
-        final BasicDBObject query = new BasicDBObject(USER_NAME, username).append(isInstructor ? INSTRUCTOR_ID : STUDENT_ID, authId);
+    public void userLoggedInSuccessfully(final String username, final String authId, final boolean isInstructor, final List<Long> systemTime) {
+        final MongoCollection<Document> loginCollection = database.getCollection(LOGIN_COLLECTION);
+        final Document query = new Document(USER_NAME, username).append(isInstructor ? INSTRUCTOR_ID : STUDENT_ID, authId);
 
         /*
             $push: {
@@ -349,14 +339,14 @@ public final class DatabaseClient extends AbstractCourseSketchDatabaseReader {
                 LOGIN_AMOUNT_FIELD: 1
             }
          */
-        final BasicDBObject update = new BasicDBObject(DatabaseStringConstants.PUSH_COMMAND,
-                new BasicDBObject(DatabaseStringConstants.LAST_LOGIN_TIMES,
-                        new BasicDBObject(DatabaseStringConstants.EACH_COMMAND, systemTime)
+        final Document update = new Document(DatabaseStringConstants.PUSH_COMMAND,
+                new Document(DatabaseStringConstants.LAST_LOGIN_TIMES,
+                        new Document(DatabaseStringConstants.EACH_COMMAND, systemTime)
                                 .append(DatabaseStringConstants.SORT_COMMAND, -1)
                                 .append(DatabaseStringConstants.SLICE_COMMAND, MAX_LOGIN_TIME_LENGTH)))
                 .append(DatabaseStringConstants.INCREMENT_COMMAND,
-                        new BasicDBObject(DatabaseStringConstants.LOGIN_AMOUNT_FIELD, 1));
+                        new Document(DatabaseStringConstants.LOGIN_AMOUNT_FIELD, 1));
 
-        loginCollection.update(query, update);
+        loginCollection.updateOne(query, update);
     }
 }

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.utils.SketchUtil;
-import protobuf.srl.utils.Util;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;

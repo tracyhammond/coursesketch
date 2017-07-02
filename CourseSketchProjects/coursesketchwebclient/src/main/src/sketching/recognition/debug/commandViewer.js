@@ -6,7 +6,7 @@ function createCommandViewer(list, idToPutViewIn, currentIndex) {
 var myWidth = 150; // single threaded = okay
 
 function createUpdate(object, highlight) {
-    var html = '<div class = "updateInfo tiny-col-group2" style = "position:relative;">'
+    var html = '<div class = "updateInfo tiny-col-group2" style = "position:relative;">';
     html += '<div class="sketchObject" style = "position:relative;">';
     html += '<p> ID:' + object.getUpdateId() + '</p>';
     html += '<p> Time:' + object.getTime() + '</p>';
@@ -24,7 +24,7 @@ function createUpdate(object, highlight) {
 }
 
 function createCommand(command, highlight) {
-    var html = "";
+    var html = '';
     if (highlight) {
         html = '<div class = "sketchObject highlight">';
     } else {
@@ -50,8 +50,8 @@ function parseUpdateList(list, level, currentIndex) {
     for (var i = 0; i < size; i++) {
         var object = list[i]; // this is a single update
         html += '<div class="update">';
-        html += createUpdate(object, i == (currentIndex - 1)); // create a view of an update
-        html +='</div>';
+        html += createUpdate(object, i === (currentIndex - 1)); // create a view of an update
+        html += '</div>';
     }
     return html;
 }

@@ -1,12 +1,8 @@
 package connection;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
-import java.util.List;
-
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.recognition.framework.exceptions.RecognitionException;
-
+import coursesketch.recognition.framework.exceptions.TemplateException;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.MultiConnectionState;
 import coursesketch.serverfront.ProxyServerWebSocketHandler;
@@ -19,6 +15,9 @@ import protobuf.srl.request.Message;
 import protobuf.srl.services.recognition.RecognitionServer;
 import protobuf.srl.sketch.Sketch;
 import utilities.ConnectionException;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * This example demonstrates how to create a websocket connection to a server.
@@ -65,41 +64,24 @@ public final class RecognitionConnection extends RecognitionWebSocketClient {
         }
 
         final Message.Request.Builder requestResponse = Message.Request.newBuilder(request);
-        RecognitionServer.RecognitionResponse.Builder response = null;
-        final Commands.SrlUpdateList updateList;
+        RecognitionServer.RecognitionResponse.Builder response = RecognitionServer.RecognitionResponse.newBuilder();
         switch (generalRecognitionRequest.getRequestType()) {
             case ADD_UPDATE:
-                LOG.debug(generalRecognitionRequest.toString());
-                response = RecognitionServer.RecognitionResponse.newBuilder();
-                updateList = super.addUpdate(generalRecognitionRequest.getAddUpdate().getRecognitionId(),
-                        generalRecognitionRequest.getAddUpdate().getUpdate());
-                response.setChanges(updateList);
+                response.setChanges(addUpdate(generalRecognitionRequest));
                 break;
             case SET_NEW_LIST:
-                response = RecognitionServer.RecognitionResponse.newBuilder();
-                updateList = super.setUpdateList(generalRecognitionRequest.getSetUpdateList().getRecognitionId(),
-                        generalRecognitionRequest.getSetUpdateList().getUpdateList());
-                response.setChanges(updateList);
+                response.setChanges(setNewList(generalRecognitionRequest));
                 break;
             case ADD_TEMPLATE:
-                final String templateId = generalRecognitionRequest.getTemplate().getTemplateId();
-                final Sketch.SrlInterpretation interpretation = generalRecognitionRequest.getTemplate().getInterpretation();
-                if (generalRecognitionRequest.getTemplate().hasShape()) {
-                     super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getShape());
-                } else if (generalRecognitionRequest.getTemplate().hasSketch()) {
-                    super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getSketch());
-                } else {
-                    super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getStroke());
-                }
+                response = null;
+                addTemplate(generalRecognitionRequest);
                 requestResponse.setOtherData(Message.DefaultResponse.getDefaultInstance().toByteString());
                 break;
             case RECOGNIZE:
-                response = RecognitionServer.RecognitionResponse.newBuilder();
-                updateList = super.recognize(generalRecognitionRequest.getSetUpdateList().getRecognitionId(),
-                        generalRecognitionRequest.getSetUpdateList().getUpdateList());
-                response.setChanges(updateList);
+                response.setChanges(recognize(generalRecognitionRequest));
                 break;
             case GENERATE_SHAPES:
+                response = null;
                 final List<Sketch.RecognitionTemplate> recognitionTemplates = super.generateTemplates(generalRecognitionRequest.getTemplate());
                 final RecognitionServer.GeneratedTemplates.Builder generatedTemplates = RecognitionServer.GeneratedTemplates.newBuilder();
                 generatedTemplates.addAllGeneratedTemplates(recognitionTemplates);
@@ -116,5 +98,63 @@ public final class RecognitionConnection extends RecognitionWebSocketClient {
         }
         final Message.Request result = ProxyConnectionManager.createClientRequest(requestResponse.build());
         this.getParentServer().send(getConnectionFromState(state), result);
+    }
+
+    /**
+     * Creates an update list from the {@link RecognitionServer.GeneralRecognitionRequest}.
+     *
+     * @param generalRecognitionRequest A request that has come in.
+     * @return a parsed request of an added update.
+     * @throws RecognitionException Thrown if something goes wrong.
+     */
+    private Commands.SrlUpdateList addUpdate(final RecognitionServer.GeneralRecognitionRequest generalRecognitionRequest)
+            throws RecognitionException {
+        LOG.debug(generalRecognitionRequest.toString());
+        return super.addUpdate(generalRecognitionRequest.getAddUpdate().getRecognitionId(),
+                generalRecognitionRequest.getAddUpdate().getUpdate());
+    }
+
+    /**
+     * Creates an update list from the {@link RecognitionServer.GeneralRecognitionRequest}.
+     *
+     * @param generalRecognitionRequest A request that has come in.
+     * @return a parsed request of a new update list.
+     * @throws RecognitionException Thrown if something goes wrong.
+     */
+    private Commands.SrlUpdateList setNewList(final RecognitionServer.GeneralRecognitionRequest generalRecognitionRequest)
+            throws RecognitionException {
+        return super.setUpdateList(generalRecognitionRequest.getSetUpdateList().getRecognitionId(),
+                generalRecognitionRequest.getSetUpdateList().getUpdateList());
+    }
+
+    /**
+     * Creates an update list from the {@link RecognitionServer.GeneralRecognitionRequest}.
+     *
+     * @param generalRecognitionRequest A request that has come in.
+     * @return a parsed request from a recognized sketch.
+     * @throws RecognitionException Thrown if something goes wrong.
+     */
+    private Commands.SrlUpdateList recognize(final RecognitionServer.GeneralRecognitionRequest generalRecognitionRequest)
+            throws RecognitionException {
+        return super.recognize(generalRecognitionRequest.getSetUpdateList().getRecognitionId(),
+                generalRecognitionRequest.getSetUpdateList().getUpdateList());
+    }
+
+    /**
+     * Adds a template that has been recognized.
+     *
+     * @param generalRecognitionRequest A request that has come in.
+     * @throws TemplateException Thrown if something goes wrong.
+     */
+    private void addTemplate(final RecognitionServer.GeneralRecognitionRequest generalRecognitionRequest) throws TemplateException {
+        final String templateId = generalRecognitionRequest.getTemplate().getTemplateId();
+        final Sketch.SrlInterpretation interpretation = generalRecognitionRequest.getTemplate().getInterpretation();
+        if (generalRecognitionRequest.getTemplate().hasShape()) {
+            super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getShape());
+        } else if (generalRecognitionRequest.getTemplate().hasSketch()) {
+            super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getSketch());
+        } else {
+            super.addTemplate(templateId, interpretation, generalRecognitionRequest.getTemplate().getStroke());
+        }
     }
 }

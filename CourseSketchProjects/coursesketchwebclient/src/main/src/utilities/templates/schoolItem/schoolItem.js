@@ -48,7 +48,7 @@ function SchoolItem() {
         var text = element.textContent;
 
         var widths = [ descriptionHolder.clientWidth, descriptionHolder.offsetWidth, descriptionHolder.scrollWidth, this.style.width,
-                this.style.maxwidth ];
+            this.style.maxwidth ];
         var usedWidth = $(window).width();
         for (var i = 0; i < widths.length; i++) {
             var width = widths[i];

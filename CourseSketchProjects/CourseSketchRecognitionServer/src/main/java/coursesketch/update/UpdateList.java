@@ -1,10 +1,10 @@
 package coursesketch.update;
 
+import protobuf.srl.sketch.Sketch.SrlSketch;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import protobuf.srl.sketch.Sketch.SrlSketch;
 
 /**
  * Contatiner for Updates. This object maintains the history of transmissions
@@ -13,7 +13,7 @@ import protobuf.srl.sketch.Sketch.SrlSketch;
  * @author Matthew Dillard
  *
  */
-public class UpdateList implements Iterable<Update>{
+public class UpdateList implements Iterable<Update> {
     LinkedList<Update> syncList;
 
     /**
@@ -27,7 +27,7 @@ public class UpdateList implements Iterable<Update>{
      * Adds a complete Update to the end of the list
      * @param up
      */
-    public void add(final Update up){
+    public void add(final Update up) {
         syncList.add(up);
     }
 
@@ -51,7 +51,7 @@ public class UpdateList implements Iterable<Update>{
      * @return most recent Update
      */
     public Update back() {
-        return syncList.get(syncList.size()-1);
+        return syncList.get(syncList.size() - 1);
     }
 
     /**
@@ -60,7 +60,7 @@ public class UpdateList implements Iterable<Update>{
      * @param s PaleoSketch Sketch
      * @param index
      */
-    public void execute(SrlSketch s,int index) {
+    public void execute(SrlSketch s, int index) {
         syncList.get(index).execute(s);
     }
 
@@ -69,7 +69,7 @@ public class UpdateList implements Iterable<Update>{
      * @param s PaleoSketch Sketch
      */
     public void executeLast(SrlSketch s) {
-        syncList.get(syncList.size()-1).execute(s);
+        syncList.get(syncList.size() - 1).execute(s);
     }
 
     /**
@@ -78,7 +78,7 @@ public class UpdateList implements Iterable<Update>{
      * @param s PaleoSketch Sketch
      */
     public void executeAll(SrlSketch s) {
-        for(Update up: syncList){
+        for (Update up : syncList) {
             up.execute(s);
         }
     }

@@ -41,6 +41,7 @@ import static coursesketch.database.RecognitionStringConstants.TEMPLATE_DATA;
 /**
  * Created by David Windows on 4/20/2016.
  */
+@SuppressWarnings({ "PMD.TooManyMethods" })
 public final class ShapeConverter implements ShapeConverterInterface<com.mongodb.DBObject> {
     /**
      * Declaration and Definition of Logger.
@@ -68,8 +69,12 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                 LOG.error("There was no point contained in the object.");
             }
+        } else {
+            throw new UnsupportedOperationException("Invalid type was trying to create db object");
         }
-        result.put(OBJECT_TYPE, srlObject.getType().name());
+        if (result != null) {
+            result.put(OBJECT_TYPE, srlObject.getType().name());
+        }
 
         return result;
     }
@@ -170,7 +175,7 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
      * @return A Recognition Tempalte that has been parsed.
      */
     public Sketch.RecognitionTemplate parseRecognitionTemplate(final DBObject templateObject) {
-        final String id = templateObject.get(TEMPLATE_ID).toString();
+        final String templateId = templateObject.get(TEMPLATE_ID).toString();
         final Sketch.SrlInterpretation interpretation = parseInterpretation(
                 (DBObject) templateObject.get(TEMPLATE_INTERPRETATION));
 
@@ -192,7 +197,7 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
             LOG.error("", new TemplateException("Unknown template type: " + objectType));
         }
 
-        recognitionTemplate.setTemplateId(id).setInterpretation(interpretation);
+        recognitionTemplate.setTemplateId(templateId).setInterpretation(interpretation);
         return recognitionTemplate.build();
     }
 

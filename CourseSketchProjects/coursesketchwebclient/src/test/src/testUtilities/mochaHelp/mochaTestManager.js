@@ -47,7 +47,7 @@ module.exports = {
                     assert.isOk(false, 'a browser error occured when running test [' + filePath + ']\n' + JSON.stringify(e));
                 });
 
-                this.timeout(1000 + timeout);
+                this.timeout(2000 + timeout);
                 browser.url(fileUrl).then(function () {
                     browser.waitForExist(failedElement, timeout).then(function (result) {
                         console.log('done waiting for element to exist was it found? ' + result);

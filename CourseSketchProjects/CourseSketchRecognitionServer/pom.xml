@@ -36,6 +36,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/command/*.java</exclude>
+						<exclude>**/update/*.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -70,17 +76,19 @@
 		<dependency>
 			<groupId>com.github.dtracers</groupId>
 			<artifactId>SketchRecognitionFramework</artifactId>
-			<version>-SNAPSHOT</version>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.dtracers</groupId>
 			<artifactId>CourseSketchDefaultRecognition</artifactId>
 			<version>t2.3</version>
+
 		</dependency>
 		<dependency>
 			<groupId>com.github.DonaldMcRonald</groupId>
 			<artifactId>SketchRecognitionWithTensorFlow</artifactId>
 			<version>-SNAPSHOT</version>
+
 		</dependency>
 		<dependency>
 			<groupId>CourseSketch</groupId>

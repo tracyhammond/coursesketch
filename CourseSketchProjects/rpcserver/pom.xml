@@ -96,7 +96,7 @@
         <dependency>
             <groupId>com.github.dtracers</groupId>
             <artifactId>SketchRecognitionFramework</artifactId>
-            <version>-SNAPSHOT</version>
+            <version>4.0.0</version>
         </dependency>
 
         <dependency>
@@ -122,6 +122,5 @@
             <artifactId>protobuf-rpc-pro</artifactId>
             <version>57efac2b9f25f5163409606161cef17ba86c3330</version>
         </dependency>
-
     </dependencies>
 </project>

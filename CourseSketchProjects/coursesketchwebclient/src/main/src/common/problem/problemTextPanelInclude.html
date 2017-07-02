@@ -10,9 +10,7 @@
     <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#problemTemplateImport');
-            var template = link.import.querySelector('#problemPanel');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document, 'problemTemplateImport', 'problemPanel');
 
             var newElement = new ProblemTextPanel();
 

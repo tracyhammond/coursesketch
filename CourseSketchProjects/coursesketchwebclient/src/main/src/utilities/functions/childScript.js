@@ -25,7 +25,7 @@ var CourseSketch = parent.CourseSketch;
     /**
      * Empties out all added name spaces. Including the addNamespace function.
      */
-    $(window).unload(function() {
+    $(window).on('unload', function() {
         for (var i = 0; i < namespaceList.length; i++) {
             CourseSketch[namespaceList[i]] = undefined;
         }

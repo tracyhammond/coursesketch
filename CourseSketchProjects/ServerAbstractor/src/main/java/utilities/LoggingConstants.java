@@ -22,7 +22,7 @@ public final class LoggingConstants {
      * Pretty Prints json for logging.
      *
      * @param json Takes in a json string and outputs the result.
-     * @return Stuff returns stuff
+     * @return A json string in a nice human readable format.
      */
     public static String prettyPrintJson(final String json) {
         return JsonWriter.formatJson(json);

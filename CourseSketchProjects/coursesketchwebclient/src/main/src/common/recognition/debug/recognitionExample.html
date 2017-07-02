@@ -16,10 +16,8 @@
 
     <!-- special elements -->
     <link rel="import" href="/src/sketching/sketchInclude.html">
-    <script src="/src/common/recognition/recognitionManager.js"></script>
-    <script src="/src/common/recognition/commandViewer.js"></script>
-    <script src="/src/common/recognition/sketchViewer.js"></script>
-    <script src="/src/common/recognition/recognitionDebugPlugin.js"></script>
+    <link rel="import" href="/src/sketching/recognition/debug/recognitionDebugInclude.html">
+
     <style>
         .sketchObject {
             display:block;
@@ -76,6 +74,7 @@
         <button id="yes">Yes</button>
         <button id="no">No</button>
         <button id="next">Next</button>
+        <div id="templates_left"></div>
     </div>
     <div id="debug-panel">
         <div id ="commandViewer"></div>
@@ -171,30 +170,31 @@
                     var sketch = sketchSurface.getCurrentSketch();
                     var templateList = msg.getGeneratedTemplates();
                     var currentTemplate = templateList[0];
-                    var currentIndex = 0;
                     console.log('setting up buttons');
                     $('#next').click(function () {
                         console.log('loading next template');
-                        currentIndex++;
-                        currentTemplate = templateList[currentIndex % templateList.length];
+                        currentTemplate = templateList.shift();
                         loadTemplateIntoSketch(sketch, currentTemplate);
-                        console.log('loading template #', currentIndex);
+                        console.log('there are ', templateList.length, 'templates left');
+                        $('#templates_left').textContent = 'there are ' + templateList.length + 'templates left'
                     });
 
                     $('#yes').click(function () {
                         console.log('submitting positibe template');
-                        currentTemplate.type = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.POSITIVE;
-                        CourseSketch.recognitionService.addTemplate(currentTemplate, function (err, msg) {
-                            console.log(err, msg);
-                        });
+                        var positive = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.POSITIVE;
+                        CourseSketch.recognition.addShapeTemplate(label, '' + currentTemplate.templateId,
+                                currentTemplate.shape, function(err, success) {
+                                    console.log(err, success);
+                        }, positive);
                     });
 
                     $('#no').click(function () {
                         console.log('submitting negative tempalte');
-                        currentTemplate.type = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.NEGATIVE;
-                        CourseSketch.recognitionService.addTemplate(currentTemplate, function (err, msg) {
-                            console.log(err, msg);
-                        });
+                        var negative = CourseSketch.prutil.getProtoRecognitionTemplateClass().TemplateType.NEGATIVE;
+                        CourseSketch.recognition.addShapeTemplate(label, '' + currentTemplate.templateId,
+                                currentTemplate.shape, function(err, success) {
+                                    console.log(err, success);
+                        }, negative);
                     });
                 });
             });

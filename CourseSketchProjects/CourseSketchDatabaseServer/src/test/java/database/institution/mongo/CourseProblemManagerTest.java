@@ -4,10 +4,8 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,6 +13,7 @@ import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,6 +31,7 @@ import java.util.List;
 
 import static database.DatabaseStringConstants.IS_UNLOCKED;
 import static database.DbSchoolUtility.getCollectionFromType;
+import static database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -48,7 +48,7 @@ public class CourseProblemManagerTest {
     @Mock AuthenticationChecker authChecker;
     @Mock AuthenticationOptionChecker optionChecker;
 
-    public DB db;
+    public MongoDatabase db;
     public Authenticator authenticator;
 
     public static final String VALID_NAME = "Valid course name!";
@@ -78,26 +78,9 @@ public class CourseProblemManagerTest {
 
     @Before
     public void before() {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
 
-        try {
-            // general rules
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
-
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
         courseId = null;
         assignmentId = null;
@@ -180,8 +163,8 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        final DBCollection courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = courseProblemCollection.findOne(convertStringToObjectId(courseProblemId));
+        final MongoCollection<Document> courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final Document mongoProblem = courseProblemCollection.find(convertStringToObjectId(courseProblemId)).first();
 
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
@@ -197,22 +180,22 @@ public class CourseProblemManagerTest {
 
         courseProblemId = CourseProblemManager.mongoInsertCourseProblem(authenticator, db, ADMIN_USER, defaultProblem.build());
 
-        final DBCollection collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = collection.findOne(convertStringToObjectId(courseProblemId));
+        final MongoCollection<Document> collection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final Document mongoProblem = collection.find(convertStringToObjectId(courseProblemId)).first();
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.COURSE_ID), courseId);
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.ASSIGNMENT_ID), assignmentId);
 
-        List<DBObject> dbObjectList = (List<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
+        List<Document> DocumentList = (List<Document>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
 
-        Assert.assertEquals(1, dbObjectList.size());
+        Assert.assertEquals(1, DocumentList.size());
 
-        DBObject expected = new BasicDBObject(DatabaseStringConstants.ITEM_ID, bankProblem.getId())
+        Document expected = new Document(DatabaseStringConstants.ITEM_ID, bankProblem.getId())
         .append(DatabaseStringConstants.SCHOOL_ITEM_TYPE, Util.ItemType.BANK_PROBLEM_VALUE)
                 .append(IS_UNLOCKED, true);
 
-        Assert.assertEquals(expected, dbObjectList.get(0));
+        Assert.assertEquals(expected, DocumentList.get(0));
     }
 
     // GETTING TEST

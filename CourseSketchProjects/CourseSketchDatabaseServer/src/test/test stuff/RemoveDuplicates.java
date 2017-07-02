@@ -21,11 +21,11 @@ import protobuf.srl.submission.Submission.SrlSubmission;
 import util.Checksum;
 
 import com.google.protobuf.ByteString;
-import com.mongodb.BasicDBObject;
+import com.mongodb.Document;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.mongodb.MongoCollection<Document>;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.Document;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
@@ -33,14 +33,14 @@ import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class RemoveDuplicates {
-	static DBCollection trash;
-	static DBCollection experiments;
+	static MongoCollection<Document> trash;
+	static MongoCollection<Document> experiments;
 	public static void main(String args[]) throws UnknownHostException, AuthenticationException, DatabaseAccessException, InterruptedException {
 		System.out.println("Starting program");
 		String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
 		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		DB sub = mongoClient.getDB("submissions");
-		DBCollection exp = sub.getCollection("Experiments");
+		MongoCollection<Document> exp = sub.getCollection("Experiments");
 		experiments = exp;
 		trash = sub.getCollection("Trash");
 		ArrayList<String> couresId = new ArrayList<String>();
@@ -61,20 +61,20 @@ public class RemoveDuplicates {
 
 				for (int r = 0; r < problems.size(); r++) {
 					System.out.println("\n\nLooking at problem " +  problems.get(r).getName() + " " + problems.get(r).getId());
-					BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, problems.get(r).getId());
+					Document findQuery = new Document(COURSE_PROBLEM_ID, problems.get(r).getId());
 					removeDusplicates(exp.find(findQuery), problems.get(r).getId(), assignmentId, courseId);
 				}
 			}
 		}
 	}
 
-	public static void removeDusplicates(DBCursor dbCursor, String problemId, String assignmentId, String courseId) throws InterruptedException, DatabaseAccessException {
+	public static void removeDusplicates(MongoCursor<Document> dbCursor, String problemId, String assignmentId, String courseId) throws InterruptedException, DatabaseAccessException {
 		Map<String, SrlExperiment> reducerMap = new HashMap<String, SrlExperiment>();
 		Map<String, SrlExperiment> duplicateMap = new HashMap<String, SrlExperiment>();
 		System.out.println("Number of submissions found: " + dbCursor.count());
 		int count = 0;
 		while (dbCursor.hasNext()) {
-			DBObject obj = dbCursor.next();
+			Document obj = dbCursor.next();
 			//UserId
 			//time
 			Object result = obj.get(util.StringConstants.USER_ID);
@@ -168,10 +168,10 @@ public class RemoveDuplicates {
 
 	private static void removeSketch(String id, SrlExperiment build, boolean putInTrash) {
 		if (putInTrash) {
-			DBObject obj = new BasicDBObject(util.StringConstants.SELF_ID, new ObjectId(id)).append("result", build.toByteArray());
-			trash.insert(obj);
+			Document obj = new Document(util.StringConstants.SELF_ID, new ObjectId(id)).append("result", build.toByteArray());
+			trash.insertOne(obj);
 		}
-		//DBObject removeObj = new BasicDBObject(database.StringConstants.SELF_ID, new ObjectId(id));
+		//Document removeObj = new Document(database.StringConstants.SELF_ID, new ObjectId(id));
 		//experiments.remove(removeObj);
 	}
 

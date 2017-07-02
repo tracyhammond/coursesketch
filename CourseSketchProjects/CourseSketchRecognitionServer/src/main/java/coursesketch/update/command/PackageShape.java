@@ -1,17 +1,14 @@
 package coursesketch.update.command;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.UUID;
-
 import com.google.protobuf.ByteString;
-
 import coursesketch.update.Command;
 import protobuf.srl.commands.Commands.ActionPackageShape;
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 import protobuf.srl.utils.SketchUtil.IdChain;
+
+import java.util.List;
 
 /**
  * Command to take a group of shapes from one container and put them in a new
@@ -59,7 +56,6 @@ public class PackageShape extends Command {
         return builder.build();
     }
     */
-
     @Override
     public ByteString toByteString() {
         ActionPackageShape.Builder build = ActionPackageShape.newBuilder();
@@ -71,12 +67,12 @@ public class PackageShape extends Command {
         return build.build().toByteString();
     }
 
-    @Override
     /**
      * This one takes all the items with IDs contained in [contained]
-     * from [OldContainer] and puts them in the [NewContainer]
+     * from [OldContainer] and puts them in the [NewContainer].
      */
-    public void execute(SrlSketch s) {
+    @Override
+    public void execute(SrlSketch sketch) {
         /*
         SContainer from;
         if (oldContainer == null)
@@ -99,9 +95,10 @@ public class PackageShape extends Command {
             to.add(from.remove(UUID.fromString(id)));
         }
         */
+        throw new UnsupportedOperationException();
     }
 
-    public void undo(SrlSketch s) {
+    public void undo(SrlSketch sketch) {
         /*
         SContainer from;
         if (oldContainer == null)
@@ -122,5 +119,6 @@ public class PackageShape extends Command {
             from.add(to.remove(UUID.fromString(id)));
         }
         */
+        throw new UnsupportedOperationException();
     }
 }

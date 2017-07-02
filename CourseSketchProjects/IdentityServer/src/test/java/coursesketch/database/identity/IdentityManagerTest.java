@@ -199,7 +199,7 @@ public class IdentityManagerTest {
         Assert.assertEquals(students, studentGroup);
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test
@@ -240,7 +240,7 @@ public class IdentityManagerTest {
         Assert.assertEquals(students, studentGroup);
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test
@@ -413,8 +413,8 @@ public class IdentityManagerTest {
 
         List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListParent.get(0));
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListChild.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListParent.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListChild.get(0));
         Assert.assertEquals(userListParent, userListChild);
     }
 
@@ -489,8 +489,8 @@ public class IdentityManagerTest {
         // userlists
         List<String> userListParent = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
         List<String> userListChild = (List<String>) dbItemChildObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListParent.get(0));
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userListChild.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListParent.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userListChild.get(0));
         Assert.assertEquals(userListParent, userListChild);
     }
 
@@ -546,7 +546,7 @@ public class IdentityManagerTest {
         Assert.assertEquals(students, studentGroup);
 
         List<String> userList = (List<String>) dbItemObject.get(DatabaseStringConstants.USER_LIST);
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), userList.get(0));
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), userList.get(0));
     }
 
     @Test(expected = AuthenticationException.class)
@@ -623,7 +623,7 @@ public class IdentityManagerTest {
 
         final Map.Entry<String, String> next = results.entrySet().iterator().next();
 
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), next.getKey());
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), next.getKey());
         Assert.assertTrue(HashManager.validateHash(next.getValue(), dbObject.get(DatabaseStringConstants.PASSWORD).toString()));
     }
 
@@ -639,7 +639,7 @@ public class IdentityManagerTest {
 
         final Map.Entry<String, String> next = results.entrySet().iterator().next();
 
-        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID), next.getKey());
+        Assert.assertEquals(dbObject.get(DatabaseStringConstants.SELF_ID).toString(), next.getKey());
         Assert.assertTrue(HashManager.validateHash(next.getValue(), dbObject.get(DatabaseStringConstants.PASSWORD).toString()));
 
         identityManager.createNewUser(VALID_USERNAME);

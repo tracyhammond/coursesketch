@@ -1,7 +1,5 @@
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.DatabaseClient;
 import coursesketch.database.LoginException;
 import coursesketch.database.RegistrationException;
@@ -9,6 +7,7 @@ import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.server.authentication.HashManager;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,6 +16,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,12 +52,12 @@ public class DatabaseClientTest {
 
     Map<String, String> createUserResult;
 
-    public DB db;
+    public MongoDatabase db;
     DatabaseClient client;
 
     @Before
     public void before() throws Exception {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
         client = new DatabaseClient(true, db, identityManager);
 
         createUserResult = new HashMap<>();
@@ -70,17 +71,17 @@ public class DatabaseClientTest {
     @Test
     public void createUserInsertsUserInfo() throws Exception {
         String userId = client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
-        final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
         Assert.assertEquals(VALID_USERNAME, obj.get(DatabaseStringConstants.USER_NAME));
         Assert.assertEquals(VALID_EMAIL, obj.get(DatabaseStringConstants.EMAIL));
         Assert.assertEquals(INSTRUCTOR, obj.get(DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR));
 
         Assert.assertTrue(HashManager.validateHash(VALID_PASSWORD, (String) obj.get(DatabaseStringConstants.PASSWORD)));
-        Assert.assertTrue(obj.containsField(INSTRUCTOR_ID));
-        Assert.assertTrue(obj.containsField(STUDENT_ID));
-        Assert.assertTrue(obj.containsField(STUDENT_CLIENT_ID));
-        Assert.assertTrue(obj.containsField(INSTRUCTOR_CLIENT_ID));
+        Assert.assertTrue(obj.containsKey(INSTRUCTOR_ID));
+        Assert.assertTrue(obj.containsKey(STUDENT_ID));
+        Assert.assertTrue(obj.containsKey(STUDENT_CLIENT_ID));
+        Assert.assertTrue(obj.containsKey(INSTRUCTOR_CLIENT_ID));
         Assert.assertEquals(obj.get(DatabaseStringConstants.IDENTITY_AUTH), VALID_IDENTITY_AUTH);
         Assert.assertEquals(VALID_USER_IDENTITY, userId);
     }
@@ -88,17 +89,17 @@ public class DatabaseClientTest {
     @Test(expected = RegistrationException.class)
     public void createUserThrowsExceptionIfUserNameExists() throws Exception {
         String userId = client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
-        final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
         Assert.assertEquals(VALID_USERNAME, obj.get(DatabaseStringConstants.USER_NAME));
         Assert.assertEquals(VALID_EMAIL, obj.get(DatabaseStringConstants.EMAIL));
         Assert.assertEquals(INSTRUCTOR, obj.get(DatabaseStringConstants.IS_DEFAULT_INSTRUCTOR));
 
         Assert.assertTrue(HashManager.validateHash(VALID_PASSWORD, (String) obj.get(DatabaseStringConstants.PASSWORD)));
-        Assert.assertTrue(obj.containsField(INSTRUCTOR_ID));
-        Assert.assertTrue(obj.containsField(STUDENT_ID));
-        Assert.assertTrue(obj.containsField(STUDENT_CLIENT_ID));
-        Assert.assertTrue(obj.containsField(INSTRUCTOR_CLIENT_ID));
+        Assert.assertTrue(obj.containsKey(INSTRUCTOR_ID));
+        Assert.assertTrue(obj.containsKey(STUDENT_ID));
+        Assert.assertTrue(obj.containsKey(STUDENT_CLIENT_ID));
+        Assert.assertTrue(obj.containsKey(INSTRUCTOR_CLIENT_ID));
         Assert.assertEquals(obj.get(DatabaseStringConstants.IDENTITY_AUTH), VALID_IDENTITY_AUTH);
         Assert.assertEquals(VALID_USER_IDENTITY, userId);
 
@@ -115,17 +116,17 @@ public class DatabaseClientTest {
     public void userLoggedInSuccessfullyAddsUserLoginTimeInstructor() throws Exception {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
-        final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String authId = (String) obj.get(INSTRUCTOR_ID);
         long time = System.currentTimeMillis();
 
         // Actual Test
-        client.userLoggedInSuccessfully(VALID_USERNAME, authId, true, time);
+        client.userLoggedInSuccessfully(VALID_USERNAME, authId, true, Arrays.asList(time));
 
-        final DBObject obj2 = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj2 = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         Assert.assertEquals(1, obj2.get(DatabaseStringConstants.LOGIN_AMOUNT_FIELD));
         List<Long> times = (List<Long>) obj2.get(DatabaseStringConstants.LAST_LOGIN_TIMES);
@@ -138,17 +139,17 @@ public class DatabaseClientTest {
     public void userLoggedInSuccessfullyAddsUserLoginTimeStudent() throws Exception {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
-        final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String authId = (String) obj.get(STUDENT_ID);
         long time = System.currentTimeMillis();
 
         // Actual Test
-        client.userLoggedInSuccessfully(VALID_USERNAME, authId, false, time);
+        client.userLoggedInSuccessfully(VALID_USERNAME, authId, false, Arrays.asList(time));
 
-        final DBObject obj2 = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj2 = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         Assert.assertEquals(1, obj2.get(DatabaseStringConstants.LOGIN_AMOUNT_FIELD));
         List<Long> times = (List<Long>) obj2.get(DatabaseStringConstants.LAST_LOGIN_TIMES);
@@ -161,27 +162,27 @@ public class DatabaseClientTest {
     public void userLoggedLimitsLoginsToTen() throws Exception {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
-        final DBObject obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String authId = (String) obj.get(STUDENT_ID);
-        long[] times = new long[11];
-        for (int k = 0; k < times.length; k++) {
-            times[k] = System.currentTimeMillis();
+        List<Long> times = new ArrayList<>();
+        for (int k = 0; k < 11; k++) {
+            times.add(System.currentTimeMillis());
         }
 
         // Actual Test
         client.userLoggedInSuccessfully(VALID_USERNAME, authId, false, times);
 
-        final DBObject obj2 = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document obj2 = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         Assert.assertEquals(1, obj2.get(DatabaseStringConstants.LOGIN_AMOUNT_FIELD));
         List<Long> outpuTimes = (List<Long>) obj2.get(DatabaseStringConstants.LAST_LOGIN_TIMES);
         Assert.assertEquals(10, outpuTimes.size());
 
         // checks to make sure the sorting works.
-        Assert.assertEquals(times[times.length - 1], (long) outpuTimes.get(0));
+        Assert.assertEquals((long) times.get(times.size() - 1), (long) outpuTimes.get(0));
     }
 
     @Test(expected = LoginException.class)
@@ -215,10 +216,10 @@ public class DatabaseClientTest {
             throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
-        final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, INSTRUCTOR);
+        final Document actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, INSTRUCTOR);
 
-        final DBObject expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String serverId = (String) expected.get(INSTRUCTOR_ID);
         String clientId = (String) expected.get(INSTRUCTOR_CLIENT_ID);
@@ -235,10 +236,10 @@ public class DatabaseClientTest {
             throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
-        final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, STUDENT);
+        final Document actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, STUDENT);
 
-        final DBObject expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String serverId = (String) expected.get(INSTRUCTOR_ID);
         String clientId = (String) expected.get(INSTRUCTOR_CLIENT_ID);
@@ -255,10 +256,10 @@ public class DatabaseClientTest {
             throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, STUDENT);
 
-        final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, INSTRUCTOR);
+        final Document actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, INSTRUCTOR);
 
-        final DBObject expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String serverId = (String) expected.get(INSTRUCTOR_ID);
         String clientId = (String) expected.get(INSTRUCTOR_CLIENT_ID);
@@ -275,10 +276,10 @@ public class DatabaseClientTest {
             throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, INSTRUCTOR);
 
-        final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, STUDENT);
+        final Document actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, false, STUDENT);
 
-        final DBObject expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String serverId = (String) expected.get(STUDENT_ID);
         String clientId = (String) expected.get(STUDENT_CLIENT_ID);
@@ -295,10 +296,10 @@ public class DatabaseClientTest {
             throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, STUDENT);
 
-        final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, STUDENT);
+        final Document actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, STUDENT);
 
-        final DBObject expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String serverId = (String) expected.get(STUDENT_ID);
         String clientId = (String) expected.get(STUDENT_CLIENT_ID);
@@ -316,10 +317,10 @@ public class DatabaseClientTest {
             throws Exception, LoginException {
         client.createUser(VALID_USERNAME, VALID_PASSWORD, VALID_EMAIL, STUDENT);
 
-        final DBObject actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, INSTRUCTOR);
+        final Document actual = client.mongoIdentify(VALID_USERNAME, VALID_PASSWORD, true, INSTRUCTOR);
 
-        final DBObject expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
-                .findOne(new BasicDBObject(DatabaseStringConstants.USER_NAME, VALID_USERNAME));
+        final Document expected = db.getCollection(DatabaseStringConstants.LOGIN_COLLECTION)
+                .find(new Document(DatabaseStringConstants.USER_NAME, VALID_USERNAME)).first();
 
         String serverId = (String) expected.get(STUDENT_ID);
         String clientId = (String) expected.get(STUDENT_CLIENT_ID);

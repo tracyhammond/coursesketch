@@ -77,7 +77,7 @@ function LoginSystem() {
      * Attaches the wave effect to the login button.
      */
     function attachButtons() {
-        var loginButton = shadowRoot.querySelector('#loginButton');
+        var loginButton = shadowRoot.querySelector('#loginnButton');
         Waves.attach(loginButton);
     }
 
