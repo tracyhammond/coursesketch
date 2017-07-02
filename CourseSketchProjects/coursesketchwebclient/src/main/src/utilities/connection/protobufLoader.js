@@ -78,6 +78,8 @@ function ProtobufSetup() {
             package: [ PROTOBUF_PACKAGE, 'srl', 'submission' ] },
         { fileName: 'util',
             package: [ PROTOBUF_PACKAGE, 'srl', 'utils' ] },
+        { fileName: 'tutorial',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'tutorial' ] },
     ];
 
     /**
