@@ -10,7 +10,13 @@
 
     <script type="text/javascript" src="/src/utilities/connection/connectionLibrary.js"></script>
 
-    <script>sinon.config = { useFakeTimers : false };</script>
+    <script>
+        try {
+            sinon.config = {useFakeTimers: false};
+        } catch(asfd) {
+
+        }
+    </script>
 
     <script src="mockedConnection.js"></script>
     <script src="mockedDataListener.js"></script>

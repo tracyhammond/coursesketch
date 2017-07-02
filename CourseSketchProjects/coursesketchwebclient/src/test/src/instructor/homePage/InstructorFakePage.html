@@ -2,20 +2,17 @@
 <head>
 <meta charset="utf-8">
 <title>Command Methods test</title>
-<!-- test Library -->
-<link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/instructor/homepage/homePage.html" data-fake>
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
           href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
     <script src="/test/testUtilities/databaseHelper.js"></script>
 
-<!-- files needed for testing -->
-<link rel="import" href="/src/instructor/homePage/homePage.html" data-fake>
 <script>
     $(document).ready(function() {
-        // calls the list with an empty array.
-        CourseSketch.dataManager.getAllCourses = function(callback) {
-            callback(new DatabaseException());
-        };
         CourseSketch.connection.isInstructor = true;
     });
 </script>

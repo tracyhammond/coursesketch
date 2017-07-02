@@ -289,6 +289,10 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
                                 }
                                 courseProblemCallbackComplete(courseProblemList);
                             });
+                        } else {
+                            courseProblemCallbackComplete(courseProblemList);
+                            courseProblemCallbackPartial(courseProblemList);
+                            return;
                         }
 
                         // this calls actually before the response from the server is received!

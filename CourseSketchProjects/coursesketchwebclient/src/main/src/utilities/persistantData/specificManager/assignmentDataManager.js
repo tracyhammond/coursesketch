@@ -341,7 +341,10 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
                             });
                             // end server listener
                         } else {
+                            stateCallbackList(assignmentList, assignmentCallbackPartial);
+
                             stateCallbackList(assignmentList, assignmentCallbackComplete);
+                            return;
                         }
 
                         // this calls actually before the response from the

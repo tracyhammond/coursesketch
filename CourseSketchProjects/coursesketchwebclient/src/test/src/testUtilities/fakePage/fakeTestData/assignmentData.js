@@ -15,7 +15,7 @@ validateFirstRun(document.currentScript);
     var assignment10 = CourseSketch.prutil.SrlAssignment();
 
     assignment1.courseId = '1';
-    assignment1.id = '000';
+    assignment1.id = '0';
     assignment1.name = 'Test Assignment';
     assignment1.description = 'Test description not the best description though...';
     assignment1.state = CourseSketch.prutil.State();
