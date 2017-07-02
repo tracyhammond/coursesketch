@@ -96,7 +96,7 @@
         <dependency>
             <groupId>com.github.dtracers</groupId>
             <artifactId>SketchRecognitionFramework</artifactId>
-            <version>-SNAPSHOT</version>
+            <version>4.0.0</version>
         </dependency>
 
         <dependency>

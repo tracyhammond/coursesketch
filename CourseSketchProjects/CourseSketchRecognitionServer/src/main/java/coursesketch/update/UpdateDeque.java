@@ -1,28 +1,28 @@
 package coursesketch.update;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Deque;
-
 import protobuf.srl.commands.Commands.CommandType;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
+
 /**
- * Contatiner for Updates. This object maintains the history of transmissions
+ * Container for Updates. This object maintains the history of transmissions
  * between the Recognition server and anyone else.
  *
  * @author Matthew Dillard
  * @author Thomas Coladonato
  *
  */
-public class UpdateDeque implements Iterable<Update>{
+public class UpdateDeque implements Iterable<Update> {
     Deque<Update> syncDeque;
     Deque<Update> undoDeque;
 
     /**
      * Default constructor to make a list with an empty history
      */
-    public UpdateDeque(){
+    public UpdateDeque() {
         syncDeque = new LinkedList<Update>();
         undoDeque = new LinkedList<Update>();
     }
@@ -31,7 +31,7 @@ public class UpdateDeque implements Iterable<Update>{
      * Adds a complete Update to the end of the list
      * @param up
      */
-    public void add(Update up){
+    public void add(Update up) {
         syncDeque.addFirst(up);
         //may not be right
         undoDeque.clear();
@@ -40,14 +40,14 @@ public class UpdateDeque implements Iterable<Update>{
     /**
      * Undo an update
      */
-    public void undo(){
+    public void undo() {
         undoDeque.addFirst(syncDeque.removeFirst());
     }
 
     /**
      * Redo an update
      */
-    public void redo(){
+    public void redo() {
         syncDeque.addFirst(undoDeque.removeFirst());
     }
 
@@ -55,7 +55,7 @@ public class UpdateDeque implements Iterable<Update>{
     /**
      * @return Entire history of Updates
      */
-    public Deque<Update> getList(){
+    public Deque<Update> getList() {
         return syncDeque;
     }
 
@@ -65,14 +65,14 @@ public class UpdateDeque implements Iterable<Update>{
      * @param index
      * @return Update at index
      */
-    public Update get(int index){
+    public Update get(int index) {
         return ((LinkedList<Update>) syncDeque).get(index);
     }
 
     /**
      * @return most recent Update
      */
-    public Update front(){
+    public Update front() {
         return syncDeque.peekFirst();
     }
 
@@ -83,7 +83,7 @@ public class UpdateDeque implements Iterable<Update>{
      * @param s PaleoSketch Sketch
      * @param index
      */
-    public void execute(SrlSketch s,int index) {
+    public void execute(SrlSketch s, int index) {
         Update update = ((LinkedList<Update>) syncDeque).get(index);
         boolean undo = true;
         if (undo && update.getCommandList().size() != 0) {
@@ -96,11 +96,11 @@ public class UpdateDeque implements Iterable<Update>{
             } else if (command != null && command.getType() == CommandType.REDO) {
                 ((LinkedList<Update>) syncDeque).remove(index);
                 Update redoThese = undoDeque.removeFirst();
-                ((LinkedList<Update>)syncDeque).add(index,redoThese);
+                ((LinkedList<Update>) syncDeque).add(index, redoThese);
                 redoThese.execute(s);
             } else if (command != null && command.getType() == CommandType.CLEAR) {
                 //Clear sketch
-                for (Update upd:syncDeque) {
+                for (Update upd : syncDeque) {
                     upd.undo(s);
                 }
                 syncDeque.clear();
@@ -109,8 +109,7 @@ public class UpdateDeque implements Iterable<Update>{
                 undoDeque.clear(); //Prevent redo on any action other than undo or redo
                 update.execute(s);
             }
-        }
-        else {
+        } else {
             update.execute(s);
         }
 
@@ -120,7 +119,7 @@ public class UpdateDeque implements Iterable<Update>{
      * Executes the commands only from the last update
      * @param s PaleoSketch Sketch
      */
-    public void executeLast(SrlSketch s){
+    public void executeLast(SrlSketch s) {
         execute(s, 0);
     }
 
@@ -130,8 +129,8 @@ public class UpdateDeque implements Iterable<Update>{
      * @param s PaleoSketch Sketch
      */
     public void executeAll(SrlSketch s) {
-        for(int i = syncDeque.size()-1;i >=0; i --) {
-            execute(s,i);
+        for (int i = syncDeque.size() - 1; i >= 0; i--) {
+            execute(s, i);
         }
 
     }

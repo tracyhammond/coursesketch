@@ -38,8 +38,9 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
         recognitionManager = manager;
     }
 
-    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
 
+    @Override public void setSocketInitializer(final ISocketInitializer socketInitializer) {
+        throw new UnsupportedOperationException("This method is not supported");
     }
 
     @Override public void addUpdate(final RpcController controller, final RecognitionServer.AddUpdateRequest request,
@@ -125,9 +126,6 @@ public final class RecognitionService extends RecognitionServer.RecognitionServi
      * Creates a list of potential template matches.
      * </pre>
      *
-     * @param controller
-     * @param request
-     * @param done
      */
     @Override public void generateTemplates(final RpcController controller, final Sketch.RecognitionTemplate request,
             final RpcCallback<RecognitionServer.GeneratedTemplates> done) {

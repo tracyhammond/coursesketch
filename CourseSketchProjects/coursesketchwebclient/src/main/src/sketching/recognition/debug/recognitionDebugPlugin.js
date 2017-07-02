@@ -14,6 +14,6 @@
                 createSketchViewer(sketchList, sketchElementId);
                 createCommandViewer(updateList, commandElementId, updateIndex);
             }
-        }
-    }
+        };
+    };
 })();

@@ -167,11 +167,11 @@ function AdvanceDataListener(Request, defListener) {
             var dataList = result.results;
             for (var i = 0; i < dataList.length; i++) {
                 //console.log('Decoding listener');
-                var item = dataList[i];
-                if (!manageTimeCallback(item)) {
+                var dataItem = dataList[i];
+                if (!manageTimeCallback(dataItem)) {
                     break;
                 }
-            } // for
+            }
             if (listener.times <= 0) {
                 removeListener(msg.requestType, msg.requestId);
             }
@@ -220,7 +220,7 @@ function AdvanceDataListener(Request, defListener) {
      * @returns {Function} A function that can be used as a listener.
      */
     this.getListenerHook = function() {
-        return function (evt, msg) {
+        return function(evt, msg) {
             console.log('MESSAGE FROM THE RECOGNITION SERVER!');
             decode(evt, msg);
         };

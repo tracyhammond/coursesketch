@@ -2,7 +2,7 @@
  * Created by David Windows on 4/15/2016.
  */
 
-(function () {
+(function() {
     CourseSketch.dataListener.addRequestType(CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
     CourseSketch.connection.setRecognitionListener(CourseSketch.dataListener.getListenerHook());
     var recognitionRpcDefinition = function(method, req, callback) {
@@ -36,14 +36,14 @@
         console.log('rpc data is set!');
         var request = CourseSketch.prutil.createRequestFromData(generalRequest, CourseSketch.prutil.getRequestClass().MessageType.RECOGNITION);
         console.log('rpc data is added and being sent: ', generalRequest);
-        CourseSketch.dataListener.sendRequestWithTimeout(request, function (evt, msg) {
+        CourseSketch.dataListener.sendRequestWithTimeout(request, function(evt, msg) {
             console.log('we got info back from the recognition server!!', msg);
             // TODO: add exception checking
             // if (msg instanceof CourseSketch.)
             try {
                 // if callback is called with error then the protobuf implementation does not call it with msg.
                 callback(undefined, msg);
-            } catch(exception) {
+            } catch (exception) {
                 console.log(exception);
             }
         }, 1, returnType);

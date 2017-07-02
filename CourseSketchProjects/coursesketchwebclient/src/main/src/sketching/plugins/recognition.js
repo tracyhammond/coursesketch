@@ -1,7 +1,7 @@
 /**
  * Created by David Windows on 5/13/2016.
  */
-(function () {
+(function() {
 
     /**
      * A plugin used to send updates to the server.
@@ -20,8 +20,8 @@
         /**
          * @returns {String} The plugin id of this plugin.
          */
-        this.getPluginId = function () {
-          return pluginId;
+        this.getPluginId = function() {
+            return pluginId;
         };
 
         /**

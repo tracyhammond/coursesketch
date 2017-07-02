@@ -1,14 +1,10 @@
 package coursesketch.update.command;
 
-import java.util.UUID;
-
 import com.google.protobuf.ByteString;
-
 import coursesketch.update.Command;
 import protobuf.srl.sketch.Sketch.SrlPoint;
 import protobuf.srl.sketch.Sketch.SrlSketch;
 import protobuf.srl.sketch.Sketch.SrlStroke;
-import protobuf.srl.commands.Commands.CommandType;
 
 /**
  * Simple command to add a user-drawn stroke.
@@ -19,7 +15,7 @@ import protobuf.srl.commands.Commands.CommandType;
 public class AddStroke extends Command {
     protected SrlStroke data;
 
-    public AddStroke(SrlStroke input){
+    public AddStroke(SrlStroke input) {
         /*
         id = UUID.fromString(input.getId());
         type = CommandType.ADD_STROKE;
@@ -39,31 +35,33 @@ public class AddStroke extends Command {
     public ByteString toByteString() {
         SrlStroke.Builder strokebuilder = SrlStroke.newBuilder();
 
-        strokebuilder.setId(data.getId().toString());
+        strokebuilder.setId(data.getId());
         strokebuilder.setTime(data.getTime());
         strokebuilder.setName(data.getName());
 
-        for (SrlPoint p: data.getPointsList()){
+        for (SrlPoint p : data.getPointsList()) {
             SrlPoint.Builder pointbuilder = SrlPoint.newBuilder();
             pointbuilder.setX(p.getX());
             pointbuilder.setY(p.getY());
             pointbuilder.setTime(p.getTime());
-            pointbuilder.setId(p.getId().toString());
+            pointbuilder.setId(p.getId());
             strokebuilder.addPoints(pointbuilder.build());
         }
 
         return strokebuilder.build().toByteString();
     }
 
-    @Override
+
     /**
-     * adds a single stroke to the sketch for recognition
+     * Adds a single stroke to the sketch for recognition.
      */
-    public void execute(SrlSketch s) {
-        // s.add(data);
-    }
     @Override
-    public void undo(SrlSketch s) {
-        // s.remove(data);
+    public void execute(SrlSketch sketch) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void undo(SrlSketch sketch) {
+        throw new UnsupportedOperationException();
     }
 }

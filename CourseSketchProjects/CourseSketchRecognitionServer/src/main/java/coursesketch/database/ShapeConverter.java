@@ -41,6 +41,7 @@ import static coursesketch.database.RecognitionStringConstants.TEMPLATE_DATA;
 /**
  * Created by David Windows on 4/20/2016.
  */
+@SuppressWarnings({ "PMD.TooManyMethods" })
 public final class ShapeConverter implements ShapeConverterInterface<com.mongodb.DBObject> {
     /**
      * Declaration and Definition of Logger.
@@ -50,26 +51,30 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
     @Override
     public DBObject makeDbObject(final Sketch.SrlObject srlObject) {
         DBObject result = null;
-        if (srlObject.getType().equals(Sketch.SrlObject.ObjectType.SHAPE)) {
+        if (srlObject.getType().equals(Sketch.ObjectType.SHAPE)) {
             try {
                 result = makeDbShape(Sketch.SrlShape.parseFrom(srlObject.getObject()));
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                 LOG.error("There was no shape contained in the object.");
             }
-        } else if (srlObject.getType().equals(Sketch.SrlObject.ObjectType.STROKE)) {
+        } else if (srlObject.getType().equals(Sketch.ObjectType.STROKE)) {
             try {
                 result = makeDbStroke(Sketch.SrlStroke.parseFrom(srlObject.getObject()));
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                 LOG.error("There was no stroke contained in the object.");
             }
-        } else if (srlObject.getType().equals(Sketch.SrlObject.ObjectType.POINT)) {
+        } else if (srlObject.getType().equals(Sketch.ObjectType.POINT)) {
             try {
                 result = makeDbPoint(Sketch.SrlPoint.parseFrom(srlObject.getObject()));
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                 LOG.error("There was no point contained in the object.");
             }
+        } else {
+            throw new UnsupportedOperationException("Invalid type was trying to create db object");
         }
-        result.put(OBJECT_TYPE, srlObject.getType().name());
+        if (result != null) {
+            result.put(OBJECT_TYPE, srlObject.getType().name());
+        }
 
         return result;
     }
@@ -170,7 +175,7 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
      * @return A Recognition Tempalte that has been parsed.
      */
     public Sketch.RecognitionTemplate parseRecognitionTemplate(final DBObject templateObject) {
-        final String id = templateObject.get(TEMPLATE_ID).toString();
+        final String templateId = templateObject.get(TEMPLATE_ID).toString();
         final Sketch.SrlInterpretation interpretation = parseInterpretation(
                 (DBObject) templateObject.get(TEMPLATE_INTERPRETATION));
 
@@ -182,17 +187,17 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
         if (objectType == null) {
             final Sketch.SrlSketch srlSketch = parseSketch(templateData);
             recognitionTemplate.setSketch(srlSketch);
-        } else if (objectType.equals(Sketch.SrlObject.ObjectType.SHAPE.name())) {
+        } else if (objectType.equals(Sketch.ObjectType.SHAPE.name())) {
             final Sketch.SrlShape srlShape = parseShape(templateData);
             recognitionTemplate.setShape(srlShape);
-        } else if (objectType.equals(Sketch.SrlObject.ObjectType.STROKE.name())) {
+        } else if (objectType.equals(Sketch.ObjectType.STROKE.name())) {
             final Sketch.SrlStroke stroke = parseStroke(templateData);
             recognitionTemplate.setStroke(stroke);
         } else {
             LOG.error("", new TemplateException("Unknown template type: " + objectType));
         }
 
-        recognitionTemplate.setTemplateId(id).setInterpretation(interpretation);
+        recognitionTemplate.setTemplateId(templateId).setInterpretation(interpretation);
         return recognitionTemplate.build();
     }
 
@@ -220,22 +225,22 @@ public final class ShapeConverter implements ShapeConverterInterface<com.mongodb
 
     @Override
     public Sketch.SrlObject parseObject(final DBObject someObject) {
-        final Sketch.SrlObject.ObjectType objectType = Sketch.SrlObject.ObjectType.valueOf(
+        final Sketch.ObjectType objectType = Sketch.ObjectType.valueOf(
                 (String) someObject.get(OBJECT_TYPE));
 
         final Sketch.SrlObject.Builder srlObject = Sketch.SrlObject.newBuilder();
 
-        if (objectType.equals(Sketch.SrlObject.ObjectType.SHAPE)) {
+        if (objectType.equals(Sketch.ObjectType.SHAPE)) {
             final Sketch.SrlShape srlShape = parseShape(someObject);
-            srlObject.setType(Sketch.SrlObject.ObjectType.SHAPE);
+            srlObject.setType(Sketch.ObjectType.SHAPE);
             srlObject.setObject(srlShape.toByteString());
-        } else if (objectType.equals(Sketch.SrlObject.ObjectType.STROKE)) {
+        } else if (objectType.equals(Sketch.ObjectType.STROKE)) {
             final Sketch.SrlStroke srlStroke = parseStroke(someObject);
-            srlObject.setType(Sketch.SrlObject.ObjectType.STROKE);
+            srlObject.setType(Sketch.ObjectType.STROKE);
             srlObject.setObject(srlStroke.toByteString());
         } else {
             final Sketch.SrlPoint srlPoint = parsePoint(someObject);
-            srlObject.setType(Sketch.SrlObject.ObjectType.POINT);
+            srlObject.setType(Sketch.ObjectType.POINT);
             srlObject.setObject(srlPoint.toByteString());
         }
         return srlObject.build();

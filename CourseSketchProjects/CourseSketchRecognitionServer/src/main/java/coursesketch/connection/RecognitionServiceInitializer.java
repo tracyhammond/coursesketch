@@ -2,7 +2,6 @@ package coursesketch.connection;
 
 import coursesketch.database.RecognitionDatabaseClient;
 import coursesketch.recognition.BasicRecognition;
-import coursesketch.recognition.framework.RecognitionInterface;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
 import coursesketch.server.rpc.CourseSketchRpcService;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Initializes the recognition service.
  */
 @SuppressWarnings("serial")
 public final class RecognitionServiceInitializer extends ServerWebSocketInitializer {
@@ -26,11 +25,6 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
      * Declaration and Definition of Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger(RecognitionServiceInitializer.class);
-
-    /**
-     * Submission manager.
-     */
-    private RecognitionInterface manager;
 
     /**
      * Identity manager.
@@ -45,7 +39,6 @@ public final class RecognitionServiceInitializer extends ServerWebSocketInitiali
     public RecognitionServiceInitializer(final ServerInfo serverInfo) {
         super(serverInfo);
         databaseClient = new RecognitionDatabaseClient(serverInfo);
-        // manager = new RecognitionManager(databaseClient);
     }
 
     /**

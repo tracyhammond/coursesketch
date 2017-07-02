@@ -259,7 +259,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
 
-        if (!!this.newContainerId) {
+        if (Boolean(this.newContainerId)) {
             console.log('NEW CONTAINER ID ID ID ID ', this.newContainerId.getIdChain());
         }
 
