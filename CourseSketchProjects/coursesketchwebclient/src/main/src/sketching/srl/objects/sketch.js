@@ -22,6 +22,7 @@ function SRL_Sketch() {
     var boundingBox = new SRL_BoundingBox();
 
     this.addObject = function(srlObject) {
+        console.log('add id ', srlObject.getId());
         objectList.push(srlObject);
         objectIdMap.set(srlObject.getId(), srlObject);
     };
@@ -66,6 +67,7 @@ function SRL_Sketch() {
      * Returns the object based off of its id.
      */
     this.getSubObjectById = function(objectId) {
+        console.log('OBJECT ID MAP', objectIdMap);
         return objectIdMap.get(objectId);
     };
 

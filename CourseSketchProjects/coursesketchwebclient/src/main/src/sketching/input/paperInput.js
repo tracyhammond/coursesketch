@@ -4,9 +4,21 @@
  * @class InputListener
  */
 function InputListener() {
+    /**
+     * @type {SRL_Point}
+     */
     var currentPoint;
+
+    /**
+     * @type {SRL_Point}
+     */
     var pastPoint;
+
+    /**
+     * @type {SRL_Stroke}
+     */
     var currentStroke;
+
     /**
      * @typedef {Object} PSTool.
      * @member {PSTool}

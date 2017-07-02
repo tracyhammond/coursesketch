@@ -59,7 +59,7 @@ function SketchSurface() {
     };
 
     /**
-     * Returns the sketch object used by this sketch surface.
+     * @returns {SRL_Sketch} The sketch object used by this sketch surface.
      */
     this.getCurrentSketch = function() {
         return this.sketchManager.getCurrentSketch();
@@ -178,7 +178,7 @@ function SketchSurface() {
     };
 
     /**
-     * Returns the manager for this sketch surface.
+     * @returns {UpdateManager} Returns the manager for this sketch surface.
      */
     this.getUpdateManager = function() {
         return this.updateManager;

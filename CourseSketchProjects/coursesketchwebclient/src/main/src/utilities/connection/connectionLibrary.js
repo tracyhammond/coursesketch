@@ -1,4 +1,5 @@
 /**
+/**
  * Creates a new connection to the wsUri.
  *
  * With this connection you can send information which is encoded via protobufs.
@@ -85,11 +86,16 @@ function Connection(uri, encrypted, attemptReconnect) {
              * @param {Event} evt - An event containing data about receiving a message.
              */
             websocket.onmessage = function(evt) {
-                /*jshint maxcomplexity:16 */
+                /*jshint maxcomplexity:18 */
                 try {
+
                     var MessageType = CourseSketch.prutil.getRequestClass().MessageType;
                     // Decode the Request
                     var msg = CourseSketch.prutil.getRequestClass().decode(evt.data);
+
+                    if (msg.requestType === MessageType.RECOGNITION) {
+                        console.log('YO REC YO');
+                    }
                     // console.log('request decoded succesfully ');
                     if (msg.requestType === MessageType.TIME) {
                         console.log('getting from time');

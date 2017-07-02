@@ -78,5 +78,12 @@
             <version>jbcrypt-0.4</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.cedarsoftware</groupId>
+            <artifactId>json-io</artifactId>
+            <version>4.4.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
