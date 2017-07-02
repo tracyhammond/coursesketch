@@ -11,13 +11,13 @@
     </head>
 <script>
     $(document).ready(function() {
-        var request = CourseSketch.PROTOBUF_UTIL.Request();
-        request.requestType = CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.DATA_REQUEST;
-        var result = CourseSketch.PROTOBUF_UTIL.DataResult();
-        var resultItem = CourseSketch.PROTOBUF_UTIL.ItemResult();
-        var school = CourseSketch.PROTOBUF_UTIL.SrlSchool();
+        var request = CourseSketch.prutil.Request();
+        request.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_REQUEST;
+        var result = CourseSketch.prutil.DataResult();
+        var resultItem = CourseSketch.prutil.ItemResult();
+        var school = CourseSketch.prutil.SrlSchool();
         school.courses = CourseSketch.fakeCourses;
-        resultItem.query = CourseSketch.PROTOBUF_UTIL.ItemQuery.COURSE_SEARCH;
+        resultItem.query = CourseSketch.prutil.ItemQuery.COURSE_SEARCH;
         resultItem.data = school.toArrayBuffer();
 
         result.results = [resultItem];

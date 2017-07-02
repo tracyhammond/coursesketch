@@ -17,6 +17,17 @@
 				<protocLocation>${env.protoc}</protocLocation>
 			</properties>
 		</profile>
+		<profile>
+			<id>proto-not-local</id>
+			<activation>
+				<file>
+					<exists>/usr/bin/protoc</exists>
+				</file>
+			</activation>
+			<properties>
+				<protocLocation>/usr/bin/protoc</protocLocation>
+			</properties>
+		</profile>
 	</profiles>
 
 	<parent>
@@ -27,8 +38,25 @@
 	</parent>
 
 	<pluginRepositories>
+		<!-- jitpack -->
 		<pluginRepository>
-			<id>protoc-plugin</id>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</pluginRepository>
+
+		<!-- for the proto plugin -->
+		<pluginRepository>
+			<id>protoc-plugin-default</id>
+			<url>https://dl.bintray.com/sergei-ivanov/maven/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>protoc-plugin-backup</id>
 			<url>http://sergei-ivanov.github.com/maven-protoc-plugin/repo/releases/</url>
 		</pluginRepository>
 	</pluginRepositories>
@@ -50,7 +78,7 @@
 			<plugin>
 				<groupId>com.google.protobuf.tools</groupId>
 				<artifactId>maven-protoc-plugin</artifactId>
-				<version>0.3.2</version>
+				<version>0.4.2</version>
 				<configuration>
 					<checkStaleness>true</checkStaleness>
 					<staleMillis>10000</staleMillis>
@@ -102,5 +130,11 @@
 			<artifactId>protobuf-java</artifactId>
 			<version>${protobufVersion}</version>
 		</dependency>
+
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>4.0.0</version>
+        </dependency>
 	</dependencies>
 </project>

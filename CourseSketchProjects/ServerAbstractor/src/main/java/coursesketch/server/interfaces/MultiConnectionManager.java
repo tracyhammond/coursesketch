@@ -1,5 +1,10 @@
 package coursesketch.server.interfaces;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import protobuf.srl.request.Message.Request;
+import utilities.ConnectionException;
+
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,11 +14,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utilities.ConnectionException;
-import protobuf.srl.request.Message.Request;
 
 /**
  * A manager for holding all of the connections that were created.
@@ -60,23 +60,21 @@ public class MultiConnectionManager {
     /**
      * Creates a default {@link MultiConnectionManager}.
      *
-     * @param iParent  The server that is using this object.
-     * @param iIsLocal True if the connection should be for a local server instead of
-     *                 a remote server.
-     * @param iSecure  True if the connections should be secure.
+     * @param parent  The server that is using this object.
+     * @param serverInfo {@link ServerInfo} Contains all of the information about the server.
      */
-    public MultiConnectionManager(final AbstractServerWebSocketHandler iParent, final boolean iIsLocal, final boolean iSecure) {
-        this.parent = iParent;
-        this.connectLocally = iIsLocal;
-        this.secure = iSecure;
+    public MultiConnectionManager(final AbstractServerWebSocketHandler parent, final ServerInfo serverInfo) {
+        this.parent = parent;
+        this.connectLocally = serverInfo.isLocal();
+        this.secure = serverInfo.isSecure();
     }
 
     /**
      * Creates a connection given the different information.
      *
-     * @param serv           The server that is connected to this connection manager.
+     * @param server         The server that is connected to this connection manager.
      * @param isLocal        If the connection that is being created is local or remote.
-     * @param remoteAdress   The location to connect to if it is connecting remotely.
+     * @param remoteAddress  The location to connect to if it is connecting remotely.
      * @param port           The port that this connection is created at. (Has to be unique
      *                       to this computer)
      * @param isSecure       True if using SSL false otherwise.
@@ -85,28 +83,28 @@ public class MultiConnectionManager {
      * @return a completed {@link AbstractClientWebSocket}.
      * @throws ConnectionException If a connection has failed to be made.
      */
-    public static AbstractClientWebSocket createConnection(final AbstractServerWebSocketHandler serv, final boolean isLocal,
-            final String remoteAdress,
-            final int port, final boolean isSecure, final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
-        if (serv == null) {
+    public static AbstractClientWebSocket createConnection(final AbstractServerWebSocketHandler server, final boolean isLocal,
+            final String remoteAddress, final int port, final boolean isSecure,
+            final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
+        if (server == null) {
             throw new ConnectionException("Can't create connection with a null parent server");
         }
-        if (remoteAdress == null && !isLocal) {
+        if (remoteAddress == null && !isLocal) {
             throw new ConnectionException("Attempting to connect to null address");
         }
 
         final String start = isSecure ? "wss://" : "ws://";
 
-        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAdress + ":" + port) + SOCKET_PATH;
+        final String location = start + (isLocal ? "localhost:" + port : "" + remoteAddress + ":" + port) + SOCKET_PATH;
         LOG.info("Creating a client connecting to: {}", location);
-        return initializeConnection(location, connectionType, serv);
+        return initializeConnection(location, connectionType, server);
     }
 
     /**
      * Initializes the connection given certain parameters.
      *
      * @param location       The location of the server as a URI
-     * @param connectionType a class that represents the connection.
+     * @param connectionType A class that represents the connection.
      * @param serv           The server that is managing the connection.
      * @return A connection wrapper.
      * @throws ConnectionException Thrown if there are problems initializing the connection.
@@ -161,21 +159,20 @@ public class MultiConnectionManager {
      *
      * @param serv           The server that is connected to this connection manager.
      * @param isLocal        If the connection that is being created is local or remote.
-     * @param remoteAdress   The location to connect to if it is connecting remotely.
+     * @param remoteAddress   The location to connect to if it is connecting remotely.
      * @param port           The port that this connection is created at. (Has to be unique
      *                       to this computer)
      * @param isSecure       True if using SSL false otherwise.
      * @param connectionType The class that will be made (should be a subclass of
      *                       ConnectionWrapper)
      * @throws ConnectionException If a connection has failed to be made.
-     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int,
-     * Class)
+     * @see #createConnection(AbstractServerWebSocketHandler, boolean, String, int, boolean, Class)
      * @see #addConnection(AbstractClientWebSocket, Class)
      */
     public final void createAndAddConnection(final AbstractServerWebSocketHandler serv, final boolean isLocal,
-            final String remoteAdress, final int port, final boolean isSecure,
+            final String remoteAddress, final int port, final boolean isSecure,
             final Class<? extends AbstractClientWebSocket> connectionType) throws ConnectionException {
-        final AbstractClientWebSocket connection = createConnection(serv, isLocal, remoteAdress, port, isSecure, connectionType);
+        final AbstractClientWebSocket connection = createConnection(serv, isLocal, remoteAddress, port, isSecure, connectionType);
         addConnection(connection, connectionType);
     }
 
@@ -200,18 +197,21 @@ public class MultiConnectionManager {
     /**
      * Drops all of the connections then adds them all back.
      */
-    protected final void reconnect() {
+    public final void reconnect() {
         this.dropAllConnection(true, false);
         this.connectServers(parent);
     }
 
     /**
-     * Does nothing by default. Can be overwritten to make life easier.
+     * Does nothing by default.
+     *
+     * Can be overwritten to handle events when the servers are being connected.
      *
      * @param parentServer ignored by this implementation. Override to change
      *                     functionality.
      */
     public void connectServers(final AbstractServerWebSocketHandler parentServer) {
+        // Overwritten by specific implementations.
     }
 
     /**
@@ -250,16 +250,17 @@ public class MultiConnectionManager {
      * time. This can be overridden for a better server specific system.
      *
      * @param connectionType The type of connection being requested.
+     * @param <T> An instance of {@link AbstractClientWebSocket} that is returned.
      * @return A valid connection.
      */
     @SuppressWarnings("checkstyle:designforextension")
-    public AbstractClientWebSocket getBestConnection(final Class<? extends AbstractClientWebSocket> connectionType) {
-        final ArrayList<AbstractClientWebSocket> cons = connections.get(connectionType);
+    public <T extends AbstractClientWebSocket> T getBestConnection(final Class<T> connectionType) {
+        final ArrayList<? extends AbstractClientWebSocket> cons = connections.get(connectionType);
         if (cons == null) {
             throw new IllegalStateException("ConnectionType: " + connectionType.getName() + " does not exist in this manager");
         }
         LOG.info("getting Connection: {}", connectionType.getSimpleName());
-        return cons.get(0); // lame best connection.
+        return (T) cons.get(0); // lame best connection.
     }
 
     /**
@@ -271,14 +272,14 @@ public class MultiConnectionManager {
     public final void dropAllConnection(final boolean clearTypes, final boolean debugPrint) {
         synchronized (connections) {
             // <? extends ConnectionWrapper> // for safe keeping
-            for (Class<?> conKey : connections.keySet()) {
-                for (AbstractClientWebSocket connection : connections.get(conKey)) {
+            for (Map.Entry<Class<?>, ArrayList<AbstractClientWebSocket>> conKey : connections.entrySet()) {
+                for (AbstractClientWebSocket connection : conKey.getValue()) {
                     if (debugPrint) {
                         LOG.info("Connection URI: {}", connection.getURI());
                     }
                     connection.close();
                 }
-                connections.get(conKey).clear();
+                conKey.getValue().clear();
             }
             if (clearTypes) {
                 connections.clear();

@@ -1,5 +1,6 @@
 /* jshint camelcase: false */
 /* depends on objectAndInheritance.js */
+//jscs:disable
 
 /**
  * ******************************
@@ -25,7 +26,7 @@ function SRL_Object() {
     /**
      * The name of the object, such as "triangle1"
      */
-    var name = "";
+    var name = '';
 
     /**
      * The creation time of the object.
@@ -112,7 +113,7 @@ function SRL_Object() {
     /**
      * Gets the list of subobjects
      *
-     * @return list of objects that make up this object
+     * @return {Array<SRL_Object>} list of objects that make up this object
      */
     this.getSubObjects = function() {
         return m_subObjects;

@@ -5,7 +5,7 @@ function Question() {
     this.lectures = [];
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -13,18 +13,41 @@ function Question() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
+        /**
+         * Called when the actions event has been clicked.
+         *
+         * @param {Event} event - On Click event.
+         */
         shadowRoot.getElementById('actions').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = true;
         };
+
+        /**
+         * Called to closed the question dialog.
+         *
+         * @param {Event} event - On Click event.
+         */
         shadowRoot.getElementById('dialog-close').onclick = function(event) {
             shadowRoot.getElementById('actions-dialog').open = false;
         };
+
+        /**
+         * Called when the correct button has been pressed.
+         *
+         * @param {Event} event - On Change event.
+         */
         shadowRoot.getElementById('correct-lecture').onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
             var lecture = localScope.lectures[lectureIndex];
             localScope.loadSlides(lecture.idList, shadowRoot.getElementById('correct-slide'));
         };
+
+        /**
+         * Called when the incorrect button has been pressed.
+         *
+         * @param {Event} event - On Change event.
+         */
         shadowRoot.getElementById('incorrect-lecture').onchange = function(event) {
             var value = event.srcElement.value;
             var lectureIndex = parseInt(event.srcElement.dataset['lecture-' + value], 10);
@@ -35,10 +58,16 @@ function Question() {
 
     /**
      * Loads the lectures that can be navigated to in the question.
-     * @param {String} lectureIds list of lecture IDs to load
+     *
+     * @param {String} lectureIds - list of lecture IDs to load
      */
     this.loadLectures = function(lectureIds) {
         var localScope = this;
+        /**
+         * Called after lectures have been loaded.
+         *
+         * @param {List<SrlLecture>} lectures - a list of lectures.
+         */
         var callback = function(lectures) {
             shadowRoot.getElementById('correct-lecture').innerHTML = '';
             shadowRoot.getElementById('incorrect-lecture').innerHTML = '';
@@ -66,10 +95,16 @@ function Question() {
 
     /**
      * Loads slides into a slide select element.
-     * @param {List<String>} idList list of 'idsInLecture' containing the slides to load
-     * @param {Element} slideSelect select element to load the slides into
+     *
+     * @param {List<String>} idList - list of 'idsInLecture' containing the slides to load
+     * @param {Element} slideSelect - select element to load the slides into
      */
     this.loadSlides = function(idList, slideSelect) {
+        /**
+         * Called when lecture slides have been loaded.
+         *
+         * @param {List<SrlSlide>} slides - Slides that have been loaded from the server.
+         */
         var callback = function(slides) {
             slideSelect.innerHTML = '';
             for (var i = 0; i < slides.length; ++i) {
@@ -90,8 +125,9 @@ function Question() {
     };
 
     /**
-     * Adds multiple choice content to the question
-     * @param {Element} answerContent the MultiChoice element to add
+     * Adds multiple choice content to the question.
+     *
+     * @param {Element} answerContent - the MultiChoice element to add
      */
     this.addAnswerContent = function(answerContent) {
         answerContent.className = 'answer';
@@ -101,11 +137,11 @@ function Question() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function
+     * @param {Event} event - event that triggered this function
      * @return {SrlQuestion} the created protobuf object.
      */
     this.saveData = function(event) {
-        var questionProto = CourseSketch.PROTOBUF_UTIL.SrlQuestion();
+        var questionProto = CourseSketch.prutil.SrlQuestion();
 
         // Populate data in the proto object
         questionProto.id = generateUUID();
@@ -139,8 +175,8 @@ function Question() {
             if (!isUndefined(correctLectureId) && !isUndefined(correctSlideStr) && !isUndefined(incorrectLectureId) &&
                     !isUndefined(incorrectSlideStr) && correctLectureId !== '' && correctSlideStr !== '' && incorrectLectureId !== '' &&
                     incorrectSlideStr !== '') {
-                var correctNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
-                var incorrectNav = CourseSketch.PROTOBUF_UTIL.LectureNavigator();
+                var correctNav = CourseSketch.prutil.LectureNavigator();
+                var incorrectNav = CourseSketch.prutil.LectureNavigator();
                 correctNav.nextLectureId = correctLectureId;
                 correctNav.nextSlide = parseInt(correctSlideStr, 10);
                 incorrectNav.nextLectureId = incorrectLectureId;
@@ -152,7 +188,7 @@ function Question() {
 
         // If the textbox does not have an id, then a command has not been created for the question
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_QUESTION, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_QUESTION, true);
         }
         this.command.setCommandData(questionProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -165,7 +201,7 @@ function Question() {
     };
 
     /**
-     * @param {ProtoCommand} questionProto is the data to be loaded from the proto
+     * @param {ProtoCommand} questionProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      *
@@ -204,6 +240,11 @@ function Question() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener.
+     *
+     * @param {Function} listener - called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

@@ -14,6 +14,7 @@
 
 </head>
 <body>
+<div><H1>DO NOT ADD ANY MORE UNIT TESTS TO THIS FILE<br>Create a second (or third, etc...) file and put them there</H1></div>
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 	<script>
@@ -45,96 +46,42 @@
         });
 
         QUnit.module("lists", {
-            PROTOBUF_UTIL : new ProtobufSetup().initializeBuf(),
         });
 
         test("protobuf contains a list of supported objects", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            assert.ok(this.PROTOBUF_UTIL.getSupportedObjects().length > 0, "List contains " + this.PROTOBUF_UTIL.getSupportedObjects().length
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            assert.ok(this.prutil.getSupportedObjects().length > 0, "List contains " + this.prutil.getSupportedObjects().length
                     + " elements");
         });
 
         test("protobuf contains a list of supported enums", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            assert.ok(this.PROTOBUF_UTIL.getSupportedEnums().length > 0, "List contains " + this.PROTOBUF_UTIL.getSupportedEnums().length
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            assert.ok(this.prutil.getSupportedEnums().length > 0, "List contains " + this.prutil.getSupportedEnums().length
                     + " elements");
         });
 
-        /* Also tests that the default PROTOBUF_UTIL actually works as it is supposed to. */
-        QUnit.module("proto Objects");
-
-        test("protobuf correctly creates object with no arguments Using standard util", function(assert) {
-            var array = CourseSketch.PROTOBUF_UTIL.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var object = CourseSketch.PROTOBUF_UTIL[object]();
-            }
-            ok(true);
-
-        });
-
-        test("protobuf throws exception when object is called with arguments", function(assert) {
-            var array = CourseSketch.PROTOBUF_UTIL.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var spy = this.spy(CourseSketch.PROTOBUF_UTIL, object);
-                try {
-                    spy("arg1");
-                } catch (exception) {
-                }
-                assert.ok(spy.threw("ProtobufException"));
-            }
-        });
-
-        test("protobuf correctly creates object with no arguments", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var array = this.PROTOBUF_UTIL.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var object = this.PROTOBUF_UTIL[object]();
-            }
-            ok(true);
-
-        });
-
-        test("protobuf throws exception when object is called with arguments", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var array = this.PROTOBUF_UTIL.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var spy = this.spy(this.PROTOBUF_UTIL, object);
-                try {
-                    spy("arg1");
-                } catch (exception) {
-                }
-                assert.ok(spy.threw("ProtobufException"));
-            }
-        });
-
-        QUnit.module("converters", {
-            PROTOBUF_UTIL : new ProtobufSetup().initializeBuf(),
-        });
+        QUnit.module("converters");
         QUnit.test("createBaseCommand", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-            assert.equal(command.getCommandType(), this.PROTOBUF_UTIL.CommandType.ADD_STROKE);
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
+            assert.equal(command.getCommandType(), this.prutil.CommandType.ADD_STROKE);
             assert.equal(command.isUserCreated, false);
             assert.notEqual(command.getCommandId, null);
         });
 
         QUnit.test("createUpdateFromCommands", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-            var update = this.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
+            var update = this.prutil.createUpdateFromCommands([ command ]);
             assert.notEqual(update.getUpdateId(), null);
             assert.notEqual(update.getTime(), null);
             assert.equal(update.getCommands()[0], command);
         });
 
         test("createUpdateFromCommands throws exception when not array is given", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-            var spy = this.spy(this.PROTOBUF_UTIL.createUpdateFromCommands);
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
+            var spy = this.spy(this.prutil.createUpdateFromCommands);
             try {
                 spy(command);
             } catch (error) {
@@ -142,25 +89,25 @@
             assert.ok(spy.threw("TypeError"));
         });
         QUnit.test("createRequestFromUpdate", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
-            var update = this.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
+            var update = this.prutil.createUpdateFromCommands([ command ]);
 
-            var request = this.PROTOBUF_UTIL.createRequestFromUpdate(update, this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
-            assert.equal(request.getRequestType(), this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+            var request = this.prutil.createRequestFromUpdate(update, this.prutil.getRequestClass().MessageType.SUBMISSION);
+            assert.equal(request.getRequestType(), this.prutil.getRequestClass().MessageType.SUBMISSION);
             // TODO: add an assert to compare the buffer data decoded to the update to make sure that part is correct.
 
         });
 
         QUnit.test("createRequestFromUpdate fails when invalid type is given", function(assert) {
 
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
 
-            var request = this.PROTOBUF_UTIL.createRequestFromUpdate;
-            var spy = this.spy(this.PROTOBUF_UTIL.createRequestFromUpdate);
+            var request = this.prutil.createRequestFromUpdate;
+            var spy = this.spy(this.prutil.createRequestFromUpdate);
             try {
-                spy([ command ], this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+                spy([ command ], this.prutil.getRequestClass().MessageType.SUBMISSION);
             } catch (exception) {
 
             }
@@ -169,28 +116,27 @@
 
         QUnit.test("createRequestFromCommands", function(assert) {
 
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
 
-            var request = this.PROTOBUF_UTIL.createRequestFromCommands([ command ], this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
-            assert.equal(request.getRequestType(), this.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+            var request = this.prutil.createRequestFromCommands([ command ], this.prutil.getRequestClass().MessageType.SUBMISSION);
+            assert.equal(request.getRequestType(), this.prutil.getRequestClass().MessageType.SUBMISSION);
         });
     </script>
 	<script>
         QUnit.module("encode/decode", {
-            PROTOBUF_UTIL : new ProtobufSetup().initializeBuf(),
         });
         QUnit.test("decoding a protobuf works", function(assert) {
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            this.prutil = new ProtobufSetup().initializeBuf();
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
             var data = command.encode();
-            var result = this.PROTOBUF_UTIL.decodeProtobuf(data, this.PROTOBUF_UTIL.getSrlCommandClass());
+            var result = this.prutil.decodeProtobuf(data, this.prutil.getSrlCommandClass());
             assert.deepEqual(command, result);
         });
         QUnit.test("decoding a protobuf throws errors when needed", function(assert) {
 
-            this.PROTOBUF_UTIL = new ProtobufSetup().initializeBuf();
-            var command = this.PROTOBUF_UTIL.createBaseCommand(this.PROTOBUF_UTIL.CommandType.ADD_STROKE, false);
+            this.prutil = new ProtobufSetup().initializeBuf();
+            var command = this.prutil.createBaseCommand(this.prutil.CommandType.ADD_STROKE, false);
             var exceptionString = "Exception"
             var data = command.encode();
 
@@ -200,11 +146,11 @@
 
             var spy = this.spy();
             spy.withArgs(exceptionString);
-            
+
             console.log(spy);
 
             // method being tested
-            this.PROTOBUF_UTIL.decodeProtobuf(data, this.PROTOBUF_UTIL.getSrlCommandClass(), spy);
+            this.prutil.decodeProtobuf(data, this.prutil.getSrlCommandClass(), spy);
 
             assert.equal(spy.callCount, 2);
         });

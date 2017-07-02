@@ -1,12 +1,24 @@
-function SlideDataManager(parent, advanceDataListener, database, sendData, Request, ByteBuffer) {
-    var localScope = parent;
+// jscs:disable jsDoc
+/**
+ * A manager for slides that talks with the remote server.
+ *
+ * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
+ * @param {IndexedDB} database - The local database
+ * @param {Function} sendData - A function that makes sending data much easier
+ * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
+ * @constructor
+ */
+function SlideDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
+    var parentScope = parent;
 
     /**
      * Sets a slide in the local database
      *
-     * @param {SrlSlide} slide is a slide object
+     * @param {SrlSlide} slide - is a slide object
      *
-     * @param {Function} slideCallback function to be called after the slide setting is done
+     * @param {Function} slideCallback - function to be called after the slide setting is done
      */
     function setSlide(slide, slideCallback) {
         database.putInSlides(slide.id, slide.toBase64(), function(e, request) {
@@ -20,13 +32,13 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Sets a slide in the server database
      *
-     * @param {SrlSlide} slide is a slide object
-     * @param {Function} slideCallback function to be called after the slide setting is done
+     * @param {SrlSlide} slide - is a slide object
+     * @param {Function} slideCallback - function to be called after the slide setting is done
      */
     function insertSlideServer(slide, slideCallback) {
-        advanceDataListener.setListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
+        advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer(), function(evt, item) {
             console.log('RESPONSE PLEASE!!!!');
-            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+            advanceDataListener.removeListener(Request.MessageType.DATA_INSERT, CourseSketch.prutil.ItemQuery.LECTURESLIDE);
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
@@ -45,7 +57,6 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                 }
             });
         });
-        sendData.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
 
     /**
@@ -60,11 +71,10 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      */
     function updateSlide(slide, localCallback, serverCallback) {
         setSlide(slide, localCallback);
-        advanceDataListener.setListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.LECTURESLIDE, function(evt, item) {
-            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+        advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slide.toArrayBuffer(), function(evt, item) {
+            advanceDataListener.removeListener(Request.MessageType.DATA_UPDATE, CourseSketch.prutil.ItemQuery.LECTURESLIDE);
             serverCallback(item);
         });
-        sendData.sendDataUpdate(CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slide.toArrayBuffer());
     }
     parent.updateSlide = updateSlide;
 
@@ -72,9 +82,9 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
      * Adds a new slide to both local and server databases. Also updates the
      * corresponding slide given by the lecture's courseId.
      *
-     * @param {SrlSlide} slide slide object to insert
-     * @param {Function} localCallback function to be called after local insert is done
-     * @param {Function} serverCallback function to be called after server insert is done
+     * @param {SrlSlide} slide - slide object to insert
+     * @param {Function} localCallback - function to be called after local insert is done
+     * @param {Function} serverCallback - function to be called after server insert is done
      */
     function insertSlide(slide, localCallback, serverCallback) {
         setSlide(slide, function(e, request) {
@@ -90,7 +100,7 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
                 console.log('SLIDE IS UPADTED FROM SERVER! ' + slideUpdated.id);
                 parent.getCourseLecture(slide.lectureId, function(lecture) {
                     var idsInLectureList = lecture.idList;
-                    var idInLecture = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+                    var idInLecture = CourseSketch.prutil.IdsInLecture();
                     idInLecture.id = slideUpdated.id;
                     idInLecture.isSlide = true;
                     console.log('SLIDE IS STUFF! ' + idInLecture);
@@ -113,10 +123,10 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Deletes a slide from local database.
      *
-     * @param {String} slideId ID of the lecture to delete
-     * @param {Function} slideCallback function to be called after the deletion is done
+     * @param {String} slideId - ID of the lecture to delete
+     * @param {Function} slideCallback - function to be called after the deletion is done
      */
-    function deleteSlide (slideId, slideCallback) {
+    function deleteSlide(slideId, slideCallback) {
         database.deleteFromSlides(slideId, function(e, request) {
             if (!isUndefined(slideCallback)) {
                 slideCallback(e, request);
@@ -128,19 +138,19 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Gets a slide from the local database.
      *
-     * @param {String} slideId ID of the slide to get
+     * @param {String} slideId - ID of the slide to get
      *
-     * @param {Function} slideCallback function to be called after getting is complete,
+     * @param {Function} slideCallback - function to be called after getting is complete,
      *                paramater is the slide object
      */
-    function getSlideLocal (slideId, slideCallback) {
+    function getSlideLocal(slideId, slideCallback) {
         database.getFromSlides(slideId, function(e, request, result) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 slideCallback(undefined);
             } else {
                 var bytes = ByteBuffer.fromBase64(result.data);
                 if (!isUndefined(slideCallback)) {
-                    slideCallback(CourseSketch.PROTOBUF_UTIL.getLectureSlideClass().decode(bytes));
+                    slideCallback(CourseSketch.prutil.getLectureSlideClass().decode(bytes));
                 }
             }// end else
         });
@@ -150,10 +160,10 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Gets a slide from the local and server databases.
      *
-     * @param {String} slideId ID of the slide to get.
-     * @param {Function} localCallback function to be called after getting is complete,
+     * @param {String} slideId - ID of the slide to get.
+     * @param {Function} localCallback - function to be called after getting is complete,
      *                paramater is the slide object.
-     * @param {Function} serverCallback function to be called after looking in the server for the slide.
+     * @param {Function} serverCallback - function to be called after looking in the server for the slide.
      */
     function getLectureSlide(slideId, localCallback, serverCallback) {
         getLectureSlides([ slideId ], isUndefined(localCallback) ? undefined : function(slideList) {
@@ -167,12 +177,12 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
     /**
      * Gets a list of slides from the local and server databases.
      *
-     * @param {String} slideIds IDs of the slides to get
-     * @param {Function} localCallback function to be called after getting is complete,
+     * @param {String} slideIds - IDs of the slides to get
+     * @param {Function} localCallback - function to be called after getting is complete,
      *              paramater is a list of slide objects.
-     * @param {Function} serverCallback function to be called after looking in the server for the slide.
+     * @param {Function} serverCallback - function to be called after looking in the server for the slide.
      */
-    function getLectureSlides (slideIds, localCallback, serverCallback) {
+    function getLectureSlides(slideIds, localCallback, serverCallback) {
         if (isUndefined (slideIds) || slideIds === null || slideIds.length === 0) {
             if (!isUndefined(localCallback)) {
                 localCallback(new DatabaseException('Result is undefined!', 'Grabbing slide from server: ' + slideIds));
@@ -186,38 +196,37 @@ function SlideDataManager(parent, advanceDataListener, database, sendData, Reque
         for (var i = 0; i < slideIds.length; i++) {
             var currentSlideId = slideIds[i];
             (function(slideId) {
-                getSlideLocal(slideId, function(slide) {
-                    if (!isUndefined(slide) && !(slide instanceof DatabaseException)) {
-                        slidesFound.push(slide);
+                getSlideLocal(slideId, function(localSlide) {
+                    if (!isUndefined(localSlide) && !(localSlide instanceof DatabaseException)) {
+                        slidesFound.push(localSlide);
                     } else {
                         slideIdsNotFound.push(slideId);
                     }
                     barrier -= 1;
                     if (barrier === 0) {
                         if (slideIdsNotFound.length >= 1) {
-                            advanceDataListener.setListener(Request.MessageType.DATA_REQUEST,
-                                    CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, function(evt, item) {
-                                var school = CourseSketch.PROTOBUF_UTIL.getSrlLectureDataHolderClass().decode(item.data);
+                            var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.LECTURESLIDE, slideIdsNotFound);
+                            advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
+                                var school = CourseSketch.prutil.getSrlLectureDataHolderClass().decode(item.data);
                                 var slide = school.slides[0];
                                 if (isUndefined(slide) || slide instanceof DatabaseException) {
                                     if (!isUndefined(serverCallback)) {
                                         serverCallback(slide);
                                     }
                                     advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                            CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+                                            CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                                     return;
                                 }  // end if
-                                for (var i = 0; i < school.slides.length; i++) {
-                                    localScope.setSlide(school.slides[i]);
-                                    slidesFound.push(school.slides[i]);
+                                for (var slideIndex = 0; slideIndex < school.slides.length; slideIndex++) {
+                                    parentScope.setSlide(school.slides[slideIndex]);
+                                    slidesFound.push(school.slides[slideIndex]);
                                 } // end for
                                 if (!isUndefined(serverCallback)) {
                                     serverCallback(slidesFound);
                                 } // end if serverCallback
                                 advanceDataListener.removeListener(Request.MessageType.DATA_REQUEST,
-                                        CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE);
+                                        CourseSketch.prutil.ItemQuery.LECTURESLIDE);
                             }); // setListener
-                            sendData.sendDataRequest (CourseSketch.PROTOBUF_UTIL.ItemQuery.LECTURESLIDE, slideIdsNotFound);
                         } // end if lectureIdsNotFound
                         if (slidesFound.length > 0 && !isUndefined(localCallback)) {
                             localCallback (slidesFound);

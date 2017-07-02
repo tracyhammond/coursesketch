@@ -50,7 +50,7 @@ sinon.config = {
 
 (function (global) {
     var qTest = QUnit.test;
-    
+
     QUnit.test = global.test = function (testName, expected, callback, async) {
         if (arguments.length === 2) {
             callback = expected;

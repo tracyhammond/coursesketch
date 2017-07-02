@@ -1,0 +1,45 @@
+<html>
+<head>
+    <!-- basic utilities -->
+
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <link type="text/css" rel="stylesheet" href="/src/instructor/gradebook/instructorGradebook.css"/>
+
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+        data-namespace="gradeBook"></script>
+     <script type="text/javascript" src="/src/instructor/gradebook/instructorGradebook.js"> </script>
+    <script type="text/javascript" src="/src/instructor/gradebook/instructorGradebookStyling.js"> </script>
+
+    <link rel="import" href="/src/utilities/libraries/materialize/materializeInclude.html">
+</head>
+<template id="inputTemplate">
+    <div class = 'filledGradeCell'>
+        <form class="gradeForm" target="hiddenFrame">
+            <input class="gradeInput input-field" type="text" pattern="\d*\.?\d*" style="margin-bottom: 8px; padding:0px; width:9ch;" maxlength = "5">
+            <a class="addComment" href="#" style="display:block;">Add Comment</a>
+            <input class="commentInput input-field" type="text" maxlength = "20" style="display:none;">
+            <input type="submit" value="Submit" style="display:none;">
+        </form>
+        <a href="#" style="display:block;">View Assignment</a>
+        <a href="#" style="display:block;">View History</a>
+    </div>
+</template>
+    <body>
+    <iframe name="hiddenFrame" style="display:none"></iframe>
+    <div class="row">
+        <div class="col s12 tabholder">
+        </div>
+    </div>
+    <div class = "tableHolder row">
+        <div class = "horizontalTableHolder">
+            <div class = "verticalTableHolder">
+                <table id="All" class="tabletalk hoverable bordered centered">
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="New">
+       This is where you would go to create a new catagory! YO~!
+    </div>
+    </body>
+</html>

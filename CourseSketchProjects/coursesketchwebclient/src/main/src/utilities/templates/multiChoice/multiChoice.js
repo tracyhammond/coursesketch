@@ -6,8 +6,9 @@ function MultiChoice() {
 
     /**
      * Removes an answer choice from this multiple choice element.
-     * @param {Event} event the event that triggered this function
-     * @param {Element} answer the answer element to be removed
+     *
+     * @param {Event} event - the event that triggered this function
+     * @param {Element} answer - the answer element to be removed
      */
     this.removeAnswer = function(event, answer) {
         this.shadowRoot.querySelector('#answer-choices').removeChild(answer);
@@ -15,8 +16,9 @@ function MultiChoice() {
 
     /**
      * Marks an answer choice as correct.
-     * @param {Event} event the event that triggered this function
-     * @param {Element} answer the answer element to set as the correct answer
+     *
+     * @param {Event} event - the event that triggered this function
+     * @param {Element} answer - the answer element to set as the correct answer
      */
     this.setCorrectAnswer = function(event, answer) {
         var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
@@ -29,7 +31,8 @@ function MultiChoice() {
 
     /**
      * Adds an answer choice to this multiple choice element.
-     * @param {Event} event the event that triggered this function
+     *
+     * @param {Event} event - the event that triggered this function
      */
     this.addAnswer = function(event) {
         // Set up the parent
@@ -63,8 +66,13 @@ function MultiChoice() {
         // Correct check box
         var correct = document.createElement('span');
         correct.className = 'correct';
-        correct.onclick = function(event) {
-            localScope.setCorrectAnswer(event, answer);
+        /**
+         * Called to say that a check box is correct.
+         *
+         * @param {Event} onClickEvent - On Click event.
+         */
+        correct.onclick = function(onClickEvent) {
+            localScope.setCorrectAnswer(onClickEvent, answer);
         };
         answer.appendChild(correct);
 
@@ -72,8 +80,13 @@ function MultiChoice() {
         var close = document.createElement('span');
         close.className = 'close';
         close.textContent = '×';
-        close.onclick = function(event) {
-            localScope.removeAnswer(event, answer);
+        /**
+         * Called to remove the answer choice.
+         *
+         * @param {Event} onClickEvent - On Click event.
+         */
+        close.onclick = function(onClickEvent) {
+            localScope.removeAnswer(onClickEvent, answer);
         };
         answer.appendChild(close);
 
@@ -82,7 +95,7 @@ function MultiChoice() {
     };
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -90,8 +103,10 @@ function MultiChoice() {
         shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
 
-        // Bind addAnswer to click
-        localScope.shadowRoot.querySelector('#add').onclick = function(event) {
+        /**
+         * Bind addAnswer to click.
+         */
+        localScope.shadowRoot.querySelector('#add').onclick = function(event) {// jscs:ignore jsDoc
             localScope.addAnswer(event);
         };
     };
@@ -99,16 +114,16 @@ function MultiChoice() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function.
+     * @param {Event} event - event that triggered this function.
      * @return {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
-        var mcProto = CourseSketch.PROTOBUF_UTIL.MultipleChoice();
+        var mcProto = CourseSketch.prutil.MultipleChoice();
 
         // Populate data in the proto object
         var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
         for (var i = 0; i < answerChoices.length; ++i) {
-            var answerChoice = CourseSketch.PROTOBUF_UTIL.AnswerChoice();
+            var answerChoice = CourseSketch.prutil.AnswerChoice();
             answerChoice.id = answerChoices[i].id;
             answerChoice.text = answerChoices[i].querySelector('.label').value;
             mcProto.answerChoices.push(answerChoice);
@@ -117,7 +132,7 @@ function MultiChoice() {
 
         // If the multi-choice item does not have an id, then a command has not been created for the multi-choice item
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_MULTIPLE_CHOICE, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_MULTIPLE_CHOICE, true);
         }
         this.command.setCommandData(mcProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -130,7 +145,7 @@ function MultiChoice() {
     };
 
     /**
-     * @param {ProtoCommand} mcProto is the data to be loaded from the proto
+     * @param {ProtoCommand} mcProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -157,6 +172,11 @@ function MultiChoice() {
         return this.finishedCallback;
     };
 
+    /**
+     * Sets the listener.
+     *
+     * @param {Function} listener - called when the data is finished saving.
+     */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };

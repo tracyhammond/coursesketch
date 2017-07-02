@@ -3,29 +3,29 @@ validateFirstRun(document.currentScript);
 /**
  * This function merges two existing api objects into one api object.
  *
- * @param {Object} originalApi The base api object.
- * @param {Object} objectApi The second api object, usually used for passing objects into an api.
+ * @param {Object} originalApi - The base api object.
+ * @param {Object} objectApi - The second api object, usually used for passing objects into an api.
  * @return {Object} result An api object that contains the contents of both api objects.
  */
 function mergeApi(originalApi, objectApi){
     var result = {};
-    for (var key in originalApi) {
-        if (originalApi.hasOwnProperty(key)) {
-            result[key] = originalApi[key];
+    for (var originalKey in originalApi) {
+        if (originalApi.hasOwnProperty(originalKey)) {
+            result[originalKey] = originalApi[originalKey];
         }
     }
-    for (var key in objectApi) {
-        if (objectApi.hasOwnProperty(key)) {
-            result[key] = objectApi[key];
+    for (var objectKey in objectApi) {
+        if (objectApi.hasOwnProperty(objectKey)) {
+            result[objectKey] = objectApi[objectKey];
         }
     }
     return result;
 }
 
 /**
- * This function adds the ability to call console.log() to the api.
+ * This function adds the ability to call {@code console.log()} to the api.
  *
- * @param {String} text The string that will be printed to console.
+ * @param {String} text - The string that will be printed to console.
  */
 function debugLog(text) {
     console.log(text);
@@ -34,16 +34,17 @@ function debugLog(text) {
 /**
  * This function builds an object that holds an api for manipulating the problem panel.
  *
- * @param {Object} panel The problem panel from the student experiment.
- * @param {Object} problemNav The bank problem info object.
- * @param {Boolean} hasSubmission Flag that shows if this problem has a submission or not.
+ * @param {Object} panel - The problem panel from the student experiment.
+ * @param {Object} problemNav - The bank problem info object.
+ * @param {Boolean} hasSubmission - Flag that shows if this problem has a submission or not.
+ * @param {Object} panel - The problem panel from the student experiment.
  */
-function PanelEditApi(panel, problemNav, hasSubmission){
+function PanelEditApi(panel, problemNav, hasSubmission) {
 
     /**
      * This function allows scripts to create a text area object next to the sketch surface in an experiment.
      *
-     * @param {Object} textAreaObj The object that defines the text area parameters (width, height, location, className, textContent).
+     * @param {Object} textAreaObj - The object that defines the text area parameters (width, height, location, className, textContent).
      */
     this.addTextArea = function(textAreaObj) {
         // Builds a text area from a passed in object.
@@ -75,7 +76,7 @@ function PanelEditApi(panel, problemNav, hasSubmission){
     /**
      * This function allows scripts to change the background of the sketch surface to any supported type.
      *
-     * @param {String} bgClass A string containing the className that corresponds to the background type.
+     * @param {String} bgClass - A string containing the className that corresponds to the background type.
      */
     this.setSketchSurfaceBg = function(bgClass) {
         // Sets the className of the sketch surface and adds .sub-panel + .submittable
@@ -85,7 +86,7 @@ function PanelEditApi(panel, problemNav, hasSubmission){
     /**
      * This function allows scripts to set the image in the image-background class type.
      *
-     * @param {String} backgroundUrl A string containing the Url of the desired background image.
+     * @param {String} backgroundUrl - A string containing the Url of the desired background image.
      */
     this.setSketchBgImage = function(backgroundUrl) {
         // Sets the Url of backgroundImage
@@ -96,7 +97,7 @@ function PanelEditApi(panel, problemNav, hasSubmission){
     /**
      * This function allows scripts to create an embedded-html object next to the sketch surface in an experiment.
      *
-     * @param {Object} htmlObj The object that defines the embedded-html parameters (width, height, location, htmlCode).
+     * @param {Object} htmlObj - The object that defines the embedded-html parameters (width, height, location, htmlCode).
      */
     this.addEmbeddedHtml = function(htmlObj) {
         var sketchSurface = panel.querySelector('.submittable');
@@ -150,10 +151,10 @@ var api = {
 /**
  * This function parses and executes the script that is passed in.
  *
- * @param {Object} problemNav The object containing the bank problem data.
- * @param {Node} panel The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
- * @param {Boolean} hasSubmission Flag that shows if this problem has a submission or not.
- * @param {Function} callback A function to call when the script is done executing to finish experiment setup.
+ * @param {Object} problemNav - The object containing the bank problem data.
+ * @param {Node} panel - The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
+ * @param {Boolean} hasSubmission - Flag that shows if this problem has a submission or not.
+ * @param {Function} callback - A function to call when the script is done executing to finish experiment setup.
  */
 function executeScript(problemNav, panel, hasSubmission, callback) {
     var script = problemNav.getProblemScript();

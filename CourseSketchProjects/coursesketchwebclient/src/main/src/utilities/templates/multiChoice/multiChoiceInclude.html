@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#multiChoiceTemplateImport');
-            var template = link.import.querySelector('#multi-choice');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'multiChoiceTemplateImport','multi');
 
             var newElement = new MultiChoice();
 

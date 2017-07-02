@@ -18,6 +18,8 @@
  *
  * this.Inherits(SuperClass); // super call inside object AND
  * SubClass.Inherits(SuperClass);
+ *
+ * @param {*} Parent - The parent class.
  */
 Function.prototype.Inherits = function(Parent) {
     var localScope = this;
@@ -26,6 +28,11 @@ Function.prototype.Inherits = function(Parent) {
     if (!isUndefined(Parent.prototype.superConstructor)) {
         var parentConstructor = Parent.prototype.superConstructor;
         var localConstructor = undefined;
+        /**
+         * Super constructor.
+         *
+         * @type {Function}
+         */
         localConstructor = localScope.prototype.superConstructor = function() {
             // special setting
             this.superConstructor = parentConstructor;
@@ -40,6 +47,9 @@ Function.prototype.Inherits = function(Parent) {
             this.superConstructor = localConstructor;
         };
     } else {
+        /**
+         * SuperConstructor.
+         */
         localScope.prototype.superConstructor = function() {
             if (arguments.length >= 1) {
                 Parent.apply(this, Array.prototype.slice.call(arguments, 0));
@@ -60,13 +70,20 @@ Function.prototype.Inherits = function(Parent) {
  * *************************************************************
  */
 if (isUndefined(makeValueReadOnly)) {
+    /**
+     * Makes a value readonly.
+     *
+     * @param {Object} obj - The object this is applying to
+     * @param {String} property - The property that is being defined as read only.
+     * @param {*} value - The value that is returned when the property is accessed.
+     */
     function makeValueReadOnly(obj, property, value) {
         if (typeof property !== 'string') {
             throw new Error('property argument must be a string');
         }
         Object.defineProperty(obj, property, {
-            value:      value,
-            writable:   false
+            value: value,
+            writable: false
         });
     }
 }

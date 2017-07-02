@@ -1,4 +1,4 @@
-<html>
+ <html>
 <head>
 	<script type="text/javascript" src="/src/common/review/multiview/multiview.js"></script>
 	<link id="mvSketchImport" rel="import" href="multiview.html">
@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#mvSketchImport');
-            var template = link.import.querySelector('#mvSketch');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document, 'mvSketchImport', 'mvSketch');
 
             var newElement = new MvSketch();
 
