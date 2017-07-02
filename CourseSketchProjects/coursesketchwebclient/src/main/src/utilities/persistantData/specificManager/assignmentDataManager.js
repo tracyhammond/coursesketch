@@ -1,15 +1,13 @@
 /**
  * A manager for assignments that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - A listener for the database.
- * @param {IndexedDB} parentDatabase - The local database
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} parentDatabase - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Request, ByteBuffer) {
-    var dataListener = advanceDataListener;
+function AssignmentDataManager(parent, advanceDataListener, parentDatabase, ByteBuffer) {
     var database = parentDatabase;
     var parentScope = parent;
 
@@ -18,7 +16,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * not exist.
      *
      * @param {SrlAssignment} assignment - Assignment to modify state of.
-     * @param {Function} assignmentCallback - Function to be called after the state is modified.
+     * @param {Function} [assignmentCallback] - Function to be called after the state is modified.
      */
     function stateCallback(assignment, assignmentCallback) {
         /*jshint maxcomplexity:13 */
@@ -70,7 +68,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Calls that stateCallback with all of the assignments in the list
      * modifying their states appropriately.
      *
-     * @param {List<SrlAssignment>} assignmentList - The list of assignments to modify the state of.
+     * @param {SrlAssignment[]} assignmentList - The list of assignments to modify the state of.
      * @param {Function} assignmentCallback - Function to be called after the state is modified.
      */
     function stateCallbackList(assignmentList, assignmentCallback) {
@@ -101,7 +99,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Deletes a assignment from local database.
      * This does not delete the id pointing to this item in the respective course.
      *
-     * @param {String} assignmentId - ID of the assignment to delete
+     * @param {UUID} assignmentId - ID of the assignment to delete
      * @param {Function} assignmentCallback - Function to be called after the deletion is done.
      */
     function deleteAssignment(assignmentId, assignmentCallback) {
@@ -153,7 +151,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Adds a new assignment to both local and server databases. Also updates the
      * corresponding course given by the assignment's courseId.
      *
-     * @param {String} assignment
+     * @param {SrlAssignment} assignment
      *                assignment object to insert
      * @param {Function} localCallback
      *                function to be called after local insert is done
@@ -225,7 +223,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
     /**
      * Gets an Assignment from the local database.
      *
-     * @param {String} assignmentId - ID of the assignment to get
+     * @param {UUID} assignmentId - ID of the assignment to get
      * @param {Function} assignmentCallback - function to be called after getting is complete, parameter
      *                is the assignment object, can be called with {@link DatabaseException} if an exception occurred getting the data.
      */
@@ -256,7 +254,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      *
      * This does attempt to pull assignments from the server!
      *
-     * @param {List<String>} assignmentIdList - list of IDs of the assignments to get
+     * @param {UUID[]} assignmentIdList - list of IDs of the assignments to get
      * @param {Function} assignmentCallbackPartial - called when assignments are grabbed from the local
      *            database only. This list may not be complete. This may also
      *            not get called if there are no local assignments.
@@ -362,7 +360,7 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
      * Returns a assignment with the given assignmentId will ask the server if it
      * does not exist locally.
      *
-     * @param {String} assignmentId - The id of the assignment we want to find.
+     * @param {UUID} assignmentId - The id of the assignment we want to find.
      * @param {Function} assignmentCallback - The method to call when the assignment has been found. (this is asynchronous)
      */
     function getAssignment(assignmentId, assignmentCallback) {
@@ -374,11 +372,16 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Requ
         /**
          * Ensures that the callback is only called once.
          *
-         * @param {List<Assignments>} assignmentList - The assignments that were loaded.
+         * @param {List<SrlAssignment> | BaseException} assignmentList - The assignments that were loaded.
          */
         function callOnce(assignmentList) {
             if (!called) {
                 called = true;
+                if (
+                    (assignmentList instanceof CourseSketch.DatabaseException || isUndefined(assignmentList[0]))) {
+                    assignmentCallback(new DatabaseException('Error with grabbing local assignment', assignmentList));
+                    return;
+                }
                 assignmentCallback(assignmentList[0]);
             }
         }

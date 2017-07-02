@@ -28,12 +28,6 @@
             return localMethod(timeThing);
         };
     })(this);
-    function restoreRealTime() {
-        setTimeout = setRealTimeout;
-        clearTimeout = clearRealTimeout;
-        setInterval = setRealInterval;
-        clearInterval = clearRealInterval;
-    }
 </script>
 <script src="/src/utilities/functions/base.js"></script>
 <link rel="stylesheet" href="/bower_components/qunit/qunit/qunit.css">
@@ -63,5 +57,9 @@
 <script src="qunit-protobuf.js"></script>
 <script>
     QUnit.config.testTimeout = 5000;
+
+    CourseSketch.getExceptionParentElement = function() {
+        return document.body;
+    };
 </script>
 </head>

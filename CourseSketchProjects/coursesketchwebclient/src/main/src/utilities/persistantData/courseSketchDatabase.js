@@ -27,6 +27,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     var courseManager;
     var assignmentManager;
     var courseProblemManager;
+    var bankProblemManager;
     var submissionManager;
     var lectureDataManager;
     var slideDataManager;
@@ -111,13 +112,14 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      */
     this.start = function() {
         // creates a manager for just courses.
-        gradeDataManager = new GradeDataManager(this, dataListener, database, Request, ByteBuffer);
-        courseManager = new CourseDataManager(this, dataListener, database, Request, ByteBuffer);
-        assignmentManager = new AssignmentDataManager(this, dataListener, database, Request, ByteBuffer);
-        courseProblemManager = new CourseProblemDataManager(this, dataListener, database, Request, ByteBuffer);
-        submissionManager = new SubmissionDataManager(this, dataListener, database, Request, ByteBuffer);
-        lectureDataManager = new LectureDataManager(this, dataListener, database, Request, ByteBuffer);
-        slideDataManager = new SlideDataManager(this, dataListener, database, Request, ByteBuffer);
+        gradeDataManager = new GradeDataManager(this, dataListener, database, ByteBuffer);
+        courseManager = new CourseDataManager(this, dataListener, database, ByteBuffer);
+        assignmentManager = new AssignmentDataManager(this, dataListener, database, ByteBuffer);
+        courseProblemManager = new CourseProblemDataManager(this, dataListener, database, ByteBuffer);
+        bankProblemManager = new BankProblemDataManager(this, dataListener, database, ByteBuffer);
+        submissionManager = new SubmissionDataManager(this, dataListener, database, ByteBuffer);
+        lectureDataManager = new LectureDataManager(this, dataListener, database, ByteBuffer);
+        slideDataManager = new SlideDataManager(this, dataListener, database, ByteBuffer);
 
         console.log('Database is ready for use! with user: ' + userId);
         databaseFinishedLoading = true;

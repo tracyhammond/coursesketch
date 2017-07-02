@@ -283,7 +283,6 @@ function AdvanceDataListener(Request, defListener) {
         }, TIMEOUT_TIME);
     };
 
-
     /**
      * Sends a request to retrieve data from the server.
      *

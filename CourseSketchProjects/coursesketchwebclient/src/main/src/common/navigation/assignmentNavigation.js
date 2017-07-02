@@ -475,7 +475,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * This also sets the subgroupList.
      * Calls the callback after the local data is set.
      *
-     * @param {UUID} assignmentId - The id of the asignment to load.
+     * @param {UUID} assignmentId - The id of the assignment to load.
      * @param {Function} [callback] - A callback function called when the assignment is loaded.
      */
     function loadAssignment(assignmentId, callback) {
@@ -495,7 +495,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
                 dataLoaded = true; // this one will take longer so we do this one second.
             });
         }
-        CourseSketch.dataManager.getAssignment(assignmentId, setData, setData);
+        CourseSketch.dataManager.getAssignment(assignmentId, setData);
     }
 
     /**
@@ -746,7 +746,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {Number} index - the index we want to switch to.
      * @param {Number} direction - The direction of navigation.
      */
-    function cantThinkOfFunctionName(index, direction) {
+    function navigateNestedInDirection(index, direction) {
         if (index < 0 && assignmentIdStack.length > 0) {
             navigateFromNestedBackwards();
             return;
@@ -781,7 +781,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     function changeSubgroup(index, direction) {
         if ((index < 0 || index >= subgroupList.length) && (!isLoopable() && !isRandomNavigation())) {
-            cantThinkOfFunctionName(index, direction);
+            navigateNestedInDirection(index, direction);
             return;
         }
         if (isRandomNavigation()) {
