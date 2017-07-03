@@ -2,8 +2,14 @@
     height: 100%;
 }
 
+ul.collapsible li {
+    box-sizing: content-box;
+}
+
 div.collapsible-body {
     display: inherit;
+    padding: 1rem;
+    border-bottom: none;
 }
 
 *[data-prop] {

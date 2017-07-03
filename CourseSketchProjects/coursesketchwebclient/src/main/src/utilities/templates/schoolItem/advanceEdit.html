@@ -10,10 +10,10 @@
     </style>
     <div class="card" style="z-index: 100;">
         <div>
-            <span data-prop="id" class="need-loading">
+            <div style="display: inline;" data-prop="id" class="need-loading ">
                 <span>ID:</span>
                 <span class="data"></span>
-            </span>
+            </div>
             <button class="save"></button>
             <button class="closeButton"></button>
         </div>
@@ -23,8 +23,8 @@
     <!-- details -->
     <template class="Course Assignment Problem">
         <li>
-            <div class="collapsible-header active"><i class="material-icons">mode_edit</i>Details</div>
-            <div class="collapsible-body row">
+            <div class="collapsible-header deep-purple accent-1 active"><i class="material-icons">mode_edit</i>Details</div>
+            <div class="collapsible-body row blue lighten-4">
                 <div data-prop="name" class="need-saving need-loading col s6">
                     <span>Name:</span>
                     <input type="text" class="data">
@@ -39,9 +39,7 @@
                         <textarea class="data"></textarea>
                     </div>
                 </div>
-                <div class="col s12 section">
-                    <div class="col s12 divider"></div>
-                </div>
+                <div class="col s12 divider black" style="margin-bottom: 1rem;"></div>
                 <div data-prop="imageUrl" class="need-saving need-loading col s6">
                     <span>Image:</span>
                     <img class="data">
@@ -73,8 +71,8 @@
     <!-- dates -->
     <template class="Course Assignment">
         <li>
-            <div class="collapsible-header"><i class="material-icons">perm_contact_calendar</i>Dates</div>
-            <div class="collapsible-body row">
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Dates</div>
+            <div class="collapsible-body row blue lighten-4">
                 <div data-prop="accessDate" class="need-saving need-loading col s3">
                     <span>accessDate:</span>
                     <div data-date class="data">
@@ -109,8 +107,8 @@
     <!-- course specific -->
     <template class="Course">
         <li>
-            <div class="collapsible-header"><i class="material-icons">vpn_key</i>Registration key</div>
-            <div class="collapsible-body">
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">vpn_key</i>Registration key</div>
+            <div class="collapsible-body blue lighten-4">
                 <div data-prop="registrationKey" class="need-loading">
                     <span>Registration key:</span>
                     <span class="data">No Key Created yet</span>
@@ -122,41 +120,59 @@
     <!-- assignment specific -->
     <template class="Assignment">
         <li>
-            <div class="collapsible-header"><i class="material-icons">av_timer</i>Late Policy</div>
-            <div class="collapsible-body">
-                <div class="latePolicy">
-                    <h3>Late Policy</h3>
-                    <span>
-                <span>Algorithm:</span>
-                <select id="elementFunction" class="need-saving need-loading" data-prop="functionType">
-                    <option value="STEPPING_FUNCTION">Stepping</option>
-                    <option value="LINE">Linear</option>
-                    <option value="EXPONENTIAL">Exponential</option>
-                </select>
-            </span>
-                    <span>
-                <span>Time Period:</span>
-                <select id="elementTimeFrame" class="need-saving need-loading" data-prop="timeFrameType">
-                    <option value="CONSTANT">Constantly</option>
-                    <option value="MINUTE">Every Minute</option>
-                    <option value="HOUR">Every Hour</option>
-                    <option value="DAY">Every Day</option>
-                </select>
-            </span>
-                    <span>
-                <span>Reduction Rule:</span>
-                <select id="elementSubtraction" class="need-saving need-loading" data-prop="subtractionType">
-                    <option value="CAP">Cap grade</option>
-                    <option value="PERCENT">percent of actual grade</option>
-                </select>
-            </span>
-                    <button>generate example graph from options</button>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">av_timer</i>Late Policy</div>
+            <div class="collapsible-body blue lighten-4">
+                <div data-prop="latePolicy" class="need-loading need-saving row" style="margin-bottom: 0px;">
+                    <div class="data col s6 row" style="margin-bottom: 0px;">
+                        <div data-prop="functionType" class="col s4 need-loading need-saving">
+                            <span>Algorithm:</span>
+                            <select class="data">
+                                <option value="0">Stepping</option>
+                                <option value="1">Linear</option>
+                                <option value="2">Exponential</option>
+                            </select>
+                        </div>
+                        <div class="need-saving need-loading col s4" data-prop="timeFrameType">
+                            <span>Time Period:</span>
+                            <select class="data">
+                                <option value="CONSTANT">Constantly</option>
+                                <option value="MINUTE">Every Minute</option>
+                                <option value="HOUR">Every Hour</option>
+                                <option value="DAY">Every Day</option>
+                            </select>
+                        </div>
+                        <div class="need-saving need-loading col s4" data-prop="subtractionType">
+                            <span>Reduction Rule:</span>
+                            <select class="data">
+                                <option value="CAP">Cap grade</option>
+                                <option value="PERCENT">percent of actual grade</option>
+                            </select>
+                        </div>
+                        <div class="divider col s12 black" style="margin-bottom: 1rem; margin-top: 1rem;"></div>
+                        <div class="need-saving need-loading col s4" data-prop="rate">
+                            <span>Rate:</span>
+                            <input class="data" type="number" step="0.1" min="0" max="1">
+                        </div>
+                        <div class="need-saving need-loading col s4" data-prop="applyOnlyToLateProblems">
+                            <span>Apply late policy on</span>
+                            <div class="switch">
+                                <label>
+                                    100%
+                                    <input id="myonoffswitch" name="onoffswitch" type="checkbox" class="data">
+                                    <span class="lever"></span>
+                                    Grade
+                                </label>
+                            </div>
+                        </div>
+                        <button class="col s4 btn">show example</button>
+                    </div>
                 </div>
+
             </div>
         </li>
         <li>
-            <div class="collapsible-header"><i class="material-icons">grade</i>Grade specifics</div>
-            <div class="collapsible-body">
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">grade</i>Grade specifics</div>
+            <div class="collapsible-body blue lighten-4">
             </div>
         </li>
     </template>

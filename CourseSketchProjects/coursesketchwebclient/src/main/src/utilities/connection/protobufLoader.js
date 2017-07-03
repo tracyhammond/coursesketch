@@ -249,7 +249,6 @@ function ProtobufSetup() {
         return request;
     };
 
-
     /**
      * Given a protobuf object compile it to other data and return a request.
      *
@@ -494,7 +493,7 @@ function ProtobufSetup() {
      * @param {Function} [onError] - A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
      *
-     * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
+     * @return {ProtobufObject} decoded protobuf object.  (This will not return undefined)
      * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {
@@ -544,7 +543,7 @@ function ProtobufSetup() {
      *
      * @param {ProtobufObject} protobuf - An object that we want to "clean".
      * @param {ProtobufMessage} protobufType - A class representing the object we want to "clean".
-     * @returns {ProyobufObject} A clean version of the object we sent in.
+     * @returns {ProtobufObject} A clean version of the object we sent in.
      */
     this.cleanProtobuf = function(protobuf, protobufType) {
         // TODO: check to see if we can extract the type from the protobuf object.

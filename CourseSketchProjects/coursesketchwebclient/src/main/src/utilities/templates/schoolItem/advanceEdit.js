@@ -1,213 +1,346 @@
 // jscs:disable jsDoc
-(function () {
+
+var advancedEditTestObject = (function () {
 
     /**
-     * @param {ShadowRoot} parent - the root of the parent.
-     * @return {Map} A map of the data mapped to the element.
+     * Holds the object with the specific functions that loads data.
      */
-    function getInput(parent) {
-        var inputList = parent.querySelectorAll('.need-saving');
+    var protoTypes = {};
+
+    var IGNORE_FIELD = {special: "N/A"};
+
+    /**
+     * Loads the data from the school item into the edit panel.
+     *
+     * @param {Protobuf} schoolItemData - A proto object containing the school item.
+     * @param {Element} parentElement - a panel that displays the editable material.
+     * @returns {Map} A map that contains the field of the school proto boject and the loaded value of the proto object.
+     */
+    function loadData(schoolItemData, parentElement) {
         var mappedInput = new Map();
-        for (var i = 0; i < inputList.length; i++) {
-            var value = inputList[i].value;
-            mappedInput.set(inputList[i].dataset.prop, value);
+        for (var property in schoolItemData) {
+            if (schoolItemData.hasOwnProperty(property)) {
+                var element = parentElement.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
+                if (!isUndefined(element)) {
+                    var elementData = element.querySelectorAll('.data')[0];
+                    var result = loadIntoElement(elementData, schoolItemData[property], property);
+                    element.style.display = 'inherit';
+                } else {
+                    result = IGNORE_FIELD;
+                }
+                mappedInput.set(property, result);
+            }
         }
         return mappedInput;
     }
 
     /**
-     * Holds the object with the specific functions that loads data.
+     * Converts date and time elements to be merged into milliseconds
+     *
+     * @param dateInput
+     * @param timeInput
+     * @returns {Number}
      */
-    var loaderObject = {};
+    function convertElementsToDateTime(dateInput, timeInput) {
+        var milliseconds = new Date(dateInput.value + " " + timeInput.value).getTime();
+        var date = CourseSketch.prutil.DateTime();
+        date.setMillisecond('' + milliseconds);
+        return date;
+    }
 
     /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
-     * loads a functiontype object from the schoolItem.
+     * Loads the data into a specific element.
      *
-     * @return {Null|Undefined|Enum} either undefined or the value of the enum.
+     * @param {Element} elementData - The element that the data needs to be set on
+     * @param {*} schoolItemData - The value of the property that needs to be set
+     * @param {String} property - The name of the field
+     * @returns {*}
      */
-    loaderObject.load_functionType = function (schoolItemElement, schoolItemData, nodeToFill) {
-        var index = -1;
-        if (!isUndefined(schoolItemData)) {
-            try {
-                index = schoolItemData.latePolicy.functionType;
-            } catch (exception) {
-                console.log('Ignoring exception while setting function type of element');
-                console.log(exception);
-                return null;
-            }
+    function loadIntoElement(elementData, schoolItemData, property) {
+        if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
+            return loadSubObject(elementData, schoolItemData, property);
         }
-        if (index > 0 || index === 0) {
-            nodeToFill.options[index].selected = true;
-            return nodeToFill.value;
-        }
-        return undefined;
-    };
-
-    /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
-     * loads a time frame object from the schoolItem.
-     *
-     * @return {Null|Undefined|Enum} either undefined or the value of the enum.
-     */
-    loaderObject.load_timeFrameType = function (schoolItemElement, schoolItemData, nodeToFill) {
-        var index = -1;
-        if (!isUndefined(schoolItemData)) {
-            try {
-                index = schoolItemData.latePolicy.timeFrameType;
-            } catch (exception) {
-                console.log('Ignoring exception while setting timeFrame type of element');
-                console.log(exception);
-                return null;
-            }
-        }
-        if (index > 0 || index === 0) {
-            nodeToFill.options[index].selected = true;
-            return nodeToFill.value;
-        }
-        return undefined;
-    };
-
-    /**
-     * Yes I know these functions have an underscore.
-     * This is so that you don't have to dynamically capitalize the first letter.
-     * Each one returns a value if it exist otherwise undefined is returned.
-     * <br>
-     * loads a subtraction object from the schoolItem.
-     *
-     * @return {Null|Undefined|Enum} either undefined or the value of the enum.
-     */
-    loaderObject.load_subtractionType = function (schoolItemElement, schoolItemData, nodeToFill) {
-        var index = -1;
-        if (!isUndefined(schoolItemData)) {
-            try {
-                index = schoolItemData.latePolicy.subtractionType;
-            } catch (exception) {
-                console.log('Ignoring exception while setting subtraction type of element');
-                console.log(exception);
-                return null;
-            }
-        }
-        if (index > 0 || index === 0) {
-            nodeToFill.options[index].selected = true;
-            return nodeToFill.value;
-        }
-        return undefined;
-    };
-
-    function loadIntoElement(elementData, schoolItemData) {
         if (elementData.tagName === 'SPAN') {
             elementData.textContent = schoolItemData;
-            if (isUndefined(schoolItemData)) {
-                elementData.textContent = "no information for this field";
+            if (isUndefined(schoolItemData) || schoolItemData === null) {
+                // This is considered write only
+                elementData.textContent = 'no information for this field';
             }
-            return schoolItemData;
         }
-        if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
+        else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
             var dateInput = elementData.querySelector('.date');
             var timeInput = elementData.querySelector('.time');
 
-            var result = undefined;
             var date;
-            if (!isUndefined(schoolItemData) && !isUndefined(schoolItemData.millisecond) && schoolItemData.millisecond !== null) {
+            if (!isUndefined(schoolItemData) && schoolItemData !== null
+                && !isUndefined(schoolItemData.millisecond) && schoolItemData.millisecond !== null) {
                 var milliseconds = '' + schoolItemData.millisecond;
-                result = schoolItemData.millisecond;
-                date = new Date(milliseconds);
+                date = new Date(parseInt(milliseconds, 10));
                 if ('' + date === 'Invalid Date') {
                     date = new Date();
                 }
+            } else {
+                date = new Date();
             }
 
             // format date for date input
             var day = ('0' + date.getDate()).slice(-2);
             var month = ('0' + (date.getMonth() + 1)).slice(-2);
-            var today = date.getFullYear() + '-' + (month) + '-' + (day);
-
-            dateInput.value = today;
+            dateInput.value = date.getFullYear() + '-' + (month) + '-' + (day);
 
             // format hour for date input
             var hours = ('0' + date.getHours()).slice(-2);
             var minutes = ('0' + date.getMinutes()).slice(-2);
             var seconds = ('0' + date.getSeconds()).slice(-2);
 
-            var time = hours + ':' + minutes + ':' + seconds;
+            timeInput.value = hours + ':' + minutes + ':' + seconds;
 
-            timeInput.value = time;
-
-            return result;
+            // The absolute date might actually be off by some milliseconds this fixes that potential offset
+            schoolItemData = convertElementsToDateTime(dateInput, timeInput);
         }
-        if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' && elementData.type === 'text')) {
-            if (!isUndefined(schoolItemData)) {
+        else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
+            (elementData.type === 'text' || elementData.type === 'number'))) {
+            if (!isUndefined(schoolItemData) && schoolItemData !== null) {
                 elementData.value = schoolItemData;
+            } else {
+                elementData.value = '';
+                schoolItemData = '';
             }
-            return schoolItemData;
-        }
-        if (elementData.tagName === 'SELECT') {
-            if (!isUndefined(schoolItemData)) {
+        } else if (elementData.tagName === 'INPUT' && elementData.type === 'checkbox') {
+            if (isUndefined(schoolItemData) || schoolItemData === null) {
+                schoolItemData = false;
+            }
+            elementData.checked = schoolItemData;
+        } else if (elementData.tagName === 'SELECT') {
+            if (!isUndefined(schoolItemData) && schoolItemData !== null) {
                 elementData.options[schoolItemData].selected = true;
-                elementData.style.display = 'inherit';
+            } else {
+                schoolItemData = elementData.selectedIndex;
             }
+            elementData.style.display = 'inherit';
+        }
+        return schoolItemData;
+    }
+
+    /**
+     * Decodes and runs everything again on a sub object.
+     *
+     * @param {Element} elementData - The element that the data needs to be set on
+     * @param {*} schoolItemData - The value of the property that needs to be set
+     * @param {String} property - The name of the field
+     * @returns {Map} a map of the original elements of the sub object
+     */
+    function loadSubObject(elementData, schoolItemData, property) {
+        if (schoolItemData === null || isUndefined(schoolItemData)) {
+            schoolItemData = protoTypes[property + 'ProtoType'];
+        }
+        return loadData(schoolItemData, elementData);
+    }
+
+    /**
+     * Decodes the policy.
+     *
+     * @returns {LatePolicy} A protobuf object
+     */
+    protoTypes.latePolicyProtoType = function () {
+        return CourseSketch.prutil.LatePolicy();
+    };
+
+    /**
+     * Does some special comparison.
+     *
+     * For example if the schoolItemData is null/undefined but the default element map contains something
+     * Then if the result map is the same as the default element map we do not change anything.
+     * @param {ProtobufObject} schoolItemData - A mpa containing the school item.
+     * @param {Element} parentElement - a panel that displays the editable material.
+     * @param {Map} originalData - A map of the data mapped to the element.
+     * @return {Map} A map representing the modified data.
+     */
+    function getInput(schoolItemData, parentElement, originalData) {
+        var result;
+        var mappedOutput = new Map();
+        for (var property in schoolItemData) {
+            if (schoolItemData.hasOwnProperty(property)) {
+                var element = parentElement.querySelectorAll('.need-saving[data-prop="' + property + '"]')[0];
+                if (!isUndefined(element)) {
+                    var elementData = element.querySelectorAll('.data')[0];
+
+                    result = getDataFromElement(elementData, schoolItemData[property], property, originalData.get(property));
+                } else {
+                    if (originalData.get(property) === IGNORE_FIELD) {
+                        result = IGNORE_FIELD;
+                    } else {
+                        result = schoolItemData[property];
+                    }
+                }
+                mappedOutput.set(property, result);
+                if (compareElements(property, schoolItemData, originalData.get(property), result)) {
+                    setProtoData(schoolItemData, property, result);
+                }
+            }
+        }
+        return mappedOutput;
+    }
+
+    /**
+     * Gets data from the element if they are the same.
+     *
+     * @param {Element} elementData
+     * @param {*} schoolItemData
+     * @param {String} property
+     * @param {*} [originalData]
+     */
+    function getDataFromElement(elementData, schoolItemData, property, originalData) {
+        if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
+            return saveSubObject(elementData, schoolItemData, property, originalData);
+        }
+        else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
+            var dateInput = elementData.querySelector('.date');
+            var timeInput = elementData.querySelector('.time');
+
+            // The absolute date might actually be off by some milliseconds this fixes that potential offset
+            schoolItemData = convertElementsToDateTime(dateInput, timeInput);
+        }
+        else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
+            (elementData.type === 'text'))) {
+            schoolItemData = elementData.value;
+        } else if (elementData.tagName === 'INPUT' && elementData.type === 'number') {
+            schoolItemData = parseFloat(elementData.value);
+        } else if (elementData.tagName === 'INPUT' && elementData.type === 'checkbox') {
+            schoolItemData = elementData.checked;
+        } else if (elementData.tagName === 'SELECT') {
+            schoolItemData = elementData.selectedIndex;
+        }
+        return schoolItemData;
+    }
+
+    /**
+     * @param elementData
+     * @param schoolItemData
+     * @param property
+     * @param originalData
+     */
+    function saveSubObject(elementData, schoolItemData, property, originalData) {
+        // Return a map if the result and the initial is the same
+        // Otherwise return a protofbuf object
+        if (schoolItemData === null || isUndefined(schoolItemData)) {
+            schoolItemData = protoTypes[property + 'ProtoType'];
+        }
+        var result = getInput(schoolItemData, elementData, originalData);
+        if (compareMaps(originalData, result)) {
+            return result;
+        } else {
             return schoolItemData;
         }
     }
 
     /**
-     * Loads the data from the school item into the edit panel.
      *
-     * @param {Element} schoolItemElement - the school Item that is currently being edited.
-     * @param {Map} schoolItemData - A mpa containing the school item.
-     * @param {Element} editPanel - a panel that displays the editable material.
-     * @returns {Map} A map that contains the field of the school proto boject and the loaded value of the proto object.
+     * @param original
+     * @param result
+     * @returns {boolean} True if the maps are the same otherwise this will return false
      */
-    function loadData(schoolItemElement, schoolItemData, editPanel) {
-        var inputList = editPanel.querySelectorAll('.need-loading');
-        var mappedInput = new Map();
-        for (var property in schoolItemData) {
-            if (schoolItemData.hasOwnProperty(property)) {
-                /*
-                 var element = inputList.filter(function (element) {
-                 return element.getAttribute('data-prop') === property;
-                 });
-                 */
-                var element = editPanel.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
-                if (!isUndefined(element)) {
-                    var elementData = element.querySelectorAll('.data')[0];
-                    var result = loadIntoElement(elementData, schoolItemData[property]);
-                    element.style.display = 'inherit';
-                    mappedInput.set(property, result);
-                } else {
-                    mappedInput.set(property, undefined);
-                }
+    function compareMaps(original, result) {
+        var resultValue;
+        if (original === result) {
+            return true;
+        }
+        if (isUndefined(original) || isUndefined(result)) {
+            return false;
+        }
+        if (original.size !== result.size) {
+            return false;
+        }
+        for (var [key, originalValue] of original) {
+            resultValue = result.get(key);
+            if (resultValue === IGNORE_FIELD || originalValue === IGNORE_FIELD) {
+                continue;
+            }
+            // in cases of an undefined value, make sure the key
+            // actually exists on the object so there are no false positives
+            if (resultValue === undefined && !result.has(key) || !compareValues(originalValue, resultValue)) {
+                return false;
             }
         }
-        return mappedInput;
+        return true;
+    }
+
+    /**
+     * @param originalValue
+     * @param newValue
+     * @returns {boolean} True if the values are the same otherwise this will return false;
+     */
+    function compareValues(originalValue, newValue) {
+        if (originalValue === newValue) {
+            return true;
+        }
+        if (originalValue === null || newValue === null || isUndefined(originalValue || isUndefined(newValue))) {
+            return false;
+        }
+        if (isFunction(originalValue.encode) && isFunction(newValue.encode)) {
+            for (var property in originalValue) {
+                if (originalValue.hasOwnProperty(property)) {
+                    if (!compareValues(originalValue[property], newValue[property])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        if (getTypeName(originalValue) === 'Long' && getTypeName(newValue) === 'Long') {
+            return ('' + originalValue) === ('' + newValue);
+        }
+        if (originalValue instanceof Map && newValue instanceof Map) {
+            return compareMaps(originalValue, newValue);
+        }
+        if ((getTypeName(originalValue) === 'number' && getTypeName(newValue) === 'string') ||
+            (getTypeName(originalValue) === 'string' && getTypeName(newValue) === 'number')) {
+            return ('' + originalValue) === ('' + newValue);
+        }
+        return false;
+    }
+
+    /**
+     * Does a comparison and then sets the result on the protobuf object if needed.
+     *
+     * @param property
+     * @param schoolItemData
+     * @param originalData
+     * @param result
+     */
+    function compareElements(property, schoolItemData, originalData, result) {
+        if (originalData === IGNORE_FIELD || result === IGNORE_FIELD) {
+            return false;
+        }
+        if (schoolItemData[property] !== originalData) {
+            if (!compareValues(originalData, result)) {
+                return true;
+            }
+            return;
+        }
+        if (schoolItemData[property] !== result) {
+            return true;
+        }
+    }
+
+    function setProtoData(schoolItemData, property, result) {
+        schoolItemData[property] = result;
     }
 
     /**
      * Removes the advance edit panel if the school item is removed.
      */
-    SchoolItem.prototype.finalize = function () {
-        if (!isUndefined(this.advanceEditPanel)) {
-            if (this.advanceEditPanel.parentNode !== null) {
-                this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
+    if (!isUndefined(SchoolItem)) {
+        SchoolItem.prototype.finalize = function () {
+            if (!isUndefined(this.advanceEditPanel)) {
+                if (this.advanceEditPanel.parentNode !== null) {
+                    this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
+                }
             }
-        }
-    };
+        };
+    }
 
-    /**
-     * Sets up the advance edit panel for editing advance data.
-     *
-     * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
-     * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
-     */
-    SchoolItem.prototype.createAdvanceEditPanel = function (localElement, parentNode, saveCallback) {
-        // create host and position it
+    function createAdvanceEditPanelElements(localElement, parentNode) {
         var host = document.createElement('div');
         host.className = 'advanceEditHost';
         host.style.height = '100%';
@@ -219,22 +352,38 @@
         clone = combineLists(clone, localElement);
         shadow.appendChild(clone);
         localElement.advanceEditPanel = host;
-        var currentData;
+
         // add our loaded element to the page.
         parentNode.appendChild(host);
+        return host;
+    }
 
+    /**
+     * Sets up the advance edit panel for editing advance data.
+     *
+     * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
+     * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
+     */
+
+    function createAdvanceEditPanel(localElement, parentNode, saveCallback) {
+        // create host and position it
+        var currentData;
+
+        var host = createAdvanceEditPanelElements(localElement);
         // save data
         //NOT WORKING, NEEDS TO BE MODIFIED
-        var saveButton = shadow.querySelector('button.save');
+        var saveButton = host.shadowRoot.querySelector('button.save');
         /**
          * Called to save all of the input.
          */
+
+        var schoolItem = localElement.schoolItemData;
         saveButton.onclick = function () {
-            var newData = getInput(shadow);
-            var schoolItem = localElement;
+            getInput(schoolItem, shadow, currentData);
+            localElement.schoolItemData = schoolItem;
             console.log(schoolItem);
             console.log(localElement);
-            saveCallback('advance', currentData, newData, schoolItem);
+            saveCallback('advance', localElement, schoolItem);
         };
 
         // cancel!
@@ -267,7 +416,7 @@
         var observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 if (mutation.type === 'attributes') {
-                    currentData = loadData(localElement, localElement.schoolItemData, shadow);
+                    currentData = loadData(localElement.schoolItemData, host.shadowRoot);
                     var accordion = host.shadowRoot.querySelectorAll('.collapsible')[0];
                     $(accordion).collapsible();
                 }
@@ -281,7 +430,11 @@
         observer.observe(target, config);
 
         return host;
-    };
+    }
+
+    if (!isUndefined(SchoolItem)) {
+        SchoolItem.prototype.createAdvanceEditPanel = createAdvanceEditPanel
+    }
 
     /**
      *
@@ -313,4 +466,15 @@
             location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
         };
     }
+
+    return {
+        combineLists: combineLists,
+        createAdvanceEditPanelElements: createAdvanceEditPanelElements,
+        createAdvanceEditPanel: createAdvanceEditPanel,
+        loadData: loadData,
+        loadDataIntoElement: loadIntoElement,
+        getInput: getInput,
+        getDataFromElement: getDataFromElement,
+        compareMaps: compareMaps
+    };
 })();

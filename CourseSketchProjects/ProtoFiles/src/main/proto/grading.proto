@@ -52,7 +52,9 @@ message LatePolicy {
     optional TimeFrame timeFrameType = 2 [default = DAY];           // Because this is what people are used to.
     optional double rate = 3;                                        // Rate of subtraction.
     optional SubtractionType subtractionType = 4 [default = CAP];   // How we are subtracting the grade.
-    optional bool applyOnlyToLateProblems = 5;                      // Determines if the late policy only applies to problems submitted late.
+    // Decides if this is applied only to the grade or if it is applied to 100% then the grade.
+    // Example lets say it is 30% off is that -30% of 100% or of the grade the person got.
+    optional bool applyOnlyToLateProblems = 5;
 
     // Determines what late policy function type is being used.
     enum FunctionType {
