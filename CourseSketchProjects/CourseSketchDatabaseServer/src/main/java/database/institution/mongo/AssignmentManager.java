@@ -42,6 +42,7 @@ import static database.DatabaseStringConstants.PROBLEM_LIST;
 import static database.DatabaseStringConstants.REVIEW_OPEN_DATE;
 import static database.DatabaseStringConstants.SELF_ID;
 import static database.DatabaseStringConstants.SET_COMMAND;
+import static database.DatabaseStringConstants.STATE_PUBLISHED;
 import static database.DatabaseStringConstants.USERS;
 import static database.DbSchoolUtility.getCollectionFromType;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
@@ -138,7 +139,8 @@ public final class AssignmentManager {
 
         final Document query = new Document(COURSE_ID, assignment.getCourseId())
                 .append(NAME, assignment.getName())
-                .append(DESCRIPTION, assignment.getDescription());
+                .append(DESCRIPTION, assignment.getDescription())
+                .append(STATE_PUBLISHED, false);
 
         setAssignmentTypeInformation(assignment, query, true);
 

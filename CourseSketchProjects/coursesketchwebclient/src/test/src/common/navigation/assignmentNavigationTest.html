@@ -4,10 +4,10 @@
     <title>Assignment Navigation methods test</title>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
-        <link rel="import"
-              href="/test/testUtilities/fakePage/fakePageInclude.html">
-        <link rel="import"
-              href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/fakePageInclude.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
 
     <!-- file being tested. -->
     <script src="/src/common/navigation/assignmentNavigation.js" data-cover></script>
@@ -18,322 +18,348 @@
 
 <script>
 
-        QUnit.module("random assignment");
-        QUnit.test("randomAssignment", function(assert) {
-            var testNavigator = new AssignmentNavigator("900", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
+    QUnit.module("random assignment");
+    QUnit.test("randomAssignment", function (assert) {
+        var testNavigator = new AssignmentNavigator("900", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        testNavigator.gotoNext();
+        assert.notEqual(undefined, testNavigator.getCurrentSubgroupIndex(), "testing randomness");
+        var randomnessHappened = 0;
+        var previousIndex = index;
+        for (var k = 0; k < 100; k++) {
+            // use goto next
             testNavigator.gotoNext();
-            assert.notEqual(undefined, testNavigator.getCurrentSubgroupIndex(), "testing randomness");
-            var randomnessHappened = 0;
-            var previousIndex = index;
-            for (var k = 0; k < 100; k++) {
-                // use goto next
-                testNavigator.gotoNext();
-                var newIndex = testNavigator.getCurrentSubgroupIndex();
-                // ensures it is not staying at the same problem and not just going up by 1
-                if (newIndex !== previousIndex + 1 && newIndex !== previousIndex) {
-                    randomnessHappened++;
-                }
-                previousIndex = newIndex;
+            var newIndex = testNavigator.getCurrentSubgroupIndex();
+            // ensures it is not staying at the same problem and not just going up by 1
+            if (newIndex !== previousIndex + 1 && newIndex !== previousIndex) {
+                randomnessHappened++;
             }
+            previousIndex = newIndex;
+        }
 
-            if (randomnessHappened > 50) {
-                assert.ok(true, 'random happened sufficiently');
-            } else {
-                assert.ok(false, 'random only happened less than 50 times: ' + randomnessHappened);
-            }
+        if (randomnessHappened > 50) {
+            assert.ok(true, 'random happened sufficiently');
+        } else {
+            assert.ok(false, 'random only happened less than 50 times: ' + randomnessHappened);
+        }
+    });
+
+
+    QUnit.module("navigation index changing (problem style!)");
+    test("AssignmentNavigationForward", function (assert) {
+        var testNavigator = new AssignmentNavigator("000", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        testNavigator.gotoNext();
+        assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    });
+
+    test("GotoAssignmentEnd", function (assert) {
+        var testNavigator = new AssignmentNavigator("000", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        testNavigator.gotoEndOfSubgroup();
+        assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    });
+
+    test("AssignmentNavigationPrevious", function (assert) {
+        var testNavigator = new AssignmentNavigator("000", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        testNavigator.gotoNext();
+        assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+
+        testNavigator.gotoPrevious();
+        assert.equal(index, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    });
+
+    test("goToProblem", function (assert) {
+        var testNavigator = new AssignmentNavigator("000", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        testNavigator.goToSubgroup(index + 1);
+        assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    });
+
+
+    QUnit.module("looping assignments");
+    test("looping", function (assert) {
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        testNavigator.gotoNext();
+        assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+        testNavigator.gotoNext();
+        assert.equal(0, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly resetting to zero");
+        testNavigator.gotoPrevious();
+        assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly navigating back to the end");
+    });
+
+    test("looping has next and has previous are always true", function (assert) {
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.reloadAssignment();
+        assert.equal(testNavigator.hasPrevious(), true, 'when looping the assignment should always have previous');
+        testNavigator.gotoNext();
+        assert.equal(testNavigator.hasNext(), true, "when looping the assignment should always have previous");
+    });
+
+
+    QUnit.module("basic callbacks", {
+        beforeEach: function () {
+            this.clock = sinon.useFakeTimers();
+        },
+        afterEach: function () {
+            this.clock.restore();
+        }
+    });
+    QUnit.test("basic reload", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.addCallback(function () {
+            assert.notEqual(testNavigator.getCurrentInfo(), undefined, 'the info should not be empty');
+            done();
         });
+        this.clock.tick(500);
+        testNavigator.reloadAssignment();
+        this.clock.tick(500);
+    });
 
-
-        QUnit.module("navigation index changing (problem style!)");
-        test("AssignmentNavigationForward", function(assert) {
-            var testNavigator = new AssignmentNavigator("000", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.gotoNext();
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    QUnit.test("next works", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("700", 0, true);
+        testNavigator.reloadAssignment();
+        this.clock.tick(500);
+        testNavigator.addCallback(function () {
+            assert.ok(true);
+            done();
         });
+        var index = testNavigator.getCurrentSubgroupIndex();
+        console.log('index');
+        testNavigator.gotoNext();
+        this.clock.tick(500);
+    });
 
-        test("GotoAssignmentEnd", function(assert) {
-            var testNavigator = new AssignmentNavigator("000", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.gotoEndOfSubgroup();
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    QUnit.test("previous works", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.reloadAssignment();
+        this.clock.tick(500);
+        testNavigator.addCallback(function () {
+            assert.ok(true);
+            done();
         });
+        testNavigator.gotoPrevious();
+        this.clock.tick(500);
+    });
 
-        test("AssignmentNavigationPrevious", function(assert) {
-            var testNavigator = new AssignmentNavigator("000", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.gotoNext();
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
-
-            testNavigator.gotoPrevious();
-            assert.equal(index, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    QUnit.test("basic reload with temp", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.reloadAssignment(function () {
+            assert.ok(true);
+            done();
         });
+    });
 
-        test("goToProblem", function(assert) {
-            var testNavigator = new AssignmentNavigator("000", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.goToSubgroup(index + 1);
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
+    QUnit.test("next works with temp", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("700", 0, true);
+        testNavigator.reloadAssignment();
+        var index = testNavigator.getCurrentSubgroupIndex();
+        console.log('index');
+        testNavigator.gotoNext(function () {
+            assert.ok(true);
+            done();
         });
+    });
 
-
-        QUnit.module("looping assignments");
-        test("looping", function(assert) {
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            testNavigator.gotoNext();
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is in face correctly moving over");
-            testNavigator.gotoNext();
-            assert.equal(0, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly resetting to zero");
-            testNavigator.gotoPrevious();
-            assert.equal(index + 1, testNavigator.getCurrentSubgroupIndex(), "testing that this assignment is correctly navigating back to the end");
+    QUnit.test("previous works with temp", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.reloadAssignment();
+        testNavigator.gotoPrevious(function () {
+            assert.ok(true);
+            done();
         });
+    });
 
-        test("looping has next and has previous are always true", function(assert) {
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.reloadAssignment();
-            assert.equal(testNavigator.hasPrevious(), true, 'when looping the assignment should always have previous');
-            testNavigator.gotoNext();
-            assert.equal(testNavigator.hasNext(), true, "when looping the assignment should always have previous");
-        });
-
-
-        QUnit.module("basic callbacks", {
-            beforeEach: function () {
-                this.clock = sinon.useFakeTimers();
-            },
-            afterEach: function () {
-                this.clock.restore();
-            }
-        });
-        QUnit.test("basic reload", function(assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.addCallback(function () {
-                assert.notEqual(testNavigator.getCurrentInfo(), undefined, 'the info should not be empty');
-                done();
-            });
-            this.clock.tick(500);
-            testNavigator.reloadAssignment();
-            this.clock.tick(500);
-        });
-
-        QUnit.test("next works", function(assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("700", 0, true);
-            testNavigator.reloadAssignment();
-            this.clock.tick(500);
-            testNavigator.addCallback(function () {
-                assert.ok(true);
-                done();
-            });
-            var index = testNavigator.getCurrentSubgroupIndex();
-            console.log('index');
-            testNavigator.gotoNext();
-            this.clock.tick(500);
-        });
-
-        QUnit.test("previous works", function(assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.reloadAssignment();
-            this.clock.tick(500);
-            testNavigator.addCallback(function () {
-                assert.ok(true);
-                done();
-            });
-            testNavigator.gotoPrevious();
-            this.clock.tick(500);
-        });
-
-        QUnit.test("basic reload with temp", function(assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.reloadAssignment(function () {
-                assert.ok(true);
-                done();
-            });
-        });
-
-        QUnit.test("next works with temp", function(assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("700", 0, true);
-            testNavigator.reloadAssignment();
-            var index = testNavigator.getCurrentSubgroupIndex();
-            console.log('index');
+    QUnit.test("nested calls with temp", function (assert) {
+        var done = assert.async(3);
+        var testNavigator = new AssignmentNavigator("800", 0, true);
+        testNavigator.reloadAssignment(function () {
+            assert.ok(true);
+            done();
             testNavigator.gotoNext(function () {
                 assert.ok(true);
                 done();
-            });
-        });
-
-        QUnit.test("previous works with temp", function(assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.reloadAssignment();
-            testNavigator.gotoPrevious(function () {
-                assert.ok(true);
-                done();
-            });
-        });
-
-        QUnit.test("nested calls with temp", function(assert) {
-            var done = assert.async(3);
-            var testNavigator = new AssignmentNavigator("800", 0, true);
-            testNavigator.reloadAssignment(function () {
-                assert.ok(true);
-                done();
-                testNavigator.gotoNext(function () {
+                testNavigator.gotoPrevious(function () {
                     assert.ok(true);
                     done();
-                    testNavigator.gotoPrevious(function () {
-                        assert.ok(true);
-                        done();
-                    });
                 });
             });
         });
+    });
 
-        QUnit.module("navigation index changing (lecture style!)", {
-            beforeEach: function () {
-                this.clock = sinon.useFakeTimers();
-            },
-            afterEach: function () {
-                this.clock.restore();
-            }
-        });
-        QUnit.test("part navigation forward", function (assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("1000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                console.log("FINISHED RELOADING");
-                testNavigator.clearAllCallbacks();
-                var partIndex = testNavigator.getCurrentPartIndex();
-                var groupIndex = testNavigator.getCurrentSubgroupIndex();
-                testNavigator.gotoNext(function () {
-                    var newPartIndex = testNavigator.getCurrentPartIndex();
-                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
-                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
-                    done();
-                });
-                this.clock.tick(500);
+    QUnit.module("navigation index changing (lecture style!)", {
+        beforeEach: function () {
+            this.clock = sinon.useFakeTimers();
+        },
+        afterEach: function () {
+            this.clock.restore();
+        }
+    });
+    QUnit.test("part navigation forward", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("1000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            console.log("FINISHED RELOADING");
+            testNavigator.clearAllCallbacks();
+            var partIndex = testNavigator.getCurrentPartIndex();
+            var groupIndex = testNavigator.getCurrentSubgroupIndex();
+            testNavigator.gotoNext(function () {
+                var newPartIndex = testNavigator.getCurrentPartIndex();
+                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
+                done();
             });
             this.clock.tick(500);
         });
+        this.clock.tick(500);
+    });
 
-        test("hasPrevious should be false at beginning", function(assert) {
-            var testNavigator = new AssignmentNavigator("1000", 0, true);
-            testNavigator.reloadAssignment();
-            assert.equal(testNavigator.hasPrevious(), false, "there should not be any previous elements");
-        });
+    test("hasPrevious should be false at beginning", function (assert) {
+        var testNavigator = new AssignmentNavigator("1000", 0, true);
+        testNavigator.reloadAssignment();
+        assert.equal(testNavigator.hasPrevious(), false, "there should not be any previous elements");
+    });
 
-        QUnit.test("go to the end of the subgroup part", function (assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("1000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                console.log("FINISHED RELOADING");
-                testNavigator.clearAllCallbacks();
-                var partIndex = testNavigator.getCurrentPartIndex();
-                var groupIndex = testNavigator.getCurrentSubgroupIndex();
-                testNavigator.gotoEndOfSubgroupPart(function () {
-                    var newPartIndex = testNavigator.getCurrentPartIndex();
-                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
-                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
-                    done();
-                });
-            });
-        });
-
-        QUnit.test("go to specific subgroup part", function (assert) {
-            var done = assert.async();
-            var testNavigator = new AssignmentNavigator("1000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                console.log("FINISHED RELOADING");
-                testNavigator.clearAllCallbacks();
-                var partIndex = testNavigator.getCurrentPartIndex();
-                var groupIndex = testNavigator.getCurrentSubgroupIndex();
-                testNavigator.goToSubgroupPart(1, function () {
-                    var newPartIndex = testNavigator.getCurrentPartIndex();
-                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
-                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
-                    done();
-                });
-            });
-        });
-
-        QUnit.test("part navigation forward twice (changing subgroup)", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("1000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                console.log("FINISHED RELOADING");
-                testNavigator.clearAllCallbacks();
-                var partIndex = testNavigator.getCurrentPartIndex();
-                var groupIndex = testNavigator.getCurrentSubgroupIndex();
-                testNavigator.gotoNext(function () {
-                    var newPartIndex = testNavigator.getCurrentPartIndex();
-                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                    assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
-                    assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
-                    done();
-
-                    testNavigator.gotoNext(function () {
-                        var newPartIndex = testNavigator.getCurrentPartIndex();
-                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                        assert.equal(newGroupIndex, groupIndex + 1, "The group is one more");
-                        assert.equal(newPartIndex, 0, "The part index is at the beginning");
-                        done();
-                    });
-                });
-            });
-        });
-
-        QUnit.test("part navigation backwards (changing subgroup)", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("1000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                console.log("FINISHED RELOADING");
-                testNavigator.clearAllCallbacks();
-                testNavigator.goToSubgroup(1, function () {
-                    var partIndex = testNavigator.getCurrentPartIndex();
-                    var groupIndex = testNavigator.getCurrentSubgroupIndex();
-                    done();
-
-                    testNavigator.gotoPrevious(function () {
-                        var newPartIndex = testNavigator.getCurrentPartIndex();
-                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                        assert.equal(newGroupIndex, groupIndex - 1, "The group is one backward");
-                        assert.equal(newPartIndex, 1, "The part index is one larger");
-                        done();
-                    });
-                });
-            });
-        });
-
-        QUnit.module("nested navigation");
-        QUnit.test("navigation into an assignment forward", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                var subgroupPart = testNavigator.getCurrentInfo();
-                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+    QUnit.test("go to the end of the subgroup part", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("1000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            console.log("FINISHED RELOADING");
+            testNavigator.clearAllCallbacks();
+            var partIndex = testNavigator.getCurrentPartIndex();
+            var groupIndex = testNavigator.getCurrentSubgroupIndex();
+            testNavigator.gotoEndOfSubgroupPart(function () {
+                var newPartIndex = testNavigator.getCurrentPartIndex();
+                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
                 done();
+            });
+        });
+    });
+
+    QUnit.test("go to specific subgroup part", function (assert) {
+        var done = assert.async();
+        var testNavigator = new AssignmentNavigator("1000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            console.log("FINISHED RELOADING");
+            testNavigator.clearAllCallbacks();
+            var partIndex = testNavigator.getCurrentPartIndex();
+            var groupIndex = testNavigator.getCurrentSubgroupIndex();
+            testNavigator.goToSubgroupPart(1, function () {
+                var newPartIndex = testNavigator.getCurrentPartIndex();
+                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
+                done();
+            });
+        });
+    });
+
+    QUnit.test("part navigation forward twice (changing subgroup)", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("1000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            console.log("FINISHED RELOADING");
+            testNavigator.clearAllCallbacks();
+            var partIndex = testNavigator.getCurrentPartIndex();
+            var groupIndex = testNavigator.getCurrentSubgroupIndex();
+            testNavigator.gotoNext(function () {
+                var newPartIndex = testNavigator.getCurrentPartIndex();
+                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                assert.equal(newGroupIndex, groupIndex, "The group does not change indexes");
+                assert.equal(newPartIndex, partIndex + 1, "The part index is one larger");
+                done();
+
                 testNavigator.gotoNext(function () {
+                    var newPartIndex = testNavigator.getCurrentPartIndex();
+                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    assert.equal(newGroupIndex, groupIndex + 1, "The group is one more");
+                    assert.equal(newPartIndex, 0, "The part index is at the beginning");
+                    done();
+                });
+            });
+        });
+    });
+
+    QUnit.test("part navigation backwards (changing subgroup)", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("1000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            console.log("FINISHED RELOADING");
+            testNavigator.clearAllCallbacks();
+            testNavigator.goToSubgroup(1, function () {
+                var partIndex = testNavigator.getCurrentPartIndex();
+                var groupIndex = testNavigator.getCurrentSubgroupIndex();
+                done();
+
+                testNavigator.gotoPrevious(function () {
+                    var newPartIndex = testNavigator.getCurrentPartIndex();
+                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    assert.equal(newGroupIndex, groupIndex - 1, "The group is one backward");
+                    assert.equal(newPartIndex, 1, "The part index is one larger");
+                    done();
+                });
+            });
+        });
+    });
+
+    QUnit.module("nested navigation");
+    QUnit.test("navigation into an assignment forward", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            var subgroupPart = testNavigator.getCurrentInfo();
+            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+            done();
+            testNavigator.gotoNext(function () {
+                var newPartIndex = testNavigator.getCurrentPartIndex();
+                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                var newAssignmentId = testNavigator.getCurrentAssignment().id;
+                var newPart = testNavigator.getCurrentInfo();
+                assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
+                assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
+                assert.equal(newGroupIndex, 0, "The new group index is 0");
+                assert.equal(newPartIndex, 0, "The new subpart index is 0");
+                assert.notEqual(newPart, undefined, 'the new subgroup is defined');
+                assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
+                assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
+                done();
+            });
+        });
+    });
+
+    QUnit.test("navigation into an assignment then back out", function (assert) {
+        var done = assert.async(3);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+            done();
+            testNavigator.gotoNext(function () {
+                var subgroupPart = testNavigator.getCurrentInfo();
+                done();
+                testNavigator.gotoPrevious(function () {
                     var newPartIndex = testNavigator.getCurrentPartIndex();
                     var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
                     var newAssignmentId = testNavigator.getCurrentAssignment().id;
                     var newPart = testNavigator.getCurrentInfo();
-                    assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
-                    assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
+                    assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
+                    assert.equal(newAssignmentId, '2000', "The old assignment is loaded");
                     assert.equal(newGroupIndex, 0, "The new group index is 0");
                     assert.equal(newPartIndex, 0, "The new subpart index is 0");
                     assert.notEqual(newPart, undefined, 'the new subgroup is defined');
@@ -343,203 +369,157 @@
                 });
             });
         });
+    });
 
-        QUnit.test("navigation into an assignment then back out", function (assert) {
-            var done = assert.async(3);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                done();
-                testNavigator.gotoNext(function () {
-                    var subgroupPart = testNavigator.getCurrentInfo();
-                    done();
-                    testNavigator.gotoPrevious(function () {
-                        var newPartIndex = testNavigator.getCurrentPartIndex();
-                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                        var newAssignmentId = testNavigator.getCurrentAssignment().id;
-                        var newPart = testNavigator.getCurrentInfo();
-                        assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
-                        assert.equal(newAssignmentId, '2000', "The old assignment is loaded");
-                        assert.equal(newGroupIndex, 0, "The new group index is 0");
-                        assert.equal(newPartIndex, 0, "The new subpart index is 0");
-                        assert.notEqual(newPart, undefined, 'the new subgroup is defined');
-                        assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
-                        assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
-                        done();
-                    });
-                });
-            });
-        });
-
-        QUnit.test("navigation into an assignment then forward out", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                done();
-                var assignmentId = testNavigator.getCurrentAssignment().id;
-                // navigate into assignment.
-                testNavigator.gotoNext(function () {
+    QUnit.test("navigation into an assignment then forward out", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+            done();
+            var assignmentId = testNavigator.getCurrentAssignment().id;
+            // navigate into assignment.
+            testNavigator.gotoNext(function () {
+                // navigate into end of nested assignment
+                testNavigator.gotoEndOfSubgroup(function () {
                     // navigate into end of nested assignment
-                    testNavigator.gotoEndOfSubgroup(function () {
-                        // navigate into end of nested assignment
-                        testNavigator.gotoEndOfSubgroupPart(function () {
-                            // go out of nested assignment
-                            testNavigator.gotoNext(function () {
-                                var newPartIndex = testNavigator.getCurrentPartIndex();
-                                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                                var newAssignmentId = testNavigator.getCurrentAssignment().id;
-                                var newPart = testNavigator.getCurrentInfo();
-                                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
-                                assert.equal(newAssignmentId, assignmentId, "The old assignment is loaded");
-                                assert.equal(newGroupIndex, 0, "The new group index is 0");
-                                assert.equal(newPartIndex, 2, "The new subpart index is 0");
-                                done();
-                            });
+                    testNavigator.gotoEndOfSubgroupPart(function () {
+                        // go out of nested assignment
+                        testNavigator.gotoNext(function () {
+                            var newPartIndex = testNavigator.getCurrentPartIndex();
+                            var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                            var newAssignmentId = testNavigator.getCurrentAssignment().id;
+                            var newPart = testNavigator.getCurrentInfo();
+                            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be 0 nested levels');
+                            assert.equal(newAssignmentId, assignmentId, "The old assignment is loaded");
+                            assert.equal(newGroupIndex, 0, "The new group index is 0");
+                            assert.equal(newPartIndex, 2, "The new subpart index is 0");
+                            done();
                         });
                     });
                 });
             });
         });
+    });
 
-        QUnit.test("navigation into an assignment backwards", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                var subgroupPart = testNavigator.getCurrentInfo();
-                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                done();
-                testNavigator.goToSubgroupPart(2, function () {
-                    testNavigator.gotoPrevious(function () {
-                        var newPartIndex = testNavigator.getCurrentPartIndex();
-                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                        var newAssignmentId = testNavigator.getCurrentAssignment().id;
-                        var newPart = testNavigator.getCurrentInfo();
-                        assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
-                        assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
-                        assert.equal(newGroupIndex, 1, "The new group index is 1");
-                        assert.equal(newPartIndex, 1, "The new subpart index is 1");
-                        assert.notEqual(newPart, undefined, 'the new subgroup is defined');
-                        assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
-                        assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
-                        done();
-                    });
-                });
-            });
-        });
-
-        QUnit.module("hasNext and hasPrevious");
-        QUnit.test("when in a nested assignment hasNext is always true", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                var subgroupPart = testNavigator.getCurrentInfo();
-                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                done();
-                testNavigator.goToSubgroupPart(2, function () {
-                    testNavigator.gotoPrevious(function () {
-                        var newPartIndex = testNavigator.getCurrentPartIndex();
-                        var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
-                        var newAssignmentId = testNavigator.getCurrentAssignment().id;
-                        var newPart = testNavigator.getCurrentInfo();
-                        assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
-                        assert.equal(newGroupIndex, 1, "The new group index is 1");
-                        assert.equal(newPartIndex, 1, "The new subpart index is 1");
-
-                        // what is actually being tested!
-                        assert.equal(testNavigator.hasPrevious(), true, "has previous is true");
-                        done();
-                    });
-                });
-            });
-        });
-
-        QUnit.test("when in a nested assignment has previous is always true", function (assert) {
-            var done = assert.async(2);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
-                var subgroupPart = testNavigator.getCurrentInfo();
-                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                done();
-                testNavigator.gotoNext(function () {
+    QUnit.test("navigation into an assignment backwards", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            var subgroupPart = testNavigator.getCurrentInfo();
+            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+            done();
+            testNavigator.goToSubgroupPart(2, function () {
+                testNavigator.gotoPrevious(function () {
                     var newPartIndex = testNavigator.getCurrentPartIndex();
                     var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    var newAssignmentId = testNavigator.getCurrentAssignment().id;
                     var newPart = testNavigator.getCurrentInfo();
                     assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
-                    assert.equal(newGroupIndex, 0, "The new group index is 0");
-                    assert.equal(newPartIndex, 0, "The new subpart index is 0");
+                    assert.equal(newAssignmentId, '1000', "The new assignment is loaded");
+                    assert.equal(newGroupIndex, 1, "The new group index is 1");
+                    assert.equal(newPartIndex, 1, "The new subpart index is 1");
+                    assert.notEqual(newPart, undefined, 'the new subgroup is defined');
+                    assert.notEqual(newPart.id, subgroupPart.id, 'The subgroup parts are different now');
+                    assert.notEqual(newPart, subgroupPart, 'The subgroup parts are different now');
+                    done();
+                });
+            });
+        });
+    });
+
+    QUnit.module("hasNext and hasPrevious");
+    QUnit.test("when in a nested assignment hasNext is always true", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            var subgroupPart = testNavigator.getCurrentInfo();
+            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+            done();
+            testNavigator.goToSubgroupPart(2, function () {
+                testNavigator.gotoPrevious(function () {
+                    var newPartIndex = testNavigator.getCurrentPartIndex();
+                    var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                    var newAssignmentId = testNavigator.getCurrentAssignment().id;
+                    var newPart = testNavigator.getCurrentInfo();
+                    assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
+                    assert.equal(newGroupIndex, 1, "The new group index is 1");
+                    assert.equal(newPartIndex, 1, "The new subpart index is 1");
 
                     // what is actually being tested!
-                    assert.equal(testNavigator.hasNext(), true, "has previous is true");
+                    assert.equal(testNavigator.hasPrevious(), true, "has previous is true");
                     done();
                 });
             });
         });
+    });
 
-        QUnit.test("reach end of assignment (lecture style navigation has next is false)", function (assert) {
-            var done = assert.async(4);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
+    QUnit.test("when in a nested assignment has previous is always true", function (assert) {
+        var done = assert.async(2);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            var subgroupPart = testNavigator.getCurrentInfo();
+            assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+            done();
+            testNavigator.gotoNext(function () {
+                var newPartIndex = testNavigator.getCurrentPartIndex();
+                var newGroupIndex = testNavigator.getCurrentSubgroupIndex();
+                var newPart = testNavigator.getCurrentInfo();
+                assert.equal(testNavigator.getCurrentNestedLevel(), 1, 'there should be 1 nested levels');
+                assert.equal(newGroupIndex, 0, "The new group index is 0");
+                assert.equal(newPartIndex, 0, "The new subpart index is 0");
+
+                // what is actually being tested!
+                assert.equal(testNavigator.hasNext(), true, "has previous is true");
                 done();
-                testNavigator.setLoadSubpartData(false);
-                testNavigator.gotoEndOfSubgroup(function () {
+            });
+        });
+    });
+
+    QUnit.test("reach end of assignment (lecture style navigation has next is false)", function (assert) {
+        var done = assert.async(4);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            done();
+            testNavigator.setLoadSubpartData(false);
+            testNavigator.gotoEndOfSubgroup(function () {
+                done();
+                testNavigator.gotoEndOfSubgroupPart(function () {
                     done();
-                    testNavigator.gotoEndOfSubgroupPart(function () {
-                        done();
-                        testNavigator.setLoadSubpartData(true);
-                        assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                        assert.equal(testNavigator.hasNext(), false, 'when not nested and at the end there should not be any next');
-                        done();
-                    });
+                    testNavigator.setLoadSubpartData(true);
+                    assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                    assert.equal(testNavigator.hasNext(), false, 'when not nested and at the end there should not be any next');
+                    done();
                 });
             });
         });
+    });
 
-        QUnit.test("hasNext should be false at end", function(assert) {
-            var testNavigator = new AssignmentNavigator("000", 0, true);
-            testNavigator.reloadAssignment();
-            testNavigator.gotoEndOfSubgroup();
+    QUnit.test("hasNext should be false at end", function (assert) {
+        var testNavigator = new AssignmentNavigator("000", 0, true);
+        testNavigator.reloadAssignment();
+        testNavigator.gotoEndOfSubgroup();
 
-            assert.equal(testNavigator.hasNext(), false, "there should not be any new elements");
-        });
+        assert.equal(testNavigator.hasNext(), false, "there should not be any new elements");
+    });
 
-        QUnit.test("hasPrevious should be false at beginning", function(assert) {
-            var testNavigator = new AssignmentNavigator("000", 0, true);
-            testNavigator.reloadAssignment();
-            assert.equal(testNavigator.hasPrevious(), false, "there should not be any previous elements");
-        });
+    QUnit.test("hasPrevious should be false at beginning", function (assert) {
+        var testNavigator = new AssignmentNavigator("000", 0, true);
+        testNavigator.reloadAssignment();
+        assert.equal(testNavigator.hasPrevious(), false, "there should not be any previous elements");
+    });
 
 
-        QUnit.module("Exceptions");
-        QUnit.test("reach end of assignment (lecture style navigation)", function (assert) {
-            var done = assert.async(4);
-            var testNavigator = new AssignmentNavigator("2000", 0, false);
-            testNavigator.reloadAssignment(function () {
+    QUnit.module("Exceptions");
+    QUnit.test("reach end of assignment (lecture style navigation)", function (assert) {
+        var done = assert.async(4);
+        var testNavigator = new AssignmentNavigator("2000", 0, false);
+        testNavigator.reloadAssignment(function () {
+            done();
+            testNavigator.setLoadSubpartData(false);
+            testNavigator.gotoEndOfSubgroup(function () {
                 done();
-                testNavigator.setLoadSubpartData(false);
-                testNavigator.gotoEndOfSubgroup(function () {
-                    done();
-                    testNavigator.gotoEndOfSubgroupPart(function () {
-                        done();
-                        testNavigator.setLoadSubpartData(true);
-                        assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
-                        assert.throws(function () {
-                            testNavigator.gotoNext();
-                            console.log()
-                        }, createExceptionComparator(NavigationException), "Navigation exception is thrown when the end is reached.");
-                        done();
-                    });
-                });
-            });
-        });
-
-        QUnit.test("reach end of assignment (problem style navigation)", function (assert) {
-            var done = assert.async(3);
-            var testNavigator = new AssignmentNavigator("2000", 0, true);
-            testNavigator.reloadAssignment(function () {
-                done();
-                testNavigator.setLoadSubpartData(false);
-                testNavigator.gotoEndOfSubgroup(function () {
+                testNavigator.gotoEndOfSubgroupPart(function () {
                     done();
                     testNavigator.setLoadSubpartData(true);
                     assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
@@ -551,5 +531,25 @@
                 });
             });
         });
+    });
+
+    QUnit.test("reach end of assignment (problem style navigation)", function (assert) {
+        var done = assert.async(3);
+        var testNavigator = new AssignmentNavigator("2000", 0, true);
+        testNavigator.reloadAssignment(function () {
+            done();
+            testNavigator.setLoadSubpartData(false);
+            testNavigator.gotoEndOfSubgroup(function () {
+                done();
+                testNavigator.setLoadSubpartData(true);
+                assert.equal(testNavigator.getCurrentNestedLevel(), 0, 'there should be no nested levels');
+                assert.throws(function () {
+                    testNavigator.gotoNext();
+                    console.log()
+                }, createExceptionComparator(NavigationException), "Navigation exception is thrown when the end is reached.");
+                done();
+            });
+        });
+    });
 </script>
 </body>

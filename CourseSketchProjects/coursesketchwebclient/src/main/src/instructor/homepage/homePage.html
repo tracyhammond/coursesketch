@@ -1,100 +1,99 @@
 <html>
 <head>
-<link rel="stylesheet" href="/css/utility/columns.css">
-<link rel="stylesheet" href="/css/courseSketch2.css">
-<link rel="stylesheet" href="/src/common/homepage/homePage.css">
+    <link rel="stylesheet" href="/css/utility/columns.css">
+    <link rel="stylesheet" href="/css/courseSketch2.css">
+    <link rel="stylesheet" href="/src/common/homepage/homePage.css">
 
 
-<!-- basic utilities -->
-<link rel="import" href="/src/utilities/defaultUtils.html">
-<script type="text/javascript" src="/src/utilities/functions/childScript.js"
-	data-namespace="courseManagement"></script>
+    <!-- basic utilities -->
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="courseManagement"></script>
 
-<!-- basic setup for this page -->
+    <!-- basic setup for this page -->
 
-<link rel="import"
-	href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
-<link rel="import"
-	href="/src/utilities/templates/loading/loadingInclude.html">
+    <link rel="import"
+          href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+    <link rel="import"
+          href="/src/utilities/templates/loading/loadingInclude.html">
 
-<!-- protobuf -->
-<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-<!-- homepage specific -->
-<script type="text/javascript"
-	src="/src/common/homepage/courseManager.js"></script>
+    <!-- homepage specific -->
+    <script type="text/javascript"
+            src="/src/common/homepage/courseManager.js"></script>
 
-<!-- INSTRUCTOR SPECIFIC MUST BE AFTER COMMON-->
-<script type="text/javascript" src="/src/utilities/functions/string.js"></script>
-<script type="text/javascript" src="/src/instructor/homepage/create.js"></script>
-<link rel="import" href="/src/instructor/problemCreation/problemSelectionInclude.html">
+    <!-- INSTRUCTOR SPECIFIC MUST BE AFTER COMMON-->
+    <script type="text/javascript" src="/src/utilities/functions/string.js"></script>
+    <script type="text/javascript" src="/src/instructor/homepage/create.js"></script>
+    <link rel="import" href="/src/instructor/problemCreation/problemSelectionInclude.html">
 
-<script>
-    $(document).ready(function() {
-        CourseSketch.courseManagement.initializeCourseManagment();
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            CourseSketch.courseManagement.initializeCourseManagment();
+        });
+    </script>
 
 </head>
-<body>
 <body style="background: #55C3C2;">
-	<!-- color options: #55C3C2 #A9D0F5 -->
-	<!-- Menu Bar -->
-	<!-- Center Section -->
-	<div class="wide_centre" style="display:flex;">
-		<div style="width: 75%;">
-			<div class="columnContainer">
-				<div>
-					<h2 class="homePageHeader" style="text-align: center">Courses</h2>
-					<div id="column1"
-						class="semi_wide_centre faded_column gradient_faded_column_instructor fullScreenColumn"
-						style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
-						<button class="myButton2 centre" onclick="CourseSketch.courseManagement.addNewCourse()">Add
-							New Course</button>
-						<div id="class_list_column" class="school_div"></div>
-					</div>
-				</div>
-				<div>
-					<h2 class="homePageHeader" style="text-align: center">Assignments</h2>
-					<div id="column2"
-						class="semi_wide_centre faded_column gradient_faded_column_instructor fullScreenColumn"
-						style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
-						<div id="assignment_button" style="display: none;">
-							<button class="myButton2 centre" onclick="CourseSketch.courseManagement.addNewAssignment()">Add New Assignment</button>
-						</div>
-						<div id="assignment_list_column" class="school_div">Click on
-							a course</div>
-					</div>
-				</div>
-				<div>
-					<h2 class="homePageHeader" style="text-align: center">Problems</h2>
-					<div id="column3"
-						class="semi_wide_centre faded_column gradient_faded_column_instructor fullScreenColumn"
-						style="overflow-y: scroll; overflow-x: hidden; padding-top: 5px;">
-						<div id="problem_button" style="display: none;">
-							<button class="myButton2 centre" onclick="CourseSketch.courseManagement.addNewCourseProblem()">Add New Problem</button>
-							<button class="myButton2 centre" onclick="CourseSketch.courseManagement.chooseExistingProblem()">Choose existing problem</button>
-						</div>
-						<div id="problem_list_column" class="school_div">Click on a
-							problem</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div style="width: 25%;">
-			<h2 class="homePageHeader" style="text-align: center; visibility: hidden;">Hidden Title</h2>
-			<div id="column4" class = "fullScreenColumn"
-				style="padding-right: 10px; padding-left: 10px; padding-top:5px; background: #55C3C2; overflow:hidden;">
-				<div style="background: #FFFFFF; margin-top:-17;">
-					<div id="editable_unit" style="height: calc(100% + 5px);">
-						<h2 style="text-align: center">Nothing is selected yet</h2>
-						<h2 style="text-align: center">Click an item to edit</h2>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</body>
+<main class="" style="z-index: 1">
+    <div class="colHolder row" style="height:100vh; margin:0;">
+        <div class="col s3 column">
+            <h2 class="homePageHeader">Courses</h2>
+            <div id="column1" class="scrollColumn z-depth-1">
+                <button style="margin-bottom:10px;" class="btn col s12"
+                        onclick="CourseSketch.courseManagement.addNewCourse()">Add New Course
+                </button>
+                <div id="class_list_column" class="school_div"></div>
+            </div>
+        </div>
+        <div class="col s3 column" style="height:100vh;">
+            <h2 class="homePageHeader">Assignments</h2>
+            <div id="column2" class="scrollColumn z-depth-1">
+                <div id="assignment_button" style="display: none;">
+                    <button style="margin-bottom:10px;" class="btn col s12"
+                            onclick="CourseSketch.courseManagement.addNewAssignment()">Add New Assignment
+                    </button>
+                </div>
+                <div id="assignment_list_column" class="school_div">
+                    <p class="flow-text">Please click on the previous column</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s3 column" style="height:100vh;">
+            <h2 class="homePageHeader">Problems</h2>
+            <div id="column3" class="scrollColumn z-depth-1">
+                <div id="problem_button" style="display: none;">
+                    <button class="btn col s12" style="margin-bottom:10px;"
+                            onclick="CourseSketch.courseManagement.addNewCourseProblem()">
+                        Add New Problem
+                    </button>
+                    <button class="btn col s12" style="margin-bottom:10px;"
+                            onclick="CourseSketch.courseManagement.chooseExistingProblem()">Choose existing problem
+                    </button>
+                </div>
+                <div id="problem_list_column" class="school_div">
+                    <p class="flow-text">Please click on the previous column</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s3 column" style="height:100vh;">
+            <h2 class="homePageHeader">Lectures</h2>
+            <div id="column4" class="scrollColumn z-depth-1" style="max-height:100vh;">
+                <div id="lecture_list_column" class="school_div" style="max-height:100%;">
+                    <p class="flow-text">Please click on the previous column</p>
+                </div>
+            </div>
+        </div>
 
+    </div>
+    <div id="advancedEditHolder" style="position: fixed;
+    bottom: 0; height:50%; width:100vw; z-index: 100;">
+
+    </div>
+</main>
+
+</body>
 
 </html>

@@ -143,9 +143,9 @@ function SchoolItemBuilder() {
     function findType(object) {
         if (!isUndefined(object.assignmentList)) {
             return COURSE;
-        } else if (!isUndefined(object.problemList)) {
+        } else if (!isUndefined(object.reviewOpenDate)) {
             return ASSIGNMENT;
-        } else if (!isUndefined(object.problemInfo)) {
+        } else if (!isUndefined(object.problemNumber)) {
             return PROBLEM;
         } else if (!isUndefined(object.questionText)) {
             return BANK_PROBLEM;
@@ -160,7 +160,7 @@ function SchoolItemBuilder() {
     this.createFancySchoolItem = function createFancySchoolItem(srlSchoolItem, currentDate, type, index) {
         // Required Items
         var box = document.createElement('school-item');
-        box.className = 'hoverable';
+        box.className = 'hoverable card';
         box.setAttribute('id', srlSchoolItem.id);
         box.schoolItemData = srlSchoolItem;
 
@@ -176,6 +176,7 @@ function SchoolItemBuilder() {
         }
 
         box.setAttribute('data-item_number', index);
+        box.setAttribute('data-type', type);
 
         this.addClickFunction(box, this.boxClickFunction, this.editCallback, srlSchoolItem);
 

@@ -8,6 +8,7 @@
  */
 function ClickSelectionManager() {
     this.selectedItems = [];
+    this.selectedListeners = [];
     this.selectionClassName = ' selectedBox';
     this.localDoc = document;
 
@@ -19,6 +20,7 @@ function ClickSelectionManager() {
     this.addSelectedItem = function(element) {
         this.selectedItems.push(element);
         this.selectItem(element);
+        this.notifyAdd(element);
     };
 
     /**
@@ -41,6 +43,26 @@ function ClickSelectionManager() {
         element.className += this.selectionClassName;
     };
 
+    this.notifyRemove = function(element) {
+        for (var i = 0; i < this.selectedListeners.length; i++) {
+            (function(listener) {
+                setTimeout(function() {
+                    listener.removed(element);
+                }, 10);
+            })(this.selectedListeners[i]);
+        }
+    };
+
+    this.notifyAdd = function(element) {
+        for (var i = 0; i < this.selectedListeners.length; i++) {
+            (function(listener) {
+                setTimeout(function() {
+                    listener.selected(element);
+                }, 10);
+            })(this.selectedListeners[i]);
+        }
+    };
+
     /**
      * Clears a specific item of its selected class.
      *
@@ -51,6 +73,7 @@ function ClickSelectionManager() {
             return;
         }
         $(element).removeClass(this.selectionClassName);
+        this.notifyRemove(element);
     };
 
     /**
@@ -83,5 +106,9 @@ function ClickSelectionManager() {
         for (var i = 0; i < listOfElements.length; i++) {
             this.addSelectedItem(listOfElements[i]);
         }
+    };
+
+    this.addClickSelectionListener = function(listener) {
+        this.selectedListeners.push(listener);
     };
 }

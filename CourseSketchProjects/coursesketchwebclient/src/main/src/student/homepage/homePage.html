@@ -1,77 +1,77 @@
 <html>
 <head>
-<link rel="import"
-	  href="/src/utilities/libraries/materialize/materializeInclude.html">
+    <link rel="import"
+          href="/src/utilities/libraries/materialize/materializeInclude.html">
 
-<!-- basic utilities -->
-<link rel="import" href="/src/utilities/defaultUtils.html">
-<script type="text/javascript" src="/src/utilities/functions/childScript.js"
-	data-namespace="courseManagement"></script>
+    <!-- basic utilities -->
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="courseManagement"></script>
 
-<!-- basic setup for this page -->
-<link rel="import"
-	href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
-<link rel="import"
-	href="/src/utilities/templates/loading/loadingInclude.html">
+    <!-- basic setup for this page -->
+    <link rel="import"
+          href="/src/utilities/templates/schoolItem/schoolItemInclude.html">
+    <link rel="import"
+          href="/src/utilities/templates/loading/loadingInclude.html">
 
-<!-- protobuf -->
-<link rel="import" href="/src/utilities/connection/protobufInclude.html">
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-<!-- homepage specific -->
-<script type="text/javascript" src="/src/utilities/functions/string.js"></script>
-<script type="text/javascript"
-	src="/src/common/homepage/courseManager.js"></script>
-<link rel="import" href="/src/common/homepage/homepage.css">
-
-
+    <!-- homepage specific -->
+    <script type="text/javascript" src="/src/utilities/functions/string.js"></script>
+    <script type="text/javascript"
+            src="/src/common/homepage/courseManager.js"></script>
+    <link rel="import" href="/src/common/homepage/homepage.css">
 
 
-<script>
-    $(document).ready(function() {
-        CourseSketch.courseManagement.initializeCourseManagment();
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            CourseSketch.courseManagement.initializeCourseManagment();
+        });
+    </script>
 </head>
 <body>
-	<div class="">
-		<div class="colHolder row" style="height:100%; margin:0;">
-			<div class="col s3 column">
-				<h2 class="homePageHeader">Courses</h2>
-				<div id="column1" class="scrollColumn z-depth-1">
-					<div class="btn col s12" style="margin-bottom:10px;"
-						onclick="CourseSketch.redirectContent('/src/student/search/classSearch.html','Search for classes');">Find
-						New Course</div>
+<div class="">
+    <div class="colHolder row" style="height:100%; margin:0;">
+        <div class="col s3 column">
+            <h2 class="homePageHeader">Courses</h2>
+            <div id="column1" class="scrollColumn z-depth-1">
+                <div class="btn col s12" style="margin-bottom:10px;"
+                     onclick="CourseSketch.redirectContent('/src/student/search/classSearch.html','Search for classes');">
+                    Find
+                    New Course
+                </div>
 
-					<div id="class_list_column" class="school_div"></div>
-				</div>
-			</div>
-			<div class="col s3 column">
-				<h2 class="homePageHeader">Assignments</h2>
-				<div id="column2" class="scrollColumn z-depth-1">
-					<div id="assignment_list_column" class="school_div">
-						<p class="flow-text">Please click on the previous column</p>
-					</div>
-				</div>
-			</div>
-			<div class="col s3 column">
-				<h2 class="homePageHeader">Problems</h2>
-				<div id="column3" class="scrollColumn z-depth-1">
-					<div id="problem_list_column" class="school_div">
-						<p class="flow-text">Please click on the previous column</p>
-					</div>
-				</div>
-			</div>
-			<div class="col s3 column">
-				<h2 class="homePageHeader">Lectures</h2>
-				<div id="column4" class="scrollColumn z-depth-1">
-					<div id="lecture_list_column" class="school_div">
-						<p class="flow-text">Please click on the previous column</p>
-					</div>
-				</div>
-			</div>
+                <div id="class_list_column" class="school_div"></div>
+            </div>
+        </div>
+        <div class="col s3 column">
+            <h2 class="homePageHeader">Assignments</h2>
+            <div id="column2" class="scrollColumn z-depth-1">
+                <div id="assignment_list_column" class="school_div">
+                    <p class="flow-text">Please click on the previous column</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s3 column">
+            <h2 class="homePageHeader">Problems</h2>
+            <div id="column3" class="scrollColumn z-depth-1">
+                <div id="problem_list_column" class="school_div">
+                    <p class="flow-text">Please click on the previous column</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s3 column">
+            <h2 class="homePageHeader">Lectures</h2>
+            <div id="column4" class="scrollColumn z-depth-1">
+                <div id="lecture_list_column" class="school_div">
+                    <p class="flow-text">Please click on the previous column</p>
+                </div>
+            </div>
+        </div>
 
-		</div>
-	</div>
+    </div>
+</div>
 
 </body>
 </html>

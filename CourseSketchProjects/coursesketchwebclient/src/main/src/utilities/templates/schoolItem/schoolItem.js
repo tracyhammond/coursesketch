@@ -159,13 +159,6 @@ function SchoolItem() {
                         localScope.editFunction(element.dataset.type, oldData, newData, realParent);
                     }
                 };
-                // do something else for the advance button.
-                if ($(element).hasClass('advanceButton')) {
-                    if (localScope.createAdvanceEditPanel) {
-                        localScope.createAdvanceEditPanel(element, localScope, parentNode);
-                    }
-                    return;
-                }
                 /**
                  * Called when an edit button has been pressed to toggle editing.
                  *

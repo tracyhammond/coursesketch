@@ -14,35 +14,8 @@ validateFirstRun(document.currentScript);
      * @param {Element} element
      *            Protobuf element that has been edited
      */
-    courseManagement.courseEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var keyList = newValue.keys();
-        var srlCourse = element.schoolItemData;
-        console.log(srlCourse);
-        newValue.forEach(function(value, key, mapObj) {
-            console.log(key);
-            srlCourse[key] = value;
-        });
-        console.log(srlCourse);
+    courseManagement.courseEndEdit = function(element, srlCourse) {
         CourseSketch.dataManager.updateCourse(srlCourse);
-    };
-
-    courseManagement.commonShowCourses = courseManagement.showCourses;
-
-    /**
-     * Overwrote the old showCourses inside {@code courseManagement.js} to add some edit capabilities.
-     * This also calls original showCourses function in courseManagement after displaying the buttons.
-     *
-     * @param {Array<SrlCourse>} courseList - The list of courses.
-     */
-    courseManagement.showCourses = function(courseList) {
-        courseManagement.commonShowCourses(courseList);
-        hideButton('assignment_button');
-        hideButton('problem_button');
-        var children = document.getElementById('class_list_column').querySelectorAll('school-item');
-        for (var i = 0; i < children.length; i++) {
-            var schoolItem = children[i];
-            schoolItem.setEditCallback(courseManagement.courseEndEdit);
-        }
     };
 
     /**
@@ -106,32 +79,8 @@ validateFirstRun(document.currentScript);
      * @param {Element} element
      *            protobuf element that has been edited
      */
-    courseManagement.assignmentEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var assignment = element.schoolItemData;
-        newValue.forEach(function(value, key, mapObj) {
-            console.log(key);
-            assignment[key] = value;
-        });
+    courseManagement.assignmentEndEdit = function(element, assignment) {
         CourseSketch.dataManager.updateAssignment(assignment);
-    };
-
-    courseManagement.commonShowAssignments = courseManagement.showAssignments;
-
-    /**
-     * Overwrote the old showAssignments inside {@code courseManagement.js} to add some edit capabilities.
-     * This also calls original showAssignments function in courseManagement after displaying the buttons.
-     *
-     * @param {Array<SrlAssignment>} assignmentList - a list of assignments.
-     */
-    courseManagement.showAssignments = function(assignmentList) {
-        showButton('assignment_button');
-        hideButton('problem_button');
-        courseManagement.commonShowAssignments(assignmentList);
-        var children = document.getElementById('assignment_list_column').querySelectorAll('school-item');
-        for (var i = 0; i < children.length; i++) {
-            var schoolItem = children[i];
-            schoolItem.setEditCallback(courseManagement.assignmentEndEdit);
-        }
     };
 
     /**
@@ -150,7 +99,6 @@ validateFirstRun(document.currentScript);
         var assignment = CourseSketch.prutil.SrlAssignment();
         assignment.name = 'Insert name';
         assignment.courseId = courseId;
-        alert(courseId);
         assignment.description = 'Insert description';
         // course.accessDate = 'mm/dd/yyyy';
         // course.closeDate = 'mm/dd/yyyy';
@@ -192,7 +140,7 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Function to be called when a lecture has finished editing.
+     * Function to be called when a problem has finished editing.
      *
      * @param {String} attributeChanged
      *            the name of the protobuf attribute that changed
@@ -203,37 +151,8 @@ validateFirstRun(document.currentScript);
      * @param {Element} element
      *            protobuf element that has been edited
      */
-    courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var problem = element.schoolItemData;
-        newValue.forEach(function(value, key) {
-            if (key === 'description') {
-                var bankProblem = problem.getProblemInfo();
-                bankProblem.questionText = value;
-                problem.setProblemInfo(bankProblem);
-                CourseSketch.dataManager.updateBankProblem(bankProblem);
-            } else {
-                problem[key] = value;
-            }
-        });
+    courseManagement.problemEndEdit = function(element, problem) {
         CourseSketch.dataManager.updateCourseProblem(problem);
-    };
-
-    courseManagement.commonShowProblems = courseManagement.showProblems;
-
-    /**
-     * Overwrote the old showProblems inside {@code courseManagement.js} to add some edit capabilities.
-     * This also calls original showProblems function in courseManagement after displaying the buttons.
-     *
-     * @param {list} problemList - The list of problems that are wanting to be showed
-     */
-    courseManagement.showProblems = function(problemList) {
-        showButton('problem_button');
-        courseManagement.commonShowProblems(problemList);
-        var children = document.getElementById('problem_list_column').querySelectorAll('school-item');
-        for (var i = 0; i < children.length; i++) {
-            var schoolItem = children[i];
-            schoolItem.setEditCallback(courseManagement.problemEndEdit);
-        }
     };
 
     /**
@@ -282,16 +201,6 @@ validateFirstRun(document.currentScript);
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
 
-        if (isUndefined(existingBankProblem)) {
-            var bankProblem = CourseSketch.prutil.SrlBankProblem();
-            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-            var permissions = CourseSketch.prutil.SrlPermission();
-            permissions.userPermission = [ courseId ];
-            bankProblem.accessPermission = permissions;
-            courseProblem.setProblemInfo(bankProblem);
-        } else {
-            courseProblem.setProblemBankId(existingBankProblem);
-        }
         var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
@@ -329,10 +238,44 @@ validateFirstRun(document.currentScript);
         });
     };
 
+    courseManagement.courseSelectionManager.addClickSelectionListener({
+        removed: function(element) {
+            hideButton('assignment_button');
+            hideButton('problem_button');
+            destroyAdvancedEditCard();
+        },
+        selected: function(element) {
+            showButton('assignment_button');
+            createAdvancedEditCard(element, courseManagement.courseEndEdit);
+        }
+    });
+
+    courseManagement.assignmentSelectionManager.addClickSelectionListener({
+        removed: function(element) {
+            hideButton('problem_button');
+            destroyAdvancedEditCard();
+        },
+        selected: function(element) {
+            showButton('problem_button');
+            destroyAdvancedEditCard();
+            createAdvancedEditCard(element, courseManagement.assignmentEndEdit);
+        }
+    });
+
+    courseManagement.problemSelectionManager.addClickSelectionListener({
+        removed: function(element) {
+            destroyAdvancedEditCard();
+        },
+        selected: function(element) {
+            destroyAdvancedEditCard();
+            createAdvancedEditCard(element, courseManagement.problemEndEdit);
+        }
+    });
+
     /**
      * Sets an element (should be a button) with the given id to be visible.
      *
-     * @param {UUID} id - The id of the button that should be shown.
+     * @param {String} id - The id of the button that should be shown.
      */
     function showButton(id) {
         var element = document.getElementById(id);
@@ -344,12 +287,31 @@ validateFirstRun(document.currentScript);
     /**
      * Sets an element (should be a button) with the given id to be invisible.
      *
-     * @param {UUID} id - The id of the button that should be shown.
+     * @param {String} id - The id of the button that should be shown.
      */
     function hideButton(id) {
         var element = document.getElementById(id);
         if (element) {
             element.style.display = 'none';
         }
+    }
+
+    function destroyAdvancedEditCard() {
+        $(document.querySelectorAll('#advancedEditHolder')[0]).html('');
+    }
+
+    function createAdvancedEditCard(element, saveCallback) {
+        var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0],
+            saveCallback, destroyAdvancedEditCard);
+        $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: 0.5, // Opacity of modal background
+            inDuration: 300, // Transition in duration
+            outDuration: 200, // Transition out duration
+            startingTop: '4%', // Starting top style attribute
+            endingTop: '10%' // Ending top style attribute
+        }
+        );
+        childElement.style.display = '';
     }
 })();
