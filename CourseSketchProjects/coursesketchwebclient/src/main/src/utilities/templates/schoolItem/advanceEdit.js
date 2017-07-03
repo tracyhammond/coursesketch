@@ -1,13 +1,13 @@
 // jscs:disable jsDoc
 
-var advancedEditTestObject = (function () {
+var advancedEditTestObject = (function() {
 
     /**
      * Holds the object with the specific functions that loads data.
      */
     var protoTypes = {};
 
-    var IGNORE_FIELD = {special: "N/A"};
+    var IGNORE_FIELD = {special: 'N/A'};
 
     /**
      * Loads the data from the school item into the edit panel.
@@ -20,10 +20,11 @@ var advancedEditTestObject = (function () {
         var mappedInput = new Map();
         for (var property in schoolItemData) {
             if (schoolItemData.hasOwnProperty(property)) {
+                var result;
                 var element = parentElement.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
                 if (!isUndefined(element)) {
                     var elementData = element.querySelectorAll('.data')[0];
-                    var result = loadIntoElement(elementData, schoolItemData[property], property);
+                    result = loadIntoElement(elementData, schoolItemData[property], property);
                     element.style.display = 'inherit';
                 } else {
                     result = IGNORE_FIELD;
@@ -42,7 +43,7 @@ var advancedEditTestObject = (function () {
      * @returns {Number}
      */
     function convertElementsToDateTime(dateInput, timeInput) {
-        var milliseconds = new Date(dateInput.value + " " + timeInput.value).getTime();
+        var milliseconds = new Date(dateInput.value + ' ' + timeInput.value).getTime();
         var date = CourseSketch.prutil.DateTime();
         date.setMillisecond('' + milliseconds);
         return date;
@@ -57,6 +58,7 @@ var advancedEditTestObject = (function () {
      * @returns {*}
      */
     function loadIntoElement(elementData, schoolItemData, property) {
+        /*jshint maxcomplexity:16 */
         if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
             return loadSubObject(elementData, schoolItemData, property);
         }
@@ -66,39 +68,9 @@ var advancedEditTestObject = (function () {
                 // This is considered write only
                 elementData.textContent = 'no information for this field';
             }
-        }
-        else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
-            var dateInput = elementData.querySelector('.date');
-            var timeInput = elementData.querySelector('.time');
-
-            var date;
-            if (!isUndefined(schoolItemData) && schoolItemData !== null
-                && !isUndefined(schoolItemData.millisecond) && schoolItemData.millisecond !== null) {
-                var milliseconds = '' + schoolItemData.millisecond;
-                date = new Date(parseInt(milliseconds, 10));
-                if ('' + date === 'Invalid Date') {
-                    date = new Date();
-                }
-            } else {
-                date = new Date();
-            }
-
-            // format date for date input
-            var day = ('0' + date.getDate()).slice(-2);
-            var month = ('0' + (date.getMonth() + 1)).slice(-2);
-            dateInput.value = date.getFullYear() + '-' + (month) + '-' + (day);
-
-            // format hour for date input
-            var hours = ('0' + date.getHours()).slice(-2);
-            var minutes = ('0' + date.getMinutes()).slice(-2);
-            var seconds = ('0' + date.getSeconds()).slice(-2);
-
-            timeInput.value = hours + ':' + minutes + ':' + seconds;
-
-            // The absolute date might actually be off by some milliseconds this fixes that potential offset
-            schoolItemData = convertElementsToDateTime(dateInput, timeInput);
-        }
-        else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
+        } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
+            schoolItemData = loadDate(elementData, schoolItemData);
+        } else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
             (elementData.type === 'text' || elementData.type === 'number'))) {
             if (!isUndefined(schoolItemData) && schoolItemData !== null) {
                 elementData.value = schoolItemData;
@@ -122,6 +94,38 @@ var advancedEditTestObject = (function () {
         return schoolItemData;
     }
 
+    function loadDate(elementData, schoolItemData) {
+        var dateInput = elementData.querySelector('.date');
+        var timeInput = elementData.querySelector('.time');
+
+        var date;
+        if (!isUndefined(schoolItemData) && schoolItemData !== null &&
+            !isUndefined(schoolItemData.millisecond) && schoolItemData.millisecond !== null) {
+            var milliseconds = '' + schoolItemData.millisecond;
+            date = new Date(parseInt(milliseconds, 10));
+            if ('' + date === 'Invalid Date') {
+                date = new Date();
+            }
+        } else {
+            date = new Date();
+        }
+
+        // format date for date input
+        var day = ('0' + date.getDate()).slice(-2);
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        dateInput.value = date.getFullYear() + '-' + (month) + '-' + (day);
+
+        // format hour for date input
+        var hours = ('0' + date.getHours()).slice(-2);
+        var minutes = ('0' + date.getMinutes()).slice(-2);
+        var seconds = ('0' + date.getSeconds()).slice(-2);
+
+        timeInput.value = hours + ':' + minutes + ':' + seconds;
+
+        // The absolute date might actually be off by some milliseconds this fixes that potential offset
+        return convertElementsToDateTime(dateInput, timeInput);
+    }
+
     /**
      * Decodes and runs everything again on a sub object.
      *
@@ -142,7 +146,7 @@ var advancedEditTestObject = (function () {
      *
      * @returns {LatePolicy} A protobuf object
      */
-    protoTypes.latePolicyProtoType = function () {
+    protoTypes.latePolicyProtoType = function() {
         return CourseSketch.prutil.LatePolicy();
     };
 
@@ -193,15 +197,13 @@ var advancedEditTestObject = (function () {
     function getDataFromElement(elementData, schoolItemData, property, originalData) {
         if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
             return saveSubObject(elementData, schoolItemData, property, originalData);
-        }
-        else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
+        } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
             var dateInput = elementData.querySelector('.date');
             var timeInput = elementData.querySelector('.time');
 
             // The absolute date might actually be off by some milliseconds this fixes that potential offset
             schoolItemData = convertElementsToDateTime(dateInput, timeInput);
-        }
-        else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
+        } else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
             (elementData.type === 'text'))) {
             schoolItemData = elementData.value;
         } else if (elementData.tagName === 'INPUT' && elementData.type === 'number') {
@@ -251,7 +253,11 @@ var advancedEditTestObject = (function () {
         if (original.size !== result.size) {
             return false;
         }
-        for (var [key, originalValue] of original) {
+        var mapIter = original.entries();
+        for (var i = 0; i < original.size; i++) {
+            var entry = mapIter.next().value;
+            var key = entry[0];
+            var originalValue = entry[1];
             resultValue = result.get(key);
             if (resultValue === IGNORE_FIELD || originalValue === IGNORE_FIELD) {
                 continue;
@@ -271,6 +277,7 @@ var advancedEditTestObject = (function () {
      * @returns {boolean} True if the values are the same otherwise this will return false;
      */
     function compareValues(originalValue, newValue) {
+        /*jshint maxcomplexity:16 */
         if (originalValue === newValue) {
             return true;
         }
@@ -331,7 +338,7 @@ var advancedEditTestObject = (function () {
      * Removes the advance edit panel if the school item is removed.
      */
     if (!isUndefined(SchoolItem)) {
-        SchoolItem.prototype.finalize = function () {
+        SchoolItem.prototype.finalize = function() {
             if (!isUndefined(this.advanceEditPanel)) {
                 if (this.advanceEditPanel.parentNode !== null) {
                     this.advanceEditPanel.parentNode.removeChild(this.advanceEditPanel);
@@ -378,7 +385,7 @@ var advancedEditTestObject = (function () {
          */
 
         var schoolItem = localElement.schoolItemData;
-        saveButton.onclick = function () {
+        saveButton.onclick = function() {
             getInput(schoolItem, shadow, currentData);
             localElement.schoolItemData = schoolItem;
             console.log(schoolItem);
@@ -413,8 +420,8 @@ var advancedEditTestObject = (function () {
         var target = host;
 
         // create an observer instance
-        var observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes') {
                     currentData = loadData(localElement.schoolItemData, host.shadowRoot);
                     var accordion = host.shadowRoot.querySelectorAll('.collapsible')[0];
@@ -433,7 +440,7 @@ var advancedEditTestObject = (function () {
     }
 
     if (!isUndefined(SchoolItem)) {
-        SchoolItem.prototype.createAdvanceEditPanel = createAdvanceEditPanel
+        SchoolItem.prototype.createAdvanceEditPanel = createAdvanceEditPanel;
     }
 
     /**
@@ -461,7 +468,7 @@ var advancedEditTestObject = (function () {
         /**
          * Called to open a script editor.
          */
-        scriptButton.onclick = function () {
+        scriptButton.onclick = function() {
             var data = getInput(shadow);
             location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
         };

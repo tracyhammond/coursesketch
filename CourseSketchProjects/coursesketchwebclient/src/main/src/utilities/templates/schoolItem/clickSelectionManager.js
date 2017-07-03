@@ -43,20 +43,20 @@ function ClickSelectionManager() {
         element.className += this.selectionClassName;
     };
 
-    this.notifyRemove = function (element) {
+    this.notifyRemove = function(element) {
         for (var i = 0; i < this.selectedListeners.length; i++) {
             (function(listener) {
-                setTimeout(function () {
+                setTimeout(function() {
                     listener.removed(element);
                 }, 10);
             })(this.selectedListeners[i]);
         }
     };
 
-    this.notifyAdd = function (element) {
+    this.notifyAdd = function(element) {
         for (var i = 0; i < this.selectedListeners.length; i++) {
             (function(listener) {
-                setTimeout(function () {
+                setTimeout(function() {
                     listener.selected(element);
                 }, 10);
             })(this.selectedListeners[i]);
@@ -108,7 +108,7 @@ function ClickSelectionManager() {
         }
     };
 
-    this.addClickSelectionListener = function (listener) {
+    this.addClickSelectionListener = function(listener) {
         this.selectedListeners.push(listener);
     };
 }

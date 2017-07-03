@@ -273,23 +273,23 @@ validateFirstRun(document.currentScript);
     };
 
     courseManagement.courseSelectionManager.addClickSelectionListener({
-        removed: function (element) {
+        removed: function(element) {
             hideButton('assignment_button');
             hideButton('problem_button');
             destroyAdvancedEditCard();
         },
-        selected: function (element) {
+        selected: function(element) {
             showButton('assignment_button');
             createAdvancedEditCard(element, courseManagement.courseEndEdit);
         }
     });
 
     courseManagement.assignmentSelectionManager.addClickSelectionListener({
-        removed: function (element) {
+        removed: function(element) {
             hideButton('problem_button');
             destroyAdvancedEditCard();
         },
-        selected: function (element) {
+        selected: function(element) {
             showButton('problem_button');
             destroyAdvancedEditCard();
             createAdvancedEditCard(element, courseManagement.assignmentEndEdit);
@@ -297,10 +297,10 @@ validateFirstRun(document.currentScript);
     });
 
     courseManagement.problemSelectionManager.addClickSelectionListener({
-        removed: function (element) {
+        removed: function(element) {
             destroyAdvancedEditCard();
         },
-        selected: function (element) {
+        selected: function(element) {
             destroyAdvancedEditCard();
             createAdvancedEditCard(element, courseManagement.problemEndEdit);
         }
@@ -344,13 +344,13 @@ validateFirstRun(document.currentScript);
         */
         var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0], saveCallback);
         $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
-                dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                opacity: .5, // Opacity of modal background
-                inDuration: 300, // Transition in duration
-                outDuration: 200, // Transition out duration
-                startingTop: '4%', // Starting top style attribute
-                endingTop: '10%' // Ending top style attribute
-            }
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: 0.5, // Opacity of modal background
+            inDuration: 300, // Transition in duration
+            outDuration: 200, // Transition out duration
+            startingTop: '4%', // Starting top style attribute
+            endingTop: '10%' // Ending top style attribute
+        }
         );
         childElement.style.display = '';
        // document.querySelectorAll('#advancedEditHolder')[0].open = true;
