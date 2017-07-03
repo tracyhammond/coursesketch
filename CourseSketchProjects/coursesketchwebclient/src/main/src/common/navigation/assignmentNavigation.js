@@ -495,6 +495,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
                 dataLoaded = true; // this one will take longer so we do this one second.
             });
         }
+
         CourseSketch.dataManager.getAssignment(assignmentId, setData);
     }
 

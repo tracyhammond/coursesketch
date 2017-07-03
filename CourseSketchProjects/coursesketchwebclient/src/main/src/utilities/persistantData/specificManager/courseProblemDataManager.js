@@ -290,8 +290,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
                                 courseProblemCallbackComplete(courseProblemList);
                             });
                         } else {
-                            courseProblemCallbackComplete(courseProblemList);
                             courseProblemCallbackPartial(courseProblemList);
+                            courseProblemCallbackComplete(courseProblemList);
                             return;
                         }
 
