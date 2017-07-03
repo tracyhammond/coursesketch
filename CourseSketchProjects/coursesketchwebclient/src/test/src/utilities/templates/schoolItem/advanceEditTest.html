@@ -42,7 +42,7 @@
         function createList(schoolItemElement, type) {
             var parentNode = document.querySelectorAll("#testLocation")[0];
             schoolItemElement.setAttribute('data-type', type);
-            return advancedEditTestObject.createAdvanceEditPanelElements(schoolItemElement, parentNode);
+            return advancedEditTestObject.createAdvanceEditPanelElements(schoolItemElement, parentNode)[0];
         }
 
         QUnit.module("testConstruction", {
@@ -58,7 +58,7 @@
 
         test('advanced edit creates no list if given no type', function (assert) {
             var parentNode = document.querySelectorAll("#testLocation")[0];
-            var host = this.advanceEdit.createAdvanceEditPanelElements(this.fakeSchoolItem, parentNode);
+            var host = this.advanceEdit.createAdvanceEditPanelElements(this.fakeSchoolItem, parentNode)[0];
             assert.equal(host.shadowRoot.querySelectorAll('ul.collapsible li').length, 0);
         });
 
@@ -258,13 +258,20 @@
             var defaultDate = CourseSketch.prutil.DateTime();
             defaultDate.setMillisecond('' + 0);
 
+            var latePolicyMap = new Map();
+            latePolicyMap.set('functionType', 0);
+            latePolicyMap.set('timeFrameType', 3);
+            latePolicyMap.set('rate', null);
+            latePolicyMap.set('subtractionType', 0);
+            latePolicyMap.set('applyOnlyToLateProblems', false);
+
             // loads data
             var orignalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
             assert.equal(orignalData.get('name'), fakeName);
             assert.equal(orignalData.get('id'), fakeId);
             assert.protoEqual(orignalData.get('accessDate'), dateProto, CourseSketch.prutil.getDateTimeClass());
             assert.protoEqual(orignalData.get('closeDate'), defaultDate, CourseSketch.prutil.getDateTimeClass());
-            assert.deepEqual(orignalData.get('latePolicy'), new Map());
+            assert.deepEqual(orignalData.get('latePolicy'), latePolicyMap);
 
             var nameValue = this.advanceEdit.getDataFromElement(nameElement, fakeName, 'name');
             assert.equal(nameValue, fakeName);
@@ -383,6 +390,8 @@
 
             // loads data
             var originalData = this.advanceEdit.loadData(this.schoolItemProto, this.host.shadowRoot);
+
+            assert.equal(rateDiv.style.display, 'inherit');
 
             var newProto = CourseSketch.prutil.cleanProtobuf(this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass());
             assert.protoEqual(newProto, this.schoolItemProto, CourseSketch.prutil.getSrlAssignmentClass(),

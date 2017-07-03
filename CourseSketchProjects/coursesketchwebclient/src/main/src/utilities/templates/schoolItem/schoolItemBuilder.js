@@ -145,7 +145,7 @@ function SchoolItemBuilder() {
             return COURSE;
         } else if (!isUndefined(object.reviewOpenDate)) {
             return ASSIGNMENT;
-        } else if (!isUndefined(object.problemInfo)) {
+        } else if (!isUndefined(object.problemNumber)) {
             return PROBLEM;
         } else if (!isUndefined(object.questionText)) {
             return BANK_PROBLEM;

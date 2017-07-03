@@ -14,15 +14,7 @@ validateFirstRun(document.currentScript);
      * @param {Element} element
      *            Protobuf element that has been edited
      */
-    courseManagement.courseEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var keyList = newValue.keys();
-        var srlCourse = element.schoolItemData;
-        console.log(srlCourse);
-        newValue.forEach(function(value, key, mapObj) {
-            console.log(key);
-            srlCourse[key] = value;
-        });
-        console.log(srlCourse);
+    courseManagement.courseEndEdit = function(element, srlCourse) {
         CourseSketch.dataManager.updateCourse(srlCourse);
     };
 
@@ -87,12 +79,7 @@ validateFirstRun(document.currentScript);
      * @param {Element} element
      *            protobuf element that has been edited
      */
-    courseManagement.assignmentEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var assignment = element.schoolItemData;
-        newValue.forEach(function(value, key, mapObj) {
-            console.log(key);
-            assignment[key] = value;
-        });
+    courseManagement.assignmentEndEdit = function(element, assignment) {
         CourseSketch.dataManager.updateAssignment(assignment);
     };
 
@@ -164,18 +151,7 @@ validateFirstRun(document.currentScript);
      * @param {Element} element
      *            protobuf element that has been edited
      */
-    courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var problem = element.schoolItemData;
-        newValue.forEach(function(value, key) {
-            if (key === 'description') {
-                var bankProblem = problem.getProblemInfo();
-                bankProblem.questionText = value;
-                problem.setProblemInfo(bankProblem);
-                CourseSketch.dataManager.updateBankProblem(bankProblem);
-            } else {
-                problem[key] = value;
-            }
-        });
+    courseManagement.problemEndEdit = function(element, problem) {
         CourseSketch.dataManager.updateCourseProblem(problem);
     };
 
@@ -225,16 +201,6 @@ validateFirstRun(document.currentScript);
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
 
-        if (isUndefined(existingBankProblem)) {
-            var bankProblem = CourseSketch.prutil.SrlBankProblem();
-            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-            var permissions = CourseSketch.prutil.SrlPermission();
-            permissions.userPermission = [ courseId ];
-            bankProblem.accessPermission = permissions;
-            courseProblem.setProblemInfo(bankProblem);
-        } else {
-            courseProblem.setProblemBankId(existingBankProblem);
-        }
         var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
@@ -335,14 +301,8 @@ validateFirstRun(document.currentScript);
     }
 
     function createAdvancedEditCard(element, saveCallback) {
-        /*
-        try {
-            document.querySelectorAll('#advancedEditHolder')[0].close();
-        } catch(adfsg) {
-
-        }
-        */
-        var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0], saveCallback);
+        var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0],
+            saveCallback, destroyAdvancedEditCard);
         $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
             dismissible: true, // Modal can be dismissed by clicking outside of the modal
             opacity: 0.5, // Opacity of modal background
@@ -353,6 +313,5 @@ validateFirstRun(document.currentScript);
         }
         );
         childElement.style.display = '';
-       // document.querySelectorAll('#advancedEditHolder')[0].open = true;
     }
 })();

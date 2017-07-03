@@ -70,13 +70,19 @@ var advancedEditTestObject = (function() {
             }
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-date')) {
             schoolItemData = loadDate(elementData, schoolItemData);
-        } else if (elementData.tagName === 'TEXTAREA' || (elementData.tagName === 'INPUT' &&
-            (elementData.type === 'text' || elementData.type === 'number'))) {
+        } else if (elementData.tagName === 'TEXTAREA' ||
+            (elementData.tagName === 'INPUT' && elementData.type === 'text')) {
             if (!isUndefined(schoolItemData) && schoolItemData !== null) {
                 elementData.value = schoolItemData;
             } else {
                 elementData.value = '';
                 schoolItemData = '';
+            }
+        } else if (elementData.tagName === 'INPUT' && elementData.type === 'number') {
+            if (!isUndefined(schoolItemData) && schoolItemData !== null && !isNaN(schoolItemData)) {
+                elementData.value = schoolItemData;
+            } else {
+                elementData.value = '';
             }
         } else if (elementData.tagName === 'INPUT' && elementData.type === 'checkbox') {
             if (isUndefined(schoolItemData) || schoolItemData === null) {
@@ -136,7 +142,7 @@ var advancedEditTestObject = (function() {
      */
     function loadSubObject(elementData, schoolItemData, property) {
         if (schoolItemData === null || isUndefined(schoolItemData)) {
-            schoolItemData = protoTypes[property + 'ProtoType'];
+            schoolItemData = protoTypes[property + 'ProtoType']();
         }
         return loadData(schoolItemData, elementData);
     }
@@ -147,7 +153,11 @@ var advancedEditTestObject = (function() {
      * @returns {LatePolicy} A protobuf object
      */
     protoTypes.latePolicyProtoType = function() {
-        return CourseSketch.prutil.LatePolicy();
+        var latePolicy = CourseSketch.prutil.LatePolicy();
+        latePolicy.subtractionType = 0;
+        latePolicy.timeFrameType = 3;
+        latePolicy.functionType = 0;
+        return latePolicy;
     };
 
     /**
@@ -208,6 +218,9 @@ var advancedEditTestObject = (function() {
             schoolItemData = elementData.value;
         } else if (elementData.tagName === 'INPUT' && elementData.type === 'number') {
             schoolItemData = parseFloat(elementData.value);
+            if (isNaN(schoolItemData)) {
+                schoolItemData = null;
+            }
         } else if (elementData.tagName === 'INPUT' && elementData.type === 'checkbox') {
             schoolItemData = elementData.checked;
         } else if (elementData.tagName === 'SELECT') {
@@ -226,7 +239,7 @@ var advancedEditTestObject = (function() {
         // Return a map if the result and the initial is the same
         // Otherwise return a protofbuf object
         if (schoolItemData === null || isUndefined(schoolItemData)) {
-            schoolItemData = protoTypes[property + 'ProtoType'];
+            schoolItemData = protoTypes[property + 'ProtoType']();
         }
         var result = getInput(schoolItemData, elementData, originalData);
         if (compareMaps(originalData, result)) {
@@ -304,6 +317,9 @@ var advancedEditTestObject = (function() {
             (getTypeName(originalValue) === 'string' && getTypeName(newValue) === 'number')) {
             return ('' + originalValue) === ('' + newValue);
         }
+        if (isNaN(originalValue) && isNaN(newValue)) {
+            return true;
+        }
         return false;
     }
 
@@ -362,7 +378,7 @@ var advancedEditTestObject = (function() {
 
         // add our loaded element to the page.
         parentNode.appendChild(host);
-        return host;
+        return [ host, shadow ];
     }
 
     /**
@@ -372,25 +388,33 @@ var advancedEditTestObject = (function() {
      * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
      */
 
-    function createAdvanceEditPanel(localElement, parentNode, saveCallback) {
+    function createAdvanceEditPanel(localElement, parentNode, saveCallback, closeCallback) {
         // create host and position it
         var currentData;
 
-        var host = createAdvanceEditPanelElements(localElement);
+        var result = createAdvanceEditPanelElements(localElement, parentNode);
+        var host = result[0];
+        var shadow = result[1];
+
         // save data
         //NOT WORKING, NEEDS TO BE MODIFIED
-        var saveButton = host.shadowRoot.querySelector('button.save');
+        var saveButton = host.shadowRoot.querySelector('.saveButton');
+        Waves.attach(saveButton);
         /**
          * Called to save all of the input.
          */
 
         var schoolItem = localElement.schoolItemData;
-        saveButton.onclick = function() {
+
+        function saveData() {
             getInput(schoolItem, shadow, currentData);
             localElement.schoolItemData = schoolItem;
             console.log(schoolItem);
-            console.log(localElement);
-            saveCallback('advance', localElement, schoolItem);
+            saveCallback(localElement, schoolItem);
+        }
+
+        saveButton.onclick = function() {
+            saveData();
         };
 
         // cancel!
@@ -406,14 +430,13 @@ var advancedEditTestObject = (function() {
             }
             closeEvent.stopPropagation();
             document.body.removeEventListener('click', close);
-            try {
-                document.body.removeChild(host);
-            } catch (exception) {
-                // ignored if this throws an error.
-            }
+            saveData();
+            closeCallback();
         }
 
-        shadow.querySelector('button.closeButton').onclick = close;
+        var closeButton = shadow.querySelector('.closeButton');
+        closeButton.onclick = close;
+        Waves.attach(closeButton);
         document.body.addEventListener('click', close);
 
         // select the target node
