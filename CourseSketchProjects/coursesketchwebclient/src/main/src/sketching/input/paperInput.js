@@ -135,6 +135,9 @@ function InputListener() {
             } else {
                 currentPoint = createPointFromEvent(event);
                 //currentPoint.setSpeed(pastPoint);
+                if (!currentStroke) {
+                    tool.onMouseUp(event);
+                }
                 currentStroke.addPoint(currentPoint);
                 graphics.updatePath(event.point);
                 pastPoint = currentPoint;
@@ -149,6 +152,11 @@ function InputListener() {
          * @param {Event} event - The event from releasing the mouse.
          */
         tool.onMouseUp = function(event) {
+            if (!currentStroke) {
+                currentStroke = false;
+                currentPoint = false;
+                return;
+            }
             currentPoint = createPointFromEvent(event);
             //currentPoint.setSpeed(pastPoint);
             currentStroke.addPoint(currentPoint);
