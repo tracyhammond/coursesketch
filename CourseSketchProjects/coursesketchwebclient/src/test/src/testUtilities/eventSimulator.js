@@ -56,6 +56,8 @@ var simulate = (function () {
      * TouchEvents:
      *              touchend, touchstart, touchmove
      *
+     * NOTE: almost all mouse events besides mousedown must be targeted at the document.
+     *
      * @param element {Element}
      *            The element that is affected by the event. It is returned at the
      *            end.
