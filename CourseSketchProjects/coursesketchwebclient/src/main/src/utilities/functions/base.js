@@ -336,7 +336,7 @@ if (isUndefined(validateFirstRun)) {
             scriptBay = {};
         }
         if (!isUndefined(scriptBay[scriptObject.src])) {
-            var errorEvent = { src: scriptObject.src, ignoreError:true };
+            var errorEvent = { src: scriptObject.src, ignoreError: true };
             /**
              * The listener that ignores the event.
              *

@@ -162,7 +162,7 @@ function SketchSurfaceManager() {
                 throw new SketchSurfaceException('You can not delete the parent sketch if there are sub sketches.');
             }
             parentSketch = undefined;
-            parentSketchId = undefined
+            parentSketchId = undefined;
         }
         if (this.getCurrentSketch() && this.getCurrentSketch().id === id) {
             if (sketchMap.size > 1) {
@@ -190,5 +190,5 @@ function SketchSurfaceManager() {
                 }
             }
         }
-    }
+    };
 }

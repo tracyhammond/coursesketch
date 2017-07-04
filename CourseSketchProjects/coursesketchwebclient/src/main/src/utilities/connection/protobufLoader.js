@@ -310,12 +310,12 @@ function ProtobufSetup() {
 
         var stack;
         if (anError instanceof ErrorEvent) {
-            stack = [anError.error.src, anError.filename, 'this is probably a course sketch defined error?'];
+            stack = [ anError.error.src, anError.filename, 'this is probably a course sketch defined error?' ];
         } else {
             stack = anError.stack;
         }
         if (!isArray(stack)) {
-            pException.stackTrace = [stack];
+            pException.stackTrace = [ stack ];
         } else {
             pException.stackTrace = stack;
         }

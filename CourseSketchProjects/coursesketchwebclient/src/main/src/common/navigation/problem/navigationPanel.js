@@ -44,7 +44,7 @@ function NavigationPanel() {
         nextButton.setAttribute('data-disabled', !hasNext);
 
         if (hasNext) {
-            nextButton.onclick = function () {
+            nextButton.onclick = function() {
                 nav.gotoNext();
             };
         } else {
@@ -56,7 +56,7 @@ function NavigationPanel() {
         previousButton.setAttribute('data-disabled', !hasPrevious);
 
         if (hasPrevious) {
-            previousButton.onclick = function () {
+            previousButton.onclick = function() {
                 nav.gotoPrevious();
             };
         } else {

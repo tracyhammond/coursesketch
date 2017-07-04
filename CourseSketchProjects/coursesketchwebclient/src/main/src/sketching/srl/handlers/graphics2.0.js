@@ -18,7 +18,7 @@ function Graphics(canvas, sketchManager) {
     var livePath = undefined;
     var canvasElement = $(canvas)[0];
     var drawUpdate = true;
-    var observer;
+    var mutationObserver;
 
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
@@ -37,7 +37,7 @@ function Graphics(canvas, sketchManager) {
         }
     };
 
-    observer = (function() {
+    mutationObserver = (function() {
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.attributeName === 'height' || mutation.attributeName === 'width') {
@@ -257,6 +257,6 @@ function Graphics(canvas, sketchManager) {
         sketchManager = undefined;
         canvasElement = undefined;
         ps = undefined;
-        observer.disconnect();
+        mutationObserver.disconnect();
     };
 }
