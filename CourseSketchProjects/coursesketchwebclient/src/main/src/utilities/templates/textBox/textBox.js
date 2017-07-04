@@ -21,7 +21,8 @@ function TextBox() {
      * NOTE: This code comes from the interact library examples page
      */
     function enableDragging(localElement) {
-        interact(localElement.shadowRoot.querySelector('.draggable'))
+        var element = localElement.shadowRoot.querySelectorAll('.draggable');
+        interact(element)
             .ignoreFrom('textarea, button')
             .draggable({
                 onmove: function(event) {
@@ -30,8 +31,8 @@ function TextBox() {
                     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
                     target.style.webkitTransform =
-                    target.style.transform =
-                        'translate(' + x + 'px, ' + y + 'px)';
+                        target.style.transform =
+                            'translate(' + x + 'px, ' + y + 'px)';
 
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
@@ -42,7 +43,7 @@ function TextBox() {
             .restrict({
                 drag: localElement.parentNode,
                 endOnly: false,
-                elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+                elementRect: {top: 0, left: 0, bottom: 1, right: 1}
             });
     }
 
@@ -196,7 +197,7 @@ function TextBox() {
         $(dialog).width(textBoxProto.getWidth()); // Sets dialog width
         $(node).width(textBoxProto.getWidth()); // Sets node width
         $(node).height(textBoxProto.getHeight() - 16); // Sets node height minus 16px to account for default padding
-        $(dialog).css({ top: textBoxProto.getY(), left: textBoxProto.getX() }); // Sets dialog x and y positions
+        $(dialog).css({top: textBoxProto.getY(), left: textBoxProto.getX()}); // Sets dialog x and y positions
         node.textContent = textBoxProto.getText(); // Sets selected node (creatorText or viewTexet) text value
 
         // If the dialog is hidden, then the TTS display is the element. This speaks the text then removes the hidden element from the DOM.
