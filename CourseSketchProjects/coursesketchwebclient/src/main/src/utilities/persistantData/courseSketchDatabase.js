@@ -160,7 +160,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
             if (isUndefined(assignment)) {
                 throw new Error('Assignment not defined');
             }
-            getCourseProblems(assignment.problemGroups, problemCallback);
+            // ignore the partial callback
+            getCourseProblems(assignment.problemGroups, function() { }, problemCallback);
         });
     };
 

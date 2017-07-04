@@ -55,7 +55,7 @@ $(document).ready(
                 var r = CourseSketch.prutil.Request();
                 r.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.CLOSE);
                 connection.sendRequest(r);
-            } catch(exception) {
+            } catch (exception) {
                 return '' + exception;
             }
             return 'you can close this window';

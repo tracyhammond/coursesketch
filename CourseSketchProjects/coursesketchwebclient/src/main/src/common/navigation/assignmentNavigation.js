@@ -403,7 +403,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.hasPrevious = function() {
         return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 ||
-            isLoopable() || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation)));
+            isLoopable() || this.getCurrentNumber() - 1 > 0 || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation)));
     };
 
     /**
@@ -430,7 +430,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             submissionWrapper.courseId = currentSubgroup.getCourseId();
             submissionWrapper.assignmentId = currentSubgroup.getAssignmentId();
             submissionWrapper.problemId = currentSubgroup.getId();
-            submissionWrapper.partId = currentSubgroupPartIndex;
+            submissionWrapper.partId = '' + currentSubgroupPartIndex;
         } else {
             submissionWrapper.problemBankId = currentSubgroupPart.getId();
         }

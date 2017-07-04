@@ -151,13 +151,21 @@ var api = {
 /**
  * This function parses and executes the script that is passed in.
  *
- * @param {Object} problemNav - The object containing the bank problem data.
+ * @param {AssignmentNavigator} problemNav - The object containing the bank problem data.
  * @param {Node} panel - The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
  * @param {Boolean} hasSubmission - Flag that shows if this problem has a submission or not.
  * @param {Function} callback - A function to call when the script is done executing to finish experiment setup.
  */
 function executeScript(problemNav, panel, hasSubmission, callback) {
-    var script = problemNav.getProblemScript();
+    if (problemNav.getPartType() !== CourseSketch.prutil.ItemType.BANK_PROBLEM) {
+        console.log('lecture slides do not execute scripts');
+        return;
+    }
+    var script = problemNav.getCurrentInfo().script;
+    if (isUndefined(script)) {
+        console.log('script does not exist for this problem');
+        return;
+    }
     console.log('executing script: ' + script);
     var panelApi = new PanelEditApi(panel, problemNav, hasSubmission);
     var totalApi = mergeApi(api, panelApi);

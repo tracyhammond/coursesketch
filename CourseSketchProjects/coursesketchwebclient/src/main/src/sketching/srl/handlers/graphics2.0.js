@@ -37,9 +37,9 @@ function Graphics(canvas, sketchManager) {
         }
     };
 
-    observer = (function () {
-        var observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
+    observer = (function() {
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
                 if (mutation.attributeName === 'height' || mutation.attributeName === 'width') {
                     ps.view.viewSize.setHeight(canvasElement.height);
                     ps.view.viewSize.setWidth(canvasElement.width);
@@ -62,7 +62,7 @@ function Graphics(canvas, sketchManager) {
      *
      * Uses the canvas size.
      */
-    this.fillCanvas = function () {
+    this.fillCanvas = function() {
         ps.activate();
         var boundary = new ps.Rectangle(ps.view.bounds);
         ps.project.activeLayer.fitBounds(boundary);
@@ -74,7 +74,7 @@ function Graphics(canvas, sketchManager) {
      *
      * @param {Event} event - the event.
      */
-    ps.view.onFrame = function (event) {
+    ps.view.onFrame = function(event) {
         if (event.count <= 1) {
             this.correctSize();
         }
@@ -86,7 +86,7 @@ function Graphics(canvas, sketchManager) {
      *
      * @param {SrlPoint} point - The point that is being added to the current updating path.
      */
-    this.createNewPath = function (point) {
+    this.createNewPath = function(point) {
         livePath = new ps.Path({strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black'});
         livePath.add(point);
     };
@@ -96,7 +96,7 @@ function Graphics(canvas, sketchManager) {
      *
      * @param {SRL_Point} point - The point that is being added to the current updating path.
      */
-    this.updatePath = function (point) {
+    this.updatePath = function(point) {
         livePath.add(point);
     };
 
@@ -106,7 +106,7 @@ function Graphics(canvas, sketchManager) {
      * @param {SRL_Point} point - The point that is being added to the current updating path.
      * @param {SRL_Stroke} stroke - The stroke that contains all of the points that were added.
      */
-    this.endPath = function (point, stroke) {
+    this.endPath = function(point, stroke) {
         livePath.add(point);
         livePath.simplify();
         livePath.data.id = stroke.getId();
@@ -115,14 +115,14 @@ function Graphics(canvas, sketchManager) {
     /**
      * @return {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
      */
-    this.getPaper = function () {
+    this.getPaper = function() {
         return ps;
     };
 
     /**
      * Sequentially loads all of the saved strokes from the beginning, and does so instantaneously.
      */
-    this.loadSketch = function () {
+    this.loadSketch = function() {
         ps.project.activeLayer.removeChildren();
         ps.view.update();
         var sketch = sketchManager.getCurrentSketch();
@@ -152,7 +152,7 @@ function Graphics(canvas, sketchManager) {
      *
      * @param {UUID} itemId - the id of the item getting removed.
      */
-    this.removeItem = function (itemId) {
+    this.removeItem = function(itemId) {
         var object = ps.project.getItem({data: {id: itemId}});
         object.remove();
         ps.view.update();
@@ -246,14 +246,14 @@ function Graphics(canvas, sketchManager) {
     /**
      * @param {Boolean} drawInstant - If false this will tell the graphics to not draw anytime it receives an update.
      */
-    this.setDrawUpdate = function (drawInstant) {
+    this.setDrawUpdate = function(drawInstant) {
         drawUpdate = drawInstant;
     };
 
     /**
      * Some manual unlinking to help out the garbage collector.
      */
-    this.finalize = function () {
+    this.finalize = function() {
         sketchManager = undefined;
         canvasElement = undefined;
         ps = undefined;

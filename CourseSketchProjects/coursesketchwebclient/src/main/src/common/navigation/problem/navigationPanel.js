@@ -38,20 +38,31 @@ function NavigationPanel() {
      * @function setUpButtons
      */
     this.setUpButtons = function(nav) {
-        var button = this.shadowRoot.querySelector('#buttonNext');
-        var tt = this.shadowRoot.querySelector('#iop');
-
-        Waves.attach(tt);
         /* jscs:disable jsDoc */
-        button.onclick = function() {
-            nav.gotoNext();
-        };
-        button.disabled = !nav.hasNext();
-        button = this.shadowRoot.querySelector('#buttonPrev');
-        button.onclick = function() {
-            nav.gotoPrevious();
-        };
-        button.disabled = !nav.hasPrevious();
+        var hasNext = nav.hasNext();
+        var nextButton = this.shadowRoot.querySelector('#buttonNext');
+        nextButton.setAttribute('data-disabled', !hasNext);
+
+        if (hasNext) {
+            nextButton.onclick = function () {
+                nav.gotoNext();
+            };
+        } else {
+            nextButton.onclick = undefined;
+        }
+
+        var hasPrevious = nav.hasPrevious();
+        var previousButton = this.shadowRoot.querySelector('#buttonPrev');
+        previousButton.setAttribute('data-disabled', !hasPrevious);
+
+        if (hasPrevious) {
+            previousButton.onclick = function () {
+                nav.gotoPrevious();
+            };
+        } else {
+            previousButton.onclick = undefined;
+        }
+
         /* jscs:enable jsDoc */
     };
 

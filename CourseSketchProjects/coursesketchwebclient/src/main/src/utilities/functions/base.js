@@ -209,7 +209,7 @@ if (isUndefined(BaseException)) {
         /**
          * Sets the cause of baseException to the causeValue passed in.
          *
-         * @param {causeValue} causeValue - Is the cause of the exception.
+         * @param {BaseException} causeValue - Is the cause of the exception.
          */
         this.setCause = function(causeValue) {
             if (!isUndefined(causeValue)) {
@@ -336,7 +336,7 @@ if (isUndefined(validateFirstRun)) {
             scriptBay = {};
         }
         if (!isUndefined(scriptBay[scriptObject.src])) {
-            var errorEvent = { src: scriptObject.src };
+            var errorEvent = { src: scriptObject.src, ignoreError:true };
             /**
              * The listener that ignores the event.
              *

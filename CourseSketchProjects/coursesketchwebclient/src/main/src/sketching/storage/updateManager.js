@@ -3,7 +3,7 @@
  * @extends BaseException
  *
  * @param {String} message - The message to show for the exception.
- * @param {BaseException} cause - The cause of the exception.
+ * @param {BaseException} [cause] - The cause of the exception.
  */
 function UpdateException(message, cause) {
     this.name = 'UpdateException';

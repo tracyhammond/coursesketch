@@ -85,7 +85,7 @@ function SubmissionPanel() {
             this.sendDataToServer(isSubmitting);
         } catch (exception) {
             if (!suppressAlert) {
-                alert(exception.toString());
+                CourseSketch.clientException(exception);
             }
             console.log(exception);
         }

@@ -1,4 +1,4 @@
-(function () {
+(function() {
     /**
      * Creates a notification from the exception that is passed in.
      *
@@ -13,7 +13,7 @@
             // If it's okay let's create a notification
             createShallowNotification(protoEx);
         } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission(function (permission) {
+            Notification.requestPermission(function(permission) {
                 // If the user is okay, let's create a notification
                 if (permission === 'granted') {
                     createShallowNotification(protoEx);
@@ -42,11 +42,11 @@
              *
              * @param {Event} event - On Click event.
              */
-            notification.onclick = function (event) {
+            notification.onclick = function(event) {
                 console.log(event);
                 createDeepNotification(protoEx, CourseSketch.getExceptionParentElement());
             };
-            setTimeout(function () {
+            setTimeout(function() {
                 notification.close();
             }, 5501);
         } catch (exception) {
@@ -83,8 +83,12 @@
 
             CourseSketch.clientException = showClientSideException;
         }
-        window.addEventListener('error', function (evt) {
-            showClientSideException(evt.error);
+        window.addEventListener('error', function(evt) {
+            if (evt.error.ignoreError) {
+                console.log('just validating a script only ran once!');
+                return;
+            }
+            showClientSideException(evt);
         });
         window.errorListenerSet = true;
     }
@@ -99,7 +103,7 @@ function ExceptionNotification() {
      *
      * @param {Node} templateClone - is a clone of the custom HTML Element for the text box.
      */
-    this.initializeElement = function (templateClone) {
+    this.initializeElement = function(templateClone) {
         var localScope = this; // This sets the variable to the level of the custom element tag
         this.createShadowRoot();
         this.shadowRoot.appendChild(templateClone);
@@ -126,7 +130,7 @@ function ExceptionNotification() {
          *
          * @param {Event} event - On Click event.
          */
-        this.shadowRoot.querySelectorAll('#closeButton')[0].onclick = function (event) {
+        this.shadowRoot.querySelectorAll('#closeButton')[0].onclick = function(event) {
             $(elements[0]).modal('close');
         };
         Waves.attach(this.shadowRoot.querySelector('#closeButton'));
@@ -142,7 +146,7 @@ function ExceptionNotification() {
      *
      * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
      */
-    this.loadProtoException = function (protoEx) {
+    this.loadProtoException = function(protoEx) {
         var header = document.createElement('h4');
         header.className = 'header';
 

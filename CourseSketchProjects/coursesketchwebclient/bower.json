@@ -12,7 +12,7 @@
     "MathJax": "2.5.3",
     "paper": "v0.11.4",
     "protobufjs": "dcodeIO/protobuf.js#5.0.1",
-    "jailed": "asvd/jailed#a840e684a3ba14cc8af61973b3e6d0d900dca097",
+    "jailed": "0.3.1",
     "d3": "3.5.5"
   },
   "devDependencies": {
