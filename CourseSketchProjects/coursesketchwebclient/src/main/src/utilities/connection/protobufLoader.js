@@ -59,8 +59,6 @@ function ProtobufSetup() {
             package: [ PROTOBUF_PACKAGE, 'srl', 'grading' ] },
         { fileName: 'identity',
             package: [ PROTOBUF_PACKAGE, 'srl', 'services', 'identity' ] },
-        { fileName: 'lecturedata',
-            package: [ PROTOBUF_PACKAGE, 'srl', 'lecturedata' ] },
         { fileName: 'message',
             package: [ PROTOBUF_PACKAGE, 'srl', 'request' ] },
         { fileName: 'problem',

@@ -10,8 +10,8 @@ import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.Document;
 import org.bson.types.Binary;
-import protobuf.srl.lecturedata.Lecturedata;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.tutorial.TutorialOuterClass;
 import protobuf.srl.utils.Util;
@@ -76,7 +76,7 @@ public final class SlideManager {
         }
         final Document query = new Document(DatabaseStringConstants.ASSIGNMENT_ID, slide.getAssignmentId());
         final ArrayList list = new ArrayList();
-        for (Lecturedata.LectureElement element : slide.getElementsList()) {
+        for (Problem.ProblemElement element : slide.getElementsList()) {
             list.add(createQueryFromElement(element));
         }
         query.append(ELEMENT_LIST, list);
@@ -92,7 +92,7 @@ public final class SlideManager {
      * @param lectureElement an element that belongs on a lecture
      * @return a Document of the element
      */
-    public static Document createQueryFromElement(final Lecturedata.LectureElement lectureElement) {
+    public static Document createQueryFromElement(final Problem.ProblemElement lectureElement) {
         final Document query = new Document(SELF_ID, lectureElement.getId())
                 .append(X_POSITION, lectureElement.getXPosition())
                 .append(Y_POSITION, lectureElement.getYPosition())
@@ -172,7 +172,7 @@ public final class SlideManager {
         }
 
         // now all possible exceptions have already been thrown.
-        final Lecturedata.LectureSlide.Builder exactSlide = Lecturedata.LectureSlide.newBuilder();
+        final Problem.LectureSlide.Builder exactSlide = Problem.LectureSlide.newBuilder();
 
         exactSlide.setId(slideId);
 
@@ -214,7 +214,7 @@ public final class SlideManager {
         // TODO make a way to clear out a lecture slide so it is empty?
         if (lectureSlide.getElementsCount() > 0) {
             final List<Document> list = new ArrayList<>();
-            for (Lecturedata.LectureElement element : lectureSlide.getElementsList()) {
+            for (Problem.ProblemElement element : lectureSlide.getElementsList()) {
                 list.add(createQueryFromElement(element));
             }
             collection.updateOne(cursor, new Document(SET_COMMAND, new Document(ELEMENT_LIST, list)));
@@ -230,11 +230,11 @@ public final class SlideManager {
      * @param cursor The database cursor pointing to a specific slide.
      * @throws database.DatabaseAccessException passes exception through to createElementFromQuery
      */
-    public static void setSlideData(final Lecturedata.LectureSlide.Builder exactSlide, final Document cursor) throws DatabaseAccessException {
+    public static void setSlideData(final Problem.LectureSlide.Builder exactSlide, final Document cursor) throws DatabaseAccessException {
         exactSlide.setAssignmentId(cursor.get(DatabaseStringConstants.ASSIGNMENT_ID).toString());
         exactSlide.setId(cursor.get(SELF_ID).toString());
         if (cursor.get(ELEMENT_LIST) != null) {
-            final ArrayList<Lecturedata.LectureElement> objects = new ArrayList<>();
+            final ArrayList<Problem.ProblemElement> objects = new ArrayList<>();
             for (Document element : (List<Document>) cursor.get(ELEMENT_LIST)) {
                 objects.add(createElementFromQuery(element));
             }
@@ -246,18 +246,18 @@ public final class SlideManager {
      * NOTE: This function is only used internally and should not be made public.
      *
      * @param query a Document from the mongo database that is a slide
-     * @return a Lecturedata.LectureElement of the Document that was passed in
+     * @return a Problem.ProblemElement of the Document that was passed in
      * @throws database.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
-    public static Lecturedata.LectureElement createElementFromQuery(final Document query) throws DatabaseAccessException {
-        final Lecturedata.LectureElement.Builder element = Lecturedata.LectureElement.newBuilder();
+    public static Problem.ProblemElement createElementFromQuery(final Document query) throws DatabaseAccessException {
+        final Problem.ProblemElement.Builder element = Problem.ProblemElement.newBuilder();
         final String lectureElementId = (String) query.get(SELF_ID);
         final int xPos = (int) query.get(X_POSITION);
         final int yPos = (int) query.get(Y_POSITION);
         final int xDim = (int) query.get(X_DIMENSION);
         final int yDim = (int) query.get(Y_DIMENSION);
-        final Lecturedata.LectureElement.ElementTypeCase blobType =
-                Lecturedata.LectureElement.ElementTypeCase.valueOf((int) query.get(SLIDE_BLOB_TYPE));
+        final Problem.ProblemElement.ElementTypeCase blobType =
+                Problem.ProblemElement.ElementTypeCase.valueOf((int) query.get(SLIDE_BLOB_TYPE));
         final byte[] blob = ((Binary) query.get(SLIDE_BLOB)).getData();
         element.setId(lectureElementId);
         element.setXPosition(xPos);
@@ -270,13 +270,13 @@ public final class SlideManager {
                     element.setTextBox(TutorialOuterClass.ActionCreateTextBox.parseFrom(blob));
                     break;
                 case IMAGE:
-                    element.setImage(Lecturedata.Image.parseFrom(blob));
+                    element.setImage(Problem.Image.parseFrom(blob));
                     break;
                 case SKETCHAREA:
-                    element.setSketchArea(Lecturedata.SketchArea.parseFrom(blob));
+                    element.setSketchArea(Problem.SketchArea.parseFrom(blob));
                     break;
                 case EMBEDDEDHTML:
-                    element.setEmbeddedHtml(Lecturedata.EmbeddedHtml.parseFrom(blob));
+                    element.setEmbeddedHtml(Problem.EmbeddedHtml.parseFrom(blob));
                     break;
                 default:
                     break;

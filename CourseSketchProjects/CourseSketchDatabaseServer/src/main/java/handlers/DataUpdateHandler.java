@@ -8,7 +8,7 @@ import database.DatabaseAccessException;
 import database.institution.Institution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;

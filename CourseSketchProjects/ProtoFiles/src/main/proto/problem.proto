@@ -1,6 +1,6 @@
 import "util.proto";
+import "tutorial.proto";
 import "commands.proto";
-import "lecturedata.proto";
 
 package protobuf.srl.school;
 
@@ -35,7 +35,7 @@ message ProblemSlideHolder {
     optional protobuf.srl.utils.ItemType itemType = 2;
     oneof problemSlide {
         SrlBankProblem problem = 3;
-        protobuf.srl.lecturedata.LectureSlide slide = 4;
+        LectureSlide slide = 4;
     }
 
     optional bool unlocked = 5;
@@ -45,7 +45,7 @@ message ProblemSlideHolder {
 }
 
 message QuestionAction {
-    optional protobuf.srl.lecturedata.LectureNavigator lectureNavigation = 1;
+    optional LectureNavigator lectureNavigation = 1;
 }
 
 message ProblemRestriction {
@@ -64,15 +64,7 @@ message SrlBankProblem {
     optional string script = 6; // a script string that is used for custom setups in experiments
 
     // used for containing special information like images or embedded elements
-    optional protobuf.srl.lecturedata.LectureElement specialQuestionData = 7;
-
-    // solutions to bank problems (only shown to instructors)
-    // 15 - 24
-    oneof solutionData {
-        MultipleChoice multipleChoice = 15;
-        protobuf.srl.commands.SrlUpdateList solutionSketch = 16; // the base sketch the instructor will make for assignments (or the solution sketch)
-        string longForm = 17;
-    }
+    optional ProblemElement specialQuestionData = 7;
 
     // meta data 25 - 34
     optional string courseTopic = 25;
@@ -90,4 +82,56 @@ message MultipleChoice {
 message AnswerChoice {
     required string id = 1;
     optional string text = 2;
+}
+
+message ProblemElement {
+    //id of this element
+    optional string id = 2;
+    optional int32 x_position = 3;
+    optional int32 y_position = 4;
+    optional int32 x_dimension = 5;
+    optional int32 y_dimension = 6;
+
+    oneof ElementType {
+        protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
+        Image image = 8;
+        SketchArea sketchArea = 9;
+        EmbeddedHtml embeddedHtml = 11;
+    }
+}
+
+message EmbeddedHtml {
+    optional string embeddedHtml = 1;
+}
+
+message Image {
+    optional string src = 8;
+    optional float orientation = 9;
+}
+
+message SketchArea {
+    //srlSketch object if proto include works
+    optional protobuf.srl.commands.SrlUpdateList recorededSketch = 10;
+}
+
+/**
+ * Can not be solvable
+ */
+message LectureSlide {
+    // Ids
+    required string id = 1;
+    required string assignmentId = 2;
+    required string courseProblemId = 3;
+
+    // The elements that are displayed for each slide
+    repeated ProblemElement elements = 4;
+}
+
+/**
+ * used for navigating different lectures or lecture subgroups
+ */
+message LectureNavigator {
+    optional string nextLectureId = 1;
+    optional int32 nextSlide = 2;
+    optional string nextLectureGroupId = 3;
 }

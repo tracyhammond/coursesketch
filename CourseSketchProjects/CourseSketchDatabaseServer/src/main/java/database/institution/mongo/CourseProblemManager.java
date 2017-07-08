@@ -11,7 +11,6 @@ import database.UserUpdateHandler;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
@@ -382,7 +381,7 @@ public final class CourseProblemManager {
                 holder.setProblem(problem);
                 break;
             case SLIDE:
-                final Lecturedata.LectureSlide lectureSlide = SlideManager
+                final Problem.LectureSlide lectureSlide = SlideManager
                         .mongoGetLectureSlide(authenticator, database, authId, itemId, checkTime);
                 holder.setSlide(lectureSlide);
                 break;

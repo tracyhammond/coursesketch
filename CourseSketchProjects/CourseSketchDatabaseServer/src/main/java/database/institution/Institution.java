@@ -7,7 +7,7 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
