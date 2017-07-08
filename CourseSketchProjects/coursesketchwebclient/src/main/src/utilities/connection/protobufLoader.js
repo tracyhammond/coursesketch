@@ -294,8 +294,8 @@ function ProtobufSetup() {
      * @return {ProtoException} A protobuf exception.
      */
     this.errorToProtoException = function(anError) {
-        if (anError instanceof ErrorEvent && ((anError.error instanceof BaseException)
-            || (anError.error instanceof CourseSketch.prutil.getProtoExceptionClass()) ||
+        if (anError instanceof ErrorEvent && ((anError.error instanceof BaseException) ||
+            (anError.error instanceof CourseSketch.prutil.getProtoExceptionClass()) ||
             (anError.error instanceof CourseSketch.BaseException))) {
             return this.createProtoException(anError.error);
         }

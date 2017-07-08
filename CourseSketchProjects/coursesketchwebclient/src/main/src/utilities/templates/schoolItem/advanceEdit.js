@@ -6,6 +6,8 @@ var advancedEditTestObject = (function() {
      * Holds the object with the specific functions that loads data.
      */
     var protoTypes = {};
+    var actions = {};
+    var actionFunctions = {};
 
     var IGNORE_FIELD = {special: 'N/A'};
 
@@ -22,10 +24,13 @@ var advancedEditTestObject = (function() {
             if (schoolItemData.hasOwnProperty(property)) {
                 var result;
                 var element = parentElement.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
+                loadAction(schoolItemData, parentElement, property);
                 if (!isUndefined(element)) {
                     var elementData = element.querySelectorAll('.data')[0];
                     result = loadIntoElement(elementData, schoolItemData[property], property);
-                    element.style.display = 'inherit';
+                    if (!element.hasAttribute('data-hidden')) {
+                        element.style.display = 'inherit';
+                    }
                 } else {
                     result = IGNORE_FIELD;
                 }
@@ -33,6 +38,16 @@ var advancedEditTestObject = (function() {
             }
         }
         return mappedInput;
+    }
+
+    function loadAction(schoolItemData, parentElement, property) {
+        var actionElement = parentElement.querySelectorAll('.need-action[data-actionProp="' + property + '"]')[0];
+        if (isUndefined(actionElement)) {
+            return;
+        }
+        actionElement.onclick = function() {
+            actionFunctions[actionElement.getAttribute('data-action')](schoolItemData, actionElement, property);
+        };
     }
 
     /**
@@ -96,8 +111,27 @@ var advancedEditTestObject = (function() {
                 schoolItemData = elementData.selectedIndex;
             }
             elementData.style.display = 'inherit';
+        } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-list')) {
+            loadListIntoElement(elementData, schoolItemData, property);
         }
         return schoolItemData;
+    }
+
+    function loadListIntoElement(elementData, schoolItemData, property) {
+        var template = elementData.querySelector('.template');
+        var templateNode = document.importNode(template.content, true);
+        var templateDataNode = templateNode.querySelector('.templateData');
+        for (var i = 0; i < schoolItemData.length; i++) {
+            createListElement(i, schoolItemData[i], templateDataNode.cloneNode(true), elementData)
+        }
+    }
+
+    function createListElement(index, schoolItemData, newNode, parent) {
+        newNode.className = 'listItem' + index;
+        newNode.setAttribute('data-list-item', index);
+        parent.appendChild(newNode);
+        newNode.querySelector('.listNumber').textContent = index + 1;
+        loadData(schoolItemData, newNode);
     }
 
     function loadDate(elementData, schoolItemData) {
@@ -158,6 +192,36 @@ var advancedEditTestObject = (function() {
         latePolicy.timeFrameType = 3;
         latePolicy.functionType = 0;
         return latePolicy;
+    };
+
+    /**
+     * Decodes the policy.
+     *
+     * @returns {Problem} A protobuf object
+     */
+    protoTypes.problemProtoType = function() {
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        return bankProblem;
+    };
+
+    actions.editProblem = function(bankProblem, buttonElement) {
+        var textContent = buttonElement.querySelector('.data').textContent;
+        var isUnlocked = (textContent === 'true');
+        if (isUnlocked) {
+            CourseSketch.dataManager.addState('bankProblem', bankProblem);
+            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ')
+        } else {
+            alert('This problem is not editable by you.');
+        }
+    };
+
+    actions.createPart = function(srlProblem, buttonElement, property) {
+        var buttonParent = buttonElement.parentNode;
+        var elementsToRemove = buttonParent.querySelectorAll('[data-list-item]');
+        for (var i = 0; i < elementsToRemove.length; i++) {
+            elementsToRemove[i].parentNode.removeChild(elementsToRemove[i]);
+        }
+        loadData(srlProblem, buttonParent.parentNode);
     };
 
     /**
@@ -382,13 +446,43 @@ var advancedEditTestObject = (function() {
     }
 
     /**
+     * Adds actions from the outside to this.
+     *
+     * If there is an overlapping function then it creates a new function.
+     * This new function calls in external function with an extra argument of a callback
+     * This call back is the original function.
+     *
+     * @param actions
+     */
+    function addActions(actionFunctions, actions) {
+        for (var property in actions) {
+            if (actionFunctions.hasOwnProperty(property)) {
+                actionFunctions[property] = (function(oldFunc, newFunc) {
+                    return function() {
+                        var args = Array.prototype.slice.call(arguments);
+                        args.push(function() {
+                            oldFunc.apply({}, arguments);
+                        });
+                        newFunc.apply({}, args);
+                    }
+                })(actionFunctions[property], actions[property]);
+            } else {
+                actionFunctions[property] = actions[property];
+            }
+        }
+        return actionFunctions;
+    }
+
+    /**
      * Sets up the advance edit panel for editing advance data.
      *
      * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
      * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
      */
 
-    function createAdvanceEditPanel(localElement, parentNode, saveCallback, closeCallback) {
+    function createAdvanceEditPanel(localElement, parentNode, saveCallback, closeCallback, externalActions) {
+        actionFunctions = addActions(addActions({}, actions), externalActions);
+
         // create host and position it
         var currentData;
 

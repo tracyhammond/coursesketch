@@ -87,15 +87,28 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
                     'inesrting bank problem ' + bankProblem, item));
                 return;
             }
+
             var resultArray = item.getReturnText().split(':');
-            // We do not need the old id as it is never stored in a way that we need to delete.
+            var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
-            // we return the new id knowing it was inserted in the database correctly.
-            serverCallback(newId);
+            // we want to get the current course in the local database in case
+            // it has changed while the server was processing.
+            getBankProblemLocal(oldId, function(bankProblem2) {
+                deleteBankProblem(oldId);
+                if (!isUndefined(bankProblem2) && !(bankProblem2 instanceof DatabaseException)) {
+                    bankProblem2.id = newId;
+                    setBankProblem(bankProblem2, function() {
+                        serverCallback(bankProblem2);
+                    });
+                } else {
+                    bankProblem.id = newId;
+                    setBankProblem(bankProblem, function() {
+                        serverCallback(bankProblem);
+                    });
+                }
+            });
         });
     }
-
-    parent.insertBankProblemServer = insertBankProblemServer;
 
     /**
      * Adds a new bankProblem to both local and server databases. Also updates the
@@ -106,9 +119,9 @@ function BankProblemDataManager(parent, advanceDataListener, parentDatabase, Byt
      *
      * @param {SrlBankProblem} bankProblem
      *                bankProblem object to insert
-     * @param {Function} localCallback
+     * @param {Function} [localCallback]
      *                function to be called after local insert is done
-     * @param {Function} serverCallback
+     * @param {Function} [serverCallback]
      *                function to be called after server insert is done
      */
     function insertBankProblem(bankProblem, localCallback, serverCallback) {

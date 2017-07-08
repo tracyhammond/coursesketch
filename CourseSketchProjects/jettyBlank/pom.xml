@@ -56,7 +56,7 @@
         <dependency>
 			<groupId>CourseSketch</groupId>
 			<artifactId>ProtoFiles</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

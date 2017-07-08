@@ -22,6 +22,21 @@ message SrlProblem {
     repeated ProblemSlideHolder subgroups = 15;
     repeated QuestionAction actions = 16;
     repeated ProblemRestriction restrictions = 17;
+
+    optional protobuf.srl.utils.Accessibility access = 20 [default=PROTECTED]; // Access for other classes to use this question
+
+    /*
+    SUPER_PUBLIC
+        everyone can see this problem and add it if they want
+    PUBLIC
+        everyone can see this problem and add it if they want
+    PROTECTED
+        This problem can be searched and added with approval
+    PROTECTED_NOSEARCH
+        This problem can found at a link and added with approval
+    PRIVATE
+        No one else can add this problem
+    */
 }
 
 /**
@@ -38,6 +53,8 @@ message ProblemSlideHolder {
         LectureSlide slide = 4;
     }
 
+    // For instructors this holds if the problem is editable
+    // For students this hold if the problem is currently viewable
     optional bool unlocked = 5;
 
     // The index of the item inside this group

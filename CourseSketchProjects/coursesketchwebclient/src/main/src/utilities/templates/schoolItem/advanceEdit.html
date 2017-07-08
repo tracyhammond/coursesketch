@@ -23,7 +23,8 @@
     <!-- details -->
     <template class="Course Assignment Problem">
         <li>
-            <div class="collapsible-header deep-purple accent-1 active"><i class="material-icons">mode_edit</i>Details</div>
+            <div class="collapsible-header deep-purple accent-1 active"><i class="material-icons">mode_edit</i>Details
+            </div>
             <div class="collapsible-body row blue lighten-4">
                 <div data-prop="name" class="need-saving need-loading col s6">
                     <span>Name:</span>
@@ -71,7 +72,8 @@
     <!-- dates -->
     <template class="Course Assignment">
         <li>
-            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Dates</div>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Dates
+            </div>
             <div class="collapsible-body row blue lighten-4">
                 <div data-prop="accessDate" class="need-saving need-loading col s3">
                     <span>accessDate:</span>
@@ -107,7 +109,8 @@
     <!-- course specific -->
     <template class="Course">
         <li>
-            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">vpn_key</i>Registration key</div>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">vpn_key</i>Registration key
+            </div>
             <div class="collapsible-body blue lighten-4">
                 <div data-prop="registrationKey" class="need-loading">
                     <span>Registration key:</span>
@@ -172,7 +175,8 @@
             </div>
         </li>
         <li>
-            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">grade</i>Grade specifics</div>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">grade</i>Grade specifics
+            </div>
             <div class="collapsible-body blue lighten-4">
             </div>
         </li>
@@ -180,8 +184,30 @@
     <!-- problem specific -->
     <template class="Problem">
         <li>
-            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Creation</div>
+            <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Creation
+            </div>
             <div class="collapsible-body row blue lighten-4">
+                <div data-prop="subgroups" class="need-saving need-loading col s12">
+                    <button data-action="createPart" class="need-action" data-actionProp="subgroups">add New Part</button>
+                    <div data-list class="data">
+                        <template class="template">
+                            <div class="templateData">
+                                <div>Part <span class="listNumber"></span></div>
+                                <!-- data for a bank problem -->
+                                <div data-prop="problem" class="need-saving need-loading">
+                                    <div class="data">
+                                        <div data-prop="questionText" class="need-loading">
+                                            <span class="data"></span>
+                                        </div>
+                                        <button data-prop="unlocked" data-action="editProblem" data-actionProp="script"
+                                                class="need-action need-loading">editProblem
+                                            <span data-hidden class="data"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
                 <!-- add the ability to create multiple problem parts that scroll to the side. -->
                 <!-- these parts can be selected from existing problems and used with weights and whatnot -->
             </div>

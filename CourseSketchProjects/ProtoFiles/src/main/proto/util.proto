@@ -39,6 +39,17 @@ enum QuestionType {
 }
 
 /**
+ * How accessible are items in course sketch
+ */
+enum Accessibility {
+    SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
+    PUBLIC = 1; //Any student can access course without approval.
+    PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
+    PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
+    PRIVATE = 4; //No students can see course without instructor invitation, invitation only
+}
+
+/**
  * The state of items in course sketch and how they are stored.
  */
 message State {

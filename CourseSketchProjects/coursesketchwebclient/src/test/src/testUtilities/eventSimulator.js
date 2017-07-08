@@ -23,6 +23,12 @@ var simulate = (function () {
         return newDestination;
     }
 
+    function extend(destination, source) {
+        for (var property in source)
+            destination[property] = source[property];
+        return destination;
+    }
+
     eventMatchers = {
         'HTMLEvents': /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
         'MouseEvents': /^(?:click|dblclick|mouse(?:down|up|over|move|out))$/,

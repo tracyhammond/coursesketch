@@ -14,7 +14,7 @@ public class CourseTester {
 	public static String testCourses() throws AuthenticationException, DatabaseAccessException {
 		SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
 		SrlCourse.Builder testBuilder1 = SrlCourse.newBuilder();
-		testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
+		testBuilder.setAccess(Util.Accessibility.SUPER_PUBLIC);
 		testBuilder.setSemester("FALL");
 		testBuilder.setName("CourseSketch 101");
 		testBuilder.setDescription("Hi Welcome to CourseSketch you have automatically been enrolled in this tutorial To expand the description of a class click the down arrow.");

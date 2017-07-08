@@ -15,3 +15,17 @@ div.collapsible-body {
 *[data-prop] {
     display: none;
 }
+
+*[data-hidden] {
+    display: none;
+}
+
+*[data-list] {
+    display: flex;
+    overflow-x: scroll;
+}
+
+*[data-list-item] {
+    flex-direction: row;
+    flex: 0 0 auto;
+}

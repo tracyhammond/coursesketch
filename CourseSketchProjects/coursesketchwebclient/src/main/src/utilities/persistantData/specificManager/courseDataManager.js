@@ -183,8 +183,13 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
                 // we do not need to make server changes we just need to make sure it was successful.
                 if (isException(item)) {
-                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'updating course ' + course, item));
+                    var exception = new DatabaseException('exception thrown while waiting for response from sever',
+                        'updating course ' + course, item);
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(exception);
+                    } else {
+                        console.error(exception);
+                    }
                     return;
                 }
                 if (!isUndefined(serverCallback)) {

@@ -2,6 +2,15 @@ validateFirstRun(document.currentScript);
 
 (function() {
     var courseManagement = CourseSketch.courseManagement;
+
+    var actions = {};
+
+    actions.createPart = function(srlProblem, buttonElement, property, callback) {
+        courseManagement.addNewSubGroup(function(updatedProblem, subGroup) {
+            callback(updatedProblem, buttonElement, property);
+        }, srlProblem);
+    };
+
     /**
      * Function to be called when a lecture has finished editing.
      *
@@ -183,6 +192,47 @@ validateFirstRun(document.currentScript);
      *
      * Displays the problem after it is added.
      *
+     * @param {Function} [callback] the problem that a new subgroup is being added to
+     * @param {SrlCourseProblem} existingCourseProblem the problem that a new subgroup is being added to
+     * @param {SrlBankProblem} [existingBankProblem] The bank problem that is being added.
+     */
+    courseManagement.addNewSubGroup = function addNewCourseProblem(callback, existingCourseProblem, existingBankProblem) {
+        function addingBankProblem(bankProblemWithId) {
+            if (bankProblemWithId instanceof CourseSketch.DatabaseException) {
+                // no problems exist or something went wrong
+                throw bankProblemWithId;
+            }
+            var groupHolder = CourseSketch.prutil.ProblemSlideHolder();
+            groupHolder.id = bankProblemWithId.id;
+            groupHolder.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
+            groupHolder.problem = bankProblemWithId;
+            groupHolder.unlocked = true;
+            existingCourseProblem.subgroups.push(groupHolder);
+            CourseSketch.dataManager.updateCourseProblem(existingCourseProblem, undefined, function(exception) {
+                if (exception instanceof BaseException) {
+                    throw exception;
+                }
+                if (!isUndefined(callback)) {
+                    callback(existingCourseProblem, groupHolder);
+                }
+            });
+        }
+
+        if (isUndefined(existingBankProblem)) {
+            var bankProblem = CourseSketch.prutil.SrlBankProblem();
+            bankProblem.questionText = 'Edit to add Question Text';
+            CourseSketch.dataManager.insertBankProblem(bankProblem, undefined, addingBankProblem);
+        } else {
+            addingBankProblem(existingBankProblem);
+        }
+    };
+
+
+    /**
+     * Creates a new bank problem and course problem with default values and adds it to the database.
+     *
+     * Displays the problem after it is added.
+     *
      * @param {String|Undefined} existingBankProblem - If loading an existing bank problem then the value is the Id. Otherwise it is undefined.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem(existingBankProblem) {
@@ -302,7 +352,7 @@ validateFirstRun(document.currentScript);
 
     function createAdvancedEditCard(element, saveCallback) {
         var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0],
-            saveCallback, destroyAdvancedEditCard);
+            saveCallback, destroyAdvancedEditCard, actions);
         $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
             dismissible: true, // Modal can be dismissed by clicking outside of the modal
             opacity: 0.5, // Opacity of modal background

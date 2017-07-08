@@ -95,7 +95,7 @@ public final class BreakDatabase {
         Random r = new Random();
         School.SrlCourse.Builder testBuilder = School.SrlCourse.newBuilder();
         testBuilder.setId(randomString(r));
-        testBuilder.setAccess(School.SrlCourse.Accessibility.valueOf(r.nextInt(School.SrlCourse.Accessibility.values().length)));
+        testBuilder.setAccess(Util.Accessibility.valueOf(r.nextInt(Util.Accessibility.values().length)));
         testBuilder.setSemester(randomString(r));
         testBuilder.setName(randomString(r));
         testBuilder.setDescription(randomString(r) + randomString(r));
@@ -112,7 +112,7 @@ public final class BreakDatabase {
         String[] description = new String[]{"Howdy! Welcome to Chem 107 where you learn about lewis dot diagrams"};
         for (int k = 0; k < name.length; k ++) {
             School.SrlCourse.Builder testBuilder = School.SrlCourse.newBuilder();
-            testBuilder.setAccess(School.SrlCourse.Accessibility.SUPER_PUBLIC);
+            testBuilder.setAccess(Util.Accessibility.SUPER_PUBLIC);
             testBuilder.setSemester("FALL");
             testBuilder.setName(name[k]);
             testBuilder.setDescription(description[k]);

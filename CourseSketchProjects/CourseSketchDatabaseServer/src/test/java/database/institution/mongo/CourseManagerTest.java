@@ -91,7 +91,7 @@ public class CourseManagerTest {
     @Test
     public void insertCourseIntoCourseWithValidPermissionAndAllValuesAreSetCorrectly() throws Exception {
         defaultCourse.setRegistrationKey(VALID_REGISTRATION_KEY);
-        defaultCourse.setAccess(School.SrlCourse.Accessibility.PRIVATE);
+        defaultCourse.setAccess(Util.Accessibility.PRIVATE);
         defaultCourse.setDescription(FAKE_DESCRIPTION);
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
@@ -107,7 +107,7 @@ public class CourseManagerTest {
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
-        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), School.SrlCourse.Accessibility.PRIVATE_VALUE);
+        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), Util.Accessibility.PRIVATE_VALUE);
     }
 
     // GETTING TEST
@@ -351,7 +351,7 @@ public class CourseManagerTest {
                 .build().equals(defaultCourse.build(), problem);
 
         School.SrlCourse updatedProblem = School.SrlCourse.newBuilder(defaultCourse.build())
-                .setAccess(School.SrlCourse.Accessibility.SUPER_PUBLIC)
+                .setAccess(Util.Accessibility.SUPER_PUBLIC)
                 .setName("New Name")
                 .setDescription("New Description")
                 .setSemester("Fall")

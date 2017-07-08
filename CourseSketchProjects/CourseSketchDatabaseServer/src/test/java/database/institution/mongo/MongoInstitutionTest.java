@@ -133,7 +133,7 @@ public class MongoInstitutionTest {
 
         defaultCourse = School.SrlCourse.newBuilder();
         defaultCourse.setId(FAKE_ID);
-        defaultCourse.setAccess(School.SrlCourse.Accessibility.PRIVATE);
+        defaultCourse.setAccess(Util.Accessibility.PRIVATE);
         defaultCourse.setDescription(FAKE_DESCRIPTION);
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
@@ -238,7 +238,7 @@ public class MongoInstitutionTest {
     @Test
     public void insertingCourseCreatesRegistrationKey() throws AuthenticationException, InvalidProtocolBufferException, DatabaseAccessException {
 
-        defaultCourse.setAccess(School.SrlCourse.Accessibility.PRIVATE);
+        defaultCourse.setAccess(Util.Accessibility.PRIVATE);
         defaultCourse.setDescription(FAKE_DESCRIPTION);
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
@@ -254,7 +254,7 @@ public class MongoInstitutionTest {
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
-        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), School.SrlCourse.Accessibility.PRIVATE_VALUE);
+        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), Util.Accessibility.PRIVATE_VALUE);
 
         String registrationKey = (String) mongoCourse.get(REGISTRATION_KEY);
 
