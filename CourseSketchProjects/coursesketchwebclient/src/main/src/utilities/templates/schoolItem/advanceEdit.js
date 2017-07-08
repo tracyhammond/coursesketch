@@ -73,7 +73,7 @@ var advancedEditTestObject = (function() {
      * @returns {*}
      */
     function loadIntoElement(elementData, schoolItemData, property) {
-        /*jshint maxcomplexity:16 */
+        /*jshint maxcomplexity:18 */
         if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
             return loadSubObject(elementData, schoolItemData, property);
         }
@@ -122,7 +122,7 @@ var advancedEditTestObject = (function() {
         var templateNode = document.importNode(template.content, true);
         var templateDataNode = templateNode.querySelector('.templateData');
         for (var i = 0; i < schoolItemData.length; i++) {
-            createListElement(i, schoolItemData[i], templateDataNode.cloneNode(true), elementData)
+            createListElement(i, schoolItemData[i], templateDataNode.cloneNode(true), elementData);
         }
     }
 
@@ -209,7 +209,7 @@ var advancedEditTestObject = (function() {
         var isUnlocked = (textContent === 'true');
         if (isUnlocked) {
             CourseSketch.dataManager.addState('bankProblem', bankProblem);
-            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ')
+            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ');
         } else {
             alert('This problem is not editable by you.');
         }
@@ -452,25 +452,26 @@ var advancedEditTestObject = (function() {
      * This new function calls in external function with an extra argument of a callback
      * This call back is the original function.
      *
-     * @param actions
+     * @param sourceActions {Object} A map of function names to functions for actions.
+     * @param destinationObject {Object} A map of function names to functions for actions.
      */
-    function addActions(actionFunctions, actions) {
-        for (var property in actions) {
-            if (actionFunctions.hasOwnProperty(property)) {
-                actionFunctions[property] = (function(oldFunc, newFunc) {
+    function addActions(destinationObject, sourceActions) {
+        for (var property in sourceActions) {
+            if (destinationObject.hasOwnProperty(property)) {
+                destinationObject[property] = (function(oldFunc, newFunc) {
                     return function() {
                         var args = Array.prototype.slice.call(arguments);
                         args.push(function() {
                             oldFunc.apply({}, arguments);
                         });
                         newFunc.apply({}, args);
-                    }
-                })(actionFunctions[property], actions[property]);
+                    };
+                })(destinationObject[property], sourceActions[property]);
             } else {
-                actionFunctions[property] = actions[property];
+                destinationObject[property] = sourceActions[property];
             }
         }
-        return actionFunctions;
+        return destinationObject;
     }
 
     /**

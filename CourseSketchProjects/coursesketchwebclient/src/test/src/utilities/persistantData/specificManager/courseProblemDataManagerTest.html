@@ -46,46 +46,6 @@
                 });
             });
 
-            asyncTest("insert bank problem from course problem local", function(assert) {
-                expect(1);
-                var dataManager = new SchoolDataManager(CourseSketch.connection.userId, CourseSketch.dataListener, CourseSketch.connection,
-                        CourseSketch.prutil.getRequestClass(), dcodeIO.ByteBuffer);
-                var assignment = CourseSketch.prutil.SrlAssignment();
-                assignment.id = generateUUID();
-                assignment.courseId = generateUUID();
-                waitForDatabase(dataManager, function() {
-                    dataManager.setAssignment(assignment, function() {
-                        var courseProblem = CourseSketch.prutil.SrlProblem();
-                        var bankProblem = CourseSketch.prutil.SrlBankProblem();
-                        bankProblem.id = generateUUID();
-                        courseProblem.problemInfo = bankProblem;
-                        courseProblem.id = generateUUID();
-                        courseProblem.assignmentId = assignment.id;
-                        courseProblem.courseId = assignment.courseId;
-                        courseProblem.name = "I AM TEST";
-
-                        var dataResult = CourseSketch.prutil.DataResult();
-                        var itemResult = CourseSketch.prutil.ItemResult();
-                        var req = CourseSketch.prutil.Request();
-                        req.requestId = generateUUID();
-                        req.requestType = CourseSketch.prutil.getRequestClass().MessageType.DATA_INSERT;
-                        itemResult.query = CourseSketch.prutil.ItemQuery.BANK_PROBLEM;
-                        dataResult.results = [itemResult];
-                        var serverBankProblemId = generateUUID();
-                        itemResult.returnText = serverBankProblemId + ":" + bankProblem.id;
-                        CourseSketch.connection.sendRequest = function(message) {
-                            req.otherData = dataResult.toArrayBuffer();
-                            req.requestId = message.requestId;
-                            CourseSketch.connection.sendSelf(req);
-                        }; //send request
-                        dataManager.insertCourseProblem(courseProblem, function(localCourseProblem) {
-                            assert.equal(localCourseProblem.problemBankId, serverBankProblemId, "Local callback called.");
-                            QUnit.start();
-                        });
-                    });
-                });
-            });
-
             //next test
 
             asyncTest("create new courseProblem server", function(assert) {
