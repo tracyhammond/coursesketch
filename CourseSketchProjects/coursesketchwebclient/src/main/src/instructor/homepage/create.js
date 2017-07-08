@@ -3,6 +3,8 @@ validateFirstRun(document.currentScript);
 (function() {
     var courseManagement = CourseSketch.courseManagement;
 
+    courseManagement.advancedEditPanel = new CourseSketch.AdvanceEditPanel();
+
     var actions = {};
 
     actions.createPart = function(srlProblem, buttonElement, property, callback) {
@@ -351,16 +353,17 @@ validateFirstRun(document.currentScript);
     }
 
     function createAdvancedEditCard(element, saveCallback) {
-        var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0],
+        var childElement = courseManagement.advancedEditPanel.createAdvanceEditPanel(element,
+            document.querySelectorAll('#advancedEditHolder')[0],
             saveCallback, destroyAdvancedEditCard, actions);
         $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
-            dismissible: true, // Modal can be dismissed by clicking outside of the modal
-            opacity: 0.5, // Opacity of modal background
-            inDuration: 300, // Transition in duration
-            outDuration: 200, // Transition out duration
-            startingTop: '4%', // Starting top style attribute
-            endingTop: '10%' // Ending top style attribute
-        }
+                dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                opacity: 0.5, // Opacity of modal background
+                inDuration: 300, // Transition in duration
+                outDuration: 200, // Transition out duration
+                startingTop: '4%', // Starting top style attribute
+                endingTop: '10%' // Ending top style attribute
+            }
         );
         childElement.style.display = '';
     }

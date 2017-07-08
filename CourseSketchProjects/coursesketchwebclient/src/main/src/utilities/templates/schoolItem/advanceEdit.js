@@ -1,5 +1,3 @@
-// jscs:disable jsDoc
-
 CourseSketch.AdvanceEditPanel = function() {
 
     /**
@@ -119,7 +117,7 @@ CourseSketch.AdvanceEditPanel = function() {
         return schoolItemData;
     }
 
-    this.loadIntoElement = loadIntoElement;
+    this.loadDataIntoElement = loadIntoElement;
 
     function loadListIntoElement(elementData, schoolItemData, property) {
         var template = elementData.querySelector('.template');
@@ -452,7 +450,7 @@ CourseSketch.AdvanceEditPanel = function() {
 
         // add our loaded element to the page.
         parentNode.appendChild(host);
-        return [host, shadow];
+        return [ host, shadow ];
     }
 
     this.createAdvanceEditPanelElements = createAdvanceEditPanelElements;
@@ -582,7 +580,7 @@ CourseSketch.AdvanceEditPanel = function() {
      * @param {Element} clone
      * @param schoolItemElement
      */
-    this.combineLists = function combineLists(clone, schoolItemElement) {
+    function combineLists(clone, schoolItemElement) {
         var type = schoolItemElement.getAttribute('data-type');
         var listOfTemplates = clone.querySelectorAll('.' + type);
         var parent = clone.querySelector('ul.collapsible');
@@ -590,7 +588,8 @@ CourseSketch.AdvanceEditPanel = function() {
             parent.appendChild(listOfTemplates[i].content);
         }
         return clone;
-    };
+    }
+    this.combineLists = combineLists;
 
     function ignore() {
         /**

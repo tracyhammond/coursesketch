@@ -39,15 +39,16 @@
             return fakeSchoolItem;
         }
 
-        function createList(schoolItemElement, type) {
+        function createList(editPanel, schoolItemElement, type) {
             var parentNode = document.querySelectorAll("#testLocation")[0];
             schoolItemElement.setAttribute('data-type', type);
-            return advancedEditTestObject.createAdvanceEditPanelElements(schoolItemElement, parentNode)[0];
+            return editPanel.createAdvanceEditPanelElements(schoolItemElement, parentNode)[0];
         }
 
         QUnit.module("testConstruction", {
             beforeEach: function () {
-                this.advanceEdit = advancedEditTestObject;
+
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
                 this.fakeSchoolItem = createSchoolElement();
 
             },
@@ -63,20 +64,20 @@
         });
 
         test('advanced edit creates list correctly if given a type', function (assert) {
-            var host = createList(this.fakeSchoolItem, 'Course');
+            var host = createList(this.advanceEdit, this.fakeSchoolItem, 'Course');
             assert.notEqual(host.shadowRoot.querySelectorAll('ul.collapsible li').length, 0);
         });
 
         test('advanced edit creates no list if given a wrong type', function (assert) {
-            var host = createList(this.fakeSchoolItem, 'INVALID_TYPE');
+            var host = createList(this.advanceEdit, this.fakeSchoolItem, 'INVALID_TYPE');
             assert.equal(host.shadowRoot.querySelectorAll('ul.collapsible li').length, 0);
         });
 
         QUnit.module("simple Data Checks", {
             beforeEach: function () {
-                this.advanceEdit = advancedEditTestObject;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
                 this.fakeSchoolItem = createSchoolElement();
-                this.host = createList(this.fakeSchoolItem, 'Assignment');
+                this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
             },
             afterEach: function () {
                 this.host = undefined;
@@ -229,10 +230,10 @@
 
                 // Type
                 this.schoolItemProto.assignmentType = 2;
-                this.advanceEdit = advancedEditTestObject;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
                 this.fakeSchoolItem = createSchoolElement();
                 this.fakeSchoolItem.schoolItemData = this.schoolItemProto;
-                this.host = createList(this.fakeSchoolItem, 'Assignment');
+                this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
             },
             afterEach: function () {
                 this.host = undefined;
@@ -373,10 +374,10 @@
 
                 // Type
                 this.schoolItemProto.assignmentType = 2;
-                this.advanceEdit = advancedEditTestObject;
+                this.advanceEdit = new CourseSketch.AdvanceEditPanel();
                 this.fakeSchoolItem = createSchoolElement();
                 this.fakeSchoolItem.schoolItemData = this.schoolItemProto;
-                this.host = createList(this.fakeSchoolItem, 'Assignment');
+                this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
             },
             afterEach: function () {
                 this.host = undefined;
