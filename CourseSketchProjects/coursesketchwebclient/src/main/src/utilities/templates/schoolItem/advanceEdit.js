@@ -1,6 +1,6 @@
 // jscs:disable jsDoc
 
-var advancedEditTestObject = (function() {
+CourseSketch.AdvanceEditPanel = function() {
 
     /**
      * Holds the object with the specific functions that loads data.
@@ -39,6 +39,8 @@ var advancedEditTestObject = (function() {
         }
         return mappedInput;
     }
+
+    this.loadData = loadData;
 
     function loadAction(schoolItemData, parentElement, property) {
         var actionElement = parentElement.querySelectorAll('.need-action[data-actionProp="' + property + '"]')[0];
@@ -116,6 +118,8 @@ var advancedEditTestObject = (function() {
         }
         return schoolItemData;
     }
+
+    this.loadIntoElement = loadIntoElement;
 
     function loadListIntoElement(elementData, schoolItemData, property) {
         var template = elementData.querySelector('.template');
@@ -260,6 +264,8 @@ var advancedEditTestObject = (function() {
         return mappedOutput;
     }
 
+    this.getInput = getInput;
+
     /**
      * Gets data from the element if they are the same.
      *
@@ -292,6 +298,8 @@ var advancedEditTestObject = (function() {
         }
         return schoolItemData;
     }
+
+    this.getDataFromElement = getDataFromElement;
 
     /**
      * @param elementData
@@ -347,6 +355,8 @@ var advancedEditTestObject = (function() {
         }
         return true;
     }
+
+    this.compareMaps = compareMaps;
 
     /**
      * @param originalValue
@@ -442,8 +452,10 @@ var advancedEditTestObject = (function() {
 
         // add our loaded element to the page.
         parentNode.appendChild(host);
-        return [ host, shadow ];
+        return [host, shadow];
     }
+
+    this.createAdvanceEditPanelElements = createAdvanceEditPanelElements;
 
     /**
      * Adds actions from the outside to this.
@@ -479,9 +491,13 @@ var advancedEditTestObject = (function() {
      *
      * @param {SchoolItem} localElement -  The school item that this advance panel is associated with.
      * @param {Node} parentNode - The node that is a parent to the button.  This is used to get the school item after saving.
+     * @param {Function} saveCallback - Called when the data is saved.
+     * @param {Function} closeCallback - Called when the panel is closed.
+     * @param {Object} externalActions - A list of actions mapped to function names.
      */
 
-    function createAdvanceEditPanel(localElement, parentNode, saveCallback, closeCallback, externalActions) {
+    this.createAdvanceEditPanel = function(localElement, parentNode,
+                                           saveCallback, closeCallback, externalActions) {
         actionFunctions = addActions(addActions({}, actions), externalActions);
 
         // create host and position it
@@ -555,7 +571,7 @@ var advancedEditTestObject = (function() {
         observer.observe(target, config);
 
         return host;
-    }
+    };
 
     if (!isUndefined(SchoolItem)) {
         SchoolItem.prototype.createAdvanceEditPanel = createAdvanceEditPanel;
@@ -566,7 +582,7 @@ var advancedEditTestObject = (function() {
      * @param {Element} clone
      * @param schoolItemElement
      */
-    function combineLists(clone, schoolItemElement) {
+    this.combineLists = function combineLists(clone, schoolItemElement) {
         var type = schoolItemElement.getAttribute('data-type');
         var listOfTemplates = clone.querySelectorAll('.' + type);
         var parent = clone.querySelector('ul.collapsible');
@@ -574,7 +590,7 @@ var advancedEditTestObject = (function() {
             parent.appendChild(listOfTemplates[i].content);
         }
         return clone;
-    }
+    };
 
     function ignore() {
         /**
@@ -591,15 +607,4 @@ var advancedEditTestObject = (function() {
             location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
         };
     }
-
-    return {
-        combineLists: combineLists,
-        createAdvanceEditPanelElements: createAdvanceEditPanelElements,
-        createAdvanceEditPanel: createAdvanceEditPanel,
-        loadData: loadData,
-        loadDataIntoElement: loadIntoElement,
-        getInput: getInput,
-        getDataFromElement: getDataFromElement,
-        compareMaps: compareMaps
-    };
-})();
+};
