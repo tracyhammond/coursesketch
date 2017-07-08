@@ -294,6 +294,11 @@ function ProtobufSetup() {
      * @return {ProtoException} A protobuf exception.
      */
     this.errorToProtoException = function(anError) {
+        if (anError instanceof ErrorEvent && ((anError.error instanceof BaseException)
+            || (anError.error instanceof CourseSketch.prutil.getProtoExceptionClass()) ||
+            (anError.error instanceof CourseSketch.BaseException))) {
+            return this.createProtoException(anError.error);
+        }
         if (anError instanceof ErrorEvent && anError.error instanceof Error) {
             return this.errorToProtoException(anError.error);
         }
@@ -306,12 +311,7 @@ function ProtobufSetup() {
         }
         pException.setMssg('' + anError.message);
 
-        var stack;
-        if (anError instanceof ErrorEvent) {
-            stack = [ anError.error.src, anError.filename, 'this is probably a course sketch defined error?' ];
-        } else {
-            stack = anError.stack;
-        }
+        var stack = anError.stack;
         if (!isArray(stack)) {
             pException.stackTrace = [ stack ];
         } else {

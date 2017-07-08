@@ -288,7 +288,7 @@ function SubmissionPanel() {
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {
-            throw new BaseException('Operation not supported');
+            throw new SubmissionException('Callbacks for Multiple choice is not supported.');
             // add mult choice tools
         } else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools

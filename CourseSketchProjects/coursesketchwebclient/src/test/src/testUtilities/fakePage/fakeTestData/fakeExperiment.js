@@ -14,8 +14,10 @@
     submission1.setUpdateList(CourseSketch.fakeSketches[0]);
     submission2.setUpdateList(CourseSketch.fakeSketches[1]);
     submission3.setUpdateList(CourseSketch.fakeSketches[2]);
-    submission4.setUpdateList(CourseSketch.fakeSketches[3]);
-    submission5.setUpdateList(CourseSketch.fakeSketches[4]);
+    submission4.textAnswer = 'This is a text answer I think I answered it correctly';
+    submission5.textAnswer = 'Here is a bad text answer I suck at answering questions';
+  //  submission4.setUpdateList(CourseSketch.fakeSketches[3]);
+  //  submission5.setUpdateList(CourseSketch.fakeSketches[4]);
 
     /*
      * setting the submissions to experiments to be used as test data
@@ -49,11 +51,11 @@
     experiment4.assignmentId = '100';
     experiment5.assignmentId = '100';
 
-    experiment1.problemId = '30';
-    experiment2.problemId = '30';
-    experiment3.problemId = '30';
-    experiment4.problemId = '40';
-    experiment5.problemId = '40';
+    experiment1.problemId = '10';
+    experiment2.problemId = '10';
+    experiment3.problemId = '10';
+    experiment4.problemId = '20';
+    experiment5.problemId = '20';
 
     experiment1.userId = 'tony';
     experiment2.userId = 'Dtracer';

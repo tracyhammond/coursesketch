@@ -39,43 +39,46 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  *
  * These are problem parts (a,b,c,d) in a normal assignment and the lecture groups in a lecture.
  * In the mongo database, a course problem has the following structure.
- *
+ * <pre><code>
  * CourseProblem
  * {
- * // Ids
- * _id: ID,
- * courseId: ID,
- * assignmentId: ID,
+ *   // Ids
+ *   _id: ID,
+ *   courseId: ID,
+ *   assignmentId: ID,
  *
- * name: String,
+ *   name: String,
  *
- * // Grade info (overwrites grade policy)
- * gradeWeight: float,
+ *   // Grade info (overwrites grade policy)
+ *   gradeWeight: float,
  *
- * // The problems contained within this group.
- * bankProblems: [
- * { id: sludeUUID,
- * type: slideType,
- * isUnlocked: true
+ *   // The problems contained within this group.
+ *   bankProblems: [
+ *   {
+ *     id: sludeUUID,
+ *     type: slideType,
+ *     isUnlocked: true
+ *   }
+ *   {
+ *     id: problemUUID,
+ *     type: problemType,
+ *     isUnlocked: false
+ *   },
+ *   ...
+ *   ],
+ *   nextGroupId: (if blank it goes through next problem group in list)
+ *   questionActions: {
+ *     // (if a question has an action it is the last problem in the list)
+ *     // these will be how the to proceed on incorrect or correct answers to the problem [this is taken from lectures]
+ *     // which depends on the problem
+ *   }
+ *   problemRestriction: {
+ *     // FUTURE: figure these out
+ *     // you can only restrict a problem group, problem parts only exist in sequential order
+ *     // OR make it so a problem group is a complete then move
+ *   }
  * }
- * { id: problemUUID,
- * type: problemType,
- * isUnlocked: false
- * },
- * ...
- * ],
- * nextGroupId: (if blank it goes through next problem group in list)
- * questionActions: {
- * // (if a question has an action it is the last problem in the list)
- * // these will be how the to proceed on incorrect or correct answers to the problem [this is taken from lectures]
- * // which depends on the problem
- * }
- * problemRestriction: {
- * // FUTURE: figure these out
- * // you can only restrict a problem group, problem parts only exist in sequential order
- * // OR make it so a problem group is a complete then move
- * }
- * }
+ * </code></pre>
  *
  * @author gigemjt
  */

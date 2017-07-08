@@ -92,7 +92,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     var currentSubgroupPart;
 
     /**
-     * Holder for current subgroup part
+     * Holder for current subgroup part.
+     *
      * @type {ProblemSlideHolder}
      */
     var currentSubgroupPartHolder = undefined;
@@ -314,7 +315,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @returns {BankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
+     * @returns {SrlBankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
      */
     this.getCurrentInfo = function getCurrentInfo() {
         return currentSubgroupPart;
@@ -328,6 +329,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * Returns the ItemType as defined in {@link ProblemSlideHolder}.
+     *
      * @return {ItemType} the type of current part.
      * @instance
      */

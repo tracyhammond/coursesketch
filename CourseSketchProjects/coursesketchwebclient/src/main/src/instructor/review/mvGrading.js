@@ -74,7 +74,9 @@ validateFirstRun(document.currentScript);
                 console.log('LOADING GRADE FROM SERVER', dbGrade);
                 mvSketch.setGrade(dbGrade.currentGrade);
                 var history = dbGrade.gradeHistory;
-                mvSketch.setComment(history[history.length - 1].comment);
+                if (!isUndefined(history)) {
+                    mvSketch.setComment(history[history.length - 1].comment);
+                }
             });
         }
     }
@@ -150,7 +152,8 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.multiViewPage.loadProblem = function(navigator, submissionData) {
         document.getElementById('dialogPanel').show();
-        var problemType = navigator.getProblemType();
+        var problemInfo = navigator.getCurrentInfo();
+        var problemType = problemInfo.questionType;
         var parentPanel = document.getElementById('problemPanel');
         var oldElement = parentPanel.querySelector('.sub-panel');
         if (oldElement instanceof Node) {
@@ -224,7 +227,6 @@ validateFirstRun(document.currentScript);
     CourseSketch.multiViewPage.addWaitOverlay = function() {
         CourseSketch.multiViewPage.waitScreenManager.buildOverlay(document.querySelector('body'));
         CourseSketch.multiViewPage.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**
