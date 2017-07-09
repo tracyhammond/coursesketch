@@ -26,7 +26,9 @@ function ProblemRenderer(problemPanel) {
         }
         var pojo = {};
         for (var property in specialQuestionData) {
-            pojo[property] = specialQuestionData[property]
+            if (specialQuestionData.hasOwnProperty(property)) {
+                pojo[property] = specialQuestionData[property];
+            }
         }
         specialQuestionData = pojo;
     }
@@ -57,20 +59,7 @@ function ProblemRenderer(problemPanel) {
         }
     }
 
-    /**
-     * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
-     *
-     * @param {QuestionData} specialQuestionData - The special data
-     */
-    function loadSketch(specialQuestionData, callback) {
-        var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'sub-panel submittable';
-        sketchSurface.style.width = '100%';
-        sketchSurface.style.height = '100%';
-        sketchSurface.setErrorListener(function(exception) {
-            console.log(exception);
-            alert(exception);
-        });
+    function setupLoadingIcon() {
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         document.getElementById('percentBar').appendChild(element);
         element.startWaiting();
@@ -86,6 +75,22 @@ function ProblemRenderer(problemPanel) {
             sketchSurface = undefined;
             element = undefined;
         };
+    }
+
+    /**
+     * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
+     *
+     * @param {QuestionData} specialQuestionData - The special data
+     */
+    function loadSketch(specialQuestionData, callback) {
+        var sketchSurface = document.createElement('sketch-surface');
+        sketchSurface.className = 'sub-panel submittable';
+        sketchSurface.style.width = '100%';
+        sketchSurface.style.height = '100%';
+        sketchSurface.setErrorListener(function(exception) {
+            console.log(exception);
+            alert(exception);
+        });
 
         if (!hasValidQuestionData(specialQuestionData)) {
             document.getElementById('problemPanel').appendChild(sketchSurface);
@@ -109,7 +114,7 @@ function ProblemRenderer(problemPanel) {
 
         sketchSurface.refreshSketch();
 
-        sketchSurface.loadUpdateList(recordedSketch.getList(), element, function() {
+        sketchSurface.loadUpdateList(sketchArea.recordedSketch.getList(), undefined, function() {
             callback();
         });
     }
@@ -134,8 +139,8 @@ function ProblemRenderer(problemPanel) {
             return;
         }
         var freeResponse = specialQuestionData.freeResponse;
-        if (!isUndefined(freeResponse) && freeResponse !== null && isUndefined(freeResponse.startingText)) {
-            typingSurface.value = bankProblem.specialQuestionData.freeResponse.startingText;
+        if (!isUndefined(freeResponse) && freeResponse !== null && !isUndefined(freeResponse.startingText)) {
+            typingSurface.value = freeResponse.startingText;
         }
         callback();
     }
@@ -202,7 +207,7 @@ function ProblemRenderer(problemPanel) {
             } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
                 questionData.checkBox = specialQuestionData.checkBox;
             }
-            bankProblem.specialQuestionData = specialQuestionData;
+            bankProblem.specialQuestionData = questionData;
             callback();
         });
     };
@@ -234,7 +239,7 @@ function ProblemRenderer(problemPanel) {
 
     function saveTyping(callback) {
         var freeResponse = CourseSketch.prutil.FreeResponse();
-        freeResponse.text = problemPanel.querySelector('textarea').value;
+        freeResponse.startingText = problemPanel.querySelector('textarea').value;
         specialQuestionData.freeResponse = freeResponse;
         callback();
     }

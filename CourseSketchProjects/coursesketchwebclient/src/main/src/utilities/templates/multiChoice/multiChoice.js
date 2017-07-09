@@ -40,9 +40,12 @@ function MultiChoice() {
         var lastAnswer = this.shadowRoot.querySelector('#answer-choices').lastChild;
         answer.className = 'answer-choice';
         if (isUndefined(lastAnswer) || lastAnswer.className !== 'answer-choice') {
-            answer.id = '1';
+            answer.id = 'A1';
+            answer.setAttribute('data-index', 1);
         } else {
-            answer.id = parseInt(lastAnswer.id, 10) + 1;
+            var nextIndex = parseInt(answer.getAttribute('data-index'), 10) + 1;
+            answer.id = 'A' + nextIndex;
+            answer.setAttribute('data-index', nextIndex);
         }
 
         // Radio button
@@ -97,7 +100,7 @@ function MultiChoice() {
 
     this.getAnswerHolderElement = function() {
         return this.shadowRoot.querySelector('#answer-choices');
-    }
+    };
 
     /**
      * @param {Node} templateClone - is a clone of the custom HTML Element for the text box

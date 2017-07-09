@@ -42,7 +42,7 @@ validateFirstRun(document.currentScript);
 
             problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
 
-            document.querySelectorAll('#saveButton').onclick = saveData;
+            document.querySelectorAll('#saveButton')[0].onclick = saveData;
         });
     });
 
