@@ -260,7 +260,6 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @param {Number} [partIndex] - The index of the part to be loaded.
      */
     this.resetNavigationForProblem = function(courseProblemId, partIndex) {
-        var local = this;
         CourseSketch.dataManager.getCourseProblem(courseProblemId, function(courseProblem) {
             loadAssignment(courseProblem.assignmentId, function() {
                 var index = currentAssignment.problemGroups.findIndex(function(element) {
@@ -330,11 +329,11 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @returns {Number} A human readable version of the total number of elements navigable.
      */
     this.getCurrentTotalNumber = function getCurrentTotalNumber() {
-      if (isSubgroupNavigation) {
-          return this.getSubgroupSize();
-      } else {
-          return this.getSubgroupPartSize();
-      }
+        if (isSubgroupNavigation) {
+            return this.getSubgroupSize();
+        } else {
+            return this.getSubgroupPartSize();
+        }
     };
 
     /**

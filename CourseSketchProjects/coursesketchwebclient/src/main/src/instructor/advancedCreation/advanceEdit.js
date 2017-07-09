@@ -49,9 +49,9 @@ CourseSketch.AdvanceEditPanel = function() {
      */
     function getMatchingParent(node, selector) {
         var compareNode = node;
-        while (compareNode.parentNode !== null
-            && compareNode.parentNode !== document.body
-            && !compareNode.matches(selector)) {
+        while (compareNode.parentNode !== null &&
+            compareNode.parentNode !== document.body &&
+            !compareNode.matches(selector)) {
             compareNode = compareNode.parentNode;
         }
         return compareNode;
@@ -65,8 +65,8 @@ CourseSketch.AdvanceEditPanel = function() {
         }
         var superParent = getMatchingParent(parentElement, 'collapsible-body');
         actionElement.onclick = function() {
-            actionFunctions[actionElement.getAttribute('data-action')](schoolItemData, actionElement, [property,
-                parentElement, superParent]);
+            actionFunctions[actionElement.getAttribute('data-action')](schoolItemData, actionElement, [ property,
+                parentElement, superParent ]);
         };
     }
 
@@ -306,6 +306,9 @@ CourseSketch.AdvanceEditPanel = function() {
             schoolItemData = elementData.checked;
         } else if (elementData.tagName === 'SELECT') {
             schoolItemData = elementData.selectedIndex;
+        } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-lower')) {
+            // Says this should look lower into this element
+            schoolItemData = getDataFromElement(elementData.querySelector('.data'), schoolItemData, property, originalData);
         }
         return schoolItemData;
     }

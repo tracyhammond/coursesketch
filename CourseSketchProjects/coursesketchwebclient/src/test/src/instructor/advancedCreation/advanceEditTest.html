@@ -31,7 +31,6 @@
         function getAdvanceEditPanel() {
             return advanceNode.cloneNode(true);
         }
-        CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
 
         function createSchoolElement() {
             var fakeSchoolItem = document.createElement('div');
@@ -48,7 +47,7 @@
 
         QUnit.module("testConstruction", {
             beforeEach: function () {
-
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
                 this.advanceEdit = new CourseSketch.AdvanceEditPanel();
                 this.fakeSchoolItem = createSchoolElement();
 
@@ -127,7 +126,7 @@
         test('advanced edit inserts checkbox correctly', function (assert) {
             var data = true;
             var parentDiv = this.host.shadowRoot.querySelectorAll('[data-prop="applyOnlyToLateProblems"]')[0];
-            var dataElement = parentDiv.querySelectorAll('.data')[0];
+            var dataElement = parentDiv.querySelectorAll('.data')[1];
             assert.notEqual(dataElement.checked, data);
 
             this.advanceEdit.loadDataIntoElement(dataElement, data, 'applyOnlyToLateProblems');
