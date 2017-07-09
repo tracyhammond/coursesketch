@@ -131,8 +131,8 @@ validateFirstRun(document.currentScript);
             element = undefined;
         };
 
-        if (isUndefined(bankProblem.specialQuestionData) || bankProblem.specialQuestionData === null
-            || isUndefined(bankProblem.specialQuestionData.sketchArea)) {
+        if (isUndefined(bankProblem.specialQuestionData) || bankProblem.specialQuestionData === null ||
+            isUndefined(bankProblem.specialQuestionData.sketchArea)) {
             document.getElementById('problemPanel').appendChild(sketchSurface);
             return;
         }
