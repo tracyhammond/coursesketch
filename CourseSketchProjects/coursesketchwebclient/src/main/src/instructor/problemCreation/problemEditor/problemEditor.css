@@ -5,3 +5,7 @@
 *[data-hidden] {
     display: none;
 }
+
+textarea {
+    border-color: #757575;
+}

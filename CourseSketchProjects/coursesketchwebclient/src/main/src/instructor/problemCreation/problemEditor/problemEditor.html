@@ -45,7 +45,7 @@
     <script type="text/javascript" src="/src/instructor/problemCreation/problemEditor/problemEditor.js"></script>
 </head>
 <body style="overflow: hidden">
-<div class="row">
+<div class="row" style="margin-bottom: 0;">
     <header>
         <div class="col s12 row" style="position: absolute; z-index: 3;">
             <navigation-panel class="col s2"></navigation-panel>
@@ -59,12 +59,12 @@
             </div>
         </nav>
     </header>
-    <main style="position:relative;">
-        <submit-panel id="problemPanel" class="col s12 cyan lighten-5" style="height:calc(100% - 70px);">
+    <main style="position:relative; height:100vh; margin-bottom: 0;" class="row">
+        <submit-panel id="problemPanel" class="col s9 cyan lighten-5" style="height:calc(100% - 66px);">
             <problem-tool-bar></problem-tool-bar>
         </submit-panel>
-        <div id="editPanel" class="editPanel fixed-action-btn"
-             style="position: absolute; z-index: 3; top:64px; height:calc(100% - 70px); bottom:initial;">
+        <div id="editPanel" class="editPanel col s3 purple lighten-3"
+             style="z-index: 3; height:calc(100% - 66px); bottom:initial; padding: 5px;">
             <button class="waves-effect waves-light btn">save question</button>
             <div data-prop="questionText" class="need-loading need-saving">
                 <span>Edit Question Text</span>
