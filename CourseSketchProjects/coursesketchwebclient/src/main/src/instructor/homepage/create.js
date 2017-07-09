@@ -13,10 +13,14 @@ validateFirstRun(document.currentScript);
         }, srlProblem);
     };
 
-    courseManagement.actions.editProblem = function(bankProblem, buttonElement) {
-        var textContent = buttonElement.querySelector('.data').textContent;
-        var isUnlocked = (textContent === 'true');
+    courseManagement.actions.editProblem = function(bankProblem, buttonElement, optionalParams) {
+        var unlocked = buttonElement.querySelector('.data.unlocked').textContent;
+        var isUnlocked = (unlocked === 'true');
         if (isUnlocked) {
+            var parentElement = courseManagement.advancedEditPanel.getMatchingParent(buttonElement, '[data-list-item]');
+            var index = parentElement.getAttribute('data-list-item');
+            CourseSketch.dataManager.addState('partIndex', index);
+            CourseSketch.dataManager.addState('courseProblemId', buttonElement.querySelector('.data.id').textContent);
             CourseSketch.dataManager.addState('bankProblem', bankProblem);
             CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ');
         } else {
@@ -361,6 +365,7 @@ validateFirstRun(document.currentScript);
 
     function destroyAdvancedEditCard() {
         $(document.querySelectorAll('#advancedEditHolder')[0]).html('');
+        document.querySelectorAll('#advancedEditHolder')[0].style.display = 'none';
     }
 
     function createAdvancedEditCard(element, saveCallback) {
@@ -380,5 +385,6 @@ validateFirstRun(document.currentScript);
         }
         );
         childElement.style.display = '';
+        document.querySelectorAll('#advancedEditHolder')[0].style.display = '';
     }
 })();

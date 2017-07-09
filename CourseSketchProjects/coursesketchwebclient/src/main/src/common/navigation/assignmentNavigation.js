@@ -193,6 +193,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     var loadSubpartData = true;
 
     /**
+     * If true the navigation will only stay within the bounds of a single problem.
+     *
+     * @type {boolean}
+     */
+    var stayInThisProblem = false;
+
+    /**
      * The event constant for submitting a problem.
      *
      * @type {String}
@@ -245,6 +252,26 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * Resets the location of the navigation to the specific indexes.
+     *
+     * This only allows navigation for the parts within this problem.
+     *
+     * @param {String} courseProblemId - The new assignment to be loaded.
+     * @param {Number} [partIndex] - The index of the part to be loaded.
+     */
+    this.resetNavigationForProblem = function(courseProblemId, partIndex) {
+        var local = this;
+        CourseSketch.dataManager.getCourseProblem(courseProblemId, function(courseProblem) {
+            loadAssignment(courseProblem.assignmentId, function() {
+                var index = currentAssignment.problemGroups.findIndex(function(element) {
+                    return element === courseProblemId;
+                });
+                local.resetNavigation(courseProblem.assignmentId, index, partIndex);
+            }, true);
+        }, undefined);
+    };
+
+    /**
      * @return {Number} assignment type of the current problem.
      */
     this.getAssignmentType = function getAssignmentType() {
@@ -293,14 +320,25 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @returns {Number} the number of subgroups in the list.
+     * @returns {Number} The number of subgroups in the list.
      */
     this.getSubgroupSize = function getSubgroupSize() {
         return subgroupList.length;
     };
 
     /**
-     * @returns {Number} the number of parts in the subgroup list.
+     * @returns {Number} A human readable version of the total number of elements navigable.
+     */
+    this.getCurrentTotalNumber = function getCurrentTotalNumber() {
+      if (isSubgroupNavigation) {
+          return this.getSubgroupSize();
+      } else {
+          return this.getSubgroupPartSize();
+      }
+    };
+
+    /**
+     * @returns {Number} The number of parts in a single item in the subgroup list.
      */
     this.getSubgroupPartSize = function getSubgroupPartSize() {
         return currentSubgroup.subgroups.length;
@@ -396,7 +434,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.hasNext = function() {
         return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 || isLoopable() ||
-            (currentIndex + 1 < subgroupList.length ||
+            ((currentIndex + 1 < subgroupList.length && !stayInThisProblem) ||
             (currentSubgroupPartIndex + 1 < this.getSubgroupPartSize() && !isSubgroupNavigation)));
     };
 
@@ -405,8 +443,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @instance
      */
     this.hasPrevious = function() {
-        return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 ||
-            isLoopable() || this.getCurrentNumber() - 1 > 0 || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation)));
+        return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 || isLoopable() ||
+            ((currentIndex - 1 >= 0 && !stayInThisProblem) || (currentSubgroupPartIndex - 1 >= 0 && !isSubgroupNavigation)));
     };
 
     /**
@@ -419,6 +457,19 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.setLoadSubpartData = function(loadSubpart) {
         loadSubpartData = loadSubpart;
+    };
+
+    this.setSubgroupNavigation = function(subgroupNavigation) {
+        isSubgroupNavigation = subgroupNavigation;
+    };
+
+    /**
+     * Changes the behavior of navigating so the user can not navigate outside the current problem.
+     *
+     * @param {Boolean} stayInCurrentProblem - True if the navigation should stay in the current problem.
+     */
+    this.setStayInThisProblem = function(stayInCurrentProblem) {
+        stayInThisProblem = stayInCurrentProblem;
     };
 
     /**
@@ -480,8 +531,18 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * @param {UUID} assignmentId - The id of the assignment to load.
      * @param {Function} [callback] - A callback function called when the assignment is loaded.
+     * @param {Boolean} [shortCircuit] - True if the loading should short circuit if possible.
      */
-    function loadAssignment(assignmentId, callback) {
+    function loadAssignment(assignmentId, callback, shortCircuit) {
+        // If we are not loading anything new short circuit.
+        if (shortCircuit && dataLoaded && currentAssignmentId === assignmentId &&
+            !isUndefined(currentAssignment) && currentAssignment.id === assignmentId) {
+            if (!isUndefined(callback)) {
+                callback();
+            }
+            return;
+        }
+
         dataLoaded = false;
 
         function setData(assignment) { // jscs:ignore jsDoc
@@ -889,6 +950,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     function goToNextSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex + 1 >= subgroupPartLength) {
+            if (stayInThisProblem) {
+                return;
+            }
             currentSubgroupPartIndex = 0;
             changeSubgroup(currentIndex + 1, 1);
             return;
@@ -904,6 +968,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     function goToPreviousSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex - 1 < 0) {
+            if (stayInThisProblem) {
+                return;
+            }
             currentSubgroupPartIndex = 0;
             changeSubgroup(currentIndex - 1, -1);
             return;

@@ -51,11 +51,12 @@ CourseSketch.AdvanceEditPanel = function() {
         var compareNode = node;
         while (compareNode.parentNode !== null
             && compareNode.parentNode !== document.body
-            && compareNode.matches(selector)) {
+            && !compareNode.matches(selector)) {
             compareNode = compareNode.parentNode;
         }
         return compareNode;
     }
+    this.getMatchingParent = getMatchingParent;
 
     function loadAction(schoolItemData, parentElement, property) {
         var actionElement = parentElement.querySelectorAll('.need-action[data-actionProp="' + property + '"]')[0];

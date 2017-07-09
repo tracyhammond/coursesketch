@@ -35,7 +35,7 @@ validateFirstRun(document.currentScript);
     var bankProblem14 = CourseSketch.prutil.SrlBankProblem();
 
     problem1.courseId = '1';
-    problem1.assignmentId = '1';
+    problem1.assignmentId = '000';
     problem1.id = '10';
     problem1.name = 'Test Problem';
     problem1.state = CourseSketch.prutil.State();
@@ -54,8 +54,9 @@ validateFirstRun(document.currentScript);
     CourseSketch.fakeBankProblems.push(bankProblem1);
 
     problem2.courseId = '1';
-    problem2.assignmentId = '1';
+    problem2.assignmentId = '000';
     problem2.id = '20';
+    problem1.name = 'No Name';
     problem2.other = '';
     problem2.gradeWeight = '15';
     problem2.grade = 97;
@@ -74,8 +75,9 @@ validateFirstRun(document.currentScript);
     CourseSketch.fakeBankProblems.push(bankProblem2);
 
     problem3.courseId = '1';
-    problem3.assignmentId = '2';
+    problem3.assignmentId = '100';
     problem3.id = '30';
+    problem3.name = 'assignment 100';
     problem3.state = CourseSketch.prutil.State();
     problem3.state.published = true;
     problem3.state.accessible = false;
@@ -92,7 +94,8 @@ validateFirstRun(document.currentScript);
 
     problem4.courseId = '1';
     problem4.id = '40';
-    problem1.assignmentId = '2';
+    problem4.assignmentId = '100';
+    problem4.name = 'i have given up';
     problem4.state = CourseSketch.prutil.State();
     problem4.state.published = true; //closed
     problem4.state.accessible = false;
@@ -110,7 +113,7 @@ validateFirstRun(document.currentScript);
     // TODO: please finish out the test data...
     problem5.courseId = '2';
     problem5.id = '50';
-    problem5.assignmentId = '3';
+    problem5.assignmentId = '200';
     problem5.name = 'Quantum spin states';
     problem5.state = CourseSketch.prutil.State();
     problem5.state.published = true; //completed
@@ -127,7 +130,7 @@ validateFirstRun(document.currentScript);
 
     problem6.courseId = '2';
     problem6.id = '60';
-    problem6.assignmentId = '3';
+    problem6.assignmentId = '200';
     problem6.name = 'weave identification';
     problem6.state = CourseSketch.prutil.State();
     problem6.state.published = false; //not published
@@ -144,7 +147,7 @@ validateFirstRun(document.currentScript);
 
     problem7.courseId = '3';
     problem7.id = '70';
-    problem7.assignmentId = '4';
+    problem7.assignmentId = '300';
     problem7.name = 'underwater breathing';
     problem7.problemInfo = bankProblem7;
     bankProblem7.questionText = 'please start a timer and hold your breath for 10 minutes.';
@@ -154,7 +157,7 @@ validateFirstRun(document.currentScript);
 
     problem8.courseId = '3';
     problem8.id = '80';
-    problem8.assignmentId = '5';
+    problem8.assignmentId = '400';
     problem8.name = 'style quiz';
     problem8.problemInfo = bankProblem8;
     bankProblem8.id = problem8.id;
@@ -163,66 +166,66 @@ validateFirstRun(document.currentScript);
     CourseSketch.fakeBankProblems.push(bankProblem8);
 
     problem9.courseId = '4';
-    problem9.assignmentId = '6';
+    problem9.assignmentId = '500';
     problem9.id = '90';
     problem9.name = 'make course sketch';
     problem9.problemInfo = bankProblem9;
     bankProblem9.id = problem9.id;
     bankProblem9.questionText = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
-                                     + 'You have one week';
+        + 'You have one week';
     CourseSketch.fakeProblems.push(problem9);
     CourseSketch.fakeBankProblems.push(bankProblem9);
 
     problem10.courseId = '5';
-    problem10.assignmentId = '7';
+    problem10.assignmentId = '600';
     problem10.id = '100';
     problem10.name = 'make course sketch';
     problem10.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
-    + 'You have one week.';
+        + 'You have one week.';
     problem10.problemInfo = bankProblem10;
     bankProblem10.id = problem10.id;
     CourseSketch.fakeProblems.push(problem10);
     CourseSketch.fakeBankProblems.push(bankProblem10);
 
     problem11.courseId = '6';
-    problem11.assignmentId = '8';
+    problem11.assignmentId = '700';
     problem11.id = '110';
     problem11.name = 'make course sketch';
     problem11.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
-    + 'You have one week.';
+        + 'You have one week.';
     problem11.problemInfo = bankProblem11;
     bankProblem11.id = problem11.id;
     CourseSketch.fakeProblems.push(problem11);
     CourseSketch.fakeBankProblems.push(bankProblem11);
 
     problem12.courseId = '6';
-    problem12.assignmentId = '8';
+    problem12.assignmentId = '700';
     problem12.id = '120';
     problem12.name = 'make course sketch';
     problem12.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
-    + 'You have one week.';
+        + 'You have one week.';
     problem12.problemInfo = bankProblem12;
     bankProblem12.id = problem12.id;
     CourseSketch.fakeProblems.push(problem12);
     CourseSketch.fakeBankProblems.push(bankProblem12);
 
     problem13.courseId = '6';
-    problem13.assignmentId = '9';
+    problem13.assignmentId = '800';
     problem13.id = '130';
     problem13.name = 'make course sketch';
     problem13.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
-    + 'You have one week.';
+        + 'You have one week.';
     problem13.problemInfo = bankProblem13;
     bankProblem13.id = problem13.id;
     CourseSketch.fakeProblems.push(problem13);
     CourseSketch.fakeBankProblems.push(bankProblem13);
 
     problem14.courseId = '6';
-    problem14.assignmentId = '9';
+    problem14.assignmentId = '800';
     problem14.id = '140';
     problem14.name = 'make course sketch';
     problem14.description = 'not a big problem, I just want you to program a MOOC using sketch recognition.  '
-    + 'You have one week.';
+        + 'You have one week.';
     problem14.problemInfo = bankProblem14;
     bankProblem14.id = problem14.id;
     CourseSketch.fakeProblems.push(problem14);
@@ -245,14 +248,22 @@ validateFirstRun(document.currentScript);
         }
     }
 
-    for (var k = 0; k < CourseSketch.fakeProblems.length; k++) {
-        var problem = CourseSketch.fakeProblems[k];
+    function createProblemHolder(k) {
         var problemHolder1 = CourseSketch.prutil.ProblemSlideHolder();
-        problemHolder1.id = problem.id;
+        problemHolder1.id = CourseSketch.fakeBankProblems[k].id;
         problemHolder1.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
         problemHolder1.unlocked = true;
         problemHolder1.problem = CourseSketch.fakeBankProblems[k];
-        problem.subgroups = [ problemHolder1 ];
+        return problemHolder1;
+    }
+
+    for (var k = 0; k < CourseSketch.fakeProblems.length; k++) {
+        var problem = CourseSketch.fakeProblems[k];
+        problem.subgroups = [createProblemHolder(k)];
         // console.log('problem: ', problem.id, problem.subgroups);
+    }
+
+    for (var k = 0; k < CourseSketch.fakeBankProblems.length; k++) {
+        problem5.subgroups.push(createProblemHolder(k));
     }
 })();

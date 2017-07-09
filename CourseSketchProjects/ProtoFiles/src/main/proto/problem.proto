@@ -45,7 +45,7 @@ message SrlProblem {
  * If the type is an assignment then that assignment is substitued in.
  */
 message ProblemSlideHolder {
-    // the id of the item being held
+    // The id of the item being held.
     optional string id = 1;
     optional protobuf.srl.utils.ItemType itemType = 2;
     oneof problemSlide {

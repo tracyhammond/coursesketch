@@ -20,7 +20,7 @@ function NavigationPanel() {
             this.shadowRoot.querySelector('#selectionBoxNumber').textContent = nav.getCurrentNumber();
             // set span state
             this.setUpButtons(nav);
-            var totalNumber = nav.getSubgroupSize();
+            var totalNumber = nav.getCurrentTotalNumber();
             if (totalNumber) {
                 this.shadowRoot.querySelector('#totalNumber').textContent = totalNumber;
             }

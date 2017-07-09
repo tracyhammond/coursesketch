@@ -3,18 +3,33 @@
     <meta charset="utf-8">
     <title>Ins Home page</title>
 
-    <!-- files needed for testing -->
-    <link rel="import" href="/src/instructor/problemCreation/problemEditor/problemEditor.html" data-fake>
     <!-- test Library -->
-    <link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
           href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
     <script src="/test/testUtilities/databaseHelper.js"></script>
 
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/instructor/problemCreation/problemEditor/problemEditor.html" data-fake>
+
     <script>
         $(document).ready(function() {
             CourseSketch.connection.isInstructor = true;
+            CourseSketch.dataManager.addState('courseProblemId', '50');
+            CourseSketch.dataManager.addState('partIndex', '10');
         });
+        CourseSketch.dataManager.getSubmission = function(problemId, callback) {
+            var index = -1;
+            for (var i = 0; i < CourseSketch.fakeProblems.length; i++) {
+                if (CourseSketch.fakeProblems[i].id == problemId) {
+                    index = i;
+                    break;
+                }
+            }
+            var submission = CourseSketch.fakeExperiments[index % CourseSketch.fakeExperiments.length].getSubmission();
+            callback(cleanSubmission(submission));
+        };
     </script>
 </head>
 <body>
