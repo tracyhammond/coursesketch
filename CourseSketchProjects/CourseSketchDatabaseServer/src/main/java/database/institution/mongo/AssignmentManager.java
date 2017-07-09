@@ -505,6 +505,12 @@ public final class AssignmentManager {
                 update = true;
             }
 
+            if (assignment.hasState() && assignment.getState().hasPublished() && assignment.getState().getPublished() && isPublishable(assignment)) {
+                // Can not be set to false.
+                updateQuery.append(STATE_PUBLISHED, true);
+                update = true;
+            }
+
             update |= setAssignmentTypeInformation(assignment, updateQuery, false);
             update |= setDateInformation(assignment, updateQuery, false);
             update |= setGradeInformation(assignment, updateQuery, false);
@@ -513,6 +519,16 @@ public final class AssignmentManager {
             assignmentCollection.updateOne(cursor, new Document(SET_COMMAND, updateQuery));
             UserUpdateHandler.insertUpdates(dbs, ((List) cursor.get(USERS)), assignmentId, UserUpdateHandler.ASSIGNMENT_CLASSIFICATION);
         }
+        return true;
+    }
+
+    /**
+     * Checks for various values to see if the assignment is publishable.
+     *
+     * @param assignment The assignment we are checking to see if it is publishable.
+     * @return True if it is publishable.
+     */
+    private static boolean isPublishable(SrlAssignment assignment) {
         return true;
     }
 

@@ -20,6 +20,8 @@ validateFirstRun(document.currentScript);
             var problemIndex = CourseSketch.dataManager.getState('partIndex');
             var addCallback = isUndefined(panel.dataset.callbackset);
 
+            problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
+
             if (!isUndefined(bankProblem)) {
                 loadBankProblem(bankProblem);
             }
@@ -39,8 +41,6 @@ validateFirstRun(document.currentScript);
             } else if (addCallback) {
                 navigator.refresh();
             }
-
-            problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
 
             document.querySelectorAll('#saveButton')[0].onclick = saveData;
         });
@@ -99,7 +99,7 @@ validateFirstRun(document.currentScript);
      * @param {SrlBankProblem} bankProblem - The bank problem to load.
      */
     function loadBankProblem(bankProblem) {
-        questionTextPanel.setProblemText(bankProblem.getQuestionText());
+        questionTextPanel.setRapidProblemText(bankProblem.getQuestionText());
         originalMap = advancedEdit.loadData(bankProblem, editPanel);
 
         problemRenderer.renderBankProblem(bankProblem, function() {

@@ -88,7 +88,9 @@ function ProblemTextPanel() {
         var actualText = this.shadowRoot.querySelector(textViewQuery);
         actualText.innerHTML = textBuffer.innerHTML;
 
-        textBuffer.parentNode.removeChild(textBuffer);
+        if (textBuffer !== null) {
+            textBuffer.parentNode.removeChild(textBuffer);
+        }
     };
 }
 

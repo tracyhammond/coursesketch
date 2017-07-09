@@ -422,19 +422,19 @@ public class BankProblemManagerTest {
         Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
 
-        final Problem.ProblemElement.Builder lectureElement = Problem.ProblemElement.newBuilder();
+        final Problem.QuestionData.Builder lectureElement = Problem.QuestionData.newBuilder();
 
         // sets the base sketch data
-        lectureElement.setSketchArea(Problem.SketchArea.newBuilder().setRecorededSketch(FAKE_UPDATELIST));
+        lectureElement.setSketchArea(Problem.SketchArea.newBuilder().setRecordedSketch(FAKE_UPDATELIST));
         bankProblem.setSpecialQuestionData(lectureElement);
 
         mongoInsertBankProblem(db, bankProblem.build());
         MongoCursor<Document> curse = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM)).find().iterator();
         System.out.println(curse);
         Document obj = curse.next();
-        final Problem.ProblemElement elementFromQuery = SlideManager
+        final Problem.QuestionData elementFromQuery = BankProblemManager
                 .createElementFromQuery((Document) obj.get(DatabaseStringConstants.SPECIAL_QUESTION_DATA));
-        Commands.SrlUpdateList UpdateList = elementFromQuery.getSketchArea().getRecorededSketch();
+        Commands.SrlUpdateList UpdateList = elementFromQuery.getSketchArea().getRecordedSketch();
         Assert.assertEquals(FAKE_UPDATELIST.build(), UpdateList);
     }
 
@@ -462,10 +462,10 @@ public class BankProblemManagerTest {
     public void testGetBaseSketch() throws Exception {
         Problem.SrlBankProblem.Builder bankProblem = Problem.SrlBankProblem.newBuilder();
         bankProblem.setId(FAKE_ID);
-        final Problem.ProblemElement.Builder lectureElement = Problem.ProblemElement.newBuilder();
+        final Problem.QuestionData.Builder lectureElement = Problem.QuestionData.newBuilder();
 
         // sets the base sketch data
-        lectureElement.setSketchArea(Problem.SketchArea.newBuilder().setRecorededSketch(FAKE_UPDATELIST));
+        lectureElement.setSketchArea(Problem.SketchArea.newBuilder().setRecordedSketch(FAKE_UPDATELIST));
 
         // sets the base sketch data
         bankProblem.setSpecialQuestionData(lectureElement);
@@ -476,7 +476,7 @@ public class BankProblemManagerTest {
                 Authentication.AuthResponse.PermissionLevel.STUDENT);
 
         SrlBankProblem getProblem = mongoGetBankProblem(authenticator, db, ADMIN_USER, problemBankId);
-        final Problem.ProblemElement specialQuestionData = getProblem.getSpecialQuestionData();
+        final Problem.QuestionData specialQuestionData = getProblem.getSpecialQuestionData();
         new ProtobufComparisonBuilder().build().equals(lectureElement.build(), specialQuestionData);
     }
 
