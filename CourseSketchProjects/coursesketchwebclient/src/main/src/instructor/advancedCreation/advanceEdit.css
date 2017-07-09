@@ -1,5 +1,5 @@
 .card {
-    height: 100%;
+    /* height: 100%; */
 }
 
 ul.collapsible li {
@@ -23,9 +23,20 @@ div.collapsible-body {
 *[data-list] {
     display: flex;
     overflow-x: scroll;
+    height: inherit;
 }
 
 *[data-list-item] {
     flex-direction: row;
     flex: 0 0 auto;
+    padding: 10px;
+}
+
+.card[data-list-item] {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+:host {
+    background-color: white;
 }

@@ -158,7 +158,7 @@
                         </div>
                         <div class="need-saving need-loading col s4" data-prop="applyOnlyToLateProblems">
                             <span>Apply late policy on:</span>
-                            <div class="switch">
+                            <div class="switch data" data-lower>
                                 <label>
                                     All problems
                                     <input id="myonoffswitch" name="onoffswitch" type="checkbox" class="data">
@@ -187,21 +187,33 @@
             <div class="collapsible-header deep-purple accent-1"><i class="material-icons">perm_contact_calendar</i>Creation
             </div>
             <div class="collapsible-body row blue lighten-4">
+                <div data-prop="assignmentId" class="need-loading">
+                    <span data-hidden class="data"></span>
+                </div>
                 <div data-prop="subgroups" class="need-saving need-loading col s12">
-                    <button data-action="createPart" class="need-action" data-actionProp="subgroups">add New Part</button>
+                    <button data-action="createPart" class="need-action waves-effect waves-light btn"
+                            data-actionProp="subgroups">add New Part
+                    </button>
                     <div data-list class="data">
                         <template class="template">
-                            <div class="templateData">
+                            <div class="templateData card">
+                                <div data-prop="id" class="need-loading">
+                                    <span data-hidden class="data"></span>
+                                </div>
                                 <div>Part <span class="listNumber"></span></div>
                                 <!-- data for a bank problem -->
                                 <div data-prop="problem" class="need-saving need-loading">
-                                    <div class="data">
+                                    <div class="data center">
                                         <div data-prop="questionText" class="need-loading">
                                             <span class="data"></span>
                                         </div>
                                         <button data-prop="unlocked" data-action="editProblem" data-actionProp="script"
-                                                class="need-action need-loading">editProblem
-                                            <span data-hidden class="data"></span></button>
+                                                class="need-action need-loading waves-effect waves-light btn center"
+                                                style="padding: 2px 6px; margin: 0 auto; line-height: initial;">
+                                            editProblem
+                                            <span data-hidden class="data"></span>
+                                            <span data-hidden data-id class="data"></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

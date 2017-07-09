@@ -24,7 +24,7 @@ CourseSketch.AdvanceEditPanel = function() {
                 var element = parentElement.querySelectorAll('.need-loading[data-prop="' + property + '"]')[0];
                 loadAction(schoolItemData, parentElement, property);
                 if (!isUndefined(element)) {
-                    var elementData = element.querySelectorAll('.data')[0];
+                    var elementData = element.querySelectorAll(':scope > .data')[0];
                     result = loadIntoElement(elementData, schoolItemData[property], property);
                     if (!element.hasAttribute('data-hidden')) {
                         element.style.display = 'inherit';
@@ -40,13 +40,32 @@ CourseSketch.AdvanceEditPanel = function() {
 
     this.loadData = loadData;
 
+    /**
+     * Returns the top level parent that matches this selector.
+     *
+     * @param {Element} node
+     * @param {String} selector
+     * @returns {Element}
+     */
+    function getMatchingParent(node, selector) {
+        var compareNode = node;
+        while (compareNode.parentNode !== null
+            && compareNode.parentNode !== document.body
+            && compareNode.matches(selector)) {
+            compareNode = compareNode.parentNode;
+        }
+        return compareNode;
+    }
+
     function loadAction(schoolItemData, parentElement, property) {
         var actionElement = parentElement.querySelectorAll('.need-action[data-actionProp="' + property + '"]')[0];
         if (isUndefined(actionElement)) {
             return;
         }
+        var superParent = getMatchingParent(parentElement, 'collapsible-body');
         actionElement.onclick = function() {
-            actionFunctions[actionElement.getAttribute('data-action')](schoolItemData, actionElement, property);
+            actionFunctions[actionElement.getAttribute('data-action')](schoolItemData, actionElement, [property,
+                parentElement, superParent]);
         };
     }
 
@@ -113,6 +132,9 @@ CourseSketch.AdvanceEditPanel = function() {
             elementData.style.display = 'inherit';
         } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-list')) {
             loadListIntoElement(elementData, schoolItemData, property);
+        } else if (elementData.tagName === 'DIV' && elementData.hasAttribute('data-lower')) {
+            // Says this should look lower into this element
+            schoolItemData = loadIntoElement(elementData.querySelector('.data'), schoolItemData, property);
         }
         return schoolItemData;
     }
@@ -129,7 +151,8 @@ CourseSketch.AdvanceEditPanel = function() {
     }
 
     function createListElement(index, schoolItemData, newNode, parent) {
-        newNode.className = 'listItem' + index;
+        newNode.classList.remove('templateData');
+        newNode.className += ' listItem' + index;
         newNode.setAttribute('data-list-item', index);
         parent.appendChild(newNode);
         newNode.querySelector('.listNumber').textContent = index + 1;
@@ -546,6 +569,10 @@ CourseSketch.AdvanceEditPanel = function() {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes') {
                     currentData = loadData(localElement.schoolItemData, host.shadowRoot);
+                    var idList = host.shadowRoot.querySelectorAll('span.data[data-id]');
+                    for (var i = 0; i < idList.length; i++) {
+                        idList[i].textContent = localElement.schoolItemData.id;
+                    }
                     var accordion = host.shadowRoot.querySelectorAll('.collapsible')[0];
                     $(accordion).collapsible();
                 }

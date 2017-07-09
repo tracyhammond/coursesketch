@@ -7,9 +7,9 @@ validateFirstRun(document.currentScript);
 
     courseManagement.actions = {};
 
-    courseManagement.actions.createPart = function(srlProblem, buttonElement, property, callback) {
+    courseManagement.actions.createPart = function(srlProblem, buttonElement, optionalParams, callback) {
         courseManagement.addNewSubGroup(function(updatedProblem, subGroup) {
-            callback(updatedProblem, buttonElement, property);
+            callback(updatedProblem, buttonElement, optionalParams);
         }, srlProblem);
     };
 
