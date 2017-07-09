@@ -2,7 +2,7 @@
 /**
  * Installs PaperScope globally, and attaches it to the DomObject canvasElement.
  *
- * @class Graphics
+ * @constructor Graphics
  * @param {Element} canvas - The canvas element that is being drawn to.
  * @param {SketchSurfaceManager} sketchManager - The manager that handles which sketch is currently active.
  */
@@ -113,7 +113,7 @@ function Graphics(canvas, sketchManager) {
     };
 
     /**
-     * @return {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
+     * @returns {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
      */
     this.getPaper = function() {
         return ps;
@@ -132,7 +132,8 @@ function Graphics(canvas, sketchManager) {
     };
 
     /**
-     * @param {Array<SRL_Object>} objectList
+     * @param {Array<SRL_Object>} objectList The list of objects to be loaded
+     * @param {*} color The color the object should be loaded with.
      */
     function recursivelyLoadSketch(objectList, color) {
         for (var i = 0; i < objectList.length; i++) {
@@ -163,6 +164,7 @@ function Graphics(canvas, sketchManager) {
      * Draws a single stroke onto the screen.
      *
      * @param {SRL_Stroke} stroke - The stroke to be drawn.
+     * @param {*} color The color the object should be loaded with.
      */
     function loadStroke(stroke, color) {
         ps.activate();
@@ -185,7 +187,7 @@ function Graphics(canvas, sketchManager) {
     /**
      * Draws a single stroke onto the screen.
      *
-     * @param {SRL_Stroke} stroke - The stroke to be drawn.
+     * @param {SRL_Shape} shape - The stroke to be drawn.
      */
     function loadShape(shape) {
         // make all shapes red!

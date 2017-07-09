@@ -2,7 +2,7 @@
  * Only one of these can be on a page at a time.
  * [We assume only one of these elements can exist at a time].
  *
- * @class ProblemSelectionPanel
+ * @constructor ProblemSelectionPanel
  */
 function ProblemSelectionPanel() {
     /**

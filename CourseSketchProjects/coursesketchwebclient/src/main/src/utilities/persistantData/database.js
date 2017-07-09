@@ -4,7 +4,7 @@
  *
  * It will also create all the functions needed for the specific database.
  *
- * @class ProtoDatabase
+ * @constructor ProtoDatabase
  *
  * @param {String} databaseName - The name of the database.
  * @param {String} version - The version of the database.  (Must always be increasing)
@@ -58,6 +58,7 @@ function ProtoDatabase(databaseName, version, openCallback) {
      * @param {String} tableName - The name of the specific table to be created.
      * @param {String} keyValue - This is the key for that specific table
      * @param {Function} addingFunction - Takes in a store and then creates and returns a request see sample above.
+     * @returns {Object} a representation of a table.
      */
     this.createTable = function(tableName, keyValue, addingFunction) {
         return {

@@ -1,4 +1,4 @@
-//jscs:disable jsDoc
+/* eslint-disable require-jsdoc, valid-jsdoc */
 function WaitScreenManager() {
     /**
      * resets the values in the school builder so that the same build object can be used again.

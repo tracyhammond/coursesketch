@@ -25,7 +25,7 @@ function EmbeddedHtml() {
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
      * @param {Event} event - event that triggered this function
-     * @return {EmbeddedHtml} the created protobuf object.
+     * @returns {EmbeddedHtml} the created protobuf object.
      */
     this.saveData = function(event) {
         var embeddedHtmlProto = CourseSketch.prutil.EmbeddedHtml();
@@ -60,7 +60,7 @@ function EmbeddedHtml() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

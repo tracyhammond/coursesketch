@@ -1,4 +1,4 @@
-//jscs:disable jsDoc
+/* eslint-disable valid-jsdoc, require-jsdoc */
 /**
  * Creates the text box dialog
  * The dialog is moveable and allows the creator to enter text to be displayed
@@ -19,6 +19,8 @@ function TextBox() {
      * It also ignores click and drag from textareas and buttons within the dialog
      * The dragging is restricted to the area of the parentNode the dialog is created in
      * NOTE: This code comes from the interact library examples page
+     *
+     * @param {Element} localElement - The host element.
      */
     function enableDragging(localElement) {
         var element = localElement.shadowRoot.querySelectorAll('.draggable');
@@ -211,7 +213,7 @@ function TextBox() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

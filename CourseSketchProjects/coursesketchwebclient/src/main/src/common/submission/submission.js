@@ -2,7 +2,10 @@
  * An exception that is thrown for the uses of submissions.
  *
  * @extends BaseException
- * @class SubmissionException
+ * @constructor SubmissionException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function SubmissionException(message, cause) {
     this.name = 'SubmissionException';
@@ -26,8 +29,7 @@ SubmissionException.prototype = new BaseException();
  * <li>You can set the problem object with the class "sub-panel".</li>
  * </ul>
  *
- * @class SubmissionPanel
- * @property {QuestionType}
+ * @constructor SubmissionPanel
  */
 function SubmissionPanel() {
 
@@ -153,7 +155,7 @@ function SubmissionPanel() {
     /**
      * Gets the text that has been typed.
      *
-     * @return {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
      *
      * @param {Element} textArea - The element that contains the text answer
      * @param {Boolean} isSubmitting - Value Currently ignored but in the future it may be used.
@@ -173,7 +175,7 @@ function SubmissionPanel() {
      *
      * @param {SketchSurface} sketchSurface - The sketch surface that is being submitted.
      * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
-     * @return {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
      */

@@ -97,6 +97,7 @@ function ProblemToolBar() {
      * @param {URL} imgLocation - A url to the image that is being displayed.
      * @param {Function} onclickFunction - A callback for when the element is clicked.
      * @param {Function} onloadFunction - A callback for when the element is laoded.
+     * @returns {Element} an image element;
      */
     this.createButton = function(imgLocation, onclickFunction, onloadFunction) {
         var element = document.createElement('img');

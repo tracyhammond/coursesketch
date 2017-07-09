@@ -1,7 +1,7 @@
 /**
  * The custom element for navigating a problem.
  *
- * @class NavigationPanel
+ * @constructor NavigationPanel
  * @attribute loop {Existence} If this property exist the navigator will loop.  (Setting the navigator overrides this property).
  * @attribute assignment_id {String} uses the given value as the assignment id inside the navigator.
  * @attribute index {Number} if the value exist then this is the number used to define the current index.
@@ -51,7 +51,7 @@ function ProblemTextPanel() {
      * Sets the question text if one it exists.
      *
      * adds a delay after setting the text once before it will set it again.
-     * @param questionText
+     * @param {String} questionText - The text/instructions for the problem.
      */
     this.setRapidProblemText = function(questionText) {
         if (this.ableToSet) {
@@ -65,19 +65,19 @@ function ProblemTextPanel() {
 
     this.createSetTimeout = function(questionText) {
         var localScope = this;
-      if (!isUndefined(this.ableToSetTimeout))  {
-          clearTimeout(this.ableToSetTimeout);
-          this.ableToSetTimeout = undefined;
-          this.createSetTimeout(questionText);
-      } else {
-          this.ableToSetTimeout = setTimeout(function() {
-              localScope.ableToSet = true;
-              localScope.ableToSetTimeout = undefined;
-              if (!isUndefined(questionText)) {
-                  localScope.setRapidProblemText(questionText);
-              }
-          }, 300);
-      }
+        if (!isUndefined(this.ableToSetTimeout))  {
+            clearTimeout(this.ableToSetTimeout);
+            this.ableToSetTimeout = undefined;
+            this.createSetTimeout(questionText);
+        } else {
+            this.ableToSetTimeout = setTimeout(function() {
+                localScope.ableToSet = true;
+                localScope.ableToSetTimeout = undefined;
+                if (!isUndefined(questionText)) {
+                    localScope.setRapidProblemText(questionText);
+                }
+            }, 300);
+        }
     };
 
     /**

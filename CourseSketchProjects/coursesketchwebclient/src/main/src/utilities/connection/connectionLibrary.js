@@ -1,9 +1,9 @@
 /**
-/**
  * Creates a new connection to the wsUri.
  *
  * With this connection you can send information which is encoded via protobufs.
  *
+ * @constructor Connection
  * @param {URL} uri - The url where the websocket server is located.
  * @param {Boolean} encrypted - True if encryption should be usec.
  * @param {Boolean} attemptReconnect - True if a reconnection should be attempted if connection initially failed.
@@ -116,7 +116,7 @@ function Connection(uri, encrypted, attemptReconnect) {
                         console.log('getting from answer checker');
                         onAnswerChecker(evt, msg);
                     } else if ((msg.requestType === MessageType.DATA_REQUEST || msg.requestType === MessageType.DATA_INSERT ||
-                            msg.requestType === MessageType.DATA_UPDATE || msg.requestType === MessageType.DATA_REMOVE) && onSchoolData) {
+                        msg.requestType === MessageType.DATA_UPDATE || msg.requestType === MessageType.DATA_REMOVE) && onSchoolData) {
                         console.log('getting from school data');
                         //console.log(msg);
                         onSchoolData(evt, msg);
@@ -172,7 +172,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * Returns true if the websocket is connected correctly.
+     * @returns {Boolean} True if the websocket is connected correctly.
      */
     this.isConnected = function() {
         return connected;
@@ -326,7 +326,7 @@ function Connection(uri, encrypted, attemptReconnect) {
     };
 
     /**
-     * Gets the current time that is the same as the time the server sees.
+     * @returns {Long} The current time that is the same as the time the server sees.
      */
     this.getCurrentTime = function() {
         var longVersion = dcodeIO.Long.fromString('' + (createTimeStamp() + totalTimeDifferance));

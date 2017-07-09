@@ -1,7 +1,7 @@
 /**
  * Contains input listeners for canvas interaction and functions for creating points using drawing events.
  *
- * @class InputListener
+ * @constructor InputListener
  */
 function InputListener() {
     /**
@@ -209,6 +209,7 @@ function InputListener() {
      * @memberof InputListener
      * @private
      * @param {Event} drawingEvent - The event from paper drawing.
+     * @returns {SRL_Point} The point created from this event.
      */
     function createPointFromEvent(drawingEvent) {
         var newPoint = new SRL_Point(drawingEvent.point.x, drawingEvent.point.y);

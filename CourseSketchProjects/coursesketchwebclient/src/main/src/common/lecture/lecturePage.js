@@ -76,6 +76,7 @@ validateFirstRun(document.currentScript);
      * Adds a new text box to the currently selected lecture slide.
      *
      * @memberof lecturePage
+     * @returns {Element} The text box that was created.
      */
     CourseSketch.lecturePage.newTextBox = function() {
         var textBox = undefined;
@@ -93,6 +94,7 @@ validateFirstRun(document.currentScript);
      * Adds a new sketch content element to the currently selected slide.
      *
      * @memberof lecturePage
+     * @returns {Element} The sketch surface that was created.
      */
     CourseSketch.lecturePage.newSketchContent = function() {
         var sketchSurface = document.createElement('sketch-surface');
@@ -106,8 +108,9 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a new image to the currently selected slide.
      *
-     * @param {element} input - The input element from the form specifying the image.
      * @memberof lecturePage
+     * @param {Element} input - The input element from the form specifying the image.
+     * @returns {Element} The image box that was created.
      */
     CourseSketch.lecturePage.newImage = function(input) {
         var imagebox = document.createElement('image-box');
@@ -132,8 +135,9 @@ validateFirstRun(document.currentScript);
     /**
      * Adds a new embedded HTML element to the currently selected slide.
      *
-     * @param {element} form - The form that contains the HTML element to be added.
      * @memberof lecturePage
+     * @param {Element} form - The form that contains the HTML element to be added.
+     * @returns {Element} The embedded html that was created.
      */
     CourseSketch.lecturePage.newEmbeddedHtml = function(form) {
         var embeddedHtml = document.createElement('embedded-html');
@@ -149,6 +153,7 @@ validateFirstRun(document.currentScript);
      * Adds a new multiple choice question to the currently selected slide.
      *
      * @memberof lecturePage
+     * @returns {Element} The question element that was created.
      */
     CourseSketch.lecturePage.newMultiChoiceQuestion = function() {
         var question = document.createElement('question-element');
@@ -190,6 +195,8 @@ validateFirstRun(document.currentScript);
     };
 
     /**
+     * Callback for when a slide is navigated.
+     *
      * @param {AssignmentNavigator} nav - The navigator used to select the slide.
      * @memberof lecturePage
      */
@@ -272,7 +279,7 @@ validateFirstRun(document.currentScript);
         var listData = [];
         var copyNavigator = new AssignmentNavigator(assignmentId, currentIndex, currentPartIndex);
         copyNavigator.reloadAssignment(function() {
-            function loadData() { // jscs:ignore jsDoc
+            function loadData() { // eslint-disable-line require-jsdoc
                 listData.push(copyNavigator.getCurrentInfo());
 
                 if (!copyNavigator.hasNext() || listData.length === amountToNavigate) {

@@ -5,7 +5,7 @@ validateFirstRun(document.currentScript);
  *
  * @param {Object} originalApi - The base api object.
  * @param {Object} objectApi - The second api object, usually used for passing objects into an api.
- * @return {Object} result An api object that contains the contents of both api objects.
+ * @returns {Object} result An api object that contains the contents of both api objects.
  */
 function mergeApi(originalApi, objectApi){
     var result = {};
@@ -34,10 +34,9 @@ function debugLog(text) {
 /**
  * This function builds an object that holds an api for manipulating the problem panel.
  *
- * @param {Object} panel - The problem panel from the student experiment.
- * @param {Object} problemNav - The bank problem info object.
+ * @param {Element} panel - The problem panel from the student experiment.
+ * @param {AssignmentNavigator} problemNav - The bank problem info object.
  * @param {Boolean} hasSubmission - Flag that shows if this problem has a submission or not.
- * @param {Object} panel - The problem panel from the student experiment.
  */
 function PanelEditApi(panel, problemNav, hasSubmission) {
 

@@ -419,7 +419,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     /**
      * Gets the id's of all of the courses in the user's local client.
      */
-    database.getFromCourses(COURSE_LIST, function(e, request, result) { // jscs:ignore jsDoc
+    database.getFromCourses(COURSE_LIST, function(e, request, result) { // eslint-disable-line require-jsdoc
         if (isUndefined(result) || isUndefined(result.data)) {
             return;
         }
@@ -427,7 +427,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     });
 
     /**
-     * @return {Array} A list that represents all of the ids of courses in the database.
+     * @returns {Array} A list that represents all of the ids of courses in the database.
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));
@@ -464,7 +464,7 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
         /**
          * Listens for the search result and displays the result given to it.
          */
-        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {// jscs:ignore jsDoc
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {// eslint-disable-line require-jsdoc
             if (isException(item)) {
                 callback(new DatabaseException('There was an exception when getting the data back from the server while searching courses', item));
                 return;

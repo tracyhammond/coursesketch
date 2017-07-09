@@ -1,5 +1,5 @@
 /**
- * @class UpdateException
+ * @constructor UpdateException
  * @extends BaseException
  *
  * @param {String} message - The message to show for the exception.
@@ -16,8 +16,11 @@ function UpdateException(message, cause) {
 UpdateException.prototype = new BaseException();
 
 /**
- * @class UndoRedoException
+ * @constructor UndoRedoException
  * @extends UpdateException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function UndoRedoException(message, cause) {
     this.name = 'UndoRedoException';
@@ -34,7 +37,7 @@ UndoRedoException.prototype = new UpdateException();
  *
  * @param {SketchManager} sketchManager - The manager that the sketch deals with.
  * @param {Function} onError - A method that is called when an error occurs.
- * @class UpdateManager
+ * @constructor UpdateManager
  */
 function UpdateManager(sketchManager, onError) {
 
@@ -550,6 +553,7 @@ function UpdateManager(sketchManager, onError) {
      * Returns a direct copy of the update list that is modifiable.
      *
      * @param {Function} [callback] - called with the update list.
+     * @returns {SrlUpdateList} The updateList.
      */
     this.getUpdateList = function(callback) {
         if (callback) {

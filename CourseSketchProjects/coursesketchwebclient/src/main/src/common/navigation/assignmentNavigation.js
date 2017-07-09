@@ -1,5 +1,7 @@
 /**
- * @class NavigationException
+ * An exception for navigating.
+ *
+ * @constructor NavigationException
  * @extends BaseException
  *
  * @param {String} message - The message to show for the exception.
@@ -50,7 +52,7 @@ NavigationException.prototype = new BaseException();
  * @param {Number} preferredIndex - The starting index to start problems at.
  * @param {Boolean} navigateAtSubgroupLevel - If True then the navigation happens at the subgroup level and not the subgroupPart level.
  *                      Not setting this gives it a value of false.
- * @class AssignmentNavigator
+ * @constructor AssignmentNavigator
  */
 function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSubgroupLevel) {
     /**
@@ -271,14 +273,14 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {Number} assignment type of the current problem.
+     * @returns {Number} assignment type of the current problem.
      */
     this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
     };
 
     /**
-     * @return {Number} assignment type of the current problem.
+     * @returns {Number} assignment type of the current problem.
      */
     this.getNavigationType = function getNavigationType() {
         return currentAssignment.navigationType;
@@ -294,7 +296,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {Boolean} true if the problems have been loaded into memory.
+     * @returns {Boolean} true if the problems have been loaded into memory.
      * @instance
      */
     this.isDataLoaded = function() {
@@ -344,7 +346,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {SrlAssignment} the current assignment stored in this navigator..
+     * @returns {SrlAssignment} the current assignment stored in this navigator..
      * @instance
      */
     this.getCurrentAssignment = function() {
@@ -368,7 +370,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     /**
      * Returns the ItemType as defined in {@link ProblemSlideHolder}.
      *
-     * @return {ItemType} the type of current part.
+     * @returns {ItemType} the type of current part.
      * @instance
      */
     this.getPartType = function() {
@@ -506,7 +508,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     }
 
     /**
-     * Returns {Boolean} True if navigation is random.
+     * @returns {Boolean} True if navigation is random.
      */
     function isRandomNavigation() {
         var assignmentType = currentAssignment.assignmentType;
@@ -516,7 +518,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     }
 
     /**
-     * @return {Boolean} True if the assignment is able to be looped.
+     * @returns {Boolean} True if the assignment is able to be looped.
      */
     function isLoopable() {
         return currentAssignment.navigationType === CourseSketch.prutil.NavigationType.LOOPING;
@@ -544,7 +546,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
 
         dataLoaded = false;
 
-        function setData(assignment) { // jscs:ignore jsDoc
+        function setData(assignment) { // eslint-disable-line require-jsdoc
             currentAssignment = assignment;
             currentAssignmentId = assignment.id;
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {

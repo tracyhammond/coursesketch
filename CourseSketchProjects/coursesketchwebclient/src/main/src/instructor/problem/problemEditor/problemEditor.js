@@ -52,7 +52,7 @@ validateFirstRun(document.currentScript);
     mutators.questionText = function(element) {
         element.oninput = function(e) {
             questionTextPanel.setRapidProblemText(element.value);
-        }
+        };
     };
 
     mutators.questionType = function(element) {
@@ -68,6 +68,9 @@ validateFirstRun(document.currentScript);
         console.log(arguments);
     };
 
+    /**
+     * Adds change listeners on a set of elements.
+     */
     function registerObservers() {
         var elementList = editPanel.querySelectorAll('[data-mutator]');
         for (var i = 0; i < elementList.length; i++) {
@@ -90,30 +93,31 @@ validateFirstRun(document.currentScript);
         loadBankProblem(bankProblem);
     }
 
+    /**
+     * Loads a bank problem.
+     *
+     * @param {SrlBankProblem} bankProblem - The bank problem to load.
+     */
     function loadBankProblem(bankProblem) {
-        var problemType = bankProblem.getQuestionType();
-
         questionTextPanel.setProblemText(bankProblem.getQuestionText());
-        console.log('a problem has been loaded with question text', bankProblem.getQuestionText());
         originalMap = advancedEdit.loadData(bankProblem, editPanel);
 
-        loadSpecificType(bankProblem);
-    }
-
-    function loadSpecificType(bankProblem) {
         problemRenderer.renderBankProblem(bankProblem, function() {
             console.log(' rendering is finished');
         });
     }
 
+    /**
+     * Saves the data to the database.
+     */
     function saveData() {
         originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
         problemRenderer.saveData(currentProblem, function() {
-           CourseSketch.dataManager.updateBankProblem(currentProblem, function(argument) {
-               console.log(argument);
-           }, function(argument) {
-               console.log(argument);
-           }) ;
+            CourseSketch.dataManager.updateBankProblem(currentProblem, function(argument) {
+                console.log(argument);
+            }, function(argument) {
+                console.log(argument);
+            }) ;
         });
     }
 })();

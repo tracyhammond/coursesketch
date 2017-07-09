@@ -46,7 +46,7 @@ function IndexManager(timeline) {
     }
 
     /**
-     * @return {Object} update is the protobuf update of the currently selected step/toolArea
+     * @returns {Object} update is the protobuf update of the currently selected step/toolArea
      */
     this.getCurrentUpdate = function() {
         var update;

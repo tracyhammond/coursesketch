@@ -33,6 +33,7 @@ function MultiChoice() {
      * Adds an answer choice to this multiple choice element.
      *
      * @param {Event} event - the event that triggered this function
+     * @returns {Element} The element that was created that holds the answer.
      */
     this.addAnswer = function(event) {
         // Set up the parent
@@ -113,8 +114,10 @@ function MultiChoice() {
 
         /**
          * Bind addAnswer to click.
+         *
+         * @param {Event} event the event that was clicked.
          */
-        localScope.shadowRoot.querySelector('#add').onclick = function(event) {// jscs:ignore jsDoc
+        localScope.shadowRoot.querySelector('#add').onclick = function(event) {
             localScope.addAnswer(event);
         };
     };
@@ -123,7 +126,7 @@ function MultiChoice() {
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
      * @param {Event} event - event that triggered this function.
-     * @return {MultipleChoice} the created protobuf object.
+     * @returns {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
         var mcProto = CourseSketch.prutil.MultipleChoice();
@@ -174,7 +177,7 @@ function MultiChoice() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

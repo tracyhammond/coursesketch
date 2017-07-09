@@ -1,7 +1,7 @@
 /**
  * The custom element for navigating a problem.
  *
- * @class NavigationPanel
+ * @constructor NavigationPanel
  * @attribute loop {Existence} If this property exist the navigator will loop.  (Setting the navigator overrides this property).
  * @attribute assignment_id {String} uses the given value as the assignment id inside the navigator.
  * @attribute index {Number} if the value exist then this is the number used to define the current index.
@@ -95,7 +95,7 @@ function NavigationPanel() {
     };
 
     /**
-     * @return {AssignmentNavigator}.
+     * @returns {AssignmentNavigator}.
      * @instance
      * @function getNavigator
      */

@@ -1,7 +1,7 @@
 /* depends on objectandinheritance.js */
 
 /**
- * @class SketchSurfaceException
+ * @constructor SketchSurfaceException
  * @extends BaseException
  *
  * @param {String} message - The message to show for the exception.
@@ -20,7 +20,7 @@ SketchSurfaceException.prototype = new BaseException();
 /**
  * This file contains all of the resources for managing sketches.
  *
- * @class
+ * @constructor
  */
 function SketchSurfaceManager() {
     var TEMPORARY_ID = 'TEMPORARY_ID';
@@ -36,7 +36,7 @@ function SketchSurfaceManager() {
     /**
      * Gets the parent sketch.
      *
-     * @return {SRL_Sketch} sketch - The top level sketch.
+     * @returns {SRL_Sketch} sketch - The top level sketch.
      */
     this.getParentSketch = function() {
         return this.getSketch(parentSketchId);

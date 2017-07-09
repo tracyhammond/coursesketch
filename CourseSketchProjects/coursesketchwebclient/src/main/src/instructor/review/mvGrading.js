@@ -84,9 +84,10 @@ validateFirstRun(document.currentScript);
     /**
      * Gets a specific set of sketch data to be used in the multiview sketch panel.
      *
+     * @memberof multiViewPage
      * @param {Arrau<SrlExperiment>} array - The array of experiments.
      * @param {Integer} index - The index at which to get the update lists.
-     * @memberof multiViewPage
+     * @returns {SrlUpdateList} The update list.
      */
     function getUpdateList(array, index) {
         return array[index].getSubmission().getUpdateList();
@@ -96,6 +97,7 @@ validateFirstRun(document.currentScript);
      * Returns the navigation panel element to be used by other pages.
      *
      * @memberof multiViewPage
+     * @returns {AssignmentNavigator} The navigator of this page.
      */
     function getNav() {
         return document.querySelector('navigation-panel').getNavigator();

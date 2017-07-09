@@ -48,11 +48,11 @@
             }
         });
         test("initialize with no document does not do anything", function(assert) {
-            assert.equal(CourseSketch.courseManagement.initializeCourseManagment(), false, "false is returned to show missing html code");
+            assert.equal(CourseSketch.courseManagement.initializeCourseManagement(), false, "false is returned to show missing html code");
         });
         test("initialize with a valid document does not throw an exception", function(assert) {
             CourseSketch.dataManager.isDatabaseReady.returns(false);
-            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+            CourseSketch.courseManagement.initializeCourseManagement(FAKE_PAGE_DOCUMENT);
             assert.equal(FAKE_PAGE_DOCUMENT.querySelector("#class_list_column").childNodes.length, 1,
                     "There should be the waiting icon in this location");
             assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), true, "There should be the waiting icon in this location");
@@ -68,7 +68,7 @@
             mockedMethod.withArgs(list);
 
             // actual function call
-            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+            CourseSketch.courseManagement.initializeCourseManagement(FAKE_PAGE_DOCUMENT);
 
             mock.verify();
             assert.equal(CourseSketch.courseManagement.waitingIcon.isRunning(), false, "The waiting list should not be running");
@@ -86,7 +86,7 @@
             mockedMethod.withArgs(list);
 
             // actual function call
-            CourseSketch.courseManagement.initializeCourseManagment(FAKE_PAGE_DOCUMENT);
+            CourseSketch.courseManagement.initializeCourseManagement(FAKE_PAGE_DOCUMENT);
 
             CourseSketch.dataManager.isDatabaseReady.returns(true);
             clock.tick(100);

@@ -1,6 +1,6 @@
 // jshint undef:false
 // jshint latedef:false
-// jscs:disable jsDoc
+/* eslint-disable valid-jsdoc */
 
 // in case it was not defined before
 var CourseSketch = CourseSketch || {};
@@ -52,7 +52,7 @@ if (isUndefined(createTimeStamp)) {
     /**
      * Creates a number that represents the current time in milliseconds since jan 1st 1970.
      *
-     * @return {Number} milliseconds since jan 1st 1970
+     * @returns {Number} milliseconds since jan 1st 1970
      */
     function createTimeStamp() {
         return new Date().getTime();
@@ -125,7 +125,7 @@ if (isUndefined(getFormattedDateTime)) {
      * {@code ex: 01-18-1994 10:50PM}
      *
      * @param {Date} dateTime - uses the default Date object in the browser to return.
-     * @return {String} A formatted date time.
+     * @returns {String} A formatted date time.
      */
     function getFormattedDateTime(dateTime) {
         var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
@@ -151,7 +151,7 @@ if (CourseSketch && isUndefined(BaseException) && !isUndefined(CourseSketch.Base
 
 if (isUndefined(BaseException)) {
     /**
-     * @class BaseException
+     * @constructor BaseException
      * Defines the base exception class that can be extended by all other exceptions.
      *
      * @param {String} [optionalMessage] - The message to show for the exception.
@@ -186,7 +186,7 @@ if (isUndefined(BaseException)) {
 
         /**
          * Used to access the stacktrace of the exception without modifying it.
-         * @return {stackTrace} Returns a string that contains the entire stacktrace of the exception.
+         * @returns {stackTrace} Returns a string that contains the entire stacktrace of the exception.
          */
         this.getStackTrace = function() {
             return this.stackTrace;
@@ -246,7 +246,7 @@ if (isUndefined(isException)) {
      * Checks to see if the input is an exception.
      *
      * @param {*} exception - What we want to see is an exception.
-     * @return {Boolean} True if the input is an exception or error. False otherwise.
+     * @returns {Boolean} True if the input is an exception or error. False otherwise.
      */
     function isException(exception) {
         if (isUndefined(exception) || exception === null) {

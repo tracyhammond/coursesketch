@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor AdvanceEditPanel
+ */
 CourseSketch.AdvanceEditPanel = function() {
 
     /**
@@ -43,9 +47,9 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Returns the top level parent that matches this selector.
      *
-     * @param {Element} node
-     * @param {String} selector
-     * @returns {Element}
+     * @param {Element} node - The node that is looking for its parent.
+     * @param {String} selector - The selector used to match the parent.
+     * @returns {Element} - An element that is a parent of node.
      */
     function getMatchingParent(node, selector) {
         var compareNode = node;
@@ -58,6 +62,13 @@ CourseSketch.AdvanceEditPanel = function() {
     }
     this.getMatchingParent = getMatchingParent;
 
+    /**
+     * Loads an action into the element.
+     *
+     * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
+     * @param {Element} parentElement - The parent element.
+     * @param {String} property - A property of schoolItemData.
+     */
     function loadAction(schoolItemData, parentElement, property) {
         var actionElement = parentElement.querySelectorAll('.need-action[data-actionProp="' + property + '"]')[0];
         if (isUndefined(actionElement)) {
@@ -73,9 +84,9 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Converts date and time elements to be merged into milliseconds
      *
-     * @param dateInput
-     * @param timeInput
-     * @returns {Number}
+     * @param {Element} dateInput - A date Input element.
+     * @param {Element} timeInput - A time Input element.
+     * @returns {Number} The date in milliseconds.
      */
     function convertElementsToDateTime(dateInput, timeInput) {
         var milliseconds = new Date(dateInput.value + ' ' + timeInput.value).getTime();
@@ -87,10 +98,10 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Loads the data into a specific element.
      *
-     * @param {Element} elementData - The element that the data needs to be set on
-     * @param {*} schoolItemData - The value of the property that needs to be set
-     * @param {String} property - The name of the field
-     * @returns {*}
+     * @param {Element} elementData - The element that the data needs to be set on.
+     * @param {*} schoolItemData - The value of the property that needs to be set.
+     * @param {String} property - The name of the field.
+     * @returns {*} The equivalent of what would be grabbed by the field if not edited.
      */
     function loadIntoElement(elementData, schoolItemData, property) {
         /*jshint maxcomplexity:18 */
@@ -142,6 +153,13 @@ CourseSketch.AdvanceEditPanel = function() {
 
     this.loadDataIntoElement = loadIntoElement;
 
+    /**
+     * Loads a list proto into the html.
+     *
+     * @param {Element} elementData - The parent element.
+     * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
+     * @param {String} property - A property of schoolItemData.
+     */
     function loadListIntoElement(elementData, schoolItemData, property) {
         var template = elementData.querySelector('.template');
         var templateNode = document.importNode(template.content, true);
@@ -151,6 +169,14 @@ CourseSketch.AdvanceEditPanel = function() {
         }
     }
 
+    /**
+     * Creates a new list element and loads the data for it.
+     *
+     * @param {Number} index - The index of the element in the list.
+     * @param {ProtobufObject} schoolItemData - Data that is being attached to the action.
+     * @param {Element} newNode - The existing node
+     * @param {Element} parent - The parent element.
+     */
     function createListElement(index, schoolItemData, newNode, parent) {
         newNode.classList.remove('templateData');
         newNode.className += ' listItem' + index;
@@ -160,6 +186,12 @@ CourseSketch.AdvanceEditPanel = function() {
         loadData(schoolItemData, newNode);
     }
 
+    /**
+     * Loads date into an element
+     * @param {Element} elementData - The parent element.
+     * @param {DateTime} schoolItemData - Data that is being attached to the action.
+     * @returns {Number} The date in milliseconds.
+     */
     function loadDate(elementData, schoolItemData) {
         var dateInput = elementData.querySelector('.date');
         var timeInput = elementData.querySelector('.time');
@@ -244,10 +276,11 @@ CourseSketch.AdvanceEditPanel = function() {
      *
      * For example if the schoolItemData is null/undefined but the default element map contains something
      * Then if the result map is the same as the default element map we do not change anything.
+     *
      * @param {ProtobufObject} schoolItemData - A mpa containing the school item.
      * @param {Element} parentElement - a panel that displays the editable material.
      * @param {Map} originalData - A map of the data mapped to the element.
-     * @return {Map} A map representing the modified data.
+     * @returns {Map} A map representing the modified data.
      */
     function getInput(schoolItemData, parentElement, originalData) {
         var result;
@@ -280,10 +313,11 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Gets data from the element if they are the same.
      *
-     * @param {Element} elementData
-     * @param {*} schoolItemData
-     * @param {String} property
-     * @param {*} [originalData]
+     * @param {Element} elementData - The element the data is being loaded from.
+     * @param {*} schoolItemData - Data that is being loaded into.
+     * @param {String} property - A property of schoolItemData.
+     * @param {*} [originalData] - A map of the original data.
+     * @returns {*} The data loaded from the element.
      */
     function getDataFromElement(elementData, schoolItemData, property, originalData) {
         if (protoTypes.hasOwnProperty(property + 'ProtoType')) {
@@ -316,10 +350,11 @@ CourseSketch.AdvanceEditPanel = function() {
     this.getDataFromElement = getDataFromElement;
 
     /**
-     * @param elementData
-     * @param schoolItemData
-     * @param property
-     * @param originalData
+     * @param {Element} elementData - The element the data is being loaded from.
+     * @param {*} schoolItemData - Data that is being split into sub objects.
+     * @param {String} property - A property of schoolItemData.
+     * @param {*} originalData - A map of the original data.
+     * @returns {Map | *} A map or a protobuf object if they are different.
      */
     function saveSubObject(elementData, schoolItemData, property, originalData) {
         // Return a map if the result and the initial is the same
@@ -336,10 +371,11 @@ CourseSketch.AdvanceEditPanel = function() {
     }
 
     /**
+     * Compares two maps. Returns true if they are equal.
      *
-     * @param original
-     * @param result
-     * @returns {boolean} True if the maps are the same otherwise this will return false
+     * @param {Map} original - The original map.
+     * @param {Map} result - The new map.
+     * @returns {Boolean} True if the maps are the same otherwise this will return false
      */
     function compareMaps(original, result) {
         var resultValue;
@@ -373,9 +409,9 @@ CourseSketch.AdvanceEditPanel = function() {
     this.compareMaps = compareMaps;
 
     /**
-     * @param originalValue
-     * @param newValue
-     * @returns {boolean} True if the values are the same otherwise this will return false;
+     * @param {*} originalValue - The original value.
+     * @param {*} newValue - The new value.
+     * @returns {Boolean} True if the values are the same otherwise this will return false;
      */
     function compareValues(originalValue, newValue) {
         /*jshint maxcomplexity:16 */
@@ -414,26 +450,31 @@ CourseSketch.AdvanceEditPanel = function() {
     /**
      * Does a comparison and then sets the result on the protobuf object if needed.
      *
-     * @param property
-     * @param schoolItemData
-     * @param originalData
-     * @param result
+     * @param {String} property - The property where the elements are being compared.
+     * @param {*} schoolItemData - The data contained within the school item.
+     * @param {*} originalData - The data from the original Map.
+     * @param {*} result - The data from the result Map.
+     * @returns {Boolean} True if the values are the same otherwise this will return false;
      */
     function compareElements(property, schoolItemData, originalData, result) {
         if (originalData === IGNORE_FIELD || result === IGNORE_FIELD) {
             return false;
         }
         if (schoolItemData[property] !== originalData) {
-            if (!compareValues(originalData, result)) {
-                return true;
-            }
-            return;
+            return !compareValues(originalData, result);
         }
         if (schoolItemData[property] !== result) {
             return true;
         }
     }
 
+    /**
+     * Sets the proto data to the result.
+     *
+     * @param {*} schoolItemData - The item the data is being set on.
+     * @param {String} property - The property at which the data is being set.
+     * @param {*} result - The data that is being set.
+     */
     function setProtoData(schoolItemData, property, result) {
         schoolItemData[property] = result;
     }
@@ -452,6 +493,13 @@ CourseSketch.AdvanceEditPanel = function() {
     }
     var getAdvanceEditPanel = this.getAdvanceEditPanel;
 
+    /**
+     * Creates the panel elements and adds them to the DOM.
+     *
+     * @param {Element} localElement - An element that holds the list of elements where the templates are.
+     * @param {Element} parentNode - The node where the panel is added to.
+     * @returns {{Element, Node}} The host and its shadow.
+     */
     function createAdvanceEditPanelElements(localElement, parentNode) {
         var host = document.createElement('div');
         host.className = 'advanceEditHost';
@@ -479,8 +527,9 @@ CourseSketch.AdvanceEditPanel = function() {
      * This new function calls in external function with an extra argument of a callback
      * This call back is the original function.
      *
-     * @param sourceActions {Object} A map of function names to functions for actions.
-     * @param destinationObject {Object} A map of function names to functions for actions.
+     * @param {Object} destinationObject - A map of function names to functions for actions.
+     * @param {Object} sourceActions - A map of function names to functions for actions.
+     * @returns {Object} The merged object.
      */
     function addActions(destinationObject, sourceActions) {
         for (var property in sourceActions) {
@@ -501,6 +550,11 @@ CourseSketch.AdvanceEditPanel = function() {
         return destinationObject;
     }
 
+    /**
+     * Sets the actions locally.
+     *
+     * @param {Object} externalActions - Contains a map of functions to act upon.
+     */
     function setActions(externalActions) {
         actionFunctions = addActions(addActions({}, actions), externalActions);
     }
@@ -514,8 +568,8 @@ CourseSketch.AdvanceEditPanel = function() {
      * @param {Function} saveCallback - Called when the data is saved.
      * @param {Function} closeCallback - Called when the panel is closed.
      * @param {Object} externalActions - A list of actions mapped to function names.
+     * @returns {Element} The host element.
      */
-
     this.createAdvanceEditPanel = function(localElement, parentNode,
                                            saveCallback, closeCallback, externalActions) {
 
@@ -537,11 +591,14 @@ CourseSketch.AdvanceEditPanel = function() {
 
         var schoolItem = localElement.schoolItemData;
 
+        /**
+         * Saves the data when clicked.
+         */
         function saveData() {
-            getInput(schoolItem, shadow, currentData);
+            var resultData = getInput(schoolItem, shadow, currentData);
             localElement.schoolItemData = schoolItem;
             console.log(schoolItem);
-            saveCallback(localElement, schoolItem);
+            saveCallback(localElement, schoolItem, compareMaps(currentData, resultData));
         }
 
         saveButton.onclick = function() {
@@ -598,9 +655,11 @@ CourseSketch.AdvanceEditPanel = function() {
     };
 
     /**
+     * Merges templates into the main element.
      *
-     * @param {Element} clone
-     * @param schoolItemElement
+     * @param {Element} clone - A list of the templates.
+     * @param {Element} schoolItemElement - An element that represents a school item.
+     * @returns {Element} The clone element.
      */
     function combineLists(clone, schoolItemElement) {
         var type = schoolItemElement.getAttribute('data-type');
@@ -613,6 +672,9 @@ CourseSketch.AdvanceEditPanel = function() {
     }
     this.combineLists = combineLists;
 
+    /**
+     * Ignore
+     */
     function ignore() {
         /**
          * Opens scripting window on click.
@@ -625,7 +687,7 @@ CourseSketch.AdvanceEditPanel = function() {
          */
         scriptButton.onclick = function() {
             var data = getInput(shadow);
-            location.href = '/instructor/problemCreation/scriptEditor/scriptEditor.html';
+            location.href = '/instructor/problem/scriptEditor/scriptEditor.html';
         };
     }
 };

@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc, require-jsdoc */
 function createCommandViewer(list, idToPutViewIn, currentIndex) {
     var output = parseUpdateList(list, 0, currentIndex);
     document.getElementById(idToPutViewIn).innerHTML = output;

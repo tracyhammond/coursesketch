@@ -27,7 +27,7 @@ ProtobufException.prototype = new BaseException();
  */
 
 /**
- * @class
+ * @constructor
  * @classdesc
  * Has utilities for protobufs and is a convient accessor to create new
  *        instances of protobuf files (and prevents the modification of a
@@ -215,7 +215,7 @@ function ProtobufSetup() {
      *            a list of commands stored as an array.
      * @param {MessageType} requestType
      *            the type that the request is.
-     * @return {Request} A request that holds the list of commands.
+     * @returns {Request} A request that holds the list of commands.
      */
     this.createRequestFromCommands = function createRequestFromCommands(commands, requestType) {
         return this.createRequestFromUpdate(this.createUpdateFromCommands(commands), requestType);
@@ -232,7 +232,7 @@ function ProtobufSetup() {
      *              The message type of the request.
      * @param {String} [requestId]
      *              An id that is required for every request.
-     * @return {Request} Creates a request from the binary data given.
+     * @returns {Request} Creates a request from the binary data given.
      */
     this.modifyRequestFromData = function(request, data, requestType, requestId) {
         request.requestType = requestType;
@@ -256,7 +256,7 @@ function ProtobufSetup() {
      *              The message type of the request.
      * @param {String} [requestId]
      *              An id that is required for every request.
-     * @return {Request} Creates a request from the binary data given.
+     * @returns {Request} Creates a request from the binary data given.
      */
     this.createRequestFromData = function(data, requestType, requestId) {
         return this.modifyRequestFromData(this.Request(), data, requestType, requestId);
@@ -267,7 +267,7 @@ function ProtobufSetup() {
      *
      * @param {Exception} exception
      *              An custom exception that extends BaseException.
-     * @return {ProtoException} A protobuf exception.
+     * @returns {ProtoException} A protobuf exception.
      */
     this.createProtoException = function(exception) {
         if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass()) &&
@@ -291,7 +291,7 @@ function ProtobufSetup() {
      *
      * @param {error} anError
      *              An JS error that has occurred or been defined.
-     * @return {ProtoException} A protobuf exception.
+     * @returns {ProtoException} A protobuf exception.
      */
     this.errorToProtoException = function(anError) {
         if (anError instanceof ErrorEvent && ((anError.error instanceof BaseException) ||
@@ -323,11 +323,10 @@ function ProtobufSetup() {
     };
 
     /**
-     * @function
      * Given an SrlUpdate a Request is created.
      * @param {SrlUpdate} update - A valid and complete object.
      * @param {MessageType} requestType - The type that the request is.
-     * @return {Request} used for all requesting needs
+     * @returns {Request} used for all requesting needs
      */
     this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
         if (!(update instanceof localScope.getSrlUpdateClass())) {
@@ -344,7 +343,7 @@ function ProtobufSetup() {
      * happened at the same time.
      *
      * @param {Array<SrlCommand>} commands - A list of commands stored as an array.
-     * @return {SrlUpdate} An update that holds the list of given commands.
+     * @returns {SrlUpdate} An update that holds the list of given commands.
      */
     this.createUpdateFromCommands = function createUpdateFromCommands(commands) {
         /*
@@ -367,7 +366,7 @@ function ProtobufSetup() {
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
      *
-     * @return {SrlUpdate} An empty update.
+     * @returns {SrlUpdate} An empty update.
      */
     this.createBaseUpdate = function createBaseUpdate() {
         var update = this.SrlUpdate();
@@ -420,7 +419,7 @@ function ProtobufSetup() {
      * Creates a protobuf date time object.
      *
      * @param {Number|Date|Long} inputDateTime - representing the time that this object should be created with.
-     * @return {DateTime} A protobuf date time objct that can be used for date stuff.
+     * @returns {DateTime} A protobuf date time objct that can be used for date stuff.
      */
     this.createProtoDateTime = function(inputDateTime) {
         var preConvertedDate = inputDateTime;
@@ -449,7 +448,7 @@ function ProtobufSetup() {
      * @param {Number} width - the width of the sketch.
      * @param {Number} height - the height of the sketch.
      *
-     * @return {SrlCommand} a create sketch command
+     * @returns {SrlCommand} a create sketch command
      */
     this.createNewSketch = function createNewSketch(id, x, y, width, height) {
         var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_SKETCH, false);
@@ -499,7 +498,7 @@ function ProtobufSetup() {
      * @param {Function} [onError] - A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
      *
-     * @return {ProtobufObject} decoded protobuf object.  (This will not return undefined)
+     * @returns {ProtobufObject} decoded protobuf object.  (This will not return undefined)
      * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {

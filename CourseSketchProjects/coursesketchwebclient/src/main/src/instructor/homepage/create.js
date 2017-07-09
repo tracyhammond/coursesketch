@@ -22,7 +22,7 @@ validateFirstRun(document.currentScript);
             CourseSketch.dataManager.addState('partIndex', index);
             CourseSketch.dataManager.addState('courseProblemId', buttonElement.querySelector('.data.id').textContent);
             CourseSketch.dataManager.addState('bankProblem', bankProblem);
-            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/problemEditor.html', 'Editing Problem ');
+            CourseSketch.redirectContent('/src/instructor/problem/problemEditor/problemEditor.html', 'Editing Problem ');
         } else {
             alert('This problem is not editable by you.');
         }
@@ -31,17 +31,14 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param {String} attributeChanged
-     *            The name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            The attribute's old value
-     * @param {String|Number|Object} newValue
-     *            The attribute's new value
-     * @param {Element} element
-     *            Protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlCourse} srlCourse - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.courseEndEdit = function(element, srlCourse) {
-        CourseSketch.dataManager.updateCourse(srlCourse);
+    courseManagement.courseEndEdit = function(element, srlCourse, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateCourse(srlCourse);
+        }
     };
 
     /**
@@ -96,17 +93,14 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlAssignment} assignment - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.assignmentEndEdit = function(element, assignment) {
-        CourseSketch.dataManager.updateAssignment(assignment);
+    courseManagement.assignmentEndEdit = function(element, assignment, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateAssignment(assignment);
+        }
     };
 
     /**
@@ -168,17 +162,14 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a problem has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlProblem} problem - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.problemEndEdit = function(element, problem) {
-        CourseSketch.dataManager.updateCourseProblem(problem);
+    courseManagement.problemEndEdit = function(element, problem, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateCourseProblem(problem);
+        }
     };
 
     /**
@@ -214,7 +205,7 @@ validateFirstRun(document.currentScript);
      * @param {SrlBankProblem} [existingBankProblem] The bank problem that is being added.
      */
     courseManagement.addNewSubGroup = function addNewCourseProblem(callback, existingCourseProblem, existingBankProblem) {
-        function addingBankProblem(bankProblemWithId) {
+        function addingBankProblem(bankProblemWithId) { // eslint-disable-line require-jsdoc
             if (bankProblemWithId instanceof CourseSketch.DatabaseException) {
                 // no problems exist or something went wrong
                 throw bankProblemWithId;
@@ -363,11 +354,20 @@ validateFirstRun(document.currentScript);
         }
     }
 
+    /**
+     * Destroys the edit panel.
+     */
     function destroyAdvancedEditCard() {
         $(document.querySelectorAll('#advancedEditHolder')[0]).html('');
         document.querySelectorAll('#advancedEditHolder')[0].style.display = 'none';
     }
 
+    /**
+     * Creates an edit panel.
+     *
+     * @param {Element} element - Where the panel is being created.
+     * @param {Function} saveCallback - Called when the panel is being saved.
+     */
     function createAdvancedEditCard(element, saveCallback) {
         if (isUndefined(courseManagement.advancedEditPanel)) {
             courseManagement.advancedEditPanel = new CourseSketch.AdvanceEditPanel();

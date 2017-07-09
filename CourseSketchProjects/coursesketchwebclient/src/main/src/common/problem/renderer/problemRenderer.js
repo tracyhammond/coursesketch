@@ -2,6 +2,9 @@ validateFirstRun(document.currentScript);
 
 /**
  * Renders problem data given a bank problem.
+ *
+ * @constructor ProblemRenderer
+ * @param {Element} problemPanel - The element where all the data is being rendered.
  */
 function ProblemRenderer(problemPanel) {
 
@@ -9,12 +12,20 @@ function ProblemRenderer(problemPanel) {
     var currentType;
     var specialQuestionData;
 
+    /**
+     * Resets the data in the renderer to its initial value.
+     */
     this.reset = function() {
         currentType = undefined;
         specialQuestionData = undefined;
         currentSaveListener = undefined;
     };
 
+    /**
+     * Copys {@link QuestionData} from the {@link SrlBankProblem} to the local instance.
+     *
+     * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
+     */
     function copyQuestionData(bankProblem) {
         if (!isUndefined(specialQuestionData)) {
             return;
@@ -33,32 +44,54 @@ function ProblemRenderer(problemPanel) {
         specialQuestionData = pojo;
     }
 
+    /**
+     * Renders the bank problem.
+     *
+     * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
+     * @param {Function} callback - Called after the data is rendered.
+     */
     this.renderBankProblem = function(bankProblem, callback) {
         copyQuestionData(bankProblem);
         loadSpecificType(bankProblem, callback);
     };
 
+    /**
+     * Renders the bank problem.
+     *
+     * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
+     * @param {Submission} submission - The student submission data.
+     * @param {Function} callback - Called after the data is rendered.
+     */
     this.renderSubmission = function(bankProblem, submission, callback) {
         this.renderBankProblem(bankProblem, function() {
-            
+            callback();
         });
     };
 
+    /**
+     * Loads the data for the {@link QuestionType}.
+     *
+     * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
+     * @param {Function} callback - Called after the data is rendered.
+     */
     function loadSpecificType(bankProblem, callback) {
-        problemPanel.innerHTML = "";
+        problemPanel.innerHTML = '';
         var type = bankProblem.questionType;
         currentType = type;
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
-            loadSketch(specialQuestionData, callback);
+            loadSketch(callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            loadTyping(specialQuestionData, callback);
+            loadTyping(callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadMultipleChoice(specialQuestionData, callback);
+            loadMultipleChoice(callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            loadCheckBox(specialQuestionData, callback);
+            loadCheckBox(callback);
         }
     }
 
+    /**
+     * Ignored
+     */
     function setupLoadingIcon() {
         var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
         document.getElementById('percentBar').appendChild(element);
@@ -80,9 +113,9 @@ function ProblemRenderer(problemPanel) {
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
      *
-     * @param {QuestionData} specialQuestionData - The special data
+     * @param {Function} callback - Called after data is loaded.
      */
-    function loadSketch(specialQuestionData, callback) {
+    function loadSketch(callback) {
         var sketchSurface = document.createElement('sketch-surface');
         sketchSurface.className = 'sub-panel submittable';
         sketchSurface.style.width = '100%';
@@ -119,17 +152,21 @@ function ProblemRenderer(problemPanel) {
         });
     }
 
-    function hasValidQuestionData(specialQuestionData) {
-        return !isUndefined(specialQuestionData) && specialQuestionData !== null
+    /**
+     * @param {QuestionData} questionData The data that is being checked if it exists.
+     * @returns {Boolean} True if the question data exists.
+     */
+    function hasValidQuestionData(questionData) {
+        return !isUndefined(questionData) && questionData !== null;
     }
 
 
     /**
-     * Loads the typing from the submission.
+     * Loads the typing from the {@link SrlBankProblem}.
      *
-     * @param {SrlBankProblem} navigator - The assignment navigator.
+     * @param {Function} callback - Called after data is loaded.
      */
-    function loadTyping(specialQuestionData, callback) {
+    function loadTyping(callback) {
         var typingSurface = document.createElement('textarea');
         typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
@@ -145,7 +182,12 @@ function ProblemRenderer(problemPanel) {
         callback();
     }
 
-    function loadMultipleChoice(specialQuestionData, callback) {
+    /**
+     * Loads the multiple choice from the {@link SrlBankProblem}
+     *
+     * @param {Function} callback - Called after data is loaded.
+     */
+    function loadMultipleChoice(callback) {
         var multiChoice = document.createElement('multi-choice');
         multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
         multiChoice.style.marginTop = '60px';
@@ -167,7 +209,12 @@ function ProblemRenderer(problemPanel) {
         callback();
     }
 
-    function loadCheckBox(specialQuestionData, callback) {
+    /**
+     * Loads the checkbox from the {@link SrlBankProblem}
+     *
+     * @param {Function} callback - Called after data is loaded.
+     */
+    function loadCheckBox(callback) {
         var question = document.createElement('question-element');
         var multiChoice = document.createElement('multi-choice');
         problemPanel.appendChild(question);
@@ -192,8 +239,8 @@ function ProblemRenderer(problemPanel) {
      * Saves the current data in the renderer to the given bank problem.
      * Only allows a single type to be saved at a time.
      *
-     * @param bankProblem
-     * @param callback
+     * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
+     * @param {Function} callback - Called after the data is saved.
      */
     this.saveData = function(bankProblem, callback) {
         saveToQuestionData(function() {
@@ -212,10 +259,20 @@ function ProblemRenderer(problemPanel) {
         });
     };
 
+    /**
+     * Saves the data internally.
+     *
+     * @param {Function} callback - Called after data is saved.
+     */
     this.stashData = function(callback) {
         saveToQuestionData(callback);
     };
 
+    /**
+     * Saves the data internally.
+     *
+     * @param {Function} callback - Called after data is saved.
+     */
     function saveToQuestionData(callback) {
         // switch by current type
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
@@ -229,6 +286,11 @@ function ProblemRenderer(problemPanel) {
         }
     }
 
+    /**
+     * Saves the sketch internally.
+     *
+     * @param {Function} callback - Called after data is saved.
+     */
     function saveSketch(callback) {
         var sketchSurface = problemPanel.querySelector('sketch-surface');
         var sketchArea = CourseSketch.prutil.SketchArea();
@@ -237,6 +299,11 @@ function ProblemRenderer(problemPanel) {
         callback();
     }
 
+    /**
+     * Saves typing data internally.
+     *
+     * @param {Function} callback - Called after data is saved.
+     */
     function saveTyping(callback) {
         var freeResponse = CourseSketch.prutil.FreeResponse();
         freeResponse.startingText = problemPanel.querySelector('textarea').value;
@@ -244,6 +311,11 @@ function ProblemRenderer(problemPanel) {
         callback();
     }
 
+    /**
+     * Saves multipleChoice data internally.
+     *
+     * @param {Function} callback - Called after data is saved.
+     */
     function saveMultipleChoice(callback) {
         var multipleChoiceElement = problemPanel.querySelector('multi-choice');
         multipleChoiceElement.setFinishedListener(function(command, evnt, update, multiChoice) {
@@ -253,6 +325,11 @@ function ProblemRenderer(problemPanel) {
         multipleChoiceElement.saveData();
     }
 
+    /**
+     * Saves checkbox data internally.
+     *
+     * @param {Function} callback - Called after data is saved.
+     */
     function saveCheckbox(callback) {
         var multipleChoiceElement = problemPanel.querySelector('multi-choice');
         multipleChoiceElement.setFinishedListener(function(command, evnt, update, multiChoice) {
