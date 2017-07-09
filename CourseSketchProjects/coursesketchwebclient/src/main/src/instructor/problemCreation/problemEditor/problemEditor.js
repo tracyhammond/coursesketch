@@ -6,6 +6,8 @@ validateFirstRun(document.currentScript);
     var editPanel = undefined;
     var questionTextPanel = undefined;
     var currentProblem = undefined;
+    var problemRenderer = undefined;
+    var originalMap = undefined;
     $(document).ready(function() {
         editPanel = document.getElementById('editPanel');
         questionTextPanel = document.querySelector('problem-text-panel');
@@ -37,6 +39,10 @@ validateFirstRun(document.currentScript);
             } else if (addCallback) {
                 navigator.refresh();
             }
+
+            problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
+
+            document.querySelectorAll('#saveButton').onclick = saveData;
         });
     });
 
@@ -51,8 +57,10 @@ validateFirstRun(document.currentScript);
 
     mutators.questionType = function(element) {
         element.onchange = function() {
-            currentProblem.questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
-            loadSpecificType(currentProblem);
+            problemRenderer.stashData(function() {
+                currentProblem.questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
+                loadSpecificType(currentProblem);
+            });
         };
     };
 
@@ -77,6 +85,7 @@ validateFirstRun(document.currentScript);
      */
     function loadProblem(navigator) {
         var bankProblem = navigator.getCurrentInfo();
+        problemRenderer.reset();
         currentProblem = bankProblem;
         loadBankProblem(bankProblem);
     }
@@ -86,88 +95,25 @@ validateFirstRun(document.currentScript);
 
         questionTextPanel.setProblemText(bankProblem.getQuestionText());
         console.log('a problem has been loaded with question text', bankProblem.getQuestionText());
-        advancedEdit.loadData(bankProblem, editPanel);
+        originalMap = advancedEdit.loadData(bankProblem, editPanel);
 
         loadSpecificType(bankProblem);
     }
 
     function loadSpecificType(bankProblem) {
-        document.getElementById('problemPanel').innerHTML = "";
-        var type = bankProblem.questionType;
-        if (type === CourseSketch.prutil.QuestionType.SKETCH) {
-            loadSketch(bankProblem);
-        } else if (type === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            loadTyping(bankProblem);
-        }
-    }
-
-    /**
-     * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
-     *
-     * @param {SrlBankRroblem} bankProblem - The bank problem
-     */
-    function loadSketch(bankProblem) {
-        var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'sub-panel submittable';
-        sketchSurface.style.width = '100%';
-        sketchSurface.style.height = '100%';
-        sketchSurface.setErrorListener(function(exception) {
-            console.log(exception);
-            alert(exception);
-        });
-        var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-        document.getElementById('percentBar').appendChild(element);
-        element.startWaiting();
-        var realWaiting = element.finishWaiting.bind(element);
-
-        /**
-         * Called when the sketch surface is done loading to remove the overlay.
-         */
-        element.finishWaiting = function() {
-            realWaiting();
-            sketchSurface.refreshSketch();
-            CourseSketch.studentExperiment.removeWaitOverlay();
-            sketchSurface = undefined;
-            element = undefined;
-        };
-
-        if (isUndefined(bankProblem.specialQuestionData) || bankProblem.specialQuestionData === null ||
-            isUndefined(bankProblem.specialQuestionData.sketchArea)) {
-            document.getElementById('problemPanel').appendChild(sketchSurface);
-            return;
-        }
-
-        var sketchArea = bankProblem.specialQuestionData.sketchArea;
-
-        if (isUndefined(sketchArea.recordedSketch)) {
-            document.getElementById('problemPanel').appendChild(sketchSurface);
-            return;
-        }
-        // tell the surface not to create its own sketch.
-        sketchSurface.dataset.existinglist = '';
-
-        // adding here because of issues
-        document.getElementById('problemPanel').appendChild(sketchSurface);
-
-        // add after attributes are set.
-
-        sketchSurface.refreshSketch();
-
-        sketchSurface.loadUpdateList(recordedSketch.getList(), element, function() {
-
+        problemRenderer.renderBankProblem(bankProblem, function() {
+            console.log(' rendering is finished');
         });
     }
 
-
-    /**
-     * Loads the typing from the submission.
-     *
-     * @param {SrlBankProblem} navigator - The assignment navigator.
-     */
-    function loadTyping(bankProblem) {
-        var typingSurface = document.createElement('textarea');
-        typingSurface.className = 'sub-panel card-panel';
-        typingSurface.contentEditable = true;
-        document.getElementById('problemPanel').appendChild(typingSurface);
+    function saveData() {
+        originalMap = advancedEdit.getInput(currentProblem, editPanel, originalMap);
+        problemRenderer.saveData(currentProblem, function() {
+           CourseSketch.dataManager.updateBankProblem(currentProblem, function(argument) {
+               console.log(argument);
+           }, function(argument) {
+               console.log(argument);
+           }) ;
+        });
     }
 })();

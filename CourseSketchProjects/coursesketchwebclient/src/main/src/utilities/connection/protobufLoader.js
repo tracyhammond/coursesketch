@@ -548,7 +548,7 @@ function ProtobufSetup() {
      * Then the protubf would not correctly apply to this new object.
      *
      * @param {ProtobufObject} protobuf - An object that we want to "clean".
-     * @param {ProtobufMessage} protobufType - A class representing the object we want to "clean".
+     * @param {ProtobufMessage|String} protobufType - A class representing the object we want to "clean".
      * @returns {ProtobufObject} A clean version of the object we sent in.
      */
     this.cleanProtobuf = function(protobuf, protobufType) {

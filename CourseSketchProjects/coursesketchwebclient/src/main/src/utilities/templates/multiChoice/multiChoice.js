@@ -11,7 +11,7 @@ function MultiChoice() {
      * @param {Element} answer - the answer element to be removed
      */
     this.removeAnswer = function(event, answer) {
-        this.shadowRoot.querySelector('#answer-choices').removeChild(answer);
+        this.getAnswerHolderElement().removeChild(answer);
     };
 
     /**
@@ -91,8 +91,13 @@ function MultiChoice() {
         answer.appendChild(close);
 
         // Now that we are done creating the answer choice, add it
-        this.shadowRoot.querySelector('#answer-choices').appendChild(answer);
+        this.getAnswerHolderElement().appendChild(answer);
+        return answer;
     };
+
+    this.getAnswerHolderElement = function() {
+        return this.shadowRoot.querySelector('#answer-choices');
+    }
 
     /**
      * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
@@ -139,7 +144,7 @@ function MultiChoice() {
         this.id = this.command.commandId;
         var callback = this.getFinishedCallback();
         if (!isUndefined(callback)) {
-            callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
+            callback(this.command, event, this.currentUpdate, mcProto); // Gets finishedCallback and calls it with command as parameter
         }
         return mcProto;
     };
@@ -154,14 +159,15 @@ function MultiChoice() {
             return;
         }
         for (var i = 0; i < mcProto.answerChoices.length; ++i) {
-            this.addAnswer();
-            var newAnswerId = '' + (i + 1);
-            var answer = this.shadowRoot.getElementById(newAnswerId);
+            var answer = this.addAnswer();
             answer.id = mcProto.answerChoices[i].id;
             answer.querySelector('.label').value = mcProto.answerChoices[i].text;
         }
         this.correctId = mcProto.correctId;
-        this.shadowRoot.getElementById(this.correctId).querySelector('.correct').textContent = '✔';
+        if (!isUndefined(this.correctId) && this.correctId !== '' && this.correctId !== null) {
+            var result = this.getAnswerHolderElement().querySelectorAll('#' + this.correctId)[0];
+            result.querySelector('.correct').textContent = '✔';
+        }
     };
 
     /**
@@ -181,6 +187,6 @@ function MultiChoice() {
         this.finishedCallback = listener;
     };
 }
-MultiChoice.prototype = Object.create(HTMLDialogElement.prototype);
+MultiChoice.prototype = Object.create(HTMLElement.prototype);
 MultiChoice.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
 MultiChoice.prototype.createdCommand = undefined;

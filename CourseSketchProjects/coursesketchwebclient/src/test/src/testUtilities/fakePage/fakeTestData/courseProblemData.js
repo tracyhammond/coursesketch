@@ -34,6 +34,14 @@ validateFirstRun(document.currentScript);
     var bankProblem13 = CourseSketch.prutil.SrlBankProblem();
     var bankProblem14 = CourseSketch.prutil.SrlBankProblem();
 
+    var multipleChoiceAnswer1 = CourseSketch.prutil.AnswerChoice();
+    multipleChoiceAnswer1.id = 'A1';
+    multipleChoiceAnswer1.text = 'First question choice';
+
+    var multipleChoiceAnswer2 = CourseSketch.prutil.AnswerChoice();
+    multipleChoiceAnswer2.id = 'A2';
+    multipleChoiceAnswer2.text = 'Second question choice';
+
     problem1.courseId = '1';
     problem1.assignmentId = '000';
     problem1.id = '10';
@@ -89,6 +97,10 @@ validateFirstRun(document.currentScript);
     bankProblem3.id = problem3.id;
     bankProblem3.questionText = 'Please select the correct answer';
     bankProblem3.questionType = CourseSketch.prutil.QuestionType.MULT_CHOICE;
+    bankProblem3.specialQuestionData = CourseSketch.prutil.QuestionData();
+    bankProblem3.specialQuestionData.multipleChoice = CourseSketch.prutil.MultipleChoice();
+    bankProblem3.specialQuestionData.multipleChoice.answerChoices = [multipleChoiceAnswer1, multipleChoiceAnswer2];
+    bankProblem3.specialQuestionData.multipleChoice.correctId = 'A2';
     CourseSketch.fakeProblems.push(problem3);
     CourseSketch.fakeBankProblems.push(bankProblem3);
 

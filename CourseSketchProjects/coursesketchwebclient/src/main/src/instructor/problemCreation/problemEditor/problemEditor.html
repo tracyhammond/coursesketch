@@ -2,9 +2,6 @@
 <head>
     <link rel="stylesheet" href="/css/courseSketch2.css">
 
-    <!-- waiting stuff -->
-    <link rel="import" href="/src/utilities/templates/loading/loadingInclude.html">
-
     <!-- basic utilities -->
     <link rel="import" href="/src/utilities/defaultUtils.html">
     <script type="text/javascript" src="/src/utilities/functions/childScript.js"
@@ -13,20 +10,18 @@
     <!-- protobuf -->
     <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-    <!-- special elements -->
+    <!-- problem renderer -->
+    <link rel="import" href="/src/common/problem/renderer/problemRendererInclude.html">
 
+    <!-- special elements -->
     <!-- text box -->
     <link rel="import" href="/src/utilities/templates/textBox/textBoxInclude.html"/>
     <!-- question -->
     <link rel="import" href="/src/utilities/templates/question/questionInclude.html"/>
-    <!-- multi-choice -->
-    <link rel="import" href="/src/utilities/templates/multiChoice/multiChoiceInclude.html"/>
     <!-- image-box -->
     <link rel="import" href="/src/utilities/templates/imageBox/imageBoxInclude.html"/>
     <!-- embedded HTML -->
     <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html"/>
-    <!-- sketching -->
-    <link rel="import" href="/src/sketching/sketchInclude.html"/>
     <!-- resizing -->
     <link rel="import" href="/src/utilities/libraries/interact/interactInclude.html">
     <!-- allow for saving image -->
@@ -65,7 +60,7 @@
         </submit-panel>
         <div id="editPanel" class="editPanel col s3 purple lighten-3"
              style="z-index: 3; height:calc(100% - 66px); bottom:initial; padding: 5px;">
-            <button class="waves-effect waves-light btn">save question</button>
+            <button id="saveButton" class="waves-effect waves-light btn">save question</button>
             <div data-prop="questionText" class="need-loading need-saving">
                 <span>Edit Question Text</span>
                 <textarea data-mutator="questionText" class="data"></textarea>
