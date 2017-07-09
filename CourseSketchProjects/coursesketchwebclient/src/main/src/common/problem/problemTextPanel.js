@@ -32,7 +32,9 @@ function ProblemTextPanel() {
      * @function setNavigator
      */
     this.setProblemText = function(questionText) {
-        this.textBuffer = document.createElement('p');
+        if (isUndefined(this.textBuffer)) {
+            this.textBuffer = document.createElement('p');
+        }
         this.textBuffer.id = 'mathBuffer';
         this.textBuffer.style.display = 'none';
         document.body.appendChild(this.textBuffer);
@@ -43,6 +45,39 @@ function ProblemTextPanel() {
         MathJax.Hub.Queue(
             [ 'Typeset', MathJax.Hub, textBuffer ], [ 'swapBuffer', this ]
         );
+    };
+
+    /**
+     * Sets the question text if one it exists.
+     *
+     * adds a delay after setting the text once before it will set it again.
+     * @param questionText
+     */
+    this.setRapidProblemText = function(questionText) {
+        if (this.ableToSet) {
+            this.setProblemText(questionText);
+            this.ableToSet = false;
+            this.createSetTimeout();
+        } else {
+            this.createSetTimeout(questionText);
+        }
+    };
+
+    this.createSetTimeout = function(questionText) {
+        var localScope = this;
+      if (!isUndefined(this.ableToSetTimeout))  {
+          clearTimeout(this.ableToSetTimeout);
+          this.ableToSetTimeout = undefined;
+          this.createSetTimeout(questionText);
+      } else {
+          this.ableToSetTimeout = setTimeout(function() {
+              localScope.ableToSet = true;
+              localScope.ableToSetTimeout = undefined;
+              if (!isUndefined(questionText)) {
+                  localScope.setRapidProblemText(questionText);
+              }
+          }, 300);
+      }
     };
 
     /**

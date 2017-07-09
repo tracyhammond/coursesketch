@@ -51,7 +51,7 @@ validateFirstRun(document.currentScript);
 
     mutators.questionText = function(element) {
         element.oninput = function(e) {
-            questionTextPanel.setProblemText(element.value);
+            questionTextPanel.setRapidProblemText(element.value);
         }
     };
 
