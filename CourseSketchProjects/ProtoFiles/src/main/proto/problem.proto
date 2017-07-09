@@ -65,6 +65,15 @@ message QuestionAction {
     optional LectureNavigator lectureNavigation = 1;
 }
 
+/**
+ * used for navigating different lectures or lecture subgroups
+ */
+message LectureNavigator {
+    optional string nextLectureId = 1;
+    optional int32 nextSlide = 2;
+    optional string nextLectureGroupId = 3;
+}
+
 message ProblemRestriction {
     // The next answer (or slide) can not be moved until the answer is correct.
     optional bool onlyUntilCorrect = 1;
@@ -80,8 +89,11 @@ message SrlBankProblem {
     // question data 6 - 14
     optional string script = 6; // a script string that is used for custom setups in experiments
 
-    // used for containing special information like images or embedded elements
-    optional ProblemElement specialQuestionData = 7;
+    // used for containing special information required for submitting the problem
+    optional QuestionData specialQuestionData = 7;
+
+    // used for containing special visual information. This is not required for submitting the problem.
+    optional LectureSlide specialVisualData = 8;
 
     // meta data 25 - 34
     optional string courseTopic = 25;
@@ -90,15 +102,17 @@ message SrlBankProblem {
     repeated string otherKeywords = 28;
 }
 
-message MultipleChoice {
-    repeated AnswerChoice answerChoices = 1;
-    // only shown to instructor
-    optional string correctId = 2;
-}
+/**
+ * Can not be solvable
+ */
+message LectureSlide {
+    // Ids
+    optional string id = 1;
+    optional string assignmentId = 2;
+    optional string courseProblemId = 3;
 
-message AnswerChoice {
-    required string id = 1;
-    optional string text = 2;
+    // The elements that are displayed for each slide
+    repeated ProblemElement elements = 4;
 }
 
 message ProblemElement {
@@ -112,9 +126,46 @@ message ProblemElement {
     oneof ElementType {
         protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
         Image image = 8;
-        SketchArea sketchArea = 9;
-        EmbeddedHtml embeddedHtml = 11;
+        SketchArea sketchArea = 9; // Read only
+        EmbeddedHtml embeddedHtml = 10;
     }
+}
+
+message QuestionData {
+    oneof ElementType {
+        SketchArea sketchArea = 1;
+        FreeResponse freeResponse = 2;
+        MultipleChoice multipleChoice = 3;
+        CheckBox checkBox = 4;
+        // for external problem solvings
+        EmbeddedHtml embeddedHtml = 5;
+    }
+}
+
+message SketchArea {
+    //srlSketch object if proto include works
+    optional protobuf.srl.commands.SrlUpdateList recordedSketch = 10;
+}
+
+message FreeResponse {
+    optional string startingText = 1;
+}
+
+message MultipleChoice {
+    repeated AnswerChoice answerChoices = 1;
+    // only shown to instructor
+    optional string correctId = 2;
+}
+
+message CheckBox {
+    repeated AnswerChoice answerChoices = 1;
+    // only shown to instructor
+    repeated string correctId = 2;
+}
+
+message AnswerChoice {
+    required string id = 1;
+    optional string text = 2;
 }
 
 message EmbeddedHtml {
@@ -124,31 +175,4 @@ message EmbeddedHtml {
 message Image {
     optional string src = 8;
     optional float orientation = 9;
-}
-
-message SketchArea {
-    //srlSketch object if proto include works
-    optional protobuf.srl.commands.SrlUpdateList recordedSketch = 10;
-}
-
-/**
- * Can not be solvable
- */
-message LectureSlide {
-    // Ids
-    required string id = 1;
-    required string assignmentId = 2;
-    required string courseProblemId = 3;
-
-    // The elements that are displayed for each slide
-    repeated ProblemElement elements = 4;
-}
-
-/**
- * used for navigating different lectures or lecture subgroups
- */
-message LectureNavigator {
-    optional string nextLectureId = 1;
-    optional int32 nextSlide = 2;
-    optional string nextLectureGroupId = 3;
 }
