@@ -75,6 +75,7 @@
 
         QUnit.module("simple Data Checks", {
             beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
                 this.advanceEdit = new CourseSketch.AdvanceEditPanel();
                 this.fakeSchoolItem = createSchoolElement();
                 this.host = createList(this.advanceEdit, this.fakeSchoolItem, 'Assignment');
@@ -212,6 +213,7 @@
 
         QUnit.module("simple Assignment", {
             beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
                 this.schoolItemProto = CourseSketch.prutil.SrlAssignment();
 
                 // Date
@@ -353,6 +355,7 @@
 
         QUnit.module("complex Assignment", {
             beforeEach: function () {
+                CourseSketch.AdvanceEditPanel.prototype.getAdvanceEditPanel = getAdvanceEditPanel;
                 this.schoolItemProto = CourseSketch.prutil.SrlAssignment();
 
                 this.schoolItemProto.latePolicy = CourseSketch.prutil.LatePolicy();

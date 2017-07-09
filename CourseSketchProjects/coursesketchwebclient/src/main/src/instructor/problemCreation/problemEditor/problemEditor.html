@@ -32,10 +32,13 @@
     <!-- allow for saving image -->
     <link rel="import" href='/src/utilities/functions/image.js'/>
 
+    <link rel="stylesheet" href='/src/instructor/problemCreation/problemEditor/problemEditor.css'/>
+
     <!-- experiment specific -->
     <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
     <link rel="import" href="/src/common/submission/submissionInclude.html">
     <link rel="import" href="/src/common/problem/problemTextPanelInclude.html">
+    <link rel="import" href="/src/instructor/advancedCreation/advancedEditInclude.html">
 
     <script type="text/javascript" src="/bower_components/jailed/lib/jailed.js"></script>
     <script type="text/javascript" src="/src/common/scriptExecution/scriptExecutor.js"></script>
@@ -56,10 +59,35 @@
             </div>
         </nav>
     </header>
-    <main>
-        <submit-panel id="problemPanel" class="col s12 cyan lighten-5">
+    <main style="position:relative;">
+        <submit-panel id="problemPanel" class="col s12 cyan lighten-5" style="height:calc(100% - 70px);">
             <problem-tool-bar></problem-tool-bar>
         </submit-panel>
+        <div id="editPanel" class="editPanel fixed-action-btn"
+             style="position: absolute; z-index: 3; top:64px; height:calc(100% - 70px); bottom:initial;">
+            <div data-prop="questionText" class="need-loading need-saving">
+                <span>Edit Question Text</span>
+                <textarea data-mutator="questionText" class="data"></textarea>
+            </div>
+            <div data-prop="questionType" class="need-loading need-saving">
+                <span>Question Type</span>
+                <select data-mutator="questionType" class="data">
+                    <option value=1>Sketch</option>
+                    <option value=2>Multiple Choice</option>
+                    <option value=3>Free response</option>
+                    <option value=4>Check box</option>
+                </select>
+            </div>
+            <button data-prop="solutionId" data-actionProp="solutionId" data-action="createSolution"
+                    class="need-loading need-action need-loading waves-effect waves-light btn">
+                Create Solution
+                <span data-hidden class="data"></span>
+            </button>
+            <div data-prop="script" class="need-loading need-saving">
+                <span>Edit A script run on loading the question</span>
+                <textarea class="data"></textarea>
+            </div>
+        </div>
     </main>
 </div>
 </body>

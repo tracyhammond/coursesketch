@@ -9,7 +9,7 @@
     "stacktrace-js": "0.6.4",
     "materialize": "0.99.0",
     "dialog-polyfill": "0.4.2",
-    "MathJax": "2.5.3",
+    "MathJax": "2.7.1",
     "paper": "v0.11.4",
     "protobufjs": "dcodeIO/protobuf.js#5.0.1",
     "jailed": "0.3.1",

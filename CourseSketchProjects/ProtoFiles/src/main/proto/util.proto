@@ -32,10 +32,10 @@ message SrlChecksum {
  * (This should only be what is currently supported)
  */
 enum QuestionType {
-    SKETCH = 1; // sketching
-    MULT_CHOICE = 2;
-    FREE_RESP = 3; // typing
-    CHECK_BOX = 4;
+    SKETCH = 0; // sketching
+    MULT_CHOICE = 1;
+    FREE_RESP = 2; // typing
+    CHECK_BOX = 3;
 }
 
 /**

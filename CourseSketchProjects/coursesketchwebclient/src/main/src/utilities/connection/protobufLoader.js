@@ -92,7 +92,7 @@ function ProtobufSetup() {
             if (isUndefined(builder) || builder === null) {
                 console.log('can not create builder for file: ', protobufDirectory + protoObject.fileName + '.proto');
             }
-            if (isUndefined(commondBuilder)) {
+            if (isUndefined(commondBuilder) || commondBuilder === null) {
                 commondBuilder = builder;
             }
         }

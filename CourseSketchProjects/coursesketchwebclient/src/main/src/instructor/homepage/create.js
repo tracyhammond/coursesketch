@@ -22,7 +22,7 @@ validateFirstRun(document.currentScript);
             CourseSketch.dataManager.addState('partIndex', index);
             CourseSketch.dataManager.addState('courseProblemId', buttonElement.querySelector('.data.id').textContent);
             CourseSketch.dataManager.addState('bankProblem', bankProblem);
-            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ');
+            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/problemEditor.html', 'Editing Problem ');
         } else {
             alert('This problem is not editable by you.');
         }

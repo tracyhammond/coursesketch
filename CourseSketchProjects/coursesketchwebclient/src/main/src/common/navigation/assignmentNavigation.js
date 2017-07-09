@@ -265,7 +265,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
                 var index = currentAssignment.problemGroups.findIndex(function(element) {
                     return element === courseProblemId;
                 });
-                local.resetNavigation(courseProblem.assignmentId, index, partIndex);
+                localScope.resetNavigation(courseProblem.assignmentId, index, partIndex);
             }, true);
         }, undefined);
     };
