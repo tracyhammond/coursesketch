@@ -1,21 +1,21 @@
 <html>
 <head>
-<meta charset="utf-8">
-<title>Ins Home page</title>
+    <meta charset="utf-8">
+    <title>Ins Home page</title>
 
     <!-- files needed for testing -->
-    <link rel="import" href="/src/instructor/homepage/homePage.html" data-fake>
+    <link rel="import" href="/src/instructor/problemCreation/problemEditor/problemEditor.html" data-fake>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html">
     <link rel="import"
           href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
     <script src="/test/testUtilities/databaseHelper.js"></script>
 
-<script>
-    $(document).ready(function() {
-        CourseSketch.connection.isInstructor = true;
-    });
-</script>
+    <script>
+        $(document).ready(function() {
+            CourseSketch.connection.isInstructor = true;
+        });
+    </script>
 </head>
 <body>
 </body>
