@@ -128,7 +128,7 @@ message Image {
 
 message SketchArea {
     //srlSketch object if proto include works
-    optional protobuf.srl.commands.SrlUpdateList recorededSketch = 10;
+    optional protobuf.srl.commands.SrlUpdateList recordedSketch = 10;
 }
 
 /**

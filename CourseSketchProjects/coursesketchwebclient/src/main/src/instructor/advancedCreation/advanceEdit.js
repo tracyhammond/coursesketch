@@ -501,6 +501,11 @@ CourseSketch.AdvanceEditPanel = function() {
         return destinationObject;
     }
 
+    function setActions(externalActions) {
+        actionFunctions = addActions(addActions({}, actions), externalActions);
+    }
+    this.setActions = setActions;
+
     /**
      * Sets up the advance edit panel for editing advance data.
      *
@@ -513,8 +518,8 @@ CourseSketch.AdvanceEditPanel = function() {
 
     this.createAdvanceEditPanel = function(localElement, parentNode,
                                            saveCallback, closeCallback, externalActions) {
-        actionFunctions = addActions(addActions({}, actions), externalActions);
 
+        setActions(externalActions);
         // create host and position it
         var currentData;
 

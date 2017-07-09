@@ -1,3 +1,7 @@
 *[data-prop] {
     margin-bottom: 10px;
 }
+
+*[data-hidden] {
+    display: none;
+}
