@@ -206,17 +206,6 @@ CourseSketch.AdvanceEditPanel = function() {
         return bankProblem;
     };
 
-    actions.editProblem = function(bankProblem, buttonElement) {
-        var textContent = buttonElement.querySelector('.data').textContent;
-        var isUnlocked = (textContent === 'true');
-        if (isUnlocked) {
-            CourseSketch.dataManager.addState('bankProblem', bankProblem);
-            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ');
-        } else {
-            alert('This problem is not editable by you.');
-        }
-    };
-
     actions.createPart = function(srlProblem, buttonElement, property) {
         var buttonParent = buttonElement.parentNode;
         var elementsToRemove = buttonParent.querySelectorAll('[data-list-item]');
@@ -434,6 +423,7 @@ CourseSketch.AdvanceEditPanel = function() {
             }
         };
     }
+    var getAdvanceEditPanel = this.getAdvanceEditPanel;
 
     function createAdvanceEditPanelElements(localElement, parentNode) {
         var host = document.createElement('div');
@@ -443,7 +433,7 @@ CourseSketch.AdvanceEditPanel = function() {
 
         // add html to host
         var shadow = host.createShadowRoot();
-        var clone = localElement.getAdvanceEditPanel();
+        var clone = getAdvanceEditPanel();
         clone = combineLists(clone, localElement);
         shadow.appendChild(clone);
         localElement.advanceEditPanel = host;
@@ -571,10 +561,6 @@ CourseSketch.AdvanceEditPanel = function() {
         return host;
     };
 
-    if (!isUndefined(SchoolItem)) {
-        SchoolItem.prototype.createAdvanceEditPanel = createAdvanceEditPanel;
-    }
-
     /**
      *
      * @param {Element} clone
@@ -603,7 +589,7 @@ CourseSketch.AdvanceEditPanel = function() {
          */
         scriptButton.onclick = function() {
             var data = getInput(shadow);
-            location.href = '/src/instructor/problemCreation/scriptEditor/scriptEditor.html';
+            location.href = '/instructor/problemCreation/scriptEditor/scriptEditor.html';
         };
     }
 };

@@ -3,14 +3,25 @@ validateFirstRun(document.currentScript);
 (function() {
     var courseManagement = CourseSketch.courseManagement;
 
-    courseManagement.advancedEditPanel = new CourseSketch.AdvanceEditPanel();
+    courseManagement.advancedEditPanel = undefined;
 
-    var actions = {};
+    courseManagement.actions = {};
 
-    actions.createPart = function(srlProblem, buttonElement, property, callback) {
+    courseManagement.actions.createPart = function(srlProblem, buttonElement, property, callback) {
         courseManagement.addNewSubGroup(function(updatedProblem, subGroup) {
             callback(updatedProblem, buttonElement, property);
         }, srlProblem);
+    };
+
+    courseManagement.actions.editProblem = function(bankProblem, buttonElement) {
+        var textContent = buttonElement.querySelector('.data').textContent;
+        var isUnlocked = (textContent === 'true');
+        if (isUnlocked) {
+            CourseSketch.dataManager.addState('bankProblem', bankProblem);
+            CourseSketch.redirectContent('/src/instructor/problemCreation/problemEditor/editor.html', 'Editing Problem ');
+        } else {
+            alert('This problem is not editable by you.');
+        }
     };
 
     /**
@@ -353,9 +364,12 @@ validateFirstRun(document.currentScript);
     }
 
     function createAdvancedEditCard(element, saveCallback) {
+        if (isUndefined(courseManagement.advancedEditPanel)) {
+            courseManagement.advancedEditPanel = new CourseSketch.AdvanceEditPanel();
+        }
         var childElement = courseManagement.advancedEditPanel.createAdvanceEditPanel(element,
             document.querySelectorAll('#advancedEditHolder')[0],
-            saveCallback, destroyAdvancedEditCard, actions);
+            saveCallback, destroyAdvancedEditCard, courseManagement.actions);
         $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
                 dismissible: true, // Modal can be dismissed by clicking outside of the modal
                 opacity: 0.5, // Opacity of modal background
