@@ -13,7 +13,7 @@ import org.bson.Document;
 import org.bson.types.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.school.Problem;
+import protobuf.srl.question.QuestionDataOuterClass;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
@@ -100,7 +100,7 @@ public final class BankProblemManager {
      * @param specialQuestionData an element that belongs on a problem
      * @return a Document of the element
      */
-    private static Document createQueryFromElement(final Problem.QuestionData specialQuestionData) {
+    private static Document createQueryFromElement(final QuestionDataOuterClass.QuestionData specialQuestionData) {
         final Document query = new Document();
         int type = specialQuestionData.getElementTypeCase().getNumber();
         switch (specialQuestionData.getElementTypeCase()) {
@@ -208,31 +208,31 @@ public final class BankProblemManager {
      * @return a Problem.ProblemElement of the Document that was passed in
      * @throws database.DatabaseAccessException a DatabaseAccessException if something goes wrong parsing a blob of a LectureElement
      */
-    static Problem.QuestionData createElementFromQuery(final Document query) throws DatabaseAccessException {
-        final Problem.QuestionData.Builder element = Problem.QuestionData.newBuilder();
+    static QuestionDataOuterClass.QuestionData createElementFromQuery(final Document query) throws DatabaseAccessException {
+        final QuestionDataOuterClass.QuestionData.Builder element = QuestionDataOuterClass.QuestionData.newBuilder();
         final int type = (int) query.get(SLIDE_BLOB_TYPE);
         if (type == -1) {
             return element.build();
         }
-        final Problem.QuestionData.ElementTypeCase blobType =
-                Problem.QuestionData.ElementTypeCase.valueOf(type);
+        final QuestionDataOuterClass.QuestionData.ElementTypeCase blobType =
+                QuestionDataOuterClass.QuestionData.ElementTypeCase.valueOf(type);
         final byte[] blob = ((Binary) query.get(SLIDE_BLOB)).getData();
         try {
             switch (blobType) {
                 case MULTIPLECHOICE:
-                    element.setMultipleChoice(Problem.MultipleChoice.parseFrom(blob));
+                    element.setMultipleChoice(QuestionDataOuterClass.MultipleChoice.parseFrom(blob));
                     break;
                 case CHECKBOX:
-                    element.setCheckBox(Problem.CheckBox.parseFrom(blob));
+                    element.setCheckBox(QuestionDataOuterClass.CheckBox.parseFrom(blob));
                     break;
                 case FREERESPONSE:
-                    element.setFreeResponse(Problem.FreeResponse.parseFrom(blob));
+                    element.setFreeResponse(QuestionDataOuterClass.FreeResponse.parseFrom(blob));
                     break;
                 case SKETCHAREA:
-                    element.setSketchArea(Problem.SketchArea.parseFrom(blob));
+                    element.setSketchArea(QuestionDataOuterClass.SketchArea.parseFrom(blob));
                     break;
                 case EMBEDDEDHTML:
-                    element.setEmbeddedHtml(Problem.EmbeddedHtml.parseFrom(blob));
+                    element.setEmbeddedHtml(QuestionDataOuterClass.EmbeddedHtml.parseFrom(blob));
                     break;
                 default:
                     break;

@@ -10,6 +10,7 @@ import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
 import org.bson.Document;
 import org.bson.types.Binary;
+import protobuf.srl.question.QuestionDataOuterClass;
 import protobuf.srl.school.Problem;
 import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.services.authentication.Authentication;
@@ -273,10 +274,10 @@ public final class SlideManager {
                     element.setImage(Problem.Image.parseFrom(blob));
                     break;
                 case SKETCHAREA:
-                    element.setSketchArea(Problem.SketchArea.parseFrom(blob));
+                    element.setSketchArea(QuestionDataOuterClass.SketchArea.parseFrom(blob));
                     break;
                 case EMBEDDEDHTML:
-                    element.setEmbeddedHtml(Problem.EmbeddedHtml.parseFrom(blob));
+                    element.setEmbeddedHtml(QuestionDataOuterClass.EmbeddedHtml.parseFrom(blob));
                     break;
                 default:
                     break;
