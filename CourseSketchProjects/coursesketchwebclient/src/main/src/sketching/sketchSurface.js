@@ -59,6 +59,10 @@ function SketchSurface() {
         this.errorListener = error;
     };
 
+    this.isInitialized = function() {
+        return this.initialized === true;
+    };
+
     /**
      * @returns {SRL_Sketch} The sketch object used by this sketch surface.
      */
@@ -302,5 +306,5 @@ SketchSurface.prototype.initializeSurface = function(InputListenerClass, UpdateM
         this.resizeSurface();
     }.bind(this));
 
-
+    this.initialized = true;
 };

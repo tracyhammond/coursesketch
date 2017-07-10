@@ -460,6 +460,11 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
         loadSubpartData = loadSubpart;
     };
 
+    /**
+     * Sets type of navigation.  If true then the navigation will ignore subparts.
+     * If false then navigation will happen at the lowest level
+     * @param {Boolean} subgroupNavigation - The type of navigation to happen.
+     */
     this.setSubgroupNavigation = function(subgroupNavigation) {
         isSubgroupNavigation = subgroupNavigation;
     };

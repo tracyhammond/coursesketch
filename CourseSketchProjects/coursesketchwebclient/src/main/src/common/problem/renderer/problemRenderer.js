@@ -1,6 +1,24 @@
 validateFirstRun(document.currentScript);
 
 /**
+ * @constructor ProblemRenderException
+ * @extends BaseException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} [cause] - The cause of the exception.
+ */
+function ProblemRenderException(message, cause) {
+    this.name = 'ProblemRenderException';
+    this.setMessage(message);
+    this.message = '';
+    this.setCause(cause);
+    this.createStackTrace();
+}
+
+ProblemRenderException.prototype = new BaseException();
+
+
+/**
  * Renders problem data given a bank problem.
  *
  * @constructor ProblemRenderer
@@ -11,11 +29,16 @@ function ProblemRenderer(problemPanel) {
     var currentSaveListener;
     var currentType;
     var specialQuestionData;
+    var startWaiting;
+    var finishWaiting;
+    var isRunning;
 
     /**
      * Resets the data in the renderer to its initial value.
      */
     this.reset = function() {
+        startWaiting;
+        finishWaiting;
         currentType = undefined;
         specialQuestionData = undefined;
         currentSaveListener = undefined;
@@ -44,6 +67,21 @@ function ProblemRenderer(problemPanel) {
         specialQuestionData = pojo;
     }
 
+    function setupWaiting(callback) {
+        var internalCallback = callback;
+        if (!isUndefined(isRunning) && isRunning) {
+            return internalCallback;
+        }
+        if (!isUndefined(startWaiting) && !isUndefined(finishWaiting)) {
+            startWaiting();
+            internalCallback = function() {
+                finishWaiting();
+                callback();
+            }
+        }
+        return internalCallback;
+    }
+
     /**
      * Renders the bank problem.
      *
@@ -52,21 +90,53 @@ function ProblemRenderer(problemPanel) {
      */
     this.renderBankProblem = function(bankProblem, callback) {
         copyQuestionData(bankProblem);
-        loadSpecificType(bankProblem, callback);
+        var internalCallback = setupWaiting(callback);
+        loadSpecificType(bankProblem, internalCallback);
     };
 
     /**
-     * Renders the bank problem.
+     * Renders the submission.
      *
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      * @param {Submission} submission - The student submission data.
      * @param {Function} callback - Called after the data is rendered.
      */
     this.renderSubmission = function(bankProblem, submission, callback) {
-        this.renderBankProblem(bankProblem, function() {
-            callback();
-        });
+        if (isUndefined(submission)) {
+            throw new ProblemRenderException('Can not render and undefined submission');
+        }
+        var internalCallback = setupWaiting(callback);
+
+        if (isUndefined(specialQuestionData)) {
+            this.renderBankProblem(bankProblem, function() {
+                renderSubmission(submission, internalCallback);
+            });
+        } else {
+            renderSubmission(submission, internalCallback);
+        }
     };
+
+    function renderSubmission(submission, callback) {
+        var submissionData = submission.submissionData;
+        if (isUndefined(submissionData) || submissionData === null) {
+            callback();
+            return;
+        }
+        renderSubmissionSpecificType(submissionData, callback);
+    }
+
+    function renderSubmissionSpecificType(submission, callback) {
+        if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
+            loadIntoSketchSurface(submission.sketchArea, problemPanel.querySelector('sketch-surface'), callback);
+        } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
+            loadIntoTyping(submission.freeResponse, problemPanel.querySelector('textArea'), callback);
+        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
+            loadIntoMultipleChoice(submission.multipleChoice, problemPanel.querySelector('multi-choice'), true, callback);
+        } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
+            throw new ProblemRenderException('Checkbox is not supported');
+        }
+
+    }
 
     /**
      * Loads the data for the {@link QuestionType}.
@@ -75,7 +145,7 @@ function ProblemRenderer(problemPanel) {
      * @param {Function} callback - Called after the data is rendered.
      */
     function loadSpecificType(bankProblem, callback) {
-        problemPanel.innerHTML = '';
+        problemPanel.emptyPanel();
         var type = bankProblem.questionType;
         currentType = type;
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
@@ -88,27 +158,20 @@ function ProblemRenderer(problemPanel) {
             loadCheckBox(callback);
         }
     }
+    
+    this.setStartWaitingFunction = function(startWaitingFunction) {
+        startWaiting = function() {
+            isRunning = true;
+            startWaitingFunction();
+        }
+    };
 
-    /**
-     * Ignored
-     */
-    function setupLoadingIcon() {
-        var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-        document.getElementById('percentBar').appendChild(element);
-        element.startWaiting();
-        var realWaiting = element.finishWaiting.bind(element);
-
-        /**
-         * Called when the sketch surface is done loading to remove the overlay.
-         */
-        element.finishWaiting = function() {
-            realWaiting();
-            sketchSurface.refreshSketch();
-            CourseSketch.studentExperiment.removeWaitOverlay();
-            sketchSurface = undefined;
-            element = undefined;
-        };
-    }
+    this.setFinishWaitingFunction = function(finishWaitingFunction) {
+        finishWaiting = function() {
+            isRunning = false;
+            finishWaitingFunction();
+        }
+    };
 
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
@@ -132,20 +195,23 @@ function ProblemRenderer(problemPanel) {
 
         var sketchArea = specialQuestionData.sketchArea;
 
-        if (isUndefined(sketchArea) || sketchArea === null || isUndefined(sketchArea.recordedSketch)) {
-            document.getElementById('problemPanel').appendChild(sketchSurface);
+        loadIntoSketchSurface(sketchArea, sketchSurface, callback);
+    }
+
+    function loadIntoSketchSurface(sketchArea, sketchSurface, callback) {
+        if (isUndefined(sketchArea) || sketchArea === null
+            || isUndefined(sketchArea.recordedSketch) || sketchArea.recordedSketch === null) {
+            if (!sketchSurface.isInitialized()) {
+                problemPanel.appendChild(sketchSurface);
+            }
             callback();
             return;
         }
-        // tell the surface not to create its own sketch.
-        sketchSurface.dataset.existinglist = '';
-
-        // adding here because of issues
-        problemPanel.appendChild(sketchSurface);
-
-        // add after attributes are set.
-
-        sketchSurface.refreshSketch();
+        if (!sketchSurface.isInitialized()) {
+            sketchSurface.dataset.existinglist = '';
+            problemPanel.appendChild(sketchSurface);
+            sketchSurface.refreshSketch();
+        }
 
         sketchSurface.loadUpdateList(sketchArea.recordedSketch.getList(), undefined, function() {
             callback();
@@ -176,6 +242,10 @@ function ProblemRenderer(problemPanel) {
             return;
         }
         var freeResponse = specialQuestionData.freeResponse;
+        loadIntoTyping(freeResponse, typingSurface, callback);
+    }
+    
+    function loadIntoTyping(freeResponse, typingSurface, callback) {
         if (!isUndefined(freeResponse) && freeResponse !== null && !isUndefined(freeResponse.startingText)) {
             typingSurface.value = freeResponse.startingText;
         }
@@ -192,19 +262,34 @@ function ProblemRenderer(problemPanel) {
         multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
         multiChoice.style.marginTop = '60px';
 
-
         problemPanel.appendChild(multiChoice);
 
         if (!hasValidQuestionData(specialQuestionData)) {
             callback();
             return;
         }
-        var multipleChoice = specialQuestionData.multipleChoice;
-        if (!isUndefined(multipleChoice) && multipleChoice !== null) {
-            multiChoice.loadData(multipleChoice);
-        } else {
-            // load in empty data
-            multiChoice.loadData(CourseSketch.prutil.MultipleChoice());
+        loadIntoMultipleChoice(specialQuestionData.multipleChoice, multiChoice, false, callback);
+    }
+
+    function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, callback) {
+        if (isSubmission) {
+            multiChoiceElement.turnOnStudentMode();
+        }
+        if (isUndefined(multipleChoice) || multipleChoice === null) {
+            if (!isSubmission) {
+                multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
+            }
+            callback();
+            return;
+        }
+        if (!isSubmission) {
+            multiChoiceElement.loadData(multipleChoice);
+            callback();
+            return;
+        }
+        var id = multipleChoice.correctId;
+        if (!isUndefined(id) && id !== null) {
+            multiChoiceElement.setSelected(id);
         }
         callback();
     }
@@ -215,11 +300,13 @@ function ProblemRenderer(problemPanel) {
      * @param {Function} callback - Called after data is loaded.
      */
     function loadCheckBox(callback) {
+        callback();
+        return;
+
         var question = document.createElement('question-element');
         var multiChoice = document.createElement('multi-choice');
         problemPanel.appendChild(question);
         question.addAnswerContent(multiChoice);
-        question.setFinishedListener(questionSaveListener);
 
         if (!hasValidQuestionData(specialQuestionData)) {
             callback();

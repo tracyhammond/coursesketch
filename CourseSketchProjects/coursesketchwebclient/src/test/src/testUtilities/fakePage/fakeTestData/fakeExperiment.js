@@ -1,6 +1,20 @@
 (function() {
     CourseSketch.fakeExperiments = [];
 
+    function createSubmissionFromSketch(updateList) {
+        var questionData = CourseSketch.prutil.QuestionData();
+        questionData.sketchArea = CourseSketch.prutil.SketchArea();
+        questionData.sketchArea.setRecordedSketch(updateList);
+        return questionData;
+    }
+
+    function createSubmissionFromText(textData) {
+        var questionData = CourseSketch.prutil.QuestionData();
+        questionData.freeResponse = CourseSketch.prutil.FreeResponse();
+        questionData.freeResponse.startingText = textData;
+        return questionData;
+    }
+
     /*
      * tansfering the sketches into submissions to be used to make experiments
      * for testing purposes
@@ -11,11 +25,11 @@
     var submission4 = CourseSketch.prutil.SrlSubmission();
     var submission5 = CourseSketch.prutil.SrlSubmission();
 
-    submission1.setUpdateList(CourseSketch.fakeSketches[0]);
-    submission2.setUpdateList(CourseSketch.fakeSketches[1]);
-    submission3.setUpdateList(CourseSketch.fakeSketches[2]);
-    submission4.textAnswer = 'This is a text answer I think I answered it correctly';
-    submission5.textAnswer = 'Here is a bad text answer I suck at answering questions';
+    submission1.setSubmissionData(createSubmissionFromSketch(CourseSketch.fakeSketches[0]));
+    submission2.setSubmissionData(createSubmissionFromSketch(CourseSketch.fakeSketches[1]));
+    submission3.setSubmissionData(createSubmissionFromSketch(CourseSketch.fakeSketches[2]));
+    submission4.setSubmissionData(createSubmissionFromText('This is a text answer I think I answered it correctly'));
+    submission5.setSubmissionData(createSubmissionFromText('Here is a bad text answer I suck at answering questions'));
   //  submission4.setUpdateList(CourseSketch.fakeSketches[3]);
   //  submission5.setUpdateList(CourseSketch.fakeSketches[4]);
 

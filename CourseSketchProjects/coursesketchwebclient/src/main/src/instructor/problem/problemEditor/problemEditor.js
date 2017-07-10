@@ -21,6 +21,8 @@ validateFirstRun(document.currentScript);
             var addCallback = isUndefined(panel.dataset.callbackset);
 
             problemRenderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
+            problemRenderer.setStartWaitingFunction(startWaiting);
+            problemRenderer.setFinishWaitingFunction(finishWaiting);
 
             if (!isUndefined(bankProblem)) {
                 loadBankProblem(bankProblem);
@@ -59,7 +61,9 @@ validateFirstRun(document.currentScript);
         element.onchange = function() {
             problemRenderer.stashData(function() {
                 currentProblem.questionType = advancedEdit.getDataFromElement(element, undefined, 'questionType', undefined);
-                loadSpecificType(currentProblem);
+                problemRenderer.renderBankProblem(currentProblem, function() {
+                    console.log(' rendering is finished');
+                });
             });
         };
     };
@@ -89,6 +93,8 @@ validateFirstRun(document.currentScript);
     function loadProblem(navigator) {
         var bankProblem = navigator.getCurrentInfo();
         problemRenderer.reset();
+        problemRenderer.setStartWaitingFunction(startWaiting);
+        problemRenderer.setFinishWaitingFunction(finishWaiting);
         currentProblem = bankProblem;
         loadBankProblem(bankProblem);
     }
@@ -120,4 +126,45 @@ validateFirstRun(document.currentScript);
             }) ;
         });
     }
+
+    function startWaiting() {
+        document.getElementById('percentBar').innerHTML = '';
+        waitingElement = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
+        CourseSketch.problemEditor.addWaitOverlay();
+        document.getElementById('percentBar').appendChild(waitingElement);
+        waitingElement.startWaiting();
+        var realWaiting = waitingElement.finishWaiting.bind(waitingElement);
+
+        /**
+         * Called when the sketch surface is done loading to remove the overlay.
+         */
+        waitingElement.finishWaiting = function() {
+            realWaiting();
+            CourseSketch.problemEditor.removeWaitOverlay();
+        };
+    }
+
+    function finishWaiting() {
+        if (!isUndefined(waitingElement) && waitingElement.isRunning()) {
+            waitingElement.finishWaiting();
+            CourseSketch.problemEditor.removeWaitOverlay();
+        }
+    }
+
+    /**
+     * Adds a wait overlay, preventing the user from interacting with the page until it is removed.
+     */
+    CourseSketch.problemEditor.addWaitOverlay = function() {
+        CourseSketch.problemEditor.waitScreenManager.buildOverlay(document.querySelector('body'));
+        CourseSketch.problemEditor.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
+    };
+
+    /**
+     * Removes the wait overlay from the DOM if it exists.
+     */
+    CourseSketch.problemEditor.removeWaitOverlay = function() {
+        if (!isUndefined(document.getElementById('overlay')) && document.getElementById('overlay') !== null) {
+            document.querySelector('body').removeChild(document.getElementById('overlay'));
+        }
+    };
 })();

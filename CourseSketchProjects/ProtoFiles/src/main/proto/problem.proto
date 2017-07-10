@@ -1,6 +1,7 @@
 import "util.proto";
 import "tutorial.proto";
 import "commands.proto";
+import "questionData.proto";
 
 package protobuf.srl.school;
 
@@ -90,7 +91,7 @@ message SrlBankProblem {
     optional string script = 6; // a script string that is used for custom setups in experiments
 
     // used for containing special information required for submitting the problem
-    optional QuestionData specialQuestionData = 7;
+    optional protobuf.srl.question.QuestionData specialQuestionData = 7;
 
     // used for containing special visual information. This is not required for submitting the problem.
     optional LectureSlide specialVisualData = 8;
@@ -126,51 +127,11 @@ message ProblemElement {
     oneof ElementType {
         protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
         Image image = 8;
-        SketchArea sketchArea = 9; // Read only
-        EmbeddedHtml embeddedHtml = 10;
+        protobuf.srl.question.SketchArea sketchArea = 9; // Read only
+        protobuf.srl.question.EmbeddedHtml embeddedHtml = 10;
     }
 }
 
-message QuestionData {
-    oneof ElementType {
-        SketchArea sketchArea = 1;
-        FreeResponse freeResponse = 2;
-        MultipleChoice multipleChoice = 3;
-        CheckBox checkBox = 4;
-        // for external problem solvings
-        EmbeddedHtml embeddedHtml = 5;
-    }
-}
-
-message SketchArea {
-    //srlSketch object if proto include works
-    optional protobuf.srl.commands.SrlUpdateList recordedSketch = 10;
-}
-
-message FreeResponse {
-    optional string startingText = 1;
-}
-
-message MultipleChoice {
-    repeated AnswerChoice answerChoices = 1;
-    // only shown to instructor
-    optional string correctId = 2;
-}
-
-message CheckBox {
-    repeated AnswerChoice answerChoices = 1;
-    // only shown to instructor
-    repeated string correctId = 2;
-}
-
-message AnswerChoice {
-    required string id = 1;
-    optional string text = 2;
-}
-
-message EmbeddedHtml {
-    optional string embeddedHtml = 1;
-}
 
 message Image {
     optional string src = 8;

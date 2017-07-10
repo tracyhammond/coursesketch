@@ -72,6 +72,8 @@ function ProtobufSetup() {
             prefix: 'Proto' },
         { fileName: 'sketchUtil',
             package: [ PROTOBUF_PACKAGE, 'srl', 'utils' ] },
+        { fileName: 'questionData',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'question' ] },
         { fileName: 'submission',
             package: [ PROTOBUF_PACKAGE, 'srl', 'submission' ] },
         { fileName: 'util',
