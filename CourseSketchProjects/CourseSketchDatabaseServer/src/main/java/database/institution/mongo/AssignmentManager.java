@@ -528,7 +528,8 @@ public final class AssignmentManager {
      * @param assignment The assignment we are checking to see if it is publishable.
      * @return True if it is publishable.
      */
-    private static boolean isPublishable(SrlAssignment assignment) {
+    private static boolean isPublishable(final SrlAssignment assignment) {
+        LOG.debug("{}", assignment);
         return true;
     }
 
