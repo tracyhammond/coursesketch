@@ -127,6 +127,9 @@ validateFirstRun(document.currentScript);
         });
     }
 
+    /**
+     * Starts a waiting screen.
+     */
     function startWaiting() {
         document.getElementById('percentBar').innerHTML = '';
         waitingElement = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
@@ -144,6 +147,9 @@ validateFirstRun(document.currentScript);
         };
     }
 
+    /**
+     * Ends a waiting screen.
+     */
     function finishWaiting() {
         if (!isUndefined(waitingElement) && waitingElement.isRunning()) {
             waitingElement.finishWaiting();

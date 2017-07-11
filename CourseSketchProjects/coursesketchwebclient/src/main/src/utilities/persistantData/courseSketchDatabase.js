@@ -131,8 +131,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * @returns {Boolean} True if the item is valid.
      */
     this.isItemValid = function(item) {
-        return !(isUndefined(item.data) || item.data === null || item.data.length <= 0
-            || item.query === CourseSketch.prutil.ItemQuery.ERROR);
+        return !(isUndefined(item.data) || item.data === null || item.data.length <= 0 ||
+            item.query === CourseSketch.prutil.ItemQuery.ERROR);
     };
 
     /**
@@ -204,7 +204,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
                 item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE);
             } else {
                 var lastTime = result.data;
-                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE, [lastTime]);
+                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
             }
             advanceDataListener.sendDataRequest(item, updateListener);
         });

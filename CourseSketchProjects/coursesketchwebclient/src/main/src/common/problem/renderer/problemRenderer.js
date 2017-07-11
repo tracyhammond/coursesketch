@@ -32,13 +32,15 @@ function ProblemRenderer(problemPanel) {
     var startWaiting;
     var finishWaiting;
     var isRunning;
+    var isStudent;
 
     /**
      * Resets the data in the renderer to its initial value.
      */
     this.reset = function() {
-        startWaiting;
-        finishWaiting;
+        isStudent = undefined;
+        startWaiting = undefined;
+        finishWaiting = undefined;
         currentType = undefined;
         specialQuestionData = undefined;
         currentSaveListener = undefined;
@@ -68,6 +70,14 @@ function ProblemRenderer(problemPanel) {
         specialQuestionData = pojo;
     }
 
+    /**
+     * Initializes and starts the waiting function.
+     *
+     * @param {Function} callback - Called after rendering is finished
+     * @param {Boolean} [stopWaiting] - True if ending waiting should be forced.  False is it should not end waiting
+     *                                  Leave unset if it should behave normally.
+     * @returns {Function} A modified version of callback that ends waiting.
+     */
     function setupWaiting(callback, stopWaiting) {
         var internalCallback = callback;
         if (!isUndefined(isRunning) && isRunning && !(!isUndefined(stopWaiting) && stopWaiting)) {
@@ -82,10 +92,17 @@ function ProblemRenderer(problemPanel) {
                     finishWaiting();
                 }
                 callback();
-            }
+            };
         }
         return internalCallback;
     }
+
+    /**
+     * @param {Boolean} studentProblem True if what is being rendered should be treated as a student problem.
+     */
+    this.setIsStudentProblem = function(studentProblem) {
+        isStudent = studentProblem;
+    };
 
     /**
      * Renders the bank problem.
@@ -97,7 +114,7 @@ function ProblemRenderer(problemPanel) {
     this.renderBankProblem = function(bankProblem, callback, stopWaiting) {
         copyQuestionData(bankProblem);
         var internalCallback = setupWaiting(callback, stopWaiting);
-        loadSpecificType(specialQuestionData, internalCallback);
+        loadSpecificType(specialQuestionData, isStudent, internalCallback);
     };
 
     /**
@@ -122,23 +139,24 @@ function ProblemRenderer(problemPanel) {
         var internalCallback = setupWaiting(callback, stopWaiting);
 
         copyQuestionData(bankProblem);
-        loadSpecificType(submission.submissionData, internalCallback);
+        loadSpecificType(submission.submissionData, isStudent, internalCallback);
     };
 
     /**
      * Loads the data for the {@link QuestionType}.
      *
-     * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
+     * @param {QuestionData} questionData - The questionData that is being rendered.
+     * @param {Boolean} isSubmission - True if a submission is happening.
      * @param {Function} callback - Called after the data is rendered.
      */
-    function loadSpecificType(questionData, callback) {
+    function loadSpecificType(questionData, isSubmission, callback) {
         problemPanel.emptyPanel();
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
             loadSketch(questionData, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
             loadTyping(questionData, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadMultipleChoice(questionData, callback);
+            loadMultipleChoice(questionData, isSubmission, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
             loadCheckBox(questionData, callback);
         }
@@ -147,19 +165,19 @@ function ProblemRenderer(problemPanel) {
     this.startWaiting = function() {
         startWaiting();
     };
-    
+
     this.setStartWaitingFunction = function(startWaitingFunction) {
         startWaiting = function() {
             isRunning = true;
             startWaitingFunction();
-        }
+        };
     };
 
     this.setFinishWaitingFunction = function(finishWaitingFunction) {
         finishWaiting = function() {
             isRunning = false;
             finishWaitingFunction();
-        }
+        };
     };
 
     /**
@@ -188,9 +206,16 @@ function ProblemRenderer(problemPanel) {
         loadIntoSketchSurface(sketchArea, sketchSurface, callback);
     }
 
+    /**
+     * Loads data into the sketch surface.
+     *
+     * @param {SketchArea} sketchArea - The proto holding sketch data.
+     * @param {SketchSurface} sketchSurface - The element that gets loaded with data.
+     * @param {Function} callback - Called after the data is loaded.
+     */
     function loadIntoSketchSurface(sketchArea, sketchSurface, callback) {
-        if (isUndefined(sketchArea) || sketchArea === null
-            || isUndefined(sketchArea.recordedSketch) || sketchArea.recordedSketch === null) {
+        if (isUndefined(sketchArea) || sketchArea === null ||
+            isUndefined(sketchArea.recordedSketch) || sketchArea.recordedSketch === null) {
             if (!sketchSurface.isInitialized()) {
                 problemPanel.appendChild(sketchSurface);
             }
@@ -235,7 +260,14 @@ function ProblemRenderer(problemPanel) {
         var freeResponse = questionData.freeResponse;
         loadIntoTyping(freeResponse, typingSurface, callback);
     }
-    
+
+    /**
+     * Loads data into the text area.
+     *
+     * @param {FreeResponse} freeResponse - The proto holding the text data.
+     * @param {Element} typingSurface - The element that gets loaded with data.
+     * @param {Function} callback - Called after the data is loaded.
+     */
     function loadIntoTyping(freeResponse, typingSurface, callback) {
         if (!isUndefined(freeResponse) && freeResponse !== null && !isUndefined(freeResponse.startingText)) {
             typingSurface.value = freeResponse.startingText;
@@ -247,9 +279,10 @@ function ProblemRenderer(problemPanel) {
      * Loads the multiple choice from the {@link SrlBankProblem}
      *
      * @param {QuestionData} questionData - questionData
+     * @param {Boolean} isSubmission - True if a submission is happening.
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadMultipleChoice(questionData, callback) {
+    function loadMultipleChoice(questionData, isSubmission, callback) {
         var multiChoice = document.createElement('multi-choice');
         multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
         multiChoice.style.marginTop = '60px';
@@ -260,9 +293,17 @@ function ProblemRenderer(problemPanel) {
             callback();
             return;
         }
-        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, false, callback);
+        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, callback);
     }
 
+    /**
+     * Loads data into the text area.
+     *
+     * @param {MultipleChoice} multipleChoice - The proto holding the multiple choice data.
+     * @param {MultiChoice} multiChoiceElement - The element that gets loaded with data.
+     * @param {Boolean} isSubmission - True if a submission is happening.
+     * @param {Function} callback - Called after the data is loaded.
+     */
     function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, callback) {
         if (isSubmission) {
             multiChoiceElement.turnOnStudentMode();
@@ -289,12 +330,14 @@ function ProblemRenderer(problemPanel) {
     /**
      * Loads the checkbox from the {@link SrlBankProblem}
      *
+     * @param {QuestionData} questionData - questionData
      * @param {Function} callback - Called after data is loaded.
      */
     function loadCheckBox(questionData, callback) {
         callback();
-        return;
 
+        /*
+        return;
         var question = document.createElement('question-element');
         var multiChoice = document.createElement('multi-choice');
         problemPanel.appendChild(question);
@@ -312,6 +355,7 @@ function ProblemRenderer(problemPanel) {
             question.loadData(CourseSketch.prutil.CheckBox());
         }
         callback();
+        */
     }
 
     /**

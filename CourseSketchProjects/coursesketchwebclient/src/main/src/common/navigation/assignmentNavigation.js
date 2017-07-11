@@ -372,9 +372,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.getSubmissionIdentifier = function() {
         if (!isSubgroupNavigation) {
-            return [currentSubgroup.id, '' + currentSubgroupPartIndex];
+            return [ currentSubgroup.id, '' + currentSubgroupPartIndex ];
         }
-        return [currentSubgroup.id];
+        return [ currentSubgroup.id ];
     };
 
     /**

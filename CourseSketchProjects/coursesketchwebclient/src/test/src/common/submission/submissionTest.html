@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Command Methods test</title>
+    <title>Submission Panel Test</title>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
     <link rel="import"
@@ -212,7 +212,7 @@
             submission.problemType = CourseSketch.prutil.QuestionType.FREE_RESP;
 
             submission.wrapperFunction = function(submission) {
-                assert.equal(submission.textAnswer, textArea.value, "Text area value is set in submission");
+                assert.equal(submission.submissionData.freeResponse.startingText, textArea.value, "Text area value is set in submission");
                 return submission;
             };
             // actual test

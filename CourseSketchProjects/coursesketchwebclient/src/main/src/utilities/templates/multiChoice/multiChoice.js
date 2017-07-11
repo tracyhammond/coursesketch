@@ -176,6 +176,10 @@ function MultiChoice() {
         }
     };
 
+    this.turnOnStudentMode = function() {
+        console.log('do nothing');
+    };
+
     /**
      * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional

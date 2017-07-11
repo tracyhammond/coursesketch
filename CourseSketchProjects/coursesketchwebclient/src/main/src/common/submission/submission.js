@@ -197,7 +197,7 @@ function SubmissionPanel() {
 
         var MarkerType = CourseSketch.prutil.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
-        var markerUpdate = CourseSketch.prutil.createUpdateFromCommands([markerCommand]);
+        var markerUpdate = CourseSketch.prutil.createUpdateFromCommands([ markerCommand ]);
         updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
@@ -279,20 +279,20 @@ function SubmissionPanel() {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton('/images/toolbar/clear_button.svg', function() {
                 var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CLEAR, true);
-                var update = CourseSketch.prutil.createUpdateFromCommands([command]);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
             toolbar.appendChild(clearButton);
 
             toolbar.setUndoCallback(function() {
                 var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, true);
-                var update = CourseSketch.prutil.createUpdateFromCommands([command]);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
 
             toolbar.setRedoCallback(function() {
                 var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.REDO, true);
-                var update = CourseSketch.prutil.createUpdateFromCommands([command]);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {

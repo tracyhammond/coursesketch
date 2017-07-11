@@ -44,6 +44,7 @@ validateFirstRun(document.currentScript);
     function loadProblem(navigator) {
         var bankProblem = navigator.getCurrentInfo();
         problemRenderer.reset();
+        problemRenderer.setIsStudentProblem(true);
         problemRenderer.setStartWaitingFunction(startWaiting);
         problemRenderer.setFinishWaitingFunction(finishWaiting);
         currentProblem = bankProblem;
@@ -53,8 +54,8 @@ validateFirstRun(document.currentScript);
     /**
      * Loads a bank problem.
      *
-     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
      * @param {SrlBankProblem} bankProblem - The bank problem to load.
+     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
      */
     function loadBankProblem(bankProblem, navigator) {
         questionTextPanel.setRapidProblemText(bankProblem.getQuestionText());
@@ -70,6 +71,13 @@ validateFirstRun(document.currentScript);
         });
     }
 
+    /**
+     * Sets data in the submission panel.
+     *
+     * @param {SubmissionPanel} submissionPanel - The element that has submission data.
+     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
+     * @param {QuestionType} questionType - The type of question on this panel.
+     */
     function setupSubmissionPanel(submissionPanel, navigator, questionType) {
         submissionPanel.problemIndex = navigator.getCurrentNumber();
         submissionPanel.setProblemType(questionType);
@@ -86,6 +94,9 @@ validateFirstRun(document.currentScript);
         });
     }
 
+    /**
+     * Starts a waiting screen.
+     */
     function startWaiting() {
         document.getElementById('percentBar').innerHTML = '';
         waitingElement = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
@@ -103,6 +114,9 @@ validateFirstRun(document.currentScript);
         };
     }
 
+    /**
+     * Ends a waiting screen.
+     */
     function finishWaiting() {
         if (!isUndefined(waitingElement) && waitingElement.isRunning()) {
             waitingElement.finishWaiting();
