@@ -50,6 +50,7 @@ function ProblemRenderer(problemPanel) {
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      */
     function copyQuestionData(bankProblem) {
+        currentType = bankProblem.questionType;
         if (!isUndefined(specialQuestionData)) {
             return;
         }
@@ -67,15 +68,19 @@ function ProblemRenderer(problemPanel) {
         specialQuestionData = pojo;
     }
 
-    function setupWaiting(callback) {
+    function setupWaiting(callback, stopWaiting) {
         var internalCallback = callback;
-        if (!isUndefined(isRunning) && isRunning) {
+        if (!isUndefined(isRunning) && isRunning && !(!isUndefined(stopWaiting) && stopWaiting)) {
             return internalCallback;
         }
         if (!isUndefined(startWaiting) && !isUndefined(finishWaiting)) {
-            startWaiting();
+            if (!(!isUndefined(isRunning) && isRunning)) {
+                startWaiting();
+            }
             internalCallback = function() {
-                finishWaiting();
+                if ((!isUndefined(stopWaiting) && stopWaiting) || isUndefined(stopWaiting)) {
+                    finishWaiting();
+                }
                 callback();
             }
         }
@@ -87,56 +92,38 @@ function ProblemRenderer(problemPanel) {
      *
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      * @param {Function} callback - Called after the data is rendered.
+     * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
      */
-    this.renderBankProblem = function(bankProblem, callback) {
+    this.renderBankProblem = function(bankProblem, callback, stopWaiting) {
         copyQuestionData(bankProblem);
-        var internalCallback = setupWaiting(callback);
-        loadSpecificType(bankProblem, internalCallback);
+        var internalCallback = setupWaiting(callback, stopWaiting);
+        loadSpecificType(specialQuestionData, internalCallback);
     };
 
     /**
      * Renders the submission.
      *
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
-     * @param {Submission} submission - The student submission data.
+     * @param {SrlSubmission} submission - The student submission data.
      * @param {Function} callback - Called after the data is rendered.
+     * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
      */
-    this.renderSubmission = function(bankProblem, submission, callback) {
+    this.renderSubmission = function(bankProblem, submission, callback, stopWaiting) {
         if (isUndefined(submission)) {
-            throw new ProblemRenderException('Can not render and undefined submission');
-        }
-        var internalCallback = setupWaiting(callback);
-
-        if (isUndefined(specialQuestionData)) {
-            this.renderBankProblem(bankProblem, function() {
-                renderSubmission(submission, internalCallback);
-            });
-        } else {
-            renderSubmission(submission, internalCallback);
-        }
-    };
-
-    function renderSubmission(submission, callback) {
-        var submissionData = submission.submissionData;
-        if (isUndefined(submissionData) || submissionData === null) {
-            callback();
+            console.error(new ProblemRenderException('Can not render and undefined submission'));
+            this.renderBankProblem(bankProblem, callback, stopWaiting);
             return;
         }
-        renderSubmissionSpecificType(submissionData, callback);
-    }
-
-    function renderSubmissionSpecificType(submission, callback) {
-        if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
-            loadIntoSketchSurface(submission.sketchArea, problemPanel.querySelector('sketch-surface'), callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            loadIntoTyping(submission.freeResponse, problemPanel.querySelector('textArea'), callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadIntoMultipleChoice(submission.multipleChoice, problemPanel.querySelector('multi-choice'), true, callback);
-        } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            throw new ProblemRenderException('Checkbox is not supported');
+        var submissionData = submission.submissionData;
+        if (isUndefined(submissionData) || submissionData === null) {
+            this.renderBankProblem(bankProblem, callback, stopWaiting);
+            return;
         }
+        var internalCallback = setupWaiting(callback, stopWaiting);
 
-    }
+        copyQuestionData(bankProblem);
+        loadSpecificType(submission.submissionData, internalCallback);
+    };
 
     /**
      * Loads the data for the {@link QuestionType}.
@@ -144,20 +131,22 @@ function ProblemRenderer(problemPanel) {
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      * @param {Function} callback - Called after the data is rendered.
      */
-    function loadSpecificType(bankProblem, callback) {
+    function loadSpecificType(questionData, callback) {
         problemPanel.emptyPanel();
-        var type = bankProblem.questionType;
-        currentType = type;
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
-            loadSketch(callback);
+            loadSketch(questionData, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
-            loadTyping(callback);
+            loadTyping(questionData, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.MULT_CHOICE) {
-            loadMultipleChoice(callback);
+            loadMultipleChoice(questionData, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
-            loadCheckBox(callback);
+            loadCheckBox(questionData, callback);
         }
     }
+
+    this.startWaiting = function() {
+        startWaiting();
+    };
     
     this.setStartWaitingFunction = function(startWaitingFunction) {
         startWaiting = function() {
@@ -176,9 +165,10 @@ function ProblemRenderer(problemPanel) {
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
      *
+     * @param {QuestionData} questionData - questionData
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadSketch(callback) {
+    function loadSketch(questionData, callback) {
         var sketchSurface = document.createElement('sketch-surface');
         sketchSurface.className = 'sub-panel submittable';
         sketchSurface.style.width = '100%';
@@ -188,12 +178,12 @@ function ProblemRenderer(problemPanel) {
             alert(exception);
         });
 
-        if (!hasValidQuestionData(specialQuestionData)) {
+        if (!hasValidQuestionData(questionData)) {
             document.getElementById('problemPanel').appendChild(sketchSurface);
             return;
         }
 
-        var sketchArea = specialQuestionData.sketchArea;
+        var sketchArea = questionData.sketchArea;
 
         loadIntoSketchSurface(sketchArea, sketchSurface, callback);
     }
@@ -230,18 +220,19 @@ function ProblemRenderer(problemPanel) {
     /**
      * Loads the typing from the {@link SrlBankProblem}.
      *
+     * @param {QuestionData} questionData - questionData
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadTyping(callback) {
+    function loadTyping(questionData, callback) {
         var typingSurface = document.createElement('textarea');
         typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
         problemPanel.appendChild(typingSurface);
-        if (!hasValidQuestionData(specialQuestionData)) {
+        if (!hasValidQuestionData(questionData)) {
             callback();
             return;
         }
-        var freeResponse = specialQuestionData.freeResponse;
+        var freeResponse = questionData.freeResponse;
         loadIntoTyping(freeResponse, typingSurface, callback);
     }
     
@@ -255,20 +246,21 @@ function ProblemRenderer(problemPanel) {
     /**
      * Loads the multiple choice from the {@link SrlBankProblem}
      *
+     * @param {QuestionData} questionData - questionData
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadMultipleChoice(callback) {
+    function loadMultipleChoice(questionData, callback) {
         var multiChoice = document.createElement('multi-choice');
         multiChoice.className = 'sub-panel card-panel submittable col offset-s3 s9';
         multiChoice.style.marginTop = '60px';
 
         problemPanel.appendChild(multiChoice);
 
-        if (!hasValidQuestionData(specialQuestionData)) {
+        if (!hasValidQuestionData(questionData)) {
             callback();
             return;
         }
-        loadIntoMultipleChoice(specialQuestionData.multipleChoice, multiChoice, false, callback);
+        loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, false, callback);
     }
 
     function loadIntoMultipleChoice(multipleChoice, multiChoiceElement, isSubmission, callback) {
@@ -299,7 +291,7 @@ function ProblemRenderer(problemPanel) {
      *
      * @param {Function} callback - Called after data is loaded.
      */
-    function loadCheckBox(callback) {
+    function loadCheckBox(questionData, callback) {
         callback();
         return;
 
@@ -308,11 +300,11 @@ function ProblemRenderer(problemPanel) {
         problemPanel.appendChild(question);
         question.addAnswerContent(multiChoice);
 
-        if (!hasValidQuestionData(specialQuestionData)) {
+        if (!hasValidQuestionData(questionData)) {
             callback();
             return;
         }
-        var checkBox = specialQuestionData.checkBox;
+        var checkBox = questionData.checkBox;
         if (!isUndefined(checkBox) && checkBox !== null) {
             question.loadData(checkBox);
         } else {

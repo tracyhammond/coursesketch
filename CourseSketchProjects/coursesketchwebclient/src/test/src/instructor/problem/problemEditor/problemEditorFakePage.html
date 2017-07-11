@@ -22,7 +22,7 @@
         CourseSketch.dataManager.getSubmission = function(problemId, callback) {
             var index = -1;
             for (var i = 0; i < CourseSketch.fakeProblems.length; i++) {
-                if (CourseSketch.fakeProblems[i].id == problemId) {
+                if (CourseSketch.fakeProblems[i].id == problemId[0]) {
                     index = i;
                     break;
                 }

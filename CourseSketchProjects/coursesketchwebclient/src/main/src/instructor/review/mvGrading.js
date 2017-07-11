@@ -16,9 +16,8 @@ validateFirstRun(document.currentScript);
      * @memberof multiViewPage
      */
     function getSketches(callback, navigator) {
-        var problemId = navigator.getGroupId();
-        console.log(problemId);
-        CourseSketch.dataManager.getAllExperiments(problemId, function(sketchList) {
+        console.log(navigator.getSubmissionIdentifier());
+        CourseSketch.dataManager.getAllExperiments(navigator.getSubmissionIdentifier(), function(sketchList) {
             console.log(sketchList);
             if (isException(sketchList)) {
                 CourseSketch.clientException(sketchList);

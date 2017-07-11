@@ -53,21 +53,20 @@ validateFirstRun(document.currentScript);
     /**
      * Loads a bank problem.
      *
+     * @param {AssignmentNavigator} navigator - The navigator that is performing navigation.
      * @param {SrlBankProblem} bankProblem - The bank problem to load.
      */
     function loadBankProblem(bankProblem, navigator) {
         questionTextPanel.setRapidProblemText(bankProblem.getQuestionText());
 
-        problemRenderer.renderBankProblem(bankProblem, function() {
-            CourseSketch.dataManager.getSubmission(navigator.getGroupId(), function(submission) {
-                if (CourseSketch.isException(submission)) {
-                    CourseSketch.clientException(submission);
-                    return;
-                }
-                problemRenderer.renderSubmission(bankProblem, submission, function() {
-                    setupSubmissionPanel(document.getElementById('problemPanel'), navigator, bankProblem.questionType);
-                });
-            });
+        problemRenderer.startWaiting();
+        CourseSketch.dataManager.getSubmission(navigator.getSubmissionIdentifier(), function(submission) {
+            if (CourseSketch.isException(submission)) {
+                CourseSketch.clientException(submission);
+            }
+            problemRenderer.renderSubmission(bankProblem, submission, function() {
+                setupSubmissionPanel(document.getElementById('problemPanel'), navigator, bankProblem.questionType);
+            }, true);
         });
     }
 

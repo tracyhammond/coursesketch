@@ -109,27 +109,33 @@ function SubmissionPanel() {
         if (isUndefined(this.problemType)) {
             throw new SubmissionException('Problem data is not set correctly aborting');
         }
-        var submission = undefined;
+        var submission = createBaseSubmission();
         var QuestionType = CourseSketch.prutil.QuestionType;
+        var submissionData = CourseSketch.prutil.QuestionData();
         switch (this.problemType) {
             case QuestionType.SKETCH:
-                submission = createSketchSubmission(subPanel, isSubmitting);
+                submissionData.sketchArea = createSketchSubmission(subPanel, isSubmitting);
                 break;
             case QuestionType.FREE_RESP:
-                submission = createTextSubmission(subPanel, isSubmitting);
+                submissionData.freeResponse = createTextSubmission(subPanel, isSubmitting);
                 break;
         }
-        if (isUndefined(submission)) {
-            throw new SubmissionException('submission type not supported, aborting');
+
+        if (isUndefined(submissionData)) {
+            throw new SubmissionException('submission type [' + this.problemType + '] not supported, aborting');
         }
+
+        submission.setSubmissionData(submissionData);
+
         if (isUndefined(this.wrapperFunction)) {
             // You need to set the wrapper function to either create an experiment or solution.
             throw new SubmissionException('Wrapper function is not set, aborting');
         }
+
         var submittingValue = this.wrapperFunction(submission);
         console.log(submittingValue);
         var submissionRequest = CourseSketch.prutil.createRequestFromData(submittingValue,
-                CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
+            CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener(function(event, request) {
@@ -163,8 +169,8 @@ function SubmissionPanel() {
      * @memberof SubmissionPanel
      */
     function createTextSubmission(textArea, isSubmitting) {
-        var submission = createBaseSubmission();
-        submission.textAnswer = textArea.value;
+        var submission = CourseSketch.prutil.FreeResponse();
+        submission.startingText = textArea.value;
         return submission;
     }
 
@@ -191,12 +197,12 @@ function SubmissionPanel() {
 
         var MarkerType = CourseSketch.prutil.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
-        var markerUpdate = CourseSketch.prutil.createUpdateFromCommands([ markerCommand ]);
+        var markerUpdate = CourseSketch.prutil.createUpdateFromCommands([markerCommand]);
         updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
-        var submission = createBaseSubmission();
-        submission.setUpdateList(protoObject);
+        var submission = CourseSketch.prutil.SketchArea();
+        submission.setRecordedSketch(protoObject);
         return submission;
     }
 
@@ -273,20 +279,20 @@ function SubmissionPanel() {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton('/images/toolbar/clear_button.svg', function() {
                 var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CLEAR, true);
-                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
+                var update = CourseSketch.prutil.createUpdateFromCommands([command]);
                 updateManager.addUpdate(update);
             });
             toolbar.appendChild(clearButton);
 
             toolbar.setUndoCallback(function() {
                 var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, true);
-                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
+                var update = CourseSketch.prutil.createUpdateFromCommands([command]);
                 updateManager.addUpdate(update);
             });
 
             toolbar.setRedoCallback(function() {
                 var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.REDO, true);
-                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
+                var update = CourseSketch.prutil.createUpdateFromCommands([command]);
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {

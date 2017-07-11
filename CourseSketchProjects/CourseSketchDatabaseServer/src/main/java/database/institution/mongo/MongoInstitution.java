@@ -528,25 +528,26 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
 
     @Override
     public void insertSubmission(final String userId, final String authId, final String problemId, final String submissionId,
-            final boolean experiment)
+            String partId, final boolean experiment)
             throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(database, userId, problemId, submissionId, experiment);
+        SubmissionManager.mongoInsertSubmission(database, userId, problemId, submissionId, partId, experiment);
     }
 
     @Override
     public Submission.SrlExperiment getExperimentAsUser(final String userId, final String authId, final String problemId,
-            final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
+            String partId, final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
         LOG.debug("Getting experiment for user: {}", userId);
         LOG.info("Problem: {}", problemId);
 
         final String courseId = this.getCourseProblem(authId, Lists.newArrayList(problemId)).get(0).getCourseId();
-        return SubmissionManager.mongoGetExperiment(auth, database, userId, authId, courseId, problemId, submissionManager);
+        return SubmissionManager.mongoGetExperiment(auth, database, userId, authId, courseId, problemId, partId, submissionManager);
     }
 
     @Override
-    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final String problemId, final Message.Request sessionInfo,
+    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final String problemId, String partId,
+            final Message.Request sessionInfo,
             final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, problemId,
+        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, problemId, partId,
                 internalConnections.getBestConnection(SubmissionWebSocketClient.class),
                 internalConnections.getBestConnection(IdentityWebSocketClient.class));
     }

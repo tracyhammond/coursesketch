@@ -368,6 +368,16 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * @returns {Array} the id of the subgroup (An {@link SrlProblem}).
+     */
+    this.getSubmissionIdentifier = function() {
+        if (!isSubgroupNavigation) {
+            return [currentSubgroup.id, '' + currentSubgroupPartIndex];
+        }
+        return [currentSubgroup.id];
+    };
+
+    /**
      * Returns the ItemType as defined in {@link ProblemSlideHolder}.
      *
      * @returns {ItemType} the type of current part.

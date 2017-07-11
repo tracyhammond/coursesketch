@@ -94,7 +94,7 @@ validateFirstRun(document.currentScript);
         typingSurface.contentEditable = true;
         CourseSketch.studentExperiment.addWaitOverlay();
         document.getElementById('problemPanel').appendChild(typingSurface);
-        CourseSketch.dataManager.getSubmission(navigator.getGroupId(), function(submission) {
+        CourseSketch.dataManager.getSubmission(navigator.getSubmissionIdentifier(), function(submission) {
             if (isUndefined(submission) || submission instanceof CourseSketch.DatabaseException || isUndefined(submission.getTextAnswer())) {
                 CourseSketch.studentExperiment.removeWaitOverlay();
                 return;

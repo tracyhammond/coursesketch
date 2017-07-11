@@ -436,14 +436,15 @@ public interface Institution {
     /**
      * A message sent from the submission server that submits the submission information into the database.
      *
-     * @param authId The id that signifies the permissions of the user the submission is associated with.
      * @param userId The user that the submission is associated.
+     * @param authId The id that signifies the permissions of the user the submission is associated with.
      * @param problemId The bank problem that is related
      * @param submissionId The submission that is being inserted.
-     * @param isExperiment True if the submission is an experiment.
-     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @param problemPartIndex
+     *@param isExperiment True if the submission is an experiment.  @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void insertSubmission(final String userId, String authId, String problemId, String submissionId, boolean isExperiment)
+    void insertSubmission(final String userId, String authId, String problemId, String submissionId, String problemPartIndex,
+            boolean isExperiment)
             throws DatabaseAccessException;
 
     /**
@@ -452,13 +453,13 @@ public interface Institution {
      * @param userId User requesting the experiment.
      * @param authId The authentication of the user requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
-     * @param submissionManager The connection manager to other servers.
-     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @param partId
+     *@param submissionManager The connection manager to other servers.  @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
      * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
      */
     Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, String problemId,
-            SubmissionManagerInterface submissionManager)
+            String partId, SubmissionManagerInterface submissionManager)
             throws DatabaseAccessException, AuthenticationException;
 
     /**
@@ -466,14 +467,14 @@ public interface Institution {
      *
      * @param authId Permissions of the user requesting the experiment.
      * @param problemId The problemId that the experiment is associated with.
-     * @param sessionInfo The session information of this query.
+     * @param partId
+     *@param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
-     * @param review Data about review the sketch.
-     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @param review Data about review the sketch.    @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      * @return The list of experiments grabbed by the instructor.
      */
-    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, String problemId, Message.Request sessionInfo,
+    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, String problemId, String partId, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**

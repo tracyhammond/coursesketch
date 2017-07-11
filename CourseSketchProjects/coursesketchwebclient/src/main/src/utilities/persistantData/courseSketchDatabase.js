@@ -127,6 +127,15 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
+     * @param {ItemResult} item - An ItemResult that is being checked for validity.
+     * @returns {Boolean} True if the item is valid.
+     */
+    this.isItemValid = function(item) {
+        return !(isUndefined(item.data) || item.data === null || item.data.length <= 0
+            || item.query === CourseSketch.prutil.ItemQuery.ERROR);
+    };
+
+    /**
      * Retrieves all the assignments for a given course.
      *
      * The callback is called with a list of assignment objects.
@@ -162,7 +171,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
                 throw new Error('Assignment not defined');
             }
             // ignore the partial callback
-            getCourseProblems(assignment.problemGroups, function() { }, problemCallback);
+            getCourseProblems(assignment.problemGroups, function() {
+            }, problemCallback);
         });
     };
 
@@ -194,7 +204,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
                 item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE);
             } else {
                 var lastTime = result.data;
-                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE, [ lastTime ]);
+                item = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.UPDATE, [lastTime]);
             }
             advanceDataListener.sendDataRequest(item, updateListener);
         });
