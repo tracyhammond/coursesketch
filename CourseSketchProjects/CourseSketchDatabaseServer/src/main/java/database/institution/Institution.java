@@ -439,11 +439,12 @@ public interface Institution {
      * @param userId The user that the submission is associated.
      * @param authId The id that signifies the permissions of the user the submission is associated with.
      * @param problemId The bank problem that is related
+     * @param problemPartIndex The id for a specific part of a problem.
      * @param submissionId The submission that is being inserted.
-     * @param problemPartIndex
-     *@param isExperiment True if the submission is an experiment.  @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @param isExperiment True if the submission is an experiment.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void insertSubmission(final String userId, String authId, String problemId, String submissionId, String problemPartIndex,
+    void insertSubmission(final String userId, String authId, String problemId, String problemPartIndex, String submissionId,
             boolean isExperiment)
             throws DatabaseAccessException;
 
@@ -452,36 +453,36 @@ public interface Institution {
      *
      * @param userId User requesting the experiment.
      * @param authId The authentication of the user requesting the experiment.
-     * @param problemId The problemId that the experiment is associated with.
-     * @param partId
-     *@param submissionManager The connection manager to other servers.  @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @param identifierList The list of ids that identify a set of submissions.
+     * @param submissionManager The connection manager to other servers.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
      * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
      */
-    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, String problemId,
-            String partId, SubmissionManagerInterface submissionManager)
+    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId,
+            List<String> identifierList, SubmissionManagerInterface submissionManager)
             throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Calls the submission server for a list of experiments based on user ids.
      *
      * @param authId Permissions of the user requesting the experiment.
-     * @param problemId The problemId that the experiment is associated with.
-     * @param partId
-     *@param sessionInfo The session information of this query.
+     * @param identifier The list of ids that identify a set of submissions.
+     * @param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
-     * @param review Data about review the sketch.    @throws DatabaseAccessException Thrown if there is an issue accessing data.
+     * @param review Data about review the sketch.
+     * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      * @return The list of experiments grabbed by the instructor.
      */
-    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, String problemId, String partId, Message.Request sessionInfo,
+    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, List<String> identifier, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
      * This method will set or insert the gradingPolicy in Mongo based on the proto object passed in.
      * As of now, it is up to the implementation to check if gradingPolicies are valid (ex: add to 100%) before calling this method.
      *
-     * @param userId
+     * @param authId
      *         The id of the user asking for the state.
      * @param policy
      *         Proto object containing the gradingPolicy to be set or updated.
@@ -490,7 +491,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    void upsertGradingPolicy(final String userId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
+    void upsertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets the grading policy for a course from the mongoDb.

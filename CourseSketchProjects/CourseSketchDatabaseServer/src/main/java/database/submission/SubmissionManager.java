@@ -44,6 +44,9 @@ import static database.utilities.MongoUtilities.convertStringToObjectId;
  */
 public final class SubmissionManager {
 
+    /**
+     * An id when a partId is not created or asked for.
+     */
     private static final String DEFAULT_ID = "NO_ID";
 
     /**
@@ -63,34 +66,35 @@ public final class SubmissionManager {
      * if {@code experiment} is true then {@code userId} is a userId otherwise
      * it is the bankProblem if {@code experiment} is true then {@code problem}
      * is a courseProblem otherwise it is the bankProblem.
-     *  @param dbs The database that contains the information about the submission.
+     * @param dbs The database that contains the information about the submission.
      * @param userId Generally the userId.  But it is used to uniquely identify each submission.
-     * @param problemId The problem id.
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionId The id associated with the submission on the submission server.
-     * @param partId
      * @param experiment True if the object being submitted is an experiment
      */
     @SuppressWarnings({ "PMD.NPathComplexity" })
-    public static void mongoInsertSubmission(final MongoDatabase dbs, final String userId, final String problemId,
-            final String submissionId,
-            String partId, final boolean experiment) {
+    public static void mongoInsertSubmission(final MongoDatabase dbs, final String userId,
+            final List<String> identifierList, final String submissionId, final boolean experiment) {
         LOG.info("Inserting an experiment {}", experiment);
-        LOG.info("Database is {}", dbs);
+
+        final String key = identifierList.size() < 2 ? DEFAULT_ID : identifierList.get(1);
+        final String problemId = identifierList.get(0);
+
+        LOG.debug("Database is {}", dbs);
         LOG.info("Problem id: {}", problemId);
-        String key = partId == null ? DEFAULT_ID : partId;
         LOG.info("Part id: {}", key);
         final Document myDbRef = new Document(SELF_ID, new ObjectId(problemId));
         final MongoCollection<Document> collection = dbs.getCollection(experiment ? EXPERIMENT_COLLECTION : SOLUTION_COLLECTION);
         final Document cursor = collection.find(myDbRef).projection(fields(include(key))).first();
 
-        LOG.info("cursor: {}", cursor);
-        LOG.info("uniuq id: {}", userId);
+        LOG.debug("cursor: {}", cursor);
+        LOG.info("unique id: {}", userId);
 
-        String userKey = (experiment ? userId : SOLUTION_ID);
+        final String userKey = (experiment ? userId : SOLUTION_ID);
 
         if (cursor != null) {
-            String updateKey = key + "." + userKey;
-            Document queryObj = null;
+            final String updateKey = key + "." + userKey;
+            Document queryObj;
             if (cursor.get(key) == null) {
                 LOG.info("adding a new submission to this new partId of existing object");
                 queryObj = new Document(key, new Document(userKey, submissionId));
@@ -117,17 +121,18 @@ public final class SubmissionManager {
      * @param userId The user who has access to the experiment.
      * @param authId The id used to authenticate the users permissions to the submission.
      * @param courseId The id of the course the problem belongs to.
-     * @param problemId The id of the problem associated with the sketch.
-     * @param partId
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that had the specific submission id.
      * @throws DatabaseAccessException Thrown is there is data missing in the database.
      * @throws AuthenticationException Thrown if the user does not have the authentication
      */
     public static Submission.SrlExperiment mongoGetExperiment(final Authenticator authenticator, final MongoDatabase dbs, final String userId,
-            final String authId, final String courseId, final String problemId,
-            String partId, final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
+            final String authId, final String courseId, final List<String> identifierList,
+            final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
 
+        final String key = identifierList.size() < 2 ? DEFAULT_ID : identifierList.get(1);
+        final String problemId = identifierList.get(0);
         final Authentication.AuthType authType = Authentication.AuthType.newBuilder()
                 .setCheckingAdmin(true)
                 .build();
@@ -141,7 +146,6 @@ public final class SubmissionManager {
         final Data.ItemResult.Builder send = Data.ItemResult.newBuilder();
         send.setQuery(ItemQuery.EXPERIMENT);
         final MongoCollection<Document> collection = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION);
-        String key = partId == null ? DEFAULT_ID : partId;
         LOG.info("Part id: {}", key);
         final Document cursor = collection.find(convertStringToObjectId(problemId)).projection(fields(include(key))).first();
 
@@ -149,7 +153,7 @@ public final class SubmissionManager {
             throw new DatabaseAccessException("The student has not submitted anything for this problem").setSendResponse(true);
         }
 
-        Document subDocument = (Document) cursor.get(key);
+        final Document subDocument = (Document) cursor.get(key);
         final String hashedUserId = MongoInstitution.hashUserId(userId, courseId);
         LOG.debug("Grabbing user with userId: {}", hashedUserId);
         if (subDocument == null || !subDocument.containsKey(hashedUserId)
@@ -172,8 +176,7 @@ public final class SubmissionManager {
      * @param authenticator The object being used to authenticate the user.
      * @param dbs The database where the data is stored.
      * @param authId The user that was requesting this information.
-     * @param problemId The problem for which the sketch data is being requested.
-     * @param partId
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connections of the submission server
      * @param identityManager The connection to the identity server.
      * @return {@link protobuf.srl.submission.Submission.SrlExperiment} that were found with the specific submission ids.
@@ -181,12 +184,12 @@ public final class SubmissionManager {
      * @throws AuthenticationException Thrown if the user does not have the authentication.
      */
     public static List<Submission.SrlExperiment> mongoGetAllExperimentsAsInstructor(final Authenticator authenticator, final MongoDatabase dbs,
-            final String authId, final String problemId,
-            String partId, final SubmissionManagerInterface submissionManager,
-            final IdentityManagerInterface identityManager)
-            throws DatabaseAccessException, AuthenticationException {
+            final String authId, final List<String> identifierList, final SubmissionManagerInterface submissionManager,
+            final IdentityManagerInterface identityManager) throws DatabaseAccessException, AuthenticationException {
 
-        String key = partId == null ? DEFAULT_ID : partId;
+
+        final String key = identifierList.size() < 2 ? DEFAULT_ID : identifierList.get(1);
+        final String problemId = identifierList.get(0);
         Document problemExperimentMap = dbs.getCollection(DatabaseStringConstants.EXPERIMENT_COLLECTION)
                 .find(convertStringToObjectId(problemId)).projection(fields(include(key))).first();
         if (problemExperimentMap == null) {
@@ -241,7 +244,7 @@ public final class SubmissionManager {
 
         for (Submission.SrlExperiment experiment : experiments) {
             final String userId = experiment.getUserId();
-            String userName = null;
+            String userName;
 
             final String hashedUserId = submissionIdToUserId.get(experiment.getSubmission().getId());
             LOG.debug("unhahsed userId: {} Hashed userid: {} for experiment: {}", userId, hashedUserId, experiment.getSubmission().getId());

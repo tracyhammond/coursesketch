@@ -180,6 +180,10 @@ function MultiChoice() {
         console.log('do nothing');
     };
 
+    this.setSelected = function() {
+        console.log('do nothing2');
+    };
+
     /**
      * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional

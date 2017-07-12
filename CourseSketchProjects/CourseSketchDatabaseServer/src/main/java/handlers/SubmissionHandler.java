@@ -61,12 +61,33 @@ public final class SubmissionHandler {
         }
     }
 
-    private static void createAndSendException(SocketSession conn, Message.Request req, Exception exception) {
+    /**
+     * Creates and sends an exception.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param exception
+     *         The exception that occurred.
+     */
+    private static void createAndSendException(final SocketSession conn, final Message.Request req, final Exception exception) {
         final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
         conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
         LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
     }
 
+    /**
+     * Takes in a request that has to deal with inserting an experiment.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param submissionManager
+     *         The manager for submission data on other servers.
+     * @param instance The database backer.
+     */
     private static void saveExperiment(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
             final Institution instance) {
         LOG.info("Parsing as an experiment");
@@ -101,8 +122,8 @@ public final class SubmissionHandler {
         try {
             final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
             LOG.debug("Hashed user id: {}", hashedUserId);
-            instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), submissionId,
-                    experiment.getPartId(), true);
+            instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), experiment.getPartId(), submissionId,
+                    true);
         } catch (AuthenticationException | DatabaseAccessException exception) {
             createAndSendException(conn, req, exception);
             // bail early

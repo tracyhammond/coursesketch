@@ -8,6 +8,39 @@ validateFirstRun(document.currentScript);
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
 
+    $(document).ready(function() {
+        /**
+         * Closes the dialog panel.
+         */
+        document.getElementById('dialogPanel').querySelector('button').onclick = function() {
+            document.getElementById('dialogPanel').close();
+        };
+        CourseSketch.dataManager.waitForDatabase(function() {
+            var navPanel = document.querySelector('navigation-panel');
+            var navigator = getNav();
+            var assignmentId = CourseSketch.dataManager.getState('currentAssignment');
+            var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
+            var addCallback = isUndefined(navPanel.dataset.callbackset);
+
+            CourseSketch.dataManager.clearStates();
+
+            if (addCallback) {
+                navPanel.dataset.callbackset = '';
+                navigator.addCallback(function(navigatorFromCallback) {
+                    multiviewSketchDelete();
+                    createMvList(navigatorFromCallback);
+                });
+            }
+
+            navigator.setSubgroupNavigation(false);
+            if (!isUndefined(assignmentId)) {
+                navigator.resetNavigation(assignmentId, parseInt(problemIndex, 10));
+            } else if (addCallback) {
+                navigator.refresh();
+            }
+        });
+    });
+
     /**
      * Gets all experiments that hold the current problem id and places them is sketchList.
      *
@@ -89,7 +122,7 @@ validateFirstRun(document.currentScript);
      * @returns {SrlUpdateList} The update list.
      */
     function getUpdateList(array, index) {
-        return array[index].getSubmission().getUpdateList();
+        return array[index].getSubmission().getSubmissionData().getSketchArea().getRecordedSketch();
     }
 
     /**
@@ -111,38 +144,6 @@ validateFirstRun(document.currentScript);
         var parent = document.getElementById('sketch-area');
         parent.innerHTML = '';
     }
-
-    $(document).ready(function() {
-        /**
-         * Closes the dialog panel.
-         */
-        document.getElementById('dialogPanel').querySelector('button').onclick = function() {
-            document.getElementById('dialogPanel').close();
-        };
-        CourseSketch.dataManager.waitForDatabase(function() {
-            var navPanel = document.querySelector('navigation-panel');
-            var navigator = getNav();
-            var assignmentId = CourseSketch.dataManager.getState('currentAssignment');
-            var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
-            var addCallback = isUndefined(navPanel.dataset.callbackset);
-
-            CourseSketch.dataManager.clearStates();
-
-            if (addCallback) {
-                navPanel.dataset.callbackset = '';
-                navigator.addCallback(function(navigatorFromCallback) {
-                    multiviewSketchDelete();
-                    createMvList(navigatorFromCallback);
-                });
-            }
-
-            if (!isUndefined(assignmentId)) {
-                navigator.resetNavigation(assignmentId, parseInt(problemIndex, 10));
-            } else if (addCallback) {
-                navigator.refresh();
-            }
-        });
-    });
 
     /**
      * Loads the problem, called every time a user navigates to a different problem.

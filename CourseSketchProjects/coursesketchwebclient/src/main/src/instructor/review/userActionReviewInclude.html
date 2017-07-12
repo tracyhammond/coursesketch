@@ -21,9 +21,7 @@
     <meta charset="UTF-8">
     <script>
     (function(importDoc) {
-        var link = importDoc.querySelector('#userActionGraphImport');
-        var template = link.import.querySelector('template');
-        var clone = document.importNode(template.content, true);
+        var clone = safeImport(importDoc, document, 'userActionGraphImport', 'user-action-graph-template');
 
         var newElement = new UserActionGraph();
 

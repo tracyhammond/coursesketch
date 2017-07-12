@@ -1,6 +1,5 @@
 package handlers;
 
-import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.ProtocolStringList;
 import coursesketch.database.auth.AuthenticationException;
@@ -36,6 +35,8 @@ import utilities.ProtobufUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static handlers.ResultBuilder.validateIds;
 
 /**
  * Handles all request for data.
@@ -95,15 +96,10 @@ public final class DataRequestHandler {
             final String authId = req.getServersideId();
             final String userId = req.getServerUserId();
             final DataRequest request = DataRequest.parseFrom(req.getOtherData());
-            if (Strings.isNullOrEmpty(authId)) {
-                throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
-            }
-            if (Strings.isNullOrEmpty(userId)) {
-                throw new DatabaseAccessException("Invalid User Identification");
-            }
+            validateIds(authId, userId);
             final ArrayList<ItemResult> results = new ArrayList<>();
-            for (int p = 0; p < request.getItemsList().size(); p++) {
-                final ItemRequest itemRequest = request.getItemsList().get(p);
+            for (int itemRequestIndex = 0; itemRequestIndex < request.getItemsList().size(); itemRequestIndex++) {
+                final ItemRequest itemRequest = request.getItemsList().get(itemRequestIndex);
                 try {
                     LOG.info("looking at query {}", itemRequest.getQuery().name());
                     switch (itemRequest.getQuery()) {
@@ -154,33 +150,22 @@ public final class DataRequestHandler {
                             // we send it the CourseProblemId and the userId and we get the submission Id
                             // MongoInstitution.mongoGetExperiment(assignementID, userId)
                             if (!itemRequest.hasAdvanceQuery()) {
-                                ProtocolStringList itemIdList = itemRequest.getItemIdList();
+                                final ProtocolStringList itemIdList = itemRequest.getItemIdList();
                                 LOG.info("Trying to retrieve an experiment from a user!");
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                String problemId;
-                                String partId = null;
-                                if (itemIdList.size() == 2) {
-                                    partId = itemIdList.get(1);
-                                }
-                                problemId = itemIdList.get(0);
-                                final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, authId, problemId, partId,
+                                final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, authId, itemIdList,
                                         internalConnections.getBestConnection(SubmissionWebSocketClient.class));
                                 results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                             } else {
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
                                 final Request baseRequest = build.build();
-                                ProtocolStringList itemIdList = itemRequest.getItemIdList();
-                                String problemId;
-                                String partId = null;
-                                if (itemIdList.size() == 2) {
-                                    partId = itemIdList.get(1);
-                                }
-                                problemId = itemIdList.get(0);
+                                final ProtocolStringList itemIdList = itemRequest.getItemIdList();
+
                                 final List<Submission.SrlExperiment> experimentList =
-                                        instance.getExperimentAsInstructor(authId, problemId, partId,
-                                                baseRequest, internalConnections, itemRequest.getAdvanceQuery());
+                                        instance.getExperimentAsInstructor(authId, itemIdList, baseRequest, internalConnections,
+                                                itemRequest .getAdvanceQuery());
                                 for (Submission.SrlExperiment experiment : experimentList) {
                                     results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
