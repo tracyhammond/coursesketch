@@ -110,7 +110,7 @@ function ProblemRenderer(problemPanel) {
     };
 
     /**
-     * @param {Function} errorListenerFunction.
+     * @param {Function} errorListenerFunction - Called if there is an error in the renderer.
      */
     this.setErrorListener = function(errorListenerFunction) {
         errorListener = errorListenerFunction;
