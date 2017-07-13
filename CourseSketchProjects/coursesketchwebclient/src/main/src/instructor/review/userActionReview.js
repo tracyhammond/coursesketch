@@ -1,8 +1,9 @@
+/* eslint-disable valid-jsdoc, require-jsdoc */
 /**
  *
  * The userActionReview is a custom element that can analyze a user's actions on a problem
  *
- * @Class
+ * @constructor UserActionGraph
  */
 function UserActionGraph() {
 
@@ -246,7 +247,7 @@ function UserActionGraph() {
     };
 
     /**
-     * @return finishedCallback {function} is the callback set at implementation.
+     * @returns finishedCallback {function} is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

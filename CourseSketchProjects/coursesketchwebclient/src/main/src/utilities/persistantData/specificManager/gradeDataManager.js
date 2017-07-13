@@ -21,7 +21,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffe
      * @param {Function} callback - called after the grade has been set.
      */
     parent.setGrade = function(protoGrade, callback) {
-        advanceDataListener.sendDataInsert(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, protoGrade.toArrayBuffer(), function(evt, item) {
+        advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.GRADE, protoGrade.toArrayBuffer(), function(evt, item) {
             if (isException(item)) {
                 CourseSketch.clientException(item);
             }
@@ -43,14 +43,14 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffe
         var isInstructor = CourseSketch.connection.isInstructor;
         var idList = [ protoGrade.courseId, protoGrade.assignmentId, protoGrade.problemId, protoGrade.userId ];
 
-        var gradingQuery = CourseSketch.PROTOBUF_UTIL.GradingQuery();
-        var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
-        var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
+        var gradingQuery = CourseSketch.prutil.GradingQuery();
+        var PermissionLevel = CourseSketch.prutil.getGradingQueryClass().PermissionLevel;
+        var SearchType = CourseSketch.prutil.getGradingQueryClass().SearchType;
 
         gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
         gradingQuery.setSearchType(SearchType.SINGLE_GRADE);
         console.log('getting grade id list: ', idList);
-        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, idList, gradingQuery);
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.GRADE, idList, gradingQuery);
 
         advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
@@ -65,7 +65,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffe
                 return;
             }
 
-            var decodedGrade = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[0], CourseSketch.PROTOBUF_UTIL.getProtoGradeClass());
+            var decodedGrade = CourseSketch.prutil.decodeProtobuf(item.data[0], CourseSketch.prutil.getProtoGradeClass());
             callback(decodedGrade);
         });
     };
@@ -86,14 +86,14 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffe
 
         var isInstructor = CourseSketch.connection.isInstructor;
 
-        var gradingQuery = CourseSketch.PROTOBUF_UTIL.GradingQuery();
-        var PermissionLevel = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().PermissionLevel;
-        var SearchType = CourseSketch.PROTOBUF_UTIL.getGradingQueryClass().SearchType;
+        var gradingQuery = CourseSketch.prutil.GradingQuery();
+        var PermissionLevel = CourseSketch.prutil.getGradingQueryClass().PermissionLevel;
+        var SearchType = CourseSketch.prutil.getGradingQueryClass().SearchType;
 
         gradingQuery.setPermissionLevel(isInstructor ? PermissionLevel.INSTRUCTOR : PermissionLevel.STUDENT);
         gradingQuery.setSearchType(SearchType.ALL_GRADES);
 
-        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.PROTOBUF_UTIL.ItemQuery.GRADE, [ courseId ], gradingQuery);
+        var itemRequest = CourseSketch.prutil.createItemRequest(CourseSketch.prutil.ItemQuery.GRADE, [ courseId ], gradingQuery);
         advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
@@ -109,7 +109,7 @@ function GradeDataManager(parent, advanceDataListener, parentDatabase, ByteBuffe
 
             var protoGradeList = [];
             for (var i = 0; i < item.data.length; i++) {
-                var decodedGrade = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(item.data[i], CourseSketch.PROTOBUF_UTIL.getProtoGradeClass());
+                var decodedGrade = CourseSketch.prutil.decodeProtobuf(item.data[i], CourseSketch.prutil.getProtoGradeClass());
                 protoGradeList.push(decodedGrade);
             }
             callback(protoGradeList);

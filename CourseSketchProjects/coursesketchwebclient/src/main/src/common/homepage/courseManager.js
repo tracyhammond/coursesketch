@@ -35,12 +35,12 @@ CourseSketch.courseManagement.waitingIcon = (function() {
      * This will wait till the database is ready before it polls for updates and
      * shows the courses.
      *
-     * @name initializeCourseManagment
+     * @name initializeCourseManagement
      * @memberof courseManagement
      */
-    CourseSketch.courseManagement.initializeCourseManagment = function() {
+    CourseSketch.courseManagement.initializeCourseManagement = function() {
         if (!document.querySelector('#class_list_column')) {
-            return false;
+            return;
         }
         document.querySelector('#class_list_column').appendChild(waitingIcon);
         CourseSketch.courseManagement.waitingIcon.startWaiting();

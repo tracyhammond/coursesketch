@@ -1,8 +1,8 @@
 /**
- * @class SchoolDataManager
  * Attempts to use data as a database, pulls data from the server if it does not
  * exist
  *
+ * @constructor SchoolDataManager
  * @param {String} userId - The user that this database is associated with.
  * @param {AdvanceDataListener} advanceDataListener - An instance of {@link AdvanceDataListener} this is used for
  *            responses to queries made by the database server
@@ -42,6 +42,8 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      *
      * It is placed this far up so that it can be called even before most of the
      * database is set up.
+     *
+     * @returns {Boolean} True if the database is ready false otherwise.
      */
     this.isDatabaseReady = function() {
         return databaseFinishedLoading;
@@ -49,7 +51,6 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
 
     /**
      * After the lower level database has been completely setup the higher level specific databases can be called.
-     *
      */
     var initalizedFunction = function() {
         if (!localScope.start) {
@@ -126,6 +127,15 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
+     * @param {ItemResult} item - An ItemResult that is being checked for validity.
+     * @returns {Boolean} True if the item is valid.
+     */
+    this.isItemValid = function(item) {
+        return !(isUndefined(item.data) || item.data === null || item.data.length <= 0 ||
+            item.query === CourseSketch.prutil.ItemQuery.ERROR);
+    };
+
+    /**
      * Retrieves all the assignments for a given course.
      *
      * The callback is called with a list of assignment objects.
@@ -160,7 +170,9 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
             if (isUndefined(assignment)) {
                 throw new Error('Assignment not defined');
             }
-            getCourseProblems(assignment.problemGroups, problemCallback);
+            // ignore the partial callback
+            getCourseProblems(assignment.problemGroups, function() {
+            }, problemCallback);
         });
     };
 
@@ -212,6 +224,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
      * Returns the state at the given key.
      *
      * @param {String} key - The unique identifier for the state.
+     * @returns {*} The value stored at that key.
      */
     this.getState = function(key) {
         return stateMachine.get(key);
@@ -235,7 +248,7 @@ function SchoolDataManager(userId, advanceDataListener, connection, Request, Byt
     };
 
     /**
-     * Returns the current id that is being used with the database.
+     * @returns {String} The current id that is being used with the database.
      */
     this.getCurrentId = function() {
         return localUserId;

@@ -2,20 +2,43 @@ validateFirstRun(document.currentScript);
 
 (function() {
     var courseManagement = CourseSketch.courseManagement;
+
+    courseManagement.advancedEditPanel = undefined;
+
+    courseManagement.actions = {};
+
+    courseManagement.actions.createPart = function(srlProblem, buttonElement, optionalParams, callback) {
+        courseManagement.addNewSubGroup(function(updatedProblem, subGroup) {
+            callback(updatedProblem, buttonElement, optionalParams);
+        }, srlProblem);
+    };
+
+    courseManagement.actions.editProblem = function(bankProblem, buttonElement, optionalParams) {
+        var unlocked = buttonElement.querySelector('.data.unlocked').textContent;
+        var isUnlocked = (unlocked === 'true');
+        if (isUnlocked) {
+            var parentElement = courseManagement.advancedEditPanel.getMatchingParent(buttonElement, '[data-list-item]');
+            var index = parentElement.getAttribute('data-list-item');
+            CourseSketch.dataManager.addState('partIndex', index);
+            CourseSketch.dataManager.addState('courseProblemId', buttonElement.querySelector('.data.id').textContent);
+            CourseSketch.dataManager.addState('bankProblem', bankProblem);
+            CourseSketch.redirectContent('/src/instructor/problem/problemEditor/problemEditor.html', 'Editing Problem ');
+        } else {
+            alert('This problem is not editable by you.');
+        }
+    };
+
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param {String} attributeChanged
-     *            The name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            The attribute's old value
-     * @param {String|Number|Object} newValue
-     *            The attribute's new value
-     * @param {Element} element
-     *            Protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlCourse} srlCourse - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.courseEndEdit = function(element, srlCourse) {
-        CourseSketch.dataManager.updateCourse(srlCourse);
+    courseManagement.courseEndEdit = function(element, srlCourse, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateCourse(srlCourse);
+        }
     };
 
     /**
@@ -70,17 +93,14 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlAssignment} assignment - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.assignmentEndEdit = function(element, assignment) {
-        CourseSketch.dataManager.updateAssignment(assignment);
+    courseManagement.assignmentEndEdit = function(element, assignment, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateAssignment(assignment);
+        }
     };
 
     /**
@@ -142,17 +162,14 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a problem has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlProblem} problem - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.problemEndEdit = function(element, problem) {
-        CourseSketch.dataManager.updateCourseProblem(problem);
+    courseManagement.problemEndEdit = function(element, problem, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateCourseProblem(problem);
+        }
     };
 
     /**
@@ -177,6 +194,47 @@ validateFirstRun(document.currentScript);
         document.body.appendChild(problemSelection);
         problemSelection.loadProblems(courseId, assignmentId, 0);
     };
+
+    /**
+     * Creates a new bank problem and course problem with default values and adds it to the database.
+     *
+     * Displays the problem after it is added.
+     *
+     * @param {Function} [callback] the problem that a new subgroup is being added to
+     * @param {SrlCourseProblem} existingCourseProblem the problem that a new subgroup is being added to
+     * @param {SrlBankProblem} [existingBankProblem] The bank problem that is being added.
+     */
+    courseManagement.addNewSubGroup = function addNewCourseProblem(callback, existingCourseProblem, existingBankProblem) {
+        function addingBankProblem(bankProblemWithId) { // eslint-disable-line require-jsdoc
+            if (bankProblemWithId instanceof CourseSketch.DatabaseException) {
+                // no problems exist or something went wrong
+                throw bankProblemWithId;
+            }
+            var groupHolder = CourseSketch.prutil.ProblemSlideHolder();
+            groupHolder.id = bankProblemWithId.id;
+            groupHolder.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
+            groupHolder.problem = bankProblemWithId;
+            groupHolder.unlocked = true;
+            existingCourseProblem.subgroups.push(groupHolder);
+            CourseSketch.dataManager.updateCourseProblem(existingCourseProblem, undefined, function(exception) {
+                if (exception instanceof BaseException) {
+                    throw exception;
+                }
+                if (!isUndefined(callback)) {
+                    callback(existingCourseProblem, groupHolder);
+                }
+            });
+        }
+
+        if (isUndefined(existingBankProblem)) {
+            var bankProblem = CourseSketch.prutil.SrlBankProblem();
+            bankProblem.questionText = 'Edit to add Question Text';
+            CourseSketch.dataManager.insertBankProblem(bankProblem, undefined, addingBankProblem);
+        } else {
+            addingBankProblem(existingBankProblem);
+        }
+    };
+
 
     /**
      * Creates a new bank problem and course problem with default values and adds it to the database.
@@ -296,13 +354,27 @@ validateFirstRun(document.currentScript);
         }
     }
 
+    /**
+     * Destroys the edit panel.
+     */
     function destroyAdvancedEditCard() {
         $(document.querySelectorAll('#advancedEditHolder')[0]).html('');
+        document.querySelectorAll('#advancedEditHolder')[0].style.display = 'none';
     }
 
+    /**
+     * Creates an edit panel.
+     *
+     * @param {Element} element - Where the panel is being created.
+     * @param {Function} saveCallback - Called when the panel is being saved.
+     */
     function createAdvancedEditCard(element, saveCallback) {
-        var childElement = element.createAdvanceEditPanel(element, document.querySelectorAll('#advancedEditHolder')[0],
-            saveCallback, destroyAdvancedEditCard);
+        if (isUndefined(courseManagement.advancedEditPanel)) {
+            courseManagement.advancedEditPanel = new CourseSketch.AdvanceEditPanel();
+        }
+        var childElement = courseManagement.advancedEditPanel.createAdvanceEditPanel(element,
+            document.querySelectorAll('#advancedEditHolder')[0],
+            saveCallback, destroyAdvancedEditCard, courseManagement.actions);
         $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
             dismissible: true, // Modal can be dismissed by clicking outside of the modal
             opacity: 0.5, // Opacity of modal background
@@ -313,5 +385,6 @@ validateFirstRun(document.currentScript);
         }
         );
         childElement.style.display = '';
+        document.querySelectorAll('#advancedEditHolder')[0].style.display = '';
     }
 })();

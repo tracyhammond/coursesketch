@@ -3,6 +3,7 @@ import "commands.proto";
 import "sketch.proto";
 import "school.proto";
 import "util.proto";
+import "questionData.proto";
 
 package protobuf.srl.submission;
 
@@ -13,12 +14,7 @@ message SrlSubmission {
     optional string id = 1;
     optional int64 submissionTime = 2;
     optional protobuf.srl.utils.SrlChecksum checksum = 3;
-    oneof submissionType {
-        protobuf.srl.commands.SrlUpdateList updateList = 4; // if this is a collection of updates
-        protobuf.srl.sketch.SrlSketch sketch = 5; // if this is a sketch.
-        string textAnswer = 6; // if this is a sketch.
-        int32 answerChoice = 7; // if this is a sketch.
-    }
+    optional protobuf.srl.question.QuestionData submissionData = 4;
 }
 
 message SrlSolution {

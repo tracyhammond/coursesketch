@@ -121,12 +121,15 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
         advanceDataListener.sendDataInsert(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
             if (isException(item)) {
                 assignmentCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                    'Getting the list of asignments: ' + asignmentIdList,  item));
+                    'Inserting assignment into server: ' + assignment.name,  item));
                 return;
             }
             var resultArray = item.getReturnText().split(':');
             var oldId = resultArray[1].trim();
             var newId = resultArray[0].trim();
+           // if (oldId === newId) {
+           //     assignmentCallback(assignment);
+           // }
             // we want to get the current course in the local database in case
             // it has changed while the server was processing.
             getAssignmentLocal(oldId, function(assignment2) {
@@ -168,6 +171,14 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
                 localCallback(assignment);
             }
             insertAssignmentServer(assignment, function(assignmentUpdated) {
+                if (assignmentUpdated instanceof DatabaseException) {
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(assignmentUpdated);
+                    } else {
+                        console.log(assignmentUpdated);
+                    }
+                    return;
+                }
                 parent.getCourse(assignment.courseId, function(course) {
                     var assignmentList = course.assignmentList;
 
@@ -207,8 +218,13 @@ function AssignmentDataManager(parent, advanceDataListener, parentDatabase, Byte
             }
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.ASSIGNMENT, assignment.toArrayBuffer(), function(evt, item) {
                 if (isException(item)) {
-                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'Getting the list of asignments: ' + asignmentIdList,  item));
+                    var databaseException = new DatabaseException('exception thrown while waiting for response from sever',
+                        'Updating assignment: ' + assignment,  item);
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(databaseException);
+                    } else {
+                        console.log(databaseException, assignment);
+                    }
                     return;
                 }
                 // we do not need to make server changes we just need to make sure it was successful.

@@ -5,7 +5,7 @@
 /**
  * A class that allows a user to register.
  *
- * @class RegisterSystem
+ * @constructor RegisterSystem
  */
 function RegisterSystem() {
     var connection = undefined;

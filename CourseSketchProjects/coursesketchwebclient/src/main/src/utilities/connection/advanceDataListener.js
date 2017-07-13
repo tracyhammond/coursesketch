@@ -2,8 +2,11 @@
 /**
  * An exception that is used to represent problems with the advance data listener.
  *
- * @class DatabaseException
+ * @constructor AdvanceListenerException
  * @extends BaseException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function AdvanceListenerException(message, cause) {
     this.name = 'AdvanceListenerException';
@@ -25,7 +28,7 @@ CourseSketch.AdvanceListenerException = AdvanceListenerException;
  * <li>an event that is specified by websocket event protocol</li>
  * <li>an ItemResult - this is specified by the protobuf file data.js</li>
  * </ul>
- *
+ * @constructor AdvanceDataListener
  * @param {Request} Request - The protobuf Request Message.
  * @param {Function} defListener - The default listener that is called if a function is not assigned to a server response.
  */
@@ -52,7 +55,7 @@ function AdvanceDataListener(Request, defListener) {
 
     /**
      * Adds a requestType to the datalistener
-     * @param {Request.MessageType} requestType
+     * @param {Request.MessageType} requestType The type of request to be added.
      */
     this.addRequestType = function(requestType) {
         if (isUndefined(requestMap[requestType])) {
@@ -114,7 +117,7 @@ function AdvanceDataListener(Request, defListener) {
      */
     function queryWrap(func, returnType) {
         return function(evt, msg, listener) {
-            function manageTimeCallback(callbackData) {
+            function manageTimeCallback(callbackData) { // eslint-disable-line require-jsdoc
                 if (listener.times >= 0) {
                     listener.times -= 1;
                     if (!isUndefined(func)) {

@@ -176,7 +176,7 @@ public final class CourseManager {
 
         if (responder.hasTeacherPermission()) {
             try {
-                exactCourse.setAccess(SrlCourse.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
+                exactCourse.setAccess(Util.Accessibility.valueOf((Integer) cursor.get(COURSE_ACCESS))); // admin
             } catch (ClassCastException exception) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
             }
@@ -315,11 +315,11 @@ public final class CourseManager {
         final List<SrlCourse> resultList = new ArrayList<SrlCourse>();
 
         // checks for all public courses.
-        final Document publicCheck = new Document(COURSE_ACCESS, SrlCourse.Accessibility.PUBLIC.getNumber());
+        final Document publicCheck = new Document(COURSE_ACCESS, Util.Accessibility.PUBLIC.getNumber());
         buildCourseForSearching(courseTable.find(publicCheck).iterator(), resultList);
 
         // checks for all super public courses.
-        final Document superPublicCheck = new Document(COURSE_ACCESS, SrlCourse.Accessibility.SUPER_PUBLIC.getNumber());
+        final Document superPublicCheck = new Document(COURSE_ACCESS, Util.Accessibility.SUPER_PUBLIC.getNumber());
         buildCourseForSearching(courseTable.find(superPublicCheck).iterator(), resultList);
 
         LOG.debug("Found {} courses in the current search", resultList.size());

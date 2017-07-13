@@ -5,6 +5,7 @@
      * @param {ProtoException} protoEx - is a ProtoException passed is so the contents can be displayed.
      */
     CourseSketch.showShallowException = function notifyMe(protoEx) {
+
         // Let's check if the browser supports notifications
         if (!('Notification' in window)) {
             console.log('this browser does not support desktop notification');
@@ -83,7 +84,11 @@
             CourseSketch.clientException = showClientSideException;
         }
         window.addEventListener('error', function(evt) {
-            showClientSideException(evt.error);
+            if (evt.error.ignoreError) {
+                console.log('just validating a script only ran once!');
+                return;
+            }
+            showClientSideException(evt);
         });
         window.errorListenerSet = true;
     }

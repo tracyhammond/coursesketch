@@ -138,7 +138,7 @@ function Question() {
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
      * @param {Event} event - event that triggered this function
-     * @return {SrlQuestion} the created protobuf object.
+     * @returns {SrlQuestion} the created protobuf object.
      */
     this.saveData = function(event) {
         var questionProto = CourseSketch.prutil.SrlQuestion();
@@ -233,7 +233,7 @@ function Question() {
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {

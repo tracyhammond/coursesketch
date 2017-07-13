@@ -16,7 +16,7 @@ import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Handles submission storage requests.
@@ -52,64 +52,89 @@ public final class SubmissionHandler {
     public static void handleData(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
             final Institution instance) {
         if (req.getResponseText().equals("student")) {
-            LOG.info("Parsing as an experiment");
-            Submission.SrlExperiment experiment = null;
-            try {
-                experiment = Submission.SrlExperiment.parseFrom(req.getOtherData());
-            } catch (InvalidProtocolBufferException e1) {
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e1);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e1);
-                return; // sorry but we are bailing if anything does not look right.
-            }
-
-            final Submission.SrlExperiment experimentWithIds = Submission.SrlExperiment.newBuilder(experiment)
-                    .setUserId(req.getServersideId())
-                    .build();
-
-            String submissionId;
-            try {
-                submissionId = submissionManager.insertExperiment(req.getServersideId(), null, experimentWithIds, req.getMessageTime());
-            } catch (AuthenticationException | DatabaseAccessException e) {
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                // bail early
-                return;
-            }
-
-            if (Strings.isNullOrEmpty(submissionId)) {
-                final Exception exception = new DatabaseAccessException("Unable to store submission in the database!");
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
-                // bail early
-                return;
-            }
-
-            try {
-                final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
-                LOG.debug("Hashed user id: {}", hashedUserId);
-                instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), submissionId, true);
-            } catch (AuthenticationException | DatabaseAccessException e) {
-                final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-                conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                // bail early
-                return;
-            }
-
-            final Message.Request result = ResultBuilder.buildRequest(
-                    Arrays.asList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SUBMISSION")),
-                    "SUCCESSFULLY STORED SUBMISSION",
-                    req
-            );
-            conn.send(result);
+            saveExperiment(req, conn, submissionManager, instance);
         } else {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(
                     new DatabaseAccessException("INSTRUCTORS CAN NOT SUBMIT SOLUTIONS"));
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.warn("INSTRUCTORS CAN NOT SUBMIT ANYTHING RIGHT NOW");
         }
+    }
+
+    /**
+     * Creates and sends an exception.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param exception
+     *         The exception that occurred.
+     */
+    private static void createAndSendException(final SocketSession conn, final Message.Request req, final Exception exception) {
+        final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(exception);
+        conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
+        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, exception);
+    }
+
+    /**
+     * Takes in a request that has to deal with inserting an experiment.
+     *
+     * @param req
+     *         The request that has data being inserted.
+     * @param conn
+     *         The connection where the result is sent to.
+     * @param submissionManager
+     *         The manager for submission data on other servers.
+     * @param instance The database backer.
+     */
+    private static void saveExperiment(final Message.Request req, final SocketSession conn, final SubmissionManagerInterface submissionManager,
+            final Institution instance) {
+        LOG.info("Parsing as an experiment");
+        Submission.SrlExperiment experiment;
+        try {
+            experiment = Submission.SrlExperiment.parseFrom(req.getOtherData());
+        } catch (InvalidProtocolBufferException exception) {
+            createAndSendException(conn, req, exception);
+            return; // sorry but we are bailing if anything does not look right.
+        }
+
+        final Submission.SrlExperiment experimentWithIds = Submission.SrlExperiment.newBuilder(experiment)
+                .setUserId(req.getServersideId())
+                .build();
+
+        String submissionId;
+        try {
+            submissionId = submissionManager.insertExperiment(req.getServersideId(), null, experimentWithIds, req.getMessageTime());
+        } catch (AuthenticationException | DatabaseAccessException exception) {
+            createAndSendException(conn, req, exception);
+            // bail early
+            return;
+        }
+
+        if (Strings.isNullOrEmpty(submissionId)) {
+            final Exception exception = new DatabaseAccessException("Unable to store submission in the database!");
+            createAndSendException(conn, req, exception);
+            // bail early
+            return;
+        }
+
+        try {
+            final String hashedUserId = MongoInstitution.hashUserId(req.getServerUserId(), experiment.getCourseId());
+            LOG.debug("Hashed user id: {}", hashedUserId);
+            instance.insertSubmission(hashedUserId, req.getServersideId(), experiment.getProblemId(), experiment.getPartId(), submissionId,
+                    true);
+        } catch (AuthenticationException | DatabaseAccessException exception) {
+            createAndSendException(conn, req, exception);
+            // bail early
+            return;
+        }
+
+        final Message.Request result = ResultBuilder.buildRequest(
+                Collections.singletonList(ResultBuilder.buildResult(Data.ItemQuery.NO_OP, "SUCCESSFULLY STORED SUBMISSION")),
+                "SUCCESSFULLY STORED SUBMISSION",
+                req
+                                                                 );
+        conn.send(result);
     }
 }

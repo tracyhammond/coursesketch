@@ -2,7 +2,10 @@
  * An exception that is thrown for the uses of submissions.
  *
  * @extends BaseException
- * @class SubmissionException
+ * @constructor SubmissionException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function SubmissionException(message, cause) {
     this.name = 'SubmissionException';
@@ -26,8 +29,7 @@ SubmissionException.prototype = new BaseException();
  * <li>You can set the problem object with the class "sub-panel".</li>
  * </ul>
  *
- * @class SubmissionPanel
- * @property {QuestionType}
+ * @constructor SubmissionPanel
  */
 function SubmissionPanel() {
 
@@ -85,7 +87,7 @@ function SubmissionPanel() {
             this.sendDataToServer(isSubmitting);
         } catch (exception) {
             if (!suppressAlert) {
-                alert(exception.toString());
+                CourseSketch.clientException(exception);
             }
             console.log(exception);
         }
@@ -107,27 +109,33 @@ function SubmissionPanel() {
         if (isUndefined(this.problemType)) {
             throw new SubmissionException('Problem data is not set correctly aborting');
         }
-        var submission = undefined;
+        var submission = createBaseSubmission();
         var QuestionType = CourseSketch.prutil.QuestionType;
+        var submissionData = CourseSketch.prutil.QuestionData();
         switch (this.problemType) {
             case QuestionType.SKETCH:
-                submission = createSketchSubmission(subPanel, isSubmitting);
+                submissionData.sketchArea = createSketchSubmission(subPanel, isSubmitting);
                 break;
             case QuestionType.FREE_RESP:
-                submission = createTextSubmission(subPanel, isSubmitting);
+                submissionData.freeResponse = createTextSubmission(subPanel, isSubmitting);
                 break;
         }
-        if (isUndefined(submission)) {
-            throw new SubmissionException('submission type not supported, aborting');
+
+        if (isUndefined(submissionData)) {
+            throw new SubmissionException('submission type [' + this.problemType + '] not supported, aborting');
         }
+
+        submission.setSubmissionData(submissionData);
+
         if (isUndefined(this.wrapperFunction)) {
             // You need to set the wrapper function to either create an experiment or solution.
             throw new SubmissionException('Wrapper function is not set, aborting');
         }
+
         var submittingValue = this.wrapperFunction(submission);
         console.log(submittingValue);
         var submissionRequest = CourseSketch.prutil.createRequestFromData(submittingValue,
-                CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
+            CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener(function(event, request) {
@@ -153,7 +161,7 @@ function SubmissionPanel() {
     /**
      * Gets the text that has been typed.
      *
-     * @return {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
      *
      * @param {Element} textArea - The element that contains the text answer
      * @param {Boolean} isSubmitting - Value Currently ignored but in the future it may be used.
@@ -161,8 +169,8 @@ function SubmissionPanel() {
      * @memberof SubmissionPanel
      */
     function createTextSubmission(textArea, isSubmitting) {
-        var submission = createBaseSubmission();
-        submission.textAnswer = textArea.value;
+        var submission = CourseSketch.prutil.FreeResponse();
+        submission.startingText = textArea.value;
         return submission;
     }
 
@@ -173,7 +181,7 @@ function SubmissionPanel() {
      *
      * @param {SketchSurface} sketchSurface - The sketch surface that is being submitted.
      * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
-     * @return {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -193,8 +201,8 @@ function SubmissionPanel() {
         updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
-        var submission = createBaseSubmission();
-        submission.setUpdateList(protoObject);
+        var submission = CourseSketch.prutil.SketchArea();
+        submission.setRecordedSketch(protoObject);
         return submission;
     }
 
@@ -288,7 +296,7 @@ function SubmissionPanel() {
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {
-            throw new BaseException('Operation not supported');
+            throw new SubmissionException('Callbacks for Multiple choice is not supported.');
             // add mult choice tools
         } else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools

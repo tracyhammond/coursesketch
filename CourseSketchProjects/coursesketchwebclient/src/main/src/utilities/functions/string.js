@@ -38,6 +38,7 @@ if (isUndefined(getTextWidth)) {
      *            (e.g. 'bold 14px verdana').
      *
      * @see http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+     * @returns {Number} The visual width of the text.
      */
     function getTextWidth(text, font) {
         // re-use canvas object for better performance
@@ -56,7 +57,7 @@ if (isUndefined(cssEscapeId)) {
      * A more complicated version is found here: {@link https://mothereff.in/css-escapes}.
      *
      * @param {String} inputId - The id we want escaped.
-     * @return {String} An escaped value is returned.
+     * @returns {String} An escaped value is returned.
      *
      * Example:
      * Input: 12a2b3c

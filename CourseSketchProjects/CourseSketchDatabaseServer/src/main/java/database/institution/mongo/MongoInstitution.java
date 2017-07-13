@@ -26,10 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.school.Problem.SrlBankProblem;
 import protobuf.srl.school.Problem.SrlProblem;
 import protobuf.srl.school.School.SrlCourse;
@@ -527,26 +527,27 @@ public final class MongoInstitution extends AbstractCourseSketchDatabaseReader i
     }
 
     @Override
-    public void insertSubmission(final String userId, final String authId, final String problemId, final String submissionId,
+    public void insertSubmission(final String userId, final String authId, final String problemId, final String partId, final String submissionId,
             final boolean experiment)
             throws DatabaseAccessException {
-        SubmissionManager.mongoInsertSubmission(database, userId, problemId, submissionId, experiment);
+        SubmissionManager.mongoInsertSubmission(database, userId, Lists.newArrayList(problemId, partId), submissionId, experiment);
     }
 
     @Override
-    public Submission.SrlExperiment getExperimentAsUser(final String userId, final String authId, final String problemId,
+    public Submission.SrlExperiment getExperimentAsUser(final String userId, final String authId, final List<String> identifierList,
             final SubmissionManagerInterface submissionManager) throws DatabaseAccessException, AuthenticationException {
         LOG.debug("Getting experiment for user: {}", userId);
-        LOG.info("Problem: {}", problemId);
+        LOG.info("Problem: {}", identifierList.get(0));
 
-        final String courseId = this.getCourseProblem(authId, Lists.newArrayList(problemId)).get(0).getCourseId();
-        return SubmissionManager.mongoGetExperiment(auth, database, userId, authId, courseId, problemId, submissionManager);
+        final String courseId = this.getCourseProblem(authId, Lists.newArrayList(identifierList.get(0))).get(0).getCourseId();
+        return SubmissionManager.mongoGetExperiment(auth, database, userId, authId, courseId, identifierList, submissionManager);
     }
 
     @Override
-    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final String problemId, final Message.Request sessionInfo,
-            final MultiConnectionManager internalConnections, final ByteString review) throws DatabaseAccessException, AuthenticationException {
-        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, problemId,
+    public List<Submission.SrlExperiment> getExperimentAsInstructor(final String authId, final List<String> identifier,
+            final Message.Request  sessionInfo, final MultiConnectionManager internalConnections, final ByteString review)
+            throws DatabaseAccessException, AuthenticationException {
+        return SubmissionManager.mongoGetAllExperimentsAsInstructor(auth, database, authId, identifier,
                 internalConnections.getBestConnection(SubmissionWebSocketClient.class),
                 internalConnections.getBestConnection(IdentityWebSocketClient.class));
     }

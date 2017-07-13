@@ -1,5 +1,7 @@
 /**
- * @class NavigationException
+ * An exception for navigating.
+ *
+ * @constructor NavigationException
  * @extends BaseException
  *
  * @param {String} message - The message to show for the exception.
@@ -50,7 +52,7 @@ NavigationException.prototype = new BaseException();
  * @param {Number} preferredIndex - The starting index to start problems at.
  * @param {Boolean} navigateAtSubgroupLevel - If True then the navigation happens at the subgroup level and not the subgroupPart level.
  *                      Not setting this gives it a value of false.
- * @class AssignmentNavigator
+ * @constructor AssignmentNavigator
  */
 function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSubgroupLevel) {
     /**
@@ -92,7 +94,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     var currentSubgroupPart;
 
     /**
-     * Holder for current subgroup part
+     * Holder for current subgroup part.
+     *
      * @type {ProblemSlideHolder}
      */
     var currentSubgroupPartHolder = undefined;
@@ -192,6 +195,13 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     var loadSubpartData = true;
 
     /**
+     * If true the navigation will only stay within the bounds of a single problem.
+     *
+     * @type {boolean}
+     */
+    var stayInThisProblem = false;
+
+    /**
      * The event constant for submitting a problem.
      *
      * @type {String}
@@ -244,14 +254,33 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {Number} assignment type of the current problem.
+     * Resets the location of the navigation to the specific indexes.
+     *
+     * This only allows navigation for the parts within this problem.
+     *
+     * @param {String} courseProblemId - The new assignment to be loaded.
+     * @param {Number} [partIndex] - The index of the part to be loaded.
+     */
+    this.resetNavigationForProblem = function(courseProblemId, partIndex) {
+        CourseSketch.dataManager.getCourseProblem(courseProblemId, function(courseProblem) {
+            loadAssignment(courseProblem.assignmentId, function() {
+                var index = currentAssignment.problemGroups.findIndex(function(element) {
+                    return element === courseProblemId;
+                });
+                localScope.resetNavigation(courseProblem.assignmentId, index, partIndex);
+            }, true);
+        }, undefined);
+    };
+
+    /**
+     * @returns {Number} assignment type of the current problem.
      */
     this.getAssignmentType = function getAssignmentType() {
         return currentAssignment.assignmentType;
     };
 
     /**
-     * @return {Number} assignment type of the current problem.
+     * @returns {Number} assignment type of the current problem.
      */
     this.getNavigationType = function getNavigationType() {
         return currentAssignment.navigationType;
@@ -267,7 +296,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {Boolean} true if the problems have been loaded into memory.
+     * @returns {Boolean} true if the problems have been loaded into memory.
      * @instance
      */
     this.isDataLoaded = function() {
@@ -292,21 +321,32 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @returns {Number} the number of subgroups in the list.
+     * @returns {Number} The number of subgroups in the list.
      */
     this.getSubgroupSize = function getSubgroupSize() {
         return subgroupList.length;
     };
 
     /**
-     * @returns {Number} the number of parts in the subgroup list.
+     * @returns {Number} A human readable version of the total number of elements navigable.
+     */
+    this.getCurrentTotalNumber = function getCurrentTotalNumber() {
+        if (isSubgroupNavigation) {
+            return this.getSubgroupSize();
+        } else {
+            return this.getSubgroupPartSize();
+        }
+    };
+
+    /**
+     * @returns {Number} The number of parts in a single item in the subgroup list.
      */
     this.getSubgroupPartSize = function getSubgroupPartSize() {
         return currentSubgroup.subgroups.length;
     };
 
     /**
-     * @return {SrlAssignment} the current assignment stored in this navigator..
+     * @returns {SrlAssignment} the current assignment stored in this navigator..
      * @instance
      */
     this.getCurrentAssignment = function() {
@@ -314,7 +354,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @returns {BankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
+     * @returns {SrlBankProblem | LectureSlide} The entire set of data that is in the bank problem or lecture slide.
      */
     this.getCurrentInfo = function getCurrentInfo() {
         return currentSubgroupPart;
@@ -328,7 +368,19 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
-     * @return {ItemType} the type of current part.
+     * @returns {Array} the id of the subgroup (An {@link SrlProblem}).
+     */
+    this.getSubmissionIdentifier = function() {
+        if (!isSubgroupNavigation) {
+            return [ currentSubgroup.id, '' + currentSubgroupPartIndex ];
+        }
+        return [ currentSubgroup.id ];
+    };
+
+    /**
+     * Returns the ItemType as defined in {@link ProblemSlideHolder}.
+     *
+     * @returns {ItemType} the type of current part.
      * @instance
      */
     this.getPartType = function() {
@@ -393,7 +445,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      */
     this.hasNext = function() {
         return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 || isLoopable() ||
-            (currentIndex + 1 < subgroupList.length ||
+            ((currentIndex + 1 < subgroupList.length && !stayInThisProblem) ||
             (currentSubgroupPartIndex + 1 < this.getSubgroupPartSize() && !isSubgroupNavigation)));
     };
 
@@ -402,8 +454,8 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      * @instance
      */
     this.hasPrevious = function() {
-        return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 ||
-            isLoopable() || (currentIndex - 1 > 0 || (currentSubgroupPartIndex - 1 > 0 && !isSubgroupNavigation)));
+        return !isUndefined(currentAssignment) && (assignmentIdStack.length !== 0 || isLoopable() ||
+            ((currentIndex - 1 >= 0 && !stayInThisProblem) || (currentSubgroupPartIndex - 1 >= 0 && !isSubgroupNavigation)));
     };
 
     /**
@@ -419,6 +471,24 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     };
 
     /**
+     * Sets type of navigation.  If true then the navigation will ignore subparts.
+     * If false then navigation will happen at the lowest level
+     * @param {Boolean} subgroupNavigation - The type of navigation to happen.
+     */
+    this.setSubgroupNavigation = function(subgroupNavigation) {
+        isSubgroupNavigation = subgroupNavigation;
+    };
+
+    /**
+     * Changes the behavior of navigating so the user can not navigate outside the current problem.
+     *
+     * @param {Boolean} stayInCurrentProblem - True if the navigation should stay in the current problem.
+     */
+    this.setStayInThisProblem = function(stayInCurrentProblem) {
+        stayInThisProblem = stayInCurrentProblem;
+    };
+
+    /**
      * Sets the information about a specific submission.
      *
      * @param {SrlExperiment | SrlSolution} submissionWrapper - This is either an experiment or solution this is NOT a submission object.
@@ -430,7 +500,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
             submissionWrapper.courseId = currentSubgroup.getCourseId();
             submissionWrapper.assignmentId = currentSubgroup.getAssignmentId();
             submissionWrapper.problemId = currentSubgroup.getId();
-            submissionWrapper.partId = currentSubgroupPartIndex;
+            submissionWrapper.partId = '' + currentSubgroupPartIndex;
         } else {
             submissionWrapper.problemBankId = currentSubgroupPart.getId();
         }
@@ -453,7 +523,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     }
 
     /**
-     * Returns {Boolean} True if navigation is random.
+     * @returns {Boolean} True if navigation is random.
      */
     function isRandomNavigation() {
         var assignmentType = currentAssignment.assignmentType;
@@ -463,7 +533,7 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     }
 
     /**
-     * @return {Boolean} True if the assignment is able to be looped.
+     * @returns {Boolean} True if the assignment is able to be looped.
      */
     function isLoopable() {
         return currentAssignment.navigationType === CourseSketch.prutil.NavigationType.LOOPING;
@@ -477,11 +547,21 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
      *
      * @param {UUID} assignmentId - The id of the assignment to load.
      * @param {Function} [callback] - A callback function called when the assignment is loaded.
+     * @param {Boolean} [shortCircuit] - True if the loading should short circuit if possible.
      */
-    function loadAssignment(assignmentId, callback) {
+    function loadAssignment(assignmentId, callback, shortCircuit) {
+        // If we are not loading anything new short circuit.
+        if (shortCircuit && dataLoaded && currentAssignmentId === assignmentId &&
+            !isUndefined(currentAssignment) && currentAssignment.id === assignmentId) {
+            if (!isUndefined(callback)) {
+                callback();
+            }
+            return;
+        }
+
         dataLoaded = false;
 
-        function setData(assignment) { // jscs:ignore jsDoc
+        function setData(assignment) { // eslint-disable-line require-jsdoc
             currentAssignment = assignment;
             currentAssignmentId = assignment.id;
             CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problems) {
@@ -886,6 +966,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     function goToNextSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex + 1 >= subgroupPartLength) {
+            if (stayInThisProblem) {
+                return;
+            }
             currentSubgroupPartIndex = 0;
             changeSubgroup(currentIndex + 1, 1);
             return;
@@ -901,6 +984,9 @@ function AssignmentNavigator(startingAssignmentId, preferredIndex, navigateAtSub
     function goToPreviousSubgroupPart() {
         var subgroupPartLength = currentSubgroup.subgroups.length;
         if (currentSubgroupPartIndex - 1 < 0) {
+            if (stayInThisProblem) {
+                return;
+            }
             currentSubgroupPartIndex = 0;
             changeSubgroup(currentIndex - 1, -1);
             return;

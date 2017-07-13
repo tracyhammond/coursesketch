@@ -1,4 +1,4 @@
-// jscs:disable jsDoc
+/* eslint-disable require-jsdoc */
 /**
  * A manager for slides that talks with the remote server.
  *

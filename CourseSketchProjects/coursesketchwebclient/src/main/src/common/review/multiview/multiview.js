@@ -4,7 +4,7 @@
  * @attribute data-binary - If set then the button will be disabled.
  * @attribute data-max_points If set then this is the max number of points that can be input.
  * @attribute data-max_percent If set then this is the max percent of score that can be used.
- * @class MvSketch
+ * @constructor MvSketch
  */
 function MvSketch() {
     this.maxValue = 100;

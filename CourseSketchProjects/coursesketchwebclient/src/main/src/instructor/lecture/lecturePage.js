@@ -17,7 +17,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.saveTextBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
                 CourseSketch.prutil.getActionCreateTextBoxClass());
-            var element = CourseSketch.prutil.LectureElement();
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.textBox = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -34,7 +34,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
             var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
                 CourseSketch.prutil.getSrlQuestionClass());
-            var element = CourseSketch.prutil.LectureElement();
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.question = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -51,7 +51,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
             var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
                 CourseSketch.prutil.getImageClass());
-            var element = CourseSketch.prutil.LectureElement();
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.image = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -68,7 +68,7 @@ validateFirstRun(document.currentScript);
         CourseSketch.lecturePage.saveEmbeddedHtml = function(command, event, currentUpdate) {
             var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
                 CourseSketch.prutil.getEmbeddedHtmlClass());
-            var element = CourseSketch.prutil.LectureElement();
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.embeddedHtml = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);

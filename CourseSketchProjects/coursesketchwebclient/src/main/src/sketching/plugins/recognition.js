@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc */
 /**
  * Created by David Windows on 5/13/2016.
  */
@@ -6,7 +7,7 @@
     /**
      * A plugin used to send updates to the server.
      *
-     * @class RecognitionPlugin
+     * @constructor RecognitionPlugin
      */
     function RecognitionPlugin(updateManager, sketchId) {
 

@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /**
  * Created by David Windows on 4/15/2016.
  */

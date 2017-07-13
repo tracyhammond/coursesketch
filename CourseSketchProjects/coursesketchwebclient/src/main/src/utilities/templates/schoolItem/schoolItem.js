@@ -1,9 +1,10 @@
+/* eslint-disable valid-jsdoc */
 /**
  * This method traverses up the parent chain until it reaches a null node. It then returns the host.
  * This is used to find the parent of a shadow root which contains the given node.
  *
  * @param {Node} parent - the parent of a node contained within a school item shadow dom.
- * @return {Node} the host element that contains this node.
+ * @returns {Node} the host element that contains this node.
  */
 var getHostElement = function(parent) {
     var grandParent = parent.parentNode;
@@ -15,7 +16,7 @@ var getHostElement = function(parent) {
 };
 
 /**
- * @class SchoolItem
+ * @constructor SchoolItem
  */
 function SchoolItem() {
 
@@ -74,7 +75,7 @@ function SchoolItem() {
      * Given an allowed width, text and font it returns true if the element is
      * over 3 lines long.
      */
-    function checkTextOverflow(widthAllowed, text, font) {// jscs:ignore jsDoc
+    function checkTextOverflow(widthAllowed, text, font) {// eslint-disable-line require-jsdoc
         var totalWidth = getTextWidth(text, font);
         var lines = totalWidth / widthAllowed;
         var numberOfLines = Math.round(lines);
@@ -192,7 +193,7 @@ function SchoolItem() {
     /**
      * Should create a special editor element based on its state.
      *
-     * @return {Element} an input element.
+     * @returns {Element} an input element.
      */
     function getEditorElement() {
         return document.createElement('input');

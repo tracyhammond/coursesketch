@@ -23,15 +23,16 @@
     <!-- homepage specific -->
     <script type="text/javascript"
             src="/src/common/homepage/courseManager.js"></script>
+    <link rel="import" href="/src/instructor/advancedCreation/advancedEditInclude.html">
 
     <!-- INSTRUCTOR SPECIFIC MUST BE AFTER COMMON-->
     <script type="text/javascript" src="/src/utilities/functions/string.js"></script>
     <script type="text/javascript" src="/src/instructor/homepage/create.js"></script>
-    <link rel="import" href="/src/instructor/problemCreation/problemSelectionInclude.html">
+    <link rel="import" href="/src/instructor/problem/problemSelectionInclude.html">
 
     <script>
         $(document).ready(function () {
-            CourseSketch.courseManagement.initializeCourseManagment();
+            CourseSketch.courseManagement.initializeCourseManagement();
         });
     </script>
 
@@ -89,7 +90,7 @@
 
     </div>
     <div id="advancedEditHolder" style="position: fixed;
-    bottom: 0; height:50%; width:100vw; z-index: 100;">
+    bottom: 0; height:50%; width:100vw; z-index: 100; display:none;">
 
     </div>
 </main>

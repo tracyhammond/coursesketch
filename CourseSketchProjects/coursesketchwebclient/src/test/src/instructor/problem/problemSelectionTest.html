@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Problem Selection test</title>
+<!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <link rel="import"
+          href="/test/testUtilities/fakePage/mockedObjects/mockedObjectsInclude.html">
+
+    <link rel="import"
+          href="/src/test/src/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+
+<!-- files needed for testing -->
+<link id="problemSelectionImport" rel="import" href="/src/instructor/problem/problemSelectionInclude.html">
+
+<!-- file being tested. -->
+<script src="/src/instructor/problem/problemSelection.js" data-cover></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+    <div id="testDiv"></div>
+
+	<script>
+        $(document).ready(function() {
+            CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+                callback(CourseSketch.fakeBankProblems);
+            };
+            var template = (function() {
+                var link1 = document.querySelectorAll('#problemSelectionImport')[0];
+                var clone = safeImport(link1.import, document,'selectionTemplateImport','selectionPanel');
+                return clone;
+            })();
+
+            QUnit.module("creation", {
+                setupOnce : function() {
+                    try {
+                        var newElement = new ProblemSelectionPanel();
+
+                        newElement.attachedCallback = function() {
+                            this.initializeElement(template.cloneNode(true));
+                        };
+
+                        // test is not a typo
+                        document.registerElement('problem-test', {
+                            prototype : newElement
+                        });
+                    } catch (exception) {
+                    }
+                },
+                beforeEach: function () {
+                    CourseSketch.dataManager.getAllBankProblems = function (courseId, assignmentId, page, callback) {
+                        callback(CourseSketch.fakeBankProblems);
+                    };
+                },
+                teardown : function() {
+                    document.getElementById('testDiv').innerHTML = "";
+                }
+            });
+
+            /**
+             * Ensures that the custom element can be created and added without throwing an exception.
+             * This <b>does not</b> ensure that everything is set up correctly.
+             */
+            QUnit.test("creation", function(assert) {
+                expect(0);
+                var problem = document.createElement('problem-test');
+                document.querySelector("#testDiv").appendChild(problem);
+            });
+
+            QUnit.test("request creation", function(assert) {
+                expect(3);
+                var problem = document.createElement('problem-test');
+                document.querySelector("#testDiv").appendChild(problem);
+                var courseId = "course";
+                var assignmentId = "assignment";
+                var page = 2;
+                var oldFunction = problem.createRequest;
+                CourseSketch.dataManager.getAllBankProblems = function(insertCourseId, insertAssignmentId, insertPage) {
+                    assert.equal(courseId, insertCourseId);
+                    assert.equal(assignmentId, insertAssignmentId);
+                    assert.equal(page, insertPage);
+                };
+                problem.loadProblems(courseId, assignmentId, page);
+            });
+        });
+    </script>
+</body>

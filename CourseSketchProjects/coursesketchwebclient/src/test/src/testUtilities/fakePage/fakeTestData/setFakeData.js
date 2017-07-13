@@ -71,6 +71,34 @@
     };
 
     /**
+     *
+     */
+    function setDataListenerFunctions() {
+        CourseSketch.dataListener.sendDataInsert = function (queryType, data, callback, requestId, times) {
+            var oldId;
+            if (queryType === CourseSketch.prutil.ItemQuery.ASSIGNMENT) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlAssignmentClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlCourseClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.COURSE_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlProblemClass()).id;
+            }
+            if (queryType === CourseSketch.prutil.ItemQuery.BANK_PROBLEM) {
+                oldId = CourseSketch.prutil.decodeProtobuf(data, CourseSketch.prutil.getSrlBankProblemClass()).id;
+            }
+            var result = {
+                getReturnText: function() { return oldId + ':' + oldId; }
+            };
+            callback(undefined, result);
+        };
+        CourseSketch.dataListener.sendDataUpdate = function (queryType, data, callback, requestId, times) {
+            callback();
+        }
+    }
+
+    /**
      * Called when we can load our fake data into the database.
      */
     function databaseIsReadForLoading() {
@@ -113,6 +141,7 @@
         loadBankProblems();
         loadAssignments();
         loadLectures();
+        setDataListenerFunctions();
     }
 
     // waits till the database is ready to set up our loading process

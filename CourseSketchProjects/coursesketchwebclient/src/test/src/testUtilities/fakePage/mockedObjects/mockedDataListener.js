@@ -2,7 +2,7 @@
 (function() {
     CourseSketch.makeNewDataListener = function() {
         return new AdvanceDataListener(CourseSketch.prutil.getRequestClass(), function(evt, item) {
-            console.log("default listener");
+            console.log("default listener",evt,item);
         });
     };
     var dataListener = CourseSketch.makeNewDataListener();

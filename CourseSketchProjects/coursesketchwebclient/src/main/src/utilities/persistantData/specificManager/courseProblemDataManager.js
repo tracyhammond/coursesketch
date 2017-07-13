@@ -111,8 +111,8 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
      * exist.
      *
      * @param {SrlCourseProblem} courseProblem - CourseProblem object to set
-     * @param {Function} localCallback - Function to be called after local courseProblem setting is done
-     * @param {Function} serverCallback - Function to be called after server courseProblem setting is done
+     * @param {Function} [localCallback] - Function to be called after local courseProblem setting is done
+     * @param {Function} [serverCallback] - Function to be called after server courseProblem setting is done
      */
     function updateCourseProblem(courseProblem, localCallback, serverCallback) {
         setCourseProblem(courseProblem, function() {
@@ -144,9 +144,9 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
      *
      * @param {SrlCourseProblem} courseProblem
      *                courseProblem object to insert
-     * @param {Function} localCallback
+     * @param {Function} [localCallback]
      *                function to be called after local insert is done
-     * @param {Function} serverCallback
+     * @param {Function} [serverCallback]
      *                function to be called after server insert is done
      */
     function insertCourseProblem(courseProblem, localCallback, serverCallback) {
@@ -185,17 +185,7 @@ function CourseProblemDataManager(parent, advanceDataListener, parentDatabase, B
                 // Finished with setting courseProblem
             });
         } // insertingCourseProblem
-
-        // Inserts the bank problem first!
-        if ((isUndefined(courseProblem.problemBankId) || courseProblem.problemBankId === null) &&
-            (!isUndefined(courseProblem.problemInfo) && courseProblem.problemInfo !== null)) {
-            parent.insertBankProblemServer(courseProblem.problemInfo, function(updateId) {
-                courseProblem.problemBankId = updateId;
-                insertingCourseProblem();
-            });
-        } else {
-            insertingCourseProblem();
-        }
+        insertingCourseProblem();
 
         // Finished with local courseProblem
     }

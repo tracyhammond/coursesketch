@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc, require-jsdoc */
 function createSketchViewer(list, idToPutViewIn) {
     var parsedList = parseList(list, 0);
     document.getElementById(idToPutViewIn).innerHTML = parsedList[0];

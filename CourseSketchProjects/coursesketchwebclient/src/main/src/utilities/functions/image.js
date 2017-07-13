@@ -1,4 +1,4 @@
-// jscs:disable jsDoc
+/* eslint-disable require-jsdoc, valid-jsdoc */
 
 /**
  * Gets an image in base 64 so we can save it as binary.

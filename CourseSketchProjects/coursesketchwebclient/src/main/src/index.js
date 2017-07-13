@@ -51,9 +51,13 @@ $(document).ready(
         };
 
         window.addEventListener('beforeunload', function(e) {
-            var r = CourseSketch.prutil.Request();
-            r.setRequestType(Request.MessageType.CLOSE);
-            connection.sendRequest(r);
+            try {
+                var r = CourseSketch.prutil.Request();
+                r.setRequestType(CourseSketch.prutil.getRequestClass().MessageType.CLOSE);
+                connection.sendRequest(r);
+            } catch (exception) {
+                return '' + exception;
+            }
             return 'you can close this window';
         });
 

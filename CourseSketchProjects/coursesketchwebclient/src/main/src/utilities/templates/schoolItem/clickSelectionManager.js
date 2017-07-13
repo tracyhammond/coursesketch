@@ -4,7 +4,7 @@
  *
  * This lets ony one be highlighted at a time.
  *
- * @class ClickSelectionManager
+ * @constructor ClickSelectionManager
  */
 function ClickSelectionManager() {
     this.selectedItems = [];
