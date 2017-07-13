@@ -33,6 +33,10 @@ function ProblemRenderer(problemPanel) {
     var finishWaiting;
     var isRunning;
     var isStudent;
+    var defaultErrorListener = function(error) {
+        console.log(error);
+    };
+    var errorListener = defaultErrorListener;
 
     /**
      * Resets the data in the renderer to its initial value.
@@ -44,6 +48,7 @@ function ProblemRenderer(problemPanel) {
         currentType = undefined;
         specialQuestionData = undefined;
         currentSaveListener = undefined;
+        errorListener = defaultErrorListener;
     };
 
     /**
@@ -105,6 +110,13 @@ function ProblemRenderer(problemPanel) {
     };
 
     /**
+     * @param {Function} errorListenerFunction.
+     */
+    this.setErrorListener = function(errorListenerFunction) {
+        errorListener = errorListenerFunction;
+    };
+
+    /**
      * Renders the bank problem.
      *
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
@@ -115,7 +127,7 @@ function ProblemRenderer(problemPanel) {
         var internalCallback = setupWaiting(callback, stopWaiting);
 
         if (isUndefined(bankProblem)) {
-            console.error(new ProblemRenderException('Can not render an undefined bank problem'));
+            errorListener(new ProblemRenderException('Can not render an undefined bank problem'));
             internalCallback(bankProblem);
             return;
         }
@@ -134,7 +146,7 @@ function ProblemRenderer(problemPanel) {
      */
     this.renderSubmission = function(bankProblem, submission, callback, stopWaiting) {
         if (isUndefined(submission)) {
-            console.error(new ProblemRenderException('Can not render and undefined submission'));
+            errorListener(new ProblemRenderException('Can not render and undefined submission'));
             this.renderBankProblem(bankProblem, callback, stopWaiting);
             return;
         }
@@ -168,7 +180,7 @@ function ProblemRenderer(problemPanel) {
         } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
             loadCheckBox(questionData, callback);
         } else {
-            console.log(new ProblemRenderException('invalid questionType when rendering submission: ' + currentType));
+            errorListener(new ProblemRenderException('invalid questionType when rendering submission: ' + currentType));
             callback();
         }
     }
@@ -202,14 +214,8 @@ function ProblemRenderer(problemPanel) {
         sketchSurface.className = 'sub-panel submittable';
         sketchSurface.style.width = '100%';
         sketchSurface.style.height = '100%';
-        sketchSurface.setErrorListener(function(exception) {
-            console.log(exception);
-            alert(exception);
-        });
-
-        if (!hasValidQuestionData(questionData)) {
-            document.getElementById('problemPanel').appendChild(sketchSurface);
-            return;
+        if (!isUndefined(errorListener)) {
+            sketchSurface.setErrorListener(errorListener);
         }
 
         var sketchArea = questionData.sketchArea;
@@ -264,10 +270,6 @@ function ProblemRenderer(problemPanel) {
         typingSurface.className = 'sub-panel card-panel';
         typingSurface.contentEditable = true;
         problemPanel.appendChild(typingSurface);
-        if (!hasValidQuestionData(questionData)) {
-            callback();
-            return;
-        }
         var freeResponse = questionData.freeResponse;
         loadIntoTyping(freeResponse, typingSurface, callback);
     }
@@ -300,10 +302,6 @@ function ProblemRenderer(problemPanel) {
 
         problemPanel.appendChild(multiChoice);
 
-        if (!hasValidQuestionData(questionData)) {
-            callback();
-            return;
-        }
         loadIntoMultipleChoice(questionData.multipleChoice, multiChoice, isSubmission, callback);
     }
 
@@ -321,6 +319,9 @@ function ProblemRenderer(problemPanel) {
         }
         if (isUndefined(multipleChoice) || multipleChoice === null) {
             if (!isSubmission) {
+                multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
+            } else {
+                errorListener(new ProblemRenderException('Invalid multiple choice data occured for problem'));
                 multiChoiceElement.loadData(CourseSketch.prutil.MultipleChoice());
             }
             callback();
