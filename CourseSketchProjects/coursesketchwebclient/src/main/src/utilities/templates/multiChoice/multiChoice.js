@@ -195,6 +195,9 @@ function MultiChoice() {
     /**
      * Sets the listener.
      *
+     * The listener is called with (SrlCommand, event, SrlUpdate, MultiChoice)
+     * With MultiChoice being the same type as LoadData.
+     *
      * @param {Function} listener - called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {

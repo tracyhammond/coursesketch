@@ -19,6 +19,7 @@
   "devDependencies": {
     "blanket": "1.1.7",
     "qunit": "1.23.0",
+    "qunit-assert-compare": "1.1.0",
     "qunit-once": "0.1.1",
     "sinon": "http://sinonjs.org/releases/sinon-1.17.3.js"
   },

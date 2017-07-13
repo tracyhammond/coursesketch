@@ -112,8 +112,15 @@ function ProblemRenderer(problemPanel) {
      * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
      */
     this.renderBankProblem = function(bankProblem, callback, stopWaiting) {
-        copyQuestionData(bankProblem);
         var internalCallback = setupWaiting(callback, stopWaiting);
+
+        if (isUndefined(bankProblem)) {
+            console.error(new ProblemRenderException('Can not render an undefined bank problem'));
+            internalCallback(bankProblem);
+            return;
+        }
+
+        copyQuestionData(bankProblem);
         loadSpecificType(specialQuestionData, isStudent, internalCallback);
     };
 
@@ -151,6 +158,7 @@ function ProblemRenderer(problemPanel) {
      */
     function loadSpecificType(questionData, isSubmission, callback) {
         problemPanel.emptyPanel();
+
         if (currentType === CourseSketch.prutil.QuestionType.SKETCH) {
             loadSketch(questionData, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.FREE_RESP) {
@@ -159,6 +167,9 @@ function ProblemRenderer(problemPanel) {
             loadMultipleChoice(questionData, isSubmission, callback);
         } else if (currentType === CourseSketch.prutil.QuestionType.CHECK_BOX) {
             loadCheckBox(questionData, callback);
+        } else {
+            console.log(new ProblemRenderException('invalid questionType when rendering submission: ' + currentType));
+            callback();
         }
     }
 
@@ -315,14 +326,13 @@ function ProblemRenderer(problemPanel) {
             callback();
             return;
         }
-        if (!isSubmission) {
-            multiChoiceElement.loadData(multipleChoice);
-            callback();
-            return;
-        }
-        var id = multipleChoice.correctId;
-        if (!isUndefined(id) && id !== null) {
-            multiChoiceElement.setSelected(id);
+        multiChoiceElement.loadData(multipleChoice);
+
+        if (isSubmission) {
+            var id = multipleChoice.correctId;
+            if (!isUndefined(id) && id !== null) {
+                multiChoiceElement.setSelected(id);
+            }
         }
         callback();
     }

@@ -1,65 +1,66 @@
 <head>
-<!-- Caches the timing function so I can restore them at any time. -->
-<script>
-    var setRealTimeout = (function(scope) {
-        var localMethod = scope.setTimeout;
-        return function(func, time) {
-            return localMethod(func, time);
-        };
-    })(this);
+    <!-- Caches the timing function so I can restore them at any time. -->
+    <script>
+        var setRealTimeout = (function(scope) {
+            var localMethod = scope.setTimeout;
+            return function(func, time) {
+                return localMethod(func, time);
+            };
+        })(this);
 
-    var clearRealTimeout = (function(scope) {
-        var localMethod = scope.clearTimeout;
-        return function(timeThing) {
-            return localMethod(timeThing);
-        };
-    })(this);
+        var clearRealTimeout = (function(scope) {
+            var localMethod = scope.clearTimeout;
+            return function(timeThing) {
+                return localMethod(timeThing);
+            };
+        })(this);
 
-    var setRealInterval = (function(scope) {
-        var localMethod = scope.setInterval;
-        return function(func, time) {
-            return localMethod(func, time);
-        };
-    })(this);
+        var setRealInterval = (function(scope) {
+            var localMethod = scope.setInterval;
+            return function(func, time) {
+                return localMethod(func, time);
+            };
+        })(this);
 
-    var clearRealInterval = (function(scope) {
-        var localMethod = scope.clearInterval;
-        return function(timeThing) {
-            return localMethod(timeThing);
-        };
-    })(this);
-</script>
-<script src="/src/utilities/functions/base.js"></script>
-<link rel="stylesheet" href="/bower_components/qunit/qunit/qunit.css">
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/qunit/qunit/qunit.js"></script>
-<!-- http://sinonjs.org/qunit/ -->
-<script src="/bower_components/sinon/index.js"></script>
-<!-- mocking framework -->
-<script src="sinon-qunit-1.0.0.js"></script>
-<!-- qunit mocking framework -->
+        var clearRealInterval = (function(scope) {
+            var localMethod = scope.clearInterval;
+            return function(timeThing) {
+                return localMethod(timeThing);
+            };
+        })(this);
+    </script>
+    <script src="/src/utilities/functions/base.js"></script>
+    <link rel="stylesheet" href="/bower_components/qunit/qunit/qunit.css">
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/qunit/qunit/qunit.js"></script>
+    <script src="/bower_components/qunit-assert-compare/qunit-assert-compare.js"></script>
+    <!-- http://sinonjs.org/qunit/ -->
+    <script src="/bower_components/sinon/index.js"></script>
+    <!-- mocking framework -->
+    <script src="sinon-qunit-1.0.0.js"></script>
+    <!-- qunit mocking framework -->
 
-<script src="/bower_components/qunit-once/qunit-once.js"></script>
-<!-- qunit once nice and helpful for making a teardownOnce and setupOnce method -->
+    <script src="/bower_components/qunit-once/qunit-once.js"></script>
+    <!-- qunit once nice and helpful for making a teardownOnce and setupOnce method -->
 
-<!-- code coverage framework -->
-<script src="/bower_components/blanket/dist/qunit/blanket.min.js"></script>
+    <!-- code coverage framework -->
+    <script src="/bower_components/blanket/dist/qunit/blanket.min.js"></script>
 
-<!-- simulates an event on an element. -->
-<script src="eventSimulator.js"></script>
+    <!-- simulates an event on an element. -->
+    <script src="eventSimulator.js"></script>
 
-<script src="databaseHelper.js"></script>
+    <script src="databaseHelper.js"></script>
 
-<!-- helpers for comparisons -->
+    <!-- helpers for comparisons -->
     <script src="ExceptionTester.js"></script>
 
-<!-- qunit extensions -->
-<script src="qunit-protobuf.js"></script>
-<script>
-    QUnit.config.testTimeout = 5000;
+    <!-- qunit extensions -->
+    <script src="qunit-protobuf.js"></script>
+    <script>
+        QUnit.config.testTimeout = 5000;
 
-    CourseSketch.getExceptionParentElement = function() {
-        return document.body;
-    };
-</script>
+        CourseSketch.getExceptionParentElement = function() {
+            return document.body;
+        };
+    </script>
 </head>
