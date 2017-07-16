@@ -1,5 +1,6 @@
 package utilities;
 
+import com.google.protobuf.Timestamp;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +95,7 @@ public final class TimeManager {
      * @return the adjusted system time based off of data from the master server.
      */
     public static long getSystemTime() {
-        return DateTime.now().getMillis() + totalTimeDifference;
+        return DateTime.now().getMillis() + getTotalTimeDifference();
     }
 
     /**
@@ -222,5 +223,15 @@ public final class TimeManager {
      */
     public static long getLatencyDifference() {
         return latencyDifference;
+    }
+
+    /**
+     * Creates a protobuf {@link Timestamp} from a long.
+     *
+     * @param milliseconds A time in milliseconds
+     * @return A protobuf.
+     */
+    public static Timestamp createTime(final long milliseconds) {
+        return com.google.protobuf.Timestamp.newBuilder().setSeconds(milliseconds).build();
     }
 }

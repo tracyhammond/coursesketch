@@ -138,6 +138,7 @@
         <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <testDirectory>${basedir}/src/main/test</testDirectory>
+        <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
         <nodeVersion>v4.2.2</nodeVersion>
     </properties>
 
@@ -155,7 +156,7 @@
                 <version>2.10</version>
                 <executions>
                     <execution>
-                        <id>unpack libraries</id>
+                        <id>unpack recognition libraries</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -165,13 +166,44 @@
                                 <artifactItem>
                                     <groupId>com.github.dtracers</groupId>
                                     <artifactId>SketchRecognitionFramework</artifactId>
-                                    <version>-SNAPSHOT</version>
+                                    <version>${recognitionFrameworkVersion}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/src/main/resources/other/protobuf</outputDirectory>
+                                    <outputDirectory>${protoDirectory}</outputDirectory>
                                     <includes>**/*.proto</includes>
                                 </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <id>download any</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://raw.githubusercontent.com/google/protobuf/v${protobufVersion}/src/google/protobuf/any.proto</url>
+                            <unpack>false</unpack>
+                            <outputDirectory>${protoDirectory}/google/protobuf</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download timestamp</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://raw.githubusercontent.com/google/protobuf/v${protobufVersion}/src/google/protobuf/timestamp.proto</url>
+                            <unpack>false</unpack>
+                            <outputDirectory>${protoDirectory}/google/protobuf</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -275,14 +307,14 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.5-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.dtracers</groupId>
             <artifactId>SketchRecognitionFramework</artifactId>
-            <version>-SNAPSHOT</version>
+            <version>${recognitionFrameworkVersion}</version>
         </dependency>
     </dependencies>
 

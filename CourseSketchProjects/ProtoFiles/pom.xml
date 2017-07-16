@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>ProtoFiles</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>${protoFileVersion}</version>
 	<name>ProtoFiles</name>
 	<profiles>
 		<profile>
@@ -64,8 +64,16 @@
 	<properties>
 	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
 		<clientProtoDir>coursesketchwebclient/src/main/resources/other/protobuf</clientProtoDir>
+		<pythonOutputDirectory>${basedir}/src/main/resources/generated_proto</pythonOutputDirectory>
 	</properties>
 	<build>
+		<extensions>
+			<extension>
+				<groupId>kr.motd.maven</groupId>
+				<artifactId>os-maven-plugin</artifactId>
+				<version>1.5.0.Final</version>
+			</extension>
+		</extensions>
 		<plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -76,26 +84,32 @@
                 </configuration>
             </plugin>
 			<plugin>
-				<groupId>com.google.protobuf.tools</groupId>
-				<artifactId>maven-protoc-plugin</artifactId>
-				<version>0.4.2</version>
+				<groupId>org.xolstice.maven.plugins</groupId>
+				<artifactId>protobuf-maven-plugin</artifactId>
+				<version>0.5.0</version>
 				<configuration>
 					<checkStaleness>true</checkStaleness>
 					<staleMillis>10000</staleMillis>
-					<protocExecutable>${protocLocation}</protocExecutable>
+					<protocArtifact>com.google.protobuf:protoc:3.3.0:exe:${os.detected.classifier}</protocArtifact>
 				</configuration>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
-						<configuration>
-							<checkStaleness>true</checkStaleness>
-							<staleMillis>10000</staleMillis>
-							<protocExecutable>${protocLocation}</protocExecutable>
-						</configuration>
 						<goals>
-                                <goal>compile</goal>
-                                <goal>testCompile</goal>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
 						</goals>
+					</execution>
+					<execution>
+						<id>pypile</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>compile-python</goal>
+						</goals>
+						<configuration>
+							<checkStaleness>false</checkStaleness>
+							<outputDirectory>${pythonOutputDirectory}</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -134,7 +148,7 @@
         <dependency>
             <groupId>com.github.dtracers</groupId>
             <artifactId>SketchRecognitionFramework</artifactId>
-            <version>4.0.0</version>
+            <version>${recognitionFrameworkVersion}</version>
         </dependency>
 	</dependencies>
 </project>

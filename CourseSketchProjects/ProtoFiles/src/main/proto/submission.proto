@@ -1,3 +1,5 @@
+syntax = "proto3";
+
 import "commands.proto";
 
 import "sketch.proto";
@@ -11,27 +13,27 @@ package protobuf.srl.submission;
  * Contains extra metadata for an UpdateList
  */
 message SrlSubmission {
-    optional string id = 1;
-    optional int64 submissionTime = 2;
-    optional protobuf.srl.utils.SrlChecksum checksum = 3;
-    optional protobuf.srl.question.QuestionData submissionData = 4;
+    string id = 1;
+    int64 submissionTime = 2;
+    protobuf.srl.utils.SrlChecksum checksum = 3;
+    protobuf.srl.question.QuestionData submissionData = 4;
 }
 
 message SrlSolution {
-    optional bool allowedInProblemBank = 1;
-    optional bool isPracticeProblem = 2;
-    optional SrlSubmission submission = 3;
-    optional string problemBankId = 4;
+    bool allowedInProblemBank = 1;
+    bool isPracticeProblem = 2;
+    SrlSubmission submission = 3;
+    string problemBankId = 4;
 }
 
 // Students submit experiments!
 message SrlExperiment {
-    optional string courseId = 1;
-    optional string assignmentId = 2;
-    optional string problemId = 3;
+    string courseId = 1;
+    string assignmentId = 2;
+    string problemId = 3;
     // This is used in the cases where there are multiple parts of a problem.
-    optional string partId = 4;
-    optional string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
-    optional SrlSubmission submission = 6;
-    optional protobuf.srl.utils.SrlPermission accessPermission = 7;
+    string partId = 4;
+    string userId = 5; // student Id  (this can sometimes be the username for displaying purposes
+    SrlSubmission submission = 6;
+    protobuf.srl.utils.SrlPermission accessPermission = 7;
 }

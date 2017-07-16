@@ -431,7 +431,7 @@ public abstract class AbstractServerWebSocketHandler {
 
             final Request.Builder sessionInfoReplacement = ProtobufUtilities.createBaseResponse(req, true);
             sessionInfoReplacement.setSessionInfo(sessionInfo);
-            if (!sessionInfoReplacement.hasMessageTime()) {
+            if (sessionInfoReplacement.getMessageTime() == 0) {
                 sessionInfoReplacement.setMessageTime(TimeManager.getSystemTime());
             }
             return sessionInfoReplacement.build();

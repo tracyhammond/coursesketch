@@ -1,3 +1,5 @@
+syntax = "proto3";
+
 import "util.proto";
 import "commands.proto";
 
@@ -16,17 +18,17 @@ message QuestionData {
 
 message SketchArea {
     //srlSketch object if proto include works
-    optional protobuf.srl.commands.SrlUpdateList recordedSketch = 10;
+    protobuf.srl.commands.SrlUpdateList recordedSketch = 10;
 }
 
 message FreeResponse {
-    optional string startingText = 1;
+    string startingText = 1;
 }
 
 message MultipleChoice {
     repeated AnswerChoice answerChoices = 1;
     // only shown to instructor
-    optional string correctId = 2;
+    string correctId = 2;
 }
 
 message CheckBox {
@@ -36,10 +38,10 @@ message CheckBox {
 }
 
 message AnswerChoice {
-    required string id = 1;
-    optional string text = 2;
+    string id = 1;
+    string text = 2;
 }
 
 message EmbeddedHtml {
-    optional string embeddedHtml = 1;
+    string embeddedHtml = 1;
 }

@@ -126,7 +126,7 @@ public final class RpcSession implements SocketSession {
      *
      * @param other
      *         A different RpcSession.
-     * @return True if the {@link org.eclipse.jetty.websocket.api.Session} are equal.
+     * @return True if the {@link PeerInfo} are equal.
      */
     @Override
     public boolean equals(final Object other) {
@@ -150,7 +150,7 @@ public final class RpcSession implements SocketSession {
     }
 
     /**
-     * @return The hash code of the {@link org.eclipse.jetty.websocket.api.Session}.
+     * @return The hash code of the {@link PeerInfo}.
      */
     @Override
     public int hashCode() {

@@ -74,7 +74,7 @@
         <dependency>
 			<groupId>CourseSketch</groupId>
 			<artifactId>ProtoFiles</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
+			<version>${protoFileVersion}</version>
 			<scope>compile</scope>
 		</dependency>
 

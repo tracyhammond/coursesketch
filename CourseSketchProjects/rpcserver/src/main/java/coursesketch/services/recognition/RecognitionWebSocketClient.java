@@ -12,13 +12,14 @@ import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.request.Message;
 import protobuf.srl.services.recognition.RecognitionServer;
+import protobuf.srl.sketch.Interpretation;
 import protobuf.srl.sketch.Sketch;
 
 import java.net.URI;
 import java.util.List;
 
 /**
- * Created by dtracers on 12/15/2015.
+ * A service for recognition.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class RecognitionWebSocketClient extends ClientWebSocket implements RecognitionInterface {
@@ -136,7 +137,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
      * @param template The template data.
      * @throws TemplateException Thrown if there are problems creating the template.
      */
-    private void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+    private void addTemplate(final String templateId, final Interpretation.SrlInterpretation interpretation,
             final Sketch.RecognitionTemplate.Builder template) throws TemplateException {
         if (recognitionService == null) {
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
@@ -158,19 +159,19 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
     }
 
     @Override
-    public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+    public final void addTemplate(final String templateId, final Interpretation.SrlInterpretation interpretation,
             final Sketch.SrlSketch sketch) throws TemplateException {
         addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setSketch(sketch));
     }
 
     @Override
-    public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+    public final void addTemplate(final String templateId, final Interpretation.SrlInterpretation interpretation,
             final Sketch.SrlShape srlShape) throws TemplateException {
         addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setShape(srlShape));
     }
 
     @Override
-    public final void addTemplate(final String templateId, final Sketch.SrlInterpretation interpretation,
+    public final void addTemplate(final String templateId, final Interpretation.SrlInterpretation interpretation,
             final Sketch.SrlStroke srlStroke) throws TemplateException {
         addTemplate(templateId, interpretation, Sketch.RecognitionTemplate.newBuilder().setStroke(srlStroke));
     }
@@ -220,7 +221,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
     }
 
     @Override
-    public final List<Sketch.SrlInterpretation> recognize(final String sketchId, final Sketch.RecognitionTemplate recognitionTemplate) throws
+    public final List<Interpretation.SrlInterpretation> recognize(final String sketchId, final Sketch.RecognitionTemplate recognitionTemplate) throws
             RecognitionException {
         return null;
     }
@@ -232,7 +233,7 @@ public class RecognitionWebSocketClient extends ClientWebSocket implements Recog
             recognitionService = RecognitionServer.RecognitionService.newBlockingStub(getRpcChannel());
         }
 
-        RecognitionServer.GeneratedTemplates generatedTemplates = null;
+        RecognitionServer.GeneratedTemplates generatedTemplates;
         try {
             LOG.debug("Sending generate additional templates request");
             generatedTemplates = recognitionService

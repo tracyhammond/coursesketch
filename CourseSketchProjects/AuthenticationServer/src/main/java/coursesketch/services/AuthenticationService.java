@@ -67,10 +67,7 @@ public final class AuthenticationService extends Authentication.AuthenticationSe
             final RpcCallback<Authentication.AuthResponse> done) {
         try {
             done.run(authChecker.isAuthenticated(request.getItemType(), request.getItemId(), request.getAuthId(), request.getAuthParams()));
-        } catch (DatabaseAccessException e) {
-            controller.setFailed(e.toString());
-            LOG.error("Failed to authenticate", e);
-        } catch (AuthenticationException e) {
+        } catch (DatabaseAccessException | AuthenticationException e) {
             controller.setFailed(e.toString());
             LOG.error("Failed to authenticate", e);
         }

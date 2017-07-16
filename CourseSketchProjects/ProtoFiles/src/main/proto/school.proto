@@ -1,22 +1,24 @@
+syntax = "proto3";
+
 import "util.proto";
 
 package protobuf.srl.school;
 
 message SrlCourse {
-    required string id = 1; // This must be globally unique.
-    optional string name = 2;
-    optional protobuf.srl.utils.SrlPermission accessPermission= 3;
-    optional protobuf.srl.utils.Accessibility access = 4 [default=PROTECTED];
-    optional string description = 5;
-    optional string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
-    optional string imageUrl = 7;
-    optional float grade = 8; //Calculated grade for all Assignments in this course
-    optional protobuf.srl.utils.DateTime accessDate = 9; //Date course can be accessed
-    optional protobuf.srl.utils.DateTime closeDate = 10; //Date course can no longer be accessed
-    optional protobuf.srl.utils.State state = 11;
+    string id = 1; // This must be globally unique.
+    string name = 2;
+    protobuf.srl.utils.SrlPermission accessPermission = 3;
+    protobuf.srl.utils.Accessibility access = 4;
+    string description = 5;
+    string semester = 6; //should be in format '_F13' (_F = Fall, Sp = Spring, Su = Summer)
+    string imageUrl = 7;
+    float grade = 8; //Calculated grade for all Assignments in this course
+    protobuf.srl.utils.DateTime accessDate = 9; //Date course can be accessed
+    protobuf.srl.utils.DateTime closeDate = 10; //Date course can no longer be accessed
+    protobuf.srl.utils.State state = 11;
     repeated string assignmentList = 12;
     repeated string lectureList = 13;
-    optional string registrationKey = 14;
+    string registrationKey = 14;
 
     /*
     SUPER_PUBLIC
@@ -34,28 +36,29 @@ message SrlCourse {
 
 
 message SrlGrade {
-    required string id = 1;
-    required string problemId = 2;
-    required float grade = 3;
-    optional string comment = 4;
+    string id = 1;
+    string problemId = 2;
+    float grade = 3;
+    string comment = 4;
 
-    //optional string subTopic = 7;
-    //optional string source = 8;
+    // string subTopic = 7;
+    // string source = 8;
     //repeated string otherKeywords = 9;
 
 }
 
 message SrlUser {
-    required string username = 1; // Must be globally unique
-    optional string email = 2;
+    string username = 1; // Must be globally unique
+    string email = 2;
     repeated string courseList = 3;
-    optional string schoolIdentity = 4;
-    optional string firstName = 5;
-    optional string lastName = 6;
-    optional string password = 7;
+    string schoolIdentity = 4;
+    string firstName = 5;
+    string lastName = 6;
+    string password = 7;
 }
 
 enum UserType {
+    UNKNOWN = 0;
     ADMIN = 1;
     INSTRUCTOR = 2;
     TEACHING_ASSISTANT = 3;
@@ -65,8 +68,8 @@ enum UserType {
 
 message SrlGroup {
     repeated string userId = 1;
-    required string groupId = 2;
-    optional string groupName = 3;
+    string groupId = 2;
+    string groupName = 3;
     repeated string admin = 4; // this is the only group of people who are allowed to use this group.
     //(and see it outside the database)
 }

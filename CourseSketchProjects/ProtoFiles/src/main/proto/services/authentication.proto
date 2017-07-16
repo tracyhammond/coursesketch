@@ -1,10 +1,11 @@
+syntax = "proto3";
+
 package protobuf.srl.services.authentication;
 
 import "util.proto";
 import "message.proto";
 
 option java_generic_services = true;
-
 
 /**
  * A list of Authentication options.
@@ -18,43 +19,43 @@ message AuthType {
     /**
      * If true then it checks against the userList in {@link AuthenticationData}.
      */
-    optional bool checkingUser = 1;
+    bool checkingUser = 1;
 
     /**
      * If true then it checks against the peerTeacherList in {@link AuthenticationData}.
      */
-    optional bool checkingPeerTeacher = 2;
+    bool checkingPeerTeacher = 2;
 
     /**
      * If true then it checks against the modList in {@link AuthenticationData}.
      */
-    optional bool checkingMod = 3;
+    bool checkingMod = 3;
 
     /**
      * If true then it checks against the adminList in {@link AuthenticationData}.
      */
-    optional bool checkingAdmin = 4;
+    bool checkingAdmin = 4;
 
     /**
      * If true then it checks that the dates are within the open and close datae in {@link AuthenticationData}.
      */
-    optional bool checkDate = 5;
+    bool checkDate = 5;
 
     /**
      * If true then it passes if either mod, admin, or user exist. {@link AuthenticationData}.
      * Or if the class does not require registration.
      */
-    optional bool checkAccess = 6;
+    bool checkAccess = 6;
 
     /**
      * If true then it checks if the course is published.
      */
-    optional bool checkIsPublished = 7;
+    bool checkIsPublished = 7;
 
     /**
      * If true then it checks if the course requires registration.
      */
-    optional bool checkIsRegistrationRequired = 8;
+    bool checkIsRegistrationRequired = 8;
 
 }
 
@@ -64,11 +65,11 @@ message AuthType {
  */
 message AuthCreationRequest {
     // contains all of the information about the item being created
-    required AuthRequest itemRequest = 1;
+    AuthRequest itemRequest = 1;
     // contains the id of the parent of this item.
     // NOTE: If the bank problem is being created for use with a course then it will automatically add itself to the list of valid users!
-    optional string parentItemId = 2;
-    optional string registrationKey = 3;
+    string parentItemId = 2;
+    string registrationKey = 3;
 }
 
 /**
@@ -76,17 +77,17 @@ message AuthCreationRequest {
  */
 message UserRegistration {
     // Contains all of the information about the registration.
-    required AuthRequest itemRequest = 1;
+    AuthRequest itemRequest = 1;
 
     // Contains the registration key that is used to authenticate registration.
-    optional string registrationKey = 2;
+    string registrationKey = 2;
 }
 
 message AuthRequest {
-    required string authId = 1;
-    required string itemId = 2;
-    required protobuf.srl.utils.ItemType itemType = 3;
-    optional AuthType authParams = 4;
+    string authId = 1;
+    string itemId = 2;
+    protobuf.srl.utils.ItemType itemType = 3;
+    AuthType authParams = 4;
 }
 
 /**
@@ -98,19 +99,19 @@ message AuthResponse {
     // This is true if they have a value greater than NO_PERMISSION
     // or if the item is published and registration is not required.
     // Dates are handled separately from having access.
-    optional bool hasAccess = 1;
+    bool hasAccess = 1;
 
-    optional PermissionLevel permissionLevel = 2 [default = NO_PERMISSION];
+    PermissionLevel permissionLevel = 2;
 
     // True if the item is currently open during the time the check was performed.
-    optional bool isItemOpen = 3;
+    bool isItemOpen = 3;
 
-    // True if the item requires registration to access.
-    // If explicitly set to false then hasAccess will almost always be true even if they have NO_PERMISSION.
-    optional bool isRegistrationRequired = 4 [default=true];
+    // False if the item does not require registration to access.
+    // If explicitly set to True then hasAccess will almost always be true even if they have NO_PERMISSION.
+    bool isNoRegistrationRequired = 4;
 
     // True if the item is published, false otherwise.
-    optional bool isItemPublished = 5;
+    bool isItemPublished = 5;
 
     // ASSUMPTION: LARGER PERMISSIONS HAVE LARGER NUMBERS
     enum PermissionLevel {
@@ -126,15 +127,15 @@ service AuthenticationService {
     /**
      * Authorizes the user to have permissions to the item detailed in the AuthRequest.
      */
-    rpc authorizeUser(AuthRequest) returns (AuthResponse);
+    rpc authorizeUser (AuthRequest) returns (AuthResponse);
 
     /**
      * Creates a new set of item permissions.
      */
-    rpc createNewItem(AuthCreationRequest) returns (protobuf.srl.request.DefaultResponse);
+    rpc createNewItem (AuthCreationRequest) returns (protobuf.srl.request.DefaultResponse);
 
     /**
      * Registers the user in the item.
      */
-    rpc registerUser(UserRegistration) returns (protobuf.srl.request.DefaultResponse);
+    rpc registerUser (UserRegistration) returns (protobuf.srl.request.DefaultResponse);
 }
