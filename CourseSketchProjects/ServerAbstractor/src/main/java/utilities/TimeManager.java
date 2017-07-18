@@ -94,7 +94,7 @@ public final class TimeManager {
      * @return the adjusted system time based off of data from the master server.
      */
     public static long getSystemTime() {
-        return DateTime.now().getMillis() + totalTimeDifference;
+        return DateTime.now().getMillis() + getTotalTimeDifference();
     }
 
     /**

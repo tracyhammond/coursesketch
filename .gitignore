@@ -77,7 +77,7 @@ package-lock.json
 CourseSketchProjects/coursesketchwebclient/etc/
 #end website files
 
-CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/*
+CourseSketchProjects/coursesketchwebclient/src/main/resources/other/protobuf/
 *.ini
 
 #local configs
