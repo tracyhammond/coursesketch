@@ -4,8 +4,8 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.CourseSketchMatcher;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.google.common.collect.Lists;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,6 +15,7 @@ import coursesketch.database.identity.IdentityManagerInterface;
 import coursesketch.database.submission.SubmissionManagerInterface;
 import database.DatabaseAccessException;
 import database.institution.mongo.MongoInstitution;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +30,7 @@ import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.submission.Submission;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,37 +46,39 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by dtracers on 12/19/2015.
+ * 
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionManagerTest {
 
     @Rule
     public FongoRule fongo = new FongoRule();
-    public DB db;
+    public MongoDatabase db;
 
-    @Mock AuthenticationChecker authChecker;
-    @Mock AuthenticationOptionChecker optionChecker;
-    public Authenticator authenticator;
+    @Mock private AuthenticationChecker authChecker;
+    @Mock private AuthenticationOptionChecker optionChecker;
+    private Authenticator authenticator;
 
     @Mock
-    SubmissionManagerInterface submissionManagerInterface;
+    private SubmissionManagerInterface submissionManagerInterface;
     @Mock
-    IdentityManagerInterface identityManagerInterface;
+    private IdentityManagerInterface identityManagerInterface;
 
-    Submission.SrlExperiment experiment;
+    private Submission.SrlExperiment experiment;
+    private List<String> idList;
 
 
-    public static final String COURSE_ID = new ObjectId().toHexString();
-    public static final String SUBMISSION_ID = new ObjectId().toHexString();
-    public static final String SUBMISSION_ID2 = new ObjectId().toHexString();
-    public static final String PROBLEM_ID = new ObjectId().toHexString();
-    public static final String ADMIN_USER = new ObjectId().toHexString();
-    public static final String USER_USER = new ObjectId().toHexString();
+    private static final String COURSE_ID = new ObjectId().toHexString();
+    private static final String SUBMISSION_ID = new ObjectId().toHexString();
+    private static final String SUBMISSION_ID2 = new ObjectId().toHexString();
+    private static final String PROBLEM_ID = new ObjectId().toHexString();
+    private static final String PART_ID = "5";
+    private static final String ADMIN_USER = new ObjectId().toHexString();
+    private static final String USER_USER = new ObjectId().toHexString();
 
     @Before
     public void setUp() throws Exception {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
         experiment = Submission.SrlExperiment.newBuilder()
                 .setProblemId(PROBLEM_ID)
                 .setAssignmentId(new ObjectId().toString())
@@ -97,26 +100,41 @@ public class SubmissionManagerTest {
                     .thenReturn(true);
 
         authenticator = new Authenticator(authChecker, optionChecker);
+
+        idList = Lists.newArrayList(PROBLEM_ID, PART_ID);
     }
 
     @Test
     public void insertingSubmissionCreatesCorrectDataInDatabase() {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
 
-        DBObject result = db.getCollection(EXPERIMENT_COLLECTION).find().next();
+        Document result = db.getCollection(EXPERIMENT_COLLECTION).find().first();
         Assert.assertEquals(PROBLEM_ID, result.get(SELF_ID).toString());
-        Assert.assertEquals(SUBMISSION_ID, result.get(USER_USER));
+        Assert.assertEquals(SUBMISSION_ID, ((Document) result.get(PART_ID)).get(USER_USER).toString());
     }
 
     @Test
     public void insertingSubmissionCreatesCorrectDataInDatabaseAndUpdates() {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
-        SubmissionManager.mongoInsertSubmission(db, ADMIN_USER, PROBLEM_ID, SUBMISSION_ID2, true);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, ADMIN_USER, idList, SUBMISSION_ID2, true);
 
-        DBObject result = db.getCollection(EXPERIMENT_COLLECTION).find().next();
+        Document result = db.getCollection(EXPERIMENT_COLLECTION).find().first();
         Assert.assertEquals(PROBLEM_ID, result.get(SELF_ID).toString());
-        Assert.assertEquals(SUBMISSION_ID, result.get(USER_USER));
-        Assert.assertEquals(SUBMISSION_ID2, result.get(ADMIN_USER));
+        Assert.assertEquals(SUBMISSION_ID, ((Document) result.get(PART_ID)).get(USER_USER));
+        Assert.assertEquals(SUBMISSION_ID2, ((Document) result.get(PART_ID)).get(ADMIN_USER));
+    }
+
+    @Test
+    public void insertingSubmissionCreatesCorrectDataInDatabaseAndUpdates2Parts() {
+        String partId2 = PART_ID + "5";
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, ADMIN_USER, Lists.newArrayList(PROBLEM_ID, partId2),
+                SUBMISSION_ID2, true);
+
+        Document result = db.getCollection(EXPERIMENT_COLLECTION).find().first();
+        Assert.assertEquals(PROBLEM_ID, result.get(SELF_ID).toString());
+        Assert.assertEquals(SUBMISSION_ID, ((Document) result.get(PART_ID)).get(USER_USER));
+        Assert.assertEquals(SUBMISSION_ID2, ((Document) result.get(partId2)).get(ADMIN_USER));
     }
 
     @Test(expected = DatabaseAccessException.class)
@@ -126,7 +144,7 @@ public class SubmissionManagerTest {
                 PROBLEM_ID, USER_USER, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
 
-        SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID, PROBLEM_ID, submissionManagerInterface);
+        SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID, idList, submissionManagerInterface);
     }
 
     @Test
@@ -134,23 +152,23 @@ public class SubmissionManagerTest {
 
         final String hashedUserId = MongoInstitution.hashUserId(USER_USER, COURSE_ID);
 
-        SubmissionManager.mongoInsertSubmission(db, hashedUserId, PROBLEM_ID, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, hashedUserId, idList, SUBMISSION_ID, true);
 
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, USER_USER, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
-        List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
+        List<Submission.SrlExperiment> experimentList = Collections.singletonList(experiment);
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
                 eq(SUBMISSION_ID))).thenReturn(experimentList);
 
-        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID,
-                PROBLEM_ID, submissionManagerInterface);
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID,idList
+                , submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void getSubmissionThrowsDatabaseExceptionWhenNoExperimentsInList() throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
 
         AuthenticationHelper.setMockPermissions(authChecker, null, null, USER_USER, null, Authentication.AuthResponse.PermissionLevel.STUDENT);
 
@@ -158,61 +176,59 @@ public class SubmissionManagerTest {
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
                 eq(SUBMISSION_ID))).thenReturn(experimentList);
 
-        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID,
-                PROBLEM_ID, submissionManagerInterface);
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID, idList
+                , submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
     }
 
     @Test(expected = AuthenticationException.class)
     public void getSubmissionHandlesAuthExceptionCorrectly() throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
 
-        List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
                 eq(SUBMISSION_ID))).thenThrow(AuthenticationException.class);
 
-        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID,
-                PROBLEM_ID, submissionManagerInterface);
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, USER_USER, USER_USER, COURSE_ID, idList
+                , submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void getSubmissionHandlesDatabaseExceptionCorrectly() throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
 
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
         when(submissionManagerInterface.getSubmission(eq(USER_USER), any(Authenticator.class), eq(PROBLEM_ID),
-                eq(SUBMISSION_ID))).thenThrow(DatabaseAccessException.class);
+               eq(SUBMISSION_ID))).thenThrow(DatabaseAccessException.class);
 
-        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, ADMIN_USER, ADMIN_USER, COURSE_ID,
-                PROBLEM_ID, submissionManagerInterface);
+        Submission.SrlExperiment actualExperiment = SubmissionManager.mongoGetExperiment(authenticator, db, ADMIN_USER, ADMIN_USER, COURSE_ID, idList
+                , submissionManagerInterface);
         new ProtobufComparisonBuilder().build().equals(experiment, actualExperiment);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void getExperimentsAsInstructorThrowsWhenDataDoesNotExist() throws DatabaseAccessException, AuthenticationException {
-        final List<Submission.SrlExperiment> experiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
-                USER_USER, PROBLEM_ID, submissionManagerInterface, null);
+        SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
+                USER_USER, idList, submissionManagerInterface, null);
     }
 
     @Test(expected = AuthenticationException.class)
     public void getExperimentsAsInstructorThrowsWhenInvalidPermissionIsUsed() throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
-        final List<Submission.SrlExperiment> experiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
-                ADMIN_USER, PROBLEM_ID, submissionManagerInterface, null);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
+        SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
+                ADMIN_USER, idList, submissionManagerInterface, null);
     }
 
     @Test(expected = DatabaseAccessException.class)
     public void getExperimentsAsInstructorThrowsWhenNoExperimentsExist() throws DatabaseAccessException, AuthenticationException {
-        SubmissionManager.mongoInsertSubmission(db, USER_USER, PROBLEM_ID, SUBMISSION_ID, true);
+        SubmissionManager.mongoInsertSubmission(db, USER_USER, idList, SUBMISSION_ID, true);
 
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
-        final List<Submission.SrlExperiment> experiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
-                ADMIN_USER, PROBLEM_ID, submissionManagerInterface, identityManagerInterface);
+        SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
+                ADMIN_USER, idList, submissionManagerInterface, identityManagerInterface);
     }
 
     @Test
@@ -224,14 +240,14 @@ public class SubmissionManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
 
-        List<Submission.SrlExperiment> experimentList = Arrays.asList(experiment);
+        List<Submission.SrlExperiment> experimentList = Collections.singletonList(experiment);
 
         for (int k = 0; k < 10; k++) {
             String userId = new ObjectId().toString();
             String submissionId = new ObjectId().toString();
             String userName = "" + Math.random();
             final String hashedUserId = MongoInstitution.hashUserId(userId, COURSE_ID);
-            SubmissionManager.mongoInsertSubmission(db, hashedUserId, PROBLEM_ID, submissionId, true);
+            SubmissionManager.mongoInsertSubmission(db, hashedUserId, idList, submissionId, true);
             submissionIds.add(submissionId);
             experiments.add(Submission.SrlExperiment.newBuilder(experiment)
                     .setUserId(userName)
@@ -240,7 +256,8 @@ public class SubmissionManagerTest {
             userIdList.put(hashedUserId, userName);
         }
 
-        when(identityManagerInterface.getItemRoster(anyString(), anyString(), any(Util.ItemType.class), anyList(), any(Authenticator.class)))
+        when(identityManagerInterface.getItemRoster(anyString(), anyString(), any(Util.ItemType.class), anyList(), any
+                (Authenticator.class)))
                 .thenReturn(userIdList);
 
         when(submissionManagerInterface.getSubmission(anyString(), any(Authenticator.class), anyString(),
@@ -250,7 +267,7 @@ public class SubmissionManagerTest {
         AuthenticationHelper.setMockPermissions(authChecker, Util.ItemType.COURSE_PROBLEM,
                 PROBLEM_ID, ADMIN_USER, null, Authentication.AuthResponse.PermissionLevel.TEACHER);
         final List<Submission.SrlExperiment> actualExperiments = SubmissionManager.mongoGetAllExperimentsAsInstructor(authenticator, db,
-                ADMIN_USER, PROBLEM_ID, submissionManagerInterface, identityManagerInterface);
+                ADMIN_USER, idList, submissionManagerInterface, identityManagerInterface);
 
         for (int k = 0; k < experimentList.size(); k++) {
             new ProtobufComparisonBuilder().build().equals(experiments.get(k), actualExperiments.get(k));

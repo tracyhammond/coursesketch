@@ -91,7 +91,7 @@
      * @param {Map<String, Integer>} idToRowMap - This is a map of studentIds to table rows.
      * @param {Map<String, Integer>} assignmentMap - This is a map of assignmentIds to table columns.
      * @param {HTMLTable} table - The grade table on the webpage.
-     * @return {List<ProtoGrade>} grades that were not displayed.
+     * @returns {List<ProtoGrade>} grades that were not displayed.
      *          This is because the users do not exist anymore in the course roster.
      */
     CourseSketch.gradeBook.populateGrades = function(listGrades, idToRowMap, assignmentMap, table) {
@@ -281,6 +281,8 @@
 
     /**
      * Turns a cell into the focused cell for grade input.
+     *
+     * @returns {Element} The container element.
      */
     function createFocusedCell() {
         var template = document.querySelector('#inputTemplate');
@@ -464,9 +466,8 @@
     };
 
     /**
-     * Returns the index of an element in reference to its parent element.
-     *
      * @param {Element} element - The element that the index is being found for.
+     * @returns {Number} The index of an element in reference to its parent element.
      */
     function getChildIndex(element) {
         var k = -1;

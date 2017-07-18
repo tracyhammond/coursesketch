@@ -2,8 +2,11 @@
 /**
  * An exception that is used to represent problems with the advance data listener.
  *
- * @class DatabaseException
+ * @constructor AdvanceListenerException
  * @extends BaseException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function AdvanceListenerException(message, cause) {
     this.name = 'AdvanceListenerException';
@@ -25,7 +28,7 @@ CourseSketch.AdvanceListenerException = AdvanceListenerException;
  * <li>an event that is specified by websocket event protocol</li>
  * <li>an ItemResult - this is specified by the protobuf file data.js</li>
  * </ul>
- *
+ * @constructor AdvanceDataListener
  * @param {Request} Request - The protobuf Request Message.
  * @param {Function} defListener - The default listener that is called if a function is not assigned to a server response.
  */
@@ -35,6 +38,7 @@ function AdvanceDataListener(Request, defListener) {
     requestMap[Request.MessageType.DATA_INSERT] = {};
     requestMap[Request.MessageType.DATA_UPDATE] = {};
     var TIMEOUT_CONST = 'TIMED_OUT';
+    var TIMEOUT_TIME = 5000;
 
     var localScope = this;
     var defaultListener = defListener || false;
@@ -47,6 +51,16 @@ function AdvanceDataListener(Request, defListener) {
      */
     this.setErrorListener = function(func) {
         errorListener = func;
+    };
+
+    /**
+     * Adds a requestType to the datalistener
+     * @param {Request.MessageType} requestType The type of request to be added.
+     */
+    this.addRequestType = function(requestType) {
+        if (isUndefined(requestMap[requestType])) {
+            requestMap[requestType] = {};
+        }
     };
 
     /**
@@ -76,9 +90,10 @@ function AdvanceDataListener(Request, defListener) {
      * @param {String} requestId - The unique identifier for the request.
      * @param {Function} func - The function that is called as a result of listening.
      * @param {Number} [times] - the number of times you want the function to be called before it is removed.
+     * @param {ProtoBufMessage} returnType - This is the type of message that other data is decoded into.
      */
-    this.setDataResultListener = function(messageType, requestId, func, times) {
-        setListener(messageType, requestId, queryWrap(func), times);
+    this.setDataResultListener = function(messageType, requestId, func, times, returnType) {
+        setListener(messageType, requestId, queryWrap(func, returnType), times);
     };
 
     /**
@@ -98,13 +113,46 @@ function AdvanceDataListener(Request, defListener) {
      *
      * @param {Function} func - The function that is wrapper to process data results.
      * @returns {Function} A wrapped function that processes data results.
+     * @param {ProtoBufMessage} returnType - This is the type of message that other data is decoded into.
      */
-    function queryWrap(func) {
+    function queryWrap(func, returnType) {
         return function(evt, msg, listener) {
+            function manageTimeCallback(callbackData) { // eslint-disable-line require-jsdoc
+                if (listener.times >= 0) {
+                    listener.times -= 1;
+                    if (!isUndefined(func)) {
+                        try {
+                            func(evt, callbackData);
+                            if (listener.times === 0) {
+                                removeListener(msg.requestType, msg.requestId);
+                                return false;
+                            }
+                        } catch (exception) {
+                            if (listener.times === 0) {
+                                removeListener(msg.requestType, msg.requestId);
+                                return false;
+                            }
+                            CourseSketch.clientException(exception);
+                        }
+                    } else {
+                        defListener(evt, item);
+                    } // if isUndefined func
+                } else {
+                    removeListener(msg.requestType, msg.requestId);
+                    return false;
+                }
+                return true;
+            }
+
             var result = undefined;
             if (msg.otherData === TIMEOUT_CONST) {
                 removeListener(msg.requestType, msg.requestId);
                 func(evt, new AdvanceListenerException('Connection to the database Timed Out'));
+                return;
+            }
+            if (!isUndefined(returnType)) {
+                result = CourseSketch.prutil.decodeProtobuf(msg.otherData, returnType);
+                manageTimeCallback(result);
                 return;
             }
             try {
@@ -122,24 +170,11 @@ function AdvanceDataListener(Request, defListener) {
             var dataList = result.results;
             for (var i = 0; i < dataList.length; i++) {
                 //console.log('Decoding listener');
-                var item = dataList[i];
-                if (listener.times >= 0) {
-                    listener.times -= 1;
-                    if (!isUndefined(func)) {
-                        try {
-                            func(evt, item);
-                        } catch (exception) {
-                            removeListener(msg.requestType, msg.requestId);
-                            CourseSketch.clientException(exception);
-                        }
-                    } else {
-                        defListener(evt, item);
-                    } // if isUndefined func
-                } else {
-                    removeListener(msg.requestType, msg.requestId);
-                    return; // no more callbacks
-                } // if times >= 0
-            } // for
+                var dataItem = dataList[i];
+                if (!manageTimeCallback(dataItem)) {
+                    break;
+                }
+            }
             if (listener.times <= 0) {
                 removeListener(msg.requestType, msg.requestId);
             }
@@ -185,13 +220,24 @@ function AdvanceDataListener(Request, defListener) {
     this.setupConnectionListeners();
 
     /**
+     * @returns {Function} A function that can be used as a listener.
+     */
+    this.getListenerHook = function() {
+        return function(evt, msg) {
+            console.log('MESSAGE FROM THE RECOGNITION SERVER!');
+            decode(evt, msg);
+        };
+    };
+
+    /**
      * Sends a request that will timeout after the server.
      *
      * @param {Request} request - The protobuf request being sent to the server.
      * @param {Function} callback - The function that is called as a result of listening.
      * @param {Number} [times] - The number of times you want the function to be called before it is removed.
+     * @param {ProtoBufMessage} returnType - This is the type of message that other data is decoded into
      */
-    this.sendRequestWithTimeout = function(request, callback, times) {
+    this.sendRequestWithTimeout = function(request, callback, times, returnType) {
         var callbackCalled = false;
         var callbackTimedOut = false;
         var timeoutVariable = undefined;
@@ -221,7 +267,7 @@ function AdvanceDataListener(Request, defListener) {
             throw new AdvanceListenerException('The server responded but took too long to respond.');
         };
         // set listener
-        this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times);
+        this.setDataResultListener(request.requestType, request.requestId, wrappedCallback, times, returnType);
 
         if (!CourseSketch.connection.isConnected()) {
             console.log('The server is not connected all messages will be queued till reconnection is made.');
@@ -237,9 +283,8 @@ function AdvanceDataListener(Request, defListener) {
             var clonedRequest = CourseSketch.prutil.cleanProtobuf(request, CourseSketch.prutil.getRequestClass());
             clonedRequest.otherData = TIMEOUT_CONST;
             decode(undefined, clonedRequest);
-        }, 5000);
+        }, TIMEOUT_TIME);
     };
-
 
     /**
      * Sends a request to retrieve data from the server.

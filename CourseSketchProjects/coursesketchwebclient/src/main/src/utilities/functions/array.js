@@ -15,7 +15,7 @@
 /**
  * Creates an ArrayException object that returns exception values.
  *
- * @class ArrayException
+ * @constructor ArrayException
  * @extends BaseException
  * @param {String} message - The message to show for the exception.
  * @param {BaseException} cause - The cause of the exception.
@@ -36,7 +36,7 @@ if (isUndefined(removeObjectFromArray)) {
      *
      * @param {Array<*>} array - The array that the object is being removed from.
      * @param {*} object - The object that is being removed from the array.
-     * @return {*} the object that was removed if it exist.
+     * @returns {*} the object that was removed if it exist.
      */
     function removeObjectFromArray(array, object) {
         var index = array.indexOf(object);
@@ -56,7 +56,7 @@ if (isUndefined(removeObjectByIndex)) {
      *
      * @param {Array<*>} array - The array that the object is being removed from.
      * @param {Number} index - The index at which the item is being removed.
-     * @return {*} the object that was removed if it exist.
+     * @returns {*} the object that was removed if it exist.
      */
     function removeObjectByIndex(array, index) {
         if (index !== -1) {
@@ -98,4 +98,35 @@ if (isUndefined(getMapAsList)) {
         }
         return list;
     }
+}
+
+// Taken from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
+// remove when es6 is supported basically everywhere
+if (!Array.prototype.includes) {
+    Array.prototype.includes = function(searchElement /*, fromIndex*/) {
+        'use strict';
+        var O = Object(this);
+        var len = parseInt(O.length) || 0;
+        if (len === 0) {
+            return false;
+        }
+        var n = parseInt(arguments[1]) || 0;
+        var k;
+        if (n >= 0) {
+            k = n;
+        } else {
+            k = len + n;
+            if (k < 0) {k = 0;}
+        }
+        var currentElement;
+        while (k < len) {
+            currentElement = O[k];
+            if (searchElement === currentElement ||
+                (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
+                return true;
+            }
+            k++;
+        }
+        return false;
+    };
 }

@@ -1,4 +1,4 @@
-//jscs:disable jsDoc
+/* eslint-disable require-jsdoc */
 
 var rewriteRulesSnippet = require('grunt-connect-rewrite/lib/utils').rewriteRequest;
 var selenium = require('selenium-standalone');
@@ -202,7 +202,9 @@ module.exports = function(grunt) {
                         expand: true,
                         src: [ 'src/**', '!src/test/**',
                             // we do not want these copied as they are legacy.
-                            '!src/html/**', '!src/js/**' ],
+                            '!src/html/**', '!src/js/**',
+                            // we do not want these copied as they are not meant for production.
+                            '!src/**/debug/**' ],
 
                         dest: 'target/website/'
                     },
@@ -391,6 +393,9 @@ module.exports = function(grunt) {
      * UTILITIES
      ******************************************/
 
+    /**
+     * Prints the current task.
+     */
     function printTaskGroup() {
         grunt.log.write('\n===========\n=========== Running task group ' + grunt.task.current.name + ' ===========\n===========\n');
     }

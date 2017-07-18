@@ -60,52 +60,6 @@
                     + " elements");
         });
 
-        /* Also tests that the default prutil actually works as it is supposed to. */
-        QUnit.module("proto Objects");
-
-        test("protobuf correctly creates object with no arguments Using standard util", function(assert) {
-            var array = CourseSketch.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var object = CourseSketch.prutil[object]();
-            }
-            ok(true);
-
-        });
-
-        test("protobuf throws exception when object is called with arguments", function(assert) {
-            var array = CourseSketch.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                assert.throws(function () {
-                    CourseSketch.prutil[object]('arg1')
-                }, createExceptionComparator(ProtobufException),
-                'exception is thrown when trying to create an object with parameters');
-            }
-        });
-
-        test("protobuf correctly creates object with no arguments", function(assert) {
-            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var array = this.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                var object = this.prutil[object]();
-            }
-            ok(true);
-        });
-
-        test("protobuf throws exception when object is called with arguments", function(assert) {
-            this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
-            var array = this.prutil.getSupportedObjects();
-            for (var i = 0; i < array.length; i++) {
-                var object = array[i];
-                assert.throws(function () {
-                    this.prutil[object]('arg1')
-                }, createExceptionComparator(ProtobufException),
-                'exception is thrown when trying to create an object with parameters');
-            }
-        });
-
         QUnit.module("converters");
         QUnit.test("createBaseCommand", function(assert) {
             this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.

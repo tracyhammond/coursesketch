@@ -4,10 +4,8 @@ import com.coursesketch.test.utilities.AuthenticationHelper;
 import com.coursesketch.test.utilities.DatabaseHelper;
 import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -15,8 +13,7 @@ import coursesketch.database.auth.AuthenticationOptionChecker;
 import coursesketch.database.auth.Authenticator;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import database.DbSchoolUtility;
-import org.bson.types.ObjectId;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,6 +28,7 @@ import protobuf.srl.utils.Util;
 
 import static database.DatabaseStringConstants.REGISTRATION_KEY;
 import static database.DbSchoolUtility.getCollectionFromType;
+import static database.institution.mongo.MongoInstitutionTest.genericDatabaseMock;
 import static database.utilities.MongoUtilities.convertStringToObjectId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -48,7 +46,7 @@ public class CourseManagerTest {
     @Mock AuthenticationOptionChecker optionChecker;
     @Mock AuthenticationDataCreator dataCreator;
 
-    public DB db;
+    public MongoDatabase db;
     public Authenticator authenticator;
 
     public static final String VALID_NAME = "Valid course name!";
@@ -72,26 +70,9 @@ public class CourseManagerTest {
 
     @Before
     public void before() {
-        db = fongo.getDB();
+        db = fongo.getDatabase();
 
-        try {
-            // general rules
-            AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
-
-            when(optionChecker.authenticateDate(any(AuthenticationDataCreator.class), anyLong()))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemPublished(any(AuthenticationDataCreator.class)))
-                    .thenReturn(false);
-
-            when(optionChecker.isItemRegistrationRequired(any(AuthenticationDataCreator.class)))
-                    .thenReturn(true);
-
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
         courseId = null;
         courseId = null;
@@ -110,15 +91,15 @@ public class CourseManagerTest {
     @Test
     public void insertCourseIntoCourseWithValidPermissionAndAllValuesAreSetCorrectly() throws Exception {
         defaultCourse.setRegistrationKey(VALID_REGISTRATION_KEY);
-        defaultCourse.setAccess(School.SrlCourse.Accessibility.PRIVATE);
+        defaultCourse.setAccess(Util.Accessibility.PRIVATE);
         defaultCourse.setDescription(FAKE_DESCRIPTION);
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setName(VALID_NAME);
         String courseId = CourseManager.mongoInsertCourse(db, defaultCourse.build());
 
-        final DBCollection courseCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
-        final DBObject mongoCourse = courseCollection.findOne(convertStringToObjectId(courseId));
+        final MongoCollection<Document> courseCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        final Document mongoCourse = courseCollection.find(convertStringToObjectId(courseId)).first();
 
 
         Assert.assertEquals(mongoCourse.get(REGISTRATION_KEY), VALID_REGISTRATION_KEY);
@@ -126,7 +107,7 @@ public class CourseManagerTest {
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
-        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), School.SrlCourse.Accessibility.PRIVATE_VALUE);
+        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), Util.Accessibility.PRIVATE_VALUE);
     }
 
     // GETTING TEST
@@ -370,7 +351,7 @@ public class CourseManagerTest {
                 .build().equals(defaultCourse.build(), problem);
 
         School.SrlCourse updatedProblem = School.SrlCourse.newBuilder(defaultCourse.build())
-                .setAccess(School.SrlCourse.Accessibility.SUPER_PUBLIC)
+                .setAccess(Util.Accessibility.SUPER_PUBLIC)
                 .setName("New Name")
                 .setDescription("New Description")
                 .setSemester("Fall")

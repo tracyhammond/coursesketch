@@ -1,72 +1,80 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>ProtoFiles</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
-	<name>ProtoFiles</name>
-	<profiles>
-		<profile>
-			<id>proto-windows</id>
-			<activation>
-				<os>
-					<family>Windows</family>
-				</os>
-			</activation>
-			<properties>
-				<protocLocation>${env.protoc}</protocLocation>
-			</properties>
-		</profile>
-		<profile>
-			<id>proto-not-local</id>
-			<activation>
-				<file>
-					<exists>/usr/bin/protoc</exists>
-				</file>
-			</activation>
-			<properties>
-				<protocLocation>/usr/bin/protoc</protocLocation>
-			</properties>
-		</profile>
-	</profiles>
+    <artifactId>ProtoFiles</artifactId>
+    <version>${protoFileVersion}</version>
+    <name>ProtoFiles</name>
+    <profiles>
+        <profile>
+            <id>proto-windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <protocLocation>${env.protoc}</protocLocation>
+            </properties>
+        </profile>
+        <profile>
+            <id>proto-not-local</id>
+            <activation>
+                <file>
+                    <exists>/usr/bin/protoc</exists>
+                </file>
+            </activation>
+            <properties>
+                <protocLocation>/usr/bin/protoc</protocLocation>
+            </properties>
+        </profile>
+    </profiles>
 
-	<parent>
-		<groupId>CourseSketch</groupId>
-		<artifactId>CourseSketch-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../</relativePath>
-	</parent>
+    <parent>
+        <groupId>CourseSketch</groupId>
+        <artifactId>CourseSketch-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
+    </parent>
 
-	<pluginRepositories>
-		<!-- jitpack -->
-		<pluginRepository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</pluginRepository>
+    <pluginRepositories>
+        <!-- jitpack -->
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
 
-		<pluginRepository>
-			<id>central</id>
-			<name>Central Repository</name>
-			<url>https://repo.maven.apache.org/maven2</url>
-		</pluginRepository>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
 
-		<!-- for the proto plugin -->
-		<pluginRepository>
-			<id>protoc-plugin-default</id>
-			<url>https://dl.bintray.com/sergei-ivanov/maven/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>protoc-plugin-backup</id>
-			<url>http://sergei-ivanov.github.com/maven-protoc-plugin/repo/releases/</url>
-		</pluginRepository>
-	</pluginRepositories>
+        <!-- for the proto plugin -->
+        <pluginRepository>
+            <id>protoc-plugin-default</id>
+            <url>https://dl.bintray.com/sergei-ivanov/maven/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>protoc-plugin-backup</id>
+            <url>http://sergei-ivanov.github.com/maven-protoc-plugin/repo/releases/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
-	<properties>
-	    <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
-		<clientProtoDir>coursesketchwebclient/src/main/resources/other/protobuf</clientProtoDir>
-	</properties>
-	<build>
-		<plugins>
+    <properties>
+        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+        <clientProtoDir>coursesketchwebclient/src/main/resources/other/protobuf</clientProtoDir>
+        <pythonOutputDirectory>${basedir}/src/main/resources/generated_proto</pythonOutputDirectory>
+    </properties>
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.5.0.Final</version>
+            </extension>
+        </extensions>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -75,60 +83,78 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>com.google.protobuf.tools</groupId>
-				<artifactId>maven-protoc-plugin</artifactId>
-				<version>0.4.2</version>
-				<configuration>
-					<checkStaleness>true</checkStaleness>
-					<staleMillis>10000</staleMillis>
-					<protocExecutable>${protocLocation}</protocExecutable>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<configuration>
-							<checkStaleness>true</checkStaleness>
-							<staleMillis>10000</staleMillis>
-							<protocExecutable>${protocLocation}</protocExecutable>
-						</configuration>
-						<goals>
-                                <goal>compile</goal>
-                                <goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${resourcePluginVersion}</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<!-- here the phase you need -->
-						<phase>install</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/../${clientProtoDir}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/proto</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <configuration>
+                    <checkStaleness>true</checkStaleness>
+                    <staleMillis>10000</staleMillis>
+                    <protocArtifact>com.google.protobuf:protoc:3.3.0:exe:${os.detected.classifier}</protocArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>protopile</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <checkStaleness>true</checkStaleness>
+                            <staleMillis>10000</staleMillis>
+                            <protocExecutable>${protocLocation}</protocExecutable>
+                        </configuration>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>pypile</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>compile-python</goal>
+                        </goals>
+                        <configuration>
+                            <checkStaleness>false</checkStaleness>
+                            <outputDirectory>${pythonOutputDirectory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${resourcePluginVersion}</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/../${clientProtoDir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/proto</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>${protobufVersion}</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobufVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>${recognitionFrameworkVersion}</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -2,12 +2,13 @@ package connection;
 
 import coursesketch.server.interfaces.AbstractClientWebSocket;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
+import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.ServerInfo;
+import coursesketch.services.recognition.RecognitionWebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utilities.ConnectionException;
-import coursesketch.server.interfaces.MultiConnectionManager;
 import protobuf.srl.request.Message.Request;
+import utilities.ConnectionException;
 import utilities.LoggingConstants;
 import utilities.ProtobufUtilities;
 
@@ -92,6 +93,15 @@ public final class ProxyConnectionManager extends MultiConnectionManager {
         LOG.info("Open Answer...");
         try {
             createAndAddConnection(serv, isConnectionLocal(), ANSWER_ADDRESS, ANSWER_PORT, isSecure(), AnswerClientWebSocket.class);
+        } catch (ConnectionException e) {
+            // TODO Auto-generated catch block
+            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+        }
+
+        LOG.info("Open Recogntion...");
+        try {
+            createAndAddConnection(serv, isConnectionLocal(), RecognitionWebSocketClient.ADDRESS, RecognitionWebSocketClient.PORT, isSecure(),
+                    RecognitionConnection.class);
         } catch (ConnectionException e) {
             // TODO Auto-generated catch block
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

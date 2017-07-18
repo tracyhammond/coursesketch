@@ -15,6 +15,11 @@ public class DatabaseAccessException extends CourseSketchException {
     private boolean recoverable;
 
     /**
+     * True if the server should send a response that is not an error proto.
+     */
+    private boolean sendResponse;
+
+    /**
      * Accepts a message and if it is recoverable error.
      * @param string A message of the error.
      * @param iRecoverable True if the error is recoverable.
@@ -56,5 +61,21 @@ public class DatabaseAccessException extends CourseSketchException {
      */
     public final boolean isRecoverable() {
         return recoverable;
+    }
+
+    /**
+     * @return True if the server should still send a valid response.
+     */
+    public final boolean isSendResponse() {
+        return sendResponse;
+    }
+
+    /**
+     * @param shouldSendResponse Set to true if the server should send a response
+     * @return Self.
+     */
+    public final DatabaseAccessException setSendResponse(final boolean shouldSendResponse) {
+        this.sendResponse = shouldSendResponse;
+        return this;
     }
 }

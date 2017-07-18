@@ -27,7 +27,7 @@ ProtobufException.prototype = new BaseException();
  */
 
 /**
- * @class
+ * @constructor
  * @classdesc
  * Has utilities for protobufs and is a convient accessor to create new
  *        instances of protobuf files (and prevents the modification of a
@@ -44,169 +44,82 @@ function ProtobufSetup() {
     var PROTOBUF_PACKAGE = 'protobuf';
     var protobufDirectory = '/other/protobuf/';
 
-    var objectList = [];
+    var messageList = [];
     var enumList = [];
+    var serviceList = [];
+
+    var protoFiles = [
+        { fileName: 'assignment',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'school' ] },
+        { fileName: 'commands',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'commands' ] },
+        { fileName: 'data',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'query' ] },
+        { fileName: 'grading',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'grading' ] },
+        { fileName: 'identity',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'services', 'identity' ] },
+        { fileName: 'message',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'request' ] },
+        { fileName: 'problem',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'school' ] },
+        { fileName: 'recognitionServer',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'services', 'recognition' ] },
+        { fileName: 'school',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'school' ] },
+        { fileName: 'sketch',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'sketch' ],
+            prefix: 'Proto' },
+        { fileName: 'sketchUtil',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'utils' ] },
+        { fileName: 'questionData',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'question' ] },
+        { fileName: 'submission',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'submission' ] },
+        { fileName: 'util',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'utils' ] },
+        { fileName: 'tutorial',
+            package: [ PROTOBUF_PACKAGE, 'srl', 'tutorial' ] },
+    ];
 
     /**
-     * Builds the Utility protobuf files.
-     *
-     * These can be used by all other protobuf files.
+     * Builds all of the protobuf files
      */
-    function buildUtil() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'util.proto');
-        var utilBuilder = builder.build(PROTOBUF_PACKAGE).srl.utils;
-        assignValues(utilBuilder);
-    }
+    function buildProtobuf() {
+        var commondBuilder = undefined;
+        var packageList = [];
+        for (var i = 0; i < protoFiles.length; i++) {
+            var protoObject = protoFiles[i];
+            var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + protoObject.fileName + '.proto', commondBuilder);
+            if (isUndefined(builder) || builder === null) {
+                console.log('can not create builder for file: ', protobufDirectory + protoObject.fileName + '.proto');
+            }
+            if (isUndefined(commondBuilder) || commondBuilder === null) {
+                commondBuilder = builder;
+            }
+        }
+        var root = commondBuilder.build();
+        for (i = 0; i < protoFiles.length; i++) {
+            var protoFile = protoFiles[i];
+            if (packageList.includes(protoFile.package.join('.'))) {
+                // console.log('These values have already been assigned. for file: ', protoObject.fileName, ' Skipping building!');
+                continue;
+            }
 
-    /**
-     * Builds the Grade protobuf files.
-     *
-     * This is the base for storing and retrieving grades.
-     */
-    function buildGrade() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'grading.proto');
-        var gradingBuilder = builder.build(PROTOBUF_PACKAGE).srl.grading;
-        assignValues(gradingBuilder);
-    }
-
-    /**
-     * Builds the Message protobuf files.
-     *
-     * This is the base for talking to the server.
-     */
-    function buildMessage() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'message.proto');
-        var requestPackage = builder.build(PROTOBUF_PACKAGE).srl.request;
-        assignValues(requestPackage);
-    }
-
-    /**
-     * Builds the Data protobuf files.
-     *
-     * These ares used to talk with the database.
-     */
-    function buildDataQuery() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'data.proto');
-        var QueryBuilder = builder.build(PROTOBUF_PACKAGE).srl.query;
-        assignValues(QueryBuilder);
-    }
-
-    /**
-     * Builds the School protobuf files.
-     *
-     * These contain data about courses, assignments, and problems
-     */
-    function buildSchool() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'school.proto');
-        var SchoolBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
-        assignValues(SchoolBuilder);
-    }
-
-    /**
-     * Builds the Sketch protobuf files.
-     *
-     * This contains the sketchml format kinda.  It holds points, strokes, and shapes
-     */
-    function buildSketch() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'sketch.proto');
-        var sketchBuilder = builder.build(PROTOBUF_PACKAGE).srl.sketch;
-        assignValues(sketchBuilder, 'Proto');
-    }
-
-    /**
-     * Builds the UpdateList protobuf files.
-     *
-     * These contain all of the little actions that can occur
-     */
-    function buildUpdateList() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'commands.proto');
-        var ProtoUpdateCommandBuilder = builder.build(PROTOBUF_PACKAGE).srl.commands;
-        assignValues(ProtoUpdateCommandBuilder);
-    }
-
-    /**
-     * Builds the UpdateList protobuf files.
-     *
-     * These contain all of the little actions that can occur
-     */
-    function buildIdentity() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'identity.proto');
-        var ProtoIdentityServiceBuilder = builder.build(PROTOBUF_PACKAGE).srl.services.identity;
-        assignValues(ProtoIdentityServiceBuilder);
-    }
-
-    /**
-     * Builds the Tutorial protobuf files.
-     *
-     * These ares used for the tutorials
-     */
-    function buildTutorial() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'tutorial.proto');
-        var ProtoTutorialBuilder = builder.build(PROTOBUF_PACKAGE).srl.tutorial;
-        assignValues(ProtoTutorialBuilder);
-    }
-
-    /**
-     * Builds the Submission protobuf files.
-     *
-     * These ares for submitting experiments or solutions.
-     */
-    function buildSubmissions() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'submission.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.submission;
-        assignValues(ProtoSubmissionBuilder);
-    }
-
-    /**
-     * Builds the Lecture protobuf files.
-     *
-     * These ares used for lecture data.
-     */
-    function buildLectures() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'lecturedata.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.lecturedata;
-        assignValues(ProtoSubmissionBuilder);
-    }
-
-    /**
-     * Builds the Assignment protobuf files.
-     *
-     * These ares used for Assignment data.
-     */
-    function buildAssignments() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'assignment.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
-        assignValues(ProtoSubmissionBuilder);
-    }
-
-    /**
-     * Builds the Problem protobuf files.
-     *
-     * These ares used for Problems data.
-     */
-    function buildProblems() {
-        var builder = localDcodeIo.ProtoBuf.protoFromFile(protobufDirectory + 'problem.proto');
-        var ProtoSubmissionBuilder = builder.build(PROTOBUF_PACKAGE).srl.school;
-        assignValues(ProtoSubmissionBuilder);
+            var resultingPackage = root;
+            for (var j = 0; j < protoFile.package.length; j++) {
+                resultingPackage = resultingPackage[protoFile.package[j]];
+            }
+            assignValues(resultingPackage, protoFile.prefix);
+            packageList.push(protoFile.package.join('.'));
+        }
     }
 
     /**
      * @returns {ProtobufSetup} an instance of itself.
      */
     this.initializeBuf = function() {
-        buildUtil();
-        buildMessage();
-        buildSchool();
-        buildSketch();
-        buildUpdateList();
-        buildIdentity();
-        buildDataQuery();
-        buildTutorial();
-        buildSubmissions();
-        buildLectures();
-        buildAssignments();
-        buildProblems();
-        buildGrade();
+        buildProtobuf();
         return localScope;
     };
 
@@ -249,14 +162,24 @@ function ProtobufSetup() {
     function createProtoMethod(ClassType, messageName, preString) {
         var objectName = preString + messageName;
         if (isFunction(ClassType)) {
-            objectList.push(objectName);
+            var isService = ClassType.$type instanceof dcodeIO.ProtoBuf.Reflect.Service;
+            if (!isService) {
+                messageList.push(objectName);
+            } else {
+                serviceList.push(objectName);
+            }
             Object.defineProperty(localScope, objectName, {
                 /**
                  * @returns {Object} An instance a protobuf object.
                  */
                 value: function() {
-                    if (arguments.length > 0) {
+                    if (arguments.length > 0 && !isService) {
                         throw new ProtobufException('you can not create this object with arguments.');
+                    }
+
+                    if (isService) {
+                        var rpcImplementation = arguments[0];
+                        return new ClassType(rpcImplementation);
                     }
                     return new ClassType();
                 },
@@ -294,7 +217,7 @@ function ProtobufSetup() {
      *            a list of commands stored as an array.
      * @param {MessageType} requestType
      *            the type that the request is.
-     * @return {Request} A request that holds the list of commands.
+     * @returns {Request} A request that holds the list of commands.
      */
     this.createRequestFromCommands = function createRequestFromCommands(commands, requestType) {
         return this.createRequestFromUpdate(this.createUpdateFromCommands(commands), requestType);
@@ -303,16 +226,17 @@ function ProtobufSetup() {
     /**
      * Given a protobuf object compile it to other data and return a request.
      *
+     * @param {Request} request
+     *              A request that is being modified instead of created outright.
      * @param {Protobuf} data
      *              An uncompiled protobuf object.
      * @param {MessageType} requestType
      *              The message type of the request.
      * @param {String} [requestId]
      *              An id that is required for every request.
-     * @return {Request} Creates a request from the binary data given.
+     * @returns {Request} Creates a request from the binary data given.
      */
-    this.createRequestFromData = function(data, requestType, requestId) {
-        var request = this.Request();
+    this.modifyRequestFromData = function(request, data, requestType, requestId) {
         request.requestType = requestType;
         var buffer = data.toArrayBuffer();
         request.setOtherData(buffer);
@@ -326,11 +250,26 @@ function ProtobufSetup() {
     };
 
     /**
+     * Given a protobuf object compile it to other data and return a request.
+     *
+     * @param {Protobuf} data
+     *              An uncompiled protobuf object.
+     * @param {MessageType} requestType
+     *              The message type of the request.
+     * @param {String} [requestId]
+     *              An id that is required for every request.
+     * @returns {Request} Creates a request from the binary data given.
+     */
+    this.createRequestFromData = function(data, requestType, requestId) {
+        return this.modifyRequestFromData(this.Request(), data, requestType, requestId);
+    };
+
+    /**
      * Given an custom exception, a ProtoException Object will be created.
      *
      * @param {Exception} exception
      *              An custom exception that extends BaseException.
-     * @return {ProtoException} A protobuf exception.
+     * @returns {ProtoException} A protobuf exception.
      */
     this.createProtoException = function(exception) {
         if (!(exception instanceof BaseException) && !(exception instanceof CourseSketch.prutil.getProtoExceptionClass()) &&
@@ -354,9 +293,17 @@ function ProtobufSetup() {
      *
      * @param {error} anError
      *              An JS error that has occurred or been defined.
-     * @return {ProtoException} A protobuf exception.
+     * @returns {ProtoException} A protobuf exception.
      */
     this.errorToProtoException = function(anError) {
+        if (anError instanceof ErrorEvent && ((anError.error instanceof BaseException) ||
+            (anError.error instanceof CourseSketch.prutil.getProtoExceptionClass()) ||
+            (anError.error instanceof CourseSketch.BaseException))) {
+            return this.createProtoException(anError.error);
+        }
+        if (anError instanceof ErrorEvent && anError.error instanceof Error) {
+            return this.errorToProtoException(anError.error);
+        }
         var pException = CourseSketch.prutil.ProtoException();
         if (typeof anError === 'string') {
             pException.setMssg(anError);
@@ -370,11 +317,25 @@ function ProtobufSetup() {
         if (!isArray(stack)) {
             pException.stackTrace = [ stack ];
         } else {
-            pException.stackTrace = anError.stack;
+            pException.stackTrace = stack;
         }
 
         pException.setExceptionType('Error');
         return pException;
+    };
+
+    /**
+     * Given an SrlUpdate a Request is created.
+     * @param {SrlUpdate} update - A valid and complete object.
+     * @param {MessageType} requestType - The type that the request is.
+     * @returns {Request} used for all requesting needs
+     */
+    this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
+        if (!(update instanceof localScope.getSrlUpdateClass())) {
+            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
+        }
+
+        return this.createRequestFromData(update, requestType);
     };
 
     /**
@@ -384,7 +345,7 @@ function ProtobufSetup() {
      * happened at the same time.
      *
      * @param {Array<SrlCommand>} commands - A list of commands stored as an array.
-     * @return {SrlUpdate} An update that holds the list of given commands.
+     * @returns {SrlUpdate} An update that holds the list of given commands.
      */
     this.createUpdateFromCommands = function createUpdateFromCommands(commands) {
         /*
@@ -407,7 +368,7 @@ function ProtobufSetup() {
      * It is important to node that an SrlUpdate implies that the commands
      * happened at the same time.
      *
-     * @return {SrlUpdate} An empty update.
+     * @returns {SrlUpdate} An empty update.
      */
     this.createBaseUpdate = function createBaseUpdate() {
         var update = this.SrlUpdate();
@@ -416,21 +377,6 @@ function ProtobufSetup() {
         update.setTime('' + n);
         update.setUpdateId(generateUUID());
         return update;
-    };
-
-    /**
-     * @function
-     * Given an SrlUpdate a Request is created.
-     * @param {SrlUpdate} update - A valid and complete object.
-     * @param {MessageType} requestType - The type that the request is.
-     * @return {Request} used for all requesting needs
-     */
-    this.createRequestFromUpdate = function createRequestFromUpdate(update, requestType) {
-        if (!(update instanceof localScope.getSrlUpdateClass())) {
-            throw new TypeError('Invalid Type Error: Input must be an instanceof SrlUpdate');
-        }
-
-        return this.createRequestFromData(update, requestType);
     };
 
     /**
@@ -475,7 +421,7 @@ function ProtobufSetup() {
      * Creates a protobuf date time object.
      *
      * @param {Number|Date|Long} inputDateTime - representing the time that this object should be created with.
-     * @return {DateTime} A protobuf date time objct that can be used for date stuff.
+     * @returns {DateTime} A protobuf date time objct that can be used for date stuff.
      */
     this.createProtoDateTime = function(inputDateTime) {
         var preConvertedDate = inputDateTime;
@@ -504,7 +450,7 @@ function ProtobufSetup() {
      * @param {Number} width - the width of the sketch.
      * @param {Number} height - the height of the sketch.
      *
-     * @return {SrlCommand} a create sketch command
+     * @returns {SrlCommand} a create sketch command
      */
     this.createNewSketch = function createNewSketch(id, x, y, width, height) {
         var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_SKETCH, false);
@@ -530,7 +476,7 @@ function ProtobufSetup() {
      */
     this.getSupportedObjects = function getSupportedObjects() {
         // The quickest way to clone.
-        return JSON.parse(JSON.stringify(objectList));
+        return JSON.parse(JSON.stringify(messageList));
     };
 
     /**
@@ -548,15 +494,17 @@ function ProtobufSetup() {
      *
      * @param {ArrayBuffer} data
      *            a compiled set of data in the protobuf object.
-     * @param {ProtobufClass} proto - The protobuf object that is being decoded.
+     * @param {ProtobufClass | String} proto - The protobuf object that is being decoded.
      *            This can be grabbed by using CourseSketch.prutil.get<objectName>Class();
+     *            If it is a string you do not use "get<objectName>Class" and instead just pass in <objectName> as a string.
      * @param {Function} [onError] - A callback that is called when an error occurs regarding marking and resetting.
      *            (optional). This will be called before the result is returned
      *
-     * @return {ProyobufObject} decoded protobuf object.  (This will not return undefined)
+     * @returns {ProtobufObject} decoded protobuf object.  (This will not return undefined)
      * @throws {ProtobufException} Thrown is there are problems decoding the data.
      */
     this.decodeProtobuf = function(data, proto, onError) {
+        /*jshint maxcomplexity:13 */
         if (isUndefined(data) || data === null || typeof data !== 'object') {
             throw new ProtobufException('Data type is not supported:' + typeof data);
         }
@@ -568,11 +516,18 @@ function ProtobufSetup() {
             }
         }
         var decoded = undefined;
-        try {
-            decoded = proto.decode(data);
-        } catch (exception) {
-            throw new ProtobufException('data was not decoded successfully');
+
+        var protoClass = proto;
+        if ((typeof proto) === 'string') {
+            protoClass = CourseSketch.prutil['get' + proto + 'Class']();
         }
+
+        try {
+            decoded = protoClass.decode(data);
+        } catch (exception) {
+            throw new ProtobufException('data was not decoded successfully', exception);
+        }
+
         if (isUndefined(decoded)) {
             throw new ProtobufException('data was not decoded successfully or input was empty');
         }
@@ -594,8 +549,8 @@ function ProtobufSetup() {
      * Then the protubf would not correctly apply to this new object.
      *
      * @param {ProtobufObject} protobuf - An object that we want to "clean".
-     * @param {ProtobufMessage} protobufType - A class representing the object we want to "clean".
-     * @returns {ProyobufObject} A clean version of the object we sent in.
+     * @param {ProtobufMessage|String} protobufType - A class representing the object we want to "clean".
+     * @returns {ProtobufObject} A clean version of the object we sent in.
      */
     this.cleanProtobuf = function(protobuf, protobufType) {
         // TODO: check to see if we can extract the type from the protobuf object.

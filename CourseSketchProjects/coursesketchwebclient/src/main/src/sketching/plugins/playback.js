@@ -54,8 +54,10 @@ function Playback(updateList, updateManager, graphics) {
      * @param {SrlUpdate} update - The update that the sketch list is currently replaying
      * @param {Boolean} redraw - True if the sketch surface needs to be redrawn.
      * @param {Integer} updateIndex - The index that this update is in the update list.
+     * @param {Integer} updateType - The type of update to check against.
+     * @param {Integer} updatePluginId - The id of the plugin to make sure we do not create loops.
      */
-    this.addUpdate = function addUpdate(update, redraw, updateIndex) {
+    this.addUpdate = function addUpdate(update, redraw, updateIndex, updateType, updatePluginId) {
         var commandList = update.commands;
 
         /**

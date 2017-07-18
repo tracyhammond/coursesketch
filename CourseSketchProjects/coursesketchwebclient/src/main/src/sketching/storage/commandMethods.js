@@ -6,8 +6,11 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
  */
 (function() {
     /**
-     * @class CommandException
+     * @constructor CommandException
      * @extends BaseException
+     *
+     * @param {String} message - The message to show for the exception.
+     * @param {BaseException} cause - The cause of the exception.
      */
     function CommandException(message, cause) {
         this.name = 'CommandException';

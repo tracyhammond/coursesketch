@@ -58,7 +58,7 @@
      * @param {List<ProtoGrade>} listGrades - The list of grades from the server.
      * @param {Map<String, Element>} assignmentMap - Map of assignmentIDs to table row.
      * @param {HTMLTable} table - The grade table on the webpage.
-     * @return {List<ProtoGrade>} grades - That were not displayed. This is because the users do not exist anymore in the course roster.
+     * @returns {List<ProtoGrade>} grades - That were not displayed. This is because the users do not exist anymore in the course roster.
      */
     CourseSketch.gradeBook.populateGrades = function(listGrades, assignmentMap, table) {
         var gradesNotShown = [];

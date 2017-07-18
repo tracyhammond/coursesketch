@@ -7,7 +7,7 @@ import coursesketch.server.interfaces.MultiConnectionManager;
 import database.DatabaseAccessException;
 import protobuf.srl.grading.Grading.ProtoGrade;
 import protobuf.srl.grading.Grading.ProtoGradingPolicy;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.request.Message;
 import protobuf.srl.school.Assignment.SrlAssignment;
 import protobuf.srl.school.Problem.SrlBankProblem;
@@ -436,14 +436,16 @@ public interface Institution {
     /**
      * A message sent from the submission server that submits the submission information into the database.
      *
-     * @param authId The id that signifies the permissions of the user the submission is associated with.
      * @param userId The user that the submission is associated.
+     * @param authId The id that signifies the permissions of the user the submission is associated with.
      * @param problemId The bank problem that is related
+     * @param problemPartIndex The id for a specific part of a problem.
      * @param submissionId The submission that is being inserted.
      * @param isExperiment True if the submission is an experiment.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      */
-    void insertSubmission(final String userId, String authId, String problemId, String submissionId, boolean isExperiment)
+    void insertSubmission(final String userId, String authId, String problemId, String problemPartIndex, String submissionId,
+            boolean isExperiment)
             throws DatabaseAccessException;
 
     /**
@@ -451,21 +453,21 @@ public interface Institution {
      *
      * @param userId User requesting the experiment.
      * @param authId The authentication of the user requesting the experiment.
-     * @param problemId The problemId that the experiment is associated with.
+     * @param identifierList The list of ids that identify a set of submissions.
      * @param submissionManager The connection manager to other servers.
      * @throws DatabaseAccessException Thrown if there is an issue accessing data.
      * @throws AuthenticationException Thrown if the user does not have authentication to the experiment.
      * @return An {@link protobuf.srl.submission.Submission.SrlExperiment} for the experiment given by the info and the problemId.
      */
-    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId, String problemId,
-            SubmissionManagerInterface submissionManager)
+    Submission.SrlExperiment getExperimentAsUser(final String userId, String authId,
+            List<String> identifierList, SubmissionManagerInterface submissionManager)
             throws DatabaseAccessException, AuthenticationException;
 
     /**
      * Calls the submission server for a list of experiments based on user ids.
      *
      * @param authId Permissions of the user requesting the experiment.
-     * @param problemId The problemId that the experiment is associated with.
+     * @param identifier The list of ids that identify a set of submissions.
      * @param sessionInfo The session information of this query.
      * @param internalConnections The connection manager to other servers.
      * @param review Data about review the sketch.
@@ -473,7 +475,7 @@ public interface Institution {
      * @throws AuthenticationException Thrown if the instructor does not have authentication to the experiments.
      * @return The list of experiments grabbed by the instructor.
      */
-    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, String problemId, Message.Request sessionInfo,
+    List<Submission.SrlExperiment> getExperimentAsInstructor(String authId, List<String> identifier, Message.Request sessionInfo,
             MultiConnectionManager internalConnections, ByteString review) throws DatabaseAccessException, AuthenticationException;
 
     /**
@@ -489,7 +491,7 @@ public interface Institution {
      * @throws AuthenticationException
      *         Thrown if the user did not have the authentication to get the course.
      */
-    void insertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
+    void upsertGradingPolicy(final String authId, final ProtoGradingPolicy policy) throws AuthenticationException, DatabaseAccessException;
 
     /**
      * Gets the grading policy for a course from the mongoDb.
@@ -562,7 +564,7 @@ public interface Institution {
      * <pre><code>
      * coll.update(
      *  { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId },
-     *  {   $push: { gradeHistory: { $each: [gradeToInsertDBObject], $sort: { GRADED_DATE: -1 }}}
+     *  {   $push: { gradeHistory: { $each: [gradeToInsertDocument], $sort: { GRADED_DATE: -1 }}}
      *      $set: { CURRENT_GRADE: currentGrade }
      *      $setOnInsert: { COURSE_ID: courseId, USER_ID, userId, ASSIGNMENT_ID: assignmentId, PROBLEM_ID: problemId }
      *  },

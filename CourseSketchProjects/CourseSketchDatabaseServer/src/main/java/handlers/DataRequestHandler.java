@@ -1,7 +1,7 @@
 package handlers;
 
-import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.ProtocolStringList;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.server.interfaces.MultiConnectionManager;
 import coursesketch.server.interfaces.SocketSession;
@@ -9,11 +9,12 @@ import coursesketch.services.submission.SubmissionWebSocketClient;
 import database.DatabaseAccessException;
 import database.institution.Institution;
 import database.user.UserClient;
+import handlers.subhandlers.GradingPolicyRequestHandler;
 import handlers.subhandlers.GradingRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.grading.Grading.ProtoGrade;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.grading.Grading.ProtoGradingPolicy;
 import protobuf.srl.query.Data;
 import protobuf.srl.query.Data.DataRequest;
 import protobuf.srl.query.Data.ItemQuery;
@@ -22,9 +23,10 @@ import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
 import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.school.Problem.SrlBankProblem;
-import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.school.Problem.SrlProblem;
+import protobuf.srl.school.School.SrlCourse;
 import protobuf.srl.services.identity.Identity;
 import protobuf.srl.submission.Submission;
 import utilities.ExceptionUtilities;
@@ -33,6 +35,8 @@ import utilities.ProtobufUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static handlers.ResultBuilder.validateIds;
 
 /**
  * Handles all request for data.
@@ -53,12 +57,6 @@ public final class DataRequestHandler {
      * A message returned when getting the data was successful.
      */
     private static final String SUCCESS_MESSAGE = "QUERY WAS SUCCESSFUL!";
-
-    /**
-     * A message returned when getting the data was successful.
-     */
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    private static final String NO_OP_MESSAGE = "NO DATA TO RETURN";
 
     /**
      * A message returned if the user does not have any classes.
@@ -98,15 +96,10 @@ public final class DataRequestHandler {
             final String authId = req.getServersideId();
             final String userId = req.getServerUserId();
             final DataRequest request = DataRequest.parseFrom(req.getOtherData());
-            if (Strings.isNullOrEmpty(authId)) {
-                throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
-            }
-            if (Strings.isNullOrEmpty(userId)) {
-                throw new DatabaseAccessException("Invalid User Identification");
-            }
-            final ArrayList<ItemResult> results = new ArrayList<ItemResult>();
-            for (int p = 0; p < request.getItemsList().size(); p++) {
-                final ItemRequest itemRequest = request.getItemsList().get(p);
+            validateIds(authId, userId);
+            final ArrayList<ItemResult> results = new ArrayList<>();
+            for (int itemRequestIndex = 0; itemRequestIndex < request.getItemsList().size(); itemRequestIndex++) {
+                final ItemRequest itemRequest = request.getItemsList().get(itemRequestIndex);
                 try {
                     LOG.info("looking at query {}", itemRequest.getQuery().name());
                     switch (itemRequest.getQuery()) {
@@ -126,7 +119,7 @@ public final class DataRequestHandler {
                         }
                         break;
                         case BANK_PROBLEM: {
-                            List<SrlBankProblem> bankProblemLoop = null;
+                            List<SrlBankProblem> bankProblemLoop;
                             if (!itemRequest.hasPage()) {
                                 bankProblemLoop = instance.getProblem(authId, itemRequest.getItemIdList());
                             } else {
@@ -157,24 +150,24 @@ public final class DataRequestHandler {
                             // we send it the CourseProblemId and the userId and we get the submission Id
                             // MongoInstitution.mongoGetExperiment(assignementID, userId)
                             if (!itemRequest.hasAdvanceQuery()) {
-                                for (String itemId : itemRequest.getItemIdList()) {
-                                    LOG.info("Trying to retrieve an experiment from a user!");
-                                    final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
-                                    build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
-                                    final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, authId, itemId,
-                                            internalConnections.getBestConnection(SubmissionWebSocketClient.class));
-                                    results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
-                                }
+                                final ProtocolStringList itemIdList = itemRequest.getItemIdList();
+                                LOG.info("Trying to retrieve an experiment from a user!");
+                                final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
+                                build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
+                                final Submission.SrlExperiment experiment = instance.getExperimentAsUser(userId, authId, itemIdList,
+                                        internalConnections.getBestConnection(SubmissionWebSocketClient.class));
+                                results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                             } else {
                                 final Request.Builder build = ProtobufUtilities.createBaseResponse(req);
                                 build.setSessionInfo(req.getSessionInfo() + "+" + sessionId);
                                 final Request baseRequest = build.build();
-                                for (String itemId : itemRequest.getItemIdList()) {
-                                    final List<Submission.SrlExperiment> experimentList = instance.getExperimentAsInstructor(authId, itemId,
-                                            baseRequest, internalConnections, itemRequest.getAdvanceQuery());
-                                    for (Submission.SrlExperiment experiment: experimentList) {
-                                        results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
-                                    }
+                                final ProtocolStringList itemIdList = itemRequest.getItemIdList();
+
+                                final List<Submission.SrlExperiment> experimentList =
+                                        instance.getExperimentAsInstructor(authId, itemIdList, baseRequest, internalConnections,
+                                                itemRequest .getAdvanceQuery());
+                                for (Submission.SrlExperiment experiment : experimentList) {
+                                    results.add(ResultBuilder.buildResult(ItemQuery.EXPERIMENT, experiment));
                                 }
                             }
                         }
@@ -210,6 +203,12 @@ public final class DataRequestHandler {
                             results.add(ResultBuilder.buildResult(ItemQuery.COURSE_ROSTER, courseRoster));
                         }
                         break;
+                        case GRADING_POLICY: {
+                            final ProtoGradingPolicy gradingPolicy = GradingPolicyRequestHandler.gradingPolicyRequestHandler(instance, itemRequest,
+                                    userId);
+                            results.add(ResultBuilder.buildResult(ItemQuery.GRADING_POLICY, gradingPolicy));
+                        }
+                        break;
                         default:
                             break;
                     }
@@ -227,21 +226,20 @@ public final class DataRequestHandler {
                         throw e;
                     }
                 } catch (DatabaseAccessException e) {
-                    LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                    LOG.error("Exception with item {}", itemRequest);
-                    throw e;
+                    if (e.isSendResponse()) {
+                        final ItemResult.Builder result = ItemResult.newBuilder();
+                        result.setQuery(itemRequest.getQuery());
+                        results.add(ResultBuilder.buildResult("The item had an error" + e.getMessage(),
+                                ItemQuery.ERROR, result.build()));
+                    } else {
+                        LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
+                        LOG.error("Exception with item {}", itemRequest);
+                        throw e;
+                    }
                 }
             }
             conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
-        } catch (AuthenticationException e) {
-            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        }  catch (DatabaseAccessException e) {
-            final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
-            conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
-            LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-        } catch (InvalidProtocolBufferException | RuntimeException e) {
+        } catch (AuthenticationException | DatabaseAccessException | InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);

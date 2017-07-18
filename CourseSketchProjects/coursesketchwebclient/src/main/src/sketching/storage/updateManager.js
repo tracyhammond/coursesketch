@@ -1,9 +1,9 @@
 /**
- * @class UpdateException
+ * @constructor UpdateException
  * @extends BaseException
  *
  * @param {String} message - The message to show for the exception.
- * @param {BaseException} cause - The cause of the exception.
+ * @param {BaseException} [cause] - The cause of the exception.
  */
 function UpdateException(message, cause) {
     this.name = 'UpdateException';
@@ -16,8 +16,11 @@ function UpdateException(message, cause) {
 UpdateException.prototype = new BaseException();
 
 /**
- * @class UndoRedoException
+ * @constructor UndoRedoException
  * @extends UpdateException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function UndoRedoException(message, cause) {
     this.name = 'UndoRedoException';
@@ -34,7 +37,7 @@ UndoRedoException.prototype = new UpdateException();
  *
  * @param {SketchManager} sketchManager - The manager that the sketch deals with.
  * @param {Function} onError - A method that is called when an error occurs.
- * @class UpdateManager
+ * @constructor UpdateManager
  */
 function UpdateManager(sketchManager, onError) {
 
@@ -52,7 +55,9 @@ function UpdateManager(sketchManager, onError) {
     var currentUpdateIndex = 0;
 
     /**
-     * Holds the pointer to the end of the list (only really used with markers)
+     * Holds the pointer to the end of the list (only really used with markers).
+     *
+     * @type {Number}
      */
     var currentEndingIndex = 0;
 
@@ -63,6 +68,12 @@ function UpdateManager(sketchManager, onError) {
     var skippingMarkerMode = false;
     var amountToSkip = 0;
     var localScope = this;
+
+    /**
+     * Updates to the current index on every submission.
+     *
+     * @type {Number}
+     */
     var lastSubmissionPointer = 0;
 
     /**
@@ -71,16 +82,22 @@ function UpdateManager(sketchManager, onError) {
      * -1 = undo
      * 1 = redo
      * 2 =
+     *
+     * @type {Number}
      */
     var lastUpdateType = 0;
 
     /**
-     * Updates on every save and every submission.
+     * Updates to the current index on every save and every submission.
+     *
+     * @type {Number}
      */
     var lastSavePointer = 0;
 
     /**
      * A list of plugins whose methods are called when addUpdate is called.
+     *
+     * @type {List<Plugin>}
      */
     var plugins = [];
 
@@ -108,11 +125,13 @@ function UpdateManager(sketchManager, onError) {
      *
      * @param {SrlUpdate} update - The update that is being added to this specific
      *            update manager.
+     * @param {String} [pluginId] - The id of the plugin that added the update.
      */
-    this.addUpdate = function(update) {
+    this.addUpdate = function(update, pluginId) {
         // TODO: find a better way to manage cleaning updates if possible.
         var cleanedUpdate = cleanUpdate(update);
         cleanedUpdate.sketchManager = sketchManager;
+        cleanedUpdate.pluginId = pluginId;
         queuedLocalUpdates.push(cleanedUpdate);
         emptyLocalQueue();
     };
@@ -125,11 +144,12 @@ function UpdateManager(sketchManager, onError) {
      *
      * @param {SrlUpdate} update - The update that is being added to this specific
      *            update manager.
+     * @param {String} [pluginId] - The id of the plugin that added the update.
      */
-    this.addSynchronousUpdate = function(update) {
-        // TODO: find a better way to manage cleaning updates if possible.
+    this.addSynchronousUpdate = function(update, pluginId) {
         var cleanedUpdate = cleanUpdate(update);
         cleanedUpdate.sketchManager = sketchManager;
+        cleanedUpdate.pluginId = pluginId;
         queuedLocalUpdates.push(cleanedUpdate);
         emptyLocalQueueSynchronously();
     };
@@ -140,9 +160,11 @@ function UpdateManager(sketchManager, onError) {
      *
      * @param {Object.addUpdate} plugin - Plugin that has an addUpdate method that can be called.
      * @callback {Function} addUpdate
-     * @callbackParam {ProtobufUpdate} update The update the was just executed by the update manager.
-     * @callbackParam {Boolean} redraw True if the sketch should be redrawn after executing this update.
-     * @callbackParam {Integer} index What index this update was.  (Typically is or close to the number of updates in the list)
+     * @callbackParam {ProtobufUpdate} update - The update the was just executed by the update manager.
+     * @callbackParam {Boolean} redraw - True if the sketch should be redrawn after executing this update.
+     * @callbackParam {Integer} index - What index this update was.  (Typically is or close to the number of updates in the list)
+     * @callbackParam {Integer} updateType - The last update type
+     * @callbackParam {String} pluginId - The id of the plugin that added this update. (Undefined if no plugin added the update)
      */
     this.addPlugin = function(plugin) {
         plugins.push(plugin);
@@ -226,6 +248,7 @@ function UpdateManager(sketchManager, onError) {
     function executeUpdateLocked() {
         executionLock = true;
         var nextUpdate = removeObjectByIndex(queuedLocalUpdates, 0);
+        var updateCreatedByPlugin = nextUpdate.pluginId;
         try {
             var redraw = executeUpdate(nextUpdate);
             if (!skippingMarkerMode) {
@@ -235,7 +258,7 @@ function UpdateManager(sketchManager, onError) {
                 var updateType = lastUpdateType;
                 for (var i = 0; i < plugins.length; i++) {
                     if (!isUndefined(plugins[i].addUpdate)) {
-                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType);
+                        plugins[i].addUpdate(pluginUpdate, redraw, updateIndex, updateType, updateCreatedByPlugin);
                     }
                 }
                 updateType = undefined;
@@ -530,6 +553,7 @@ function UpdateManager(sketchManager, onError) {
      * Returns a direct copy of the update list that is modifiable.
      *
      * @param {Function} [callback] - called with the update list.
+     * @returns {SrlUpdateList} The updateList.
      */
     this.getUpdateList = function(callback) {
         if (callback) {
@@ -635,7 +659,7 @@ function UpdateManager(sketchManager, onError) {
                 if (percentBar) {
                     percentBar.updatePercentBar(index, maxIndex);
                 }
-                localScope.addUpdate(list[index], false, true);
+                localScope.addUpdate(list[index]);
                 index++;
             }
             if (index >= maxIndex) {

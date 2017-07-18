@@ -49,7 +49,7 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -76,6 +76,13 @@
             <groupId>com.github.jeremyh</groupId>
             <artifactId>jBCrypt</artifactId>
             <version>jbcrypt-0.4</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cedarsoftware</groupId>
+            <artifactId>json-io</artifactId>
+            <version>4.4.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

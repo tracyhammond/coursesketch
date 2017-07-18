@@ -1,14 +1,13 @@
 /**
  * A manager for courses that talks with the remote server.
  *
- * @param {CourseSketchDatabase} parent - The database that will hold the methods of this instance.
+ * @param {SchoolDataManager} parent - The database that will hold the methods of this instance.
  * @param {AdvanceDataListener} advanceDataListener - A listener and sender for the database
- * @param {IndexedDB} database - The local database
- * @param {SrlRequest} Request - A shortcut to a request
+ * @param {ProtoDatabase} database - The local database
  * @param {ByteBuffer} ByteBuffer - Used in the case of longs for javascript.
  * @constructor
  */
-function CourseDataManager(parent, advanceDataListener, database, Request, ByteBuffer) {
+function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
     var COURSE_LIST = 'COURSE_LIST';
     var userCourseId = [];
     var userHasCourses = true;
@@ -91,6 +90,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         });
     }
+
     parent.getCourseLocal = getCourseLocal;
 
     /**
@@ -160,6 +160,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         });
     }
+
     parent.setCourse = setCourse;
 
     /**
@@ -182,8 +183,13 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             advanceDataListener.sendDataUpdate(CourseSketch.prutil.ItemQuery.COURSE, course.toArrayBuffer(), function(evt, item) {
                 // we do not need to make server changes we just need to make sure it was successful.
                 if (isException(item)) {
-                    serverCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'updating course ' + course, item));
+                    var exception = new DatabaseException('exception thrown while waiting for response from sever',
+                        'updating course ' + course, item);
+                    if (!isUndefined(serverCallback)) {
+                        serverCallback(exception);
+                    } else {
+                        console.error(exception);
+                    }
                     return;
                 }
                 if (!isUndefined(serverCallback)) {
@@ -192,6 +198,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             });
         });
     }
+
     parent.updateCourse = updateCourse;
 
     /**
@@ -214,6 +221,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         });
     }
+
     parent.deleteCourse = deleteCourse;
 
     /**
@@ -245,7 +253,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         var callback = function(evt, item) {
             if (isException(item)) {
                 courseCallback(new DatabaseException('exception thrown while waiting for response from sever',
-                        'Getting all courses for user ' + parent.getCurrentId(), item));
+                    'Getting all courses for user ' + parent.getCurrentId(), item));
                 return;
             }
             // there was an error getting the user classes.
@@ -258,7 +266,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
                 courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
-                        CourseSketch.prutil.getSrlCourseClass()));
+                    CourseSketch.prutil.getSrlCourseClass()));
             }
 
             var setCourseCallback = createBarrier(courseList.length, function() {
@@ -306,6 +314,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             }
         }
     }
+
     parent.getAllCourses = getAllCourses;
 
     /**
@@ -359,6 +368,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             });
         });
     }
+
     parent.insertCourse = insertCourse;
 
     /**
@@ -381,14 +391,14 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {
             if (isException(item)) {
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
-                courseId, item));
+                    courseId, item));
                 return;
             }
             // after listener is removed
             if (isUndefined(item.data) || item.data === null || item.data.length <= 0) {
                 // not calling the state callback because this should skip that step.
                 callback(new DatabaseException('There are no grades for the course or the data does not exist ' +
-                courseId));
+                    courseId));
                 return;
             }
 
@@ -403,12 +413,13 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         });
 
     }
+
     parent.getCourseRoster = getCourseRoster;
 
     /**
      * Gets the id's of all of the courses in the user's local client.
      */
-    database.getFromCourses(COURSE_LIST, function(e, request, result) { // jscs:ignore jsDoc
+    database.getFromCourses(COURSE_LIST, function(e, request, result) { // eslint-disable-line require-jsdoc
         if (isUndefined(result) || isUndefined(result.data)) {
             return;
         }
@@ -416,7 +427,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
     });
 
     /**
-     * @return {Array} A list that represents all of the ids of courses in the database.
+     * @returns {Array} A list that represents all of the ids of courses in the database.
      */
     parent.getAllCourseIds = function() {
         return JSON.parse(JSON.stringify(userCourseId));
@@ -453,7 +464,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
         /**
          * Listens for the search result and displays the result given to it.
          */
-        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {// jscs:ignore jsDoc
+        advanceDataListener.sendDataRequest(itemRequest, function(evt, item) {// eslint-disable-line require-jsdoc
             if (isException(item)) {
                 callback(new DatabaseException('There was an exception when getting the data back from the server while searching courses', item));
                 return;
@@ -467,7 +478,7 @@ function CourseDataManager(parent, advanceDataListener, database, Request, ByteB
             var courseList = [];
             for (var i = 0; i < item.data.length; i++) {
                 courseList.push(CourseSketch.prutil.decodeProtobuf(item.data[i],
-                        CourseSketch.prutil.getSrlCourseClass()));
+                    CourseSketch.prutil.getSrlCourseClass()));
             }
             callback(courseList);
         });

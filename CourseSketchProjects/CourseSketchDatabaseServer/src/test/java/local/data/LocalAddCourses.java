@@ -5,6 +5,7 @@ import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import protobuf.srl.school.School.SrlCourse;
+import protobuf.srl.utils.Util;
 import protobuf.srl.utils.Util.SrlPermission;
 
 import javax.swing.JOptionPane;
@@ -15,7 +16,7 @@ public class LocalAddCourses {
 		String[] description = new String[]{"Howdy! Welcome to Chem 107 where you learn about lewis dot diagrams"};
 		for (int k = 0; k < name.length; k ++) {
 			SrlCourse.Builder testBuilder = SrlCourse.newBuilder();
-			testBuilder.setAccess(SrlCourse.Accessibility.SUPER_PUBLIC);
+			testBuilder.setAccess(Util.Accessibility.SUPER_PUBLIC);
 			testBuilder.setSemester("FALL");
 			testBuilder.setName(name[k]);
 			testBuilder.setDescription(description[k]);

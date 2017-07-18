@@ -19,7 +19,7 @@ public final class DbSchoolUtility {
      * Returns a string representing the type of school item it is based on the enum.
      *
      * This method is used to make it easier to handle upgrades or changes to protobuf names.
-     * @param type {@link protobuf.srl.school.Util.ItemType}.
+     * @param type {@link Util.ItemType}.
      * @return A string representing the ItemType.
      */
     public static String getCollectionFromType(final Util.ItemType type) {
@@ -31,7 +31,7 @@ public final class DbSchoolUtility {
      *
      * A course item type returns itself.
      * A bank problem also returns itself.
-     * @param item {@link protobuf.srl.school.Util.ItemType}.
+     * @param item {@link Util.ItemType}.
      * @return The item type that is supposed to be the parent.
      */
     public static Util.ItemType getParentItemType(final Util.ItemType item) {

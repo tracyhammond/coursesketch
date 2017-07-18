@@ -128,7 +128,7 @@ public final class AuthUtilities {
      * @param shiftAmount the amount to shift the result by.
      * @return A number that is based on the input.
      */
-    public static long convertAndShift(final boolean bool, final int shiftAmount) {
+    static long convertAndShift(final boolean bool, final int shiftAmount) {
         return (bool ? 1 : 0) << shiftAmount;
     }
 }

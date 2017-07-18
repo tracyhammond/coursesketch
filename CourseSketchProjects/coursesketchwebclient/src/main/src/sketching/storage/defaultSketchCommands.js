@@ -228,6 +228,11 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
      * @param {SrlSketch} sketch - The sketch object that is being affected by these changes.
      */
     CourseSketch.prutil.getActionPackageShapeClass().prototype.redo = function(sketch) {
+
+        if (this.newContainerId) {
+            console.log('SHAPE ID: ', this.newContainerId.getIdChain());
+        }
+
         var oldContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
         var newContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
 
@@ -237,6 +242,7 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
         }
         for (var shapeIndex = 0; shapeIndex < this.shapesToBeContained.length; shapeIndex++) {
             var shapeId = this.shapesToBeContained[shapeIndex];
+            console.log('SHAPE BEING CONTAINED ID ', shapeId);
             var object = oldContainingObject.removeSubObjectById(shapeId);
             newContainingObject.addSubObject(object);
         }
@@ -252,6 +258,10 @@ validateFirstGlobalRun(document.currentScript, CourseSketch);
     CourseSketch.prutil.getActionPackageShapeClass().prototype.undo = function(sketch) {
         var oldContainingObject = !(this.newContainerId) ? sketch : sketch.getSubObjectByIdChain(this.newContainerId.getIdChain());
         var newContainingObject = !(this.oldContainerId) ? sketch : sketch.getSubObjectByIdChain(this.oldContainerId.getIdChain());
+
+        if (Boolean(this.newContainerId)) {
+            console.log('NEW CONTAINER ID ID ID ID ', this.newContainerId.getIdChain());
+        }
 
         if (oldContainingObject === newContainingObject) {
             // done moving to same place.

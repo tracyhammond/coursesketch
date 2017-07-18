@@ -1,4 +1,4 @@
-//jscs:disable jsDoc
+/* eslint-disable require-jsdoc, valid-jsdoc */
 function WaitScreenManager() {
     /**
      * resets the values in the school builder so that the same build object can be used again.
@@ -165,7 +165,6 @@ function WaitScreenManager() {
         inner2.appendChild(inner3);
         inner1.appendChild(inner2);
         outer.appendChild(inner1);
-
 
         element.appendChild(outer);
         if (this.waitIconText) {

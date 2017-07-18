@@ -3,7 +3,7 @@
 </head>
 <body>
 <template id="instructorMenu">
-	<ul id="menuList" class="side-nav" style="z-index: 999">
+	<ul id="slide-out" class="side-nav" style="z-index: 999">
 		<li><a href="/src/instructor/homepage/homePage.html" target="wrapper"
 			class="contentLink"
 			onclick="CourseSketch.redirectContent('/src/instructor/homepage/homePage.html','Welcome Instructor')">Home</a></li>
@@ -18,6 +18,9 @@
 			class="contentLink"
 			onclick="CourseSketch.redirectContent('/src/instructor/homepage/homePage.html','Welcome Instructor')">Course
 				Management</a></li>
+		<li><a href="/src/common/recognition/debug/recognitionExample.html" target="wrapper"
+			   class="contentLink"
+			   onclick="CourseSketch.redirectContent('/src/common/recognition/recogntionExample.html','Welcome Recognition Guy')">Recognition example</a></li>
 		<li><a href="viewClassKeys.php" target="wrapper"
 			data-ajax="false" class="contentLink">View Class Keys</a></li>
 		<li><a href="html/instructor/homepage/roster.html" target="wrapper"
@@ -32,7 +35,7 @@
 </template>
 
 <template id="studentMenu">
-	<ul id="menuList" class="side-nav" style="z-index: 999">
+	<ul id="slide-out" class="side-nav" style="z-index: 999">
 		<li><a href="/src/student/homepage/homePage.html" target="wrapper"
 			class="contentLink" onclick="CourseSketch.redirectContent('/src/student/homepage/homePage.html','Welcome Student')">Home</a></li>
 		<li class="header"><h6>Classes I'm In</h6></li>
@@ -47,6 +50,9 @@
 		<li><a href="/src/common/lecture/lectureSelection.html" target="wrapper"
 			   class="contentLink"
 			   onclick="CourseSketch.redirectContent('/src/common/lecture/lectureSelection.html','Lectures')">Lectures</a></li>
+		<li><a href="/src/common/recognition/debug/recognitionExample.html" target="wrapper"
+			   class="contentLink"
+			   onclick="CourseSketch.redirectContent('/src/common/recognition/recogntionExample.html','Welcome Recognition Guy')">Recognition example</a></li>
 		<li><a href="html/student/homepage/roster.html" target="wrapper"
 			class="contentLink" onclick="CourseSketch.redirectContent('html/student/homepage/roster.html','Class Rosters')">Rosters</a></li>
 		<li class="header"><h3>Account</h3></li>

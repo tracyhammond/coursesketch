@@ -11,5 +11,10 @@
 
     <artifactId>DatabaseTestHelper</artifactId>
 
+    <properties>
+        <!-- This may be removed and a later solution will need to be worked on -->
+        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+    </properties>
+
 
 </project>

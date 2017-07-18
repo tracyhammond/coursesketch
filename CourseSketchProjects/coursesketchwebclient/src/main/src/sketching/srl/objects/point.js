@@ -55,7 +55,7 @@ function SRL_Point(x, y) {
     /**
      * Points can have pressure depending on the input device
      *
-     * @return the pressure of the point
+     * @returns the pressure of the point
      */
     this.getPressure = function() {
         return pressure;
@@ -128,7 +128,7 @@ function SRL_Point(x, y) {
     /**
      * Get the current x value of the point
      *
-     * @return current x value of the point
+     * @returns current x value of the point
      */
     this.getX = function() {
         return m_xList[m_currentElement];
@@ -137,7 +137,7 @@ function SRL_Point(x, y) {
     /**
      * Get the current y value of the point
      *
-     * @return current y value of the point
+     * @returns current y value of the point
      */
     this.getY = function() {
         return m_yList[m_currentElement];
@@ -165,7 +165,7 @@ function SRL_Point(x, y) {
          *
          * @param rp
          *            the other point
-         * @return the distance
+         * @returns the distance
          */
         if (arg1 instanceof SRL_Point) {
             return this.distance(arg1.getX(), arg1.getY());
@@ -178,7 +178,7 @@ function SRL_Point(x, y) {
              *            the x value of the other point
              * @param y
              *            the y value of the other point
-             * @return the distance
+             * @returns the distance
              */
         } else if (typeof arg1 === "number" && typeof arg2 === "number" && arg3 === undefined && arg4 === undefined) {
             var xdiff = Math.abs(arg1 - this.getX());
@@ -193,7 +193,7 @@ function SRL_Point(x, y) {
              *            the x value of the other point
              * @param y
              *            the y value of the other point
-             * @return the distance
+             * @returns the distance
              */
         } else if (typeof arg1 === "number" && typeof arg2 === "number" && typeof arg3 === "number" && typeof arg4 === "number") {
             var xdiff = arg1 - arg3;
@@ -243,7 +243,7 @@ function SRL_Point(x, y) {
     /**
      * Get the original value of the point
      *
-     * @return a point where getx and gety return the first values that were
+     * @returns a point where getx and gety return the first values that were
      *         added to the history
      */
     this.goBackToInitial = function() {
@@ -256,7 +256,7 @@ function SRL_Point(x, y) {
     /**
      * Get the x value for the first point in the history
      *
-     * @return {Number} the first x point.
+     * @returns {Number} the first x point.
      */
     this.getInitialX = function() {
         if (m_xList.length === 0) {
@@ -268,7 +268,7 @@ function SRL_Point(x, y) {
     /**
      * Get the y value for the first point in the history
      *
-     * @return {Number} the first y point.
+     * @returns {Number} the first y point.
      */
     this.getInitialY = function() {
         if (m_yList.length === 0) {

@@ -1,6 +1,5 @@
 package handlers;
 
-import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
 import coursesketch.database.auth.AuthenticationException;
@@ -8,7 +7,7 @@ import database.DatabaseAccessException;
 import database.institution.Institution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
@@ -22,6 +21,8 @@ import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;
+
+import static handlers.ResultBuilder.validateIds;
 
 /**
  * Handles data being added or edited.
@@ -71,17 +72,13 @@ public final class DataUpdateHandler {
 
             final String authId = req.getServersideId();
             final String userId = req.getServerUserId();
-            final DataSend request = DataSend.parseFrom(req.getOtherData());
-            if (Strings.isNullOrEmpty(authId)) {
-                throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
-            }
-            if (Strings.isNullOrEmpty(userId)) {
-                throw new DatabaseAccessException("Invalid User Identification");
-            }
-            final ArrayList<ItemResult> results = new ArrayList<>();
+            validateIds(authId, userId);
 
-            for (int p = 0; p < request.getItemsList().size(); p++) {
-                final ItemSend itemSet = request.getItemsList().get(p);
+            final DataSend request = DataSend.parseFrom(req.getOtherData());
+
+            final ArrayList<ItemResult> results = new ArrayList<>();
+            for (int itemUpdateIndex = 0; itemUpdateIndex < request.getItemsList().size(); itemUpdateIndex++) {
+                final ItemSend itemSet = request.getItemsList().get(itemUpdateIndex);
                 try {
                     switch (itemSet.getQuery()) {
                         // TODO Enable updates for other data

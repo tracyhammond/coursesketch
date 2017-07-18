@@ -52,7 +52,8 @@ message LatePolicy {
     optional TimeFrame timeFrameType = 2 [default = DAY];           // Because this is what people are used to.
     optional double rate = 3;                                        // Rate of subtraction.
     optional SubtractionType subtractionType = 4 [default = CAP];   // How we are subtracting the grade.
-    optional bool applyOnlyToLateProblems = 5;                      // Determines if the late policy only applies to problems submitted late.
+    // If the user submits some problems problems on time then this will only apply to problems that were submitted late.
+    optional bool applyOnlyToLateProblems = 5;
 
     // Determines what late policy function type is being used.
     enum FunctionType {
@@ -62,15 +63,12 @@ message LatePolicy {
     }
 
     /**
-     * The numbers are reversed because of how the client loads and saves data for options.
-     *
-     * Specifically this is used in the advance edit panel.
      */
     enum TimeFrame {
-        DAY = 3;
-        HOUR = 2;
-        MINUTE = 1;
         CONSTANT = 0;
+        MINUTE = 1;
+        HOUR = 2;
+        DAY = 3;
     }
 
     // Determines if the subtraction results in a capped grade or is a percent reduction. The cap type is nicer on the student.

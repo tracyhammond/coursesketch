@@ -1,0 +1,46 @@
+<html>
+<head>
+    <!-- Utilities -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- Jquery library -->
+    <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+
+     <!-- d3 library, for the graphs -->
+    <link rel="import" href="/src/utilities/libraries/d3/d3include.html">
+
+    <!-- Sketch Storage -->
+    <link rel="import"
+          href="/src/sketching/storage/sketchStorageInclude.html">
+
+    <!-- user action graph -->
+    <link id="userActionGraphImport" rel="import"
+          href="/src/instructor/review/userActionReview.html">
+    <script src="userActionReview.js"></script>
+
+    <meta charset="UTF-8">
+    <script>
+    (function(importDoc) {
+        var clone = safeImport(importDoc, document, 'userActionGraphImport', 'user-action-graph-template');
+
+        var newElement = new UserActionGraph();
+
+        newElement.createdCallback = function() {
+            this.initializeElement(clone.cloneNode(true));
+        };
+
+        newElement.attachedCallback = function() {
+
+        };
+
+        newElement.detachedCallback = function() {
+            //this.finalize(); this should be implemented
+        };
+
+        document.registerElement('user-action-graph', {
+            prototype : newElement
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

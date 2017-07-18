@@ -3,30 +3,32 @@ package database;
 import com.google.common.base.Strings;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import coursesketch.database.auth.AuthenticationResponder;
 import coursesketch.database.interfaces.AbstractCourseSketchDatabaseReader;
 import coursesketch.server.interfaces.AbstractServerWebSocketHandler;
 import coursesketch.server.interfaces.ServerInfo;
-import org.bson.types.ObjectId;
+import org.bson.Document;
+import org.bson.types.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import protobuf.srl.commands.Commands;
 import protobuf.srl.commands.Commands.SrlUpdateList;
+import protobuf.srl.question.QuestionDataOuterClass;
+import protobuf.srl.question.QuestionDataOuterClass.FreeResponse;
+import protobuf.srl.question.QuestionDataOuterClass.MultipleChoice;
+import protobuf.srl.question.QuestionDataOuterClass.QuestionData;
+import protobuf.srl.question.QuestionDataOuterClass.SketchArea;
 import protobuf.srl.submission.Submission.SrlExperiment;
 import protobuf.srl.submission.Submission.SrlSolution;
 import protobuf.srl.submission.Submission.SrlSubmission;
 import util.MergeException;
 import util.SubmissionMerger;
 import utilities.LoggingConstants;
-
-import java.net.UnknownHostException;
 
 import static database.DatabaseStringConstants.ALLOWED_IN_PROBLEMBANK;
 import static database.DatabaseStringConstants.ANSWER_CHOICE;
@@ -41,11 +43,13 @@ import static database.DatabaseStringConstants.IS_PRACTICE_PROBLEM;
 import static database.DatabaseStringConstants.ITEM_ID;
 import static database.DatabaseStringConstants.PROBLEM_BANK_ID;
 import static database.DatabaseStringConstants.SELF_ID;
+import static database.DatabaseStringConstants.SLIDE_BLOB_TYPE;
 import static database.DatabaseStringConstants.SOLUTION_COLLECTION;
 import static database.DatabaseStringConstants.SUBMISSION_TIME;
 import static database.DatabaseStringConstants.TEXT_ANSWER;
 import static database.DatabaseStringConstants.UPDATELIST;
 import static database.DatabaseStringConstants.USER_ID;
+import static database.utilities.MongoUtilities.convertStringToObjectId;
 
 /**
  * Manages the submissions in the database.
@@ -61,7 +65,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     /**
      * A private Database that stores all of the data used by mongo.
      */
-    private DB database;
+    private MongoDatabase database;
 
     /**
      * A private SubmissionDatabaseClient that accepts data for the database location.
@@ -81,24 +85,16 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *         name of the database.
      * @param fakeDB The fake database.
      */
-    public SubmissionDatabaseClient(final boolean testOnly, final DB fakeDB) {
+    public SubmissionDatabaseClient(final boolean testOnly, final MongoDatabase fakeDB) {
         this(null);
         if (testOnly && fakeDB != null) {
             database = fakeDB;
         } else {
-            MongoClient mongoClient = null;
-            try {
-                mongoClient = new MongoClient("localhost");
-            } catch (UnknownHostException e) {
-                LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            }
-            if (mongoClient == null) {
-                return;
-            }
+            final MongoClient mongoClient = new MongoClient("localhost");
             if (testOnly) {
-                database = mongoClient.getDB("test");
+                database = mongoClient.getDatabase("test");
             } else {
-                database = mongoClient.getDB(DATABASE);
+                database = mongoClient.getDatabase(DATABASE);
             }
         }
     }
@@ -118,26 +114,29 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      */
     public String saveSolution(final SrlSolution solution) throws DatabaseAccessException {
         LOG.info("\n\n\nsaving the experiment!");
-        final DBCollection solutions = database.getCollection(SOLUTION_COLLECTION);
+        final MongoCollection<Document> solutions = database.getCollection(SOLUTION_COLLECTION);
 
-        final BasicDBObject findQuery = new BasicDBObject(PROBLEM_BANK_ID, solution.getProblemBankId());
-        final DBCursor multipleObjectCursor = solutions.find(findQuery);
-        DBObject resultCursor = null;
-        if (multipleObjectCursor.count() > 0) {
+        final Document findQuery = new Document(PROBLEM_BANK_ID, solution.getProblemBankId());
+        final MongoCursor<Document> multipleObjectCursor = solutions.find(findQuery).iterator();
+        Document resultCursor = null;
+        if (multipleObjectCursor.hasNext()) {
             resultCursor = multipleObjectCursor.next();
             multipleObjectCursor.close();
-            final DBObject updateObj = new BasicDBObject(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray());
-            solutions.update(resultCursor, new BasicDBObject("$set", updateObj));
+            final Document updateObj =
+                    new Document(UPDATELIST, new Binary(solution.getSubmission()
+                            .getSubmissionData().getSketchArea().getRecordedSketch().toByteArray()));
+            solutions.updateOne(resultCursor, new Document("$set", updateObj));
         } else {
             LOG.info("No existing submissions found");
 
-            final BasicDBObject query = new BasicDBObject(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
+            final Document query = new Document(ALLOWED_IN_PROBLEMBANK, solution.getAllowedInProblemBank())
                     .append(IS_PRACTICE_PROBLEM, solution.getIsPracticeProblem())
-                    .append(UPDATELIST, solution.getSubmission().getUpdateList().toByteArray())
+                    .append(UPDATELIST, new Binary(solution.getSubmission()
+                            .getSubmissionData().getSketchArea().getRecordedSketch().toByteArray()))
                     .append(PROBLEM_BANK_ID, solution.getProblemBankId());
 
-            solutions.insert(query);
-            resultCursor = solutions.findOne(query);
+            solutions.insertOne(query);
+            resultCursor = solutions.find(query).first();
             multipleObjectCursor.close();
         }
         return resultCursor.get(SELF_ID).toString();
@@ -162,56 +161,58 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         LOG.info("saving the experiment!");
         verifyInput(experiment);
 
-        final DBCollection experiments = database.getCollection(EXPERIMENT_COLLECTION);
+        final MongoCollection<Document> experiments = database.getCollection(EXPERIMENT_COLLECTION);
 
-        final BasicDBObject findQuery = new BasicDBObject(COURSE_PROBLEM_ID, experiment.getProblemId())
+        final Document findQuery = new Document(COURSE_PROBLEM_ID, experiment.getProblemId())
                 .append(USER_ID, experiment.getUserId());
 
         if (experiment.hasPartId()) {
             findQuery.append(ITEM_ID, experiment.getPartId());
         }
         LOG.info("Searching for existing solutions {}", findQuery);
-        final DBCursor multipleObjectCursor = experiments.find(findQuery).sort(new BasicDBObject(SUBMISSION_TIME, -1));
+        final MongoCursor<Document> multipleObjectCursor = experiments.find(findQuery).sort(new Document(SUBMISSION_TIME, -1)).iterator();
         LOG.info("Do we have the next cursor {}", multipleObjectCursor.hasNext());
-        LOG.info("Number of solutions found {}", multipleObjectCursor.count());
-        DBObject existingSubmission = null;
+        if (LOG.isDebugEnabled()) {
+            LOG.info("Number of solutions found {}", experiments.count(findQuery));
+        }
+        Document existingSubmission = null;
 
-        if (multipleObjectCursor.count() > 0) {
+        if (multipleObjectCursor.hasNext()) {
             LOG.info("UPDATING AN EXPERIMENT!!!!!!!!");
             existingSubmission = multipleObjectCursor.next();
 
             // TODO figure out how to update a document with a single command
 
-            final DBObject updateObj;
+            final Document updateObj;
             try {
                 updateObj = createSubmission(experiment.getSubmission(), existingSubmission, false, submissionTime);
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission", e);
             }
-            final DBObject updateObj2 = new BasicDBObject(SUBMISSION_TIME, submissionTime);
-            final BasicDBObject updateQueryPart2 = new BasicDBObject("$set", updateObj);
-            final BasicDBObject updateQuery2Part2 = new BasicDBObject("$set", updateObj2);
-            experiments.update(existingSubmission, updateQueryPart2);
-            experiments.update(existingSubmission, updateQuery2Part2);
+            final Document updateObj2 = new Document(SUBMISSION_TIME, submissionTime);
+            final Document updateQueryPart2 = new Document("$set", updateObj);
+            final Document updateQuery2Part2 = new Document("$set", updateObj2);
+            experiments.updateOne(existingSubmission, updateQueryPart2);
+            experiments.updateOne(existingSubmission, updateQuery2Part2);
 
             return existingSubmission.get(SELF_ID).toString();
         } else {
             multipleObjectCursor.close();
-            final DBObject submissionObject;
+            final Document submissionObject;
             try {
                 submissionObject = createSubmission(experiment.getSubmission(), existingSubmission, false, submissionTime);
             } catch (SubmissionException e) {
                 throw new DatabaseAccessException("Exception while creating submission", e);
             }
-            final BasicDBObject query = new BasicDBObject(COURSE_ID, experiment.getCourseId())
+            final Document query = new Document(COURSE_ID, experiment.getCourseId())
                     .append(ASSIGNMENT_ID, experiment.getAssignmentId())
                     .append(COURSE_PROBLEM_ID, experiment.getProblemId())
                     .append(ITEM_ID, experiment.getPartId())
                     .append(USER_ID, experiment.getUserId())
                     .append(SUBMISSION_TIME, submissionTime);
             query.putAll(submissionObject);
-            experiments.insert(query);
-            existingSubmission = experiments.findOne(query);
+            experiments.insertOne(query);
+            existingSubmission = experiments.find(query).first();
         }
         return existingSubmission.get(SELF_ID).toString();
     }
@@ -268,7 +269,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         }
 
         LOG.info("Fetching experiment");
-        final DBObject cursor = database.getCollection(EXPERIMENT_COLLECTION).findOne(new ObjectId(itemId));
+        final Document cursor = database.getCollection(EXPERIMENT_COLLECTION).find(convertStringToObjectId(itemId)).first();
         if (cursor == null) {
             throw new DatabaseAccessException("There is no experiment with id: " + itemId);
         }
@@ -313,45 +314,46 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         Thrown if there are issues getting the submission.
      */
-    private static SrlSubmission getSubmission(final DBObject submissionObject, final String submissionId) throws SubmissionException {
+    private static SrlSubmission getSubmission(final Document submissionObject, final String submissionId) throws SubmissionException {
         final SrlSubmission.Builder subBuilder = SrlSubmission.newBuilder();
         if (!Strings.isNullOrEmpty(submissionId)) {
             subBuilder.setId(submissionId);
         }
 
-        final SrlSubmission.SubmissionTypeCase submissionType = getExpectedType(submissionObject);
+        final QuestionData.ElementTypeCase submissionType = getExpectedType(submissionObject);
 
+        final QuestionData.Builder questionData = QuestionData.newBuilder();
         switch (submissionType) {
-            case UPDATELIST:
+            case SKETCHAREA:
                 final Object binary = submissionObject.get(UPDATELIST);
                 if (binary == null) {
                     throw new SubmissionException("UpdateList did not contain any data", null);
                 }
                 try {
-                    subBuilder.setUpdateList(SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary)));
-                    return subBuilder.build();
+                    final SrlUpdateList updateList = SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
+                    questionData.setSketchArea(QuestionDataOuterClass.SketchArea.newBuilder().setRecordedSketch(updateList));
                 } catch (InvalidProtocolBufferException e) {
                     throw new SubmissionException("Error decoding update list", e);
                 }
-            case TEXTANSWER:
+                break;
+            case FREERESPONSE:
                 final Object text = submissionObject.get(TEXT_ANSWER);
                 if (text == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }
-                subBuilder.setTextAnswer(text.toString());
-                return subBuilder.build();
-            case ANSWERCHOICE:
+                questionData.setFreeResponse(QuestionDataOuterClass.FreeResponse.newBuilder().setStartingText(text.toString()));
+                break;
+            case MULTIPLECHOICE:
                 final Object answerChoice = submissionObject.get(ANSWER_CHOICE);
                 if (answerChoice == null) {
                     throw new SubmissionException("Text answer did not contain any data", null);
                 }
-                // prevents a possible class cast exception.
-                subBuilder.setAnswerChoice(Integer.parseInt(answerChoice.toString()));
-                return subBuilder.build();
+                questionData.setMultipleChoice(MultipleChoice.newBuilder().setCorrectId(answerChoice.toString()));
+                break;
             default:
                 throw new SubmissionException("Submission data is not supported type or does not exist", null);
-
         }
+        return subBuilder.setSubmissionData(questionData).build();
     }
 
     /**
@@ -369,17 +371,28 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    private static BasicDBObject createSubmission(final SrlSubmission submission, final DBObject cursor,
+    private static Document createSubmission(final SrlSubmission submission, final Document cursor,
             final boolean isMod, final long submissionTime) throws SubmissionException {
-        if (submission.hasUpdateList()) {
-            return createUpdateList(submission, cursor, isMod, submissionTime);
-        } else if (submission.hasTextAnswer()) {
-            return createTextSubmission(submission, cursor);
-        } else if (submission.hasAnswerChoice()) {
-            return createMultipleChoiceSolution(submission, cursor);
-        } else {
+        if (!submission.hasSubmissionData()) {
             throw new SubmissionException("Tried to save as an invalid submission", null);
         }
+        Document document = null;
+        final QuestionData submissionData = submission.getSubmissionData();
+        switch (submissionData.getElementTypeCase()) {
+            case SKETCHAREA:
+                document = createUpdateList(submissionData.getSketchArea(), cursor, isMod, submissionTime);
+                break;
+            case FREERESPONSE:
+                document = createTextSubmission(submissionData.getFreeResponse(), cursor);
+                break;
+            case MULTIPLECHOICE:
+                document = createMultipleChoiceSolution(submissionData.getMultipleChoice(), cursor);
+                break;
+            default:
+                throw new SubmissionException("Tried to save as an invalid submission", null);
+        }
+        document.append(SLIDE_BLOB_TYPE, submissionData.getElementTypeCase().getNumber());
+        return document;
     }
 
     /**
@@ -393,12 +406,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    private static BasicDBObject createTextSubmission(final SrlSubmission submission, final DBObject cursor) throws SubmissionException {
-        if (cursor != null && getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.TEXTANSWER) {
+    private static Document createTextSubmission(final FreeResponse submission, final Document cursor) throws SubmissionException {
+        if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.FREERESPONSE) {
             throw new SubmissionException("Can not switch to a text submission from a different type", null);
         }
         // don't store it as changes for right now.
-        return new BasicDBObject(TEXT_ANSWER, submission.getTextAnswer());
+        return new Document(TEXT_ANSWER, submission.getStartingText());
     }
 
     /**
@@ -412,20 +425,20 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    private static BasicDBObject createMultipleChoiceSolution(final SrlSubmission submission, final DBObject cursor) throws SubmissionException {
-        if (cursor != null && getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.ANSWERCHOICE) {
+    private static Document createMultipleChoiceSolution(final MultipleChoice submission, final Document cursor) throws SubmissionException {
+        if (cursor != null && getExpectedType(cursor) != QuestionData.ElementTypeCase.MULTIPLECHOICE) {
             throw new SubmissionException("Can not switch to a multiple choice submission from a different type", null);
         }
         // don't store it as changes for right now.
-        return new BasicDBObject(ANSWER_CHOICE, submission.getAnswerChoice());
+        return new Document(ANSWER_CHOICE, submission.getCorrectId());
     }
 
     /**
-    * Gets the time for the first stroke in a submission.
-    * @param updateList The updateList in a submission.
-    * @return the time for the first stroke recorded.
-    *
-    */
+     * Gets the time for the first stroke in a submission.
+     * @param updateList The updateList in a submission.
+     * @return the time for the first stroke recorded.
+     *
+     */
     private static long getFirstStrokeTime(final SrlUpdateList updateList) {
         for (int i = 0; i < updateList.getListList().size(); i++) {
             final Commands.SrlUpdate tmpUpdate = updateList.getListList().get(i);
@@ -440,11 +453,11 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     }
 
     /**
-    *
-    *  Gets the time for the last stroke in a submission.
-    * @param updateList The updateList in a submission.
-    * @return the time for the last stroke recorded.
-    */
+     *
+     *  Gets the time for the last stroke in a submission.
+     * @param updateList The updateList in a submission.
+     * @return the time for the last stroke recorded.
+     */
     static long getFirstSubmissionTime(final SrlUpdateList updateList) {
         try {
             for (int i = 0; i < updateList.getListList().size(); i++) {
@@ -465,6 +478,7 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
         }
         return -1;
     }
+
     /**
      * Creates a database object for the update list, merges the list if there is already a list in the database.
      *
@@ -480,39 +494,39 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         thrown if there is a problem creating the database object.
      */
-    static BasicDBObject createUpdateList(final SrlSubmission submission, final DBObject cursor,
+    static Document createUpdateList(final SketchArea submission, final Document cursor,
             final boolean isMod, final long submissionTime)
             throws SubmissionException {
         if (cursor != null) {
             SrlUpdateList result = null;
             try {
                 final Object binary = cursor.get(UPDATELIST);
-                if (getExpectedType(cursor) != SrlSubmission.SubmissionTypeCase.UPDATELIST) {
+                if (getExpectedType(cursor) != QuestionData.ElementTypeCase.SKETCHAREA) {
                     throw new SubmissionException("Can not switch type of submission.", null);
                 }
                 if (binary == null) {
-                    result = submission.getUpdateList();
+                    result = submission.getRecordedSketch();
                 } else {
-                    result = SrlUpdateList.parseFrom(ByteString.copyFrom((byte[]) binary));
+                    result = SrlUpdateList.parseFrom(ByteString.copyFrom(((Binary) binary).getData()));
                 }
             } catch (InvalidProtocolBufferException e) {
                 LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-                result = submission.getUpdateList();
+                result = submission.getRecordedSketch();
             }
             try {
-                result = new SubmissionMerger(result, submission.getUpdateList()).setIsModerator(isMod).merge();
+                result = new SubmissionMerger(result, submission.getRecordedSketch()).setIsModerator(isMod).merge();
             } catch (MergeException e) {
                 throw new SubmissionException("exception while merging the two lists.  Update rejected", e);
             }
             final long firstStrokeTime = getFirstStrokeTime(result);
             final long lastStrokeTime = getFirstSubmissionTime(result);
             result = setTime(result, submissionTime);
-            return new BasicDBObject(UPDATELIST, result.toByteArray()).append(FIRST_STROKE_TIME, firstStrokeTime)
+            return new Document(UPDATELIST, new Binary(result.toByteArray())).append(FIRST_STROKE_TIME, firstStrokeTime)
                     .append(FIRST_SUBMISSION_TIME, lastStrokeTime);
         } else {
-            final long firstStrokeTime = getFirstStrokeTime(submission.getUpdateList());
-            final long lastStrokeTime = getFirstSubmissionTime(submission.getUpdateList());
-            return new BasicDBObject(UPDATELIST, setTime(submission.getUpdateList(), submissionTime).toByteArray())
+            final long firstStrokeTime = getFirstStrokeTime(submission.getRecordedSketch());
+            final long lastStrokeTime = getFirstSubmissionTime(submission.getRecordedSketch());
+            return new Document(UPDATELIST, new Binary(setTime(submission.getRecordedSketch(), submissionTime).toByteArray()))
                     .append(FIRST_STROKE_TIME, firstStrokeTime).append(FIRST_SUBMISSION_TIME, lastStrokeTime);
         }
     }
@@ -577,28 +591,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      * @throws SubmissionException
      *         Thrown if there is no type found or if there are multiple types found.
      */
-    private static SrlSubmission.SubmissionTypeCase getExpectedType(final DBObject cursor) throws SubmissionException {
-        SrlSubmission.SubmissionTypeCase currentCase = null;
-        if (cursor.containsField(UPDATELIST)) {
-            currentCase = SrlSubmission.SubmissionTypeCase.UPDATELIST;
+    private static QuestionData.ElementTypeCase getExpectedType(final Document cursor) throws SubmissionException {
+        final int type = (int) cursor.get(SLIDE_BLOB_TYPE);
+        if (type == -1) {
+            return QuestionData.ElementTypeCase.ELEMENTTYPE_NOT_SET;
         }
-        if (cursor.containsField(TEXT_ANSWER)) {
-            if (currentCase != null) {
-                throw new SubmissionException("Submission can not be multiple types at the same time.", null);
-            }
-            currentCase = SrlSubmission.SubmissionTypeCase.TEXTANSWER;
-        }
-        if (cursor.containsField(ANSWER_CHOICE)) {
-            if (currentCase != null) {
-                throw new SubmissionException("Submission can not be multiple types at the same time.", null);
-            }
-            currentCase = SrlSubmission.SubmissionTypeCase.ANSWERCHOICE;
-        }
-        if (currentCase == null) {
-            throw new SubmissionException("Submission has no type specified", null);
-        } else {
-            return currentCase;
-        }
+        return QuestionData.ElementTypeCase.valueOf(type);
     }
 
     /**
@@ -607,12 +605,12 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
     @Override
     public void setUpIndexes() {
         LOG.info("Setting up an index");
-        LOG.info("Experiment Index command: {}", new BasicDBObject(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
-        database.getCollection(EXPERIMENT_COLLECTION).createIndex(new BasicDBObject(COURSE_PROBLEM_ID, 1)
+        LOG.info("Experiment Index command: {}", new Document(COURSE_PROBLEM_ID, 1).append(USER_ID, 1));
+        database.getCollection(EXPERIMENT_COLLECTION).createIndex(new Document(COURSE_PROBLEM_ID, 1)
                 .append(ITEM_ID, 1)
                 .append(USER_ID, 1)
                 .append("unique", true));
-        database.getCollection(SOLUTION_COLLECTION).createIndex(new BasicDBObject(PROBLEM_BANK_ID, 1).append("unique", true));
+        database.getCollection(SOLUTION_COLLECTION).createIndex(new Document(PROBLEM_BANK_ID, 1).append("unique", true));
     }
 
     /**
@@ -620,9 +618,10 @@ public final class SubmissionDatabaseClient extends AbstractCourseSketchDatabase
      *
      * This method should be synchronous.
      */
-    @Override protected void onStartDatabase() {
+    @Override
+    protected void onStartDatabase() {
         final MongoClient mongoClient = new MongoClient(super.getServerInfo().getDatabaseUrl());
-        database = mongoClient.getDB(super.getServerInfo().getDatabaseName());
+        database = mongoClient.getDatabase(super.getServerInfo().getDatabaseName());
         super.setDatabaseStarted();
     }
 }

@@ -23,9 +23,7 @@
 	<script>
         var template = (function() {
             var link1 = document.querySelector('#questionTemplateImport');
-            var link = link1.import.querySelector('#questionTemplateImport');
-            var template = link.import.querySelector('#question');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(link1.import, document,'questionTemplateImport','question');
             return clone;
         })();
 

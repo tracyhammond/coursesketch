@@ -1,6 +1,7 @@
 import "util.proto";
+import "tutorial.proto";
 import "commands.proto";
-import "lecturedata.proto";
+import "questionData.proto";
 
 package protobuf.srl.school;
 
@@ -22,6 +23,21 @@ message SrlProblem {
     repeated ProblemSlideHolder subgroups = 15;
     repeated QuestionAction actions = 16;
     repeated ProblemRestriction restrictions = 17;
+
+    optional protobuf.srl.utils.Accessibility access = 20 [default=PROTECTED]; // Access for other classes to use this question
+
+    /*
+    SUPER_PUBLIC
+        everyone can see this problem and add it if they want
+    PUBLIC
+        everyone can see this problem and add it if they want
+    PROTECTED
+        This problem can be searched and added with approval
+    PROTECTED_NOSEARCH
+        This problem can found at a link and added with approval
+    PRIVATE
+        No one else can add this problem
+    */
 }
 
 /**
@@ -30,14 +46,16 @@ message SrlProblem {
  * If the type is an assignment then that assignment is substitued in.
  */
 message ProblemSlideHolder {
-    // the id of the item being held
+    // The id of the item being held.
     optional string id = 1;
     optional protobuf.srl.utils.ItemType itemType = 2;
     oneof problemSlide {
         SrlBankProblem problem = 3;
-        protobuf.srl.lecturedata.LectureSlide slide = 4;
+        LectureSlide slide = 4;
     }
 
+    // For instructors this holds if the problem is editable
+    // For students this hold if the problem is currently viewable
     optional bool unlocked = 5;
 
     // The index of the item inside this group
@@ -45,7 +63,16 @@ message ProblemSlideHolder {
 }
 
 message QuestionAction {
-    optional protobuf.srl.lecturedata.LectureNavigator lectureNavigation = 1;
+    optional LectureNavigator lectureNavigation = 1;
+}
+
+/**
+ * used for navigating different lectures or lecture subgroups
+ */
+message LectureNavigator {
+    optional string nextLectureId = 1;
+    optional int32 nextSlide = 2;
+    optional string nextLectureGroupId = 3;
 }
 
 message ProblemRestriction {
@@ -63,16 +90,11 @@ message SrlBankProblem {
     // question data 6 - 14
     optional string script = 6; // a script string that is used for custom setups in experiments
 
-    // used for containing special information like images or embedded elements
-    optional protobuf.srl.lecturedata.LectureElement specialQuestionData = 7;
+    // used for containing special information required for submitting the problem
+    optional protobuf.srl.question.QuestionData specialQuestionData = 7;
 
-    // solutions to bank problems (only shown to instructors)
-    // 15 - 24
-    oneof solutionData {
-        MultipleChoice multipleChoice = 15;
-        protobuf.srl.commands.SrlUpdateList solutionSketch = 16; // the base sketch the instructor will make for assignments (or the solution sketch)
-        string longForm = 17;
-    }
+    // used for containing special visual information. This is not required for submitting the problem.
+    optional LectureSlide specialVisualData = 8;
 
     // meta data 25 - 34
     optional string courseTopic = 25;
@@ -81,13 +103,37 @@ message SrlBankProblem {
     repeated string otherKeywords = 28;
 }
 
-message MultipleChoice {
-    repeated AnswerChoice answerChoices = 1;
-    // only shown to instructor
-    optional string correctId = 2;
+/**
+ * Can not be solvable
+ */
+message LectureSlide {
+    // Ids
+    optional string id = 1;
+    optional string assignmentId = 2;
+    optional string courseProblemId = 3;
+
+    // The elements that are displayed for each slide
+    repeated ProblemElement elements = 4;
 }
 
-message AnswerChoice {
-    required string id = 1;
-    optional string text = 2;
+message ProblemElement {
+    //id of this element
+    optional string id = 2;
+    optional int32 x_position = 3;
+    optional int32 y_position = 4;
+    optional int32 x_dimension = 5;
+    optional int32 y_dimension = 6;
+
+    oneof ElementType {
+        protobuf.srl.tutorial.ActionCreateTextBox textBox = 7;
+        Image image = 8;
+        protobuf.srl.question.SketchArea sketchArea = 9; // Read only
+        protobuf.srl.question.EmbeddedHtml embeddedHtml = 10;
+    }
+}
+
+
+message Image {
+    optional string src = 8;
+    optional float orientation = 9;
 }

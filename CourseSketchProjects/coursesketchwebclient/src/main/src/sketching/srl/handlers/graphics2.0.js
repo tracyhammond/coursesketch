@@ -2,9 +2,9 @@
 /**
  * Installs PaperScope globally, and attaches it to the DomObject canvasElement.
  *
- * @class Graphics
+ * @constructor Graphics
  * @param {Element} canvas - The canvas element that is being drawn to.
- * @param {SketchManager} sketchManager - The manager that handles which sketch is currently active.
+ * @param {SketchSurfaceManager} sketchManager - The manager that handles which sketch is currently active.
  */
 function Graphics(canvas, sketchManager) {
     paper.install(window);
@@ -18,6 +18,7 @@ function Graphics(canvas, sketchManager) {
     var livePath = undefined;
     var canvasElement = $(canvas)[0];
     var drawUpdate = true;
+    var mutationObserver;
 
     ps = new paper.PaperScope(canvasElement);
     ps.setup(canvasElement);
@@ -35,6 +36,25 @@ function Graphics(canvas, sketchManager) {
             ps.view.viewSize.setWidth(canvasElement.width);
         }
     };
+
+    mutationObserver = (function() {
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'height' || mutation.attributeName === 'width') {
+                    ps.view.viewSize.setHeight(canvasElement.height);
+                    ps.view.viewSize.setWidth(canvasElement.width);
+                }
+            });
+        });
+
+        // configuration of the observer:
+        var config = {attributes: true};
+
+        // pass in the target node, as well as the observer options
+        observer.observe(canvas, config);
+        return observer;
+
+    })();
 
     /**
      * Expands or shrinks the sketch so that it fills the canvas while keeping the same aspect ratio.
@@ -67,14 +87,14 @@ function Graphics(canvas, sketchManager) {
      * @param {SrlPoint} point - The point that is being added to the current updating path.
      */
     this.createNewPath = function(point) {
-        livePath = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
+        livePath = new ps.Path({strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black'});
         livePath.add(point);
     };
 
     /**
      * Adds a given point to the active path.
      *
-     * @param {SrlPoint} point - The point that is being added to the current updating path.
+     * @param {SRL_Point} point - The point that is being added to the current updating path.
      */
     this.updatePath = function(point) {
         livePath.add(point);
@@ -83,8 +103,8 @@ function Graphics(canvas, sketchManager) {
     /**
      * Adds a final given point to the path, then simplifies it (makes it pretty and smooth).
      *
-     * @param {SrlPoint} point - The point that is being added to the current updating path.
-     * @param {SrlStroke} stroke - The stroke that contains all of the points that were added.
+     * @param {SRL_Point} point - The point that is being added to the current updating path.
+     * @param {SRL_Stroke} stroke - The stroke that contains all of the points that were added.
      */
     this.endPath = function(point, stroke) {
         livePath.add(point);
@@ -93,7 +113,7 @@ function Graphics(canvas, sketchManager) {
     };
 
     /**
-     * @return {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
+     * @returns {PaperScope} the PaperScope (will return scope of a specific element via a parameter)
      */
     this.getPaper = function() {
         return ps;
@@ -107,14 +127,25 @@ function Graphics(canvas, sketchManager) {
         ps.view.update();
         var sketch = sketchManager.getCurrentSketch();
         var objectList = sketch.getList();
+        recursivelyLoadSketch(objectList);
+        ps.view.update();
+    };
+
+    /**
+     * @param {Array<SRL_Object>} objectList The list of objects to be loaded
+     * @param {*} color The color the object should be loaded with.
+     */
+    function recursivelyLoadSketch(objectList, color) {
         for (var i = 0; i < objectList.length; i++) {
             var object = objectList[i];
             if (object instanceof SRL_Stroke) {
-                loadStroke(object);
+                loadStroke(object, color);
+            } else if (object instanceof SRL_Shape) {
+                loadShape(object);
             }
         }
-        ps.view.update();
-    };
+    }
+
     var loadSketch = this.loadSketch;
 
     /**
@@ -123,7 +154,7 @@ function Graphics(canvas, sketchManager) {
      * @param {UUID} itemId - the id of the item getting removed.
      */
     this.removeItem = function(itemId) {
-        var object = ps.project.getItem({ data: { id: itemId } });
+        var object = ps.project.getItem({data: {id: itemId}});
         object.remove();
         ps.view.update();
     };
@@ -132,21 +163,35 @@ function Graphics(canvas, sketchManager) {
     /**
      * Draws a single stroke onto the screen.
      *
-     * @param {Srl_Stroke} stroke - The stroke to be drawn.
+     * @param {SRL_Stroke} stroke - The stroke to be drawn.
+     * @param {*} color The color the object should be loaded with.
      */
-    function loadStroke(stroke) {
+    function loadStroke(stroke, color) {
         ps.activate();
-        var object = ps.project.getItem({ data: { id: stroke.getId() } });
+        var object = ps.project.getItem({data: {id: stroke.getId()}});
         if (!isUndefined(object) && object !== null) {
             return; // already added to the sketch.
         }
-        var path = new ps.Path({ strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black' });
+        var path = new ps.Path({strokeWidth: 2, strokeCap: 'round', selected: false, strokeColor: 'black'});
         path.data.id = stroke.getId();
+        if (!isUndefined(color)) {
+            path.strokeColor = color;
+        }
         var pointList = stroke.getPoints();
         for (var i = 0; i < pointList.length; i++) {
             path.add(new ps.Point(pointList[i].getX(), pointList[i].getY()));
         }
         path.simplify();
+    }
+
+    /**
+     * Draws a single stroke onto the screen.
+     *
+     * @param {SRL_Shape} shape - The stroke to be drawn.
+     */
+    function loadShape(shape) {
+        // make all shapes red!
+        recursivelyLoadSketch(shape.getSubObjects(), '#ff0000');
     }
 
     /**
@@ -214,5 +259,6 @@ function Graphics(canvas, sketchManager) {
         sketchManager = undefined;
         canvasElement = undefined;
         ps = undefined;
+        mutationObserver.disconnect();
     };
 }

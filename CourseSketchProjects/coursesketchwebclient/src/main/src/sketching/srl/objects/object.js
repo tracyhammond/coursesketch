@@ -26,7 +26,7 @@ function SRL_Object() {
     /**
      * The name of the object, such as "triangle1"
      */
-    var name = "";
+    var name = '';
 
     /**
      * The creation time of the object.
@@ -77,7 +77,7 @@ function SRL_Object() {
     /**
      * Goes through every object in this list of objects. (Brute force).
      *
-     * @return the object if it exist, returns false otherwise.
+     * @returns the object if it exist, returns false otherwise.
      */
     this.getSubObjectById = function(objectId) {
         for (var i = 0; i < m_subObjects.length; i++) {
@@ -92,7 +92,7 @@ function SRL_Object() {
     /**
      * Goes through every object in this list of objects. (Brute force).
      *
-     * @return the object if it exist, returns false otherwise.
+     * @returns the object if it exist, returns false otherwise.
      */
     this.removeSubObjectById = function(objectId) {
         for (var i = 0; i < m_subObjects.length; i++) {
@@ -113,7 +113,7 @@ function SRL_Object() {
     /**
      * Gets the list of subobjects
      *
-     * @return list of objects that make up this object
+     * @returns {Array<SRL_Object>} list of objects that make up this object
      */
     this.getSubObjects = function() {
         return m_subObjects;
@@ -124,7 +124,7 @@ function SRL_Object() {
      * recursive search through all of the subobjects. This objects is also
      * included on the list.
      *
-     * @return {List<SrlObject>} a list of objects.
+     * @returns {List<SrlObject>} a list of objects.
      */
     this.getRecursiveSubObjectList = function() {
         var completeList = [];
@@ -152,7 +152,7 @@ function SRL_Object() {
     };
 
     /**
-     * @return the list of interpretations for this shape.
+     * @returns the list of interpretations for this shape.
      */
     this.getInterpretations = function() {
         return m_interpretations;
@@ -166,7 +166,7 @@ function SRL_Object() {
     };
 
     /**
-     * @return unique UUID for an object
+     * @returns unique UUID for an object
      */
     this.getId = function() {
         return id;
@@ -175,7 +175,7 @@ function SRL_Object() {
     /**
      * An object can have a name, such as "triangle1".
      *
-     * @return the string name of the object
+     * @returns the string name of the object
      */
     this.getName = function() {
         return name;
@@ -195,7 +195,7 @@ function SRL_Object() {
      * Gets the time associated with the object. The default time is the time it
      * was created
      *
-     * @return the time the object was created.
+     * @returns the time the object was created.
      */
     this.getTime = function() {
         return time;
@@ -221,7 +221,7 @@ function SRL_Object() {
      * phrase) or it can be created by a system (like a recognition of a higher
      * level shape) default is false if not explicitly set
      *
-     * @return true if a user created the shape
+     * @returns true if a user created the shape
      */
     this.isUserCreated = function() {
         return isUserCreated;
@@ -242,7 +242,7 @@ function SRL_Object() {
     /**
      * Gets the bounding box of the object.
      *
-     * @return the bounding box of the object
+     * @returns the bounding box of the object
      */
     this.getBoundingBox = function() {
         return boundingBox;
@@ -256,21 +256,21 @@ function SRL_Object() {
     };
 
     /**
-     * @return minimum y value in an object
+     * @returns minimum y value in an object
      */
     this.getMinY = function() {
         return boundingBox.getTop();// miny;
     };
 
     /**
-     * @return maximum x value in an object
+     * @returns maximum x value in an object
      */
     this.getMaxX = function() {
         return boundingBox.getRight();// maxx;
     };
 
     /**
-     * @return maximum x value in an object
+     * @returns maximum x value in an object
      */
     this.getMaxY = function() {
         return boundingBox.getBottom();

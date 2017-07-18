@@ -20,15 +20,6 @@ message SrlPermission {
 }
 
 /**
- * A sub message that contains a list of Ids.
- * The first Id will be at the level of the sketch, all further ids are subshapes of that shape.
- * This can also be used when wanting to return a list of ids.
- */
-message IdChain {
-    repeated string idChain = 1;
-}
-
-/**
  * The checksum contains 4 sets of longs
  */
 message SrlChecksum {
@@ -41,10 +32,21 @@ message SrlChecksum {
  * (This should only be what is currently supported)
  */
 enum QuestionType {
-    SKETCH = 1; // sketching
-    MULT_CHOICE = 2;
-    FREE_RESP = 3; // typing
-    CHECK_BOX = 4;
+    SKETCH = 0; // sketching
+    MULT_CHOICE = 1;
+    FREE_RESP = 2; // typing
+    CHECK_BOX = 3;
+}
+
+/**
+ * How accessible are items in course sketch
+ */
+enum Accessibility {
+    SUPER_PUBLIC = 0; // no registration check is needed for this course.  (you do still have to register)
+    PUBLIC = 1; //Any student can access course without approval.
+    PROTECTED = 2; //Any student can request access for course and public information it is searchable, requires instructor approval
+    PROTECTED_NOSEARCH = 3; //No students can see course without a special link, it is not searchable, requires instructor approval
+    PRIVATE = 4; //No students can see course without instructor invitation, invitation only
 }
 
 /**

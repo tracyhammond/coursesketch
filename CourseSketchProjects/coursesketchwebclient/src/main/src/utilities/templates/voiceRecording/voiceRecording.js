@@ -59,7 +59,9 @@ function VoiceRecording() {
         }.bind(this);
 
         /**
-         * Create the recorder
+         * Create the recorder.
+         *
+         * @param {*} stream Idk
          */
         this.startUserMedia = function(stream) {
             this.recorder = new Recorder(stream);

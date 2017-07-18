@@ -6,11 +6,8 @@ import com.coursesketch.test.utilities.ProtobufComparisonBuilder;
 import com.github.fakemongo.junit.FongoRule;
 import com.google.common.collect.Lists;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.sun.tools.javac.util.List;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationChecker;
 import coursesketch.database.auth.AuthenticationDataCreator;
 import coursesketch.database.auth.AuthenticationException;
@@ -20,8 +17,8 @@ import coursesketch.database.auth.Authenticator;
 import coursesketch.database.identity.IdentityManagerInterface;
 import database.DatabaseAccessException;
 import database.DatabaseStringConstants;
-import database.DbSchoolUtility;
 import database.user.UserClient;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,7 +34,6 @@ import protobuf.srl.school.School;
 import protobuf.srl.services.authentication.Authentication;
 import protobuf.srl.utils.Util;
 
-import static database.DatabaseStringConstants.BASE_SKETCH;
 import static database.DatabaseStringConstants.COURSE_TOPIC;
 import static database.DatabaseStringConstants.QUESTION_TEXT;
 import static database.DatabaseStringConstants.QUESTION_TYPE;
@@ -67,7 +63,7 @@ public class MongoInstitutionTest {
     @Mock AuthenticationUpdater authenticationUpdater;
     @Mock IdentityManagerInterface identityManager;
 
-    public DB db;
+    public MongoDatabase db;
     public Authenticator authenticator;
     public MongoInstitution institution;
 
@@ -103,13 +99,7 @@ public class MongoInstitutionTest {
     private Problem.SrlProblem.Builder defaultProblem;
     private Problem.SrlBankProblem.Builder bankProblem;
 
-    @Before
-    public void before() {
-        db = fongo.getDB();
-
-        // used to make the user client use the mock database
-        new UserClient(true, db);
-
+    public static void genericDatabaseMock(AuthenticationChecker authChecker, AuthenticationOptionChecker optionChecker) {
         try {
             // general results
             AuthenticationHelper.setMockPermissions(authChecker, null, null, null, null, Authentication.AuthResponse.PermissionLevel.NO_PERMISSION);
@@ -128,12 +118,22 @@ public class MongoInstitutionTest {
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }
+    }
+
+    @Before
+    public void before() {
+        db = fongo.getDatabase();
+
+        // used to make the user client use the mock database
+        new UserClient(true, db);
+
+        genericDatabaseMock(authChecker, optionChecker);
         authenticator = new Authenticator(authChecker, optionChecker);
         institution = new MongoInstitution(true, db, authenticator, authenticationUpdater, identityManager);
 
         defaultCourse = School.SrlCourse.newBuilder();
         defaultCourse.setId(FAKE_ID);
-        defaultCourse.setAccess(School.SrlCourse.Accessibility.PRIVATE);
+        defaultCourse.setAccess(Util.Accessibility.PRIVATE);
         defaultCourse.setDescription(FAKE_DESCRIPTION);
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
@@ -218,10 +218,10 @@ public class MongoInstitutionTest {
 
         String problemBankId = institution.insertBankProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, bankProblem.build());
 
-        final DBCollection bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
-        final DBObject mongoBankProblem = bankProblemCollection.findOne(convertStringToObjectId(problemBankId));
+        final MongoCollection<Document> bankProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.BANK_PROBLEM));
+        final Document mongoBankProblem = bankProblemCollection.find(convertStringToObjectId(problemBankId)).first();
 
-        Assert.assertTrue(mongoBankProblem.containsField(REGISTRATION_KEY));
+        Assert.assertTrue(mongoBankProblem.containsKey(REGISTRATION_KEY));
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TEXT), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(COURSE_TOPIC), FAKE_QUESTION_TEXT);
         Assert.assertEquals(mongoBankProblem.get(QUESTION_TYPE), FAKE_QUESTION_TYPE.getNumber());
@@ -238,7 +238,7 @@ public class MongoInstitutionTest {
     @Test
     public void insertingCourseCreatesRegistrationKey() throws AuthenticationException, InvalidProtocolBufferException, DatabaseAccessException {
 
-        defaultCourse.setAccess(School.SrlCourse.Accessibility.PRIVATE);
+        defaultCourse.setAccess(Util.Accessibility.PRIVATE);
         defaultCourse.setDescription(FAKE_DESCRIPTION);
         defaultCourse.setAccessDate(FAKE_VALID_DATE_OBJECT);
         defaultCourse.setCloseDate(FAKE_VALID_DATE_OBJECT);
@@ -246,15 +246,15 @@ public class MongoInstitutionTest {
 
         String courseId = institution.insertCourse(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultCourse.build());
 
-        final DBCollection courseCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
-        final DBObject mongoCourse = courseCollection.findOne(convertStringToObjectId(courseId));
+        final MongoCollection<Document> courseCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        final Document mongoCourse = courseCollection.find(convertStringToObjectId(courseId)).first();
 
-        Assert.assertTrue(mongoCourse.containsField(REGISTRATION_KEY));
+        Assert.assertTrue(mongoCourse.containsKey(REGISTRATION_KEY));
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.ACCESS_DATE), FAKE_VALID_DATE);
         Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.CLOSE_DATE), FAKE_VALID_DATE);
-        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), School.SrlCourse.Accessibility.PRIVATE_VALUE);
+        Assert.assertEquals(mongoCourse.get(DatabaseStringConstants.COURSE_ACCESS), Util.Accessibility.PRIVATE_VALUE);
 
         String registrationKey = (String) mongoCourse.get(REGISTRATION_KEY);
 
@@ -279,8 +279,8 @@ public class MongoInstitutionTest {
 
         assignmentId = institution.insertAssignment(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultAssignment.build());
 
-        final DBCollection assignmentCollection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
-        final DBObject mongoAssignment = assignmentCollection.findOne(convertStringToObjectId(assignmentId));
+        final MongoCollection<Document> assignmentCollection = db.getCollection(getCollectionFromType(Util.ItemType.ASSIGNMENT));
+        final Document mongoAssignment = assignmentCollection.find(convertStringToObjectId(assignmentId)).first();
 
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.NAME), VALID_NAME);
         Assert.assertEquals(mongoAssignment.get(DatabaseStringConstants.DESCRIPTION), FAKE_DESCRIPTION);
@@ -312,14 +312,14 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
-        final DBCollection courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = courseProblemCollection.findOne(convertStringToObjectId(courseProblemId));
+        final MongoCollection<Document> courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final Document mongoProblem = courseProblemCollection.find(convertStringToObjectId(courseProblemId)).first();
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
-        final Iterable<DBObject> list = (Iterable<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
+        final Iterable<Document> list = (Iterable<Document>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
 
-        final DBObject dbObject = list.iterator().next();
-        Assert.assertEquals(bankProblemId, dbObject.get(DatabaseStringConstants.ITEM_ID));
+        final Document Document = list.iterator().next();
+        Assert.assertEquals(bankProblemId, Document.get(DatabaseStringConstants.ITEM_ID));
 
         verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(courseProblemId), eq(Util.ItemType.COURSE_PROBLEM),
                 eq(assignmentId),
@@ -348,14 +348,14 @@ public class MongoInstitutionTest {
 
         courseProblemId = institution.insertCourseProblem(TEACHER_USER_ID, TEACHER_AUTH_ID, defaultProblem.build());
 
-        final DBCollection courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
-        final DBObject mongoProblem = courseProblemCollection.findOne(convertStringToObjectId(courseProblemId));
+        final MongoCollection<Document> courseProblemCollection = db.getCollection(getCollectionFromType(Util.ItemType.COURSE_PROBLEM));
+        final Document mongoProblem = courseProblemCollection.find(convertStringToObjectId(courseProblemId)).first();
 
         Assert.assertEquals(mongoProblem.get(DatabaseStringConstants.NAME), VALID_NAME);
-        final Iterable<DBObject> list = (Iterable<DBObject>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
+        final Iterable<Document> list = (Iterable<Document>) mongoProblem.get(DatabaseStringConstants.PROBLEM_LIST);
 
-        final DBObject dbObject = list.iterator().next();
-        Assert.assertEquals(bankProblemId, dbObject.get(DatabaseStringConstants.ITEM_ID));
+        final Document Document = list.iterator().next();
+        Assert.assertEquals(bankProblemId, Document.get(DatabaseStringConstants.ITEM_ID));
 
         verify(authenticationUpdater, atLeastOnce()).createNewItem(eq(TEACHER_AUTH_ID), eq(courseProblemId), eq(Util.ItemType.COURSE_PROBLEM),
                 eq(assignmentId),

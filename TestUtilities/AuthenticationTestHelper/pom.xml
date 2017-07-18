@@ -12,6 +12,11 @@
     <name>AuthenticationTestHelper</name>
     <artifactId>AuthenticationTestHelper</artifactId>
 
+    <properties>
+        <!-- This may be removed and a later solution will need to be worked on -->
+        <parentConfigLocationDir>${basedir}/../..</parentConfigLocationDir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>CourseSketch</groupId>
@@ -22,7 +27,7 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

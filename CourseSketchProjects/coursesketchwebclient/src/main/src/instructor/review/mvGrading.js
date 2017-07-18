@@ -8,6 +8,39 @@ validateFirstRun(document.currentScript);
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
 
+    $(document).ready(function() {
+        /**
+         * Closes the dialog panel.
+         */
+        document.getElementById('dialogPanel').querySelector('button').onclick = function() {
+            document.getElementById('dialogPanel').close();
+        };
+        CourseSketch.dataManager.waitForDatabase(function() {
+            var navPanel = document.querySelector('navigation-panel');
+            var navigator = getNav();
+            var assignmentId = CourseSketch.dataManager.getState('currentAssignment');
+            var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
+            var addCallback = isUndefined(navPanel.dataset.callbackset);
+
+            CourseSketch.dataManager.clearStates();
+
+            if (addCallback) {
+                navPanel.dataset.callbackset = '';
+                navigator.addCallback(function(navigatorFromCallback) {
+                    multiviewSketchDelete();
+                    createMvList(navigatorFromCallback);
+                });
+            }
+
+            navigator.setSubgroupNavigation(false);
+            if (!isUndefined(assignmentId)) {
+                navigator.resetNavigation(assignmentId, parseInt(problemIndex, 10));
+            } else if (addCallback) {
+                navigator.refresh();
+            }
+        });
+    });
+
     /**
      * Gets all experiments that hold the current problem id and places them is sketchList.
      *
@@ -16,9 +49,8 @@ validateFirstRun(document.currentScript);
      * @memberof multiViewPage
      */
     function getSketches(callback, navigator) {
-        var problemId = navigator.getGroupId();
-        console.log(problemId);
-        CourseSketch.dataManager.getAllExperiments(problemId, function(sketchList) {
+        console.log(navigator.getSubmissionIdentifier());
+        CourseSketch.dataManager.getAllExperiments(navigator.getSubmissionIdentifier(), function(sketchList) {
             console.log(sketchList);
             if (isException(sketchList)) {
                 CourseSketch.clientException(sketchList);
@@ -61,7 +93,7 @@ validateFirstRun(document.currentScript);
                 CourseSketch.multiViewPage.loadProblem(navigator, this.getUpdateList());
             });
 
-            var protoGrade = CourseSketch.PROTOBUF_UTIL.ProtoGrade();
+            var protoGrade = CourseSketch.prutil.ProtoGrade();
             protoGrade.userId = array[i].userId;
             mvSketch.courseId = protoGrade.courseId = array[i].courseId;
             mvSketch.assignmentId = protoGrade.assignmentId = array[i].assignmentId;
@@ -74,7 +106,9 @@ validateFirstRun(document.currentScript);
                 console.log('LOADING GRADE FROM SERVER', dbGrade);
                 mvSketch.setGrade(dbGrade.currentGrade);
                 var history = dbGrade.gradeHistory;
-                mvSketch.setComment(history[history.length - 1].comment);
+                if (!isUndefined(history)) {
+                    mvSketch.setComment(history[history.length - 1].comment);
+                }
             });
         }
     }
@@ -82,18 +116,20 @@ validateFirstRun(document.currentScript);
     /**
      * Gets a specific set of sketch data to be used in the multiview sketch panel.
      *
+     * @memberof multiViewPage
      * @param {Arrau<SrlExperiment>} array - The array of experiments.
      * @param {Integer} index - The index at which to get the update lists.
-     * @memberof multiViewPage
+     * @returns {SrlUpdateList} The update list.
      */
     function getUpdateList(array, index) {
-        return array[index].getSubmission().getUpdateList();
+        return array[index].getSubmission().getSubmissionData().getSketchArea().getRecordedSketch();
     }
 
     /**
      * Returns the navigation panel element to be used by other pages.
      *
      * @memberof multiViewPage
+     * @returns {AssignmentNavigator} The navigator of this page.
      */
     function getNav() {
         return document.querySelector('navigation-panel').getNavigator();
@@ -109,38 +145,6 @@ validateFirstRun(document.currentScript);
         parent.innerHTML = '';
     }
 
-    $(document).ready(function() {
-        /**
-         * Closes the dialog panel.
-         */
-        document.getElementById('dialogPanel').querySelector('button').onclick = function() {
-            document.getElementById('dialogPanel').close();
-        };
-        CourseSketch.dataManager.waitForDatabase(function() {
-            var navPanel = document.querySelector('navigation-panel');
-            var navigator = getNav();
-            var assignmentId = CourseSketch.dataManager.getState('currentAssignment');
-            var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
-            var addCallback = isUndefined(navPanel.dataset.callbackset);
-
-            CourseSketch.dataManager.clearStates();
-
-            if (addCallback) {
-                navPanel.dataset.callbackset = '';
-                navigator.addCallback(function(navigatorFromCallback) {
-                    multiviewSketchDelete();
-                    createMvList(navigatorFromCallback);
-                });
-            }
-
-            if (!isUndefined(assignmentId)) {
-                navigator.resetNavigation(assignmentId, parseInt(problemIndex, 10));
-            } else if (addCallback) {
-                navigator.refresh();
-            }
-        });
-    });
-
     /**
      * Loads the problem, called every time a user navigates to a different problem.
      *
@@ -150,7 +154,8 @@ validateFirstRun(document.currentScript);
      */
     CourseSketch.multiViewPage.loadProblem = function(navigator, submissionData) {
         document.getElementById('dialogPanel').show();
-        var problemType = navigator.getProblemType();
+        var problemInfo = navigator.getCurrentInfo();
+        var problemType = problemInfo.questionType;
         var parentPanel = document.getElementById('problemPanel');
         var oldElement = parentPanel.querySelector('.sub-panel');
         if (oldElement instanceof Node) {
@@ -224,7 +229,6 @@ validateFirstRun(document.currentScript);
     CourseSketch.multiViewPage.addWaitOverlay = function() {
         CourseSketch.multiViewPage.waitScreenManager.buildOverlay(document.querySelector('body'));
         CourseSketch.multiViewPage.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**

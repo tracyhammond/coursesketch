@@ -5,7 +5,7 @@
 /**
  * A class that allows a user to login.
  *
- * @class LoginSystem
+ * @constructor LoginSystem
  */
 function LoginSystem() {
     // note these are shared accross all instances of the login element.
@@ -77,7 +77,7 @@ function LoginSystem() {
      * Attaches the wave effect to the login button.
      */
     function attachButtons() {
-        var loginButton = shadowRoot.querySelector('#loginButton');
+        var loginButton = shadowRoot.querySelectorAll('#loginButton')[0];
         Waves.attach(loginButton);
     }
 
@@ -132,10 +132,7 @@ function LoginSystem() {
     }
 
     /**
-     * @access private
-     * @memberof LoginSystem
-     * @function formSubmit
-     * the function used for submitting login information.
+     * The function used for submitting login information.
      * Also the only difference between login.js and register.js
      */
     function formSubmit() {
@@ -178,7 +175,6 @@ function LoginSystem() {
     }
 
     /**
-     * @function setupCallbacks
      * Setups up the callback for the register button and the lost password button.
      */
     function setupCallbacks() {
@@ -210,7 +206,6 @@ function LoginSystem() {
     };
 
     /**
-     * @function setRegisterCallback
      * The callback is called when the register button is pressed.
      * @param {Function} callback - Called when user login is successful.
      */

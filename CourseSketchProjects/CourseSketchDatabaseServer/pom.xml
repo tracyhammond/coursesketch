@@ -88,7 +88,7 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.3</version>
+            <version>${mongodbJavaDriverVersion}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

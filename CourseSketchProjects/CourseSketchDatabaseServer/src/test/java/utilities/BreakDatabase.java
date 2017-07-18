@@ -1,15 +1,14 @@
 package utilities;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import coursesketch.database.auth.AuthenticationException;
 import database.DatabaseAccessException;
 import database.RequestConverter;
 import database.institution.mongo.MongoInstitution;
 import database.user.UserClient;
 import local.data.LocalAddAssignments;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import protobuf.srl.school.School;
 import protobuf.srl.utils.Util;
@@ -28,10 +27,10 @@ import static database.DbSchoolUtility.getCollectionFromType;
 public final class BreakDatabase {
 
     private MongoInstitution mongoDatabase;
-    private DB database;
+    private MongoDatabase database;
     private UserClient userClient;
 
-    public BreakDatabase(final DB db) {
+    public BreakDatabase(final MongoDatabase db) {
         mongoDatabase = new MongoInstitution(null, null, null, null);
         database = db;
         userClient = new UserClient(true, db);
@@ -67,8 +66,8 @@ public final class BreakDatabase {
         String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
         mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
-        DBCollection courseCollection = database.getCollection(getCollectionFromType(Util.ItemType.COURSE));
-        courseCollection.remove(new BasicDBObject(SELF_ID, new ObjectId(courseID)));
+        MongoCollection<Document> courseCollection = database.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        courseCollection.deleteOne(new Document(SELF_ID, new ObjectId(courseID)));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
     }
@@ -81,9 +80,9 @@ public final class BreakDatabase {
         String courseID = mongoDatabase.insertCourse(null, user.getUsername(), course);
         mongoDatabase.putUserInCourse(null, user.getUsername(), courseID, null);
 
-        DBCollection courseCollection = database.getCollection(getCollectionFromType(Util.ItemType.COURSE));
-        DBObject dbCourse = courseCollection.findOne();
-        courseCollection.update(dbCourse, new BasicDBObject(SET_COMMAND, new BasicDBObject(ADMIN, new ArrayList<>())));
+        MongoCollection<Document> courseCollection = database.getCollection(getCollectionFromType(Util.ItemType.COURSE));
+        Document dbCourse = courseCollection.find().first();
+        courseCollection.updateOne(dbCourse, new Document(SET_COMMAND, new Document(ADMIN, new ArrayList<>())));
         String[] returnID = {user.getUsername(), courseID};
         return returnID;
     }
@@ -96,7 +95,7 @@ public final class BreakDatabase {
         Random r = new Random();
         School.SrlCourse.Builder testBuilder = School.SrlCourse.newBuilder();
         testBuilder.setId(randomString(r));
-        testBuilder.setAccess(School.SrlCourse.Accessibility.valueOf(r.nextInt(School.SrlCourse.Accessibility.values().length)));
+        testBuilder.setAccess(Util.Accessibility.valueOf(r.nextInt(Util.Accessibility.values().length)));
         testBuilder.setSemester(randomString(r));
         testBuilder.setName(randomString(r));
         testBuilder.setDescription(randomString(r) + randomString(r));
@@ -113,7 +112,7 @@ public final class BreakDatabase {
         String[] description = new String[]{"Howdy! Welcome to Chem 107 where you learn about lewis dot diagrams"};
         for (int k = 0; k < name.length; k ++) {
             School.SrlCourse.Builder testBuilder = School.SrlCourse.newBuilder();
-            testBuilder.setAccess(School.SrlCourse.Accessibility.SUPER_PUBLIC);
+            testBuilder.setAccess(Util.Accessibility.SUPER_PUBLIC);
             testBuilder.setSemester("FALL");
             testBuilder.setName(name[k]);
             testBuilder.setDescription(description[k]);

@@ -1,9 +1,5 @@
 package coursesketch.server.authentication;
 
-/**
- * Created by dtracers on 12/24/2015.
- */
-
 import coursesketch.database.auth.AuthenticationException;
 import org.mindrot.BCrypt;
 

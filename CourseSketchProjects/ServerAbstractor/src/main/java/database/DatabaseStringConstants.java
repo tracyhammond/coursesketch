@@ -37,6 +37,7 @@ public final class DatabaseStringConstants {
     public static final String AUTH_DATABASE = "auth";
     public static final String IDENTITY_DATABASE = "identity";
     public static final String SUBMISSION_DATABASE = "submissions";
+    public static final String RECOGNITION_DATABASE = "Recognition";
 
     // meta fields
     public static final String NAME = "Name";
@@ -173,6 +174,7 @@ public final class DatabaseStringConstants {
 
     // mongo commands
     public static final String SET_COMMAND = "$set";
+    public static final String UPSERT_COMMAND = "$setOnInsert";
     public static final String ADD_SET_COMMAND = "$addToSet";
     public static final String EXISTS = "$exists";
     public static final String PUSH_COMMAND = "$push";

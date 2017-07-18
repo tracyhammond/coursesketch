@@ -1,4 +1,5 @@
 /* jshint camelcase: false */
+/* eslint-disable valid-jsdoc */
 
 (function(scriptScope) {
     /**
@@ -115,17 +116,17 @@
         }
         proto.setSubComponents(protoSubShapes);
 
-        proto.id = this.getId();
+        proto.setId(this.getId());
         var n = this.getTime();
         proto.setTime('' + n);
-        proto.name = this.getName();
+        proto.setName = this.getName();
         return proto;
     };
 
     /**
      * Static function that returns an {@link SRL_Shape}.
      *
-     * @param {SrlShape} shape - The proto object that is being turned into a sketch object.
+     * @param {ProtoSrlShape} shape - The proto object that is being turned into a sketch object.
      * @memberof SRL_Shape
      */
     SRL_Shape.createFromProtobuf = function(shape) {
@@ -141,6 +142,8 @@
             var protoObject = subObjects[i];
             newShape.addSubObject(decodeSrlObject(protoObject));
         }
+        newShape.setId(shape.getId());
+        newShape.setName(shape.getName());
 
         return newShape;
     };
@@ -158,6 +161,19 @@
         return proto;
     };
 
+    SRL_Sketch.prototype.sendToProtobuf = function() {
+        var protoSketch = CourseSketch.prutil.ProtoSrlSketch();
+
+        var subObjects = this.getList();
+        var protoSubObjects = [];
+
+        for (var i = 0; i < subObjects.length; i++) {
+            protoSubObjects.push(encodeSrlObject(subObjects[i]));
+        }
+        protoSketch.sketch = protoSubObjects;
+        return protoSketch;
+    };
+
     /**
      * Used locally to decode the srl object.
      *
@@ -165,24 +181,15 @@
      * @returns {ProtoSrlObject} SRL_Object or its subclass.
      */
     function decodeSrlObject(object) {
-        var proto = false;
-        var scope = false;
-        if (!isUndefined(ProtoSrlObject)) {
-            proto = ProtoSrlObject;
-            scope = scriptScope;
-        } else {
-            proto = parent.ProtoSrlObject;
-            scope = parent;
-        }
-
+        var proto = CourseSketch.prutil.getProtoSrlObjectClass();
         var objectType = object.type; // FIXME: change this to objectType
         switch (objectType) {
             case proto.ObjectType.SHAPE:
-                return SRL_Shape.createFromProtobuf(scope.ProtoSrlShape.decode(object.object));
+                return SRL_Shape.createFromProtobuf(CourseSketch.prutil.decodeProtobuf(object.object, 'ProtoSrlShape'));
             case proto.ObjectType.STROKE:
-                return SRL_Stroke.createFromProtobuf(scope.ProtoSrlStroke.decode(object.object));
+                return SRL_Stroke.createFromProtobuf(CourseSketch.prutil.decodeProtobuf(object.object, 'ProtoSrlStroke'));
             case proto.ObjectType.POINT:
-                return SRL_Point.createFromProtobuf(scope.ProtoSrlPoint.decode(object.object));
+                return SRL_Point.createFromProtobuf(CourseSketch.prutil.decodeProtobuf(object.object, 'ProtoSrlPoint'));
         }
     }
 
@@ -190,10 +197,11 @@
      * Used locally to encode an SRL_Object into its protobuf type.
      *
      * @param {SRL_Object} object - the object that is being turned into its proto type.
-     * @return {ProtoSrlObject} The protobuf form of an SRL_Object.
+     * @returns {ProtoSrlObject} The protobuf form of an SRL_Object.
      */
     function encodeSrlObject(object) {
         var proto = CourseSketch.prutil.ProtoSrlObject();
+        var SrlObject = CourseSketch.prutil.getProtoSrlObjectClass();
 
         if (object.check_type() === SRL_ShapeType) {
             proto.type = SrlObject.ObjectType.SHAPE;

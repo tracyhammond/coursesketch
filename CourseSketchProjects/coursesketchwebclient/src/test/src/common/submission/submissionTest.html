@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Command Methods test</title>
+    <title>Submission Panel Test</title>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
     <link rel="import"
@@ -25,9 +25,7 @@
 
         var template = (function() {
             var link1 = document.querySelector('#submissionTemplateImport');
-            var link = link1.import.querySelector('#submissionTemplateImport');
-            var template = link.import.querySelector('#submission');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(link1.import, document,'submissionTemplateImport','submission');
             return clone;
         })();
 
@@ -83,8 +81,9 @@
             });
         });
 
-        QUnit.asyncTest("testing toolbar submission callback is set", function(assert) {
+        QUnit.test("testing toolbar submission callback is set", function(assert) {
             expect(1);
+            var done = assert.async();
             var element = createSubmissionElement();
             addElementToDom(element[0]);
             var submission = element[0];
@@ -94,16 +93,17 @@
             submission.sendDataToServer = function(isSubmission) {
                 clearInterval(interval);
                 assert.ok(isSubmission, "Submission callback is set");
-                QUnit.start();
+                done();
             };
             // set variable.
-            interval = setInterval(function() {
+            interval = setRealTimeout(function() {
                 simulate(toolbar.shadowRoot.querySelector("#submission"), "click");
-            }, 100);
+            }, 300);
         });
 
-        QUnit.asyncTest("testing toolbar save callback is set", function(assert) {
+        QUnit.test("testing toolbar save callback is set", function(assert) {
             expect(1);
+            var done = assert.async();
             var element = createSubmissionElement();
             addElementToDom(element[0]);
             var submission = element[0];
@@ -113,12 +113,13 @@
             submission.sendDataToServer = function(isSubmission) {
                 clearInterval(interval);
                 assert.ok(!isSubmission, "Save callback is set");
-                QUnit.start();
+                done();
             };
             // set variable.
-            interval = setInterval(function() {
+            interval = setRealTimeout(function() {
+                var shadow = toolbar.shadowRoot;
                 simulate(toolbar.shadowRoot.querySelector("#save"), "click");
-            }, 100);
+            }, 300);
         });
 
         QUnit.test("testing wrapped exception does not throw error", function(assert) {
@@ -211,7 +212,7 @@
             submission.problemType = CourseSketch.prutil.QuestionType.FREE_RESP;
 
             submission.wrapperFunction = function(submission) {
-                assert.equal(submission.textAnswer, textArea.value, "Text area value is set in submission");
+                assert.equal(submission.submissionData.freeResponse.startingText, textArea.value, "Text area value is set in submission");
                 return submission;
             };
             // actual test
