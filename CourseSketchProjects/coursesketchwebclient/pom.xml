@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>CourseSketch</groupId>
     <artifactId>WebClient</artifactId>
@@ -189,7 +189,9 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://raw.githubusercontent.com/google/protobuf/v${protobufVersion}/src/google/protobuf/any.proto</url>
+                            <url>
+                                https://raw.githubusercontent.com/google/protobuf/v${protobufVersion}/src/google/protobuf/any.proto
+                            </url>
                             <unpack>false</unpack>
                             <outputDirectory>${protoDirectory}/google/protobuf</outputDirectory>
                         </configuration>
@@ -201,7 +203,9 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://raw.githubusercontent.com/google/protobuf/v${protobufVersion}/src/google/protobuf/timestamp.proto</url>
+                            <url>
+                                https://raw.githubusercontent.com/google/protobuf/v${protobufVersion}/src/google/protobuf/timestamp.proto
+                            </url>
                             <unpack>false</unpack>
                             <outputDirectory>${protoDirectory}/google/protobuf</outputDirectory>
                         </configuration>
@@ -293,8 +297,12 @@
                         <id>ip_prop_replace</id>
                         <configuration>
                             <includes>
-                                <include>${basedir}/target/website/src/main/src/utilities/connection/login/loginInclude.html</include>
-                                <include>${basedir}/target/website/src/main/src/utilities/connection/register/registerInclude.html</include>
+                                <include>
+                                    ${basedir}/target/website/src/main/src/utilities/connection/login/loginInclude.html
+                                </include>
+                                <include>
+                                    ${basedir}/target/website/src/main/src/utilities/connection/register/registerInclude.html
+                                </include>
                             </includes>
                         </configuration>
                     </execution>
@@ -307,7 +315,7 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
             <scope>compile</scope>
         </dependency>
 
