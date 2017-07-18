@@ -10,6 +10,8 @@ import utilities.ConnectionException;
 import utilities.LoggingConstants;
 
 /**
+ * Manages Connections to the login server.
+ *
  * Created by dtracers on 12/6/2015.
  */
 public class LoginConnectionManager extends MultiConnectionManager {
