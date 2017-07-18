@@ -301,7 +301,8 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${basedir}/CourseSketchProjects/coursesketchwebclient/src/main/resources/other</directory>
+                            <directory>${basedir}/CourseSketchProjects/coursesketchwebclient/src/main/resources/other
+                            </directory>
                             <includes>
                                 <include>**/*.proto</include>
                             </includes>
@@ -615,7 +616,8 @@
                                     <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
                                 <backupPropertyFiles>
-                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop
+                                    </backupPropertyFile>
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
@@ -631,7 +633,8 @@
                                     <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
                                 <backupPropertyFiles>
-                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop
+                                    </backupPropertyFile>
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
@@ -647,7 +650,8 @@
                                     <propertyFile>${parentConfigLocationDir}/config/local/ips.prop</propertyFile>
                                 </propertyFiles>
                                 <backupPropertyFiles>
-                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop</backupPropertyFile>
+                                    <backupPropertyFile>${parentConfigLocationDir}/config/local/ips_default.prop
+                                    </backupPropertyFile>
                                 </backupPropertyFiles>
                             </configuration>
                         </execution>
@@ -708,7 +712,8 @@
         <!-- config locations -->
         <checkstyleLocation>${absoluteConfigLocation}/checkstyle.xml</checkstyleLocation>
         <absoluteCheckstyleLocation>${checkstyleLocation}</absoluteCheckstyleLocation>
-        <checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml</checkstyleSuppressionLocation>
+        <checkstyleSuppressionLocation>${moduleConfigLocation}/checkstyle-suppressions.xml
+        </checkstyleSuppressionLocation>
         <findbugSupressionLocation>${moduleConfigLocation}/findbugs-exclude.xml</findbugSupressionLocation>
         <moduleConfigLocation>${basedir}/config</moduleConfigLocation>
         <pmdExclude>${moduleConfigLocation}/${pmdFile}</pmdExclude>
