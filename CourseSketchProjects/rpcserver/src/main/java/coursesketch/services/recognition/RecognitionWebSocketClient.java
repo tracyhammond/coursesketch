@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * Created by dtracers on 12/15/2015.
+ * A service for recognition.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class RecognitionWebSocketClient extends ClientWebSocket implements RecognitionInterface {
