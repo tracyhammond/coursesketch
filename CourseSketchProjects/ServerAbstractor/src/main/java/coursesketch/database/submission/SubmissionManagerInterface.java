@@ -8,6 +8,8 @@ import protobuf.srl.submission.Submission;
 import java.util.List;
 
 /**
+ * An interface for submissions.
+ *
  * Created by dtracers on 12/17/2015.
  */
 public interface SubmissionManagerInterface {
