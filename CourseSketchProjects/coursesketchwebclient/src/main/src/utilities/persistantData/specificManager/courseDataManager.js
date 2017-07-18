@@ -79,14 +79,17 @@ function CourseDataManager(parent, advanceDataListener, database, ByteBuffer) {
             if (isUndefined(result) || isUndefined(result.data)) {
                 courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
             } else {
+                var course;
                 // gets the data from the database and calls the callback
                 try {
                     var bytes = ByteBuffer.fromBase64(result.data);
-                    stateCallback(CourseSketch.prutil.getSrlCourseClass().decode(bytes), courseCallback);
+                    course = CourseSketch.prutil.getSrlCourseClass().decode(bytes);
                 } catch (exception) {
                     console.error(exception);
                     courseCallback(new DatabaseException('The result is undefined', 'getting Course: ' + courseId));
+                    return;
                 }
+                stateCallback(course, courseCallback);
             }
         });
     }

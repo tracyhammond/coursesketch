@@ -641,8 +641,8 @@ function UpdateManager(sketchManager, onError) {
      * This clears any current updates and replaces the list with a new list.
      *
      * @param {Array} list - The list that is will be added to the sketch
-     * @param {Object} percentBar - The bar that will show these updates. It is called with how much is left to be completed.
-     * @param {Function} finishedCallback - Called when the update list is set and executed.
+     * @param {Object} [percentBar] - The bar that will show these updates. It is called with how much is left to be completed.
+     * @param {Function} [finishedCallback] - Called when the update list is set and executed.
      */
     this.setUpdateList = function(list, percentBar, finishedCallback) {
         if (!Array.isArray(list)) {

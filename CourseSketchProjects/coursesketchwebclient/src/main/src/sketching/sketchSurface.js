@@ -232,8 +232,8 @@ function SketchSurface() {
      * This should only be done after the sketch surface is inserted into the dom.
      *
      * @param {Array<SrlUpdate>} updateList - The update list that is being loaded into the update manager.
-     * @param {PercentBar} percentBar - The object that is used to update how much of the sketch is updated.
-     * @param {Function} finishedCallback - called when the sketch is done loading.
+     * @param {PercentBar} [percentBar] - The object that is used to update how much of the sketch is updated.
+     * @param {Function} [finishedCallback] - called when the sketch is done loading.
      */
     this.loadUpdateList = function(updateList, percentBar, finishedCallback) {
         try {

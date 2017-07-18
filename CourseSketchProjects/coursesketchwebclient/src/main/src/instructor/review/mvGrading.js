@@ -10,7 +10,8 @@ validateFirstRun(document.currentScript);
 
     $(document).ready(function() {
         CourseSketch.multiViewPage.renderer = new CourseSketch.ProblemRenderer(document.getElementById('problemPanel'));
-
+        CourseSketch.multiViewPage.renderer.setStartWaitingFunction(CourseSketch.multiViewPage.addWaitOverlay);
+        CourseSketch.multiViewPage.renderer.setFinishWaitingFunction(CourseSketch.multiViewPage.removeWaitOverlay);
         /**
          * Closes the dialog panel.
          */
@@ -151,7 +152,7 @@ validateFirstRun(document.currentScript);
         bankProblem.questionType = problemInfo.questionType;
         CourseSketch.multiViewPage.renderer.renderSubmission(bankProblem, submissionData, function() {
             console.log('submission Loaded');
-            parentPanel = document.getElementById('problemPanel')
+            var parentPanel = document.getElementById('problemPanel');
             parentPanel.problemIndex = navigator.getCurrentNumber();
             parentPanel.setProblemType(problemInfo.questionType);
             parentPanel.refreshPanel();
@@ -166,43 +167,6 @@ validateFirstRun(document.currentScript);
                 return studentExperiment;
             });
         });
-    };
-
-    /**
-     * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
-     *
-     * @param {SrlUpdateList} updateList - The list of updates that were applied to the sketch.
-     * @memberof multiViewPage
-     */
-    CourseSketch.multiViewPage.loadSketch = function(updateList) {
-        var sketchSurface = document.createElement('sketch-surface');
-        sketchSurface.className = 'wide_rule sub-panel';
-        sketchSurface.style.width = '100%';
-        sketchSurface.style.height = 'calc(100%)';
-        var element = new WaitScreenManager().setWaitType(WaitScreenManager.TYPE_PERCENT).build();
-        CourseSketch.multiViewPage.addWaitOverlay();
-        document.getElementById('percentBar').appendChild(element);
-        element.startWaiting();
-        var realWaiting = element.finishWaiting.bind(element);
-
-        /**
-         * Called when the sketch has been completely loaded.
-         */
-        element.finishWaiting = function() {
-            realWaiting();
-            sketchSurface.refreshSketch();
-            CourseSketch.multiViewPage.removeWaitOverlay();
-            sketchSurface = undefined;
-            element = undefined;
-        };
-        document.getElementById('problemPanel').appendChild(sketchSurface);
-        // Tell the surface not to create its own sketch.
-        sketchSurface.dataset.existinglist = '';
-
-        sketchSurface.refreshSketch();
-        sketchSurface.loadUpdateList(updateList, element);
-        updateList = null;
-        element = null;
     };
 
     /**

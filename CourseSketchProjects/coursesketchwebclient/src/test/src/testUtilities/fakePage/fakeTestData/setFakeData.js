@@ -131,6 +131,15 @@
             callback(results);
         };
 
+        CourseSketch.dataManager.getCourseRoster = function(courseId, callback) {
+            //var studentRoster = studentList.concat('noGradeStudnet', 'noGrade2', 'failure');
+            callback(CourseSketch.fakeRoster);
+        };
+
+        CourseSketch.dataManager.getAllAssignmentGrades = function(courseId, callback) {
+            callback(CourseSketch.fakeGradeList);
+        };
+
         barrier.finalize(function() {
             console.log("DATABASE HAS ITS DATA LOADED");
             CourseSketch.dataManager.testDataLoaded = true;

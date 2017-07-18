@@ -56,6 +56,11 @@ function MvSketch() {
     this.setGrade = function(grade) {
         this.gradeValue = grade;
         this.shadowRoot.querySelector('#gradeInput').value = grade;
+        if (grade === this.maxValue) {
+            correct.bind(this)();
+        } else if (grade === 0) {
+            wrong.bind(this)();
+        }
     };
 
     /**
@@ -72,13 +77,15 @@ function MvSketch() {
     /**
      * Marks the sketch at correct and changes the background to outercorrect.
      *
-     * @param {Event} event - The event propagation is stopped.
+     * @param {Event} [event] - The event propagation is stopped.
      * @instance
      * @memberof MvSketch
      * @access private
      */
     function correct(event) {
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         this.gradeValue = this.maxValue;
         this.shadowRoot.querySelector('#outline').className = 'green accent-1';
         this.shadowRoot.querySelector('#outer').className = 'outerCorrect';
@@ -94,7 +101,9 @@ function MvSketch() {
      * @access private
      */
     function wrong(event) {
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         this.gradeValue = 0;
         this.shadowRoot.querySelector('#outline').className = 'red accent-1';
         this.shadowRoot.querySelector('#outer').className = 'outerWrong';

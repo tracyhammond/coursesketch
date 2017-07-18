@@ -76,7 +76,9 @@ validateFirstRun(document.currentScript);
 	course8.description = 'This Course has 10 assignments which each have 10 problems to simulate a very large course';
 	course8.assignmentList = [];
 	course8.lectureList = [];
-	for (var i = 0; i < 10; i++) {
+	course8.assignmentList.push('000');
+	course8.lectureList.push('000');
+	for (var i = 1; i < 10; i++) {
 		course8.assignmentList.push('' + (i * 100));
 		course8.lectureList.push('' + (i * 100));
 	}

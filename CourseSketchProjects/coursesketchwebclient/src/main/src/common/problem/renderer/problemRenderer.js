@@ -159,7 +159,7 @@ function ProblemRenderer(problemPanel) {
      * @param {SrlBankProblem} bankProblem - The bank problem that is being rendered.
      * @param {SrlSubmission} submission - The student submission data.
      * @param {Function} callback - Called after the data is rendered.
-     * @param {Boolean} stopWaiting - If false the {@code finishWaiting} function will not be called.
+     * @param {Boolean} [stopWaiting] - If false the {@code finishWaiting} function will not be called.
      */
     this.renderSubmission = function(bankProblem, submission, callback, stopWaiting) {
         if (isUndefined(submission)) {
