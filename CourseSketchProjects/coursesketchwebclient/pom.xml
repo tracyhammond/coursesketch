@@ -140,6 +140,7 @@
         <testDirectory>${basedir}/src/main/test</testDirectory>
         <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
         <nodeVersion>v4.2.2</nodeVersion>
+        <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
     </properties>
 
     <reporting>
