@@ -87,6 +87,8 @@ function VoiceRecording() {
                 navigator.webkitGetUserMedia ||
                 navigator.mozgetUserMedia ||
                 navigator.msGetUserMedia);
+                console.log('Audio context set up');
+                console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not available'));
                 window.URL = window.URL || window.webkitURL;
             } catch (e) {
                 alert('Web audio is not supported in this browser.');
