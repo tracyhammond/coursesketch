@@ -11,19 +11,29 @@ function MvSketch() {
     this.gradeValue = undefined;
 
     /**
-     * Sets the update list.
+     * Sets the submissions data.
      *
-     * After the update list is done loading this attempts to resize the sketch surface so that it fills the canvas correctly.
+     * After the submission data is done loading this attempts to resize the sketch surface so that it fills the canvas correctly.
      *
-     * @param {SrlUpdateList} updateList - A list that contains all the changes made in sketch.
+     * @param {QuestionType} questionType - The type of question this data applies to.
+     * @param {SrlSubmission} submission - A list that contains all the changes made in sketch.
      * @instance
      * @memberof MvSketch
      */
-    this.setUpdateList = function(updateList)  {
-        this.shadowRoot.querySelector('sketch-surface').loadUpdateList(updateList, undefined, function() {
-            console.log('Resizing the canvas');
-            this.shadowRoot.querySelector('sketch-surface').fillCanvas();
-        }.bind(this));
+    this.setSubmission = function(questionType, submission) {
+        this.studentSubmission = submission;
+        var bankProblem = CourseSketch.prutil.SrlBankProblem();
+        bankProblem.questionType = questionType;
+        this.problemRenderer.renderSubmission(bankProblem, submission, function() {
+            console.log('Submission has been rendered');
+        });
+    };
+
+    /**
+     * @returns {QuestionData} The submission data stored in this multiview panel.
+     */
+    this.getSubmission = function() {
+        return this.studentSubmission;
     };
 
     /**
@@ -157,7 +167,9 @@ function MvSketch() {
                 event.stopPropagation();
             }, false);
         this.setupAttributes();
-
+        this.problemRenderer = new CourseSketch.ProblemRenderer(this.shadowRoot.querySelectorAll('#problemPanel')[0]);
+        this.problemRenderer.setReadOnly(true);
+        this.problemRenderer.setFullScreen(true);
     };
 
     /**
@@ -188,8 +200,8 @@ function MvSketch() {
      * @instance
      * @memberof MvSketch
      */
-    this.setSketchClickedFunction = function(sketchClickedFunction) {
-        this.shadowRoot.querySelector('sketch-surface').onclick = sketchClickedFunction;
+    this.setSubmissionClickedFunction = function(sketchClickedFunction) {
+        this.shadowRoot.querySelector('#problemPanel').onclick = sketchClickedFunction.bind(this);
     };
 
     /**

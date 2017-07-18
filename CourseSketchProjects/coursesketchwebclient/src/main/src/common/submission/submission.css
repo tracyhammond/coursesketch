@@ -13,7 +13,6 @@
     z-index: 2;
 }
 
-
 /*Future: add css for question panel*/
 #question-panel {
 
@@ -28,7 +27,7 @@
     display: flex;
 }
 
-#sub-panel::content textarea {
+#sub-panel::content textarea:not(.full-screen) {
     font-size: 36;
     font-weight: 300;
     display: flex;
@@ -38,6 +37,15 @@
     height: calc(100% - 64px - 44px);
     resize: none;
     margin: 10px auto;
+}
 
+#sub-panel::content textarea.full-screen {
+    font-size: 36;
+    font-weight: 300;
+    padding: 0;
+    justify-content: center;
+    width: calc(100% - 5px);
+    height: calc(100% - 5px);
+    resize: none;
 }
 

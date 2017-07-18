@@ -54,7 +54,7 @@ function SubmissionPanel() {
      */
     this.setCallbacks = function() {
         var toolbar = this.shadowRoot.querySelector('#toolbar').getDistributedNodes()[0];
-        if (toolbar === null) {
+        if (toolbar === null || isUndefined(toolbar)) {
             return; //Quit before infinite loop
         }
         // Toolbar may not be set up by the time this is called, so we wait till it is set up.

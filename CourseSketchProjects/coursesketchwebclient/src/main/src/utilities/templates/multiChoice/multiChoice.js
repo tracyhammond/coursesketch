@@ -180,6 +180,10 @@ function MultiChoice() {
         console.log('do nothing');
     };
 
+    this.turnOnReadOnlyMode = function() {
+        console.log('do nothing');
+    };
+
     this.setSelected = function() {
         console.log('do nothing2');
     };
