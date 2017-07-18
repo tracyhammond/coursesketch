@@ -139,6 +139,7 @@
         <sourceDirectory>${basedir}/src/main/src</sourceDirectory>
         <testDirectory>${basedir}/src/main/test</testDirectory>
         <nodeVersion>v4.2.2</nodeVersion>
+        <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
     </properties>
 
     <reporting>
@@ -155,7 +156,7 @@
                 <version>2.10</version>
                 <executions>
                     <execution>
-                        <id>unpack libraries</id>
+                        <id>unpack recognition libraries</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -165,10 +166,10 @@
                                 <artifactItem>
                                     <groupId>com.github.dtracers</groupId>
                                     <artifactId>SketchRecognitionFramework</artifactId>
-                                    <version>-SNAPSHOT</version>
+                                    <version>${recognitionFrameworkVersion}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/src/main/resources/other/protobuf</outputDirectory>
+                                    <outputDirectory>${protoDirectory}</outputDirectory>
                                     <includes>**/*.proto</includes>
                                 </artifactItem>
                             </artifactItems>
@@ -286,7 +287,7 @@
         <dependency>
             <groupId>com.github.dtracers</groupId>
             <artifactId>SketchRecognitionFramework</artifactId>
-            <version>-SNAPSHOT</version>
+            <version>${recognitionFrameworkVersion}</version>
         </dependency>
     </dependencies>
 
