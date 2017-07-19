@@ -140,6 +140,7 @@
         <testDirectory>${basedir}/src/main/test</testDirectory>
         <nodeVersion>v4.2.2</nodeVersion>
         <protoDirectory>${basedir}/src/main/resources/other/protobuf</protoDirectory>
+        <sketchSurfaceVersion>0.0.3</sketchSurfaceVersion>
     </properties>
 
     <reporting>
@@ -172,7 +173,53 @@
                                     <outputDirectory>${protoDirectory}</outputDirectory>
                                     <includes>**/*.proto</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.dtracers</groupId>
+                                    <artifactId>SketchRecognitionFramework</artifactId>
+                                    <version>${recognitionFrameworkVersion}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/temp</outputDirectory>
+                                    <includes>website/**/*.js</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.github.dtracers</groupId>
+                                    <artifactId>Srl-SketchSurface</artifactId>
+                                    <version>${sketchSurfaceVersion}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/temp</outputDirectory>
+                                    <includes>website/**/*</includes>
+                                </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/bower_components</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/target/temp/website</directory>
+                                    <includes>
+                                        <include>website/**/*.js</include>
+                                        <include>website/**/*.html</include>
+                                        <include>website/**/*.cs</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

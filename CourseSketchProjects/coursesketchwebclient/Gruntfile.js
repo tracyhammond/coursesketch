@@ -58,7 +58,7 @@ module.exports = function(grunt) {
                 configFile: 'config/eslint.json',
                 outputFile: 'target/eslintReport.txt',
                 fix: true
-               // maxWarnings: 1000
+                // maxWarnings: 1000
             }
         },
         /*
@@ -108,11 +108,11 @@ module.exports = function(grunt) {
                 debug: false
             },
             rules: [
-               { from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1' },
-               { from: '^/test(.*)$', to: '/src/test/src$1', redirect: 'permanent' },
-               { from: '^/other(.*)$', to: '/src/main/resources/other/$1' },
-               { from: '^/images(.*)$', to: '/src/main/resources/images/$1' },
-            //   { from: '^/bower_components(.*)$', to: 'bower_components$1' }
+                {from: '^/src/(?!test)(.*)$', to: '/src/main/src/$1'},
+                {from: '^/test(.*)$', to: '/src/test/src$1', redirect: 'permanent'},
+                {from: '^/other(.*)$', to: '/src/main/resources/other/$1'},
+                {from: '^/images(.*)$', to: '/src/main/resources/images/$1'},
+                //   { from: '^/bower_components(.*)$', to: 'bower_components$1' }
             ],
             development: {
                 options: {
@@ -156,14 +156,10 @@ module.exports = function(grunt) {
             }
         },
         'seleniumStandalone': {
-            run: {
-
-            }
+            run: {}
         },
         'seleniumKill': {
-            run: {
-
-            }
+            run: {}
         },
         /**
          * BUILDERS
@@ -192,6 +188,17 @@ module.exports = function(grunt) {
                         cwd: '../ProtoFiles/src/main/',
                         src: [ 'proto/**/**.proto' ],
                         dest: 'src/main/resources/other/protobuf'
+                    }
+                ]
+            },
+            extern_librarys: {
+                files: [
+                    {
+                        // copies the website files used in production for prod use
+                        expand: true,
+                        src: [ '**' ],
+                        dest: 'bower_components',
+                        cwd: 'target/temp/website/'
                     }
                 ]
             },
@@ -448,7 +455,8 @@ module.exports = function(grunt) {
     grunt.registerTask('install', function() {
         printTaskGroup();
         grunt.task.run([
-            'copy:proto'
+            'copy:proto',
+            'copy:extern_librarys'
         ]);
     });
 
