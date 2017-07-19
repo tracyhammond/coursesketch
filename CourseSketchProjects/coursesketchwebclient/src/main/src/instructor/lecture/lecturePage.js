@@ -8,12 +8,16 @@ validateFirstRun(document.currentScript);
 
         /**
          * Saves the textbox for viewing use later.
+         *
          * @memberof "lecturePage/instructor"
+         * @param {SrlCommand} command - The command that is being saved.
+         * @param {Event} event - The event that created this function call.
+         * @param {SrlUpdate} currentUpdate - The update this command belongs to.
          */
         CourseSketch.lecturePage.saveTextBox = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getActionCreateTextBoxClass());
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.textBox = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -21,12 +25,16 @@ validateFirstRun(document.currentScript);
 
         /**
          * Saves the question for viewing use later.
+         *
          * @memberof "lecturePage/instructor"
+         * @param {SrlCommand} command - The command that is being saved.
+         * @param {Event} event - The event that created this function call.
+         * @param {SrlUpdate} currentUpdate - The update this command belongs to.
          */
         CourseSketch.lecturePage.saveQuestion = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getSrlQuestionClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getSrlQuestionClass());
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.question = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -34,12 +42,16 @@ validateFirstRun(document.currentScript);
 
         /**
          * Saves the image for viewing use later.
+         *
          * @memberof "lecturePage/instructor"
+         * @param {SrlCommand} command - The command that is being saved.
+         * @param {Event} event - The event that created this function call.
+         * @param {SrlUpdate} currentUpdate - The update this command belongs to.
          */
         CourseSketch.lecturePage.saveImageBox = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getImageClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getImageClass());
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.image = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -47,12 +59,16 @@ validateFirstRun(document.currentScript);
 
         /**
          * Saves the embedded html for viewing use later.
+         *
          * @memberof "lecturePage/instructor"
+         * @param {SrlCommand} command - The command that is being saved.
+         * @param {Event} event - The event that created this function call.
+         * @param {SrlUpdate} currentUpdate - The update this command belongs to.
          */
         CourseSketch.lecturePage.saveEmbeddedHtml = function(command, event, currentUpdate) {
-            var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(command.getCommandData(),
-                CourseSketch.PROTOBUF_UTIL.getEmbeddedHtmlClass());
-            var element = CourseSketch.PROTOBUF_UTIL.LectureElement();
+            var decoded = CourseSketch.prutil.decodeProtobuf(command.getCommandData(),
+                CourseSketch.prutil.getEmbeddedHtmlClass());
+            var element = CourseSketch.prutil.ProblemElement();
             element.id = generateUUID();
             element.embeddedHtml = decoded;
             CourseSketch.lecturePage.currentSlide.elements.push(element);
@@ -61,14 +77,13 @@ validateFirstRun(document.currentScript);
         /**
          * Selects a specific lecture slide.
          *
-         * @param {Integer} slideIndex
-         *            index of the slide in the current lecture's protobuf
-         *            object.
+         * @param {Integer} slideIndex - index of the slide in the current lecture's protobuf object.
          * @memberof "lecturePage/instructor"
          */
         CourseSketch.lecturePage.selectSlide = function(slideIndex) {
             /**
              * Called when the specific slide is completely loaded.
+             *
              * @memberof "lecturePage/instructor"
              */
             var completionHandler = function() {
@@ -110,17 +125,19 @@ validateFirstRun(document.currentScript);
          */
         CourseSketch.lecturePage.newSlide = function() {
             CourseSketch.lecturePage.addWaitOverlay();
-            var slide = CourseSketch.PROTOBUF_UTIL.LectureSlide();
+            var slide = CourseSketch.prutil.LectureSlide();
             slide.id = generateUUID();
             slide.lectureId = CourseSketch.lecturePage.lecture.id;
             slide.unlocked = true;
 
             /**
              * Called after the course lecture is grabbed.
+             *
              * @memberof "lecturePage/instructor"
+             * @param {SrlLecture} lecture - The lecture that was just finished.
              */
             var finishGetCourseLecture = function(lecture) {
-                var id = CourseSketch.PROTOBUF_UTIL.IdsInLecture();
+                var id = CourseSketch.prutil.IdsInLecture();
                 id.id = slide.id;
                 id.isSlide = true;
                 id.unlocked = true;
@@ -132,11 +149,11 @@ validateFirstRun(document.currentScript);
             /**
              * Called when the slide is successfully inserted into the database.
              *
-             * @param {Slide} slide A slide which points at a separate lecture.
+             * @param {Slide} lectureSlide - A slide which points at a separate lecture.
              * @memberof "lecturePage/instructor"
              */
-            var finishInsert = function(slide) {
-                CourseSketch.dataManager.getCourseLecture(slide.lectureId, finishGetCourseLecture, finishGetCourseLecture);
+            var finishInsert = function(lectureSlide) {
+                CourseSketch.dataManager.getCourseLecture(lectureSlide.lectureId, finishGetCourseLecture, finishGetCourseLecture);
             };
             CourseSketch.dataManager.insertSlide(slide, finishInsert, finishInsert);
         };

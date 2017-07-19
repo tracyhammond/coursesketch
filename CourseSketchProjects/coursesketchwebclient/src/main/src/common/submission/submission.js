@@ -2,7 +2,10 @@
  * An exception that is thrown for the uses of submissions.
  *
  * @extends BaseException
- * @class SubmissionException
+ * @constructor SubmissionException
+ *
+ * @param {String} message - The message to show for the exception.
+ * @param {BaseException} cause - The cause of the exception.
  */
 function SubmissionException(message, cause) {
     this.name = 'SubmissionException';
@@ -19,24 +22,20 @@ SubmissionException.prototype = new BaseException();
  * This class does not retrieve submissions.
  *
  * Assumptions made:
- * toolbar is a custom element that has two functions: setSaveCallback(callback), setSubmitCallback(callback)
+ * <ul>
+ * <li>Toolbar is a custom element that has two functions: setSaveCallback(callback), setSubmitCallback(callback).</li>
+ * <li>The toolbar is set before the element is inserted.  (or it will never be inserted).</li>
+ * <li>The sub-panel (submit panel) element can change at run time and may not be inserted when this element is inserted.</li>
+ * <li>You can set the problem object with the class "sub-panel".</li>
+ * </ul>
  *
- * the toolbar is set before the element is inserted.  (or it will never be inserted)
- *
- * the sub-panel (submit panel) element can change at run time and may not be inserted when this element is inserted
- *
- * you can set the problem object with the class "sub-panel"
- *
- * @class SubmissionPanel
- * @property {QuestionType}
+ * @constructor SubmissionPanel
  */
 function SubmissionPanel() {
 
     /**
-     * @param {Element} templateClone
-     *            An element representing the data inside tag, its
-     *            content has already been imported and then added to this
-     *            element.
+     * @param {Element} templateClone - An element representing the data inside tag, its
+     *            content has already been imported and then added to this element.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -76,10 +75,11 @@ function SubmissionPanel() {
      * This sends data to the server but catches any exception.
      *
      * This method should only be used for testing purposes.
+     *
      * @instance
      * @memberof SubmissionPanel
-     * @param {Boolean} isSubmitting - true if the data is being submitted.
-     * @param {Boolean} suppressAlert - true if the alert is being suppressed (used for testing purposes)
+     * @param {Boolean} isSubmitting - True if the data is being submitted.
+     * @param {Boolean} suppressAlert - True if the alert is being suppressed (used for testing purposes)
      * @see SubmissionPanel#sendDataToServer
      */
     this.sendDataToServerExceptionWrapped = function(isSubmitting, suppressAlert) {
@@ -87,7 +87,7 @@ function SubmissionPanel() {
             this.sendDataToServer(isSubmitting);
         } catch (exception) {
             if (!suppressAlert) {
-                alert(exception.toString());
+                CourseSketch.clientException(exception);
             }
             console.log(exception);
         }
@@ -109,36 +109,40 @@ function SubmissionPanel() {
         if (isUndefined(this.problemType)) {
             throw new SubmissionException('Problem data is not set correctly aborting');
         }
-        var submission = undefined;
-        var QuestionType = CourseSketch.PROTOBUF_UTIL.QuestionType;
+        var submission = createBaseSubmission();
+        var QuestionType = CourseSketch.prutil.QuestionType;
+        var submissionData = CourseSketch.prutil.QuestionData();
         switch (this.problemType) {
-            case QuestionType.SKETCH: {
-                submission = createSketchSubmission(subPanel, isSubmitting);
-            }
-            break;
-            case QuestionType.FREE_RESP: {
-                submission = createTextSubmission(subPanel, isSubmitting);
-            }
-            break;
+            case QuestionType.SKETCH:
+                submissionData.sketchArea = createSketchSubmission(subPanel, isSubmitting);
+                break;
+            case QuestionType.FREE_RESP:
+                submissionData.freeResponse = createTextSubmission(subPanel, isSubmitting);
+                break;
         }
-        if (isUndefined(submission)) {
-            throw new SubmissionException('submission type not supported, aborting');
+
+        if (isUndefined(submissionData)) {
+            throw new SubmissionException('submission type [' + this.problemType + '] not supported, aborting');
         }
+
+        submission.setSubmissionData(submissionData);
+
         if (isUndefined(this.wrapperFunction)) {
             // You need to set the wrapper function to either create an experiment or solution.
             throw new SubmissionException('Wrapper function is not set, aborting');
         }
+
         var submittingValue = this.wrapperFunction(submission);
         console.log(submittingValue);
-        var submissionRequest = CourseSketch.PROTOBUF_UTIL.createRequestFromData(submittingValue,
-                CourseSketch.PROTOBUF_UTIL.getRequestClass().MessageType.SUBMISSION);
+        var submissionRequest = CourseSketch.prutil.createRequestFromData(submittingValue,
+            CourseSketch.prutil.getRequestClass().MessageType.SUBMISSION);
         var problemType = this.problemType;
         var problemIndex = this.problemIndex;
         CourseSketch.connection.setSubmissionListener(function(event, request) {
             console.log(request);
             CourseSketch.connection.setSubmissionListener(undefined);
             alert(request.responseText);
-            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.PROTOBUF_UTIL.QuestionType.SKETCH) {
+            if (problemIndex === this.problemIndex && this.problemType === CourseSketch.prutil.QuestionType.SKETCH) {
                 var sketchSurface = this.querySelector('.submittable');
                 // Potential conflict if it was save multiple times in quick succession.
                 sketchSurface.getUpdateManager().setLastSaveTime(request.getMessageTime());
@@ -157,16 +161,16 @@ function SubmissionPanel() {
     /**
      * Gets the text that has been typed.
      *
-     * @return {SrlSubmission} object that is ready to be sent to the server.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
      *
-     * @param {Element} textArea The element that contains the text answer
-     * @param {Boolean} isSubmitting value Currently ignored but in the future it may be used.
+     * @param {Element} textArea - The element that contains the text answer
+     * @param {Boolean} isSubmitting - Value Currently ignored but in the future it may be used.
      * @instance
      * @memberof SubmissionPanel
      */
     function createTextSubmission(textArea, isSubmitting) {
-        var submission = createBaseSubmission();
-        submission.textAnswer = textArea.value;
+        var submission = CourseSketch.prutil.FreeResponse();
+        submission.startingText = textArea.value;
         return submission;
     }
 
@@ -174,9 +178,10 @@ function SubmissionPanel() {
      * Creates the submission object for the sketch surface.
      *
      * This also adds the submit or save marker to the update list.
-     * @param {SketchSurface} sketchSurface - the sketch surface that is being submitted.
-     * @param {Boolean} isSubmitting - true if this is a submission instead of a save.
-     * @return {SrlSubmission} object that is ready to be sent to the server.
+     *
+     * @param {SketchSurface} sketchSurface - The sketch surface that is being submitted.
+     * @param {Boolean} isSubmitting - True if this is a submission instead of a save.
+     * @returns {SrlSubmission} object that is ready to be sent to the server.
      * @instance
      * @memberof SubmissionPanel
      */
@@ -190,14 +195,14 @@ function SubmissionPanel() {
             throw new SubmissionException('must make changes to save again.');
         }
 
-        var MarkerType = CourseSketch.PROTOBUF_UTIL.getMarkerClass().MarkerType;
+        var MarkerType = CourseSketch.prutil.getMarkerClass().MarkerType;
         var markerCommand = updateManager.createMarker(true, isSubmitting ? MarkerType.SUBMISSION : MarkerType.SAVE);
-        var markerUpdate = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ markerCommand ]);
+        var markerUpdate = CourseSketch.prutil.createUpdateFromCommands([ markerCommand ]);
         updateManager.addSynchronousUpdate(markerUpdate);
 
         var protoObject = sketchSurface.getSrlUpdateListProto();
-        var submission = createBaseSubmission();
-        submission.setUpdateList(protoObject);
+        var submission = CourseSketch.prutil.SketchArea();
+        submission.setRecordedSketch(protoObject);
         return submission;
     }
 
@@ -207,7 +212,7 @@ function SubmissionPanel() {
      * @memberof SubmissionPanel
      */
     function createBaseSubmission() {
-        var submission = CourseSketch.PROTOBUF_UTIL.SrlSubmission();
+        var submission = CourseSketch.prutil.SrlSubmission();
         return submission;
     }
 
@@ -216,6 +221,7 @@ function SubmissionPanel() {
      *
      * This function takes in a submission and wraps it as either the experiment or solution.
      * This wrapped value is returned from the function and then it is sent to the server internally.
+     *
      * @param  {Function} wrapperFunction - used to wrap the submission in its required data.
      * @instance
      * @memberof SubmissionPanel
@@ -226,6 +232,7 @@ function SubmissionPanel() {
 
     /**
      * Called when the panel is removed from the DOM.
+     *
      * @instance
      * @memberof SubmissionPanel
      */
@@ -235,6 +242,7 @@ function SubmissionPanel() {
 
     /**
      * This clears the toolbar and remakes the callbacks for the toolbar.
+     *
      * @instance
      * @memberof SubmissionPanel
      */
@@ -259,36 +267,36 @@ function SubmissionPanel() {
     /**
      * Makes callbacks for the toolbar that depend on the type of problem.
      *
-     * @param {QuestionType} problemType - the type of problem that is currently being submitted.
-     * @param {Element} element - the element contained inside the submission panel.
-     * @param {Toolbar} toolbar - the custom toolbar element that is contained inside the submission panel.
+     * @param {QuestionType} problemType - The type of problem that is currently being submitted.
+     * @param {Element} element - The element contained inside the submission panel.
+     * @param {Toolbar} toolbar - The custom toolbar element that is contained inside the submission panel.
      * @instance
      * @memberof SubmissionPanel
      */
     this.setSpecificCallbacks = function(problemType, element, toolbar) {
-        var QuestionType = CourseSketch.PROTOBUF_UTIL.QuestionType;
+        var QuestionType = CourseSketch.prutil.QuestionType;
         if (problemType === QuestionType.SKETCH) {
             var updateManager = element.getUpdateManager();
             var clearButton = toolbar.createButton('/images/toolbar/clear_button.svg', function() {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CLEAR, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CLEAR, true);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
             toolbar.appendChild(clearButton);
 
             toolbar.setUndoCallback(function() {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.UNDO, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.UNDO, true);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
 
             toolbar.setRedoCallback(function() {
-                var command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.REDO, true);
-                var update = CourseSketch.PROTOBUF_UTIL.createUpdateFromCommands([ command ]);
+                var command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.REDO, true);
+                var update = CourseSketch.prutil.createUpdateFromCommands([ command ]);
                 updateManager.addUpdate(update);
             });
         } else if (problemType === QuestionType.MULT_CHOICE) {
-            throw new BaseException('Operation not supported');
+            throw new SubmissionException('Callbacks for Multiple choice is not supported.');
             // add mult choice tools
         } else if (problemType === QuestionType.FREE_RESP) {
             // add free resp tools
@@ -311,7 +319,8 @@ SubmissionPanel.prototype = Object.create(HTMLElement.prototype);
  * Sets the problem type for the submission panel.
  *
  * The problem type is used to detirmine how to load and save the panel.
- * @param {QuestionType} problemType sets the problem element.
+ *
+ * @param {QuestionType} problemType - Sets the problem element.
  * @instance
  * @memberof SubmissionPanel
  */

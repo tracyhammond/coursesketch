@@ -1,0 +1,41 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="import" href="/src/utilities/libraries/jquery/jqueryInclude.html">
+    <link rel="import" href="/src/utilities/libraries/materialize/materializeInclude.html">
+    <link id="problemTemplateImport" rel="import" href="/src/common/problem/problemTextPanel.html">
+    <script src="/src/common/problem/problemTextPanel.js"></script>
+    <link rel="import" href="/src/utilities/libraries/mathjax/mathjaxInclude.html">
+
+    <script>
+    (function(importDoc) {
+        $(document).ready(function() {
+            var clone = safeImport(importDoc, document, 'problemTemplateImport', 'problemPanel');
+
+            var newElement = new ProblemTextPanel();
+
+            /**
+             * @Method
+             * Called when the element is created, using document.create()(but does nothing else)
+             */
+            newElement.createdCallback = function() {
+            };
+
+            /**
+             * Creates the shadow root and adds that into the system.
+             */
+            newElement.attachedCallback = function() {
+                this.initializeElement(clone.cloneNode(true));
+            };
+
+            newElement.detachedCallback = function() {
+            };
+
+            document.registerElement('problem-text-panel', {
+                prototype : newElement
+            });
+        });
+    })(document.currentScript.ownerDocument);
+</script>
+</head>
+</html>

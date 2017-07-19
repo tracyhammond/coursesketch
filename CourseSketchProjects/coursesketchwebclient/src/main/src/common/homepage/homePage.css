@@ -1,18 +1,18 @@
-.fullScreenColumn {
-	height:calc(100vh - 3.75em - 5px);
+.scrollColumn {
+    max-height: calc(100vh - 4em);
+    overflow-y:hidden;
 }
 
-h2 {
-	margin-top:0.5em;
-	margin-bottom:0.5em;
-	font-size:1.5em;
-	line-height: 1.5em;
+.school_div {
+    max-height: 100vh;
+    width: calc(100% - 2px);
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    flex: 1 1 auto;
+    background: #e3f2fd;
+    padding-top: 15px;
 }
 
-.wide_centre > div {
-	height:100vh;
-}
-
-.columnContainer {
-	display:flex;
-}
+.school_div::-webkit-scrollbar { width: 0 !important }
+.school_div { -ms-overflow-style: none; }
+.school_div { overflow: -moz-scrollbars-none; }

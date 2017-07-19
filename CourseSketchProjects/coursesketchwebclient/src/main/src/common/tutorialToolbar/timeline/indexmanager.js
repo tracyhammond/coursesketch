@@ -1,9 +1,9 @@
 /**
- * @param {Object} timeline is the timeline object that the index manager will be associated with
+ * @param {Object} timeline - is the timeline object that the index manager will be associated with
  * Creates an IndexManager for a tutorial timeline
  * Manages currently selected element as well as undoing and redoing update steps when editing tutorial
  */
-function IndexManager (timeline) {
+function IndexManager(timeline) {
     var current; // Used to set currently selected index class to 'focused'
     var index = -1; // Tracks the current index in the IndexManager
     this.addNewToolArea = function(toolArea) {
@@ -13,12 +13,12 @@ function IndexManager (timeline) {
         };
         if (!timeline.viewingMode) {
             console.log("dangit");
-            timeline.updateList.list.push(CourseSketch.PROTOBUF_UTIL.createBaseUpdate());
+            timeline.updateList.list.push(CourseSketch.prutil.createBaseUpdate());
         }
     };
 
     /**
-     * @param {Integer} destination is the index of a step that is clicked on
+     * @param {Integer} destination - is the index of a step that is clicked on
      * This removes the focused class from the previously selected step
      * It then adds the focused class to the currently selected step
      */
@@ -35,7 +35,7 @@ function IndexManager (timeline) {
     };
 
     /**
-     * @param {Object} child is the toolArea/step being queried
+     * @param {Object} child - is the toolArea/step being queried
      * @returns {Integer} i is the index of the queried toolArea/step
      * Used to query the index in the step/toolArea order of the current element
      */
@@ -49,7 +49,7 @@ function IndexManager (timeline) {
     }
 
     /**
-     * @return {Object} update is the protobuf update of the currently selected step/toolArea
+     * @returns {Object} update is the protobuf update of the currently selected step/toolArea
      */
     this.getCurrentUpdate = function() {
         var update;
@@ -62,12 +62,12 @@ function IndexManager (timeline) {
     };
 
     /**
-     * @param {Integer} oldIndex is the index to change away from
-     * @param {Integer} newIndex is the index to change to
+     * @param {Integer} oldIndex - is the index to change away from
+     * @param {Integer} newIndex - is the index to change to
      * Runs protobuf undo function on the update corresponding to oldIndex
      * Runs protobuf redo function on the update corresponding to newIndex
      */
-    function changeListIndex (oldIndex, newIndex) {
+    function changeListIndex(oldIndex, newIndex) {
         // The indexes of toolAreas in relation the children elements starts at 1. In relation to commands and updates, the index starts at 0.
         oldIndex -= 1;
         newIndex -= 1;

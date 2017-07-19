@@ -1,0 +1,42 @@
+.card {
+    /* height: 100%; */
+}
+
+ul.collapsible li {
+    box-sizing: content-box;
+}
+
+div.collapsible-body {
+    display: inherit;
+    padding: 1rem;
+    border-bottom: none;
+}
+
+*[data-prop] {
+    display: none;
+}
+
+*[data-hidden] {
+    display: none;
+}
+
+*[data-list] {
+    display: flex;
+    overflow-x: scroll;
+    height: inherit;
+}
+
+*[data-list-item] {
+    flex-direction: row;
+    flex: 0 0 auto;
+    padding: 10px;
+}
+
+.card[data-list-item] {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+:host {
+    background-color: white;
+}

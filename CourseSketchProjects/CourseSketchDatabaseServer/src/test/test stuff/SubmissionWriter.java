@@ -11,23 +11,23 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlProblem;
+import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.school.Problem.SrlBankProblem;
 
-import com.mongodb.BasicDBObject;
+import com.mongodb.Document;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.mongodb.MongoCollection<Document>;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.Document;
 import com.mongodb.MongoClient;
 
 import database.DatabaseAccessException;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.Institution;
 
 public class SubmissionWriter {
 	public static void start() throws IOException, AuthenticationException, DatabaseAccessException {
-		
+
 		JFileChooser chooser = new JFileChooser();
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
 	        "Binary files", "dat");
@@ -40,37 +40,37 @@ public class SubmissionWriter {
 	    	return;
 	    }
 	    File directory = new File(chooser.getSelectedFile().getParent());
-	    
-	    
+
+
 		MongoClient mongoClient = new MongoClient("goldberglinux.tamu.edu");
 		DB db = mongoClient.getDB("submissions");
-		DBCollection collection = db.getCollection("Experiments");
-		DBCursor cursor = collection.find().skip(2);
+		MongoCollection<Document> collection = db.getCollection("Experiments");
+		MongoCursor<Document> cursor = collection.find().skip(2);
 		int numbers = cursor.count();
 		System.out.println("Number of submissions: " + numbers);
-		
+
 		// User Name DB things
 		DB ldb = mongoClient.getDB("login");
-		DBCollection lcollection = ldb.getCollection("CourseSketchUsers");
+		MongoCollection<Document> lcollection = ldb.getCollection("CourseSketchUsers");
 		final String mastId = "0aeee914-3411-6e12-8012-50ab6e769496-6eff24dba01bc332";
 		DB idb = mongoClient.getDB("Institution");
 		int i = 0;
 		while (cursor.hasNext()) {
 			i++;
-			DBObject object = cursor.next();
+			Document object = cursor.next();
 			BufferedOutputStream stream;
-			
+
 			Object uid = object.get("UserId");
-			BasicDBObject query = new BasicDBObject("ServerId",uid);
-			DBCursor lcursor = lcollection.find(query);
-			
+			Document query = new Document("ServerId",uid);
+			MongoCursor<Document> lcursor = lcollection.find(query);
+
 			String userName = "null";
 			if (lcursor.hasNext()) {
-				DBObject result = lcursor.next();
+				Document result = lcursor.next();
 				userName = result.get("UserName").toString();
 			}
-			
-			
+
+
 			String pid = object.get("CourseProblemId").toString();
 			SrlProblem currentProblem;
 			try {currentProblem =  Institution.mongoGetCourseProblem(toStringArray(pid), mastId).get(0);}
@@ -79,9 +79,9 @@ public class SubmissionWriter {
 				continue;
 			}
 			SrlAssignment currentAssignment = Institution.mongoGetAssignment(toStringArray(currentProblem.getAssignmentId()), mastId).get(0);
-		
-			
-			stream = new BufferedOutputStream(new FileOutputStream(directory.getAbsolutePath() + "/" +  i + "_" + userName + "_" + 
+
+
+			stream = new BufferedOutputStream(new FileOutputStream(directory.getAbsolutePath() + "/" +  i + "_" + userName + "_" +
 			currentAssignment.getName() + "_" + currentProblem.getName() + ".dat"));
 //			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(directory.getAbsolutePath() + "/"
 //			+ object.get("UserName").toString() + "_Assignemnt" + object.get("AssignmentId").toString() + "_Problem" + object.get("CourseProblemId").toString() +".dat"));
@@ -90,18 +90,18 @@ public class SubmissionWriter {
 			stream.write(bytes);
 			stream.flush();
 			stream.close();
-			
+
 		}
 	}
-	
-	
+
+
 	private static ArrayList<String> toStringArray(String str) {
 		ArrayList<String> strs = new ArrayList<String>();
 		strs.add(str);
 		return strs;
 	}
-	
-	
+
+
 	public static void main(String args[]) throws AuthenticationException, DatabaseAccessException {
 		try {
 			start();

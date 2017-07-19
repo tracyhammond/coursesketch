@@ -1,11 +1,15 @@
 // jshint undef:false
 // jshint latedef:false
+/* eslint-disable valid-jsdoc */
 
+// in case it was not defined before
+var CourseSketch = CourseSketch || {};
 
 if (typeof isUndefined === 'undefined') {
     /**
-     * Returns true if an object is not defined
-     * @param {Object} object the object that is being tested.
+     * Returns true if an object is not defined.
+     *
+     * @param {Object} object - the object that is being tested.
      * @returns {Boolean} true if the object is not defined.  (Only not defined being null will return false)
      */
     function isUndefined(object) {
@@ -48,7 +52,7 @@ if (isUndefined(createTimeStamp)) {
     /**
      * Creates a number that represents the current time in milliseconds since jan 1st 1970.
      *
-     * @return {Number} milliseconds since jan 1st 1970
+     * @returns {Number} milliseconds since jan 1st 1970
      */
     function createTimeStamp() {
         return new Date().getTime();
@@ -69,7 +73,7 @@ if (isUndefined(isFunction)) {
     /**
      * Checks to see if the given object is a function.
      *
-     * @param {*} object Object that is being checked if it is a function.
+     * @param {*} object - Object that is being checked if it is a function.
      * @returns {Boolean} true if the input object is a function, false otherwise.
      */
     function isFunction(object) {
@@ -91,8 +95,9 @@ if (isUndefined(make2Digits)) {
     /**
      * Given a number that could be 1 or 2 digits returns a 2 digit version of that number.
      *
-     * ex: 1 -> 01, or 15 -> 15
-     * @param {Number} num the number that is needed to be forced into 2 digits.
+     * {@code ex: 1 -> 01, or 15 -> 15}
+     *
+     * @param {Number} num - the number that is needed to be forced into 2 digits.
      */
     function make2Digits(num) {
         return ('0' + Number(num)).slice(-2);
@@ -103,7 +108,7 @@ if (isUndefined(getMilitaryFormattedDateTime)) {
     /**
      * Returns the date formatted as Military Time.
      *
-     * @param {Date} dateTime the date that is being formatted.
+     * @param {Date} dateTime - the date that is being formatted.
      * @returns {String} The formatted result.
      */
     function getMilitaryFormattedDateTime(dateTime) {
@@ -117,10 +122,10 @@ if (isUndefined(getFormattedDateTime)) {
     /**
      * Creates and return a formatted date time.
      *
-     * ex: 01-18-1994 10:50PM
+     * {@code ex: 01-18-1994 10:50PM}
      *
-     * @param {Date} dateTime uses the default Date object in the browser to return.
-     * @return {String} A formatted date time.
+     * @param {Date} dateTime - uses the default Date object in the browser to return.
+     * @returns {String} A formatted date time.
      */
     function getFormattedDateTime(dateTime) {
         var date = make2Digits(dateTime.getMonth() + 1) + '-' + make2Digits(dateTime.getDate()) + '-' + dateTime.getFullYear();
@@ -140,12 +145,18 @@ if (isUndefined(getFormattedDateTime)) {
     }
 }
 
+if (CourseSketch && isUndefined(BaseException) && !isUndefined(CourseSketch.BaseException)) {
+    BaseException = CourseSketch.BaseException; // jshint ignore:line
+}
+
 if (isUndefined(BaseException)) {
     /**
-     * @class BaseException
+     * @constructor BaseException
      * Defines the base exception class that can be extended by all other exceptions.
+     *
+     * @param {String} [optionalMessage] - The message to show for the exception.
      */
-    function BaseException() {
+    function BaseException(optionalMessage) {
         this.name = 'BaseException';
         /**
          * The level defines how bad it is. level 5 is the okayest exception
@@ -165,8 +176,8 @@ if (isUndefined(BaseException)) {
 
         /**
          * Sets the message of the Exception.
-         * @param {messageValue} messageValue
-         *          is a string that contains the description
+         *
+         * @param {String} messageValue - is a string that contains the description
          *          of the the exception that occurred.
          */
         this.setMessage = function(messageValue) {
@@ -175,7 +186,7 @@ if (isUndefined(BaseException)) {
 
         /**
          * Used to access the stacktrace of the exception without modifying it.
-         * @return {stackTrace} Returns a string that contains the entire stacktrace of the exception.
+         * @returns {stackTrace} Returns a string that contains the entire stacktrace of the exception.
          */
         this.getStackTrace = function() {
             return this.stackTrace;
@@ -197,8 +208,8 @@ if (isUndefined(BaseException)) {
 
         /**
          * Sets the cause of baseException to the causeValue passed in.
-         * @param {causeValue} causeValue
-         *          is the cause of the exception.
+         *
+         * @param {BaseException} causeValue - Is the cause of the exception.
          */
         this.setCause = function(causeValue) {
             if (!isUndefined(causeValue)) {
@@ -212,18 +223,55 @@ if (isUndefined(BaseException)) {
         this.getCause = function() {
             return this.cause;
         };
-    }
 
-    if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
-        CourseSketch.BaseException = CourseSketch.BaseException;
+        if (!isUndefined(optionalMessage)) {
+            this.setMessage(optionalMessage);
+        }
+        if (CourseSketch && CourseSketch.printStackTrace) {
+            this.createStackTrace();
+        }
     }
+}
+
+if (CourseSketch && isUndefined(CourseSketch.BaseException)) {
+    CourseSketch.BaseException = BaseException;
+}
+
+if (CourseSketch && isUndefined(isException) && !isUndefined(CourseSketch.isException)) {
+    isException = CourseSketch.isException; // jshint ignore:line
+}
+
+if (isUndefined(isException)) {
+    /**
+     * Checks to see if the input is an exception.
+     *
+     * @param {*} exception - What we want to see is an exception.
+     * @returns {Boolean} True if the input is an exception or error. False otherwise.
+     */
+    function isException(exception) {
+        if (isUndefined(exception) || exception === null) {
+            return false;
+        }
+        if (exception instanceof BaseException || exception instanceof Error ||
+                (CourseSketch && CourseSketch.BaseException && exception instanceof CourseSketch.BaseException)) {
+            return true;
+        }
+
+        // returns true if the below statement is true.
+        return (!isUndefined(exception.name) && exception.name.endsWith('Exception'));
+
+    }
+}
+
+if (CourseSketch && isUndefined(CourseSketch.isException)) {
+    CourseSketch.isException = isException;
 }
 
 if (isUndefined(getTypeName)) {
     /**
      * Gets the name of the object.  Also gets the name of the constructor if the constructor.
      *
-     * @param {*} value The object that we want to get the type of.
+     * @param {*} value - The object that we want to get the type of.
      * @returns {String} The name of the type of the object sent in.
      */
     function getTypeName(value) {
@@ -260,7 +308,8 @@ if (isUndefined(getTypeName)) {
 if (isUndefined(loadJs)) {
     /**
      * Loads the javascript file given its src.
-     * @param {String} src the address of the script to load.
+     *
+     * @param {String} src - the address of the script to load.
      */
     function loadJs(src) {
         var head = document.getElementsByTagName('head')[0];
@@ -273,7 +322,7 @@ if (isUndefined(loadJs)) {
 
 if (isUndefined(validateFirstRun)) {
     /**
-     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides).
      * And prevents further execution of the script.  This is limited to the document it is contained in.
      *
      * @param {Script} scriptObject
@@ -287,11 +336,11 @@ if (isUndefined(validateFirstRun)) {
             scriptBay = {};
         }
         if (!isUndefined(scriptBay[scriptObject.src])) {
-            var errorEvent = { src: scriptObject.src };
+            var errorEvent = { src: scriptObject.src, ignoreError: true };
             /**
              * The listener that ignores the event.
              *
-             * @param {Event} event the error event that was thrown.
+             * @param {Event} event - the error event that was thrown.
              * @memberof validateFirstRun
              */
             var listener = function(event) {
@@ -309,7 +358,7 @@ if (isUndefined(validateFirstRun)) {
 
 if (isUndefined(validateFirstGlobalRun)) {
     /**
-     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides)
+     * Allows the script to continue if it is only being run once otherwise it will throw an exception (that it hides).
      * And prevents further execution of the script. This is limited to CourseSketch running.
      *
      * @param {Script} scriptObject
@@ -327,7 +376,7 @@ if (isUndefined(validateFirstGlobalRun)) {
             /**
              * The listener that ignores the event.
              *
-             * @param {Event} event the error event that was thrown.
+             * @param {Event} event - the error event that was thrown.
              * @memberof validateFirstGlobalRun
              */
             var listener = function(event) {
@@ -348,8 +397,8 @@ if (isUndefined(safeLoad)) {
     /**
      * Loads a script but only once.
      *
-     * @param {String} url The url that is being loaded.
-     * @param {Object} uniqueGlobalObject a global object that is unique to the script that will be undefined if the script does not exist.
+     * @param {String} url - The url that is being loaded.
+     * @param {Object} uniqueGlobalObject - a global object that is unique to the script that will be undefined if the script does not exist.
      */
     function safeLoad(url, uniqueGlobalObject) {
         if (typeof window[uniqueGlobalObject] === 'undefined') {
@@ -359,5 +408,24 @@ if (isUndefined(safeLoad)) {
             script.src = url;
             document.getElementsByTagName('head')[0].appendChild(script);
         }
+    }
+}
+
+if (isUndefined(safeImport)) {
+    /**
+     * Imports a node from a different document safely.
+     *
+     * @param importDoc {Document} The document that is importing the template
+     * @param document {Document} The general document
+     * @param importId {String} The id of the import link
+     * @param importNodeId {String} The id of the node to be imported
+     * @returns {Node|*}
+     */
+    function safeImport(importDoc, document, importId, importNodeId) {
+        var link = importDoc.getElementById(importId) || importDoc.querySelector('#' + importId);
+        console.log('grabbed link with id: ', importId, ' the resulting link is ', link);
+        var template = link.import.getElementById(importNodeId) || link.import.querySelector('#' + importNodeId);
+        console.log('grabbed node with id: ', importNodeId, ' the resulting node is ', template);
+        return document.importNode(template.content, true);
     }
 }

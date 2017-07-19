@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Command Methods test</title>
+    <title>Base exception test</title>
     <!-- test Library -->
     <link rel="import" href="/test/testUtilities/testUtilities.html">
 
@@ -49,7 +49,7 @@
                     assert.equal(exception.specificMessage, word);
                     console.log(sTrace);
                     console.log(exception);
-                    CourseSketch.showShallowException(CourseSketch.PROTOBUF_UTIL.createProtoException(exception));
+                    CourseSketch.showShallowException(CourseSketch.prutil.createProtoException(exception));
                 }
             }
         });

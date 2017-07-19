@@ -20,9 +20,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#timelineImport');
-            var template = link.import.querySelector('#timelineCreation');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'timelineImport','timelineCreation');
 
             var newElement = new Timeline();
 

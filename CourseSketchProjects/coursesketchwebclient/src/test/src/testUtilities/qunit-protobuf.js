@@ -2,7 +2,7 @@
  * Returns a cleaned version of the update that is ready for comparison.
  */
 function cleanUpdateForComparison(update) {
-    return CourseSketch.PROTOBUF_UTIL.decodeProtobuf(update.toArrayBuffer(), CourseSketch.PROTOBUF_UTIL.getSrlUpdateClass());
+    return CourseSketch.prutil.decodeProtobuf(update.toArrayBuffer(), CourseSketch.prutil.getSrlUpdateClass());
 }
 
 /**
@@ -25,18 +25,25 @@ function cleanUpdateList(updateList) {
 }
 
 function updateEqual(actual, expected, message) {
-    actualUpdate = cleanUpdateForComparison(actual);
-    expectedUpdate = cleanUpdateForComparison(expected);
+    var actualUpdate = cleanUpdateForComparison(actual);
+    var expectedUpdate = cleanUpdateForComparison(expected);
     this.propEqual(actualUpdate, expectedUpdate, message);
 }
 
 function updateListEqual(actual, expected, message) {
-    actualList = cleanUpdateList(actual);
-    expectedList = cleanUpdateList(expected);
+    var actualList = cleanUpdateList(actual);
+    var expectedList = cleanUpdateList(expected);
     this.propEqual(actualList, expectedList, message);
 }
 
+function compareProtobuf(actual, expected, type, message) {
+    var cleanActual = CourseSketch.prutil.cleanProtobuf(actual, type);
+    var cleanExpected = CourseSketch.prutil.cleanProtobuf(expected, type);
+    this.propEqual(cleanActual, cleanExpected, message);
+}
+
 QUnit.extend(QUnit.assert, {
-  updateListEqual: updateListEqual,
-  updateEqual : updateEqual
+    updateListEqual: updateListEqual,
+    updateEqual: updateEqual,
+    protoEqual: compareProtobuf
 });

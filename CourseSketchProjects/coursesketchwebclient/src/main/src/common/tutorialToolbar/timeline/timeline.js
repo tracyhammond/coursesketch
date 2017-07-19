@@ -1,32 +1,17 @@
-
-function Timeline () {
+/* eslint-disable */
+/* jshint ignore:start */
+function Timeline() {
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
         this.viewingMode = false;
 
-        // DELETE THIS AFTER DAVID's STUFF IS IMPLEMENTED!!!!!
-        CourseSketch.dataManager.getTutorialList = function(url, callback) {
-            var tutorialList = [];
-            for (var i = 0; i < 5; i++) {
-                var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
-                tutorial.name = 'TUT' + i;
-                tutorial.description = 'DESCRIPT' + i;
-                tutorial.id = 'id' + i;
-                tutorialList.push(tutorial);
-            }
-            callback(tutorialList);
-        };
-
-        // END OF STUPID DAVID STUFF!
-
         var shadowRoot = this.createShadowRoot();
         shadowRoot.appendChild(templateClone);
-        this.updateList = CourseSketch.PROTOBUF_UTIL.SrlUpdateList();
+        this.updateList = CourseSketch.prutil.SrlUpdateList();
         this.index = new IndexManager(this);
-        shadowRoot.querySelector('.savetutorial').style.display = 'none';
 
         this.addToolArea(shadowRoot.querySelector('.timeline'));
         this.continueButton(shadowRoot);
@@ -37,7 +22,6 @@ function Timeline () {
             console.log(e);
         }
 
-
         shadowRoot.querySelector('.tutorialtutorial').onclick = function() {
             this.parentNode.removeChild(this);
         };
@@ -47,13 +31,14 @@ function Timeline () {
      * Call this to load the existing tutorials for the current page.
      */
     this.loadExistingTutorials = function() {
+        this.shadowRoot.querySelector('.savetutorial').style.display = 'none';
         this.shadowRoot.querySelector('.btn').style.display = 'none';
         var toolElement = this.shadowRoot.querySelector('.toolarea');
         if (toolElement !== null) {
             toolElement.parentNode.removeChild(toolElement);
         }
         var localScope = this;
-        CourseSketch.dataManager.getTutorialList(window.location.href, function(tutorialList) {
+        CourseSketch.dataManager.getTutorialList(CourseSketch.currentUrl, function(tutorialList) {
             localScope.tutorialList(tutorialList);
         });
     };
@@ -65,36 +50,38 @@ function Timeline () {
     this.tutorialList = function(tutorialList) {
         var shadowRoot = this.shadowRoot;
         var localScope = this;
-        var newTutorial = document.createElement('div');
-        var timelinefd = this.shadowRoot.querySelector('.timeline');
-        var addfd = document.createElement('div');
+        var timeline = this.shadowRoot.querySelector('.timeline');
+        var createNewTutorialButton = document.createElement('div');
 
         // displays the list of tutorials and their info.
         for (var i = 0; i < tutorialList.length; i++) {
-            (function(index) {
-                var viewTutorial = document.createElement('div');
-                var listfd = document.createElement('div');
-                listfd.title = i;
-                listfd.className = 'smallicon';
-                timelinefd.appendChild(listfd);
-                viewTutorial.onclick = function() {
-                    // do tutorial loading here
-                };
-            })(i);
+            var tutorial = tutorialList[i];
+            console.log(tutorial);
+            var existingTutorial = document.createElement('div');
+            existingTutorial.title = tutorial.name;
+            existingTutorial.className = 'smallicon';
+            existingTutorial.id = tutorial.id;
+            existingTutorial.onclick = function() {
+                console.log('LOADING EXISTING TUTORIAL');
+                console.log(this.id);
+                loadTutorialFromServer(localScope, this.id, true);
+            };
+            timeline.appendChild(existingTutorial);
         }
-        addfd.title = 'Create new tutorial';
-        addfd.className = 'newicon';
-        timelinefd.appendChild(addfd);
-        addfd.onclick = function() {
+        createNewTutorialButton.title = 'Create new tutorial';
+        createNewTutorialButton.className = 'newicon';
+        timeline.appendChild(createNewTutorialButton);
+        createNewTutorialButton.onclick = function() {
             localScope.addToolArea(shadowRoot.querySelector('.timeline'));
             localScope.continueButton(shadowRoot);
             for (var i = 0; i < tutorialList.length; i++) {
                 // remove first instance of the file descriptor
-                timelinefd.removeChild(shadowRoot.querySelector('.smallicon'));
+                timeline.removeChild(shadowRoot.querySelector('.smallicon'));
             }
-            timelinefd.removeChild(shadowRoot.querySelector('.newicon'));
+            timeline.removeChild(shadowRoot.querySelector('.newicon'));
             shadowRoot.querySelector('.btn').style.display = 'inline-block';
-            saveTutorial(localScope);
+            shadowRoot.querySelector('.savetutorial').style.display = 'initial';
+            setupSaveButton(localScope);
         };
     };
 
@@ -125,11 +112,16 @@ function Timeline () {
     };
 
     /**
-     * loads a tutorial for viewing
+     * Loads a tutorial for viewing.
+     *
+     * @param {ProtobufTutorial} tutorial The protobuf object representing the tutorial to be loaded.
+     * @param {bool} viewingMode Tells if the tutorial is to be loaded in viewing mode or not.
      */
     this.loadTutorial = function(tutorial, viewingMode) {
         this.viewingMode = viewingMode;
-        this.updateList = tutorial.steps;
+        this.updateList = CourseSketch.PROTOBUF_UTIL.cleanProtobuf(tutorial.steps, CourseSketch.PROTOBUF_UTIL.getSrlUpdateListClass());
+        console.log(this.updateList);
+        var shadowRoot = this.shadowRoot;
         var initialToolArea = this.shadowRoot.querySelector('.toolarea');
         initialToolArea.parentNode.removeChild(initialToolArea); // Removes default toolArea that is added when a tutorial object is initialized
         for (var i = 0; i < this.updateList.list.length; i++) {
@@ -152,22 +144,24 @@ function Timeline () {
         }
         // Creation mode shows last step, viewing mode shows first step
         if (!viewingMode) {
+            shadowRoot.querySelector('.savetutorial').style.display = 'initial';
             this.index.switchIndex(this.updateList.list.length); // Sets indexManager to lastStep as the currentStep
             this.updateList.list[this.updateList.list.length - 1].redo();
         } else {
+            shadowRoot.querySelector('.savetutorial').style.display = 'none';
             this.index.switchIndex(1); // Sets indexManager to 1st step as currentStep. Step indexes start from 1. Reason in indexManager.
             this.updateList.list[0].redo();
         }
-    }
+    };
 
     // returns command class of command type
     function getCommandClass(commandType) {
         var commandClass = '';
-        if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX) {
+        if (commandType === CourseSketch.prutil.CommandType.CREATE_TEXTBOX) {
             commandClass = 'textbox';
-        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX) {
+        } else if (commandType === CourseSketch.prutil.CommandType.CREATE_TTSBOX) {
             commandClass = 'ttsbox';
-        } else if (commandType === CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT) {
+        } else if (commandType === CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT) {
             commandClass = 'highlight';
         }
         return commandClass;
@@ -176,7 +170,7 @@ function Timeline () {
     /**
      * the plus button calls show tools to list out the available tools
      */
-    function addPlusButton (parent, localScope) {
+    function addPlusButton(parent, self) {
         var plusButton = document.createElement('div');
         plusButton.title = 'Add tutorial element';
         plusButton.className = 'plusbutton';
@@ -184,18 +178,18 @@ function Timeline () {
         plusButton.onclick = function() {
             $(plusButton).empty();
             $(plusButton).addClass('tall');
-            showTools(plusButton, parent, localScope);
+            showTools(plusButton, parent, self);
         };
     }
 
     /**
      * sketch surface is currently not fully implemented.  To see what it does, uncomment the line
      */
-    function showTools(plusButton, toolArea, localScope) {
-        addTextBoxButton(plusButton, toolArea, localScope);
-        addTtsBoxButton(plusButton, toolArea, localScope);
-        addHighlightButton(plusButton, toolArea, localScope);
-        //addSketchSurfaceButton(plusButton, toolArea, localScope);
+    function showTools(plusButton, toolArea, self) {
+        addTextBoxButton(plusButton, toolArea, self);
+        addTtsBoxButton(plusButton, toolArea, self);
+        addHighlightButton(plusButton, toolArea, self);
+        //addSketchSurfaceButton(plusButton, toolArea, self);
     }
 
     // adds marker for tutorial tool based on commandId
@@ -238,7 +232,7 @@ function Timeline () {
             var textArea = stepTool.shadowRoot.querySelector('textarea');
             marker.setPreviewText(textArea.value);
         }
-    };
+    }
 
     // closes tutorial tool based on passed command
     function closeTutorialTool(command, localScope) {
@@ -264,7 +258,7 @@ function Timeline () {
      * when clicked, the 'preview' button will be added to the step
      * This allows the user to create a text box to further explain steps in the tutorial
      */
-    function addTextBoxButton (plusButton, toolArea, localScope) {
+    function addTextBoxButton(plusButton, toolArea, self) {
         var textBoxButton = document.createElement('div');
         textBoxButton.title = 'Add text box';
         textBoxButton.className = 'textboxbutton';
@@ -276,7 +270,7 @@ function Timeline () {
             /* creating the textbox */
             var textBox = document.createElement('text-box-creation');
             document.body.appendChild(textBox);
-            var currentUpdate = localScope.index.getCurrentUpdate();
+            var currentUpdate = self.index.getCurrentUpdate();
             textBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
 
@@ -297,7 +291,7 @@ function Timeline () {
      * when clicked, the "preview" button will be added to the step
      * This allows the user to create audible text
      */
-    function addTtsBoxButton (plusButton, toolArea, localScope) {
+    function addTtsBoxButton(plusButton, toolArea, self) {
         var ttsBoxButton = document.createElement('div');
         ttsBoxButton.title = 'Add text to speech box';
         ttsBoxButton.className = 'ttsboxbutton';
@@ -309,7 +303,7 @@ function Timeline () {
             /* creating the textbox */
             var ttsBox = document.createElement('tts-box-creation');
             document.body.appendChild(ttsBox);
-            var currentUpdate = localScope.index.getCurrentUpdate();
+            var currentUpdate = self.index.getCurrentUpdate();
             ttsBox.currentUpdate = currentUpdate;
             /* end of creating the textbox */
 
@@ -327,7 +321,7 @@ function Timeline () {
      * when clicked, the "preview" button will be added to the step
      * The highlight tool will highlight any valid text  for a given step.  Saving the highlighting still needs to be worked on
      */
-    function addHighlightButton (plusButton, toolArea, localScope) {
+    function addHighlightButton(plusButton, toolArea, self) {
         var highlightButton = document.createElement('div');
         highlightButton.title = 'Highlight text';
         highlightButton.className = 'highlightbutton';
@@ -346,7 +340,7 @@ function Timeline () {
             /* creating the highlightTool */
             var highlightText = document.createElement('highlight-text-creation');
             document.body.appendChild(highlightText);
-            var currentUpdate = localScope.index.getCurrentUpdate();
+            var currentUpdate = self.index.getCurrentUpdate();
             highlightText.currentUpdate = currentUpdate;
             /* end of creating the highlightTool */
 
@@ -364,7 +358,7 @@ function Timeline () {
      * when clicked, the "preview" button will be added to the step
      * This will create a simple sketch surface to draw on.  Currently this isn't called because it isn't finished
      */
-    function addSketchSurfaceButton(plusButton, toolArea, localScope) {
+    function addSketchSurfaceButton(plusButton, toolArea, self) {
         var sketchSurfaceButton = document.createElement('div');
         sketchSurfaceButton.title = 'Sketch Surface';
         sketchSurfaceButton.className = 'sketchsurfacebutton';
@@ -383,7 +377,7 @@ function Timeline () {
      */
     function undoCreator() {
         // creates undo for textbox
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -395,7 +389,7 @@ function Timeline () {
             }
         });
         // creates undo for tts box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -407,7 +401,7 @@ function Timeline () {
             }
         });
         // creates undo for highlight box
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addUndoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+        CourseSketch.prutil.getSrlCommandClass().addUndoMethod(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
                 var elementToDelete = document.getElementById(this.commandId);
                 if (elementToDelete !== null) {
@@ -425,10 +419,10 @@ function Timeline () {
      */
     function redoCreator() {
         //creates textbox redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TEXTBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_TEXTBOX, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var textBox = document.createElement('text-box-creation');
                 } else {
@@ -446,10 +440,10 @@ function Timeline () {
             }
         });
         // creates tts box redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_TTSBOX, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_TTSBOX, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateTextBoxClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateTextBoxClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var ttsBox = document.createElement('tts-box-creation');
                 } else {
@@ -467,10 +461,10 @@ function Timeline () {
             }
         });
         // creates highlightText redo
-        CourseSketch.PROTOBUF_UTIL.getSrlCommandClass().addRedoMethod(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
+        CourseSketch.prutil.getSrlCommandClass().addRedoMethod(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, function() {
             if (!isUndefined(this.commandId)) {
-                var decoded = CourseSketch.PROTOBUF_UTIL.decodeProtobuf(this.commandData,
-                        CourseSketch.PROTOBUF_UTIL.getActionCreateHighlightTextClass());
+                var decoded = CourseSketch.prutil.decodeProtobuf(this.commandData,
+                        CourseSketch.prutil.getActionCreateHighlightTextClass());
                 if (!document.querySelector('entire-timeline').viewingMode) {
                     var highlightText = document.createElement('highlight-text-creation');
                 } else {
@@ -485,34 +479,70 @@ function Timeline () {
             }
         });
     }
-    function saveTutorial(timeLine) {
-        var savefd = timeLine.shadowRoot.querySelector('.savetutorial');
+
+    /**
+     * Saves a tutorial to the database.
+     */
+    this.saveTutorial = function() {
+        var tutorial = CourseSketch.PROTOBUF_UTIL.Tutorial();
+        tutorial.id = generateUUID();
+        tutorial.name = prompt('Enter a name for the tutorial: ', 'defaultName');
+        tutorial.description = prompt('Enter a description for the tutorial: ', 'defaultDescription');
+        tutorial.steps = this.updateList;
+        tutorial.url = CourseSketch.currentUrl;
+        CourseSketch.dataManager.insertTutorial(tutorial);
+    };
+
+    /**
+     * Inserts a tutorial into the server.
+     *
+     * @param {HTMLElement} timeline The timeline element in the DOM.
+     */
+    function setupSaveButton(timeline) {
+        var savefd = timeline.shadowRoot.querySelector('.savetutorial');
         savefd.onclick = function() {
             //save tutorial
-
+            timeline.saveTutorial();
             // reset timeline!
-            var timeParent = timeLine.parentNode;
-            timeParent.removeChild(timeLine);
-            //var timeline = document.createElement('entire-timeline');
-            //timeParent.appendChild(timeline);
-        }
+            /*var timeParent = timeline.parentNode;
+            timeParent.removeChild(timeline);
+            var timeline = document.createElement('entire-timeline');
+            timeParent.appendChild(timeline);*/
+        };
     }
 
+    /**
+     * Clears the tutorial timeline of all elements. Acts like a reset.
+     */
     this.clearTimeline = function() {
-        console.log(this.index.getCurrentUpdate());
         var currentStep = this.index.getCurrentUpdate();
         for (var i = 0; i < currentStep.commands.length; i++) {
             var commandId = currentStep.commands[i].commandId;
             var elementToDelete = document.getElementById(commandId);
-            console.log(elementToDelete);
             if (this.viewingMode) {
                 elementToDelete.saveData();
             }
             elementToDelete.parentNode.removeChild(elementToDelete);
-            //this.updateList.list[i].undo();
         }
         $('.highlightedText').contents().unwrap();
         document.normalize();
+    };
+
+    /**
+     * Loads a tutorial from the server.
+     *
+     * @param {HTMLElement} timeline The timeline element in the DOM.
+     * @param {String} tutorialId The id of the tutorial to be loaded.
+     * @param {bool} viewingMode Tells if the tutorial is to be loaded in viewing mode or not.
+     */
+    function loadTutorialFromServer(timeline, tutorialId, viewingMode) {
+        CourseSketch.dataManager.getTutorial(tutorialId, function(tutorial) {
+            var parentNode = timeline.parentNode;
+            parentNode.removeChild(timeline);
+            var newTimeline = document.createElement('entire-timeline');
+            parentNode.appendChild(newTimeline);
+            newTimeline.loadTutorial(tutorial, viewingMode);
+        });
     }
 
 }

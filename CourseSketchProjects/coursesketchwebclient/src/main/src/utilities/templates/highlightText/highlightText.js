@@ -40,8 +40,8 @@ function HighlightText() {
     }
 
     /**
-     * @param {Array} children represents the childNodes in the selected text.
-     * @return {Boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
+     * @param {Array} children - represents the childNodes in the selected text.
+     * @returns {Boolean} false if children contains nodes that are something other than #text or SPAN. True otherwise
      * If false then the text selected will not be highlighted
      * It will not be highlighted because it contains node types such as H2 and adding span tags will ruin the formatting of the text
      */
@@ -87,11 +87,11 @@ function HighlightText() {
     }
 
     /**
-     * @param {Node} node is the node whose path we are getting
-     * @param {String} currentPath is used within the function to append the previous sibling to the path
-     * @return {String} currentPath is the XML Path of the input node
+     * @param {Node} node - is the node whose path we are getting
+     * @param {String} currentPath - is used within the function to append the previous sibling to the path
+     * @returns {String} currentPath is the XML Path of the input node
      */
-    function getXPath (node, currentPath) {
+    function getXPath(node, currentPath) {
         currentPath = currentPath || '';
         switch (node.nodeType) {
             case 3:
@@ -109,7 +109,7 @@ function HighlightText() {
     }
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML template for highlighting text
+     * @param {Node} templateClone - is a clone of the custom HTML template for highlighting text
      * This creates the element in the shadowRoot and turns highlight mode on by default
      * It tracks changes to the color selector and to the highlight mode checkbox
      * When color selector is changed, the color variable updates.
@@ -177,9 +177,9 @@ function HighlightText() {
      * nodePathProto is the data needed to define a selection with its highlighted color. There can be multiple per tutorial step
      */
     this.saveData = function() {
-        var nodePathProto = CourseSketch.PROTOBUF_UTIL.SelectedNodePath();
+        var nodePathProto = CourseSketch.prutil.SelectedNodePath();
         if (isUndefined(this.highlightProto)) { // Defines highlightProto if it does not already exist
-            this.highlightProto = CourseSketch.PROTOBUF_UTIL.ActionCreateHighlightText();
+            this.highlightProto = CourseSketch.prutil.ActionCreateHighlightText();
         }
         if (!isUndefined(this.startPath)) { // If startPath is defined, then saving will occur
             nodePathProto.setStartPath(this.startPath);
@@ -193,7 +193,7 @@ function HighlightText() {
 
         // If the highlightText does not have an id, then a command has not been created for the highlightText
         if ((isUndefined(this.id) || this.id === null || this.id === '')) {
-            this.command = CourseSketch.PROTOBUF_UTIL.createBaseCommand(CourseSketch.PROTOBUF_UTIL.CommandType.CREATE_HIGHLIGHT_TEXT, true);
+            this.command = CourseSketch.prutil.createBaseCommand(CourseSketch.prutil.CommandType.CREATE_HIGHLIGHT_TEXT, true);
         }
         this.command.setCommandData(this.highlightProto.toArrayBuffer()); // Sets commandData for commandlist
         this.createdCommand = this.command;
@@ -203,7 +203,7 @@ function HighlightText() {
 
     /**
      * This function loads data by recreating the node and then insert it into the webpage
-     * @param {ProtoCommand} protoData is the CommandData to be loaded
+     * @param {ProtoCommand} protoData - is the CommandData to be loaded
      */
     this.loadData = function(protoData) {
         if (isUndefined(this.shadowRoot) || this.shadowRoot === null) {

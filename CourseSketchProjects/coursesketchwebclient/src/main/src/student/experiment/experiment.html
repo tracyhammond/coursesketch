@@ -1,6 +1,5 @@
 <html>
 <head>
-    <link rel="stylesheet" href="/css/courseSketch2.css">
 
     <!-- waiting stuff -->
     <link rel="import" href="/src/utilities/templates/loading/loadingInclude.html">
@@ -10,23 +9,44 @@
     <script type="text/javascript" src="/src/utilities/functions/childScript.js"
             data-namespace="studentExperiment"></script>
 
+    <!-- problem renderer -->
+    <link rel="import" href="/src/common/problem/renderer/problemRendererInclude.html">
+
     <!-- protobuf -->
     <link rel="import" href="/src/utilities/connection/protobufInclude.html">
 
-    <!-- special elements -->
-    <link rel="import" href="/src/sketching/sketchInclude.html">
     <!-- experiment specific -->
     <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
     <link rel="import" href="/src/common/submission/submissionInclude.html">
+    <link rel="import" href="/src/common/problem/problemTextPanelInclude.html">
 
     <!-- embedded HTML -->
-    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html" />
-    <script type="text/javascript" src="/src/utilities/libraries/jailed/jailed.js"></script>
+    <link rel="import" href="/src/utilities/templates/embeddedHtml/embeddedHtmlInclude.html">
+    <script type="text/javascript" src="/bower_components/jailed/lib/jailed.js"></script>
     <script type="text/javascript" src="/src/common/scriptExecution/scriptExecutor.js"></script>
     <script type="text/javascript" src="/src/student/experiment/experiment.js"></script>
+
 </head>
-<body style = "overflow: hidden;">
-<navigation-panel></navigation-panel>
-<div id="percentBar" style="height:10px;"></div>
-<submit-panel id="problemPanel"><problem-tool-bar></problem-tool-bar></submit-panel>
+<body style="overflow: hidden">
+<div class="row">
+    <header>
+        <div class="col s12 row" style="position: absolute; z-index: 3;">
+            <navigation-panel class="col s2"></navigation-panel>
+            <problem-text-panel class="col s6 offset-s1"></problem-text-panel>
+        </div>
+        <div id="percentBar" style="display:none;"></div>
+        <nav class="col s12 z-depth-1 teal darken-3" style='z-index: 1; position: relative'>
+            <div class="nav-wrapper">
+                <div class="col s12">
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <submit-panel id="problemPanel" class="col s12 cyan lighten-5">
+            <problem-tool-bar></problem-tool-bar>
+        </submit-panel>
+    </main>
+</div>
 </body>
+</html>

@@ -1,0 +1,105 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Protobuf Creation Test</title>
+
+    <!-- test Library -->
+    <link rel="import" href="/test/testUtilities/testUtilities.html">
+
+    <!-- files needed for testing -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- file being tested. -->
+    <script src="/src/utilities/connection/protobufLoader.js" data-cover></script>
+
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<script>
+    // Also tests that the default prutil actually works as it is supposed to.
+
+    QUnit.module("proto Objects School Objects");
+
+    QUnit.test("create course", function (assert) {
+        this.prutil = new ProtobufSetup().initializeBuf();
+        var course = this.prutil.SrlCourse();
+        course.setId("ID");
+        course.setName("Name");
+        assert.ok(true);
+    });
+
+    QUnit.test("create assignment", function (assert) {
+        this.prutil = new ProtobufSetup().initializeBuf();
+        var assignment = this.prutil.SrlAssignment();
+        assignment.setId("ID");
+        assignment.setCourseId("CourseId")
+        assignment.setName("Name");
+        assert.ok(true);
+    });
+
+    QUnit.test("create problem", function (assert) {
+        this.prutil = new ProtobufSetup().initializeBuf();
+        var courseProblem = this.prutil.SrlProblem();
+        courseProblem.setId("ID");
+        courseProblem.setCourseId("CourseId");
+        courseProblem.setAssignmentId("AssignmentId");
+        courseProblem.setName("Name");
+        assert.ok(true);
+    });
+
+
+    /* Also tests that the default prutil actually works as it is supposed to. */
+    QUnit.module("proto Objects");
+
+    test("protobuf correctly creates object with no arguments Using standard util", function(assert) {
+        var array = CourseSketch.prutil.getSupportedObjects();
+        for (var i = 0; i < array.length; i++) {
+            var object = array[i];
+            var object = CourseSketch.prutil[object]();
+        }
+        ok(true);
+
+    });
+
+    test("protobuf throws exception when object is called with arguments", function(assert) {
+        var array = CourseSketch.prutil.getSupportedObjects();
+        for (var i = 0; i < array.length; i++) {
+            var object = array[i];
+            assert.throws(function () {
+                        CourseSketch.prutil[object]('arg1')
+                    }, createExceptionComparator(ProtobufException),
+                    'exception is thrown when trying to create an object with parameters');
+        }
+    });
+
+    test("protobuf correctly creates object with no arguments", function(assert) {
+        this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+        var array = this.prutil.getSupportedObjects();
+        for (var i = 0; i < array.length; i++) {
+            var object = array[i];
+            var object = this.prutil[object]();
+        }
+        ok(true);
+    });
+
+    test("protobuf throws exception when object is called with arguments", function(assert) {
+        this.prutil = new ProtobufSetup().initializeBuf(); // TODO: figure out how to get code covereage without needing this.
+        var array = this.prutil.getSupportedObjects();
+        for (var i = 0; i < array.length; i++) {
+            var object = array[i];
+            assert.throws(function () {
+                        this.prutil[object]('arg1')
+                    }, createExceptionComparator(ProtobufException),
+                    'exception is thrown when trying to create an object with parameters');
+        }
+    });
+
+</script>
+
+<script>
+</script>
+
+</body>
+</html>
