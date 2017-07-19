@@ -19,8 +19,8 @@
         <mainClass>connection.SubmissionRunner</mainClass>
         <testLevel>0</testLevel>
         <averageTestLevel>0</averageTestLevel>
-        <projectBranchLevel>57</projectBranchLevel>
-        <projectLineLevel>48</projectLineLevel>
+        <projectBranchLevel>75</projectBranchLevel>
+        <projectLineLevel>59</projectLineLevel>
     </properties>
     <build>
         <plugins>
@@ -53,10 +53,6 @@
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.github.joelittlejohn.embedmongo</groupId>
-                <artifactId>embedmongo-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
@@ -76,6 +72,12 @@
                             <file>${basedir}/src/main/java/connection/SubmissionConnectionManager.java</file>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>ip_prop_reverse2</id>
+                        <configuration>
+                            <file>${basedir}/src/main/java/connection/SubmissionConnectionManager.java</file>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -85,7 +87,13 @@
         <dependency>
             <groupId>CourseSketch</groupId>
             <artifactId>ProtoFiles</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>${protoFileVersion}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dtracers</groupId>
+            <artifactId>SketchRecognitionFramework</artifactId>
+            <version>${recognitionFrameworkVersion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -95,9 +103,15 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>RpcServer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.3</version>
+            <version>${mongodbJavaDriverVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -109,6 +123,12 @@
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
             <version>2.4.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>CourseSketch</groupId>
+            <artifactId>ProtobufComparison</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,0 +1,36 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/css/courseSketch2.css">
+
+    <!-- waiting stuff -->
+    <link rel="import" href="/src/utilities/templates/loading/loadingInclude.html">
+
+    <!-- basic utilities -->
+    <link rel="import" href="/src/utilities/defaultUtils.html">
+    <script type="text/javascript" src="/src/utilities/functions/childScript.js"
+            data-namespace="studentExperiment"></script>
+
+    <!-- protobuf -->
+    <link rel="import" href="/src/utilities/connection/protobufInclude.html">
+
+    <!-- special elements -->
+    <link rel="import" href="/src/sketching/sketchInclude.html">
+    <!-- experiment specific -->
+    <link rel="import" href="/src/common/navigation/problem/navigationPanelInclude.html">
+    <link rel="import" href="/src/common/submission/submissionInclude.html">
+
+    <script type="text/javascript" src="/bower_components/jailed/lib/jailed.js"></script>
+    <script type="text/javascript" src="/src/common/scriptExecution/scriptExecutor.js"></script>
+    <script type="text/javascript" src="/src/student/experiment/experiment.js"></script>
+    <script type="test/javascript" src="/src/instructor/problemCreation/scriptEditor/scriptEditor.js"></script>
+</head>
+<body style = "overflow: hidden;">
+<navigation-panel></navigation-panel>
+<div id="percentBar" style="height:10px;"></div>
+<textarea id="scriptBox" rows="20" placeholder="Insert the script here..."></textarea>
+<button class="save">Save</button>
+<button class="exit">Exit</button>
+<submit-panel id="problemPanel"><problem-tool-bar></problem-tool-bar>
+<sketch-surface class="submittable sub-panel" height="100" width="400"></sketch-surface>
+</submit-panel>
+</body>

@@ -14,7 +14,8 @@ var CourseSketch = parent.CourseSketch;
 
     /**
      * Adds a namespace to the {@link CourseSketch} global namespace.
-     * @param {String} namespaceName The name of the namespace that is being added.
+     *
+     * @param {String} namespaceName - The name of the namespace that is being added.
      */
     CourseSketch.addNamespace = function(namespaceName) {
         CourseSketch[namespaceName] = {};
@@ -24,7 +25,7 @@ var CourseSketch = parent.CourseSketch;
     /**
      * Empties out all added name spaces. Including the addNamespace function.
      */
-    $(window).unload(function() {
+    $(window).on('unload', function() {
         for (var i = 0; i < namespaceList.length; i++) {
             CourseSketch[namespaceList[i]] = undefined;
         }
@@ -47,4 +48,7 @@ var CourseSketch = parent.CourseSketch;
             CourseSketch.addNamespace(dataNamespaceList[i].trim());
         }
     }
+
+    CourseSketch.currentUrl = window.location.href;
+    console.log('Now on page ', CourseSketch.currentUrl);
 })();

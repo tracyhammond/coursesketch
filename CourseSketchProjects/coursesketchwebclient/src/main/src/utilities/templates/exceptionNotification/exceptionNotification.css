@@ -1,4 +1,4 @@
-.modal {
+dialog {
     display: none;
     position: fixed;
     left: 0;
@@ -19,14 +19,14 @@
     will-change: top, opacity;
 }
 
-.modal.modal-fixed-footer .modal-content .modal-header {
+dialog.modal-fixed-footer .modal-content .modal-header {
     position: fixed;
     max-height: 100%;
     padding-bottom: 64px;
     width: 60%;
 }
 
-.modal .modal-footer {
+dialog .modal-footer {
     border-radius: 0 0 2px 2px;
     background-color: #fafafa;
     padding: 4px 6px;
@@ -34,7 +34,7 @@
     width: 100%;
 }
 
-.modal .modal-footer .btn-flat {
+dialog .modal-footer .btn-flat {
     float: right;
     margin: 6px 0;
 }

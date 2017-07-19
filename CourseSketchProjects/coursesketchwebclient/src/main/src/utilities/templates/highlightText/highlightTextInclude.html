@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#highlightTextTemplateImport');
-            var template = link.import.querySelector('#highlightTextCreation');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'highlightTextTemplateImport','highlightTextCreation');
 
             var newElement = new HighlightText();
 

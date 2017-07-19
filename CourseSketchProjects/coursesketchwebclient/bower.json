@@ -7,8 +7,21 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#0.7.14",
     "IndexedDBShim": "",
     "stacktrace-js": "0.6.4",
-    "materialize": "0.97.1",
-    "dialog-polyfill": "0.4.2"
+    "materialize": "0.99.0",
+    "dialog-polyfill": "0.4.2",
+    "MathJax": "2.7.1",
+    "paper": "v0.11.4",
+    "protobufjs": "dcodeIO/protobuf.js#5.0.1",
+    "jailed": "0.3.1",
+    "d3": "3.5.5",
+    "interactjs":"v1.2.9"
+  },
+  "devDependencies": {
+    "blanket": "1.1.7",
+    "qunit": "1.23.0",
+    "qunit-assert-compare": "1.1.0",
+    "qunit-once": "0.1.1",
+    "sinon": "http://sinonjs.org/releases/sinon-1.17.3.js"
   },
   "private": true
 }

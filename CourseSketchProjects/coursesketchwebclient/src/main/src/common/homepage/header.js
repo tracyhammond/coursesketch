@@ -1,7 +1,7 @@
 /**
  * Handles the opening and closing of menu bar and changing the title.
  *
- * @class HeaderHandler
+ * @constructor HeaderHandler
  */
 function HeaderHandler() {
     var open;
@@ -20,15 +20,12 @@ function HeaderHandler() {
             }, 300, function() {
                 open = false;
             });
-            return false;
         } else { // Open header
             header.animate({
                 top: '0px'
-                }, 300, function() {
-                    open = true;
-                }
-            );
-            return false;
+            }, 300, function() {
+                open = true;
+            });
         }
     };
 
@@ -38,7 +35,7 @@ function HeaderHandler() {
      * @instance
      * @function
      * @memberof HeaderHandler
-     * @param {String} titleText what the title is changing to
+     * @param {String} titleText - what the title is changing to
      */
     this.changeText = function(titleText) {
         document.getElementById('nameBlock').textContent = titleText;

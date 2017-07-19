@@ -2,50 +2,49 @@ validateFirstRun(document.currentScript);
 
 (function() {
     var courseManagement = CourseSketch.courseManagement;
+
+    courseManagement.advancedEditPanel = undefined;
+
+    courseManagement.actions = {};
+
+    courseManagement.actions.createPart = function(srlProblem, buttonElement, optionalParams, callback) {
+        courseManagement.addNewSubGroup(function(updatedProblem, subGroup) {
+            callback(updatedProblem, buttonElement, optionalParams);
+        }, srlProblem);
+    };
+
+    courseManagement.actions.editProblem = function(bankProblem, buttonElement, optionalParams) {
+        var unlocked = buttonElement.querySelector('.data.unlocked').textContent;
+        var isUnlocked = (unlocked === 'true');
+        if (isUnlocked) {
+            var parentElement = courseManagement.advancedEditPanel.getMatchingParent(buttonElement, '[data-list-item]');
+            var index = parentElement.getAttribute('data-list-item');
+            CourseSketch.dataManager.addState('partIndex', index);
+            CourseSketch.dataManager.addState('courseProblemId', buttonElement.querySelector('.data.id').textContent);
+            CourseSketch.dataManager.addState('bankProblem', bankProblem);
+            CourseSketch.redirectContent('/src/instructor/problem/problemEditor/problemEditor.html', 'Editing Problem ');
+        } else {
+            alert('This problem is not editable by you.');
+        }
+    };
+
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlCourse} srlCourse - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.courseEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var keyList = newValue.keys();
-        var srlCourse = element.schoolItemData;
-        console.log(srlCourse);
-        newValue.forEach(function(value, key, mapObj) {
-            console.log(key);
-            srlCourse[key] = value;
-        });
-        console.log(srlCourse);
-        CourseSketch.dataManager.updateCourse(srlCourse);
-    };
-
-    courseManagement.commonShowCourses = courseManagement.showCourses;
-
-    /**
-     * Overwrote the old showCourses inside courseManagement.js to add some edit capabilities.
-     * This also calls original showCourses function in courseManagement after displaying the buttons.
-     */
-    courseManagement.showCourses = function(courseList) {
-        courseManagement.commonShowCourses(courseList);
-        hideButton('assignment_button');
-        hideButton('problem_button');
-        var children = document.getElementById('class_list_column').querySelectorAll('school-item');
-        for (var i = 0; i < children.length; i++) {
-            var schoolItem = children[i];
-            schoolItem.setEditCallback(courseManagement.courseEndEdit);
+    courseManagement.courseEndEdit = function(element, srlCourse, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateCourse(srlCourse);
         }
     };
 
     /**
      * Creates a new course with default values.
-     * adds it to the database.
+     *
+     * Adds it to the database.
      */
     courseManagement.addNewCourse = function addNewCourse() {
         var waitingIcon = CourseSketch.courseManagement.waitingIcon;
@@ -94,44 +93,19 @@ validateFirstRun(document.currentScript);
     /**
      * Function to be called when a lecture has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlAssignment} assignment - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.assignmentEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var assignment = element.schoolItemData;
-        newValue.forEach(function(value, key, mapObj) {
-            console.log(key);
-            assignment[key] = value;
-        });
-        CourseSketch.dataManager.updateAssignment(assignment);
-    };
-
-    courseManagement.commonShowAssignments = courseManagement.showAssignments;
-
-    /**
-     * Overwrote the old showAssignments inside courseManagement.js to add some edit capabilities.
-     * This also calls original showAssignments function in courseManagement after displaying the buttons.
-     */
-    courseManagement.showAssignments = function(assignmentList) {
-        showButton('assignment_button');
-        hideButton('problem_button');
-        courseManagement.commonShowAssignments(assignmentList);
-        var children = document.getElementById('assignment_list_column').querySelectorAll('school-item');
-        for (var i = 0; i < children.length; i++) {
-            var schoolItem = children[i];
-            schoolItem.setEditCallback(courseManagement.assignmentEndEdit);
+    courseManagement.assignmentEndEdit = function(element, assignment, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateAssignment(assignment);
         }
     };
 
     /**
      * Creates a new assignment with default values.
-     * and adds it to the database.
+     * And adds it to the database.
      */
     courseManagement.addNewAssignment = function addNewAssignment() {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
@@ -145,7 +119,6 @@ validateFirstRun(document.currentScript);
         var assignment = CourseSketch.prutil.SrlAssignment();
         assignment.name = 'Insert name';
         assignment.courseId = courseId;
-        alert(courseId);
         assignment.description = 'Insert description';
         // course.accessDate = 'mm/dd/yyyy';
         // course.closeDate = 'mm/dd/yyyy';
@@ -187,45 +160,15 @@ validateFirstRun(document.currentScript);
     };
 
     /**
-     * Function to be called when a lecture has finished editing.
+     * Function to be called when a problem has finished editing.
      *
-     * @param {String} attributeChanged
-     *            the name of the protobuf attribute that changed
-     * @param {String|Number|Object} oldValue
-     *            the attribute's old value
-     * @param {String|Number|Object} newValue
-     *            the attribute's new value
-     * @param {Element} element
-     *            protobuf element that has been edited
+     * @param {Element} element - Protobuf element that has been edited.
+     * @param {SrlProblem} problem - The course that was updated
+     * @param {Boolean} isEquivalent - True if the data was not changed.
      */
-    courseManagement.problemEndEdit = function(attributeChanged, oldValue, newValue, element) {
-        var problem = element.schoolItemData;
-        newValue.forEach(function(value, key) {
-            if (key === 'description') {
-                var bankProblem = problem.getProblemInfo();
-                bankProblem.questionText = value;
-                problem.setProblemInfo(bankProblem);
-                CourseSketch.dataManager.updateBankProblem(bankProblem);
-            } else {
-                problem[key] = value;
-            }
-        });
-        CourseSketch.dataManager.updateCourseProblem(problem);
-    };
-
-    courseManagement.commonShowProblems = courseManagement.showProblems;
-
-    /**
-     * Overwrote the old showProblems inside courseManagement.js to add some edit capabilities.
-     * This also calls original showProblems function in courseManagement after displaying the buttons.
-     */
-    courseManagement.showProblems = function(problemList) {
-        showButton('problem_button');
-        courseManagement.commonShowProblems(problemList);
-        var children = document.getElementById('problem_list_column').querySelectorAll('school-item');
-        for (var i = 0; i < children.length; i++) {
-            var schoolItem = children[i];
-            schoolItem.setEditCallback(courseManagement.problemEndEdit);
+    courseManagement.problemEndEdit = function(element, problem, isEquivalent) {
+        if (!isEquivalent) {
+            CourseSketch.dataManager.updateCourseProblem(problem);
         }
     };
 
@@ -256,7 +199,49 @@ validateFirstRun(document.currentScript);
      * Creates a new bank problem and course problem with default values and adds it to the database.
      *
      * Displays the problem after it is added.
-     * @param {String|Undefined} existingBankProblem - if loading an existing bank problem then the value is the Id. Otherwise it is undefined.
+     *
+     * @param {Function} [callback] the problem that a new subgroup is being added to
+     * @param {SrlCourseProblem} existingCourseProblem the problem that a new subgroup is being added to
+     * @param {SrlBankProblem} [existingBankProblem] The bank problem that is being added.
+     */
+    courseManagement.addNewSubGroup = function addNewCourseProblem(callback, existingCourseProblem, existingBankProblem) {
+        function addingBankProblem(bankProblemWithId) { // eslint-disable-line require-jsdoc
+            if (bankProblemWithId instanceof CourseSketch.DatabaseException) {
+                // no problems exist or something went wrong
+                throw bankProblemWithId;
+            }
+            var groupHolder = CourseSketch.prutil.ProblemSlideHolder();
+            groupHolder.id = bankProblemWithId.id;
+            groupHolder.itemType = CourseSketch.prutil.ItemType.BANK_PROBLEM;
+            groupHolder.problem = bankProblemWithId;
+            groupHolder.unlocked = true;
+            existingCourseProblem.subgroups.push(groupHolder);
+            CourseSketch.dataManager.updateCourseProblem(existingCourseProblem, undefined, function(exception) {
+                if (exception instanceof BaseException) {
+                    throw exception;
+                }
+                if (!isUndefined(callback)) {
+                    callback(existingCourseProblem, groupHolder);
+                }
+            });
+        }
+
+        if (isUndefined(existingBankProblem)) {
+            var bankProblem = CourseSketch.prutil.SrlBankProblem();
+            bankProblem.questionText = 'Edit to add Question Text';
+            CourseSketch.dataManager.insertBankProblem(bankProblem, undefined, addingBankProblem);
+        } else {
+            addingBankProblem(existingBankProblem);
+        }
+    };
+
+
+    /**
+     * Creates a new bank problem and course problem with default values and adds it to the database.
+     *
+     * Displays the problem after it is added.
+     *
+     * @param {String|Undefined} existingBankProblem - If loading an existing bank problem then the value is the Id. Otherwise it is undefined.
      */
     courseManagement.addNewCourseProblem = function addNewCourseProblem(existingBankProblem) {
         var courseId = document.querySelector('#class_list_column .selectedBox').id;
@@ -274,16 +259,6 @@ validateFirstRun(document.currentScript);
         courseProblem.assignmentId = assignmentId;
         courseProblem.description = '';
 
-        if (isUndefined(existingBankProblem)) {
-            var bankProblem = CourseSketch.prutil.SrlBankProblem();
-            bankProblem.questionText = prompt('Please enter the question text', 'Default Question Text');
-            var permissions = CourseSketch.prutil.SrlPermission();
-            permissions.userPermission = [ courseId ];
-            bankProblem.accessPermission = permissions;
-            courseProblem.setProblemInfo(bankProblem);
-        } else {
-            courseProblem.setProblemBankId(existingBankProblem);
-        }
         var isInserting = false;
         CourseSketch.dataManager.getAllProblemsFromAssignment(assignmentId, function(problemList) {
             // ensure that we only insert once.
@@ -321,8 +296,44 @@ validateFirstRun(document.currentScript);
         });
     };
 
+    courseManagement.courseSelectionManager.addClickSelectionListener({
+        removed: function(element) {
+            hideButton('assignment_button');
+            hideButton('problem_button');
+            destroyAdvancedEditCard();
+        },
+        selected: function(element) {
+            showButton('assignment_button');
+            createAdvancedEditCard(element, courseManagement.courseEndEdit);
+        }
+    });
+
+    courseManagement.assignmentSelectionManager.addClickSelectionListener({
+        removed: function(element) {
+            hideButton('problem_button');
+            destroyAdvancedEditCard();
+        },
+        selected: function(element) {
+            showButton('problem_button');
+            destroyAdvancedEditCard();
+            createAdvancedEditCard(element, courseManagement.assignmentEndEdit);
+        }
+    });
+
+    courseManagement.problemSelectionManager.addClickSelectionListener({
+        removed: function(element) {
+            destroyAdvancedEditCard();
+        },
+        selected: function(element) {
+            destroyAdvancedEditCard();
+            createAdvancedEditCard(element, courseManagement.problemEndEdit);
+        }
+    });
+
     /**
-     * sets an element (should be a button) with the given id to be visible.
+     * Sets an element (should be a button) with the given id to be visible.
+     *
+     * @param {String} id - The id of the button that should be shown.
      */
     function showButton(id) {
         var element = document.getElementById(id);
@@ -331,13 +342,49 @@ validateFirstRun(document.currentScript);
         }
     }
 
-     /**
-     * sets an element (should be a button) with the given id to be invisible.
+    /**
+     * Sets an element (should be a button) with the given id to be invisible.
+     *
+     * @param {String} id - The id of the button that should be shown.
      */
     function hideButton(id) {
         var element = document.getElementById(id);
         if (element) {
             element.style.display = 'none';
         }
+    }
+
+    /**
+     * Destroys the edit panel.
+     */
+    function destroyAdvancedEditCard() {
+        $(document.querySelectorAll('#advancedEditHolder')[0]).html('');
+        document.querySelectorAll('#advancedEditHolder')[0].style.display = 'none';
+    }
+
+    /**
+     * Creates an edit panel.
+     *
+     * @param {Element} element - Where the panel is being created.
+     * @param {Function} saveCallback - Called when the panel is being saved.
+     */
+    function createAdvancedEditCard(element, saveCallback) {
+        if (isUndefined(courseManagement.advancedEditPanel)) {
+            courseManagement.advancedEditPanel = new CourseSketch.AdvanceEditPanel();
+        }
+        var childElement = courseManagement.advancedEditPanel.createAdvanceEditPanel(element,
+            document.querySelectorAll('#advancedEditHolder')[0],
+            saveCallback, destroyAdvancedEditCard, courseManagement.actions);
+        $(document.querySelectorAll('#advancedEditHolder')[0]).modal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: 0.5, // Opacity of modal background
+            inDuration: 300, // Transition in duration
+            outDuration: 200, // Transition out duration
+            startingTop: '4%', // Starting top style attribute
+            endingTop: '10%' // Ending top style attribute
+        }
+        );
+        childElement.style.display = '';
+        document.querySelectorAll('#advancedEditHolder')[0].style.display = '';
     }
 })();

@@ -29,8 +29,23 @@
     <rule ref="rulesets/java/design.xml">
         <exclude name="GodClass"/>
         <exclude name="ConfusingTernary"/>
+        <!--
         <exclude name="UncommentedEmptyMethod"/>
+        -->
     </rule>
+
+    <rule ref="rulesets/java/comments.xml/CommentRequired">
+        <properties>
+            <property name="publicMethodCommentRequirement" value="Ignored"/>
+            <property name="protectedMethodCommentRequirement" value="Ignored"/>
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/java/comments.xml">
+        <exclude name="CommentRequired"/>
+    </rule>
+
+    <!-- property changes -->
 
     <rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>
@@ -58,6 +73,19 @@
         <properties>
             <property name="maxLines" value="30"/>
             <property name="maxLineLength" value="150"/>
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/java/naming.xml/ShortVariable">
+        <properties>
+            <property name="xpath">
+                <value>
+                    //VariableDeclaratorId[(string-length(@Image) &lt; 3) and (not (@Image='id'))
+                    and (not (@Image='x')) and (not (@Image='y'))]
+                    [not(ancestor::ForInit)]
+                    [not((ancestor::FormalParameter) and (ancestor::TryStatement))]
+                </value>
+            </property>
         </properties>
     </rule>
 

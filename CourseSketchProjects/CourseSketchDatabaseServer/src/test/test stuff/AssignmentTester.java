@@ -2,16 +2,13 @@ package test;
 
 import java.util.Date;
 
-import protobuf.srl.school.School.SrlAssignment;
-import protobuf.srl.school.School.SrlAssignment.AssignmentType;
-import protobuf.srl.school.School.SrlAssignment.LatePolicy;
+import protobuf.srl.school.Assignment.SrlAssignment;
+import protobuf.srl.school.Assignment.SrlAssignment.LatePolicy;
 import protobuf.srl.utils.Util.SrlPermission;
-
-import com.mongodb.DB;
 
 import database.DatabaseAccessException;
 import database.RequestConverter;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
 import database.institution.AssignmentManager;
 import database.institution.Institution;
 

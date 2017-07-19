@@ -59,17 +59,17 @@ public final class TimeManager {
      *
      * This is a transient value and is not thread safe.
      */
-    private static long timeDifference = 0;
+    private static long timeDifference;
 
     /**
      * The latency between the client and the server.
      */
-    private static long latencyDifference = 0;
+    private static long latencyDifference;
 
     /**
      * The difference between the master server and the client server.
      */
-    private static long totalTimeDifference = 0;
+    private static long totalTimeDifference;
 
     /**
      * A listener that is called every time that latency is received and finished calculating.
@@ -94,7 +94,7 @@ public final class TimeManager {
      * @return the adjusted system time based off of data from the master server.
      */
     public static long getSystemTime() {
-        return DateTime.now().getMillis() + totalTimeDifference;
+        return DateTime.now().getMillis() + getTotalTimeDifference();
     }
 
     /**

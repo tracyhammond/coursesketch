@@ -1,0 +1,58 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Command Methods test</title>
+<!-- test Library -->
+<link rel="import" href="/test/testUtilities/fakePage/fakePageInclude.html">
+    <link rel="import"
+          href="/test/testUtilities/fakePage/fakeTestData/fakeTestDataInclude.html">
+    <script src="/test/testUtilities/databaseHelper.js"></script>
+
+<!-- files needed for testing -->
+<link rel="import" href="/src/student/gradebook/studentGradebook.html" data-fake>
+
+</head>
+<body>
+<script>
+    CourseSketch.dataManager.waitForDatabase(function() {
+        CourseSketch.dataManager.addState('gradebookCourseid', '8');
+
+		var assignmentList = [];
+		for (var i = 0; i < 10; i++) {
+			assignmentList.push('' + (i + 11));
+		}
+
+        var studentList = ["student1"];
+
+        CourseSketch.dataManager.getAllAssignmentGrades = function(courseId, callback) {
+            var gradeList = [];
+            var grade = CourseSketch.prutil.ProtoGrade();
+            grade.courseId = courseId;
+            grade.userId = studentList[0];
+            grade.assignmentId = assignmentList[0];
+            grade.currentGrade = 70;
+            gradeList.push(grade);
+
+            var grade = CourseSketch.prutil.ProtoGrade();
+            grade.courseId = courseId;
+            grade.userId = studentList[0];
+            grade.assignmentId = assignmentList[1];
+            grade.currentGrade = 80;
+            gradeList.push(grade);
+
+            for (var i = 0; i < studentList.length; i++) {
+                for (var j = 0; j < assignmentList.length; j++) {
+                    var grade = CourseSketch.prutil.ProtoGrade();
+                    grade.courseId = courseId;
+                    grade.userId = studentList[i];
+                    grade.assignmentId = assignmentList[j];
+                    grade.currentGrade = Math.random() * 100;
+                    gradeList.push(grade);
+                }
+            }
+
+            callback(gradeList);
+        };
+    });
+</script>
+</body>

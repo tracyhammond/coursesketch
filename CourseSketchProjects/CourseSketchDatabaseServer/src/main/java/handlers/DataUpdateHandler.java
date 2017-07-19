@@ -2,24 +2,27 @@ package handlers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import coursesketch.server.interfaces.SocketSession;
-import database.auth.AuthenticationException;
+import coursesketch.database.auth.AuthenticationException;
+import database.DatabaseAccessException;
 import database.institution.Institution;
-import database.institution.mongo.MongoInstitution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import protobuf.srl.lecturedata.Lecturedata.Lecture;
-import protobuf.srl.lecturedata.Lecturedata.LectureSlide;
+import protobuf.srl.school.Problem.LectureSlide;
 import protobuf.srl.query.Data.DataSend;
 import protobuf.srl.query.Data.ItemQuery;
 import protobuf.srl.query.Data.ItemResult;
 import protobuf.srl.query.Data.ItemSend;
 import protobuf.srl.request.Message;
 import protobuf.srl.request.Message.Request;
+import protobuf.srl.school.Assignment;
+import protobuf.srl.school.Problem;
 import protobuf.srl.school.School;
 import utilities.ExceptionUtilities;
 import utilities.LoggingConstants;
 
 import java.util.ArrayList;
+
+import static handlers.ResultBuilder.validateIds;
 
 /**
  * Handles data being added or edited.
@@ -54,64 +57,64 @@ public final class DataUpdateHandler {
      *
      * decode request and pull correct information from {@link database.institution.Institution}
      * (courses, assignments, ...) then repackage everything and send it out.
-     *
      * @param req
      *         The request that has data being inserted.
      * @param conn
      *         The connection where the result is sent to.
+     * @param instance
+     *         The object that interfaces with the database and handles specific requests.
      */
     @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity",
-            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException" })
-    public static void handleData(final Request req, final SocketSession conn) {
+            "PMD.ExcessiveMethodLength", "PMD.AvoidCatchingGenericException", "checkstyle:avoidnestedblocks" })
+    public static void handleData(final Request req, final SocketSession conn, final Institution instance) {
         try {
             LOG.info("Receiving DATA UPDATE Request...");
 
-            final String userId = req.getServersideId();
-            final DataSend request = DataSend.parseFrom(req.getOtherData());
-            if (userId == null || userId.equals("")) {
-                throw new AuthenticationException(AuthenticationException.NO_AUTH_SENT);
-            }
-            final ArrayList<ItemResult> results = new ArrayList<>();
+            final String authId = req.getServersideId();
+            final String userId = req.getServerUserId();
+            validateIds(authId, userId);
 
-            final Institution instance = MongoInstitution.getInstance();
-            for (int p = 0; p < request.getItemsList().size(); p++) {
-                final ItemSend itemSet = request.getItemsList().get(p);
+            final DataSend request = DataSend.parseFrom(req.getOtherData());
+
+            final ArrayList<ItemResult> results = new ArrayList<>();
+            for (int itemUpdateIndex = 0; itemUpdateIndex < request.getItemsList().size(); itemUpdateIndex++) {
+                final ItemSend itemSet = request.getItemsList().get(itemUpdateIndex);
                 try {
                     switch (itemSet.getQuery()) {
                         // TODO Enable updates for other data
                         case LECTURE: {
-                            final Lecture lecture = Lecture.parseFrom(itemSet.getData());
-                            instance.updateLecture(userId, lecture);
+                            final Assignment.SrlAssignment lecture = Assignment.SrlAssignment.parseFrom(itemSet.getData());
+                            instance.updateLecture(authId, lecture);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case LECTURESLIDE: {
                             final LectureSlide lectureSlide = LectureSlide.parseFrom(itemSet.getData());
-                            instance.updateLectureSlide(userId, lectureSlide);
+                            instance.updateLectureSlide(authId, lectureSlide);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case COURSE: {
                             final School.SrlCourse course = School.SrlCourse.parseFrom(itemSet.getData());
-                            instance.updateCourse(userId, course);
+                            instance.updateCourse(authId, course);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case ASSIGNMENT: {
-                            final School.SrlAssignment assignment = School.SrlAssignment.parseFrom(itemSet.getData());
-                            instance.updateAssignment(userId, assignment);
+                            final Assignment.SrlAssignment assignment = Assignment.SrlAssignment.parseFrom(itemSet.getData());
+                            instance.updateAssignment(authId, assignment);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case COURSE_PROBLEM: {
-                            final School.SrlProblem srlProblem = School.SrlProblem.parseFrom(itemSet.getData());
-                            instance.updateCourseProblem(userId, srlProblem);
+                            final Problem.SrlProblem srlProblem = Problem.SrlProblem.parseFrom(itemSet.getData());
+                            instance.updateCourseProblem(authId, srlProblem);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
                         case BANK_PROBLEM: {
-                            final School.SrlBankProblem srlBankProblem = School.SrlBankProblem.parseFrom(itemSet.getData());
-                            instance.updateBankProblem(userId, srlBankProblem);
+                            final Problem.SrlBankProblem srlBankProblem = Problem.SrlBankProblem.parseFrom(itemSet.getData());
+                            instance.updateBankProblem(authId, srlBankProblem);
                             results.add(ResultBuilder.buildResult(itemSet.getQuery(), ""));
                         }
                         break;
@@ -146,11 +149,10 @@ public final class DataUpdateHandler {
             if (!results.isEmpty()) {
                 conn.send(ResultBuilder.buildRequest(results, SUCCESS_MESSAGE, req));
             }
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | DatabaseAccessException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));
             LOG.error(LoggingConstants.EXCEPTION_MESSAGE, e);
-            conn.send(ResultBuilder.buildRequest(null, "user was not authenticated to update data " + e.getMessage(), req));
         } catch (InvalidProtocolBufferException | RuntimeException e) {
             final Message.ProtoException protoEx = ExceptionUtilities.createProtoException(e);
             conn.send(ExceptionUtilities.createExceptionRequest(req, protoEx));

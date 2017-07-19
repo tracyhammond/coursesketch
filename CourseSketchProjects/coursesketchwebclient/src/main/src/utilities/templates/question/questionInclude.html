@@ -9,9 +9,7 @@
 <script>
     (function(importDoc) {
         $(document).ready(function() {
-            var link = importDoc.querySelector('#questionTemplateImport');
-            var template = link.import.querySelector('#question');
-            var clone = document.importNode(template.content, true);
+            var clone = safeImport(importDoc, document,'questionTemplateImport','question');
 
             var newElement = new Question();
 
@@ -20,7 +18,6 @@
              * Called when the element is created, using document.create()(but does nothing else)
              */
             newElement.createdCallback = function() {
-                this.open = "";
             };
 
             /**

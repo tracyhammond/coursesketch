@@ -8,13 +8,50 @@ validateFirstRun(document.currentScript);
 (function() {
     CourseSketch.multiViewPage.waitScreenManager = new WaitScreenManager();
 
+    $(document).ready(function() {
+        /**
+         * Closes the dialog panel.
+         */
+        document.getElementById('dialogPanel').querySelector('button').onclick = function() {
+            document.getElementById('dialogPanel').close();
+        };
+        CourseSketch.dataManager.waitForDatabase(function() {
+            var navPanel = document.querySelector('navigation-panel');
+            var navigator = getNav();
+            var assignmentId = CourseSketch.dataManager.getState('currentAssignment');
+            var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
+            var addCallback = isUndefined(navPanel.dataset.callbackset);
+
+            CourseSketch.dataManager.clearStates();
+
+            if (addCallback) {
+                navPanel.dataset.callbackset = '';
+                navigator.addCallback(function(navigatorFromCallback) {
+                    multiviewSketchDelete();
+                    createMvList(navigatorFromCallback);
+                });
+            }
+
+            navigator.setSubgroupNavigation(false);
+            if (!isUndefined(assignmentId)) {
+                navigator.resetNavigation(assignmentId, parseInt(problemIndex, 10));
+            } else if (addCallback) {
+                navigator.refresh();
+            }
+        });
+    });
+
     /**
-     * gets all experiments that hold the current problem id and places them is sketchList.
+     * Gets all experiments that hold the current problem id and places them is sketchList.
      *
+     * @param {Function} callback - called when all of the sketches are loaded.
+     * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
      * @memberof multiViewPage
      */
     function getSketches(callback, navigator) {
-        CourseSketch.dataManager.getAllExperiments(getNav().getCurrentProblemId(), function(sketchList) {
+        console.log(navigator.getSubmissionIdentifier());
+        CourseSketch.dataManager.getAllExperiments(navigator.getSubmissionIdentifier(), function(sketchList) {
+            console.log(sketchList);
             if (isException(sketchList)) {
                 CourseSketch.clientException(sketchList);
                 return;
@@ -31,6 +68,8 @@ validateFirstRun(document.currentScript);
 
     /**
      * Used to get list of experiments and then calls createMvSketch to create all sketches on to the grade screen.
+     *
+     * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
      * @memberof multiViewPage
      */
     function createMvList(navigator) {
@@ -39,6 +78,9 @@ validateFirstRun(document.currentScript);
 
     /**
      * Creates a multiview sketch panel and attaches it to the grading area this can be done dynamically.
+     *
+     * @param {Array<SrlExperiment>} array - An array of sketches that the MvPanel creates.
+     * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
      * @memberof multiViewPage
      */
     function createMvSketch(array, navigator) {
@@ -48,8 +90,25 @@ validateFirstRun(document.currentScript);
             mvSketch.setUserId(array[i].userId);
             mvSketch.setUpdateList(getUpdateList(array, i).getList());
             mvSketch.setSketchClickedFunction(function() {
-                console.log(navigator);
                 CourseSketch.multiViewPage.loadProblem(navigator, this.getUpdateList());
+            });
+
+            var protoGrade = CourseSketch.prutil.ProtoGrade();
+            protoGrade.userId = array[i].userId;
+            mvSketch.courseId = protoGrade.courseId = array[i].courseId;
+            mvSketch.assignmentId = protoGrade.assignmentId = array[i].assignmentId;
+            mvSketch.problemId = protoGrade.problemId = array[i].problemId;
+            console.log('before I get the grade ', protoGrade);
+
+            // TODO: don't merge in until refactor is complete.
+            // Only one of the callbacks will be called right now...
+            CourseSketch.dataManager.getGrade(protoGrade, function(dbGrade) {
+                console.log('LOADING GRADE FROM SERVER', dbGrade);
+                mvSketch.setGrade(dbGrade.currentGrade);
+                var history = dbGrade.gradeHistory;
+                if (!isUndefined(history)) {
+                    mvSketch.setComment(history[history.length - 1].comment);
+                }
             });
         }
     }
@@ -57,17 +116,20 @@ validateFirstRun(document.currentScript);
     /**
      * Gets a specific set of sketch data to be used in the multiview sketch panel.
      *
-     * @param {Arrau<SrlExperiment>} array
-     * @param {Integer} index
      * @memberof multiViewPage
+     * @param {Arrau<SrlExperiment>} array - The array of experiments.
+     * @param {Integer} index - The index at which to get the update lists.
+     * @returns {SrlUpdateList} The update list.
      */
     function getUpdateList(array, index) {
-        return array[index].getSubmission().getUpdateList();
+        return array[index].getSubmission().getSubmissionData().getSketchArea().getRecordedSketch();
     }
 
     /**
      * Returns the navigation panel element to be used by other pages.
+     *
      * @memberof multiViewPage
+     * @returns {AssignmentNavigator} The navigator of this page.
      */
     function getNav() {
         return document.querySelector('navigation-panel').getNavigator();
@@ -83,44 +145,17 @@ validateFirstRun(document.currentScript);
         parent.innerHTML = '';
     }
 
-    $(document).ready(function() {
-        /**
-         * Closes the dialog panel.
-         */
-        document.getElementById('dialogPanel').querySelector('button').onclick = function() {
-            document.getElementById('dialogPanel').close();
-        };
-        CourseSketch.dataManager.waitForDatabase(function() {
-            var navPanel = document.querySelector('navigation-panel');
-            var navigator = getNav();
-            var assignment = CourseSketch.dataManager.getState('currentAssignment');
-            if (!isUndefined(assignment)) {
-                navigator.setAssignmentId(assignment);
-            }
-            var problemIndex = CourseSketch.dataManager.getState('currentProblemIndex');
-            if (!isUndefined(problemIndex)) {
-                navigator.setPreferredIndex(parseInt(problemIndex, 10));
-            }
-            CourseSketch.dataManager.clearStates();
-            if (isUndefined(navPanel.dataset.callbackset)) {
-                navPanel.dataset.callbackset = '';
-                navigator.addCallback(function(navigator) {
-                    multiviewSketchDelete();
-                    createMvList(navigator);
-                });
-                navigator.reloadProblems();
-            }
-        });
-    });
-
     /**
      * Loads the problem, called every time a user navigates to a different problem.
      *
+     * @param {AssignmentNavigator} navigator - The navigator used to navigate the assignment.
+     * @param {SrlExperiment} submissionData - the data that was submitted.
      * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.loadProblem = function(navigator, submissionData) {
         document.getElementById('dialogPanel').show();
-        var problemType = navigator.getProblemType();
+        var problemInfo = navigator.getCurrentInfo();
+        var problemType = problemInfo.questionType;
         var parentPanel = document.getElementById('problemPanel');
         var oldElement = parentPanel.querySelector('.sub-panel');
         if (oldElement instanceof Node) {
@@ -152,6 +187,7 @@ validateFirstRun(document.currentScript);
     /**
      * Loads the update list on to a sketch surface and prevents editing until it is completely loaded.
      *
+     * @param {SrlUpdateList} updateList - The list of updates that were applied to the sketch.
      * @memberof multiViewPage
      */
     CourseSketch.multiViewPage.loadSketch = function(updateList) {
@@ -193,7 +229,6 @@ validateFirstRun(document.currentScript);
     CourseSketch.multiViewPage.addWaitOverlay = function() {
         CourseSketch.multiViewPage.waitScreenManager.buildOverlay(document.querySelector('body'));
         CourseSketch.multiViewPage.waitScreenManager.buildWaitIcon(document.getElementById('overlay'));
-        document.getElementById('overlay').querySelector('.waitingIcon').classList.add('centered');
     };
 
     /**

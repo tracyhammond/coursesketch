@@ -4,7 +4,8 @@
 <body>
 <template id = "tool-bar">
     <style>
-        @import "/bower_components/materialize/bin/materialize.css";
+        @import "/bower_components/materialize/dist/css/materialize.css";
+        @import "https://fonts.googleapis.com/icon?family=Material+Icons";
         .noselect {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -13,6 +14,13 @@
             -ms-user-select: none;
             user-select: none;
         }
+        i.dark-icon {
+            color:#424242;
+        }
+        i.light-icon {
+            color:#e0e0e0;
+        }
+
     </style>
     <div id = "panelWrapper" class = "panelWrapper noselect">
         <div id = "toolPanel">
@@ -27,13 +35,13 @@
                  -->
                 <div id="toolbarFAB" class="fixed-action-btn">
                     <a class="btn-floating btn-large red">
-                        <i class="large mdi-image-color-lens"></i>
+                        <i class="large material-icons">color_lens</i>
                     </a>
                     <ul>
-                        <li><a id="submission" class="btn-floating green"><i class="large mdi-action-done"></i></a></li>
-                        <li><a id="save" class="btn-floating yellow darken-1"><i class="large mdi-content-save"></i></a></li>
-                        <li><a id="undo" class="btn-floating red"><i class="large mdi-content-undo"></i></a></li>
-                        <li><a id="redo" class="btn-floating blue"><i class="large mdi-content-redo"></i></a></li>
+                        <li><a id="submission" class="btn-floating green"><i class="large material-icons light-icon">done_all</i></a></li>
+                        <li><a id="save" class="btn-floating purple lighten-1"><i class="large material-icons light-icon">save</i></a></li>
+                        <li><a id="undo" class="btn-floating red"><i class="large material-icons light-icon">undo</i></a></li>
+                        <li><a id="redo" class="btn-floating blue"><i class="large material-icons light-icon">redo</i></a></li>
                         <li><a class="btn-floating"><content id="specific_buttons" select=".specific_button"></content></a></li>
                     </ul>
                 </div>

@@ -3,29 +3,29 @@ validateFirstRun(document.currentScript);
 /**
  * This function merges two existing api objects into one api object.
  *
- * @param {Object} originalApi The base api object.
- * @param {Object} objectApi The second api object, usually used for passing objects into an api.
- * @return {Object} result An api object that contains the contents of both api objects.
+ * @param {Object} originalApi - The base api object.
+ * @param {Object} objectApi - The second api object, usually used for passing objects into an api.
+ * @returns {Object} result An api object that contains the contents of both api objects.
  */
 function mergeApi(originalApi, objectApi){
     var result = {};
-    for (var key in originalApi) {
-        if (originalApi.hasOwnProperty(key)) {
-            result[key] = originalApi[key];
+    for (var originalKey in originalApi) {
+        if (originalApi.hasOwnProperty(originalKey)) {
+            result[originalKey] = originalApi[originalKey];
         }
     }
-    for (var key in objectApi) {
-        if (objectApi.hasOwnProperty(key)) {
-            result[key] = objectApi[key];
+    for (var objectKey in objectApi) {
+        if (objectApi.hasOwnProperty(objectKey)) {
+            result[objectKey] = objectApi[objectKey];
         }
     }
     return result;
 }
 
 /**
- * This function adds the ability to call console.log() to the api.
+ * This function adds the ability to call {@code console.log()} to the api.
  *
- * @param {String} text The string that will be printed to console.
+ * @param {String} text - The string that will be printed to console.
  */
 function debugLog(text) {
     console.log(text);
@@ -34,14 +34,16 @@ function debugLog(text) {
 /**
  * This function builds an object that holds an api for manipulating the problem panel.
  *
- * @param {Object} panel The problem panel from the student experiment.
+ * @param {Element} panel - The problem panel from the student experiment.
+ * @param {AssignmentNavigator} problemNav - The bank problem info object.
+ * @param {Boolean} hasSubmission - Flag that shows if this problem has a submission or not.
  */
-function PanelEditApi(panel){
+function PanelEditApi(panel, problemNav, hasSubmission) {
 
     /**
      * This function allows scripts to create a text area object next to the sketch surface in an experiment.
      *
-     * @param {Object} textAreaObj The object that defines the text area parameters (width, height, location, className, textContent).
+     * @param {Object} textAreaObj - The object that defines the text area parameters (width, height, location, className, textContent).
      */
     this.addTextArea = function(textAreaObj) {
         // Builds a text area from a passed in object.
@@ -73,7 +75,7 @@ function PanelEditApi(panel){
     /**
      * This function allows scripts to change the background of the sketch surface to any supported type.
      *
-     * @param {String} bgClass A string containing the className that corresponds to the background type.
+     * @param {String} bgClass - A string containing the className that corresponds to the background type.
      */
     this.setSketchSurfaceBg = function(bgClass) {
         // Sets the className of the sketch surface and adds .sub-panel + .submittable
@@ -83,7 +85,7 @@ function PanelEditApi(panel){
     /**
      * This function allows scripts to set the image in the image-background class type.
      *
-     * @param {String} backgroundUrl A string containing the Url of the desired background image.
+     * @param {String} backgroundUrl - A string containing the Url of the desired background image.
      */
     this.setSketchBgImage = function(backgroundUrl) {
         // Sets the Url of backgroundImage
@@ -94,7 +96,7 @@ function PanelEditApi(panel){
     /**
      * This function allows scripts to create an embedded-html object next to the sketch surface in an experiment.
      *
-     * @param {Object} htmlObj The object that defines the embedded-html parameters (width, height, location, htmlCode).
+     * @param {Object} htmlObj - The object that defines the embedded-html parameters (width, height, location, htmlCode).
      */
     this.addEmbeddedHtml = function(htmlObj) {
         var sketchSurface = panel.querySelector('.submittable');
@@ -125,6 +127,16 @@ function PanelEditApi(panel){
         embeddedHtml.setHtml(builtHtml);
     };
 
+    /**
+     * This function allows scripts to load and draw a sketch onto the sketch surface
+     */
+    this.loadBasisSketch = function() {
+        if (!hasSubmission) {
+            var sketchSurface = panel.querySelector('.submittable');
+            var updateList = problemNav.getBasisSketch();
+            sketchSurface.loadUpdateList(updateList.getList(), undefined);
+        }
+    };
 }
 
 /**
@@ -138,13 +150,23 @@ var api = {
 /**
  * This function parses and executes the script that is passed in.
  *
- * @param {String} script The string containing the problem script to execute.
- * @param {Node} panel The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
- * @param {Function} callback A function to call when the script is done executing to finish experiment setup.
+ * @param {AssignmentNavigator} problemNav - The object containing the bank problem data.
+ * @param {Node} panel - The submission surface DOM node that contains the sketch surface and will be passed to PanelEditApi.
+ * @param {Boolean} hasSubmission - Flag that shows if this problem has a submission or not.
+ * @param {Function} callback - A function to call when the script is done executing to finish experiment setup.
  */
-function executeScript(script, panel, callback) {
+function executeScript(problemNav, panel, hasSubmission, callback) {
+    if (problemNav.getPartType() !== CourseSketch.prutil.ItemType.BANK_PROBLEM) {
+        console.log('lecture slides do not execute scripts');
+        return;
+    }
+    var script = problemNav.getCurrentInfo().script;
+    if (isUndefined(script)) {
+        console.log('script does not exist for this problem');
+        return;
+    }
     console.log('executing script: ' + script);
-    var panelApi = new PanelEditApi(panel);
+    var panelApi = new PanelEditApi(panel, problemNav, hasSubmission);
     var totalApi = mergeApi(api, panelApi);
     console.log(totalApi);
     var scriptWorker = new jailed.DynamicPlugin(script, totalApi);

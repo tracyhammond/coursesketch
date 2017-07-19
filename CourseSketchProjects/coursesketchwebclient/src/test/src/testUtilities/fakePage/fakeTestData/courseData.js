@@ -1,3 +1,4 @@
+validateFirstRun(document.currentScript);
 (function(){
 	CourseSketch.fakeCourses = [];
 
@@ -8,65 +9,79 @@
 	var course5 = CourseSketch.prutil.SrlCourse();
 	var course6 = CourseSketch.prutil.SrlCourse();
 	var course7 = CourseSketch.prutil.SrlCourse();
+	var course8 = CourseSketch.prutil.SrlCourse();
 	var twentyMinutes = 20 * 60 * 1000;
 
-	course1.id = "1";
-	course1.name = "This is a test item!";
-	course1.description = "This is a description. It is not quite as big as the title.";
-	course1.lectureList = ["1", "2"];
-	course1.assignmentList = ["1", "2"];
+	course1.id = '1';
+	course1.name = 'This is a test item!';
+	course1.description = 'This is a description. It is not quite as big as the title.';
+	course1.lectureList = ['100', '200'];
+	course1.assignmentList = ['100', '200'];
 	course1.accessDate = CourseSketch.prutil.createProtoDateTime(new Date());
 	course1.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes));
 	CourseSketch.fakeCourses.push(course1);
 
-	course2.id = "2";
-	course2.name = "CourseSketch 101";
-	course2.description = "Take this class to learn more about CourseSketch! We will guide you through the basics to get you up and running quickly.";
-	course2.lectureList = ["3", "4"];
-	course2.assignmentList = ["3"];
+	course2.id = '2';
+	course2.name = 'CourseSketch 101';
+	course2.description = 'Take this class to learn more about CourseSketch! We will guide you through the basics to get you up and running quickly.';
+	course2.lectureList = ['300', '400'];
+	course2.assignmentList = ['300'];
 	course2.accessDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime()));
 	course2.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes));
 	CourseSketch.fakeCourses.push(course2);
 
-	course3.id = "3";
-	course3.name = "Quantum Rocket Science 1337";
-	course3.description = "This is the hardest class that is ever taught anywhere. Unless you are at least as smart as Albert Einstein, you will definitely fail. Topics include: time travel, hyperdrive design, and quantum entanglement communication.";
-	course3.lectureList = ["5", "6"];
-	course2.assignmentList = ["4", "5"];
+	course3.id = '3';
+	course3.name = 'Quantum Rocket Science 1337';
+	course3.description = 'This is the hardest class that is ever taught anywhere. Unless you are at least as smart as Albert Einstein, you will definitely fail. Topics include: time travel, hyperdrive design, and quantum entanglement communication.';
+	course3.lectureList = ['500', '600'];
+	course2.assignmentList = ['400', '500'];
 	course3.accessDate = CourseSketch.prutil.createProtoDateTime(new Date());
 	course3.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes));
 	CourseSketch.fakeCourses.push(course3);
 
-	course4.id = "4";
-	course4.name = "Underwater Basket Weaving 220";
-	course4.description = "Learn how to weave a basket underwater!";
-	course4.lectureList = ["7", "8"];
-	course2.assignmentList = ["6", "7"];
+	course4.id = '4';
+	course4.name = 'Underwater Basket Weaving 220';
+	course4.description = 'Learn how to weave a basket underwater!';
+	course4.lectureList = ['700', '800'];
+	course2.assignmentList = ['600', '700'];
 	course4.accessDate = CourseSketch.prutil.createProtoDateTime(new Date());
 	course4.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes));
 	CourseSketch.fakeCourses.push(course4);
 
-	course5.id = "5";
-	course5.name = "ENGR 491";
-	course5.description = "The super-awesome CourseSketch research course!";
-	course5.lectureList = ["9", "10"];
-	course5.assignmentList = ["8", "9"];
+	course5.id = '5';
+	course5.name = 'ENGR 491';
+	course5.description = 'The super-awesome CourseSketch research course!';
+	course5.lectureList = ['900', '1000'];
+	course5.assignmentList = ['800', '900'];
 	course5.accessDate = CourseSketch.prutil.createProtoDateTime(new Date());
 	course5.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes));
 	CourseSketch.fakeCourses.push(course5);
 
-    course6.id = "6";
-    course6.name = "not open course";
-    course6.description = "This course will not be open (and it contains no assignments anyways)!";
+    course6.id = '6';
+    course6.name = 'not open course';
+    course6.description = 'This course will not be open (and it contains no assignments anyways)!';
     course6.accessDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes));
     course6.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes * 2));
     CourseSketch.fakeCourses.push(course6);
 
-    course7.id = "7";
-    course7.name = "not open course2";
-    course7.description = "This course will not be open (and it contains no assignments anyways)!";
+    course7.id = '7';
+    course7.name = 'not open course2';
+    course7.description = 'This course will not be open (and it contains no assignments anyways)!';
     course7.accessDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() - twentyMinutes));
     course7.closeDate = CourseSketch.prutil.createProtoDateTime(new Date());
     CourseSketch.fakeCourses.push(course7);
+
+	course8.id = '8';
+	course8.name = 'Large Full Course';
+	course8.description = 'This Course has 10 assignments which each have 10 problems to simulate a very large course';
+	course8.assignmentList = [];
+	course8.lectureList = [];
+	for (var i = 0; i < 10; i++) {
+		course8.assignmentList.push('' + (i * 100));
+		course8.lectureList.push('' + (i * 100));
+	}
+	course8.accessDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() - twentyMinutes));
+	course8.closeDate = CourseSketch.prutil.createProtoDateTime(new Date(new Date().getTime() + twentyMinutes * 50));
+	CourseSketch.fakeCourses.push(course8);
 }
 )();

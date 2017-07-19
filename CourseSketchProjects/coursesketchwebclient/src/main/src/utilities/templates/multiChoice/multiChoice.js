@@ -6,17 +6,19 @@ function MultiChoice() {
 
     /**
      * Removes an answer choice from this multiple choice element.
-     * @param {Event} event the event that triggered this function
-     * @param {Element} answer the answer element to be removed
+     *
+     * @param {Event} event - the event that triggered this function
+     * @param {Element} answer - the answer element to be removed
      */
     this.removeAnswer = function(event, answer) {
-        this.shadowRoot.querySelector('#answer-choices').removeChild(answer);
+        this.getAnswerHolderElement().removeChild(answer);
     };
 
     /**
      * Marks an answer choice as correct.
-     * @param {Event} event the event that triggered this function
-     * @param {Element} answer the answer element to set as the correct answer
+     *
+     * @param {Event} event - the event that triggered this function
+     * @param {Element} answer - the answer element to set as the correct answer
      */
     this.setCorrectAnswer = function(event, answer) {
         var answerChoices = this.shadowRoot.querySelectorAll('.answer-choice');
@@ -29,7 +31,9 @@ function MultiChoice() {
 
     /**
      * Adds an answer choice to this multiple choice element.
-     * @param {Event} event the event that triggered this function
+     *
+     * @param {Event} event - the event that triggered this function
+     * @returns {Element} The element that was created that holds the answer.
      */
     this.addAnswer = function(event) {
         // Set up the parent
@@ -37,9 +41,12 @@ function MultiChoice() {
         var lastAnswer = this.shadowRoot.querySelector('#answer-choices').lastChild;
         answer.className = 'answer-choice';
         if (isUndefined(lastAnswer) || lastAnswer.className !== 'answer-choice') {
-            answer.id = '1';
+            answer.id = 'A1';
+            answer.setAttribute('data-index', 1);
         } else {
-            answer.id = parseInt(lastAnswer.id, 10) + 1;
+            var nextIndex = parseInt(answer.getAttribute('data-index'), 10) + 1;
+            answer.id = 'A' + nextIndex;
+            answer.setAttribute('data-index', nextIndex);
         }
 
         // Radio button
@@ -65,10 +72,11 @@ function MultiChoice() {
         correct.className = 'correct';
         /**
          * Called to say that a check box is correct.
-         * @param {Event} event On Click event.
+         *
+         * @param {Event} onClickEvent - On Click event.
          */
-        correct.onclick = function(event) {
-            localScope.setCorrectAnswer(event, answer);
+        correct.onclick = function(onClickEvent) {
+            localScope.setCorrectAnswer(onClickEvent, answer);
         };
         answer.appendChild(correct);
 
@@ -78,19 +86,25 @@ function MultiChoice() {
         close.textContent = '×';
         /**
          * Called to remove the answer choice.
-         * @param {Event} event On Click event.
+         *
+         * @param {Event} onClickEvent - On Click event.
          */
-        close.onclick = function(event) {
-            localScope.removeAnswer(event, answer);
+        close.onclick = function(onClickEvent) {
+            localScope.removeAnswer(onClickEvent, answer);
         };
         answer.appendChild(close);
 
         // Now that we are done creating the answer choice, add it
-        this.shadowRoot.querySelector('#answer-choices').appendChild(answer);
+        this.getAnswerHolderElement().appendChild(answer);
+        return answer;
+    };
+
+    this.getAnswerHolderElement = function() {
+        return this.shadowRoot.querySelector('#answer-choices');
     };
 
     /**
-     * @param {Node} templateClone is a clone of the custom HTML Element for the text box
+     * @param {Node} templateClone - is a clone of the custom HTML Element for the text box
      * Makes the exit button close the box and enables dragging
      */
     this.initializeElement = function(templateClone) {
@@ -100,6 +114,8 @@ function MultiChoice() {
 
         /**
          * Bind addAnswer to click.
+         *
+         * @param {Event} event the event that was clicked.
          */
         localScope.shadowRoot.querySelector('#add').onclick = function(event) {
             localScope.addAnswer(event);
@@ -109,8 +125,8 @@ function MultiChoice() {
     /**
      * Saves the embedded HTML element to a protobuf object. Calls finished callback when done.
      *
-     * @param {Event} event event that triggered this function.
-     * @return {MultipleChoice} the created protobuf object.
+     * @param {Event} event - event that triggered this function.
+     * @returns {MultipleChoice} the created protobuf object.
      */
     this.saveData = function(event) {
         var mcProto = CourseSketch.prutil.MultipleChoice();
@@ -134,13 +150,13 @@ function MultiChoice() {
         this.id = this.command.commandId;
         var callback = this.getFinishedCallback();
         if (!isUndefined(callback)) {
-            callback(this.command, event, this.currentUpdate); // Gets finishedCallback and calls it with command as parameter
+            callback(this.command, event, this.currentUpdate, mcProto); // Gets finishedCallback and calls it with command as parameter
         }
         return mcProto;
     };
 
     /**
-     * @param {ProtoCommand} mcProto is the data to be loaded from the proto
+     * @param {ProtoCommand} mcProto - is the data to be loaded from the proto
      * If shadowRoot does not exist, saves the protoCommand locally and returns so the element can be initialized
      * If the protoCommand does not exist, returns because data cannot be loaded
      */
@@ -149,18 +165,27 @@ function MultiChoice() {
             return;
         }
         for (var i = 0; i < mcProto.answerChoices.length; ++i) {
-            this.addAnswer();
-            var newAnswerId = '' + (i + 1);
-            var answer = this.shadowRoot.getElementById(newAnswerId);
+            var answer = this.addAnswer();
             answer.id = mcProto.answerChoices[i].id;
             answer.querySelector('.label').value = mcProto.answerChoices[i].text;
         }
         this.correctId = mcProto.correctId;
-        this.shadowRoot.getElementById(this.correctId).querySelector('.correct').textContent = '✔';
+        if (!isUndefined(this.correctId) && this.correctId !== '' && this.correctId !== null) {
+            var result = this.getAnswerHolderElement().querySelectorAll('#' + this.correctId)[0];
+            result.querySelector('.correct').textContent = '✔';
+        }
+    };
+
+    this.turnOnStudentMode = function() {
+        console.log('do nothing');
+    };
+
+    this.setSelected = function() {
+        console.log('do nothing2');
     };
 
     /**
-     * @return {Function} finishedCallback is the callback set at implementation.
+     * @returns {Function} finishedCallback is the callback set at implementation.
      * The callback can be called immediately using .getFinishedCallback()(argument) with argument being optional
      */
     this.getFinishedCallback = function() {
@@ -168,13 +193,17 @@ function MultiChoice() {
     };
 
     /**
-     * Sets the listener
-     * @param {Function} listener called when the data is finished saving.
+     * Sets the listener.
+     *
+     * The listener is called with (SrlCommand, event, SrlUpdate, MultiChoice)
+     * With MultiChoice being the same type as LoadData.
+     *
+     * @param {Function} listener - called when the data is finished saving.
      */
     this.setFinishedListener = function(listener) {
         this.finishedCallback = listener;
     };
 }
-MultiChoice.prototype = Object.create(HTMLDialogElement.prototype);
+MultiChoice.prototype = Object.create(HTMLElement.prototype);
 MultiChoice.prototype.finishedCallback = undefined; // Defined by whoever implements this by using setFinishedListener().
 MultiChoice.prototype.createdCommand = undefined;

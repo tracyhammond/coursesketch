@@ -4,9 +4,9 @@
  * @param callback called when the database is ready.
  */
 function waitForDatabase(dataManager, callback) {
-    var interval = setInterval(function() {
+    var interval = setRealInterval(function() {
         if (dataManager.isDatabaseReady()) {
-            clearInterval(interval);
+            clearRealInterval(interval);
             // ACTUAL TEST HERE
             callback();
         } // endif
